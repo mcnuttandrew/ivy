@@ -8,5 +8,9 @@
         "jsx": "react",
         "esModuleInterop": true,
         "moduleResolution": "node"
-    }
+    },
+    "include": [
+      "src/**/*",
+      "untyped/index.d.ts"
+    ]
 }

@@ -33,6 +33,17 @@ body,
   width: 300px;
 }
 
+.shelf {
+  align-items: center;
+  background: white;
+  border-radius: 5px;
+  font-size: 12px;
+  height: 20px;
+  justify-content: space-around;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
 
 .background-1 {
   background: #b1b582;
