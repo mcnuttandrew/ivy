@@ -32,8 +32,9 @@
     "prettier": "^1.18.2",
     "source-map-loader": "^0.2.4",
     "style-loader": "0.13.1",
-    "typescript": "^3.6.4",
     "ts-loader": "^6.2.0",
+    "typescript": "^3.6.4",
+    "vega-typings": "^0.10.2",
     "webpack": "4",
     "webpack-cli": "^3.0.8",
     "webpack-command": "^0.2.1",
@@ -41,11 +42,16 @@
   },
   "dependencies": {
     "immutable": "^3.8.2",
-    "react": "16",
+    "react": "^16.10.2",
+    "react-dnd": "^9.4.0",
+    "react-dnd-html5-backend": "^9.4.0",
     "react-dom": "^16.8.6",
     "react-redux": "^6.0.1",
+    "react-vega": "^7.0.1",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "vega": "^5.7.3",
+    "vega-lite": "^4.0.0-beta.10"
   },
   "scripts": {
     "start": "webpack-dev-server",

@@ -1,17 +1,21 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import Immutable from 'immutable';
+import {Spec} from 'vega-typings';
+import {ColumnHeader} from '../types';
 
-interface Store {}
+interface Store {
+  spec: Spec;
+  data: any;
+  columns: ColumnHeader[];
+}
 interface ActionResponse {
   (state: Store, payload: any): Store;
 }
 
-const DEFAULT_STATE = Immutable.fromJS({});
+const DEFAULT_STATE: Store = {spec: {}, data: [], columns: []};
 
 const actionFuncMap: {[val: string]: ActionResponse} = {};
-let NULL_ACTION: ActionResponse;
-NULL_ACTION = (state: Store, payload: any): Store => state;
+const NULL_ACTION: ActionResponse = (state: Store): Store => state;
 
 export default createStore(
   combineReducers({
