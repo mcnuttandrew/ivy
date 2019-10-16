@@ -5,3 +5,17 @@ export interface ColumnHeader {
   secondaryType: string;
   field: string;
 }
+
+export type VegaMark =
+  | 'arc'
+  | 'area'
+  | 'image'
+  | 'group'
+  | 'line'
+  | 'path'
+  | 'rect'
+  | 'rule'
+  | 'shape'
+  | 'symbol'
+  | 'text'
+  | 'trail';

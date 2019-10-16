@@ -46,7 +46,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
             currentlySelectedFile={currentlySelectedFile}
             changeSelectedFile={changeSelectedFile}
           />
-          <EncodingColumn spec={spec} />
+          <EncodingColumn spec={spec} columns={columns} />
           <ChartArea data={data} spec={spec} />
         </div>
       </div>

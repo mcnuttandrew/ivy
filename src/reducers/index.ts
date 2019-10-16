@@ -12,7 +12,10 @@ import {Map} from 'immutable';
 export type AppState = any;
 // TODO undo this embarrasment
 const DEFAULT_STATE: AppState = Map({
-  spec: {},
+  spec: {
+    mark: 'circle',
+    encoding: {},
+  },
   data: [],
   columns: [],
   currentlySelectedFile: 'cars.json',

@@ -10,9 +10,9 @@ export default class Shelf extends React.Component<ShelfProps> {
   render() {
     const {field, currentField} = this.props;
     return (
-      <div className="shelf">
+      <div className="shelf flex">
         <div>{field}</div>
-        <div>{currentField || 'drop a field here'}</div>
+        <div>{'drop a field here'}</div>
       </div>
     );
   }
