@@ -4,10 +4,11 @@
     "browser": true
   },
   "extends": [
-    "uber-es2015",
-    "uber-jsx",
+    "plugin:@typescript-eslint/recommended",
     "prettier",
-    "prettier/react"
+    "prettier/@typescript-eslint"
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
   ],
   "rules": {
     "consistent-return": 0,
@@ -16,15 +17,8 @@
     "object-curly-spacing": 0,
     "babel/object-curly-spacing": 2
   },
-  "parser": "babel-eslint",
-  "plugins": [
-    "react",
-    "babel",
-    "prettier"
-  ],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "project": "./tsconfig.json",
   }
 }

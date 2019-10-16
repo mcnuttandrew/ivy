@@ -1,11 +1,13 @@
+import {Dispatch} from 'redux';
 /* global chrome*/
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
-const buildEasyAction = type => payload => dispatch =>
-  dispatch({type, payload});
+const buildEasyAction = (type: string) => (payload: any) => (
+  dispatch: Dispatch,
+) => dispatch({type, payload});
 export const clearSelection = buildEasyAction('clear-selection');
 
 // example action
