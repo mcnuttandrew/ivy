@@ -1,10 +1,9 @@
 import React from 'react';
-import {ColumnHeader} from '../types.ts';
+import {ColumnHeader} from '../types';
 
 interface DataColumnProps {
   columns: ColumnHeader[];
 }
-interface DataColumnState {}
 export default class DataColumn extends React.Component<DataColumnProps> {
   render() {
     const {columns} = this.props;

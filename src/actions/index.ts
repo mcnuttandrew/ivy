@@ -1,9 +1,8 @@
 import {Dispatch} from 'redux';
-/* global chrome*/
-const SECOND = 1000;
-const MINUTE = SECOND * 60;
-const HOUR = MINUTE * 60;
-const DAY = HOUR * 24;
+// const SECOND = 1000;
+// const MINUTE = SECOND * 60;
+// const HOUR = MINUTE * 60;
+// const DAY = HOUR * 24;
 
 const buildEasyAction = (type: string) => (payload: any) => (
   dispatch: Dispatch,

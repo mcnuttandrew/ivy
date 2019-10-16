@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 
-import AppState from './reducers/index.ts';
+import AppState from './reducers/index';
 import './stylesheets/main.css';
-import Root from './components/root.tsx';
+import Root from './components/root';
 
 const appContainer = document.createElement('div');
 appContainer.setAttribute('id', 'root-container');

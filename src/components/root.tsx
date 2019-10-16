@@ -1,14 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import * as actionCreators from '../actions/index.ts';
+import * as actionCreators from '../actions/index';
 
 import {Spec} from 'vega-typings';
-import {ColumnHeader} from './types.ts';
+import {ColumnHeader} from '../types';
 
-import Header from './header.tsx';
-import DataColumn from './data-column.tsx';
-import ChartArea from './chart-area.tsx';
-import EncodingColumn from './encoding-column.tsx';
+import Header from './header';
+import DataColumn from './data-column';
+import ChartArea from './chart-area';
+import EncodingColumn from './encoding-column';
 
 interface RootProps {
   columns?: ColumnHeader[];

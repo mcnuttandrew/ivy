@@ -3,10 +3,10 @@ const path = require('path');
 module.exports = {
   devtool: 'source-map',
 
-  // resolve: {
-  //   // Add '.ts' and '.tsx' as resolvable extensions.
-  //   extensions: ['.ts', '.tsx'],
-  // },
+  resolve: {
+    // Add '.ts' and '.tsx' as resolvable extensions.
+    extensions: ['.ts', '.tsx', '.js'],
+  },
 
   entry: {
     app: './src/app.tsx',
@@ -27,6 +27,7 @@ module.exports = {
         enforce: 'pre',
         test: /\.js$/,
         loader: 'source-map-loader',
+        exclude: [/node_modules/],
       },
       {
         test: /\.css$/,

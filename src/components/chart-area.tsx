@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Vega} from 'react-vega';
 
 // const spec = {
@@ -39,7 +38,6 @@ interface ChartAreaProps {
   spec: any;
   data: any;
 }
-interface ChartAreaState {}
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render() {
     const {spec, data} = this.props;
