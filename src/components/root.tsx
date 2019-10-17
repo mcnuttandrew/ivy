@@ -25,6 +25,7 @@ interface RootProps {
   changeSelectedFile?: GenericAction;
   setEncodingParameter?: GenericAction;
   clearEncoding?: GenericAction;
+  changeMarkType?: GenericAction;
 }
 
 interface RootState {}
@@ -43,6 +44,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
       changeSelectedFile,
       setEncodingParameter,
       clearEncoding,
+      changeMarkType,
     } = this.props;
 
     return (
@@ -56,6 +58,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
               changeSelectedFile={changeSelectedFile}
             />
             <EncodingColumn
+              changeMarkType={changeMarkType}
               setEncodingParameter={setEncodingParameter}
               clearEncoding={clearEncoding}
               spec={spec}

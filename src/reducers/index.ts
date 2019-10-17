@@ -13,7 +13,7 @@ export type AppState = any;
 // TODO undo this embarrasment
 const EMPTY_SPEC = Immutable.fromJS({
   data: {name: 'myData'},
-  mark: 'circle',
+  mark: {type: 'circle'},
   encoding: {},
 });
 const DEFAULT_STATE: AppState = Map({
@@ -77,6 +77,8 @@ const setEncodingParam: ActionResponse = (state, payload) => {
 };
 
 const clearEncoding: ActionResponse = state => state.set('spec', EMPTY_SPEC);
+const changeMarkType: ActionResponse = (state, payload) =>
+  state.setIn(['spec', 'mark', 'type'], payload);
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-data-from-predefined': recieveDataFromPredefinedDatasets,
@@ -84,6 +86,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'change-selected-file': changeSelectedFile,
   'set-encoding-param': setEncodingParam,
   'clear-encoding': clearEncoding,
+  'change-mark-type': changeMarkType,
 };
 const NULL_ACTION: ActionResponse = state => state;
 
