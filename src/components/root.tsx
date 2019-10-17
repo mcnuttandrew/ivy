@@ -53,23 +53,28 @@ class RootComponent extends React.Component<RootProps, RootState> {
       <div className="flex-down full-width full-height">
         <Header />
         <div className="flex full-height">
-          <DndProvider backend={HTML5Backend}>
-            <DataColumn
-              columns={columns}
-              currentlySelectedFile={currentlySelectedFile}
-              changeSelectedFile={changeSelectedFile}
-            />
-            <EncodingColumn
-              changeMarkType={changeMarkType}
-              setEncodingParameter={setEncodingParameter}
-              clearEncoding={clearEncoding}
-              spec={spec}
-              columns={columns}
-              onDrop={(item: any) => {
-                setEncodingParameter(item);
-              }}
-            />
-          </DndProvider>
+          <div className="flex-down full-height">
+            <div className="secondary-controls">SECONDARY CONTROLS</div>
+            <div className="flex full-height">
+              <DndProvider backend={HTML5Backend}>
+                <DataColumn
+                  columns={columns}
+                  currentlySelectedFile={currentlySelectedFile}
+                  changeSelectedFile={changeSelectedFile}
+                />
+                <EncodingColumn
+                  changeMarkType={changeMarkType}
+                  setEncodingParameter={setEncodingParameter}
+                  clearEncoding={clearEncoding}
+                  spec={spec}
+                  columns={columns}
+                  onDrop={(item: any) => {
+                    setEncodingParameter(item);
+                  }}
+                />
+              </DndProvider>
+            </div>
+          </div>
           <ChartArea data={data} spec={spec} setNewSpec={setNewSpec} />
         </div>
       </div>

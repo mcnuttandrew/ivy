@@ -39,9 +39,14 @@ h1 {
   padding: 0 15px;
 }
 
+.secondary-controls {
+  background: gray;
+  padding: 15px;
+}
+
 .column {
   padding: 15px;
-  width: 300px;
+  width: 200px;
 }
 
 .shelf {
