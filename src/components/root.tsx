@@ -26,6 +26,7 @@ interface RootProps {
   setEncodingParameter?: GenericAction;
   clearEncoding?: GenericAction;
   changeMarkType?: GenericAction;
+  setNewSpec?: GenericAction;
 }
 
 interface RootState {}
@@ -45,6 +46,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
       setEncodingParameter,
       clearEncoding,
       changeMarkType,
+      setNewSpec,
     } = this.props;
 
     return (
@@ -68,7 +70,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
               }}
             />
           </DndProvider>
-          <ChartArea data={data} spec={spec} />
+          <ChartArea data={data} spec={spec} setNewSpec={setNewSpec} />
         </div>
       </div>
     );

@@ -79,6 +79,8 @@ const setEncodingParam: ActionResponse = (state, payload) => {
 const clearEncoding: ActionResponse = state => state.set('spec', EMPTY_SPEC);
 const changeMarkType: ActionResponse = (state, payload) =>
   state.setIn(['spec', 'mark', 'type'], payload);
+const setNewSpec: ActionResponse = (state, payload) =>
+  state.set('spec', Immutable.fromJS(payload));
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-data-from-predefined': recieveDataFromPredefinedDatasets,
@@ -87,6 +89,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'set-encoding-param': setEncodingParam,
   'clear-encoding': clearEncoding,
   'change-mark-type': changeMarkType,
+  'set-new-encoding': setNewSpec,
 };
 const NULL_ACTION: ActionResponse = state => state;
 

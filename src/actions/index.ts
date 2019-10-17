@@ -23,6 +23,7 @@ const buildEasyAction: GenericActionCreator = type => payload => dispatch =>
 export const setEncodingParameter = buildEasyAction('set-encoding-param');
 export const clearEncoding = buildEasyAction('clear-encoding');
 export const changeMarkType = buildEasyAction('change-mark-type');
+export const setNewSpec = buildEasyAction('set-new-encoding');
 
 export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
   fetch(VegaData[fileName].url)
