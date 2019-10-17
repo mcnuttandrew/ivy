@@ -1,5 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {DndProvider} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
 
@@ -20,6 +23,8 @@ interface RootProps {
 
   loadDataFromPredefinedDatasets?: GenericAction;
   changeSelectedFile?: GenericAction;
+  setEncodingParameter?: GenericAction;
+  clearEncoding?: GenericAction;
 }
 
 interface RootState {}
@@ -36,17 +41,30 @@ class RootComponent extends React.Component<RootProps, RootState> {
       spec,
       currentlySelectedFile,
       changeSelectedFile,
+      setEncodingParameter,
+      clearEncoding,
     } = this.props;
+
     return (
       <div className="flex-down full-width full-height">
         <Header />
         <div className="flex full-height">
-          <DataColumn
-            columns={columns}
-            currentlySelectedFile={currentlySelectedFile}
-            changeSelectedFile={changeSelectedFile}
-          />
-          <EncodingColumn spec={spec} columns={columns} />
+          <DndProvider backend={HTML5Backend}>
+            <DataColumn
+              columns={columns}
+              currentlySelectedFile={currentlySelectedFile}
+              changeSelectedFile={changeSelectedFile}
+            />
+            <EncodingColumn
+              setEncodingParameter={setEncodingParameter}
+              clearEncoding={clearEncoding}
+              spec={spec}
+              columns={columns}
+              onDrop={(item: any) => {
+                setEncodingParameter(item);
+              }}
+            />
+          </DndProvider>
           <ChartArea data={data} spec={spec} />
         </div>
       </div>
@@ -59,7 +77,7 @@ function mapStateToProps({base}: {base: AppState}): any {
   return {
     columns: base.get('columns'),
     data: base.get('data'),
-    spec: base.get('spec'),
+    spec: base.get('spec').toJS(),
     currentlySelectedFile: base.get('currentlySelectedFile'),
   };
 }

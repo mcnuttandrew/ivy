@@ -1,19 +1,53 @@
 import React from 'react';
+import {useDrop} from 'react-dnd';
+import {GenericAction} from '../actions/index';
+import Pill from './pill';
 import {ColumnHeader} from '../types';
 
 interface ShelfProps {
   field: string;
   columns: ColumnHeader[];
-  currentField?: string;
+  currentField?: {field: string, type: string};
+  onDrop: any;
+  setEncodingParameter: GenericAction;
 }
-export default class Shelf extends React.Component<ShelfProps> {
-  render() {
-    const {field, currentField} = this.props;
-    return (
-      <div className="shelf flex">
-        <div>{field}</div>
-        <div>{'drop a field here'}</div>
-      </div>
-    );
+
+export default function Shelf({
+  field,
+  columns,
+  currentField,
+  onDrop,
+  setEncodingParameter,
+}: ShelfProps) {
+  const [{isOver, canDrop}, drop] = useDrop({
+    accept: 'CARD',
+    drop: item => onDrop({...item, field}),
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+
+  const isActive = isOver && canDrop;
+  let backgroundColor = null;
+  if (isActive) {
+    backgroundColor = 'darkgreen';
+  } else if (canDrop) {
+    backgroundColor = 'darkkhaki';
   }
+
+  return (
+    <div ref={drop} className="shelf flex" style={{backgroundColor}}>
+      <div>{field}</div>
+      {!currentField && <div>{'drop a field here'}</div>}
+      {currentField && (
+        <Pill
+          inEncoding={true}
+          setEncodingParameter={setEncodingParameter}
+          containingField={field}
+          column={columns.find(({field}) => field === currentField.field)}
+        />
+      )}
+    </div>
+  );
 }

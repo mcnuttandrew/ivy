@@ -29,6 +29,10 @@ h1 {
   height: 100%;
 }
 
+.chart-container {
+  padding: 20px;
+}
+
 .header {
   align-items: center;
   height: 50px;

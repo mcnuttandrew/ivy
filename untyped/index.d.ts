@@ -17,3 +17,4 @@ declare module 'type-analyzer';
 //   //
 //   // }
 // }
+declare module 'react-use-dimensions';

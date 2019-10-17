@@ -20,9 +20,8 @@ interface GenericActionCreator {
 
 const buildEasyAction: GenericActionCreator = type => payload => dispatch =>
   dispatch({type, payload});
-// export const loadDataFromPredefinedDatasets = buildEasyAction(
-//   'load-data-from-predefined',
-// );
+export const setEncodingParameter = buildEasyAction('set-encoding-param');
+export const clearEncoding = buildEasyAction('clear-encoding');
 
 export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
   fetch(VegaData[fileName].url)

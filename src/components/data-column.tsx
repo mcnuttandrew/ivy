@@ -33,7 +33,9 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         </div>
         <div className="flex-down">
           {columns.map(column => {
-            return <Pill column={column} key={column.field} />;
+            return (
+              <Pill column={column} key={column.field} inEncoding={false} />
+            );
           })}
         </div>
       </div>
