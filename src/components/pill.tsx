@@ -1,4 +1,14 @@
 import React from 'react';
+
+import {GoPlus, GoTriangleDown} from 'react-icons/go';
+import {
+  TiFilter,
+  TiSortNumerically,
+  TiSortAlphabetically,
+  TiCalendar,
+  TiDeleteOutline,
+} from 'react-icons/ti';
+
 import {GenericAction} from '../actions/index';
 import {useDrag} from 'react-dnd';
 import {ColumnHeader, DataType} from '../types';
@@ -8,21 +18,28 @@ export interface PillProps {
   containingField?: string;
   inEncoding: boolean;
   setEncodingParameter?: GenericAction;
+  addToNextOpenSlot?: GenericAction;
 }
-function getTypeSymbol(type: DataType): string {
+function getTypeSymbol(type: DataType): JSX.Element {
   switch (type) {
     case 'MEASURE':
-      return '#';
-    // case 'TIME':
-    //   return 'T';
+      return <TiSortNumerically />;
+    case 'TIME':
+      return <TiCalendar />;
     default:
     case 'DIMENSION':
-      return 'A';
+      return <TiSortAlphabetically />;
   }
 }
 
 export default function Pill(props: PillProps) {
-  const {column, inEncoding, setEncodingParameter, containingField} = props;
+  const {
+    column,
+    inEncoding,
+    setEncodingParameter,
+    containingField,
+    addToNextOpenSlot,
+  } = props;
   const [{opacity}, dragRef] = useDrag({
     item: {type: 'CARD', text: column.field},
     collect: monitor => ({
@@ -30,19 +47,29 @@ export default function Pill(props: PillProps) {
     }),
   });
   return (
-    <div className="shelf flex" ref={dragRef} style={{opacity}}>
-      {!inEncoding && <div>^</div>}
-      <div>{getTypeSymbol(column.type)}</div>
-      <div>{column.field}</div>
-      {!inEncoding && <div>Filt</div>}
-      {!inEncoding && <div>+</div>}
+    <div className="pill flex" ref={dragRef} style={{opacity}}>
+      <div className="fixed-symbol-width">
+        {!inEncoding && <GoTriangleDown />}
+      </div>
+      <div className="fixed-symbol-width">{getTypeSymbol(column.type)}</div>
+      <div className="pill-label">{column.field}</div>
+      <div className="fixed-symbol-width">{!inEncoding && <TiFilter />}</div>
+      {!inEncoding && (
+        <div
+          className="fixed-symbol-width"
+          onClick={() => addToNextOpenSlot(column)}
+        >
+          <GoPlus />
+        </div>
+      )}
       {inEncoding && (
         <div
+          className="fixed-symbol-width"
           onClick={() =>
             setEncodingParameter({text: null, field: containingField})
           }
         >
-          X
+          <TiDeleteOutline />
         </div>
       )}
     </div>

@@ -37,17 +37,23 @@ export default function Shelf({
   }
 
   return (
-    <div ref={drop} className="shelf flex" style={{backgroundColor}}>
-      <div>{field}</div>
-      {!currentField && <div>{'drop a field here'}</div>}
-      {currentField && (
-        <Pill
-          inEncoding={true}
-          setEncodingParameter={setEncodingParameter}
-          containingField={field}
-          column={columns.find(({field}) => field === currentField.field)}
-        />
-      )}
+    <div ref={drop} className="shelf flex">
+      <div className="field-label">{field}</div>
+      <div className="pill-dropzone">
+        {!currentField && (
+          <div className="blank-pill" style={{backgroundColor}}>
+            {'drop a field here'}
+          </div>
+        )}
+        {currentField && (
+          <Pill
+            inEncoding={true}
+            setEncodingParameter={setEncodingParameter}
+            containingField={field}
+            column={columns.find(({field}) => field === currentField.field)}
+          />
+        )}
+      </div>
     </div>
   );
 }

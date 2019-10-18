@@ -13,7 +13,9 @@ export type AppState = any;
 // TODO undo this embarrasment
 const EMPTY_SPEC = Immutable.fromJS({
   data: {name: 'myData'},
-  mark: {type: 'circle'},
+  mark: {
+    type: 'circle',
+  },
   encoding: {},
 });
 const DEFAULT_STATE: AppState = Map({
@@ -55,6 +57,7 @@ const changeSelectedFile: ActionResponse = (state, payload) => {
 const TYPE_TRANSLATE: {[s: string]: string} = {
   DIMENSION: 'ordinal',
   MEASURE: 'quantitative',
+  TIME: 'temporal',
 };
 
 const setEncodingParam: ActionResponse = (state, payload) => {
@@ -82,6 +85,28 @@ const changeMarkType: ActionResponse = (state, payload) =>
 const setNewSpec: ActionResponse = (state, payload) =>
   state.set('spec', Immutable.fromJS(payload));
 
+const addToNextOpenSlot: ActionResponse = (state, payload) => {
+  // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
+  const encoding = state.getIn(['spec', 'encoding']).toJS();
+  const targetField = [
+    'x',
+    'y',
+    'column',
+    'rows',
+    'size',
+    'color',
+    'shape',
+    'detail',
+    'text',
+  ].find(field => !encoding[field]);
+  if (!targetField) {
+    return state;
+  }
+  console.log(payload, encoding);
+  encoding[targetField] = {field: payload.field, type: 'ordinal'};
+  return state.setIn(['spec', 'encoding'], Immutable.fromJS(encoding));
+};
+
 const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-data-from-predefined': recieveDataFromPredefinedDatasets,
   'recieve-type-inferences': recieveTypeInferences,
@@ -90,6 +115,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'clear-encoding': clearEncoding,
   'change-mark-type': changeMarkType,
   'set-new-encoding': setNewSpec,
+  'add-to-next-open-slot': addToNextOpenSlot,
 };
 const NULL_ACTION: ActionResponse = state => state;
 

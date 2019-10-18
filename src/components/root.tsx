@@ -27,6 +27,7 @@ interface RootProps {
   clearEncoding?: GenericAction;
   changeMarkType?: GenericAction;
   setNewSpec?: GenericAction;
+  addToNextOpenSlot?: GenericAction;
 }
 
 interface RootState {}
@@ -47,6 +48,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
       clearEncoding,
       changeMarkType,
       setNewSpec,
+      addToNextOpenSlot,
     } = this.props;
 
     return (
@@ -61,6 +63,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
                   columns={columns}
                   currentlySelectedFile={currentlySelectedFile}
                   changeSelectedFile={changeSelectedFile}
+                  addToNextOpenSlot={addToNextOpenSlot}
                 />
                 <EncodingColumn
                   changeMarkType={changeMarkType}

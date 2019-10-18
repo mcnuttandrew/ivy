@@ -6,9 +6,9 @@ body,
   margin: 0;
   padding: 0;
 }
-
-h1 {
-  font-size: 20px;
+h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -29,6 +29,10 @@ h1 {
   height: 100%;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
 .chart-container {
   padding: 20px;
 }
@@ -40,8 +44,17 @@ h1 {
 }
 
 .secondary-controls {
-  background: gray;
+  background: lightgray;
   padding: 15px;
+}
+
+.section-title {
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.section-subtitle {
+  font-size: 12px;
 }
 
 .column {
@@ -49,26 +62,99 @@ h1 {
   width: 200px;
 }
 
+.pill-container {
+  color: black;
+  height: 20px;
+  margin-bottom: 5px;
+}
+
+.pill {
+  background: #C9CBD0;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 9px;
+  height: 100%;
+  padding: 0 5px;
+}
+.pill .fixed-symbol-width {
+  align-items: center;
+  display: flex;
+  font-size: 15px;
+  justify-content: center;
+  height: 100%;
+  width: 20px;
+}
+.pill .pill-label {
+  align-items: center;
+  display: flex;
+  font-size: 9px;
+  height: 100%;
+  padding: 0 5px;
+  width: 100%;
+  max-width: 100%;
+}
+
 .shelf {
   align-items: center;
-  background: white;
+  background: #BFC7D4;
+  border: 2px solid #BFC7D4;
   border-radius: 5px;
-  font-size: 12px;
-  height: 20px;
-  justify-content: space-around;
-  cursor: pointer;
+  font-size: 10px;
+  height: 22px;
   margin-bottom: 5px;
+  padding: 0;
+  padding-left: 5px;
+}
+
+.shelf .field-label {
+  text-align: left;
+  min-width: 50px;
+  width: 50px;
+}
+
+.shelf .blank-pill {
+  color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+}
+
+.shelf .pill-dropzone {
+  background: white;
+  border-radius: 2px;
+  height: 100%;
+  margin: 0 5px;
+  width: 100%;
+}
+
+.shelf .pill {
+  background: #E4E6E8;
+}
+
+.data-select {
+  max-width: 100%;
+  width: 100%;
 }
 
 
 .background-1 {
-  background: #b1b582;
+  background: #FCFDFE;
 }
 
 .background-2 {
-  background: #8a9b77;
+  background: #36425C;
 }
 
 .background-3 {
-  background: #dfd2b0;
+  background: #E1E9F2;
+}
+
+.font-white {
+  color: white;
+}
+
+.clear-encoding {
+  align-items: center;
+  display: flex;
+  font-size: 12px;
+  justify-content: space-between;
+  width: 50px;
 }
