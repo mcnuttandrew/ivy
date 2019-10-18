@@ -4,6 +4,8 @@ import {Provider} from 'react-redux';
 
 import AppState from './reducers/index';
 import './stylesheets/main.css';
+import './stylesheets/rc-slider.css';
+
 import Root from './components/root';
 
 const appContainer = document.createElement('div');

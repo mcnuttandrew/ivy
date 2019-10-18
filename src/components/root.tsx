@@ -27,14 +27,17 @@ interface RootProps {
   selectedGUIMode?: string;
   currentlySelectedFile?: string;
 
-  loadDataFromPredefinedDatasets?: GenericAction;
-  changeSelectedFile?: GenericAction;
-  setEncodingParameter?: GenericAction;
-  clearEncoding?: GenericAction;
-  changeMarkType?: GenericAction;
-  setNewSpec?: GenericAction;
   addToNextOpenSlot?: GenericAction;
   changeGUIMode?: GenericAction;
+  changeMarkType?: GenericAction;
+  changeSelectedFile?: GenericAction;
+  clearEncoding?: GenericAction;
+  createFilter?: GenericAction;
+  loadDataFromPredefinedDatasets?: GenericAction;
+  updateFilter?: GenericAction;
+  deleteFilter?: GenericAction;
+  setEncodingParameter?: GenericAction;
+  setNewSpec?: GenericAction;
 }
 
 interface RootState {
@@ -88,6 +91,9 @@ class RootComponent extends React.Component<RootProps, RootState> {
       addToNextOpenSlot,
       selectedGUIMode,
       changeGUIMode,
+      createFilter,
+      updateFilter,
+      deleteFilter,
     } = this.props;
 
     return (
@@ -122,6 +128,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
                     columns={columns}
                     currentlySelectedFile={currentlySelectedFile}
                     changeSelectedFile={changeSelectedFile}
+                    createFilter={createFilter}
                     addToNextOpenSlot={addToNextOpenSlot}
                   />
                   <EncodingColumn
@@ -129,6 +136,8 @@ class RootComponent extends React.Component<RootProps, RootState> {
                     setEncodingParameter={setEncodingParameter}
                     clearEncoding={clearEncoding}
                     spec={spec}
+                    updateFilter={updateFilter}
+                    deleteFilter={deleteFilter}
                     columns={columns}
                     onDrop={(item: any) => {
                       setEncodingParameter(item);

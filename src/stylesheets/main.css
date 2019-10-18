@@ -22,6 +22,15 @@ h1, h2, h3, h4, h5 {
   display: flex;
   flex-direction: column;
 }
+.grid {
+  display: grid;
+}
+.grid-col-1 {
+  grid-column: 1;
+}
+.grid-col-2 {
+  grid-column: 2;
+}
 
 .full-width {
   width: 100%;
@@ -73,6 +82,8 @@ h1, h2, h3, h4, h5 {
 }
 
 .column {
+  max-height: 100%;
+  overflow-y: scroll;
   padding: 15px;
   width: 200px;
 }
@@ -174,5 +185,29 @@ h1, h2, h3, h4, h5 {
   width: 50px;
 }
 
-.code-container {
+.filter-container {
+  border: 2px solid #F1F1F1;
+  border-radius: 2px;
+}
+
+.filter-container .filter-header {
+  background: #F1F1F1;
+  font-size: 10px;
+  padding: 3px 6px;
+}
+
+.filter-container .filter-contents {
+  background: #FCFDFE;
+  font-size: 10px;
+  height: 100%;
+  max-height: 200px;
+  min-height: 35px;
+  overflow-y: scroll;
+  padding: 10px 6px;
+  width: calc(100% - 12px);
+}
+
+.filter-container .filter-contents .range-wrap {
+  padding: 0 10px;
+  height: 30px;
 }

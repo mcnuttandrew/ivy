@@ -1,6 +1,7 @@
 import {Dispatch} from 'redux';
 
 import VegaDataPreAlias from 'vega-datasets';
+import {getDomain, getUniques} from '../utils';
 const VegaData: {[key: string]: any} = VegaDataPreAlias;
 
 import {Analyzer} from 'type-analyzer';
@@ -26,6 +27,9 @@ export const changeMarkType = buildEasyAction('change-mark-type');
 export const setNewSpec = buildEasyAction('set-new-encoding');
 export const addToNextOpenSlot = buildEasyAction('add-to-next-open-slot');
 export const changeGUIMode = buildEasyAction('change-gui-mode');
+export const createFilter = buildEasyAction('create-filter');
+export const updateFilter = buildEasyAction('update-filter');
+export const deleteFilter = buildEasyAction('delete-filter');
 
 export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
   fetch(VegaData[fileName].url)
@@ -38,7 +42,12 @@ export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatc
 
       dispatch({
         type: 'recieve-type-inferences',
-        payload: computeColMeta(d),
+        payload: computeColMeta(d).map((columnMeta: any) => {
+          if (columnMeta.category === 'DIMENSION') {
+            return {...columnMeta, domain: getUniques(d, columnMeta.key)};
+          }
+          return {...columnMeta, domain: getDomain(d, columnMeta.key)};
+        }),
       });
     });
 };

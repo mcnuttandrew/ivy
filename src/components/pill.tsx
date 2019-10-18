@@ -20,6 +20,7 @@ export interface PillProps {
   containingShelf?: string;
   setEncodingParameter?: GenericAction;
   addToNextOpenSlot?: GenericAction;
+  createFilter?: GenericAction;
 }
 function getTypeSymbol(type: DataType): JSX.Element {
   switch (type) {
@@ -41,6 +42,7 @@ export default function Pill(props: PillProps) {
     containingField,
     addToNextOpenSlot,
     containingShelf,
+    createFilter,
   } = props;
   const [{opacity}, dragRef] = useDrag({
     item: {type: 'CARD', text: column.field, containingShelf},
@@ -55,7 +57,17 @@ export default function Pill(props: PillProps) {
       </div>
       <div className="fixed-symbol-width">{getTypeSymbol(column.type)}</div>
       <div className="pill-label">{column.field}</div>
-      <div className="fixed-symbol-width">{!inEncoding && <TiFilter />}</div>
+      <div
+        className="fixed-symbol-width"
+        onClick={() => {
+          if (inEncoding) {
+            return;
+          }
+          createFilter(column);
+        }}
+      >
+        {!inEncoding && <TiFilter />}
+      </div>
       {!inEncoding && (
         <div
           className="fixed-symbol-width"

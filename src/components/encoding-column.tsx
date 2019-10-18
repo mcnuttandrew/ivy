@@ -3,6 +3,7 @@ import {Spec} from 'vega-typings';
 import {FaEraser} from 'react-icons/fa';
 import {GenericAction} from '../actions/index';
 import Shelf from './shelf';
+import Filter from './filter';
 import {ColumnHeader} from '../types';
 
 interface EncodingColumnProps {
@@ -12,6 +13,8 @@ interface EncodingColumnProps {
   setEncodingParameter: GenericAction;
   clearEncoding: GenericAction;
   changeMarkType: GenericAction;
+  updateFilter: GenericAction;
+  deleteFilter: GenericAction;
 }
 export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render() {
@@ -22,6 +25,8 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       setEncodingParameter,
       clearEncoding,
       changeMarkType,
+      deleteFilter,
+      updateFilter,
     } = this.props;
     return (
       <div className="flex-down column full-height background-3">
@@ -92,6 +97,24 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           })}
         </div>
         <h1 className="section-title"> Filter </h1>
+        <div className="flex-down">
+          {spec.transform.map((filter: any, idx: number) => {
+            return (
+              <Filter
+                column={columns.find(
+                  ({field}) => field === filter.filter.field,
+                )}
+                spec={spec}
+                filter={filter}
+                key={`${idx}-filter`}
+                updateFilter={(newFilterValue: any) => {
+                  updateFilter({newFilterValue, idx});
+                }}
+                deleteFilter={() => deleteFilter(idx)}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   }

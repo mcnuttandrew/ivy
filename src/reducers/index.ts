@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import {Spec} from 'vega-typings';
 import {ColumnHeader, DataType} from '../types';
 import Immutable, {Map} from 'immutable';
+import {getUniques, getDomain} from '../utils';
 
 // interface InternalAppState {
 //   spec: Spec;
@@ -13,6 +14,7 @@ export type AppState = any;
 // TODO undo this embarrasment
 const EMPTY_SPEC = Immutable.fromJS({
   data: {name: 'myData'},
+  transform: [],
   mark: {
     type: 'circle',
   },
@@ -39,16 +41,36 @@ const recieveTypeInferences: ActionResponse = (state, payload) => {
     key: string,
     type: string,
     category: DataType,
+    domain: number[] | string[],
   };
-  const modifiedColumns = payload.map(({key, type, category}: DestructType) => {
-    const newHeader: ColumnHeader = {
-      field: key,
-      type: category,
-      secondaryType: type,
-    };
-    return newHeader;
-  });
-  return state.set('columns', modifiedColumns);
+  const modifiedColumns = payload.map(
+    ({key, type, category, domain}: DestructType) => {
+      const newHeader: ColumnHeader = {
+        field: key,
+        type: category,
+        secondaryType: type,
+        domain,
+      };
+      return newHeader;
+    },
+  );
+  const groupedColumns = modifiedColumns.reduce(
+    (acc: any, row: ColumnHeader) => {
+      acc[row.type] = acc[row.type].concat(row);
+      return acc;
+    },
+    {DIMENSION: [], MEASURE: [], TIME: []},
+  );
+  const orderedColumns = ['DIMENSION', 'TIME', 'MEASURE']
+    .map(key =>
+      groupedColumns[key].sort((a: ColumnHeader, b: ColumnHeader) => {
+        const textA = a.field.toUpperCase();
+        const textB = b.field.toUpperCase();
+        return textA < textB ? -1 : textA > textB ? 1 : 0;
+      }),
+    )
+    .reduce((acc, row) => acc.concat(row), []);
+  return state.set('columns', orderedColumns);
 };
 
 const changeSelectedFile: ActionResponse = (state, payload) => {
@@ -111,9 +133,43 @@ const addToNextOpenSlot: ActionResponse = (state, payload) => {
   if (!targetField) {
     return state;
   }
-  console.log(payload, encoding);
   encoding[targetField] = {field: payload.field, type: 'ordinal'};
   return state.setIn(['spec', 'encoding'], Immutable.fromJS(encoding));
+};
+
+const createFilter: ActionResponse = (state, payload) => {
+  const fieldHeader = state
+    .get('columns')
+    .find(({field}: {field: string}) => field === payload.field);
+  const isDim = fieldHeader.type === 'DIMENSION';
+  const newFilter: any = {
+    filter: {
+      field: payload.field,
+      // todo this is really slick, but we should probably be caching these values on load
+      [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(
+        state.get('data'),
+        payload.field,
+      ),
+    },
+  };
+
+  return state.updateIn(['spec', 'transform'], (arr: any) =>
+    arr.push(Immutable.fromJS(newFilter)),
+  );
+};
+
+const updateFilter: ActionResponse = (state, payload) => {
+  const {newFilterValue, idx} = payload;
+  const newVal = Immutable.fromJS(newFilterValue);
+  const oneOf = ['spec', 'transform', idx, 'filter', 'oneOf'];
+  if (state.getIn(oneOf)) {
+    return state.setIn(oneOf, newVal);
+  }
+  return state.setIn(['spec', 'transform', idx, 'filter', 'range'], newVal);
+};
+
+const deleteFilter: ActionResponse = (state, deleteIndex) => {
+  return state.deleteIn(['spec', 'transform', deleteIndex]);
 };
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
@@ -126,6 +182,9 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'set-new-encoding': setNewSpec,
   'add-to-next-open-slot': addToNextOpenSlot,
   'change-gui-mode': changeGUIMode,
+  'create-filter': createFilter,
+  'update-filter': updateFilter,
+  'delete-filter': deleteFilter,
 };
 const NULL_ACTION: ActionResponse = state => state;
 

@@ -11,6 +11,7 @@ interface DataColumnProps {
   currentlySelectedFile: string;
   changeSelectedFile: GenericAction;
   addToNextOpenSlot: GenericAction;
+  createFilter: GenericAction;
 }
 export default class DataColumn extends React.Component<DataColumnProps> {
   render() {
@@ -19,6 +20,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       currentlySelectedFile,
       changeSelectedFile,
       addToNextOpenSlot,
+      createFilter,
     } = this.props;
     return (
       <div className="flex-down column full-height background-2 font-white">
@@ -50,6 +52,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
                   column={column}
                   inEncoding={false}
                   addToNextOpenSlot={addToNextOpenSlot}
+                  createFilter={createFilter}
                 />
               </div>
             );

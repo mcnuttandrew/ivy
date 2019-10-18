@@ -4,6 +4,7 @@ export interface ColumnHeader {
   type: DataType;
   secondaryType: string;
   field: string;
+  domain: number[] | string[];
 }
 
 export type VegaMark =
