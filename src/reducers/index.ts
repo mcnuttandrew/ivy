@@ -23,6 +23,7 @@ const DEFAULT_STATE: AppState = Map({
   data: [],
   columns: [],
   currentlySelectedFile: 'cars.json',
+  selectedGUIMode: 'GRAMMAR',
 });
 
 interface ActionResponse {
@@ -85,6 +86,9 @@ const changeMarkType: ActionResponse = (state, payload) =>
 const setNewSpec: ActionResponse = (state, payload) =>
   state.set('spec', Immutable.fromJS(payload));
 
+const changeGUIMode: ActionResponse = (state, payload) =>
+  state.set('selectedGUIMode', payload);
+
 const addToNextOpenSlot: ActionResponse = (state, payload) => {
   // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
   const encoding = state.getIn(['spec', 'encoding']).toJS();
@@ -116,6 +120,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'change-mark-type': changeMarkType,
   'set-new-encoding': setNewSpec,
   'add-to-next-open-slot': addToNextOpenSlot,
+  'change-gui-mode': changeGUIMode,
 };
 const NULL_ACTION: ActionResponse = state => state;
 

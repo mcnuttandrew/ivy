@@ -9,6 +9,7 @@
     "node": ">=9.0.0"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.6",
     "@types/react": "^16.9.9",
     "@types/react-dom": "^16.9.2",
     "@types/react-redux": "^7.1.4",
@@ -29,6 +30,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.16.0",
+    "monaco-editor-webpack-plugin": "^1.7.0",
     "prettier": "^1.18.2",
     "source-map-loader": "^0.2.4",
     "style-loader": "0.13.1",
@@ -42,11 +44,13 @@
   },
   "dependencies": {
     "immutable": "^3.8.2",
+    "lodash.debounce": "^4.0.8",
     "react": "^16.10.2",
     "react-dnd": "^9.4.0",
     "react-dnd-html5-backend": "^9.4.0",
     "react-dom": "^16.8.6",
     "react-icons": "^3.7.0",
+    "react-monaco-editor": "^0.26.2",
     "react-redux": "^6.0.1",
     "react-vega": "^7.0.1",
     "redux": "^4.0.1",

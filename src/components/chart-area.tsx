@@ -7,10 +7,12 @@ interface ChartAreaProps {
   spec: any;
   data: any;
   setNewSpec: GenericAction;
+  height: number;
+  width: number;
 }
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render() {
-    const {spec, data, setNewSpec} = this.props;
+    const {spec, data, setNewSpec, width, height} = this.props;
     // todo listeners
     // todo automatical height inference
     return (

@@ -5,6 +5,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 h1, h2, h3, h4, h5 {
   margin: 0;
@@ -35,6 +36,7 @@ h1, h2, h3, h4, h5 {
 
 .chart-container {
   padding: 20px;
+  overflow: scroll;
 }
 
 .header {
@@ -46,6 +48,19 @@ h1, h2, h3, h4, h5 {
 .secondary-controls {
   background: lightgray;
   padding: 15px;
+}
+
+.mode-selector {
+  font-size: 12px;
+}
+
+.mode-selector .mode-option {
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.mode-selector .mode-option.selected-mode {
+  text-decoration: underline;
 }
 
 .section-title {
@@ -157,4 +172,7 @@ h1, h2, h3, h4, h5 {
   font-size: 12px;
   justify-content: space-between;
   width: 50px;
+}
+
+.code-container {
 }
