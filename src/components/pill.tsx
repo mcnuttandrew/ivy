@@ -17,6 +17,7 @@ export interface PillProps {
   column: ColumnHeader;
   containingField?: string;
   inEncoding: boolean;
+  containingShelf?: string;
   setEncodingParameter?: GenericAction;
   addToNextOpenSlot?: GenericAction;
 }
@@ -39,9 +40,10 @@ export default function Pill(props: PillProps) {
     setEncodingParameter,
     containingField,
     addToNextOpenSlot,
+    containingShelf,
   } = props;
   const [{opacity}, dragRef] = useDrag({
-    item: {type: 'CARD', text: column.field},
+    item: {type: 'CARD', text: column.field, containingShelf},
     collect: monitor => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),

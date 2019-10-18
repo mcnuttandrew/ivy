@@ -65,9 +65,10 @@ const setEncodingParam: ActionResponse = (state, payload) => {
   const fieldHeader = state
     .get('columns')
     .find(({field}: {field: string}) => field === payload.text);
-  // const spec = {...state.get('spec')};
+
+  let newState = state;
   if (fieldHeader) {
-    return state.setIn(
+    newState = state.setIn(
       ['spec', 'encoding', payload.field],
       Immutable.fromJS({
         field: payload.text,
@@ -75,9 +76,13 @@ const setEncodingParam: ActionResponse = (state, payload) => {
       }),
     );
   } else {
-    console.log('???');
-    return state.deleteIn(['spec', 'encoding', payload.field]);
+    newState = state.deleteIn(['spec', 'encoding', payload.field]);
   }
+  if (payload.containingShelf) {
+    newState = newState.deleteIn(['spec', 'encoding', payload.containingShelf]);
+  }
+
+  return newState;
 };
 
 const clearEncoding: ActionResponse = state => state.set('spec', EMPTY_SPEC);

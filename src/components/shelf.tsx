@@ -48,6 +48,7 @@ export default function Shelf({
         {currentField && (
           <Pill
             inEncoding={true}
+            containingShelf={field}
             setEncodingParameter={setEncodingParameter}
             containingField={field}
             column={columns.find(({field}) => field === currentField.field)}
