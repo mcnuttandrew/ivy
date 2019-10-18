@@ -1,5 +1,4 @@
 import React from 'react';
-import {Spec} from 'vega-typings';
 import {FaEraser} from 'react-icons/fa';
 import {GenericAction} from '../actions/index';
 import Shelf from './shelf';
@@ -104,7 +103,6 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
                 column={columns.find(
                   ({field}) => field === filter.filter.field,
                 )}
-                spec={spec}
                 filter={filter}
                 key={`${idx}-filter`}
                 updateFilter={(newFilterValue: any) => {

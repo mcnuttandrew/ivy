@@ -1,6 +1,6 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import {Spec} from 'vega-typings';
+// import {Spec} from 'vega-typings';
 import {ColumnHeader, DataType} from '../types';
 import Immutable, {Map} from 'immutable';
 import {getUniques, getDomain} from '../utils';

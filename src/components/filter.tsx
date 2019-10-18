@@ -5,14 +5,12 @@ import {Range} from 'rc-slider';
 interface FilterProps {
   column: any;
   filter: any;
-  spec: any;
   updateFilter: any;
   deleteFilter: any;
 }
 
 export default function Filter({
   column,
-  spec,
   filter,
   updateFilter,
   deleteFilter,
