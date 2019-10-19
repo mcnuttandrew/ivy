@@ -3,8 +3,6 @@ import {DiDatabase} from 'react-icons/di';
 import {GenericAction} from '../actions/index';
 import {ColumnHeader} from '../types';
 import Pill from './pill';
-import VegaDataPreAlias from 'vega-datasets';
-const VegaData: {[key: string]: any} = VegaDataPreAlias;
 
 interface DataColumnProps {
   columns: ColumnHeader[];
@@ -12,15 +10,16 @@ interface DataColumnProps {
   changeSelectedFile: GenericAction;
   addToNextOpenSlot: GenericAction;
   createFilter: GenericAction;
+  toggleDataModal: GenericAction;
 }
 export default class DataColumn extends React.Component<DataColumnProps> {
   render() {
     const {
       columns,
       currentlySelectedFile,
-      changeSelectedFile,
       addToNextOpenSlot,
       createFilter,
+      toggleDataModal,
     } = this.props;
     return (
       <div className="flex-down column full-height background-2 font-white">
@@ -30,19 +29,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
             <DiDatabase />
             <div className="section-subtitle"> {currentlySelectedFile}</div>
           </div>
-          <select
-            className="data-select"
-            value={currentlySelectedFile}
-            onChange={({target: {value}}) => changeSelectedFile(value)}
-          >
-            {Object.keys(VegaData).map(name => {
-              return (
-                <option value={name} key={name}>
-                  {name}
-                </option>
-              );
-            })}
-          </select>
+          <button onClick={toggleDataModal}>CHANGE</button>
         </div>
         <div className="flex-down">
           {columns.map(column => {

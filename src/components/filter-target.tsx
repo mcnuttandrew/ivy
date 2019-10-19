@@ -1,8 +1,5 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
-import {GenericAction} from '../actions/index';
-import Pill from './pill';
-import {ColumnHeader} from '../types';
 
 interface FilterTargetProps {
   onDrop: any;

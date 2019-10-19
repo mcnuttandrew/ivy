@@ -26,6 +26,7 @@ const DEFAULT_STATE: AppState = Map({
   columns: [],
   currentlySelectedFile: 'cars.json',
   selectedGUIMode: 'GRAMMAR',
+  dataModalOpen: false,
 });
 
 interface ActionResponse {
@@ -172,6 +173,9 @@ const deleteFilter: ActionResponse = (state, deleteIndex) => {
   return state.deleteIn(['spec', 'transform', deleteIndex]);
 };
 
+const toggleDataModal: ActionResponse = state =>
+  state.set('dataModalOpen', !state.get('dataModalOpen'));
+
 const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-data-from-predefined': recieveDataFromPredefinedDatasets,
   'recieve-type-inferences': recieveTypeInferences,
@@ -185,6 +189,8 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'create-filter': createFilter,
   'update-filter': updateFilter,
   'delete-filter': deleteFilter,
+  // TODO exrract UI controls into their own reducer
+  'toggle-data-modal': toggleDataModal,
 };
 const NULL_ACTION: ActionResponse = state => state;
 

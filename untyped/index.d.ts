@@ -1,4 +1,5 @@
 declare module 'type-analyzer';
+declare module 'hoopoe';
 // TODO i guess
 //  {
 //   // export type Data = {[key: string]: string}[];

@@ -19,17 +19,21 @@ import Header from './header';
 import DataColumn from './data-column';
 import ChartArea from './chart-area';
 import EncodingColumn from './encoding-column';
+import DataModal from './data-modal';
 
+// TODO root props shouldn't all be optional, fix
 interface RootProps {
   columns?: ColumnHeader[];
   spec?: Spec;
   data?: any; //TODO: define the data type
   selectedGUIMode?: string;
   currentlySelectedFile?: string;
+  dataModalOpen?: boolean;
 
   addToNextOpenSlot?: GenericAction;
   changeGUIMode?: GenericAction;
   changeMarkType?: GenericAction;
+  chainActions?: GenericAction;
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
   createFilter?: GenericAction;
@@ -38,6 +42,7 @@ interface RootProps {
   deleteFilter?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
+  toggleDataModal?: GenericAction;
 }
 
 interface RootState {
@@ -78,26 +83,37 @@ class RootComponent extends React.Component<RootProps, RootState> {
 
   render() {
     const {menuWidth, menuHeight, mainHeight, mainWidth} = this.state;
+    // TODO alphabetize
     const {
-      columns,
-      data,
-      spec,
-      currentlySelectedFile,
-      changeSelectedFile,
-      setEncodingParameter,
-      clearEncoding,
-      changeMarkType,
-      setNewSpec,
       addToNextOpenSlot,
-      selectedGUIMode,
+      columns,
+      changeSelectedFile,
+      changeMarkType,
       changeGUIMode,
+      chainActions,
+      clearEncoding,
       createFilter,
-      updateFilter,
+      currentlySelectedFile,
+      data,
+      dataModalOpen,
       deleteFilter,
+      selectedGUIMode,
+      spec,
+      setEncodingParameter,
+      setNewSpec,
+      updateFilter,
+      toggleDataModal,
     } = this.props;
 
     return (
       <div className="flex-down full-width full-height">
+        {dataModalOpen && (
+          <DataModal
+            toggleDataModal={toggleDataModal}
+            changeSelectedFile={changeSelectedFile}
+            chainActions={chainActions}
+          />
+        )}
         <Header />
         <div className="flex full-height">
           <div className="flex-down full-height" ref="menuContainer">
@@ -130,6 +146,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
                     changeSelectedFile={changeSelectedFile}
                     createFilter={createFilter}
                     addToNextOpenSlot={addToNextOpenSlot}
+                    toggleDataModal={toggleDataModal}
                   />
                   <EncodingColumn
                     changeMarkType={changeMarkType}
@@ -181,6 +198,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     spec: base.get('spec').toJS(),
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),
+    dataModalOpen: base.get('dataModalOpen'),
   };
 }
 

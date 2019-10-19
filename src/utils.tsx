@@ -1,3 +1,12 @@
+import React from 'react';
+import {
+  TiSortNumerically,
+  TiSortAlphabetically,
+  TiCalendar,
+} from 'react-icons/ti';
+
+import {DataType} from './types';
+
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
     .filter(name => classObject[name])
@@ -25,5 +34,24 @@ export function getDomain(data: any, field: string): number[] {
       },
       {min: Infinity, max: -Infinity},
     ),
+  );
+}
+
+export function getTypeSymbol(type: DataType): JSX.Element {
+  switch (type) {
+    case 'MEASURE':
+      return <TiSortNumerically />;
+    case 'TIME':
+      return <TiCalendar />;
+    default:
+    case 'DIMENSION':
+      return <TiSortAlphabetically />;
+  }
+}
+
+export function executePromisesInSeries(tasks: any) {
+  return tasks.reduce(
+    (promiseChain: any, task: any): any => promiseChain.then(task),
+    Promise.resolve([]),
   );
 }

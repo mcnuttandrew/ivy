@@ -1,17 +1,12 @@
 import React from 'react';
 
 import {GoPlus, GoTriangleDown} from 'react-icons/go';
-import {
-  TiFilter,
-  TiSortNumerically,
-  TiSortAlphabetically,
-  TiCalendar,
-  TiDeleteOutline,
-} from 'react-icons/ti';
+import {TiFilter, TiDeleteOutline} from 'react-icons/ti';
 
 import {GenericAction} from '../actions/index';
 import {useDrag} from 'react-dnd';
-import {ColumnHeader, DataType} from '../types';
+import {ColumnHeader} from '../types';
+import {getTypeSymbol} from '../utils';
 
 export interface PillProps {
   column: ColumnHeader;
@@ -21,17 +16,6 @@ export interface PillProps {
   setEncodingParameter?: GenericAction;
   addToNextOpenSlot?: GenericAction;
   createFilter?: GenericAction;
-}
-function getTypeSymbol(type: DataType): JSX.Element {
-  switch (type) {
-    case 'MEASURE':
-      return <TiSortNumerically />;
-    case 'TIME':
-      return <TiCalendar />;
-    default:
-    case 'DIMENSION':
-      return <TiSortAlphabetically />;
-  }
 }
 
 export default function Pill(props: PillProps) {

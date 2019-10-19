@@ -1,7 +1,7 @@
 import {Dispatch} from 'redux';
 
 import VegaDataPreAlias from 'vega-datasets';
-import {getDomain, getUniques} from '../utils';
+import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 const VegaData: {[key: string]: any} = VegaDataPreAlias;
 
 import {Analyzer} from 'type-analyzer';
@@ -30,6 +30,18 @@ export const changeGUIMode = buildEasyAction('change-gui-mode');
 export const createFilter = buildEasyAction('create-filter');
 export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
+
+export const toggleDataModal = buildEasyAction('toggle-data-modal');
+
+export const chainActions = (actions: GenericAction[]) => (
+  dispatch: Dispatch,
+) => {
+  executePromisesInSeries(
+    actions.map((action: GenericAction) => {
+      return () => Promise.resolve().then(() => action(dispatch));
+    }),
+  );
+};
 
 export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
   const url = `node_modules/vega-datasets/data/${fileName}`;
