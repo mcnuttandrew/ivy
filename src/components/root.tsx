@@ -5,6 +5,8 @@ import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import debounce from 'lodash.debounce';
 
+import {SHOW_SECONDARY_CONTROLS} from '../constants/CONFIG';
+
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
 
@@ -25,6 +27,7 @@ import DataModal from './data-modal';
 interface RootProps {
   columns?: ColumnHeader[];
   spec?: Spec;
+  specCode?: string;
   data?: any; //TODO: define the data type
   selectedGUIMode?: string;
   currentlySelectedFile?: string;
@@ -42,6 +45,7 @@ interface RootProps {
   deleteFilter?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
+  setNewSpecCode?: GenericAction;
   toggleDataModal?: GenericAction;
 }
 
@@ -99,8 +103,10 @@ class RootComponent extends React.Component<RootProps, RootState> {
       deleteFilter,
       selectedGUIMode,
       spec,
+      specCode,
       setEncodingParameter,
       setNewSpec,
+      setNewSpecCode,
       updateFilter,
       toggleDataModal,
     } = this.props;
@@ -117,26 +123,39 @@ class RootComponent extends React.Component<RootProps, RootState> {
         <Header />
         <div className="flex full-height">
           <div className="flex-down full-height" ref="menuContainer">
-            <div className="secondary-controls flex-down">
-              <h5>SECONDARY CONTROLS</h5>
-              <div className="mode-selector flex">
-                Mode:{' '}
-                {['GRAMMAR', 'PROGRAMMATIC'].map(mode => {
-                  return (
-                    <div
-                      key={mode}
-                      onClick={() => changeGUIMode(mode)}
-                      className={classnames({
-                        'mode-option': true,
-                        'selected-mode': mode === selectedGUIMode,
-                      })}
-                    >
-                      {mode}
-                    </div>
-                  );
-                })}
+            {SHOW_SECONDARY_CONTROLS && (
+              <div className="secondary-controls flex-down">
+                <h5>SECONDARY CONTROLS</h5>
+                <div className="mode-selector flex">
+                  Mode:{' '}
+                  {['GRAMMAR', 'PROGRAMMATIC'].map(mode => {
+                    return (
+                      <div
+                        key={mode}
+                        onClick={() => {
+                          changeGUIMode(mode);
+                          console.log(spec);
+                          /* chainActions([
+                          () =>
+                            setNewSpecCode({
+                              code: JSON.stringify(spec, null, 2),
+                              inError: false,
+                            }),
+                          () => changeGUIMode(mode),
+                        ]); */
+                        }}
+                        className={classnames({
+                          'mode-option': true,
+                          'selected-mode': mode === selectedGUIMode,
+                        })}
+                      >
+                        {mode}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
             {selectedGUIMode === 'GRAMMAR' && (
               <div className="flex full-height">
                 <DndProvider backend={HTML5Backend}>
@@ -167,11 +186,12 @@ class RootComponent extends React.Component<RootProps, RootState> {
               </div>
             )}
             {selectedGUIMode === 'PROGRAMMATIC' && (
-              <div className="flex full-height">
+              <div className="flex full-height two-column">
                 <CodeEditor
+                  setNewSpecCode={setNewSpecCode}
                   height={menuHeight - 65}
                   width={menuWidth}
-                  currentCode={JSON.stringify(spec, null, 2)}
+                  currentCode={specCode}
                 />
               </div>
             )}
@@ -196,6 +216,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     columns: base.get('columns'),
     data: base.get('data'),
     spec: base.get('spec').toJS(),
+    specCode: base.get('specCode'),
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),

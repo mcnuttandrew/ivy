@@ -22,10 +22,12 @@ const EMPTY_SPEC = Immutable.fromJS({
 });
 const DEFAULT_STATE: AppState = Map({
   spec: EMPTY_SPEC,
+  specCode: JSON.stringify(EMPTY_SPEC, null, 2),
   data: [],
   columns: [],
   currentlySelectedFile: 'cars.json',
   selectedGUIMode: 'GRAMMAR',
+  // selectedGUIMode: 'PROGRAMMATIC',
   dataModalOpen: false,
 });
 
@@ -111,6 +113,16 @@ const setEncodingParam: ActionResponse = (state, payload) => {
 const clearEncoding: ActionResponse = state => state.set('spec', EMPTY_SPEC);
 const changeMarkType: ActionResponse = (state, payload) =>
   state.setIn(['spec', 'mark', 'type'], payload);
+const setNewSpecCode: ActionResponse = (state, payload) => {
+  const {code, inError} = payload;
+  if (inError) {
+    return state.set('specCode', code);
+  }
+  return state
+    .set('specCode', code)
+    .set('spec', Immutable.fromJS(JSON.parse(code)));
+};
+
 const setNewSpec: ActionResponse = (state, payload) =>
   state.set('spec', Immutable.fromJS(payload));
 
@@ -184,6 +196,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'clear-encoding': clearEncoding,
   'change-mark-type': changeMarkType,
   'set-new-encoding': setNewSpec,
+  'set-new-encoding-code': setNewSpecCode,
   'add-to-next-open-slot': addToNextOpenSlot,
   'change-gui-mode': changeGUIMode,
   'create-filter': createFilter,
