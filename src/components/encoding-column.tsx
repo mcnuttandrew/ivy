@@ -3,12 +3,14 @@ import {FaEraser} from 'react-icons/fa';
 import {GenericAction} from '../actions/index';
 import Shelf from './shelf';
 import Filter from './filter';
+import FilterTarget from './filter-target';
 import {ColumnHeader} from '../types';
 
 interface EncodingColumnProps {
   spec: any;
   columns: ColumnHeader[];
   onDrop: any;
+  onDropFilter: any;
   setEncodingParameter: GenericAction;
   clearEncoding: GenericAction;
   changeMarkType: GenericAction;
@@ -26,6 +28,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       changeMarkType,
       deleteFilter,
       updateFilter,
+      onDropFilter,
     } = this.props;
     return (
       <div className="flex-down column full-height background-3">
@@ -112,6 +115,9 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
               />
             );
           })}
+        </div>
+        <div>
+          <FilterTarget onDrop={onDropFilter} />
         </div>
       </div>
     );

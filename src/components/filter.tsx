@@ -30,7 +30,7 @@ export default function Filter({
     <div className="flex-down filter-container">
       <div className="flex space-between filter-header">
         <div>{field}</div>
-        <div onClick={deleteFilter}>
+        <div onClick={deleteFilter} className="filter-cancel">
           <TiDeleteOutline />
         </div>
       </div>
@@ -62,6 +62,7 @@ export default function Filter({
                 allowCross={false}
                 min={domain[0]}
                 max={domain[1]}
+                step={(domain[1] - domain[0]) / 100}
                 marks={{[domain[0]]: domain[0], [domain[1]]: domain[1]}}
                 defaultValue={range}
                 onChange={(x: number[]) => updateFilter(x)}

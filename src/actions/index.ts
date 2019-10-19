@@ -32,7 +32,8 @@ export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
 
 export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
-  fetch(VegaData[fileName].url)
+  const url = `node_modules/vega-datasets/data/${fileName}`;
+  fetch(url)
     .then(d => d.json())
     .then(d => {
       dispatch({

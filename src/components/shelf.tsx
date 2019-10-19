@@ -29,12 +29,7 @@ export default function Shelf({
   });
 
   const isActive = isOver && canDrop;
-  let backgroundColor = null;
-  if (isActive) {
-    backgroundColor = 'darkgreen';
-  } else if (canDrop) {
-    backgroundColor = 'darkkhaki';
-  }
+  const backgroundColor = isActive ? 'darkgreen' : canDrop ? 'darkkhaki' : null;
 
   return (
     <div ref={drop} className="shelf flex">

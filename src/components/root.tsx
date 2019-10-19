@@ -142,6 +142,9 @@ class RootComponent extends React.Component<RootProps, RootState> {
                     onDrop={(item: any) => {
                       setEncodingParameter(item);
                     }}
+                    onDropFilter={(item: any) =>
+                      createFilter({field: item.text})
+                    }
                   />
                 </DndProvider>
               </div>
