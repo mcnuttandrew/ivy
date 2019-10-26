@@ -1,8 +1,6 @@
 import {Dispatch} from 'redux';
-
-import VegaDataPreAlias from 'vega-datasets';
+import {csvParse} from 'd3-dsv';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
-const VegaData: {[key: string]: any} = VegaDataPreAlias;
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
@@ -44,26 +42,60 @@ export const chainActions = (actions: GenericAction[]) => (
   );
 };
 
+const csvReader = (data: string) => csvParse(data);
+const jsonReader = (data: string) => JSON.parse(data);
+const getReader = (fileName: string) => {
+  if (fileName.includes('.csv')) {
+    return csvReader;
+  }
+  if (fileName.includes('.json')) {
+    return jsonReader;
+  }
+  return (): any[] => [];
+};
+
 export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
   const url = `node_modules/vega-datasets/data/${fileName}`;
   fetch(url)
-    .then(d => d.json())
+    .then(d => d.text())
+    .then(d => getReader(fileName)(d))
     .then(d => {
       dispatch({
-        type: 'recieve-data-from-predefined',
+        type: 'recieve-data',
         payload: d,
       });
 
-      dispatch({
-        type: 'recieve-type-inferences',
-        payload: computeColMeta(d).map((columnMeta: any) => {
-          if (columnMeta.category === 'DIMENSION') {
-            return {...columnMeta, domain: getUniques(d, columnMeta.key)};
-          }
-          return {...columnMeta, domain: getDomain(d, columnMeta.key)};
-        }),
-      });
+      generateTypeInferences(d)(dispatch);
     });
+};
+
+export const loadCustomDataset: GenericAction = file => dispatch => {
+  const {fileName, data} = file;
+  dispatch({
+    type: 'change-selected-file',
+    payload: fileName,
+  });
+  getReader(fileName)(data);
+
+  const liveData = getReader(fileName)(data);
+  dispatch({
+    type: 'recieve-data',
+    payload: liveData,
+  });
+  generateTypeInferences(liveData)(dispatch);
+};
+
+export const generateTypeInferences: GenericAction = data => dispatch => {
+  dispatch({
+    type: 'recieve-type-inferences',
+    payload: computeColMeta(data).map((columnMeta: any) => {
+      const isDimension = columnMeta.category === 'DIMENSION';
+      return {
+        ...columnMeta,
+        domain: (isDimension ? getUniques : getDomain)(data, columnMeta.key),
+      };
+    }),
+  });
 };
 
 export const changeSelectedFile: GenericAction = fileName => dispatch => {
@@ -73,16 +105,3 @@ export const changeSelectedFile: GenericAction = fileName => dispatch => {
   });
   loadDataFromPredefinedDatasets(fileName)(dispatch);
 };
-
-// example action
-// export const setPageId = payload => dispatch => {
-//   dispatch({type: 'set-page-id', payload});
-//   getTreeForId(payload)
-//     .then(result => dispatch({
-//       type: 'get-tree-from-cache',
-//       payload: {
-//         data: result,
-//         pageId: payload
-//       }
-//     }));
-// };

@@ -37,7 +37,7 @@ const DEFAULT_STATE: AppState = Map({
 interface ActionResponse {
   (state: AppState, payload: any): AppState;
 }
-const recieveDataFromPredefinedDatasets: ActionResponse = (state, payload) => {
+const recieveData: ActionResponse = (state, payload) => {
   // this might be the wrong way to do this? it sort of depends on the internals of that vega component
   return state.set('data', payload).set('spec', EMPTY_SPEC);
 };
@@ -193,7 +193,7 @@ const toggleDataModal: ActionResponse = state =>
   state.set('dataModalOpen', !state.get('dataModalOpen'));
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
-  'recieve-data-from-predefined': recieveDataFromPredefinedDatasets,
+  'recieve-data': recieveData,
   'recieve-type-inferences': recieveTypeInferences,
   'change-selected-file': changeSelectedFile,
   'set-encoding-param': setEncodingParameter,

@@ -1,16 +1,24 @@
 const {getFile, writeFile} = require('hoopoe');
 const {Analyzer} = require('type-analyzer');
+const {csvParse} = require('d3-dsv');
 const {computeColMeta} = Analyzer;
 const vegaDataSet = require('vega-datasets');
 
+const csvReader = data => csvParse(data);
+const jsonReader = data => JSON.parse(data);
+const getReader = fileName => {
+  if (fileName.includes('.csv')) {
+    return csvReader;
+  }
+  if (fileName.includes('.json')) {
+    return jsonReader;
+  }
+  return () => [];
+};
 Promise.all(
   Object.keys(vegaDataSet).map(key => {
-    if (key.includes('.csv')) {
-      // console.log('csv', key);
-      return;
-    }
     return getFile(`./node_modules/vega-datasets/data/${key}`)
-      .then(d => JSON.parse(d))
+      .then(d => getReader(key)(d))
       .then(file => [computeColMeta(file), file])
       .then(([colMeta, file]) =>
         colMeta.reduce(
@@ -36,13 +44,4 @@ Promise.all(
     './src/constants/vega-datasets-counts.json',
     JSON.stringify(fullCounts, null, 2),
   );
-  // const fullCounts = results
-  //   .filter(d => d)
-  //   .reduce((acc, row) => {
-  //     Object.entries(row).forEach(([category, count]) => {
-  //       acc[category] = (acc[category] || 0) + count;
-  //     });
-  //     return acc;
-  //   }, {filesCounted: });
-  // console.log(fullCounts);
 });

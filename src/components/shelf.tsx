@@ -78,7 +78,6 @@ export default function Shelf(props: ShelfProps) {
             ? Object.entries(configurationOptions[field])
             : []
           ).map(([optionType, options]: [any, any]) => {
-            console.log(field, optionType, spec.encoding[field][optionType]);
             return (
               <div key={optionType} className="option-row flex">
                 {optionType}

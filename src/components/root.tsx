@@ -40,6 +40,7 @@ interface RootProps {
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
   createFilter?: GenericAction;
+  loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
@@ -101,6 +102,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
       data,
       dataModalOpen,
       deleteFilter,
+      loadCustomDataset,
       selectedGUIMode,
       spec,
       specCode,
@@ -118,6 +120,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
             toggleDataModal={toggleDataModal}
             changeSelectedFile={changeSelectedFile}
             chainActions={chainActions}
+            loadCustomDataset={loadCustomDataset}
           />
         )}
         <Header />
