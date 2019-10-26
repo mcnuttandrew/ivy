@@ -125,6 +125,10 @@ h1, h2, h3, h4, h5 {
   max-width: 100%;
 }
 
+.shelf-container {
+  margin-bottom: 5px;
+}
+
 .shelf {
   align-items: center;
   background: #BFC7D4;
@@ -132,9 +136,29 @@ h1, h2, h3, h4, h5 {
   border-radius: 5px;
   font-size: 10px;
   height: 22px;
-  margin-bottom: 5px;
+
   padding: 0;
   padding-left: 5px;
+  z-index: 1;
+}
+
+.shelf-configuration {
+  display: flex;
+  padding: 5px;
+  background: rgba(191, 199, 212, 0.5);
+  top: -5px;
+  position: relative;
+  align-items: center;
+  border-radius: 5px;
+  z-index: 0;
+}
+
+.shelf-configuration .option-row {
+  font-size: 10px;
+}
+
+.shelf-configuration .clear-option {
+  font-size: 20px;
 }
 
 .shelf .field-label {

@@ -13,7 +13,6 @@ import {GenericAction} from '../actions/index';
 import {Spec} from 'vega-typings';
 import {ColumnHeader} from '../types';
 import {AppState} from '../reducers/index';
-import {classnames} from '../utils';
 
 import CodeEditor from './code-editor';
 
@@ -22,6 +21,7 @@ import DataColumn from './data-column';
 import ChartArea from './chart-area';
 import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
+import SecondaryControls from './secondary-controls';
 
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
@@ -124,37 +124,12 @@ class RootComponent extends React.Component<RootProps, RootState> {
         <div className="flex full-height">
           <div className="flex-down full-height" ref="menuContainer">
             {SHOW_SECONDARY_CONTROLS && (
-              <div className="secondary-controls flex-down">
-                <h5>SECONDARY CONTROLS</h5>
-                <div className="mode-selector flex">
-                  Mode:{' '}
-                  {['GRAMMAR', 'PROGRAMMATIC'].map(mode => {
-                    return (
-                      <div
-                        key={mode}
-                        onClick={() => {
-                          changeGUIMode(mode);
-                          console.log(spec);
-                          /* chainActions([
-                          () =>
-                            setNewSpecCode({
-                              code: JSON.stringify(spec, null, 2),
-                              inError: false,
-                            }),
-                          () => changeGUIMode(mode),
-                        ]); */
-                        }}
-                        className={classnames({
-                          'mode-option': true,
-                          'selected-mode': mode === selectedGUIMode,
-                        })}
-                      >
-                        {mode}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              <SecondaryControls
+                selectedGUIMode={selectedGUIMode}
+                spec={spec}
+                setNewSpecCode={setNewSpecCode}
+                changeGUIMode={changeGUIMode}
+              />
             )}
             {selectedGUIMode === 'GRAMMAR' && (
               <div className="flex full-height">

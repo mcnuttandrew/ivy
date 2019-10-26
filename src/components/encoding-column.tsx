@@ -49,6 +49,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
                 key={channel}
                 columns={columns}
                 onDrop={onDrop}
+                spec={spec}
               />
             );
           })}
@@ -94,6 +95,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
                 key={channel}
                 columns={columns}
                 onDrop={onDrop}
+                spec={spec}
               />
             );
           })}

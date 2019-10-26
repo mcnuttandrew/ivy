@@ -18,7 +18,10 @@ const EMPTY_SPEC = Immutable.fromJS({
   mark: {
     type: 'circle',
   },
-  encoding: {},
+  encoding: {
+    x: {},
+    y: {},
+  },
 });
 const DEFAULT_STATE: AppState = Map({
   spec: EMPTY_SPEC,
@@ -142,7 +145,9 @@ const addToNextOpenSlot: ActionResponse = (state, payload) => {
     'shape',
     'detail',
     'text',
-  ].find(field => !encoding[field]);
+  ].find(field => {
+    return !encoding[field] || JSON.stringify(encoding[field]) === '{}';
+  });
   if (!targetField) {
     return state;
   }

@@ -1,1 +1,1 @@
-export const SHOW_SECONDARY_CONTROLS = false;
+export const SHOW_SECONDARY_CONTROLS = true;

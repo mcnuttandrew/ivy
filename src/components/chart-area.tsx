@@ -32,10 +32,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         </div>
         <div className="chart-container full-width full-height">
           <VegaLite
-            spec={spec}
+            spec={{...spec, height: 500, width: 500, padding: 50}}
             data={{myData: data}}
-            height={500}
-            width={500}
           />
         </div>
       </div>
