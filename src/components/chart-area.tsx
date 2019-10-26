@@ -1,6 +1,6 @@
 import React from 'react';
 import {VegaLite} from 'react-vega';
-
+import {VegaTheme} from '../types';
 import {GenericAction} from '../actions/index';
 
 const DEFAULT_CONFIG = {
@@ -15,12 +15,14 @@ interface ChartAreaProps {
   setNewSpec: GenericAction;
   height: number;
   width: number;
+  currentTheme: VegaTheme;
 }
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render() {
-    const {spec, data, setNewSpec} = this.props;
+    const {spec, data, setNewSpec, currentTheme} = this.props;
     // todo listeners
     // todo automatical height inference
+    console.log(currentTheme);
     return (
       <div className="flex-down center full-width full-height">
         <div className="chart-controls full-width">
@@ -40,6 +42,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           <VegaLite
             spec={{...spec, config: DEFAULT_CONFIG, padding: 50}}
             data={{myData: data}}
+            theme={currentTheme}
           />
         </div>
       </div>

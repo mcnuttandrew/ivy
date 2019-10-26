@@ -20,3 +20,5 @@ export type VegaMark =
   | 'symbol'
   | 'text'
   | 'trail';
+
+export type VegaTheme = 'excel' | 'ggplot2' | 'quartz' | 'vox' | 'dark';

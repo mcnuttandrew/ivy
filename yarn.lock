@@ -7229,7 +7229,7 @@ vega-statistics@^1.2.5, vega-statistics@^1.4.0, vega-statistics@^1.6.1:
   dependencies:
     d3-array "^2.3.2"
 
-vega-themes@^2.3.2:
+vega-themes@^2.3.2, vega-themes@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/vega-themes/-/vega-themes-2.5.0.tgz#464d0715a54c48591cd6340c28b0c4c9d39b1571"
   integrity sha512-mkyYhcRhmMBWLfvCBPTVx0S/OnxeIfVY/TmFfYP5sPdW8X1kMyHtLI34bMhzosPrkhNyHsC8FNHJyU/dOQnX4A==

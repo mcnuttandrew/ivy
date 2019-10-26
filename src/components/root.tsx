@@ -11,7 +11,7 @@ import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
 
 import {Spec} from 'vega-typings';
-import {ColumnHeader} from '../types';
+import {ColumnHeader, VegaTheme} from '../types';
 import {AppState} from '../reducers/index';
 
 import CodeEditor from './code-editor';
@@ -31,11 +31,13 @@ interface RootProps {
   data?: any; //TODO: define the data type
   selectedGUIMode?: string;
   currentlySelectedFile?: string;
+  currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
 
   addToNextOpenSlot?: GenericAction;
   changeGUIMode?: GenericAction;
   changeMarkType?: GenericAction;
+  changeTheme?: GenericAction;
   chainActions?: GenericAction;
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
@@ -95,10 +97,12 @@ class RootComponent extends React.Component<RootProps, RootState> {
       changeSelectedFile,
       changeMarkType,
       changeGUIMode,
+      changeTheme,
       chainActions,
       clearEncoding,
       createFilter,
       currentlySelectedFile,
+      currentTheme,
       data,
       dataModalOpen,
       deleteFilter,
@@ -128,6 +132,8 @@ class RootComponent extends React.Component<RootProps, RootState> {
           <div className="flex-down full-height" ref="menuContainer">
             {SHOW_SECONDARY_CONTROLS && (
               <SecondaryControls
+                currentTheme={currentTheme}
+                changeTheme={changeTheme}
                 selectedGUIMode={selectedGUIMode}
                 spec={spec}
                 setNewSpecCode={setNewSpecCode}
@@ -180,6 +186,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
             height={mainHeight}
             width={mainWidth}
             setNewSpec={setNewSpec}
+            currentTheme={currentTheme}
             ref="mainContainer"
           />
         </div>
@@ -198,6 +205,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
+    currentTheme: base.get('currentTheme'),
   };
 }
 

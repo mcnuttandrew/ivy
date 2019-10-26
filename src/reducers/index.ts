@@ -32,6 +32,7 @@ const DEFAULT_STATE: AppState = Map({
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',
   dataModalOpen: false,
+  currentTheme: 'urbaninstitute',
 });
 
 interface ActionResponse {
@@ -191,6 +192,8 @@ const deleteFilter: ActionResponse = (state, deleteIndex) => {
 
 const toggleDataModal: ActionResponse = state =>
   state.set('dataModalOpen', !state.get('dataModalOpen'));
+const changeTheme: ActionResponse = (state, payload) =>
+  state.set('currentTheme', payload);
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-data': recieveData,
@@ -209,6 +212,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   // TODO exrract UI controls into their own reducer
   'change-gui-mode': changeGUIMode,
   'toggle-data-modal': toggleDataModal,
+  'change-theme': changeTheme,
 };
 const NULL_ACTION: ActionResponse = state => state;
 

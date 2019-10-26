@@ -66,19 +66,20 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
               onChange={({target: {value}}) => changeMarkType(value)}
             >
               {[
-                'bar',
-                'circle',
-                'square',
-                'tick',
-                'line',
                 'area',
-                'point',
-                'geoshape',
-                'rule',
-                'text',
+                'bar',
                 'boxplot',
+                'circle',
                 'errorband',
                 'errorbar',
+                'geoshape',
+                'line',
+                'point',
+                'rect',
+                'rule',
+                'square',
+                'tick',
+                'text',
               ].map((mark: string) => {
                 return (
                   <option value={mark} key={mark}>
