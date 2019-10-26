@@ -53,12 +53,12 @@ export default function Shelf(props: ShelfProps) {
       <div className="shelf flex">
         <div className="field-label flex space-around">
           <div>{field} </div>
-          <div
-            className="label-control"
-            onClick={() => toggleConfiguration(!configurationOpen)}
-          >
-            <IoIosOptions />
-          </div>
+          {/* <div
+              className="label-control"
+              onClick={() => toggleConfiguration(!configurationOpen)}
+              >
+                <IoIosOptions />
+              </div> */}
         </div>
         <div className="pill-dropzone">
           {!definedField && (
@@ -82,22 +82,31 @@ export default function Shelf(props: ShelfProps) {
           {(configurationOptions[field] || [])
             .filter((option: EncodingOption) => option.predicate(iMspec))
             .map((option: EncodingOption) => {
-              const {optionType, options, optionSetter, optionGetter} = option;
+              const {
+                optionType,
+                options,
+                optionSetter,
+                optionGetter,
+                optionDefault,
+              } = option;
               return (
                 <div key={optionType} className="option-row flex">
-                  {optionType}
-                  <div className="flex">
-                    <Selector
-                      options={options}
-                      selectedValue={optionGetter(iMspec) || ''}
-                      onChange={(value: any) =>
-                        setNewSpec(optionSetter(iMspec, value))
-                      }
-                    />
+                  <div className="option-row-label">{optionType}</div>
+                  <Selector
+                    options={options}
+                    selectedValue={optionGetter(iMspec) || ''}
+                    onChange={(value: any) =>
+                      setNewSpec(optionSetter(iMspec, value))
+                    }
+                  />
 
-                    <div className="clear-option">
-                      <TiDeleteOutline />
-                    </div>
+                  <div
+                    className="clear-option"
+                    onClick={() =>
+                      setNewSpec(optionSetter(iMspec, optionDefault))
+                    }
+                  >
+                    <TiDeleteOutline />
                   </div>
                 </div>
               );

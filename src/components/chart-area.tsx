@@ -42,6 +42,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             spec={{...spec, config: DEFAULT_CONFIG, padding: 50}}
             data={{myData: data}}
             theme={currentTheme}
+            actions={false}
           />
         </div>
       </div>

@@ -1,5 +1,18 @@
 import Immutable from 'immutable';
 
+export interface OptionValue {
+  display: string;
+  value: string;
+}
+export interface EncodingOption {
+  optionType: string;
+  options: OptionValue[];
+  optionSetter: (spec: any, selectedOption: string) => any;
+  optionGetter: (spec: any) => string;
+  optionDefault: string;
+  predicate: (spec: any) => Boolean;
+}
+
 import {VegaMark} from './types';
 export const marks: VegaMark[] = [
   'arc',
@@ -26,18 +39,23 @@ const spatialAggs = [
   {display: 'median', value: 'median'},
   {display: 'mode', value: 'mode'},
 ];
+const toOption = (x: string): OptionValue => ({display: x, value: x});
+const binningOptions = [
+  'none',
+  'min',
+  'mean',
+  'sum',
+  'bin',
+  'max',
+  'median',
+].map(toOption);
 
-export interface EncodingOption {
-  optionType: string;
-  options: {display: string, value: string}[];
-  optionSetter: (spec: any, selectedOption: string) => any;
-  optionGetter: (spec: any) => string;
-  predicate: (spec: any) => Boolean;
-}
-
-const buildSpatialOptions = (dimension: string): EncodingOption => ({
+const buildSpatialOptions = (
+  dimension: string,
+  options: OptionValue[],
+): EncodingOption => ({
   optionType: 'aggregate',
-  options: spatialAggs,
+  options,
   optionSetter: (spec, selectedOption) => {
     const route = ['encoding', dimension];
     const newSpec = spec.setIn([...route, 'aggregate'], selectedOption);
@@ -46,6 +64,7 @@ const buildSpatialOptions = (dimension: string): EncodingOption => ({
     return hasField ? newSpec : addType(newSpec);
   },
   optionGetter: spec => spec.getIn(['encoding', dimension, 'aggregate']),
+  optionDefault: 'none',
   predicate: () => true,
 });
 
@@ -55,10 +74,12 @@ const buildScaleOption = (dim: string): EncodingOption => ({
   options: ['linear', 'log'].map(x => ({display: x, value: x})),
   optionSetter: (spec, option) => spec.setIn(typeRoute(dim), option),
   optionGetter: spec => spec.getIn(typeRoute(dim)) || 'linear',
+  optionDefault: 'linear',
   predicate: spec => Boolean(spec.getIn(['encoding', dim, 'field'])),
 });
 
 export const configurationOptions: any = {
-  x: [buildSpatialOptions('x'), buildScaleOption('x')],
-  y: [buildSpatialOptions('y'), buildScaleOption('y')],
+  x: [buildSpatialOptions('x', spatialAggs), buildScaleOption('x')],
+  y: [buildSpatialOptions('y', spatialAggs), buildScaleOption('y')],
+  size: [buildSpatialOptions('size', binningOptions)],
 };

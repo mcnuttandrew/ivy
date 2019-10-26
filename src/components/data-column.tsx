@@ -24,7 +24,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
     return (
       <div className="flex-down column full-height background-2 font-white">
         <h1 className="section-title">Data</h1>
-        <div className="flex">
+        <div className="flex space-between data-selection">
           <div className="flex center">
             <DiDatabase />
             <div className="section-subtitle"> {currentlySelectedFile}</div>

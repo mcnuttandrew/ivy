@@ -62,8 +62,8 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
           );
         })}
       </div>
-      <div>
-        THEME:
+      <div className="flex center">
+        <span>Theme:</span>
         <Selector
           selectedValue={currentTheme}
           onChange={value => changeTheme(value)}

@@ -137,13 +137,13 @@ const addToNextOpenSlot: ActionResponse = (state, payload) => {
   const targetField = [
     'x',
     'y',
-    'column',
-    'rows',
     'size',
     'color',
     'shape',
     'detail',
     'text',
+    'column',
+    'rows',
   ].find(field => {
     return !encoding[field] || JSON.stringify(encoding[field]) === '{}';
   });

@@ -11,6 +11,7 @@ export default function SelectorFUCK(props: SelectorProps) {
 
   return (
     <select
+      className="hydra-selector"
       value={selectedValue}
       onChange={({target: {value}}) => onChange(value)}
     >

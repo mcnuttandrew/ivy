@@ -46,14 +46,20 @@ h1, h2, h3, h4, h5 {
 .space-around {
   justify-content: space-around;
 }
+.center {
+  align-items: center;
+}
 
 .chart-container {
+  display: flex;
+  justify-content: center;
   padding: 20px;
   overflow: scroll;
 }
 
 .header {
   align-items: center;
+  border-bottom: 1px solid lightgray;
   height: 50px;
   padding: 0 15px;
 }
@@ -82,8 +88,13 @@ h1, h2, h3, h4, h5 {
 }
 
 .section-title {
-  font-size: 15px;
+  font-size: 12px;
+  font-weight: 100;
   text-transform: uppercase;
+}
+
+.section-body {
+  margin-bottom: 15px;
 }
 
 .section-subtitle {
@@ -163,15 +174,26 @@ h1, h2, h3, h4, h5 {
 
 .shelf-configuration .option-row {
   font-size: 10px;
+  padding: 0 5px;
+  width: 100%;
+}
+
+.shelf-configuration .option-row .option-row-label {
+  white-space: nowrap;
 }
 
 .shelf-configuration .clear-option {
-  font-size: 20px;
+  display: flex;
+  cursor: pointer;
+  font-size: 15px;
 }
 
 .shelf .field-label {
-  text-align: left;
+  font-weight: 900;
+  font-size: 12px;
   min-width: 50px;
+  text-align: left;
+  text-transform: uppercase;
   width: 50px;
 }
 
@@ -382,4 +404,36 @@ h1, h2, h3, h4, h5 {
 .error-bar.has-error {
   top: 0;
   z-index: 1;
+}
+
+.data-selection {
+  margin: 5px 0;
+}
+
+
+
+/* SELECT STUFF */
+.hydra-selector {
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  color: #444;
+	display: flex;
+	font-size: 10px;
+	font-weight: 700;
+  height: 10px;
+  margin: 0;
+  text-transform: uppercase;
+	width: 100%;
+}
+.hydra-selector::-ms-expand {
+	display: none;
+}
+.hydra-selector:focus {
+	border-color: #aaa;
+	color: #222;
+	outline: none;
+}
+.hydra-selector option {
+	font-weight: normal;
+  text-transform: none;
 }

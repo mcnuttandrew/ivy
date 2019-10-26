@@ -52,7 +52,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
             Clear
           </div>
         </div>
-        <div className="flex-down">
+        <div className="flex-down section-body">
           {['x', 'y', 'column', 'row'].map(channel => {
             return (
               <Shelf
@@ -68,7 +68,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
             );
           })}
         </div>
-        <div className="flex space-between">
+        <div className="flex space-between center">
           <h1 className="section-title"> Marks </h1>
           <div>
             <Selector
@@ -78,7 +78,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
             />
           </div>
         </div>
-        <div className="flex-down">
+        <div className="flex-down section-body">
           {['size', 'color', 'shape', 'detail', 'text'].map(channel => {
             return (
               <Shelf
