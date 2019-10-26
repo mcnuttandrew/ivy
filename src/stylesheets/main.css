@@ -54,6 +54,10 @@ h1, h2, h3, h4, h5 {
   padding: 0 15px;
 }
 
+.header img {
+  height: 40px;
+}
+
 .secondary-controls {
   background: lightgray;
   padding: 15px;

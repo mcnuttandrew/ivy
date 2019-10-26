@@ -11,11 +11,13 @@ interface EncodingColumnProps {
   columns: ColumnHeader[];
   onDrop: any;
   onDropFilter: any;
-  setEncodingParameter: GenericAction;
-  clearEncoding: GenericAction;
+
   changeMarkType: GenericAction;
-  updateFilter: GenericAction;
+  clearEncoding: GenericAction;
   deleteFilter: GenericAction;
+  setNewSpec: GenericAction;
+  setEncodingParameter: GenericAction;
+  updateFilter: GenericAction;
 }
 export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render() {
@@ -29,6 +31,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       deleteFilter,
       updateFilter,
       onDropFilter,
+      setNewSpec,
     } = this.props;
     return (
       <div className="flex-down column full-height background-3">
@@ -50,6 +53,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
                 columns={columns}
                 onDrop={onDrop}
                 spec={spec}
+                setNewSpec={setNewSpec}
               />
             );
           })}
@@ -96,6 +100,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
                 columns={columns}
                 onDrop={onDrop}
                 spec={spec}
+                setNewSpec={setNewSpec}
               />
             );
           })}

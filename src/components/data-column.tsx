@@ -7,7 +7,7 @@ import Pill from './pill';
 interface DataColumnProps {
   columns: ColumnHeader[];
   currentlySelectedFile: string;
-  changeSelectedFile: GenericAction;
+
   addToNextOpenSlot: GenericAction;
   createFilter: GenericAction;
   toggleDataModal: GenericAction;

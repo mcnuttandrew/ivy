@@ -55,3 +55,9 @@ export function executePromisesInSeries(tasks: any) {
     Promise.resolve([]),
   );
 }
+
+export function findField(state: any, targetField: string) {
+  return state
+    .get('columns')
+    .find(({field}: {field: string}) => field === targetField);
+}

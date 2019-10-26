@@ -14,11 +14,22 @@ export const marks: VegaMark[] = [
   // 'trail',
 ];
 
+const spatialAggs = [
+  {display: 'none', value: undefined},
+  {display: 'count', value: 'count'},
+  {display: 'min', value: 'min'},
+  {display: 'max', value: 'max'},
+  {display: 'sum', value: 'sum'},
+  {display: 'mean', value: 'mean'},
+  {display: 'median', value: 'median'},
+  {display: 'mode', value: 'mode'},
+];
+
 export const configurationOptions: any = {
   x: {
-    aggregation: ['count', 'min', 'max', 'sum', 'mean', 'median', 'mode'],
+    aggregate: spatialAggs,
   },
   y: {
-    aggregation: ['count', 'min', 'max', 'sum', 'mean', 'median', 'mode'],
+    aggregate: spatialAggs,
   },
 };

@@ -2,28 +2,34 @@ import React, {useState} from 'react';
 import {useDrop} from 'react-dnd';
 import {IoIosOptions} from 'react-icons/io';
 import {TiDeleteOutline} from 'react-icons/ti';
+import Immutable from 'immutable';
+
 import {GenericAction} from '../actions/index';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {configurationOptions} from '../constants';
 
 interface ShelfProps {
-  field: string;
   columns: ColumnHeader[];
   currentField?: {field: string, type: string};
+  field: string;
   onDrop: any;
-  setEncodingParameter: GenericAction;
   spec: any;
+
+  setEncodingParameter: GenericAction;
+  setNewSpec: GenericAction;
 }
 
-export default function Shelf({
-  field,
-  columns,
-  currentField,
-  onDrop,
-  setEncodingParameter,
-  spec,
-}: ShelfProps) {
+export default function Shelf(props: ShelfProps) {
+  const {
+    field,
+    columns,
+    currentField,
+    onDrop,
+    setEncodingParameter,
+    spec,
+    setNewSpec,
+  } = props;
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
     drop: item => onDrop({...item, field}),
@@ -33,7 +39,7 @@ export default function Shelf({
     }),
   });
 
-  // TODO, make field that are new changed pop open
+  // TODO, make field that are newly changed pop open
   const [configurationOpen, toggleConfiguration] = useState(false);
   const isActive = isOver && canDrop;
   const backgroundColor = isActive ? 'darkgreen' : canDrop ? 'darkkhaki' : null;
@@ -72,19 +78,37 @@ export default function Shelf({
             ? Object.entries(configurationOptions[field])
             : []
           ).map(([optionType, options]: [any, any]) => {
+            console.log(field, optionType, spec.encoding[field][optionType]);
             return (
               <div key={optionType} className="option-row flex">
                 {optionType}
                 <div className="flex">
                   <select
-                    value={spec.encoding[field][optionType]}
-                    onChange={({target: {value}}) => console.log(value)}
+                    value={spec.encoding[field][optionType] || ''}
+                    onChange={({target: {value}}) => {
+                      const route = ['encoding', field];
+                      const newSpec = Immutable.fromJS(spec).setIn(
+                        [...route, optionType],
+                        value,
+                      );
+                      const addType = (x: any) =>
+                        x.setIn([...route, 'type'], 'quantitative');
+                      const hasField = newSpec.getIn([...route, 'field']);
+                      setNewSpec(
+                        (hasField ? newSpec : addType(newSpec)).toJS(),
+                      );
+                    }}
                   >
-                    {options.map((option: string) => (
-                      <option value={option} key={`${optionType}-${option}`}>
-                        {option}
-                      </option>
-                    ))}
+                    {options.map(
+                      ({display, value}: {display: string, value: any}) => (
+                        <option
+                          value={value || ''}
+                          key={`${optionType}-${display}`}
+                        >
+                          {display}
+                        </option>
+                      ),
+                    )}
                   </select>
                   <div className="clear-option">
                     <TiDeleteOutline />

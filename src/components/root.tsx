@@ -135,11 +135,10 @@ class RootComponent extends React.Component<RootProps, RootState> {
               <div className="flex full-height">
                 <DndProvider backend={HTML5Backend}>
                   <DataColumn
+                    addToNextOpenSlot={addToNextOpenSlot}
                     columns={columns}
                     currentlySelectedFile={currentlySelectedFile}
-                    changeSelectedFile={changeSelectedFile}
                     createFilter={createFilter}
-                    addToNextOpenSlot={addToNextOpenSlot}
                     toggleDataModal={toggleDataModal}
                   />
                   <EncodingColumn
@@ -150,6 +149,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
                     updateFilter={updateFilter}
                     deleteFilter={deleteFilter}
                     columns={columns}
+                    setNewSpec={setNewSpec}
                     onDrop={(item: any) => {
                       setEncodingParameter(item);
                     }}

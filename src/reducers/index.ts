@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 // import {Spec} from 'vega-typings';
 import {ColumnHeader, DataType} from '../types';
 import Immutable, {Map} from 'immutable';
-import {getUniques, getDomain} from '../utils';
+import {getUniques, getDomain, findField} from '../utils';
 
 // interface InternalAppState {
 //   spec: Spec;
@@ -89,25 +89,23 @@ const TYPE_TRANSLATE: {[s: string]: string} = {
   TIME: 'temporal',
 };
 
-const setEncodingParam: ActionResponse = (state, payload) => {
-  const fieldHeader = state
-    .get('columns')
-    .find(({field}: {field: string}) => field === payload.text);
-
+const setEncodingParameter: ActionResponse = (state, payload) => {
+  const fieldHeader = findField(state, payload.text);
+  const route = ['spec', 'encoding'];
   let newState = state;
   if (fieldHeader) {
     newState = state.setIn(
-      ['spec', 'encoding', payload.field],
+      [...route, payload.field],
       Immutable.fromJS({
         field: payload.text,
         type: TYPE_TRANSLATE[fieldHeader.type],
       }),
     );
   } else {
-    newState = state.deleteIn(['spec', 'encoding', payload.field]);
+    newState = state.setIn([...route, payload.field], Map());
   }
   if (payload.containingShelf) {
-    newState = newState.deleteIn(['spec', 'encoding', payload.containingShelf]);
+    newState = newState.setIn([...route, payload.containingShelf], Map());
   }
 
   return newState;
@@ -148,18 +146,19 @@ const addToNextOpenSlot: ActionResponse = (state, payload) => {
   ].find(field => {
     return !encoding[field] || JSON.stringify(encoding[field]) === '{}';
   });
+  // TODO add messaging about not being able to find a place to put the thing
   if (!targetField) {
     return state;
   }
-  encoding[targetField] = {field: payload.field, type: 'ordinal'};
+  encoding[targetField] = {
+    field: payload.field,
+    type: TYPE_TRANSLATE[findField(state, payload.field).type],
+  };
   return state.setIn(['spec', 'encoding'], Immutable.fromJS(encoding));
 };
 
 const createFilter: ActionResponse = (state, payload) => {
-  const fieldHeader = state
-    .get('columns')
-    .find(({field}: {field: string}) => field === payload.field);
-  const isDim = fieldHeader.type === 'DIMENSION';
+  const isDim = findField(state, payload.field).type === 'DIMENSION';
   const newFilter: any = {
     filter: {
       field: payload.field,
@@ -197,17 +196,18 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-data-from-predefined': recieveDataFromPredefinedDatasets,
   'recieve-type-inferences': recieveTypeInferences,
   'change-selected-file': changeSelectedFile,
-  'set-encoding-param': setEncodingParam,
+  'set-encoding-param': setEncodingParameter,
   'clear-encoding': clearEncoding,
   'change-mark-type': changeMarkType,
   'set-new-encoding': setNewSpec,
   'set-new-encoding-code': setNewSpecCode,
   'add-to-next-open-slot': addToNextOpenSlot,
-  'change-gui-mode': changeGUIMode,
   'create-filter': createFilter,
   'update-filter': updateFilter,
   'delete-filter': deleteFilter,
+
   // TODO exrract UI controls into their own reducer
+  'change-gui-mode': changeGUIMode,
   'toggle-data-modal': toggleDataModal,
 };
 const NULL_ACTION: ActionResponse = state => state;

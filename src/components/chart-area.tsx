@@ -3,6 +3,12 @@ import {VegaLite} from 'react-vega';
 
 import {GenericAction} from '../actions/index';
 
+const DEFAULT_CONFIG = {
+  facet: {width: 150, height: 150},
+  overlay: {line: true},
+  scale: {useRawDomain: true},
+};
+
 interface ChartAreaProps {
   spec: any;
   data: any;
@@ -32,7 +38,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         </div>
         <div className="chart-container full-width full-height">
           <VegaLite
-            spec={{...spec, height: 500, width: 500, padding: 50}}
+            spec={{...spec, config: DEFAULT_CONFIG, padding: 50}}
             data={{myData: data}}
           />
         </div>
