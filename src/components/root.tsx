@@ -29,6 +29,7 @@ interface RootProps {
   spec?: Spec;
   specCode?: string;
   data?: any; //TODO: define the data type
+  iMspec?: any;
   selectedGUIMode?: string;
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
@@ -106,6 +107,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
       data,
       dataModalOpen,
       deleteFilter,
+      iMspec,
       loadCustomDataset,
       selectedGUIMode,
       spec,
@@ -151,6 +153,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
                     toggleDataModal={toggleDataModal}
                   />
                   <EncodingColumn
+                    iMspec={iMspec}
                     changeMarkType={changeMarkType}
                     setEncodingParameter={setEncodingParameter}
                     clearEncoding={clearEncoding}
@@ -201,6 +204,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     columns: base.get('columns'),
     data: base.get('data'),
     spec: base.get('spec').toJS(),
+    iMspec: base.get('spec'),
     specCode: base.get('specCode'),
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),

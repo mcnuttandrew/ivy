@@ -43,6 +43,10 @@ h1, h2, h3, h4, h5 {
   justify-content: space-between;
 }
 
+.space-around {
+  justify-content: space-around;
+}
+
 .chart-container {
   padding: 20px;
   overflow: scroll;
@@ -170,6 +174,11 @@ h1, h2, h3, h4, h5 {
   min-width: 50px;
   width: 50px;
 }
+
+.shelf .label-control {
+  font-size: 15px;
+}
+
 
 .shelf .blank-pill {
   align-items: center;

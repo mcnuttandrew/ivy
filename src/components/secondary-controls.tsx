@@ -4,6 +4,8 @@ import {classnames} from '../utils';
 import {Spec} from 'vega-typings';
 import {VegaTheme} from '../types';
 
+import Selector from './selector';
+
 const VEGA_THEMES = [
   'dark',
   'excel',
@@ -13,7 +15,7 @@ const VEGA_THEMES = [
   'quartz',
   'urbaninstitute',
   'vox',
-];
+].map((x: string) => ({display: x, value: x}));
 export interface SecondaryHeaderProps {
   changeGUIMode: GenericAction;
   changeTheme: GenericAction;
@@ -62,18 +64,11 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
       </div>
       <div>
         THEME:
-        <select
-          value={currentTheme}
-          onChange={({target: {value}}) => changeTheme(value)}
-        >
-          {VEGA_THEMES.map(theme => {
-            return (
-              <option value={theme} key={theme}>
-                {theme}
-              </option>
-            );
-          })}
-        </select>
+        <Selector
+          selectedValue={currentTheme}
+          onChange={value => changeTheme(value)}
+          options={VEGA_THEMES}
+        />
       </div>
     </div>
   );

@@ -5,9 +5,18 @@ import Shelf from './shelf';
 import Filter from './filter';
 import FilterTarget from './filter-target';
 import {ColumnHeader} from '../types';
+import Selector from './selector';
+
+import {PRIMITIVE_MARKS} from 'vega-lite/build/src/mark';
+
+const MARK_TYPES = PRIMITIVE_MARKS.map((x: string) => ({
+  display: x,
+  value: x,
+}));
 
 interface EncodingColumnProps {
   spec: any;
+  iMspec: any;
   columns: ColumnHeader[];
   onDrop: any;
   onDropFilter: any;
@@ -24,6 +33,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
     const {
       columns,
       spec,
+      iMspec,
       onDrop,
       setEncodingParameter,
       clearEncoding,
@@ -47,12 +57,12 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
             return (
               <Shelf
                 setEncodingParameter={setEncodingParameter}
-                currentField={spec.encoding[channel]}
+                column={spec.encoding[channel]}
                 field={channel}
                 key={channel}
                 columns={columns}
                 onDrop={onDrop}
-                spec={spec}
+                iMspec={iMspec}
                 setNewSpec={setNewSpec}
               />
             );
@@ -61,33 +71,11 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         <div className="flex space-between">
           <h1 className="section-title"> Marks </h1>
           <div>
-            <select
-              value={spec.mark.type}
-              onChange={({target: {value}}) => changeMarkType(value)}
-            >
-              {[
-                'area',
-                'bar',
-                'boxplot',
-                'circle',
-                'errorband',
-                'errorbar',
-                'geoshape',
-                'line',
-                'point',
-                'rect',
-                'rule',
-                'square',
-                'tick',
-                'text',
-              ].map((mark: string) => {
-                return (
-                  <option value={mark} key={mark}>
-                    {mark}
-                  </option>
-                );
-              })}
-            </select>
+            <Selector
+              selectedValue={spec.mark.type}
+              onChange={value => changeMarkType(value)}
+              options={MARK_TYPES}
+            />
           </div>
         </div>
         <div className="flex-down">
@@ -95,12 +83,12 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
             return (
               <Shelf
                 setEncodingParameter={setEncodingParameter}
-                currentField={spec.encoding[channel]}
+                column={spec.encoding[channel]}
                 field={channel}
                 key={channel}
                 columns={columns}
                 onDrop={onDrop}
-                spec={spec}
+                iMspec={iMspec}
                 setNewSpec={setNewSpec}
               />
             );

@@ -22,7 +22,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
     const {spec, data, setNewSpec, currentTheme} = this.props;
     // todo listeners
     // todo automatical height inference
-    console.log(currentTheme);
     return (
       <div className="flex-down center full-width full-height">
         <div className="chart-controls full-width">

@@ -2,19 +2,19 @@ import React, {useState} from 'react';
 import {useDrop} from 'react-dnd';
 import {IoIosOptions} from 'react-icons/io';
 import {TiDeleteOutline} from 'react-icons/ti';
-import Immutable from 'immutable';
 
 import {GenericAction} from '../actions/index';
 import Pill from './pill';
+import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {configurationOptions} from '../constants';
+import {configurationOptions, EncodingOption} from '../constants';
 
 interface ShelfProps {
   columns: ColumnHeader[];
-  currentField?: {field: string, type: string};
+  column?: {field: string, type: string};
   field: string;
   onDrop: any;
-  spec: any;
+  iMspec: any;
 
   setEncodingParameter: GenericAction;
   setNewSpec: GenericAction;
@@ -24,12 +24,14 @@ export default function Shelf(props: ShelfProps) {
   const {
     field,
     columns,
-    currentField,
+    column,
     onDrop,
     setEncodingParameter,
-    spec,
+    iMspec,
     setNewSpec,
   } = props;
+
+  // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
     drop: item => onDrop({...item, field}),
@@ -39,19 +41,22 @@ export default function Shelf(props: ShelfProps) {
     }),
   });
 
-  // TODO, make field that are newly changed pop open
-  const [configurationOpen, toggleConfiguration] = useState(false);
+  const [configurationOpen, toggleConfiguration] = useState(true);
   const isActive = isOver && canDrop;
+  // TODO make these colors not awful
   const backgroundColor = isActive ? 'darkgreen' : canDrop ? 'darkkhaki' : null;
   const definedField = columns.find(
-    ({field}) => currentField && field === currentField.field,
+    ({field}) => column && field === column.field,
   );
   return (
     <div ref={drop} className="flex-down shelf-container">
       <div className="shelf flex">
-        <div className="field-label">
-          {field}{' '}
-          <div onClick={() => toggleConfiguration(!configurationOpen)}>
+        <div className="field-label flex space-around">
+          <div>{field} </div>
+          <div
+            className="label-control"
+            onClick={() => toggleConfiguration(!configurationOpen)}
+          >
             <IoIosOptions />
           </div>
         </div>
@@ -61,7 +66,7 @@ export default function Shelf(props: ShelfProps) {
               {'drop a field here'}
             </div>
           )}
-          {currentField && definedField && (
+          {column && definedField && (
             <Pill
               inEncoding={true}
               containingShelf={field}
@@ -73,49 +78,30 @@ export default function Shelf(props: ShelfProps) {
         </div>
       </div>
       {configurationOpen && (
-        <div className="shelf-configuration">
-          {(configurationOptions[field]
-            ? Object.entries(configurationOptions[field])
-            : []
-          ).map(([optionType, options]: [any, any]) => {
-            return (
-              <div key={optionType} className="option-row flex">
-                {optionType}
-                <div className="flex">
-                  <select
-                    value={spec.encoding[field][optionType] || ''}
-                    onChange={({target: {value}}) => {
-                      const route = ['encoding', field];
-                      const newSpec = Immutable.fromJS(spec).setIn(
-                        [...route, optionType],
-                        value,
-                      );
-                      const addType = (x: any) =>
-                        x.setIn([...route, 'type'], 'quantitative');
-                      const hasField = newSpec.getIn([...route, 'field']);
-                      setNewSpec(
-                        (hasField ? newSpec : addType(newSpec)).toJS(),
-                      );
-                    }}
-                  >
-                    {options.map(
-                      ({display, value}: {display: string, value: any}) => (
-                        <option
-                          value={value || ''}
-                          key={`${optionType}-${display}`}
-                        >
-                          {display}
-                        </option>
-                      ),
-                    )}
-                  </select>
-                  <div className="clear-option">
-                    <TiDeleteOutline />
+        <div className="shelf-configuration flex-down">
+          {(configurationOptions[field] || [])
+            .filter((option: EncodingOption) => option.predicate(iMspec))
+            .map((option: EncodingOption) => {
+              const {optionType, options, optionSetter, optionGetter} = option;
+              return (
+                <div key={optionType} className="option-row flex">
+                  {optionType}
+                  <div className="flex">
+                    <Selector
+                      options={options}
+                      selectedValue={optionGetter(iMspec) || ''}
+                      onChange={(value: any) =>
+                        setNewSpec(optionSetter(iMspec, value))
+                      }
+                    />
+
+                    <div className="clear-option">
+                      <TiDeleteOutline />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       )}
     </div>
