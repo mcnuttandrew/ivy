@@ -127,13 +127,14 @@ h1, h2, h3, h4, h5 {
 .pill {
   background: #C9CBD0;
   border-radius: 2px;
-  cursor: pointer;
+  cursor: move;
   font-size: 9px;
   height: 100%;
   padding: 0 5px;
 }
 .pill .fixed-symbol-width {
   align-items: center;
+  cursor: pointer;
   display: flex;
   font-size: 15px;
   justify-content: center;
