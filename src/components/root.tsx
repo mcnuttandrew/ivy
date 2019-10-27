@@ -12,7 +12,7 @@ import {GenericAction} from '../actions/index';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
-import {AppState} from '../reducers/index';
+import {AppState} from '../reducers/default-state';
 
 import CodeEditor from './code-editor';
 
@@ -43,6 +43,7 @@ interface RootProps {
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
   createFilter?: GenericAction;
+  coerceType?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
   updateFilter?: GenericAction;
@@ -94,6 +95,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
     // TODO alphabetize
     const {
       addToNextOpenSlot,
+      coerceType,
       columns,
       changeSelectedFile,
       changeMarkType,
@@ -151,6 +153,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
                   <DataColumn
                     addToNextOpenSlot={addToNextOpenSlot}
                     columns={columns}
+                    coerceType={coerceType}
                     currentlySelectedFile={currentlySelectedFile}
                     createFilter={createFilter}
                     toggleDataModal={toggleDataModal}

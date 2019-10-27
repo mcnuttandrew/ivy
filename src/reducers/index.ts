@@ -4,34 +4,7 @@ import thunk from 'redux-thunk';
 import {ColumnHeader, DataType} from '../types';
 import Immutable, {Map} from 'immutable';
 import {getUniques, getDomain, findField} from '../utils';
-
-// interface InternalAppState {
-//   spec: Spec;
-//   data: any;
-//   columns: ColumnHeader[];
-// }
-export type AppState = any;
-// TODO undo this embarrasment
-const EMPTY_SPEC = Immutable.fromJS({
-  data: {name: 'myData'},
-  transform: [],
-  mark: 'point',
-  encoding: {
-    x: {},
-    y: {},
-  },
-});
-const DEFAULT_STATE: AppState = Map({
-  spec: EMPTY_SPEC,
-  specCode: JSON.stringify(EMPTY_SPEC, null, 2),
-  data: [],
-  columns: [],
-  currentlySelectedFile: 'cars.json',
-  selectedGUIMode: 'GRAMMAR',
-  // selectedGUIMode: 'PROGRAMMATIC',
-  dataModalOpen: false,
-  currentTheme: 'urbaninstitute',
-});
+import {AppState, EMPTY_SPEC, DEFAULT_STATE} from './default-state';
 
 interface ActionResponse {
   (state: AppState, payload: any): AppState;
@@ -53,6 +26,7 @@ const recieveTypeInferences: ActionResponse = (state, payload) => {
       const newHeader: ColumnHeader = {
         field: key,
         type: category,
+        originalType: category,
         secondaryType: type,
         domain,
       };
@@ -126,6 +100,18 @@ const setNewSpecCode: ActionResponse = (state, payload) => {
   return state
     .set('specCode', code)
     .set('spec', Immutable.fromJS(JSON.parse(code)));
+};
+const coerceType: ActionResponse = (state, payload) => {
+  const {field, type} = payload;
+  const columnIdx = state
+    .get('columns')
+    .findIndex((d: any) => d.field === field);
+  return state.set(
+    'columns',
+    Immutable.fromJS(state.get('columns'))
+      .setIn([columnIdx, 'type'], type)
+      .toJS(),
+  );
 };
 
 const setNewSpec: ActionResponse = (state, payload) =>
@@ -211,8 +197,9 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'create-filter': createFilter,
   'update-filter': updateFilter,
   'delete-filter': deleteFilter,
+  'coerce-type': coerceType,
 
-  // TODO exrract UI controls into their own reducer
+  // TODO exrract UI controls into their own reducer?
   'change-gui-mode': changeGUIMode,
   'toggle-data-modal': toggleDataModal,
   'change-theme': changeTheme,

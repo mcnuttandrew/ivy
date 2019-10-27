@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {GoPlus, GoTriangleDown} from 'react-icons/go';
 import {TiFilter, TiDeleteOutline} from 'react-icons/ti';
@@ -6,7 +6,7 @@ import {TiFilter, TiDeleteOutline} from 'react-icons/ti';
 import {GenericAction} from '../actions/index';
 import {useDrag} from 'react-dnd';
 import {ColumnHeader} from '../types';
-import {getTypeSymbol} from '../utils';
+import {getTypeSymbol, classnames} from '../utils';
 
 export interface PillProps {
   column: ColumnHeader;
@@ -16,6 +16,7 @@ export interface PillProps {
   setEncodingParameter?: GenericAction;
   addToNextOpenSlot?: GenericAction;
   createFilter?: GenericAction;
+  coerceType?: GenericAction;
 }
 
 export default function Pill(props: PillProps) {
@@ -27,6 +28,7 @@ export default function Pill(props: PillProps) {
     addToNextOpenSlot,
     containingShelf,
     createFilter,
+    coerceType,
   } = props;
   const [{opacity}, dragRef] = useDrag({
     item: {type: 'CARD', text: column.field, containingShelf},
@@ -34,10 +36,45 @@ export default function Pill(props: PillProps) {
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
+  const [open, toggleOpen] = useState(false);
+  const field = column.field;
   return (
     <div className="pill flex" ref={dragRef} style={{opacity}}>
+      {open && (
+        <div>
+          <div
+            className="coercion-tooltip-background"
+            onClick={() => toggleOpen(false)}
+          />
+          <div className="coercion-tooltip-container">
+            <div className="coercion-tooltip">
+              <h5>Change Base Type</h5>
+              {['DIMENSION', 'MEASURE', 'TIME'].map((type: string) => {
+                return (
+                  <button
+                    className={classnames({
+                      'selected-dimension': column.type === type,
+                    })}
+                    onClick={() => coerceType({field, type})}
+                    key={type}
+                  >
+                    {type}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => coerceType({field, type: column.originalType})}
+              >
+                RESET TO ORIGINAL
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {!inEncoding && (
-        <div className="fixed-symbol-width">{<GoTriangleDown />}</div>
+        <div className="fixed-symbol-width" onClick={() => toggleOpen(!open)}>
+          {<GoTriangleDown />}
+        </div>
       )}
       <div className="fixed-symbol-width">{getTypeSymbol(column.type)}</div>
       <div className="pill-label">{column.field}</div>

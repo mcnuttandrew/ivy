@@ -30,6 +30,7 @@ export const changeTheme = buildEasyAction('change-theme');
 export const createFilter = buildEasyAction('create-filter');
 export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
+export const coerceType = buildEasyAction('coerce-type');
 
 export const toggleDataModal = buildEasyAction('toggle-data-modal');
 

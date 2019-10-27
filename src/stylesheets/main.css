@@ -140,6 +140,9 @@ h1, h2, h3, h4, h5 {
   height: 100%;
   width: 20px;
 }
+.pill .fixed-symbol-width:hover {
+  background-color: gray;
+}
 .pill .pill-label {
   align-items: center;
   display: flex;
@@ -449,4 +452,37 @@ h1, h2, h3, h4, h5 {
 .hydra-selector option {
 	font-weight: normal;
   text-transform: none;
+}
+
+
+.coercion-tooltip-container {
+  position: relative;
+}
+
+.coercion-tooltip-background {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 5001;
+}
+
+.coercion-tooltip {
+  background-color: white;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  padding: 5px;
+  position: absolute;
+  height: auto;
+  width: auto;
+  top: 20px;
+  z-index: 5002;
+}
+
+.coercion-tooltip  .selected-dimension {
+  background-color: steelblue;
+  color: white;
 }

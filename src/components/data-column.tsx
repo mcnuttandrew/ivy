@@ -9,6 +9,7 @@ interface DataColumnProps {
   currentlySelectedFile: string;
 
   addToNextOpenSlot: GenericAction;
+  coerceType: GenericAction;
   createFilter: GenericAction;
   toggleDataModal: GenericAction;
 }
@@ -16,6 +17,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
   render() {
     const {
       columns,
+      coerceType,
       currentlySelectedFile,
       addToNextOpenSlot,
       createFilter,
@@ -37,6 +39,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
               <div className="pill-container" key={column.field}>
                 <Pill
                   column={column}
+                  coerceType={coerceType}
                   inEncoding={false}
                   addToNextOpenSlot={addToNextOpenSlot}
                   createFilter={createFilter}

@@ -2,6 +2,7 @@ export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME';
 
 export interface ColumnHeader {
   type: DataType;
+  originalType: DataType;
   secondaryType: string;
   field: string;
   domain: number[] | string[];
