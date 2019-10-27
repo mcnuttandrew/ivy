@@ -4,6 +4,9 @@ import Immutable, {Map} from 'immutable';
 //   data: any;
 //   columns: ColumnHeader[];
 // }
+export interface ActionResponse {
+  (state: AppState, payload: any): AppState;
+}
 export type AppState = any;
 // TODO undo this embarrasment
 export const EMPTY_SPEC = Immutable.fromJS({
