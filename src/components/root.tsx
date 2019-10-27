@@ -131,7 +131,10 @@ class RootComponent extends React.Component<RootProps, RootState> {
         )}
         <Header />
         <div className="flex full-height">
-          <div className="flex-down full-height" ref="menuContainer">
+          <div
+            className="flex-down full-height control-container"
+            ref="menuContainer"
+          >
             {SHOW_SECONDARY_CONTROLS && (
               <SecondaryControls
                 currentTheme={currentTheme}

@@ -17,6 +17,26 @@ interface ChartAreaProps {
   width: number;
   currentTheme: VegaTheme;
 }
+
+function compareObjects(a: any, b: any) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function cleanSpec(spec: any) {
+  return {
+    config: DEFAULT_CONFIG,
+    padding: 50,
+    ...spec,
+    encoding: {
+      ...Object.entries(spec.encoding).reduce((acc: any, [key, val]) => {
+        if (!compareObjects(val, {})) {
+          acc[key] = val;
+        }
+        return acc;
+      }, {}),
+    },
+  };
+}
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render() {
     const {spec, data, setNewSpec, currentTheme} = this.props;
@@ -39,7 +59,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         </div>
         <div className="chart-container full-width full-height">
           <VegaLite
-            spec={{...spec, config: DEFAULT_CONFIG, padding: 50}}
+            spec={cleanSpec(spec)}
             data={{myData: data}}
             theme={currentTheme}
             actions={false}

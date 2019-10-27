@@ -1,5 +1,3 @@
-import Immutable from 'immutable';
-
 export interface OptionValue {
   display: string;
   value: string;
@@ -45,7 +43,7 @@ const binningOptions = [
   'min',
   'mean',
   'sum',
-  'bin',
+  'bin', // TODO bin is handled incorrectly
   'max',
   'median',
 ].map(toOption);
@@ -54,7 +52,7 @@ const buildSpatialOptions = (
   dimension: string,
   options: OptionValue[],
 ): EncodingOption => ({
-  optionType: 'aggregate',
+  optionType: 'Agg.',
   options,
   optionSetter: (spec, selectedOption) => {
     const route = ['encoding', dimension];
@@ -71,15 +69,66 @@ const buildSpatialOptions = (
 const typeRoute = (dim: string) => ['encoding', dim, 'scale', 'type'];
 const buildScaleOption = (dim: string): EncodingOption => ({
   optionType: 'Scale type',
-  options: ['linear', 'log'].map(x => ({display: x, value: x})),
+  options: ['linear', 'log'].map(toOption),
   optionSetter: (spec, option) => spec.setIn(typeRoute(dim), option),
   optionGetter: spec => spec.getIn(typeRoute(dim)) || 'linear',
   optionDefault: 'linear',
   predicate: spec => Boolean(spec.getIn(['encoding', dim, 'field'])),
 });
 
+const typeCoerceRoute = (dim: string) => ['encoding', dim, 'type'];
+const buildTypeCoercion = (dim: string): EncodingOption => ({
+  optionType: 'Data type',
+  options: ['nominal', 'ordinal', 'quantitative', 'temporal'].map(toOption),
+  optionSetter: (spec, option) => spec.setIn(typeCoerceRoute(dim), option),
+  optionGetter: spec => spec.getIn(typeCoerceRoute(dim)),
+  optionDefault: undefined,
+  predicate: () => true,
+});
+
+// take in an encoding option and create a predicate that rejects that option if that field is not present
+const injectFieldPredicate = (
+  dim: string,
+  option: EncodingOption,
+): EncodingOption => ({
+  ...option,
+  predicate: (spec: any) => Boolean(spec.getIn(['encoding', dim, 'field'])),
+});
+
 export const configurationOptions: any = {
-  x: [buildSpatialOptions('x', spatialAggs), buildScaleOption('x')],
-  y: [buildSpatialOptions('y', spatialAggs), buildScaleOption('y')],
-  size: [buildSpatialOptions('size', binningOptions)],
+  x: [
+    buildTypeCoercion('x'),
+    buildScaleOption('x'),
+    buildSpatialOptions('x', spatialAggs),
+  ],
+  y: [
+    buildTypeCoercion('y'),
+    buildScaleOption('y'),
+    buildSpatialOptions('y', spatialAggs),
+  ],
+  row: [injectFieldPredicate('row', buildTypeCoercion('row'))],
+  column: [injectFieldPredicate('column', buildTypeCoercion('column'))],
+  size: [
+    injectFieldPredicate('size', buildTypeCoercion('size')),
+    injectFieldPredicate('size', buildSpatialOptions('size', binningOptions)),
+  ],
+  color: [
+    injectFieldPredicate('color', buildTypeCoercion('color')),
+    injectFieldPredicate('color', buildSpatialOptions('color', binningOptions)),
+  ],
+  shape: [
+    injectFieldPredicate('shape', buildTypeCoercion('shape')),
+    injectFieldPredicate('shape', buildSpatialOptions('shape', binningOptions)),
+  ],
+  detail: [
+    injectFieldPredicate('detail', buildTypeCoercion('detail')),
+    injectFieldPredicate(
+      'detail',
+      buildSpatialOptions('detail', binningOptions),
+    ),
+  ],
+  text: [
+    injectFieldPredicate('text', buildTypeCoercion('text')),
+    injectFieldPredicate('text', buildSpatialOptions('text', binningOptions)),
+  ],
 };

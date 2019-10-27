@@ -1,6 +1,8 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
 
+import {classnames} from '../utils';
+
 interface FilterTargetProps {
   onDrop: any;
 }
@@ -15,13 +17,15 @@ export default function FilterTarget({onDrop}: FilterTargetProps) {
     }),
   });
 
-  const isActive = isOver && canDrop;
-  const backgroundColor = isActive ? 'darkgreen' : canDrop ? 'darkkhaki' : null;
-
   return (
     <div ref={drop} className="filter-target flex shelf">
       <div className="pill-dropzone">
-        <div className="blank-pill" style={{backgroundColor}}>
+        <div
+          className={classnames({
+            'blank-pill': true,
+            'highlight-drop': isOver || canDrop,
+          })}
+        >
           {'drop a field here'}
         </div>
       </div>

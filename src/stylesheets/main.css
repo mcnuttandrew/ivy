@@ -13,7 +13,6 @@ h1, h2, h3, h4, h5 {
 }
 
 
-
 .flex {
   display: flex;
 }
@@ -68,6 +67,9 @@ h1, h2, h3, h4, h5 {
   height: 40px;
 }
 
+.bottom-fill {
+  margin-bottom: 100px;
+}
 .secondary-controls {
   background: lightgray;
   padding: 15px;
@@ -110,6 +112,10 @@ h1, h2, h3, h4, h5 {
 
 .two-column {
   width: 460px;
+}
+
+.control-container {
+  z-index: 1;
 }
 
 .pill-container {
@@ -204,10 +210,16 @@ h1, h2, h3, h4, h5 {
 
 .shelf .blank-pill {
   align-items: center;
+  background-color: white;
   color: rgba(0, 0, 0, 0.5);
   display: flex;
   height: 100%;
   padding-left: 5px;
+  transition: background-color 1s;
+}
+
+.shelf .highlight-drop {
+  background-color: paleturquoise;
 }
 
 .shelf .pill-dropzone {
@@ -256,6 +268,7 @@ h1, h2, h3, h4, h5 {
 
 .clear-encoding {
   align-items: center;
+  cursor: pointer;
   display: flex;
   font-size: 12px;
   justify-content: space-between;

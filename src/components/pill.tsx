@@ -36,9 +36,9 @@ export default function Pill(props: PillProps) {
   });
   return (
     <div className="pill flex" ref={dragRef} style={{opacity}}>
-      <div className="fixed-symbol-width">
-        {!inEncoding && <GoTriangleDown />}
-      </div>
+      {!inEncoding && (
+        <div className="fixed-symbol-width">{<GoTriangleDown />}</div>
+      )}
       <div className="fixed-symbol-width">{getTypeSymbol(column.type)}</div>
       <div className="pill-label">{column.field}</div>
       <div

@@ -45,6 +45,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
             );
           })}
         </div>
+        <div className="bottom-fill" />
       </div>
     );
   }

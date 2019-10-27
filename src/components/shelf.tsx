@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useDrop} from 'react-dnd';
-import {IoIosOptions} from 'react-icons/io';
 import {TiDeleteOutline} from 'react-icons/ti';
 
 import {GenericAction} from '../actions/index';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
+import {classnames} from '../utils';
 import {configurationOptions, EncodingOption} from '../constants';
 
 interface ShelfProps {
@@ -40,11 +40,12 @@ export default function Shelf(props: ShelfProps) {
       canDrop: monitor.canDrop(),
     }),
   });
-
-  const [configurationOpen, toggleConfiguration] = useState(true);
-  const isActive = isOver && canDrop;
-  // TODO make these colors not awful
-  const backgroundColor = isActive ? 'darkgreen' : canDrop ? 'darkkhaki' : null;
+  const optionsToRender = (configurationOptions[field] || []).filter(
+    (option: EncodingOption) => option.predicate(iMspec),
+  );
+  // unsure if the toggle should be open or not
+  // const [configurationOpen, toggleConfiguration] = useState(true);
+  const configurationOpen = Boolean(optionsToRender.length);
   const definedField = columns.find(
     ({field}) => column && field === column.field,
   );
@@ -62,7 +63,12 @@ export default function Shelf(props: ShelfProps) {
         </div>
         <div className="pill-dropzone">
           {!definedField && (
-            <div className="blank-pill" style={{backgroundColor}}>
+            <div
+              className={classnames({
+                'blank-pill': true,
+                'highlight-drop': isOver || canDrop,
+              })}
+            >
               {'drop a field here'}
             </div>
           )}
@@ -79,38 +85,36 @@ export default function Shelf(props: ShelfProps) {
       </div>
       {configurationOpen && (
         <div className="shelf-configuration flex-down">
-          {(configurationOptions[field] || [])
-            .filter((option: EncodingOption) => option.predicate(iMspec))
-            .map((option: EncodingOption) => {
-              const {
-                optionType,
-                options,
-                optionSetter,
-                optionGetter,
-                optionDefault,
-              } = option;
-              return (
-                <div key={optionType} className="option-row flex">
-                  <div className="option-row-label">{optionType}</div>
-                  <Selector
-                    options={options}
-                    selectedValue={optionGetter(iMspec) || ''}
-                    onChange={(value: any) =>
-                      setNewSpec(optionSetter(iMspec, value))
-                    }
-                  />
+          {optionsToRender.map((option: EncodingOption) => {
+            const {
+              optionType,
+              options,
+              optionSetter,
+              optionGetter,
+              optionDefault,
+            } = option;
+            return (
+              <div key={optionType} className="option-row flex">
+                <div className="option-row-label">{optionType}</div>
+                <Selector
+                  options={options}
+                  selectedValue={optionGetter(iMspec) || ''}
+                  onChange={(value: any) =>
+                    setNewSpec(optionSetter(iMspec, value))
+                  }
+                />
 
-                  <div
-                    className="clear-option"
-                    onClick={() =>
-                      setNewSpec(optionSetter(iMspec, optionDefault))
-                    }
-                  >
-                    <TiDeleteOutline />
-                  </div>
+                <div
+                  className="clear-option"
+                  onClick={() =>
+                    setNewSpec(optionSetter(iMspec, optionDefault))
+                  }
+                >
+                  <TiDeleteOutline />
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

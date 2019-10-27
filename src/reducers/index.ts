@@ -15,9 +15,7 @@ export type AppState = any;
 const EMPTY_SPEC = Immutable.fromJS({
   data: {name: 'myData'},
   transform: [],
-  mark: {
-    type: 'circle',
-  },
+  mark: 'point',
   encoding: {
     x: {},
     y: {},
@@ -113,8 +111,13 @@ const setEncodingParameter: ActionResponse = (state, payload) => {
 };
 
 const clearEncoding: ActionResponse = state => state.set('spec', EMPTY_SPEC);
-const changeMarkType: ActionResponse = (state, payload) =>
-  state.setIn(['spec', 'mark', 'type'], payload);
+const changeMarkType: ActionResponse = (state, payload) => {
+  const route = ['spec', 'mark', 'type'];
+  if (!state.getIn(route)) {
+    return state.setIn(['spec', 'mark'], Immutable.fromJS({type: payload}));
+  }
+  return state.setIn(route, payload);
+};
 const setNewSpecCode: ActionResponse = (state, payload) => {
   const {code, inError} = payload;
   if (inError) {

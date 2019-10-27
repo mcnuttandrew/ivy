@@ -72,7 +72,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           <h1 className="section-title"> Marks </h1>
           <div>
             <Selector
-              selectedValue={spec.mark.type}
+              selectedValue={spec.mark.type || spec.mark}
               onChange={value => changeMarkType(value)}
               options={MARK_TYPES}
             />
