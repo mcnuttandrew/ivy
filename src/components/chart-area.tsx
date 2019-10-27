@@ -6,7 +6,7 @@ import {GenericAction} from '../actions/index';
 const DEFAULT_CONFIG = {
   facet: {width: 150, height: 150},
   overlay: {line: true},
-  scale: {useRawDomain: true},
+  scale: {useRawDomain: false},
 };
 
 interface ChartAreaProps {

@@ -19,7 +19,7 @@ export function getUniques(data: any, field: string): string[] {
       acc[row[field]] = true;
       return acc;
     }, {}),
-  );
+  ).sort();
 }
 
 export function getDomain(data: any, field: string): number[] {

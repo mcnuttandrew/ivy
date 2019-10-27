@@ -92,3 +92,29 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
 
   return newState;
 };
+
+// takes in an old state (via a wrapping function) and an updated state and push the contents
+// of the old state into the undo stack
+export function pushToUndoStack(oldState: any, newState: any) {
+  return newState
+    .set('undoStack', newState.get('undoStack').push(oldState.get('spec')))
+    .set('redoStack', Immutable.fromJS([]));
+}
+
+export const triggerRedo: ActionResponse = state => {
+  const undoStack = state.get('undoStack');
+  const redoStack = state.get('redoStack');
+  return state
+    .set('spec', redoStack.last())
+    .set('redoStack', redoStack.pop())
+    .set('undoStack', undoStack.push(state.get('spec')));
+};
+
+export const triggerUndo: ActionResponse = state => {
+  const undoStack = state.get('undoStack');
+  const redoStack = state.get('redoStack');
+  return state
+    .set('spec', undoStack.last())
+    .set('undoStack', undoStack.pop())
+    .set('redoStack', redoStack.push(state.get('spec')));
+};

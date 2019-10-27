@@ -1,9 +1,14 @@
+import Immutable from 'immutable';
 import {EMPTY_SPEC, ActionResponse} from './default-state';
 import {ColumnHeader, DataType} from '../types';
 
 export const recieveData: ActionResponse = (state, payload) => {
   // this might be the wrong way to do this? it sort of depends on the internals of that vega component
-  return state.set('data', payload).set('spec', EMPTY_SPEC);
+  return state
+    .set('data', payload)
+    .set('spec', EMPTY_SPEC)
+    .set('undoStack', Immutable.fromJS([]))
+    .set('undoStack', Immutable.fromJS([]));
 };
 
 export const recieveTypeInferences: ActionResponse = (state, payload) => {

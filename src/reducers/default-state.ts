@@ -28,4 +28,6 @@ export const DEFAULT_STATE: AppState = Map({
   // selectedGUIMode: 'PROGRAMMATIC',
   dataModalOpen: false,
   currentTheme: 'urbaninstitute',
+  undoStack: Immutable.fromJS([]),
+  redoStack: Immutable.fromJS([]),
 });

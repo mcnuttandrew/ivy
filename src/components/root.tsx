@@ -26,6 +26,8 @@ import SecondaryControls from './secondary-controls';
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
   columns?: ColumnHeader[];
+  canUndo?: boolean;
+  canRedo?: boolean;
   spec?: Spec;
   specCode?: string;
   data?: any; //TODO: define the data type
@@ -52,6 +54,8 @@ interface RootProps {
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
   toggleDataModal?: GenericAction;
+  triggerUndo?: GenericAction;
+  triggerRedo?: GenericAction;
 }
 
 interface RootState {
@@ -95,6 +99,8 @@ class RootComponent extends React.Component<RootProps, RootState> {
     // TODO alphabetize
     const {
       addToNextOpenSlot,
+      canRedo,
+      canUndo,
       coerceType,
       columns,
       changeSelectedFile,
@@ -119,6 +125,8 @@ class RootComponent extends React.Component<RootProps, RootState> {
       setNewSpecCode,
       updateFilter,
       toggleDataModal,
+      triggerUndo,
+      triggerRedo,
     } = this.props;
 
     return (
@@ -131,7 +139,12 @@ class RootComponent extends React.Component<RootProps, RootState> {
             loadCustomDataset={loadCustomDataset}
           />
         )}
-        <Header />
+        <Header
+          triggerUndo={triggerUndo}
+          triggerRedo={triggerRedo}
+          canRedo={canRedo}
+          canUndo={canUndo}
+        />
         <div className="flex full-height">
           <div
             className="flex-down full-height control-container"
@@ -207,6 +220,8 @@ class RootComponent extends React.Component<RootProps, RootState> {
 // TODO figure out base type
 function mapStateToProps({base}: {base: AppState}): any {
   return {
+    canUndo: base.get('undoStack').size >= 1,
+    canRedo: base.get('redoStack').size >= 1,
     columns: base.get('columns'),
     data: base.get('data'),
     spec: base.get('spec').toJS(),

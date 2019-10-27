@@ -486,3 +486,21 @@ h1, h2, h3, h4, h5 {
   background-color: steelblue;
   color: white;
 }
+
+.state-action-controls {
+  margin: 0 15px;
+}
+
+.state-action-button {
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  margin: 0 5px;
+  font-weight: 700;
+}
+
+.state-action-button.action-deactivated {
+  cursor: not-allowed;
+  opacity: 0.2;
+}

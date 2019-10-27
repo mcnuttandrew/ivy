@@ -86,7 +86,36 @@ const buildTypeCoercion = (dim: string): EncodingOption => ({
   predicate: () => true,
 });
 
-// take in an encoding option and create a predicate that rejects that option if that field is not present
+// started doing the remove zero story got bored
+// function findExtentOfIntervals(filters, naturalDomain: [number, number]) {
+//   return filters.reduce(([min, max]: [number, number], filter) => {
+//     return [Math.max(min, filter.range[0]), Math.min(max, filter.range[1])];
+//   }, naturalDomain);
+// }
+//
+// const buildDomainSelection = (dim: string): EncodingOption => ({
+//   optionType: 'Domain',
+//   options: ['INCLUDE ZERO', 'ONLY SELECTED'].map(toOption),
+//   optionSetter: (spec, option, column) => {
+//     const field = spec.getIn(['encoding', dim, 'field']);
+//     const domain = findExtentOfIntervals(
+//       spec.get('transform').filter(filter => filter.get('field') === field),
+//       column.domain,
+//     );
+//
+//     // if (option === 'INCLUDE ZERO') {
+//     //   domain =
+//     // }
+//     spec.setIn(['encoding', dim, 'scale', 'domain'], option);
+//   },
+//   optionGetter: spec => spec.getIn(typeCoerceRoute(dim)),
+//   optionDefault: 'INCLUDE ZERO',
+//   predicate: spec =>
+//     spec.encoding[dim].field && spec.encoding[dim].type === 'quantitative',
+// });
+
+// take in an encoding option and create a predicate that rejects that option
+// if that field is not present
 const injectFieldPredicate = (
   dim: string,
   option: EncodingOption,

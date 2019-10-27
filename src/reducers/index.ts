@@ -10,6 +10,9 @@ import {
   setNewSpecCode,
   addToNextOpenSlot,
   coerceType,
+  triggerRedo,
+  triggerUndo,
+  pushToUndoStack,
 } from './modify-encodings';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
@@ -28,6 +31,11 @@ const toggleDataModal: ActionResponse = state =>
 const changeTheme: ActionResponse = (state, payload) =>
   state.set('currentTheme', payload);
 
+const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
+  state,
+  payload,
+) => wrapper(state, func(state, payload));
+
 const actionFuncMap: {[val: string]: ActionResponse} = {
   // data modifications
   'change-selected-file': changeSelectedFile,
@@ -35,18 +43,21 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-type-inferences': recieveTypeInferences,
 
   // encoding modifications
-  'add-to-next-open-slot': addToNextOpenSlot,
-  'change-mark-type': changeMarkType,
-  'clear-encoding': clearEncoding,
-  'coerce-type': coerceType,
-  'set-encoding-param': setEncodingParameter,
-  'set-new-encoding': setNewSpec,
-  'set-new-encoding-code': setNewSpecCode,
+  'add-to-next-open-slot': wrap(addToNextOpenSlot, pushToUndoStack),
+  'change-mark-type': wrap(changeMarkType, pushToUndoStack),
+  'clear-encoding': wrap(clearEncoding, pushToUndoStack),
+  'coerce-type': wrap(coerceType, pushToUndoStack),
+  'set-encoding-param': wrap(setEncodingParameter, pushToUndoStack),
+  'set-new-encoding': wrap(setNewSpec, pushToUndoStack),
+  'set-new-encoding-code': wrap(setNewSpecCode, pushToUndoStack),
+
+  'trigger-redo': triggerRedo,
+  'trigger-undo': triggerUndo,
 
   // filter modifications
-  'create-filter': createFilter,
-  'delete-filter': deleteFilter,
-  'update-filter': updateFilter,
+  'create-filter': wrap(createFilter, pushToUndoStack),
+  'delete-filter': wrap(deleteFilter, pushToUndoStack),
+  'update-filter': wrap(updateFilter, pushToUndoStack),
 
   // gui modifications
   'change-gui-mode': changeGUIMode,

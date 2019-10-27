@@ -32,6 +32,9 @@ export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
 export const coerceType = buildEasyAction('coerce-type');
 
+export const triggerRedo = buildEasyAction('trigger-redo');
+export const triggerUndo = buildEasyAction('trigger-undo');
+
 export const toggleDataModal = buildEasyAction('toggle-data-modal');
 
 export const chainActions = (actions: GenericAction[]) => (
