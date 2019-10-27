@@ -102,8 +102,8 @@ export default function Filter({
                         selectedVals[option] = !selectedVals[option];
                         updateFilter(
                           Object.entries(selectedVals)
-                            .filter(([_, x]: [string, boolean]) => x)
-                            .map(([x, _]: [string, boolean]) => x),
+                            .filter((x: [string, boolean]) => x[1])
+                            .map((x: [string, boolean]) => x[0]),
                         );
                       }}
                     />

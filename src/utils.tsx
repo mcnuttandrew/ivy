@@ -49,7 +49,7 @@ export function getTypeSymbol(type: DataType): JSX.Element {
   }
 }
 
-export function executePromisesInSeries(tasks: any) {
+export function executePromisesInSeries(tasks: any): any {
   return tasks.reduce(
     (promiseChain: any, task: any): any => promiseChain.then(task),
     Promise.resolve([]),

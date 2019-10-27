@@ -8,7 +8,7 @@ export interface EncodingOption {
   optionSetter: (spec: any, selectedOption: string) => any;
   optionGetter: (spec: any) => string;
   optionDefault: string;
-  predicate: (spec: any) => Boolean;
+  predicate: (spec: any) => boolean;
 }
 
 import {VegaMark} from './types';

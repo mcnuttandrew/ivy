@@ -47,6 +47,19 @@ export const chainActions = (actions: GenericAction[]) => (
   );
 };
 
+export const generateTypeInferences: GenericAction = data => dispatch => {
+  dispatch({
+    type: 'recieve-type-inferences',
+    payload: computeColMeta(data).map((columnMeta: any) => {
+      const isDimension = columnMeta.category === 'DIMENSION';
+      return {
+        ...columnMeta,
+        domain: (isDimension ? getUniques : getDomain)(data, columnMeta.key),
+      };
+    }),
+  });
+};
+
 const csvReader = (data: string) => csvParse(data);
 const jsonReader = (data: string) => JSON.parse(data);
 const getReader = (fileName: string) => {
@@ -88,19 +101,6 @@ export const loadCustomDataset: GenericAction = file => dispatch => {
     payload: liveData,
   });
   generateTypeInferences(liveData)(dispatch);
-};
-
-export const generateTypeInferences: GenericAction = data => dispatch => {
-  dispatch({
-    type: 'recieve-type-inferences',
-    payload: computeColMeta(data).map((columnMeta: any) => {
-      const isDimension = columnMeta.category === 'DIMENSION';
-      return {
-        ...columnMeta,
-        domain: (isDimension ? getUniques : getDomain)(data, columnMeta.key),
-      };
-    }),
-  });
 };
 
 export const changeSelectedFile: GenericAction = fileName => dispatch => {

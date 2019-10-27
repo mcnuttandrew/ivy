@@ -9,7 +9,7 @@ import Selector from './selector';
 
 import {PRIMITIVE_MARKS} from 'vega-lite/build/src/mark';
 
-const MARK_TYPES = PRIMITIVE_MARKS.map((x: string) => ({
+const MARK_TYPES = PRIMITIVE_MARKS.sort().map((x: string) => ({
   display: x,
   value: x,
 }));
@@ -43,8 +43,22 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       onDropFilter,
       setNewSpec,
     } = this.props;
+
+    const makeShelf = (channel: string) => (
+      <Shelf
+        setEncodingParameter={setEncodingParameter}
+        column={spec.encoding[channel]}
+        field={channel}
+        key={channel}
+        columns={columns}
+        onDrop={onDrop}
+        iMspec={iMspec}
+        setNewSpec={setNewSpec}
+      />
+    );
     return (
       <div className="flex-down column full-height background-3">
+        {/* ENCODING STUFF */}
         <div className="flex space-between">
           <h1 className="section-title flex"> Encoding </h1>
           <div className="clear-encoding" onClick={clearEncoding}>
@@ -53,21 +67,10 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           </div>
         </div>
         <div className="flex-down section-body">
-          {['x', 'y', 'column', 'row'].map(channel => {
-            return (
-              <Shelf
-                setEncodingParameter={setEncodingParameter}
-                column={spec.encoding[channel]}
-                field={channel}
-                key={channel}
-                columns={columns}
-                onDrop={onDrop}
-                iMspec={iMspec}
-                setNewSpec={setNewSpec}
-              />
-            );
-          })}
+          {['x', 'y'].map(makeShelf)}
         </div>
+
+        {/* MARK STUFF */}
         <div className="flex space-between center">
           <h1 className="section-title"> Marks </h1>
           <div>
@@ -79,21 +82,17 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           </div>
         </div>
         <div className="flex-down section-body">
-          {['size', 'color', 'shape', 'detail', 'text'].map(channel => {
-            return (
-              <Shelf
-                setEncodingParameter={setEncodingParameter}
-                column={spec.encoding[channel]}
-                field={channel}
-                key={channel}
-                columns={columns}
-                onDrop={onDrop}
-                iMspec={iMspec}
-                setNewSpec={setNewSpec}
-              />
-            );
-          })}
+          {['size', 'color', 'shape', 'detail', 'text'].map(makeShelf)}
         </div>
+
+        {/* FACET STUFF */}
+        <div className="flex space-between">
+          <h1 className="section-title flex"> Facet </h1>
+        </div>
+        <div className="flex-down section-body">
+          {['column', 'row'].map(makeShelf)}
+        </div>
+
         <h1 className="section-title"> Filter </h1>
         <div className="flex-down">
           {spec.transform.map((filter: any, idx: number) => {
