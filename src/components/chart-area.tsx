@@ -2,6 +2,7 @@ import React from 'react';
 import {VegaLite} from 'react-vega';
 import {VegaTheme} from '../types';
 import {GenericAction} from '../actions/index';
+import LintDisplay from './lint-display';
 
 const DEFAULT_CONFIG = {
   facet: {width: 150, height: 150},
@@ -12,6 +13,7 @@ const DEFAULT_CONFIG = {
 interface ChartAreaProps {
   spec: any;
   data: any;
+  lints: any;
   setNewSpec: GenericAction;
   height: number;
   width: number;
@@ -39,7 +41,7 @@ function cleanSpec(spec: any) {
 }
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render() {
-    const {spec, data, setNewSpec, currentTheme} = this.props;
+    const {spec, data, setNewSpec, currentTheme, lints} = this.props;
     // todo listeners
     // todo automatical height inference
     return (
@@ -65,6 +67,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             actions={false}
           />
         </div>
+        <LintDisplay lints={lints} />
       </div>
     );
   }

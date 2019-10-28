@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 // import {Spec} from 'vega-typings';
@@ -31,12 +32,19 @@ const toggleDataModal: ActionResponse = state =>
 const changeTheme: ActionResponse = (state, payload) =>
   state.set('currentTheme', payload);
 
+const recieveLinting: ActionResponse = (state, payload) => {
+  console.log(payload);
+  return state.set('lints', Immutable.fromJS(payload.lintResults));
+};
+
 const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
   state,
   payload,
 ) => wrapper(state, func(state, payload));
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
+  'recieve-linting': recieveLinting,
+
   // data modifications
   'change-selected-file': changeSelectedFile,
   'recieve-data': recieveData,

@@ -1,3 +1,4 @@
+const WorkerPlugin = require('worker-plugin');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const path = require('path');
 const APP_DIR = path.resolve(__dirname, './src');
@@ -9,6 +10,7 @@ module.exports = {
       // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
       languages: ['json'],
     }),
+    new WorkerPlugin(),
   ],
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.

@@ -42,7 +42,8 @@
     "webpack": "4",
     "webpack-cli": "^3.0.8",
     "webpack-command": "^0.2.1",
-    "webpack-dev-server": "^3.2.1"
+    "webpack-dev-server": "^3.2.1",
+    "worker-plugin": "^3.2.0"
   },
   "dependencies": {
     "@types/rc-slider": "^8.6.5",

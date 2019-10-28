@@ -32,6 +32,7 @@ interface RootProps {
   specCode?: string;
   data?: any; //TODO: define the data type
   iMspec?: any;
+  lints?: any;
   selectedGUIMode?: string;
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
@@ -50,6 +51,7 @@ interface RootProps {
   loadDataFromPredefinedDatasets?: GenericAction;
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
+  recieveLinting?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
@@ -81,6 +83,21 @@ class RootComponent extends React.Component<RootProps, RootState> {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     window.addEventListener('resize', debounce(this.resize.bind(this), 50));
     this.resize();
+    this.lintWorker = new Worker('../lint/worker.ts', {type: 'module'});
+    this.lintWorker.onmessage = (event: any) => {
+      switch (event.data.type) {
+        default:
+        case 'lintSpec':
+          this.props.recieveLinting(event.data);
+      }
+    };
+  }
+  private lintWorker: any;
+
+  componentDidUpdate(oldProps: RootProps) {
+    if (!oldProps.iMspec.equals(this.props.iMspec)) {
+      this.lintWorker.postMessage({type: 'evaluateSpec', spec: JSON.stringify(this.props.spec)});
+    }
   }
 
   resize() {
@@ -116,6 +133,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
       dataModalOpen,
       deleteFilter,
       iMspec,
+      lints,
       loadCustomDataset,
       selectedGUIMode,
       spec,
@@ -209,6 +227,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
             width={mainWidth}
             setNewSpec={setNewSpec}
             currentTheme={currentTheme}
+            lints={lints}
             ref="mainContainer"
           />
         </div>
@@ -231,6 +250,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
     currentTheme: base.get('currentTheme'),
+    lints: base.get('lints').toJS()
   };
 }
 

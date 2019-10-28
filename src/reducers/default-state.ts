@@ -30,4 +30,5 @@ export const DEFAULT_STATE: AppState = Map({
   currentTheme: 'urbaninstitute',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
+  lints: Immutable.fromJS([]),
 });
