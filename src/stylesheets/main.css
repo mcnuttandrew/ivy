@@ -144,14 +144,22 @@ h1, h2, h3, h4, h5 {
 .pill .fixed-symbol-width:hover {
   background-color: gray;
 }
+/* the data type indicator should behave special */
+.pill .fixed-symbol-width.pill-symbol {
+  cursor: move;
+  background-color: transparent;
+}
+.pill .fixed-symbol-width.pill-symbol:hover {
+  background-color: transparent;
+}
 .pill .pill-label {
   align-items: center;
   display: flex;
   font-size: 9px;
   height: 100%;
+  max-width: 100%;
   padding: 0 5px;
   width: 100%;
-  max-width: 100%;
 }
 
 .shelf-container {

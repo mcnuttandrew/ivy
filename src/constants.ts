@@ -27,9 +27,12 @@ export const marks: VegaMark[] = [
   // 'trail',
 ];
 
-const spatialAggs = [
+const justCountAgg = [
   {display: 'none', value: undefined},
   {display: 'count', value: 'count'},
+];
+const spatialAggs = [
+  ...justCountAgg,
   {display: 'min', value: 'min'},
   {display: 'max', value: 'max'},
   {display: 'sum', value: 'sum'},
@@ -40,6 +43,7 @@ const spatialAggs = [
 const toOption = (x: string): OptionValue => ({display: x, value: x});
 const binningOptions = [
   'none',
+  'count',
   'min',
   'mean',
   'sum',
@@ -116,34 +120,39 @@ const buildTypeCoercion = (dim: string): EncodingOption => ({
 
 // take in an encoding option and create a predicate that rejects that option
 // if that field is not present
-const injectFieldPredicate = (
-  dim: string,
-  option: EncodingOption,
-): EncodingOption => ({
+type predicateInject = (dim: string, option: EncodingOption) => EncodingOption;
+const injectFieldPredicate: predicateInject = (dim, option) => ({
   ...option,
-  predicate: (spec: any) => Boolean(spec.getIn(['encoding', dim, 'field'])),
+  predicate: (spec: any): boolean =>
+    Boolean(spec.getIn(['encoding', dim, 'field'])),
+});
+const injectNofieldPredicate: predicateInject = (dim, option) => ({
+  ...option,
+  predicate: (spec: any): boolean =>
+    !Boolean(spec.getIn(['encoding', dim, 'field'])),
 });
 
+const generateXorY = (dim: string) => [
+  injectFieldPredicate(dim, buildTypeCoercion(dim)),
+  buildScaleOption(dim),
+  injectFieldPredicate(dim, buildSpatialOptions(dim, spatialAggs)),
+  injectNofieldPredicate(dim, buildSpatialOptions(dim, justCountAgg)),
+];
+
 export const configurationOptions: any = {
-  x: [
-    buildTypeCoercion('x'),
-    buildScaleOption('x'),
-    buildSpatialOptions('x', spatialAggs),
-  ],
-  y: [
-    buildTypeCoercion('y'),
-    buildScaleOption('y'),
-    buildSpatialOptions('y', spatialAggs),
-  ],
+  x: generateXorY('x'),
+  y: generateXorY('y'),
   row: [injectFieldPredicate('row', buildTypeCoercion('row'))],
   column: [injectFieldPredicate('column', buildTypeCoercion('column'))],
   size: [
     injectFieldPredicate('size', buildTypeCoercion('size')),
     injectFieldPredicate('size', buildSpatialOptions('size', binningOptions)),
+    injectNofieldPredicate('size', buildSpatialOptions('size', justCountAgg)),
   ],
   color: [
     injectFieldPredicate('color', buildTypeCoercion('color')),
     injectFieldPredicate('color', buildSpatialOptions('color', binningOptions)),
+    injectNofieldPredicate('color', buildSpatialOptions('color', justCountAgg)),
   ],
   shape: [
     injectFieldPredicate('shape', buildTypeCoercion('shape')),

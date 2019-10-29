@@ -39,7 +39,15 @@ export default function Pill(props: PillProps) {
   const [open, toggleOpen] = useState(false);
   const field = column.field;
   return (
-    <div className="pill flex" ref={dragRef} style={{opacity}}>
+    <div
+      className={classnames({
+        pill: true,
+        flex: true,
+        'in-encoding-panel': inEncoding,
+      })}
+      ref={dragRef}
+      style={{opacity}}
+    >
       {open && (
         <div>
           <div
@@ -76,19 +84,23 @@ export default function Pill(props: PillProps) {
           {<GoTriangleDown />}
         </div>
       )}
-      <div className="fixed-symbol-width">{getTypeSymbol(column.type)}</div>
-      <div className="pill-label">{column.field}</div>
-      <div
-        className="fixed-symbol-width"
-        onClick={() => {
-          if (inEncoding) {
-            return;
-          }
-          createFilter(column);
-        }}
-      >
-        {!inEncoding && <TiFilter />}
+      <div className="fixed-symbol-width pill-symbol">
+        {getTypeSymbol(column.type)}
       </div>
+      <div className="pill-label">{column.field}</div>
+      {!inEncoding && (
+        <div
+          className="fixed-symbol-width"
+          onClick={() => {
+            if (inEncoding) {
+              return;
+            }
+            createFilter(column);
+          }}
+        >
+          <TiFilter />
+        </div>
+      )}
       {!inEncoding && (
         <div
           className="fixed-symbol-width"
