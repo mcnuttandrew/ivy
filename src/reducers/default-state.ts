@@ -12,7 +12,7 @@ export type AppState = any;
 export const EMPTY_SPEC = Immutable.fromJS({
   data: {name: 'myData'},
   transform: [],
-  mark: 'point',
+  mark: {type: 'point', tooltip: true},
   encoding: {
     x: {},
     y: {},

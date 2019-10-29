@@ -61,3 +61,29 @@ export function findField(state: any, targetField: string) {
     .get('columns')
     .find(({field}: {field: string}) => field === targetField);
 }
+
+function compareObjects(a: any, b: any) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+const DEFAULT_CONFIG = {
+  facet: {width: 150, height: 150},
+  overlay: {line: true},
+  scale: {useRawDomain: false},
+};
+
+export function cleanSpec(spec: any) {
+  return {
+    config: DEFAULT_CONFIG,
+    padding: 50,
+    ...spec,
+    encoding: {
+      ...Object.entries(spec.encoding).reduce((acc: any, [key, val]) => {
+        if (!compareObjects(val, {})) {
+          acc[key] = val;
+        }
+        return acc;
+      }, {}),
+    },
+  };
+}

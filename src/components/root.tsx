@@ -205,6 +205,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
           <ChartArea
             data={data}
             spec={spec}
+            iMspec={iMspec}
             height={mainHeight}
             width={mainWidth}
             setNewSpec={setNewSpec}
