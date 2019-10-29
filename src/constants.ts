@@ -142,8 +142,12 @@ const generateXorY = (dim: string) => [
 export const configurationOptions: any = {
   x: generateXorY('x'),
   y: generateXorY('y'),
+
+  // repeaters
+  facet: [injectFieldPred('facet', buildTypeCoercion('facet'))],
   row: [injectFieldPred('row', buildTypeCoercion('row'))],
   column: [injectFieldPred('column', buildTypeCoercion('column'))],
+  // marks
   size: [
     injectFieldPred('size', buildTypeCoercion('size')),
     injectFieldPred('size', buildSpatialOptions('size', binningOptions)),

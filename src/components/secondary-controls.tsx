@@ -7,6 +7,7 @@ import {VegaTheme} from '../types';
 import Selector from './selector';
 
 const VEGA_THEMES = [
+  'default',
   'dark',
   'excel',
   'fivethirtyeight',

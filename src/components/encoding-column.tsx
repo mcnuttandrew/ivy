@@ -87,7 +87,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
 
         {/* FACET STUFF */}
         <div className="flex space-between">
-          <h1 className="section-title flex"> Facet </h1>
+          <h1 className="section-title flex"> Repeat / Small Multiply </h1>
         </div>
         <div className="flex-down section-body">
           {['column', 'row'].map(makeShelf)}

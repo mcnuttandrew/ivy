@@ -23,11 +23,11 @@ export const DEFAULT_STATE: AppState = Map({
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),
   data: [],
   columns: [],
-  currentlySelectedFile: 'cars.json',
+  currentlySelectedFile: 'iris.json',
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',
   dataModalOpen: false,
-  currentTheme: 'urbaninstitute',
+  currentTheme: 'default',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
 });
