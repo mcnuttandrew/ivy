@@ -72,9 +72,15 @@ const getReader = (fileName: string) => {
   return (): any[] => [];
 };
 
+// when the application is deployed on the internet don't try to get data from a folder that doesn't exisit
+const vegaDatasetAdress =
+  window.location.origin === 'http://localhost:8080'
+    ? (fileName: string) => `node_modules/vega-datasets/data/${fileName}`
+    : (fileName: string) =>
+        `https://raw.githubusercontent.com/vega/vega-datasets/master/data/${fileName}`;
+
 export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
-  const url = `node_modules/vega-datasets/data/${fileName}`;
-  fetch(url)
+  fetch(vegaDatasetAdress(fileName))
     .then(d => d.text())
     .then(d => getReader(fileName)(d))
     .then(d => {

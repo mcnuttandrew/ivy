@@ -121,52 +121,50 @@ const buildTypeCoercion = (dim: string): EncodingOption => ({
 // take in an encoding option and create a predicate that rejects that option
 // if that field is not present
 type predicateInject = (dim: string, option: EncodingOption) => EncodingOption;
-const injectFieldPredicate: predicateInject = (dim, option) => ({
+const injectFieldPred: predicateInject = (dim, option) => ({
   ...option,
   predicate: (spec: any): boolean =>
     Boolean(spec.getIn(['encoding', dim, 'field'])),
 });
-const injectNofieldPredicate: predicateInject = (dim, option) => ({
+const injectNofieldPred: predicateInject = (dim, option) => ({
   ...option,
   predicate: (spec: any): boolean =>
     !Boolean(spec.getIn(['encoding', dim, 'field'])),
 });
 
 const generateXorY = (dim: string) => [
-  injectFieldPredicate(dim, buildTypeCoercion(dim)),
+  injectFieldPred(dim, buildTypeCoercion(dim)),
   buildScaleOption(dim),
-  injectFieldPredicate(dim, buildSpatialOptions(dim, spatialAggs)),
-  injectNofieldPredicate(dim, buildSpatialOptions(dim, justCountAgg)),
+  injectFieldPred(dim, buildSpatialOptions(dim, spatialAggs)),
+  injectNofieldPred(dim, buildSpatialOptions(dim, justCountAgg)),
 ];
 
 export const configurationOptions: any = {
   x: generateXorY('x'),
   y: generateXorY('y'),
-  row: [injectFieldPredicate('row', buildTypeCoercion('row'))],
-  column: [injectFieldPredicate('column', buildTypeCoercion('column'))],
+  row: [injectFieldPred('row', buildTypeCoercion('row'))],
+  column: [injectFieldPred('column', buildTypeCoercion('column'))],
   size: [
-    injectFieldPredicate('size', buildTypeCoercion('size')),
-    injectFieldPredicate('size', buildSpatialOptions('size', binningOptions)),
-    injectNofieldPredicate('size', buildSpatialOptions('size', justCountAgg)),
+    injectFieldPred('size', buildTypeCoercion('size')),
+    injectFieldPred('size', buildSpatialOptions('size', binningOptions)),
+    injectNofieldPred('size', buildSpatialOptions('size', justCountAgg)),
   ],
   color: [
-    injectFieldPredicate('color', buildTypeCoercion('color')),
-    injectFieldPredicate('color', buildSpatialOptions('color', binningOptions)),
-    injectNofieldPredicate('color', buildSpatialOptions('color', justCountAgg)),
+    injectFieldPred('color', buildTypeCoercion('color')),
+    injectFieldPred('color', buildSpatialOptions('color', binningOptions)),
+    injectNofieldPred('color', buildSpatialOptions('color', justCountAgg)),
   ],
   shape: [
-    injectFieldPredicate('shape', buildTypeCoercion('shape')),
-    injectFieldPredicate('shape', buildSpatialOptions('shape', binningOptions)),
+    injectFieldPred('shape', buildTypeCoercion('shape')),
+    injectFieldPred('shape', buildSpatialOptions('shape', binningOptions)),
   ],
   detail: [
-    injectFieldPredicate('detail', buildTypeCoercion('detail')),
-    injectFieldPredicate(
-      'detail',
-      buildSpatialOptions('detail', binningOptions),
-    ),
+    injectFieldPred('detail', buildTypeCoercion('detail')),
+    injectFieldPred('detail', buildSpatialOptions('detail', binningOptions)),
   ],
   text: [
-    injectFieldPredicate('text', buildTypeCoercion('text')),
-    injectFieldPredicate('text', buildSpatialOptions('text', binningOptions)),
+    injectFieldPred('text', buildTypeCoercion('text')),
+    injectFieldPred('text', buildSpatialOptions('text', binningOptions)),
+    injectNofieldPred('text', buildSpatialOptions('text', justCountAgg)),
   ],
 };
