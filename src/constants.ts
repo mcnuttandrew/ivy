@@ -123,13 +123,11 @@ const buildTypeCoercion = (dim: string): EncodingOption => ({
 type predicateInject = (dim: string, option: EncodingOption) => EncodingOption;
 const injectFieldPred: predicateInject = (dim, option) => ({
   ...option,
-  predicate: (spec: any): boolean =>
-    Boolean(spec.getIn(['encoding', dim, 'field'])),
+  predicate: (spec: any): boolean => !!spec.getIn(['encoding', dim, 'field']),
 });
 const injectNofieldPred: predicateInject = (dim, option) => ({
   ...option,
-  predicate: (spec: any): boolean =>
-    !Boolean(spec.getIn(['encoding', dim, 'field'])),
+  predicate: (spec: any): boolean => !spec.getIn(['encoding', dim, 'field']),
 });
 
 const generateXorY = (dim: string) => [

@@ -1,9 +1,7 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import debounce from 'lodash.debounce';
 
 import {SHOW_SECONDARY_CONTROLS} from '../constants/CONFIG';
 
@@ -58,44 +56,13 @@ interface RootProps {
   triggerRedo?: GenericAction;
 }
 
-interface RootState {
-  menuHeight: number;
-  menuWidth: number;
-  mainHeight: number;
-  mainWidth: number;
-}
-
-class RootComponent extends React.Component<RootProps, RootState> {
-  constructor(props: RootProps) {
-    super(props);
-    this.state = {
-      menuHeight: 0,
-      menuWidth: 0,
-      mainHeight: 0,
-      mainWidth: 0,
-    };
-    this.resize = this.resize.bind(this);
-  }
+class RootComponent extends React.Component<RootProps> {
   componentDidMount() {
     // on start load the default selected file
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
-    window.addEventListener('resize', debounce(this.resize.bind(this), 50));
-    this.resize();
-  }
-
-  resize() {
-    const menuNode: any = ReactDOM.findDOMNode(this.refs.menuContainer);
-    const currentNode: any = ReactDOM.findDOMNode(this.refs.mainContainer);
-    this.setState({
-      menuHeight: menuNode.clientHeight,
-      menuWidth: menuNode.clientWidth,
-      mainHeight: currentNode.clientHeight,
-      mainWidth: currentNode.clientWidth,
-    });
   }
 
   render() {
-    const {menuWidth, menuHeight, mainHeight, mainWidth} = this.state;
     // TODO alphabetize
     const {
       addToNextOpenSlot,
@@ -146,10 +113,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
           canUndo={canUndo}
         />
         <div className="flex full-height">
-          <div
-            className="flex-down full-height control-container"
-            ref="menuContainer"
-          >
+          <div className="flex-down full-height control-container">
             {SHOW_SECONDARY_CONTROLS && (
               <SecondaryControls
                 currentTheme={currentTheme}
@@ -195,23 +159,20 @@ class RootComponent extends React.Component<RootProps, RootState> {
               <div className="flex full-height two-column">
                 <CodeEditor
                   setNewSpecCode={setNewSpecCode}
-                  height={menuHeight - 65}
-                  width={menuWidth}
                   currentCode={specCode}
                 />
               </div>
             )}
           </div>
-          <ChartArea
-            data={data}
-            spec={spec}
-            iMspec={iMspec}
-            height={mainHeight}
-            width={mainWidth}
-            setNewSpec={setNewSpec}
-            currentTheme={currentTheme}
-            ref="mainContainer"
-          />
+          <div>
+            <ChartArea
+              data={data}
+              spec={spec}
+              iMspec={iMspec}
+              setNewSpec={setNewSpec}
+              currentTheme={currentTheme}
+            />
+          </div>
         </div>
       </div>
     );

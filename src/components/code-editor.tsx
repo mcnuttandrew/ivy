@@ -6,8 +6,6 @@ import {classnames} from '../utils';
 
 interface Props {
   currentCode: string;
-  height: number;
-  width: number;
   setNewSpecCode: GenericAction;
 }
 
@@ -28,7 +26,7 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const {currentCode, height, width, setNewSpecCode} = this.props;
+    const {currentCode, setNewSpecCode} = this.props;
     const {error} = this.state;
     const options = {
       selectOnLineNumbers: true,
@@ -47,8 +45,6 @@ export default class CodeEditor extends React.Component<Props, State> {
           ERROR
         </div>
         <MonacoEditor
-          width={width}
-          height={height}
           language="json"
           theme="vs-light"
           value={currentCode}

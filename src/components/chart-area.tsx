@@ -8,8 +8,6 @@ interface ChartAreaProps {
   spec: any;
   data: any;
   setNewSpec: GenericAction;
-  height: number;
-  width: number;
   currentTheme: VegaTheme;
   iMspec: any;
 }

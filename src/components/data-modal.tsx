@@ -87,7 +87,7 @@ export default class DataModal extends React.Component<DataModalProps> {
             <div className="custom-data">
               <h3>Upload a Custom Dataset</h3>
               <h5>We support JSON and CSV formatted data</h5>
-              <input type="file" ref="fileInput" onChange={this.handleSubmit} />
+              <input type="file" onChange={this.handleSubmit} />
             </div>
           </div>
         </div>
