@@ -1,13 +1,25 @@
-import Immutable, {Map} from 'immutable';
-// interface InternalAppState {
+import Immutable from 'immutable';
+// import {ColumnHeader} from '../types';
+// import {Spec, Data} from 'vega-typings/types';
+export type AppState = Immutable.Map<any, any>;
+
+// {
 //   spec: Spec;
-//   data: any;
+//   specCode: string;
+//   data: Data;
 //   columns: ColumnHeader[];
+//   currentlySelectedFile: string;
+//   selectedGUIMode: string;
+//   // selectedGUIMode: 'PROGRAMMATIC';
+//   dataModalOpen: boolean;
+//   currentTheme: string;
+//   undoStack: any;
+//   redoStack: any;
 // }
 export interface ActionResponse {
   (state: AppState, payload: any): AppState;
 }
-export type AppState = any;
+// export type AppState = any;
 // TODO undo this embarrasment
 export const EMPTY_SPEC = Immutable.fromJS({
   data: {name: 'myData'},
@@ -18,7 +30,7 @@ export const EMPTY_SPEC = Immutable.fromJS({
     y: {},
   },
 });
-export const DEFAULT_STATE: AppState = Map({
+export const DEFAULT_STATE: AppState = Immutable.fromJS({
   spec: EMPTY_SPEC,
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),
   data: [],
