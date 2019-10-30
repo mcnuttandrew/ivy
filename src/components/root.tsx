@@ -26,6 +26,7 @@ import SecondaryControls from './secondary-controls';
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
   columns?: ColumnHeader[];
+  metaColumns?: ColumnHeader[];
   canUndo?: boolean;
   canRedo?: boolean;
   spec?: Spec;
@@ -51,6 +52,7 @@ interface RootProps {
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
   setEncodingParameter?: GenericAction;
+  setFacetingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
   toggleDataModal?: GenericAction;
@@ -117,10 +119,12 @@ class RootComponent extends React.Component<RootProps, RootState> {
       deleteFilter,
       iMspec,
       loadCustomDataset,
+      metaColumns,
       selectedGUIMode,
       spec,
       specCode,
       setEncodingParameter,
+      setFacetingParameter,
       setNewSpec,
       setNewSpecCode,
       updateFilter,
@@ -166,6 +170,7 @@ class RootComponent extends React.Component<RootProps, RootState> {
                   <DataColumn
                     addToNextOpenSlot={addToNextOpenSlot}
                     columns={columns}
+                    metaColumns={metaColumns}
                     coerceType={coerceType}
                     currentlySelectedFile={currentlySelectedFile}
                     createFilter={createFilter}
@@ -182,6 +187,10 @@ class RootComponent extends React.Component<RootProps, RootState> {
                     columns={columns}
                     setNewSpec={setNewSpec}
                     onDrop={(item: any) => {
+                      if (item.type === 'METADATA_COLUMN') {
+                        setFacetingParameter(item);
+                        return;
+                      }
                       setEncodingParameter(item);
                     }}
                     onDropFilter={(item: any) =>
@@ -227,6 +236,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     data: base.get('data'),
     spec: base.get('spec').toJS(),
     iMspec: base.get('spec'),
+    metaColumns: base.get('metaColumns'),
     specCode: base.get('specCode'),
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),

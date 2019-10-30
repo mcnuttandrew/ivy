@@ -23,6 +23,7 @@ export const DEFAULT_STATE: AppState = Map({
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),
   data: [],
   columns: [],
+  metaColumns: [],
   currentlySelectedFile: 'iris.json',
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',

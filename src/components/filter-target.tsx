@@ -9,7 +9,7 @@ interface FilterTargetProps {
 
 export default function FilterTarget({onDrop}: FilterTargetProps) {
   const [{isOver, canDrop}, drop] = useDrop({
-    accept: 'CARD',
+    accept: 'DATA_COLUMN',
     drop: item => onDrop({...item}),
     collect: monitor => ({
       isOver: monitor.isOver(),

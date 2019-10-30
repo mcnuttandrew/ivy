@@ -120,6 +120,29 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   return newState;
 };
 
+const facetingToSpace: {[x: string]: string} = {
+  row: 'y',
+  column: 'x',
+};
+export const setFacetingParameter: ActionResponse = (state, payload) => {
+  const column = findField(state, payload.text, 'metaColumns');
+  let newSpec = state.get('spec');
+  if (!newSpec.get('repeat')) {
+    newSpec = newSpec.setIn(['repeat'], Map());
+  }
+  console.log(payload, column, payload.field, facetingToSpace[payload.field]);
+  newSpec = newSpec
+    .setIn(['repeat', payload.field], Immutable.fromJS(column.domain))
+    .setIn(
+      ['encoding', facetingToSpace[payload.field], 'field'],
+      Immutable.fromJS({repeat: 'column'}),
+    );
+  return state.set('spec', newSpec);
+  // console.log(payload, column);
+  // state.setIn([''])
+  // return newState;
+};
+
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
 export function pushToUndoStack(oldState: any, newState: any) {

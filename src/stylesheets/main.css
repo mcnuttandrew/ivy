@@ -48,6 +48,9 @@ h1, h2, h3, h4, h5 {
 .center {
   align-items: center;
 }
+.margin-bottom {
+  margin-bottom: 10px;
+}
 
 .chart-container {
   display: flex;

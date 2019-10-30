@@ -46,7 +46,20 @@ export const recieveTypeInferences: ActionResponse = (state, payload) => {
       }),
     )
     .reduce((acc, row) => acc.concat(row), []);
-  return state.set('columns', orderedColumns);
+  const metaColumns = Object.entries(groupedColumns)
+    .filter((d: [string, ColumnHeader[]]) => d[1].length)
+    .map((entry: [string, ColumnHeader[]]) => {
+      const [type, columns] = entry;
+      const newHeader: ColumnHeader = {
+        field: `${type} COLUMNS`,
+        type: 'METADATA',
+        originalType: 'METADATA',
+        secondaryType: 'METADATA',
+        domain: columns.map((column: ColumnHeader) => column.field),
+      };
+      return newHeader;
+    });
+  return state.set('columns', orderedColumns).set('metaColumns', metaColumns);
 };
 
 export const changeSelectedFile: ActionResponse = (state, payload) => {

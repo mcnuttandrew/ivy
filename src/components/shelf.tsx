@@ -20,6 +20,11 @@ interface ShelfProps {
   setNewSpec: GenericAction;
 }
 
+const METADATA_ACCEPTORS: {[x: string]: boolean} = {
+  row: true,
+  column: true,
+};
+
 export default function Shelf(props: ShelfProps) {
   const {
     field,
@@ -33,22 +38,25 @@ export default function Shelf(props: ShelfProps) {
 
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
-    accept: 'CARD',
+    accept: METADATA_ACCEPTORS[field]
+      ? ['DATA_COLUMN', 'METADATA_COLUMN']
+      : 'DATA_COLUMN',
     drop: item => onDrop({...item, field}),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
   });
-  const optionsToRender = (configurationOptions[field] || []).filter(
-    (option: EncodingOption) => option.predicate(iMspec),
-  );
+  const optionsToRender = (configurationOptions[field] || [])
+    .filter((option: EncodingOption) => option.predicate(iMspec))
+    .map((option: EncodingOption) => option);
   // unsure if the toggle should be open or not
   // const [configurationOpen, toggleConfiguration] = useState(true);
   const configurationOpen = Boolean(optionsToRender.length);
   const definedField = columns.find(
     ({field}) => column && field === column.field,
   );
+
   return (
     <div ref={drop} className="flex-down shelf-container">
       <div className="shelf flex">

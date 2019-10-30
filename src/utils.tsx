@@ -5,7 +5,7 @@ import {
   TiCalendar,
 } from 'react-icons/ti';
 
-import {DataType} from './types';
+import {DataType, ColumnHeader} from './types';
 
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
@@ -39,6 +39,8 @@ export function getDomain(data: any, field: string): number[] {
 
 export function getTypeSymbol(type: DataType): JSX.Element {
   switch (type) {
+    case 'METADATA':
+      return <span>?</span>;
     case 'MEASURE':
       return <TiSortNumerically />;
     case 'TIME':
@@ -56,11 +58,16 @@ export function executePromisesInSeries(tasks: any): any {
   );
 }
 
-export function findField(state: any, targetField: string) {
+type findField = (
+  state: any,
+  targetField: string,
+  table?: string,
+) => ColumnHeader;
+export const findField: findField = (state, targetField, table = 'columns') => {
   return state
-    .get('columns')
+    .get(table)
     .find(({field}: {field: string}) => field === targetField);
-}
+};
 
 function compareObjects(a: any, b: any) {
   return JSON.stringify(a) === JSON.stringify(b);

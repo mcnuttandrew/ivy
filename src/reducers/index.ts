@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 
 import {
   setEncodingParameter,
+  setFacetingParameter,
   clearEncoding,
   changeMarkType,
   setNewSpec,
@@ -48,6 +49,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'clear-encoding': wrap(clearEncoding, pushToUndoStack),
   'coerce-type': wrap(coerceType, pushToUndoStack),
   'set-encoding-param': wrap(setEncodingParameter, pushToUndoStack),
+  'set-faceting-param': wrap(setFacetingParameter, pushToUndoStack),
   'set-new-encoding': wrap(setNewSpec, pushToUndoStack),
   'set-new-encoding-code': wrap(setNewSpecCode, pushToUndoStack),
 

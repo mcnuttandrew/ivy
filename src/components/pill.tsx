@@ -30,14 +30,20 @@ export default function Pill(props: PillProps) {
     createFilter,
     coerceType,
   } = props;
+
   const [{opacity}, dragRef] = useDrag({
-    item: {type: 'CARD', text: column.field, containingShelf},
+    item: {
+      type: column.type === 'METADATA' ? 'METADATA_COLUMN' : 'DATA_COLUMN',
+      text: column.field,
+      containingShelf,
+    },
     collect: monitor => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
   const [open, toggleOpen] = useState(false);
   const field = column.field;
+  const type = column.type;
   return (
     <div
       className={classnames({
@@ -79,7 +85,7 @@ export default function Pill(props: PillProps) {
           </div>
         </div>
       )}
-      {!inEncoding && (
+      {!inEncoding && type !== 'METADATA' && (
         <div className="fixed-symbol-width" onClick={() => toggleOpen(!open)}>
           {<GoTriangleDown />}
         </div>
@@ -88,7 +94,7 @@ export default function Pill(props: PillProps) {
         {getTypeSymbol(column.type)}
       </div>
       <div className="pill-label">{column.field}</div>
-      {!inEncoding && (
+      {!inEncoding && type !== 'METADATA' && (
         <div
           className="fixed-symbol-width"
           onClick={() => {

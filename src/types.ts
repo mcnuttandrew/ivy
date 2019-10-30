@@ -1,4 +1,4 @@
-export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME';
+export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METADATA';
 
 export interface ColumnHeader {
   type: DataType;

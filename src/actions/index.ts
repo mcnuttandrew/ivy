@@ -20,6 +20,7 @@ interface GenericActionCreator {
 const buildEasyAction: GenericActionCreator = type => payload => dispatch =>
   dispatch({type, payload});
 export const setEncodingParameter = buildEasyAction('set-encoding-param');
+export const setFacetingParameter = buildEasyAction('set-faceting-param');
 export const clearEncoding = buildEasyAction('clear-encoding');
 export const changeMarkType = buildEasyAction('change-mark-type');
 export const setNewSpec = buildEasyAction('set-new-encoding');
