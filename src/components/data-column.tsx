@@ -6,6 +6,7 @@ import Pill from './pill';
 
 interface DataColumnProps {
   columns: ColumnHeader[];
+  metaColumns: ColumnHeader[];
   currentlySelectedFile: string;
 
   addToNextOpenSlot: GenericAction;
@@ -22,7 +23,22 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       addToNextOpenSlot,
       createFilter,
       toggleDataModal,
+      metaColumns,
     } = this.props;
+
+    const makePill = (column: ColumnHeader) => {
+      return (
+        <div className="pill-container" key={column.field}>
+          <Pill
+            column={column}
+            coerceType={coerceType}
+            inEncoding={false}
+            addToNextOpenSlot={addToNextOpenSlot}
+            createFilter={createFilter}
+          />
+        </div>
+      );
+    };
     return (
       <div className="flex-down column full-height background-2 font-white">
         <h1 className="section-title">Data</h1>
@@ -33,21 +49,11 @@ export default class DataColumn extends React.Component<DataColumnProps> {
           </div>
           <button onClick={toggleDataModal}>CHANGE</button>
         </div>
-        <div className="flex-down">
-          {columns.map(column => {
-            return (
-              <div className="pill-container" key={column.field}>
-                <Pill
-                  column={column}
-                  coerceType={coerceType}
-                  inEncoding={false}
-                  addToNextOpenSlot={addToNextOpenSlot}
-                  createFilter={createFilter}
-                />
-              </div>
-            );
-          })}
-        </div>
+        <h5>Data Columns</h5>
+        <div className="flex-down">{columns.map(makePill)}</div>
+        <h5>Meta Columns</h5>
+        <div className="flex-down">{metaColumns.map(makePill)}</div>
+
         <div className="bottom-fill" />
       </div>
     );

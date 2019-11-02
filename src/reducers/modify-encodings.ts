@@ -3,6 +3,16 @@ import Immutable, {Map} from 'immutable';
 import {findField} from '../utils';
 import {ActionResponse, EMPTY_SPEC} from './default-state';
 
+// function getSpecModificationTarget(state: any) {
+//   if (state.getIn(['spec', 'spec'])) {
+//     return {target, }
+//   }
+// }
+//
+
+const usingNestedSpec = (state: any): boolean =>
+  Boolean(state.getIn(['spec', 'spec']));
+
 const TYPE_TRANSLATE: {[s: string]: string} = {
   DIMENSION: 'nominal',
   MEASURE: 'quantitative',
@@ -34,6 +44,7 @@ const usuallyContinuous: setMap = {
   y: true,
   size: true,
 };
+// roughly follow APT for automatic suggestion
 function guessType(channel: string, type: string): string {
   if (type === 'DIMENSION') {
     return usuallyContinuous[channel] ? 'ordinal' : 'nominal';
@@ -63,8 +74,11 @@ export const addToNextOpenSlot: ActionResponse = (state, payload) => {
   return state.setIn(['spec', 'encoding'], Immutable.fromJS(encoding));
 };
 
+// remove the current encoding
 export const clearEncoding: ActionResponse = state =>
   state.set('spec', EMPTY_SPEC);
+
+// change the mark type
 export const changeMarkType: ActionResponse = (state, payload) => {
   const route = ['spec', 'mark', 'type'];
   if (!state.getIn(route)) {
@@ -72,9 +86,12 @@ export const changeMarkType: ActionResponse = (state, payload) => {
   }
   return state.setIn(route, payload);
 };
+
+// blindly set a new spec
 export const setNewSpec: ActionResponse = (state, payload) =>
   state.set('spec', Immutable.fromJS(payload));
 
+// set the spec code
 export const setNewSpecCode: ActionResponse = (state, payload) => {
   const {code, inError} = payload;
   if (inError) {
@@ -98,9 +115,12 @@ export const coerceType: ActionResponse = (state, payload) => {
   );
 };
 
+// move a field from one channel to another (origin field might be null)
 export const setEncodingParameter: ActionResponse = (state, payload) => {
   const fieldHeader = findField(state, payload.text);
-  const route = ['spec', 'encoding'];
+  const route = usingNestedSpec(state)
+    ? ['spec', 'spec', 'encoding']
+    : ['spec', 'encoding'];
   let newState = state;
   if (fieldHeader) {
     newState = state.setIn(
@@ -120,6 +140,17 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   return newState;
 };
 
+// move a field from one channel to another (origin field might be null)
+export const swapXAndYChannels: ActionResponse = state => {
+  const route = usingNestedSpec(state)
+    ? ['spec', 'spec', 'encoding']
+    : ['spec', 'encoding'];
+  const oldX = state.getIn([...route, 'x']);
+  const oldY = state.getIn([...route, 'y']);
+
+  return state.setIn([...route, 'x'], oldY).setIn([...route, 'y'], oldX);
+};
+
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
 export function pushToUndoStack(oldState: any, newState: any) {
@@ -127,7 +158,7 @@ export function pushToUndoStack(oldState: any, newState: any) {
     .set('undoStack', newState.get('undoStack').push(oldState.get('spec')))
     .set('redoStack', Immutable.fromJS([]));
 }
-
+// TODO these are probably constructable as a single more elegant function
 export const triggerRedo: ActionResponse = state => {
   const undoStack = state.get('undoStack');
   const redoStack = state.get('redoStack');

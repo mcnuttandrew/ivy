@@ -30,6 +30,7 @@ interface RootProps {
   specCode?: string;
   data?: any; //TODO: define the data type
   iMspec?: any;
+  metaColumns?: ColumnHeader[];
   selectedGUIMode?: string;
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
@@ -51,6 +52,7 @@ interface RootProps {
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
+  swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
   triggerUndo?: GenericAction;
   triggerRedo?: GenericAction;
@@ -84,12 +86,14 @@ class RootComponent extends React.Component<RootProps> {
       deleteFilter,
       iMspec,
       loadCustomDataset,
+      metaColumns,
       selectedGUIMode,
       spec,
       specCode,
       setEncodingParameter,
       setNewSpec,
       setNewSpecCode,
+      swapXAndYChannels,
       updateFilter,
       toggleDataModal,
       triggerUndo,
@@ -133,6 +137,7 @@ class RootComponent extends React.Component<RootProps> {
                     coerceType={coerceType}
                     currentlySelectedFile={currentlySelectedFile}
                     createFilter={createFilter}
+                    metaColumns={metaColumns}
                     toggleDataModal={toggleDataModal}
                   />
                   <EncodingColumn
@@ -144,6 +149,7 @@ class RootComponent extends React.Component<RootProps> {
                     updateFilter={updateFilter}
                     deleteFilter={deleteFilter}
                     columns={columns}
+                    metaColumns={metaColumns}
                     setNewSpec={setNewSpec}
                     onDrop={(item: any) => {
                       setEncodingParameter(item);
@@ -169,7 +175,7 @@ class RootComponent extends React.Component<RootProps> {
               data={data}
               spec={spec}
               iMspec={iMspec}
-              setNewSpec={setNewSpec}
+              swapXAndYChannels={swapXAndYChannels}
               currentTheme={currentTheme}
             />
           </div>
@@ -188,6 +194,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     data: base.get('data'),
     spec: base.get('spec').toJS(),
     iMspec: base.get('spec'),
+    metaColumns: base.get('metaColumns'),
     specCode: base.get('specCode'),
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),

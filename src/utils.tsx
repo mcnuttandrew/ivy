@@ -43,6 +43,8 @@ export function getTypeSymbol(type: DataType): JSX.Element {
       return <TiSortNumerically />;
     case 'TIME':
       return <TiCalendar />;
+    case 'METACOLUMN':
+      return <span>?</span>;
     default:
     case 'DIMENSION':
       return <TiSortAlphabetically />;
@@ -73,17 +75,36 @@ const DEFAULT_CONFIG = {
 };
 
 export function cleanSpec(spec: any) {
-  return {
-    config: DEFAULT_CONFIG,
-    padding: 50,
-    ...spec,
-    encoding: {
-      ...Object.entries(spec.encoding).reduce((acc: any, [key, val]) => {
-        if (!compareObjects(val, {})) {
-          acc[key] = val;
-        }
-        return acc;
-      }, {}),
-    },
-  };
+  return {config: DEFAULT_CONFIG, padding: 50, ...spec};
+  // return {
+  //   config: DEFAULT_CONFIG,
+  //   padding: 50,
+  //   ...spec,
+  //   encoding: {
+  //     ...Object.entries(spec.encoding).reduce((acc: any, [key, val]: any) => {
+  //       if (!compareObjects(val, {})) {
+  //         acc[key] = val;
+  //       }
+  //       return acc;
+  //     }, {}),
+  //   },
+  // };
+}
+
+// safely access elements on a nested object
+export function get(obj: any, route: string[]): any {
+  if (!obj) {
+    return null;
+  }
+  if (route.length === 0) {
+    return null;
+  }
+  if (route.length === 1) {
+    return obj[route[0]];
+  }
+  const next = obj[route[0]];
+  if (!next) {
+    return null;
+  }
+  return get(next, route.slice(1));
 }

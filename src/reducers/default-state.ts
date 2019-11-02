@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import {splom} from '../constants/vega-examples';
 // import {ColumnHeader} from '../types';
 // import {Spec, Data} from 'vega-typings/types';
 export type AppState = Immutable.Map<any, any>;
@@ -21,7 +22,7 @@ export interface ActionResponse {
 }
 // export type AppState = any;
 // TODO undo this embarrasment
-export const EMPTY_SPEC = Immutable.fromJS({
+const defaultEmpty = Immutable.fromJS({
   data: {name: 'myData'},
   transform: [],
   mark: {type: 'point', tooltip: true},
@@ -30,11 +31,13 @@ export const EMPTY_SPEC = Immutable.fromJS({
     y: {},
   },
 });
+export const EMPTY_SPEC = splom;
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
   spec: EMPTY_SPEC,
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),
   data: [],
   columns: [],
+  metaColumns: [],
   currentlySelectedFile: 'iris.json',
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',

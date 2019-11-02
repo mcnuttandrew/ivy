@@ -13,6 +13,7 @@ import {
   triggerRedo,
   triggerUndo,
   pushToUndoStack,
+  swapXAndYChannels,
 } from './modify-encodings';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
@@ -50,6 +51,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'set-encoding-param': wrap(setEncodingParameter, pushToUndoStack),
   'set-new-encoding': wrap(setNewSpec, pushToUndoStack),
   'set-new-encoding-code': wrap(setNewSpecCode, pushToUndoStack),
+  'swap-x-and-y-channels': wrap(swapXAndYChannels, pushToUndoStack),
 
   'trigger-redo': triggerRedo,
   'trigger-undo': triggerUndo,
@@ -72,6 +74,7 @@ export default createStore(
       state: AppState = DEFAULT_STATE,
       {type, payload}: {type: string, payload: any},
     ) => {
+      console.log(type);
       return (actionFuncMap[type] || NULL_ACTION)(state, payload);
     },
   }),

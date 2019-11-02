@@ -6,11 +6,12 @@ import {GenericAction} from '../actions/index';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {classnames} from '../utils';
+import {classnames, get} from '../utils';
 import {configurationOptions, EncodingOption} from '../constants';
 
 interface ShelfProps {
   columns: ColumnHeader[];
+  metaColumns: ColumnHeader[];
   column?: {field: string, type: string};
   field: string;
   onDrop: any;
@@ -25,9 +26,10 @@ export default function Shelf(props: ShelfProps) {
     field,
     columns,
     column,
+    iMspec,
+    metaColumns,
     onDrop,
     setEncodingParameter,
-    iMspec,
     setNewSpec,
   } = props;
 
@@ -46,9 +48,15 @@ export default function Shelf(props: ShelfProps) {
   // unsure if the toggle should be open or not
   // const [configurationOpen, toggleConfiguration] = useState(true);
   const configurationOpen = Boolean(optionsToRender.length);
-  const definedField = columns.find(
+  let definedField = columns.find(
     ({field}) => column && field === column.field,
   );
+  const repeatKey = get(column, ['field', 'repeat']);
+  if (repeatKey && typeof repeatKey === 'string') {
+    definedField = metaColumns.find(
+      ({field}: {field: string}) => repeatKey === field,
+    );
+  }
   return (
     <div ref={drop} className="flex-down shelf-container">
       <div className="shelf flex">

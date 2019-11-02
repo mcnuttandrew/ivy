@@ -38,6 +38,7 @@ export default function Pill(props: PillProps) {
   });
   const [open, toggleOpen] = useState(false);
   const field = column.field;
+  const isMeta = column.metaColumn;
   return (
     <div
       className={classnames({
@@ -79,16 +80,16 @@ export default function Pill(props: PillProps) {
           </div>
         </div>
       )}
-      {!inEncoding && (
+      {!isMeta && !inEncoding && (
         <div className="fixed-symbol-width" onClick={() => toggleOpen(!open)}>
           {<GoTriangleDown />}
         </div>
       )}
       <div className="fixed-symbol-width pill-symbol">
-        {getTypeSymbol(column.type)}
+        {getTypeSymbol(isMeta ? 'METACOLUMN' : column.type)}
       </div>
       <div className="pill-label">{column.field}</div>
-      {!inEncoding && (
+      {!isMeta && !inEncoding && (
         <div
           className="fixed-symbol-width"
           onClick={() => {
@@ -101,7 +102,7 @@ export default function Pill(props: PillProps) {
           <TiFilter />
         </div>
       )}
-      {!inEncoding && (
+      {!isMeta && !inEncoding && (
         <div
           className="fixed-symbol-width"
           onClick={() => addToNextOpenSlot(column)}
