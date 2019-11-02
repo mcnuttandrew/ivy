@@ -8,7 +8,7 @@ export const recieveData: ActionResponse = (state, payload) => {
     .set('data', payload)
     .set('spec', EMPTY_SPEC)
     .set('undoStack', Immutable.fromJS([]))
-    .set('undoStack', Immutable.fromJS([]));
+    .set('redoStack', Immutable.fromJS([]));
 };
 
 export const recieveTypeInferences: ActionResponse = (state, payload) => {
