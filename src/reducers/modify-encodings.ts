@@ -117,8 +117,37 @@ export const coerceType: ActionResponse = (state, payload) => {
   );
 };
 
+function maybeRemoveRepeats(
+  oldState: any,
+  newState: any,
+  targetChannel: string,
+) {
+  const route = usingNestedSpec(newState)
+    ? ['spec', 'spec', 'encoding']
+    : ['spec', 'encoding'];
+  // figure out if target removing field is a metacolumn
+  const oldField = oldState.getIn([...route, targetChannel]);
+  const repeaterField = oldField.getIn(['field', 'repeat']);
+  if (!repeaterField) {
+    return newState;
+  }
+  // check to see if that column is still in use after the removal
+  let stillInUse = false;
+  newState.getIn(route).forEach((channelEncoding: any) => {
+    if (channelEncoding.getIn(['field', 'repeat', repeaterField])) {
+      stillInUse = true;
+    }
+  });
+  // if not then remove the corresponding repeat
+  if (stillInUse) {
+    return newState;
+  }
+  return newState.deleteIn(['spec', 'repeat', repeaterField]);
+}
+
 // move a field from one channel to another (origin field might be null)
 export const setEncodingParameter: ActionResponse = (state, payload) => {
+  console.log(payload);
   if (payload.isMeta) {
     return setChannelToMetaColumn(state, payload);
   }
@@ -128,7 +157,7 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
     : ['spec', 'encoding'];
   let newState = state;
   if (fieldHeader) {
-    newState = state.setIn(
+    newState = newState.setIn(
       [...route, payload.field],
       Immutable.fromJS({
         field: payload.text,
@@ -136,11 +165,28 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
       }),
     );
   } else {
-    newState = state.setIn([...route, payload.field], Map());
+    // removing field
+    newState = maybeRemoveRepeats(
+      state,
+      newState.setIn([...route, payload.field], Map()),
+      payload.field,
+    );
+    // // TODO: extract this logic into a function
+    // const oldField = state.getIn([...route, payload.field]);
+    // if (oldField.getIn(['field', 'repeat'])) {
+    //   console.log('met a fie;// DEBUG: ');
+    //   newState = newState.deleteIn([
+    //     'spec',
+    //     'repeat',
+    //     oldField.getIn(['field', 'repeat']),
+    //   ]);
+    // }
   }
+  // if the card is being moved, remove where it was before
   if (payload.containingShelf) {
-    newState = newState.setIn([...route, payload.containingShelf], Map());
+    newState = newState.deleteIn([...route, payload.containingShelf]);
   }
+  // check if the nesting spec should be removed
   if (usingNestedSpec(state) && noMetaUsage(newState, route)) {
     return removeMetaEncoding(newState);
   }
@@ -154,6 +200,7 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
 //   should have modes dimension columns / measure columns / custom (this should also auto set the field type)
 //        - custom then should be a check box of all columns
 // - also haven't set up the "repeat" metacolumn, which requires it's own weird repeat setting
+// also just so many minor bugs
 
 function noMetaUsage(state: any, route: string[]) {
   let containsMeta = false;
@@ -166,44 +213,51 @@ function noMetaUsage(state: any, route: string[]) {
 }
 
 function addMetaEncoding(state: any) {
-  return (
-    state
-      // move all of the old stuff in the new subspec
-      .setIn(['spec', 'spec'], Map())
-      .setIn(['spec', 'spec', 'encoding'], state.getIn(['spec', 'encoding']))
-      .setIn(['spec', 'spec', 'mark'], state.getIn(['spec', 'mark']))
-      .deleteIn(['spec', 'encoding'])
-      .deleteIn(['spec', 'mark'])
-  );
+  return state
+    .setIn(['spec', 'spec'], Map())
+    .setIn(['spec', 'spec', 'encoding'], state.getIn(['spec', 'encoding']))
+    .setIn(['spec', 'spec', 'mark'], state.getIn(['spec', 'mark']))
+    .deleteIn(['spec', 'encoding'])
+    .deleteIn(['spec', 'mark']);
 }
 
 function removeMetaEncoding(state: any) {
-  return (
-    state
-      // move all of the old stuff in the new subspec
-      .setIn(['spec', 'encoding'], state.getIn(['spec', 'spec', 'encoding']))
-      .setIn(['spec', 'mark'], state.getIn(['spec', 'spec', 'mark']))
-      .deleteIn(['spec', 'spec'])
-      .deleteIn(['spec', 'repeat'])
-  );
+  return state
+    .setIn(['spec', 'encoding'], state.getIn(['spec', 'spec', 'encoding']))
+    .setIn(['spec', 'mark'], state.getIn(['spec', 'spec', 'mark']))
+    .deleteIn(['spec', 'spec'])
+    .deleteIn(['spec', 'repeat']);
 }
 
 export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
+  console.log('meta column manip');
   let newState = state;
   const metacolumnHeader = findField(state, payload.text, 'metaColumns');
+  // moving from un-nested spec to nested spec
   if (!usingNestedSpec(state)) {
-    newState = addMetaEncoding(newState)
-      // create repeats
-      // this approach only works for column / row
-      .setIn(['spec', 'repeat'], Immutable.fromJS({}));
-    console.log('i set everything?');
+    newState = addMetaEncoding(newState).setIn(
+      ['spec', 'repeat'],
+      Immutable.fromJS({}),
+    );
   }
+  //
+  // this approach only works for column / row
   if (!newState.getIn(['spec', 'repeat', payload.text])) {
-    console.log(newState.getIn(['spec', 'repeat', payload.text]));
-    newState = newState.setIn(
-      ['spec', 'repeat', payload.text],
+    const route = ['spec', 'repeat', payload.text];
+    newState = maybeRemoveRepeats(newState, newState, payload.field).setIn(
+      route,
       metacolumnHeader.domain,
     );
+  }
+  // if the card is being moved remove where it was before
+  if (payload.containingShelf) {
+    const delRoute = ['spec', 'spec', 'encoding', payload.containingShelf];
+    newState = maybeRemoveRepeats(
+      state,
+      newState.deleteIn(delRoute),
+      payload.field,
+    );
+    // newState = newState.deleteIn(route);
   }
   return newState.setIn(
     ['spec', 'spec', 'encoding', payload.field],

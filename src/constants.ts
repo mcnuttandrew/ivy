@@ -70,7 +70,14 @@ const buildSpatialOptions = (
     const hasField = newSpec.getIn([...route, 'field']);
     return hasField ? newSpec : addType(newSpec);
   },
-  optionGetter: spec => spec.getIn(['encoding', dimension, 'aggregate']),
+  optionGetter: spec => {
+    const route = maybePrefixWithSpec(spec, [
+      'encoding',
+      dimension,
+      'aggregate',
+    ]);
+    return spec.getIn(route);
+  },
   optionDefault: 'none',
   predicate: () => true,
 });
@@ -84,7 +91,8 @@ const buildScaleOption = (dim: string): EncodingOption => ({
   optionGetter: spec =>
     spec.getIn(maybePrefixWithSpec(spec, typeRoute(dim))) || 'linear',
   optionDefault: 'linear',
-  predicate: spec => Boolean(spec.getIn(['encoding', dim, 'field'])),
+  predicate: spec =>
+    Boolean(spec.getIn(maybePrefixWithSpec(spec, ['encoding', dim, 'field']))),
 });
 
 const buildCoerceRoute = (spec: any, dim: string): string[] =>
