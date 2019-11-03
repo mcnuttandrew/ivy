@@ -5,11 +5,6 @@ import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
 
-// const SECOND = 1000;
-// const MINUTE = SECOND * 60;
-// const HOUR = MINUTE * 60;
-// const DAY = HOUR * 24;
-
 export interface GenericAction {
   (payload?: any): (dispatch: Dispatch) => void;
 }

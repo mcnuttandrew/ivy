@@ -80,7 +80,9 @@ export const clearEncoding: ActionResponse = state =>
 
 // change the mark type
 export const changeMarkType: ActionResponse = (state, payload) => {
-  const route = ['spec', 'mark', 'type'];
+  const route = usingNestedSpec
+    ? ['spec', 'spec', 'mark', 'type']
+    : ['spec', 'mark', 'type'];
   if (!state.getIn(route)) {
     return state.setIn(['spec', 'mark'], Immutable.fromJS({type: payload}));
   }
@@ -117,6 +119,9 @@ export const coerceType: ActionResponse = (state, payload) => {
 
 // move a field from one channel to another (origin field might be null)
 export const setEncodingParameter: ActionResponse = (state, payload) => {
+  if (payload.isMeta) {
+    return setChannelToMetaColumn(state, payload);
+  }
   const fieldHeader = findField(state, payload.text);
   const route = usingNestedSpec(state)
     ? ['spec', 'spec', 'encoding']
@@ -136,8 +141,74 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   if (payload.containingShelf) {
     newState = newState.setIn([...route, payload.containingShelf], Map());
   }
-
+  if (usingNestedSpec(state) && noMetaUsage(newState, route)) {
+    return removeMetaEncoding(newState);
+  }
   return newState;
+};
+
+// Katy is about to come over,
+// so here's what's left in the repeater story.
+//
+// - add controls to the data column under the meta column pills for selecting which columns to use
+//   should have modes dimension columns / measure columns / custom (this should also auto set the field type)
+//        - custom then should be a check box of all columns
+// - also haven't set up the "repeat" metacolumn, which requires it's own weird repeat setting
+
+function noMetaUsage(state: any, route: string[]) {
+  let containsMeta = false;
+  state.getIn(route).forEach((channelEncoding: any) => {
+    if (channelEncoding.getIn(['field', 'repeat'])) {
+      containsMeta = true;
+    }
+  });
+  return !containsMeta;
+}
+
+function addMetaEncoding(state: any) {
+  return (
+    state
+      // move all of the old stuff in the new subspec
+      .setIn(['spec', 'spec'], Map())
+      .setIn(['spec', 'spec', 'encoding'], state.getIn(['spec', 'encoding']))
+      .setIn(['spec', 'spec', 'mark'], state.getIn(['spec', 'mark']))
+      .deleteIn(['spec', 'encoding'])
+      .deleteIn(['spec', 'mark'])
+  );
+}
+
+function removeMetaEncoding(state: any) {
+  return (
+    state
+      // move all of the old stuff in the new subspec
+      .setIn(['spec', 'encoding'], state.getIn(['spec', 'spec', 'encoding']))
+      .setIn(['spec', 'mark'], state.getIn(['spec', 'spec', 'mark']))
+      .deleteIn(['spec', 'spec'])
+      .deleteIn(['spec', 'repeat'])
+  );
+}
+
+export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
+  let newState = state;
+  const metacolumnHeader = findField(state, payload.text, 'metaColumns');
+  if (!usingNestedSpec(state)) {
+    newState = addMetaEncoding(newState)
+      // create repeats
+      // this approach only works for column / row
+      .setIn(['spec', 'repeat'], Immutable.fromJS({}));
+    console.log('i set everything?');
+  }
+  if (!newState.getIn(['spec', 'repeat', payload.text])) {
+    console.log(newState.getIn(['spec', 'repeat', payload.text]));
+    newState = newState.setIn(
+      ['spec', 'repeat', payload.text],
+      metacolumnHeader.domain,
+    );
+  }
+  return newState.setIn(
+    ['spec', 'spec', 'encoding', payload.field],
+    Immutable.fromJS({field: {repeat: payload.text}, type: 'quantitative'}),
+  );
 };
 
 // move a field from one channel to another (origin field might be null)

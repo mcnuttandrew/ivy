@@ -31,7 +31,7 @@ const defaultEmpty = Immutable.fromJS({
     y: {},
   },
 });
-export const EMPTY_SPEC = splom;
+export const EMPTY_SPEC = defaultEmpty;
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
   spec: EMPTY_SPEC,
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),

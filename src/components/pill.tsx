@@ -30,15 +30,17 @@ export default function Pill(props: PillProps) {
     createFilter,
     coerceType,
   } = props;
+  const field = column.field;
+  const isMeta = column.metaColumn;
+
   const [{opacity}, dragRef] = useDrag({
-    item: {type: 'CARD', text: column.field, containingShelf},
+    item: {type: 'CARD', text: column.field, containingShelf, isMeta},
     collect: monitor => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
   const [open, toggleOpen] = useState(false);
-  const field = column.field;
-  const isMeta = column.metaColumn;
+
   return (
     <div
       className={classnames({

@@ -47,7 +47,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       setNewSpec,
     } = this.props;
     const encoding = get(spec, ['spec', 'encoding']) || get(spec, ['encoding']);
-    const makeShelf = (channel: string) => (
+    const makeShelf = (disable: boolean) => (channel: string) => (
       <Shelf
         setEncodingParameter={setEncodingParameter}
         column={encoding[channel]}
@@ -58,6 +58,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         onDrop={onDrop}
         iMspec={iMspec}
         setNewSpec={setNewSpec}
+        disable={disable}
       />
     );
     return (
@@ -71,7 +72,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           </div>
         </div>
         <div className="flex-down section-body">
-          {['x', 'y'].map(makeShelf)}
+          {['x', 'y'].map(makeShelf(false))}
         </div>
 
         {/* MARK STUFF */}
@@ -92,7 +93,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           </div>
         </div>
         <div className="flex-down section-body">
-          {['size', 'color', 'shape', 'detail', 'text'].map(makeShelf)}
+          {['size', 'color', 'shape', 'detail', 'text'].map(makeShelf(false))}
         </div>
 
         {/* FACET STUFF */}
@@ -100,7 +101,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           <h1 className="section-title flex"> Repeat / Small Multiply </h1>
         </div>
         <div className="flex-down section-body">
-          {['column', 'row'].map(makeShelf)}
+          {['column', 'row'].map(makeShelf(get(spec, ['spec', 'encoding'])))}
         </div>
 
         <h1 className="section-title"> Filter </h1>

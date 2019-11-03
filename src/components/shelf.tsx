@@ -10,12 +10,13 @@ import {classnames, get} from '../utils';
 import {configurationOptions, EncodingOption} from '../constants';
 
 interface ShelfProps {
-  columns: ColumnHeader[];
-  metaColumns: ColumnHeader[];
   column?: {field: string, type: string};
+  columns: ColumnHeader[];
+  disable: boolean;
   field: string;
-  onDrop: any;
   iMspec: any;
+  metaColumns: ColumnHeader[];
+  onDrop: any;
 
   setEncodingParameter: GenericAction;
   setNewSpec: GenericAction;
@@ -23,9 +24,10 @@ interface ShelfProps {
 
 export default function Shelf(props: ShelfProps) {
   const {
-    field,
-    columns,
     column,
+    columns,
+    disable,
+    field,
     iMspec,
     metaColumns,
     onDrop,
@@ -36,7 +38,7 @@ export default function Shelf(props: ShelfProps) {
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    drop: item => onDrop({...item, field}),
+    drop: item => onDrop({...item, field, disable}),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -45,8 +47,7 @@ export default function Shelf(props: ShelfProps) {
   const optionsToRender = (configurationOptions[field] || []).filter(
     (option: EncodingOption) => option.predicate(iMspec),
   );
-  // unsure if the toggle should be open or not
-  // const [configurationOpen, toggleConfiguration] = useState(true);
+
   const configurationOpen = Boolean(optionsToRender.length);
   let definedField = columns.find(
     ({field}) => column && field === column.field,
@@ -58,23 +59,24 @@ export default function Shelf(props: ShelfProps) {
     );
   }
   return (
-    <div ref={drop} className="flex-down shelf-container">
+    <div
+      ref={drop}
+      className={classnames({
+        'flex-down': true,
+        'shelf-container': true,
+        'disable-shelf': disable,
+      })}
+    >
       <div className="shelf flex">
         <div className="field-label flex space-around">
-          <div>{field} </div>
-          {/* <div
-              className="label-control"
-              onClick={() => toggleConfiguration(!configurationOpen)}
-              >
-                <IoIosOptions />
-              </div> */}
+          <div>{field}</div>
         </div>
         <div className="pill-dropzone">
           {!definedField && (
             <div
               className={classnames({
                 'blank-pill': true,
-                'highlight-drop': isOver || canDrop,
+                'highlight-drop': !disable && (isOver || canDrop),
               })}
             >
               {'drop a field here'}

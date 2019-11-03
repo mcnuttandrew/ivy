@@ -58,9 +58,13 @@ export function executePromisesInSeries(tasks: any): any {
   );
 }
 
-export function findField(state: any, targetField: string) {
+export function findField(
+  state: any,
+  targetField: string,
+  columnKey: string = 'columns',
+) {
   return state
-    .get('columns')
+    .get(columnKey)
     .find(({field}: {field: string}) => field === targetField);
 }
 

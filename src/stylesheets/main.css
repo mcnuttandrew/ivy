@@ -219,6 +219,10 @@ h1, h2, h3, h4, h5 {
   font-size: 15px;
 }
 
+.disable-shelf {
+  cursor: no-drop;
+  opacity: 0.4;
+}
 
 .shelf .blank-pill {
   align-items: center;

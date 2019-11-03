@@ -152,6 +152,9 @@ class RootComponent extends React.Component<RootProps> {
                     metaColumns={metaColumns}
                     setNewSpec={setNewSpec}
                     onDrop={(item: any) => {
+                      if (item.disable) {
+                        return;
+                      }
                       setEncodingParameter(item);
                     }}
                     onDropFilter={(item: any) =>
