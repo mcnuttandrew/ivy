@@ -132,6 +132,9 @@ const generateXorY = (dim: string) => [
 export const configurationOptions: any = {
   x: generateXorY('x'),
   y: generateXorY('y'),
+  'row-meta': [],
+  'column-meta': [],
+  'repeat-meta': [],
 
   // repeaters
   facet: [injectFieldPred('facet', buildTypeCoercion('facet'))],

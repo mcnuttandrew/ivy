@@ -137,8 +137,11 @@ class RootComponent extends React.Component<RootProps> {
                     coerceType={coerceType}
                     currentlySelectedFile={currentlySelectedFile}
                     createFilter={createFilter}
+                    iMspec={iMspec}
                     metaColumns={metaColumns}
                     toggleDataModal={toggleDataModal}
+                    setEncodingParameter={setEncodingParameter}
+                    setNewSpec={setNewSpec}
                   />
                   <EncodingColumn
                     iMspec={iMspec}

@@ -112,3 +112,18 @@ export function get(obj: any, route: string[]): any {
   }
   return get(next, route.slice(1));
 }
+
+export function getAllInUseFields(spec: any): Set<string> {
+  const inUse = new Set([]);
+  const encoding = spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']);
+  encoding.forEach((x: any) => {
+    if (!x.size) {
+      return;
+    }
+    const channel = x.toJS();
+    const field =
+      typeof channel.field === 'string' ? channel.field : channel.field.repeat;
+    inUse.add(field);
+  });
+  return inUse;
+}

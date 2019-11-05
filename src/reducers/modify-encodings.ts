@@ -1,6 +1,6 @@
 import Immutable, {Map} from 'immutable';
 
-import {findField} from '../utils';
+import {findField, getAllInUseFields} from '../utils';
 import {ActionResponse, EMPTY_SPEC} from './default-state';
 
 // function getSpecModificationTarget(state: any) {
@@ -132,14 +132,8 @@ function maybeRemoveRepeats(
     return newState;
   }
   // check to see if that column is still in use after the removal
-  let stillInUse = false;
-  newState.getIn(route).forEach((channelEncoding: any) => {
-    if (channelEncoding.getIn(['field', 'repeat', repeaterField])) {
-      stillInUse = true;
-    }
-  });
-  // if not then remove the corresponding repeat
-  if (stillInUse) {
+  const inUse = getAllInUseFields(newState.getIn(['spec']));
+  if (inUse.has(repeaterField)) {
     return newState;
   }
   return newState.deleteIn(['spec', 'repeat', repeaterField]);
@@ -147,7 +141,6 @@ function maybeRemoveRepeats(
 
 // move a field from one channel to another (origin field might be null)
 export const setEncodingParameter: ActionResponse = (state, payload) => {
-  console.log(payload);
   if (payload.isMeta) {
     return setChannelToMetaColumn(state, payload);
   }
@@ -171,23 +164,13 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
       newState.setIn([...route, payload.field], Map()),
       payload.field,
     );
-    // // TODO: extract this logic into a function
-    // const oldField = state.getIn([...route, payload.field]);
-    // if (oldField.getIn(['field', 'repeat'])) {
-    //   console.log('met a fie;// DEBUG: ');
-    //   newState = newState.deleteIn([
-    //     'spec',
-    //     'repeat',
-    //     oldField.getIn(['field', 'repeat']),
-    //   ]);
-    // }
   }
   // if the card is being moved, remove where it was before
   if (payload.containingShelf) {
     newState = newState.deleteIn([...route, payload.containingShelf]);
   }
   // check if the nesting spec should be removed
-  if (usingNestedSpec(state) && noMetaUsage(newState, route)) {
+  if (usingNestedSpec(state) && noMetaUsage(newState)) {
     return removeMetaEncoding(newState);
   }
   return newState;
@@ -202,14 +185,9 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
 // - also haven't set up the "repeat" metacolumn, which requires it's own weird repeat setting
 // also just so many minor bugs
 
-function noMetaUsage(state: any, route: string[]) {
-  let containsMeta = false;
-  state.getIn(route).forEach((channelEncoding: any) => {
-    if (channelEncoding.getIn(['field', 'repeat'])) {
-      containsMeta = true;
-    }
-  });
-  return !containsMeta;
+function noMetaUsage(state: any): boolean {
+  const inUse = getAllInUseFields(state.getIn(['spec']));
+  return !(inUse.has('row') || inUse.has('column') || inUse.has('repeat'));
 }
 
 function addMetaEncoding(state: any) {
@@ -230,7 +208,6 @@ function removeMetaEncoding(state: any) {
 }
 
 export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
-  console.log('meta column manip');
   let newState = state;
   const metacolumnHeader = findField(state, payload.text, 'metaColumns');
   // moving from un-nested spec to nested spec
@@ -240,29 +217,39 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
       Immutable.fromJS({}),
     );
   }
+
   //
   // this approach only works for column / row
-  if (!newState.getIn(['spec', 'repeat', payload.text])) {
-    const route = ['spec', 'repeat', payload.text];
-    newState = maybeRemoveRepeats(newState, newState, payload.field).setIn(
-      route,
-      metacolumnHeader.domain,
+  // if the repeat operator has not been initialized, initialize it
+  const repeatRoute = ['spec', 'repeat', payload.text];
+  if (!newState.getIn(repeatRoute)) {
+    newState = newState.setIn(repeatRoute, metacolumnHeader.domain);
+  }
+  // if there is already a card in place, check to see if removing it removes the repeats
+  const fieldRoute = ['spec', 'spec', 'encoding', payload.field];
+  if (
+    state.getIn(fieldRoute) &&
+    state.getIn([...fieldRoute, 'field', 'repeat']) !== payload.text
+  ) {
+    newState = maybeRemoveRepeats(
+      newState,
+      newState.deleteIn(fieldRoute),
+      payload.field,
     );
   }
+
   // if the card is being moved remove where it was before
   if (payload.containingShelf) {
     const delRoute = ['spec', 'spec', 'encoding', payload.containingShelf];
-    newState = maybeRemoveRepeats(
-      state,
-      newState.deleteIn(delRoute),
-      payload.field,
-    );
-    // newState = newState.deleteIn(route);
+    newState = newState.deleteIn(delRoute);
   }
-  return newState.setIn(
-    ['spec', 'spec', 'encoding', payload.field],
-    Immutable.fromJS({field: {repeat: payload.text}, type: 'quantitative'}),
-  );
+
+  // finally set the new field
+  const newFieldVal = Immutable.fromJS({
+    field: {repeat: payload.text},
+    type: 'quantitative',
+  });
+  return newState.setIn(fieldRoute, newFieldVal);
 };
 
 // move a field from one channel to another (origin field might be null)

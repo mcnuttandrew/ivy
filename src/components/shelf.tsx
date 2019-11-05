@@ -8,6 +8,7 @@ import Selector from './selector';
 import {ColumnHeader} from '../types';
 import {classnames, get} from '../utils';
 import {configurationOptions, EncodingOption} from '../constants';
+import ConfigurationOption from './configuration-option';
 
 interface ShelfProps {
   column?: {field: string, type: string};
@@ -95,34 +96,15 @@ export default function Shelf(props: ShelfProps) {
       </div>
       {configurationOpen && (
         <div className="shelf-configuration flex-down">
-          {optionsToRender.map((option: EncodingOption) => {
-            const {
-              optionType,
-              options,
-              optionSetter,
-              optionGetter,
-              optionDefault,
-            } = option;
+          {optionsToRender.map((option: EncodingOption, idx: number) => {
             return (
-              <div key={optionType} className="option-row flex">
-                <div className="option-row-label">{optionType}</div>
-                <Selector
-                  options={options}
-                  selectedValue={optionGetter(iMspec) || ''}
-                  onChange={(value: any) =>
-                    setNewSpec(optionSetter(iMspec, value))
-                  }
-                />
-
-                <div
-                  className="clear-option"
-                  onClick={() =>
-                    setNewSpec(optionSetter(iMspec, optionDefault))
-                  }
-                >
-                  <TiDeleteOutline />
-                </div>
-              </div>
+              <ConfigurationOption
+                key={idx}
+                option={option}
+                iMspec={iMspec}
+                setEncodingParameter={setEncodingParameter}
+                setNewSpec={setNewSpec}
+              />
             );
           })}
         </div>
