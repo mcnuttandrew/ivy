@@ -182,10 +182,6 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
 
 // Katy is about to come over,
 // so here's what's left in the repeater story.
-//
-// - add controls to the data column under the meta column pills for selecting which columns to use
-//   should have modes dimension columns / measure columns / custom (this should also auto set the field type)
-//        - custom then should be a check box of all columns
 // - also haven't set up the "repeat" metacolumn, which requires it's own weird repeat setting
 // also just so many minor bugs
 

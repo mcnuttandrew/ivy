@@ -122,7 +122,6 @@ h1, h2, h3, h4, h5 {
   color: black;
   display: flex;
   flex-direction: column;
-  height: 100%;
   margin-bottom: 5px;
   min-height: 20px;
 }
@@ -163,7 +162,6 @@ h1, h2, h3, h4, h5 {
   align-items: center;
   display: flex;
   font-size: 9px;
-  height: 100%;
   max-width: 100%;
   padding: 0 5px;
   width: 100%;
