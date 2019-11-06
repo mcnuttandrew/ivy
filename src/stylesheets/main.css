@@ -120,8 +120,15 @@ h1, h2, h3, h4, h5 {
 
 .pill-container {
   color: black;
-  height: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   margin-bottom: 5px;
+  min-height: 20px;
+}
+
+.pill-container .pill {
+  min-height: 20px;
 }
 
 .pill {
@@ -259,6 +266,20 @@ h1, h2, h3, h4, h5 {
 .shelf.filter-target .pill-dropzone {
   margin: 0;
 }
+
+.meta-column-filter-option-container {
+  flex-wrap: wrap;
+}
+
+.meta-column-filter-option-container .meta-column-filter-option {
+  cursor: pointer;
+  text-decoration: underline;
+  margin-right: 5px;
+}
+.meta-column-filter-count {
+  min-width: 30px;
+}
+
 
 .data-select {
   max-width: 100%;

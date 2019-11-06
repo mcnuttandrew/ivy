@@ -52,6 +52,7 @@ interface RootProps {
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
+  setRepeats?: GenericAction;
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
   triggerUndo?: GenericAction;
@@ -93,6 +94,7 @@ class RootComponent extends React.Component<RootProps> {
       setEncodingParameter,
       setNewSpec,
       setNewSpecCode,
+      setRepeats,
       swapXAndYChannels,
       updateFilter,
       toggleDataModal,
@@ -140,8 +142,7 @@ class RootComponent extends React.Component<RootProps> {
                     iMspec={iMspec}
                     metaColumns={metaColumns}
                     toggleDataModal={toggleDataModal}
-                    setEncodingParameter={setEncodingParameter}
-                    setNewSpec={setNewSpec}
+                    setRepeats={setRepeats}
                   />
                   <EncodingColumn
                     iMspec={iMspec}

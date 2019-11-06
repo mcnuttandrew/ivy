@@ -1,6 +1,10 @@
 import Immutable, {Map} from 'immutable';
 
-import {findField, getAllInUseFields} from '../utils';
+import {
+  findField,
+  getAllInUseFields,
+  extractFieldStringsForType,
+} from '../utils';
 import {ActionResponse, EMPTY_SPEC} from './default-state';
 
 // function getSpecModificationTarget(state: any) {
@@ -223,7 +227,12 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   // if the repeat operator has not been initialized, initialize it
   const repeatRoute = ['spec', 'repeat', payload.text];
   if (!newState.getIn(repeatRoute)) {
-    newState = newState.setIn(repeatRoute, metacolumnHeader.domain);
+    newState = newState.setIn(
+      repeatRoute,
+      Immutable.fromJS(
+        extractFieldStringsForType(state.get('columns'), 'MEASURE'),
+      ),
+    );
   }
   // if there is already a card in place, check to see if removing it removes the repeats
   const fieldRoute = ['spec', 'spec', 'encoding', payload.field];
@@ -261,6 +270,12 @@ export const swapXAndYChannels: ActionResponse = state => {
   const oldY = state.getIn([...route, 'y']);
 
   return state.setIn([...route, 'x'], oldY).setIn([...route, 'y'], oldX);
+};
+
+export const setRepeats: ActionResponse = (state, payload) => {
+  const {repeats, target} = payload;
+  console.log('se');
+  return state.setIn(['spec', 'repeat', target], Immutable.fromJS(repeats));
 };
 
 // takes in an old state (via a wrapping function) and an updated state and push the contents

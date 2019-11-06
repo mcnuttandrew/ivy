@@ -2,9 +2,9 @@ import React from 'react';
 import {DiDatabase} from 'react-icons/di';
 import {GenericAction} from '../actions/index';
 import {ColumnHeader} from '../types';
+import {getAllInUseFields} from '../utils';
 import Pill from './pill';
-import {configurationOptions, EncodingOption} from '../constants';
-import ConfigurationOption from './configuration-option';
+import MetaColumnPicker from './meta-column-picker';
 
 interface DataColumnProps {
   columns: ColumnHeader[];
@@ -16,13 +16,7 @@ interface DataColumnProps {
   coerceType: GenericAction;
   createFilter: GenericAction;
   toggleDataModal: GenericAction;
-  setEncodingParameter: GenericAction;
-  setNewSpec: GenericAction;
-}
-
-function shouldShowOptionsForMeta(column: ColumnHeader, imSpec: any) {
-  return true;
-  // ain;
+  setRepeats: GenericAction;
 }
 
 export default class DataColumn extends React.Component<DataColumnProps> {
@@ -36,15 +30,10 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       toggleDataModal,
       metaColumns,
       iMspec,
-      setEncodingParameter,
-      setNewSpec,
+      setRepeats,
     } = this.props;
+    const inUseFields = getAllInUseFields(iMspec);
     const makePill = (checkOptions: boolean) => (column: ColumnHeader) => {
-      // const metaOptionsToRender = (
-      //   configurationOptions[`${column.field}-meta`] || []
-      // ).filter((option: EncodingOption) => option.predicate(iMspec));
-      // console.log(optionsToRender, column.field);
-
       return (
         <div className="pill-container" key={column.field}>
           <Pill
@@ -54,7 +43,16 @@ export default class DataColumn extends React.Component<DataColumnProps> {
             addToNextOpenSlot={addToNextOpenSlot}
             createFilter={createFilter}
           />
-          {checkOptions && <div></div>}
+          {checkOptions && inUseFields.has(column.field) && (
+            <div>
+              <MetaColumnPicker
+                columns={columns}
+                field={column.field}
+                iMspec={iMspec}
+                setRepeats={setRepeats}
+              />
+            </div>
+          )}
         </div>
       );
     };

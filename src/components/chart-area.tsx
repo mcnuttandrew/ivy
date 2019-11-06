@@ -19,20 +19,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
     return (
       <div className="flex-down center full-width full-height">
         <div className="chart-controls full-width">
-          <button
-            onClick={() => {
-              {
-                /* const {x, y} = spec.encoding;
-              {
-                ...spec,
-                encoding: {...spec.encoding, x: y, y: x},
-              } */
-              }
-              swapXAndYChannels();
-            }}
-          >
-            Swap X/Y
-          </button>
+          <button onClick={swapXAndYChannels}>Swap X/Y</button>
         </div>
         <div className="chart-container full-width full-height">
           <VegaWrapper

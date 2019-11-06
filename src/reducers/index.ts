@@ -15,6 +15,7 @@ import {
   pushToUndoStack,
   swapXAndYChannels,
   setChannelToMetaColumn,
+  setRepeats,
 } from './modify-encodings';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
@@ -55,6 +56,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'set-channel-to-meta-colum': addUndo(setChannelToMetaColumn),
   'set-new-encoding': addUndo(setNewSpec),
   'set-new-encoding-code': addUndo(setNewSpecCode),
+  'set-repeats': addUndo(setRepeats),
   'swap-x-and-y-channels': addUndo(swapXAndYChannels),
 
   'trigger-redo': triggerRedo,
@@ -71,16 +73,15 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'toggle-data-modal': toggleDataModal,
 };
 const NULL_ACTION: ActionResponse = state => state;
-
-export default createStore(
-  combineReducers({
-    base: (
-      state: AppState = DEFAULT_STATE,
-      {type, payload}: {type: string, payload: any},
-    ) => {
-      console.log(type);
-      return (actionFuncMap[type] || NULL_ACTION)(state, payload);
-    },
-  }),
-  applyMiddleware(thunk),
-);
+const reducers = {
+  base: (
+    state: AppState = DEFAULT_STATE,
+    {type, payload}: {type: string, payload: any},
+  ) => {
+    console.log(type);
+    return (actionFuncMap[type] || NULL_ACTION)(state, payload);
+  },
+};
+export default function setUpState() {
+  return createStore(combineReducers(reducers), applyMiddleware(thunk));
+}

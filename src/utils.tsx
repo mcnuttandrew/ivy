@@ -5,7 +5,7 @@ import {
   TiCalendar,
 } from 'react-icons/ti';
 
-import {DataType} from './types';
+import {DataType, ColumnHeader} from './types';
 
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
@@ -127,3 +127,11 @@ export function getAllInUseFields(spec: any): Set<string> {
   });
   return inUse;
 }
+
+export const extractFieldStringsForType = (
+  columns: ColumnHeader[],
+  type: DataType,
+) =>
+  columns
+    .filter((column: ColumnHeader) => column.type === type)
+    .map((column: ColumnHeader) => column.field);
