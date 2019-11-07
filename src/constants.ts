@@ -30,7 +30,7 @@ export const marks: VegaMark[] = [
 
 // check if using the nested spec mode, if so, re-route into that subspec
 const maybePrefixWithSpec = (spec: any, route: string[]): string[] =>
-  Boolean(spec.getIn(['spec'])) ? ['spec', ...route] : route;
+  spec.getIn(['spec']) ? ['spec', ...route] : route;
 
 const justCountAgg = [
   {display: 'none', value: undefined},

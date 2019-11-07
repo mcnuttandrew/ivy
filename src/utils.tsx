@@ -61,7 +61,7 @@ export function executePromisesInSeries(tasks: any): any {
 export function findField(
   state: any,
   targetField: string,
-  columnKey: string = 'columns',
+  columnKey = 'columns',
 ) {
   return state
     .get(columnKey)

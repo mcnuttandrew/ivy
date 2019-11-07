@@ -7,13 +7,6 @@ import {
 } from '../utils';
 import {ActionResponse, EMPTY_SPEC} from './default-state';
 
-// function getSpecModificationTarget(state: any) {
-//   if (state.getIn(['spec', 'spec'])) {
-//     return {target, }
-//   }
-// }
-//
-
 const usingNestedSpec = (state: any): boolean =>
   Boolean(state.getIn(['spec', 'spec']));
 
@@ -143,48 +136,6 @@ function maybeRemoveRepeats(
   return newState.deleteIn(['spec', 'repeat', repeaterField]);
 }
 
-// move a field from one channel to another (origin field might be null)
-export const setEncodingParameter: ActionResponse = (state, payload) => {
-  if (payload.isMeta) {
-    return setChannelToMetaColumn(state, payload);
-  }
-  const fieldHeader = findField(state, payload.text);
-  const route = usingNestedSpec(state)
-    ? ['spec', 'spec', 'encoding']
-    : ['spec', 'encoding'];
-  let newState = state;
-  if (fieldHeader) {
-    newState = newState.setIn(
-      [...route, payload.field],
-      Immutable.fromJS({
-        field: payload.text,
-        type: TYPE_TRANSLATE[fieldHeader.type],
-      }),
-    );
-  } else {
-    // removing field
-    newState = maybeRemoveRepeats(
-      state,
-      newState.setIn([...route, payload.field], Map()),
-      payload.field,
-    );
-  }
-  // if the card is being moved, remove where it was before
-  if (payload.containingShelf) {
-    newState = newState.deleteIn([...route, payload.containingShelf]);
-  }
-  // check if the nesting spec should be removed
-  if (usingNestedSpec(state) && noMetaUsage(newState)) {
-    return removeMetaEncoding(newState);
-  }
-  return newState;
-};
-
-// Katy is about to come over,
-// so here's what's left in the repeater story.
-// - also haven't set up the "repeat" metacolumn, which requires it's own weird repeat setting
-// also just so many minor bugs
-
 function noMetaUsage(state: any): boolean {
   const inUse = getAllInUseFields(state.getIn(['spec']));
   return !(inUse.has('row') || inUse.has('column') || inUse.has('repeat'));
@@ -209,7 +160,6 @@ function removeMetaEncoding(state: any) {
 
 export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   let newState = state;
-  const metacolumnHeader = findField(state, payload.text, 'metaColumns');
   // moving from un-nested spec to nested spec
   if (!usingNestedSpec(state)) {
     newState = addMetaEncoding(newState).setIn(
@@ -255,6 +205,43 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
     type: 'quantitative',
   });
   return newState.setIn(fieldRoute, newFieldVal);
+};
+
+// move a field from one channel to another (origin field might be null)
+export const setEncodingParameter: ActionResponse = (state, payload) => {
+  if (payload.isMeta) {
+    return setChannelToMetaColumn(state, payload);
+  }
+  const fieldHeader = findField(state, payload.text);
+  const route = usingNestedSpec(state)
+    ? ['spec', 'spec', 'encoding']
+    : ['spec', 'encoding'];
+  let newState = state;
+  if (fieldHeader) {
+    newState = newState.setIn(
+      [...route, payload.field],
+      Immutable.fromJS({
+        field: payload.text,
+        type: TYPE_TRANSLATE[fieldHeader.type],
+      }),
+    );
+  } else {
+    // removing field
+    newState = maybeRemoveRepeats(
+      state,
+      newState.setIn([...route, payload.field], Map()),
+      payload.field,
+    );
+  }
+  // if the card is being moved, remove where it was before
+  if (payload.containingShelf) {
+    newState = newState.deleteIn([...route, payload.containingShelf]);
+  }
+  // check if the nesting spec should be removed
+  if (usingNestedSpec(state) && noMetaUsage(newState)) {
+    return removeMetaEncoding(newState);
+  }
+  return newState;
 };
 
 // move a field from one channel to another (origin field might be null)
