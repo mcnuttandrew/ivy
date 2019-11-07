@@ -40,7 +40,7 @@ export default function MetaColumnPicker({
       effect: () => set(extractFieldStringsForType(columns, 'TIME')),
     },
   ];
-  console.log('????', selectedDomain);
+
   return (
     <div className="flex-down filter-container">
       <div className="filter-contents">

@@ -257,7 +257,6 @@ export const swapXAndYChannels: ActionResponse = state => {
 
 export const setRepeats: ActionResponse = (state, payload) => {
   const {repeats, target} = payload;
-  console.log('se');
   return state.setIn(['spec', 'repeat', target], Immutable.fromJS(repeats));
 };
 

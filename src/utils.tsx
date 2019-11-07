@@ -121,9 +121,14 @@ export function getAllInUseFields(spec: any): Set<string> {
       return;
     }
     const channel = x.toJS();
-    const field =
-      typeof channel.field === 'string' ? channel.field : channel.field.repeat;
-    inUse.add(field);
+    if (typeof channel.field === 'string') {
+      inUse.add(channel.field);
+      return;
+    }
+    if (channel.field && channel.field.repeat) {
+      inUse.add(channel.field.repeat);
+      return;
+    }
   });
   return inUse;
 }
