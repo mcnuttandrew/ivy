@@ -1,4 +1,4 @@
-export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME';
+export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN';
 
 export interface ColumnHeader {
   type: DataType;
@@ -6,6 +6,7 @@ export interface ColumnHeader {
   secondaryType: string;
   field: string;
   domain: number[] | string[];
+  metaColumn?: boolean;
 }
 
 export type VegaMark =

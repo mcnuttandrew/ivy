@@ -5,7 +5,7 @@ import {
   TiCalendar,
 } from 'react-icons/ti';
 
-import {DataType} from './types';
+import {DataType, ColumnHeader} from './types';
 
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
@@ -43,6 +43,8 @@ export function getTypeSymbol(type: DataType): JSX.Element {
       return <TiSortNumerically />;
     case 'TIME':
       return <TiCalendar />;
+    case 'METACOLUMN':
+      return <span>?</span>;
     default:
     case 'DIMENSION':
       return <TiSortAlphabetically />;
@@ -56,9 +58,13 @@ export function executePromisesInSeries(tasks: any): any {
   );
 }
 
-export function findField(state: any, targetField: string) {
+export function findField(
+  state: any,
+  targetField: string,
+  columnKey = 'columns',
+) {
   return state
-    .get('columns')
+    .get(columnKey)
     .find(({field}: {field: string}) => field === targetField);
 }
 
@@ -73,17 +79,59 @@ const DEFAULT_CONFIG = {
 };
 
 export function cleanSpec(spec: any) {
-  return {
-    config: DEFAULT_CONFIG,
-    padding: 50,
-    ...spec,
-    encoding: {
-      ...Object.entries(spec.encoding).reduce((acc: any, [key, val]) => {
-        if (!compareObjects(val, {})) {
-          acc[key] = val;
-        }
-        return acc;
-      }, {}),
-    },
-  };
+  return {config: DEFAULT_CONFIG, padding: 50, ...spec};
+  // return {
+  //   config: DEFAULT_CONFIG,
+  //   padding: 50,
+  //   ...spec,
+  //   encoding: {
+  //     ...Object.entries(spec.encoding).reduce((acc: any, [key, val]: any) => {
+  //       if (!compareObjects(val, {})) {
+  //         acc[key] = val;
+  //       }
+  //       return acc;
+  //     }, {}),
+  //   },
+  // };
 }
+
+// safely access elements on a nested object
+export function get(obj: any, route: string[]): any {
+  if (!obj) {
+    return null;
+  }
+  if (route.length === 0) {
+    return null;
+  }
+  if (route.length === 1) {
+    return obj[route[0]];
+  }
+  const next = obj[route[0]];
+  if (!next) {
+    return null;
+  }
+  return get(next, route.slice(1));
+}
+
+export function getAllInUseFields(spec: any): Set<string> {
+  const inUse = new Set([]);
+  const encoding = spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']);
+  encoding.forEach((x: any) => {
+    if (!x.size) {
+      return;
+    }
+    const channel = x.toJS();
+    const field =
+      typeof channel.field === 'string' ? channel.field : channel.field.repeat;
+    inUse.add(field);
+  });
+  return inUse;
+}
+
+export const extractFieldStringsForType = (
+  columns: ColumnHeader[],
+  type: DataType,
+) =>
+  columns
+    .filter((column: ColumnHeader) => column.type === type)
+    .map((column: ColumnHeader) => column.field);

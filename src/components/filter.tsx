@@ -3,8 +3,9 @@ import {TiDeleteOutline} from 'react-icons/ti';
 import {Range} from 'rc-slider';
 
 interface FilterProps {
+  // TODO fix these terrible types
   column: any;
-  filter: any;
+  filter: {filter: {range?: [number, number], field: string, oneOf?: string[]}};
   updateFilter: any;
   deleteFilter: any;
 }
