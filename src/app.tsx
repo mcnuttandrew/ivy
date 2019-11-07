@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 
-import AppState from './reducers/index';
+import setUpState from './reducers/index';
 import './stylesheets/main.css';
 import './stylesheets/rc-slider.css';
 
@@ -15,7 +15,7 @@ if (body) {
   body.appendChild(appContainer);
 
   ReactDOM.render(
-    <Provider store={AppState}>
+    <Provider store={setUpState()}>
       <Root />
     </Provider>,
     document.querySelector('#root-container'),

@@ -120,8 +120,14 @@ h1, h2, h3, h4, h5 {
 
 .pill-container {
   color: black;
-  height: 20px;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 5px;
+  min-height: 20px;
+}
+
+.pill-container .pill {
+  min-height: 20px;
 }
 
 .pill {
@@ -156,7 +162,6 @@ h1, h2, h3, h4, h5 {
   align-items: center;
   display: flex;
   font-size: 9px;
-  height: 100%;
   max-width: 100%;
   padding: 0 5px;
   width: 100%;
@@ -219,6 +224,10 @@ h1, h2, h3, h4, h5 {
   font-size: 15px;
 }
 
+.disable-shelf {
+  cursor: no-drop;
+  opacity: 0.4;
+}
 
 .shelf .blank-pill {
   align-items: center;
@@ -255,6 +264,20 @@ h1, h2, h3, h4, h5 {
 .shelf.filter-target .pill-dropzone {
   margin: 0;
 }
+
+.meta-column-filter-option-container {
+  flex-wrap: wrap;
+}
+
+.meta-column-filter-option-container .meta-column-filter-option {
+  cursor: pointer;
+  text-decoration: underline;
+  margin-right: 5px;
+}
+.meta-column-filter-count {
+  min-width: 30px;
+}
+
 
 .data-select {
   max-width: 100%;

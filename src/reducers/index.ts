@@ -13,6 +13,9 @@ import {
   triggerRedo,
   triggerUndo,
   pushToUndoStack,
+  swapXAndYChannels,
+  setChannelToMetaColumn,
+  setRepeats,
 } from './modify-encodings';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
@@ -35,6 +38,8 @@ const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
   state,
   payload,
 ) => wrapper(state, func(state, payload));
+const addUndo = (func: ActionResponse): ActionResponse =>
+  wrap(func, pushToUndoStack);
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
   // data modifications
@@ -43,21 +48,24 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-type-inferences': recieveTypeInferences,
 
   // encoding modifications
-  'add-to-next-open-slot': wrap(addToNextOpenSlot, pushToUndoStack),
-  'change-mark-type': wrap(changeMarkType, pushToUndoStack),
-  'clear-encoding': wrap(clearEncoding, pushToUndoStack),
-  'coerce-type': wrap(coerceType, pushToUndoStack),
-  'set-encoding-param': wrap(setEncodingParameter, pushToUndoStack),
-  'set-new-encoding': wrap(setNewSpec, pushToUndoStack),
-  'set-new-encoding-code': wrap(setNewSpecCode, pushToUndoStack),
+  'add-to-next-open-slot': addUndo(addToNextOpenSlot),
+  'change-mark-type': addUndo(changeMarkType),
+  'clear-encoding': addUndo(clearEncoding),
+  'coerce-type': addUndo(coerceType),
+  'set-encoding-param': addUndo(setEncodingParameter),
+  'set-channel-to-meta-colum': addUndo(setChannelToMetaColumn),
+  'set-new-encoding': addUndo(setNewSpec),
+  'set-new-encoding-code': addUndo(setNewSpecCode),
+  'set-repeats': addUndo(setRepeats),
+  'swap-x-and-y-channels': addUndo(swapXAndYChannels),
 
   'trigger-redo': triggerRedo,
   'trigger-undo': triggerUndo,
 
   // filter modifications
-  'create-filter': wrap(createFilter, pushToUndoStack),
-  'delete-filter': wrap(deleteFilter, pushToUndoStack),
-  'update-filter': wrap(updateFilter, pushToUndoStack),
+  'create-filter': addUndo(createFilter),
+  'delete-filter': addUndo(deleteFilter),
+  'update-filter': addUndo(updateFilter),
 
   // gui modifications
   'change-gui-mode': changeGUIMode,
@@ -65,15 +73,15 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'toggle-data-modal': toggleDataModal,
 };
 const NULL_ACTION: ActionResponse = state => state;
-
-export default createStore(
-  combineReducers({
-    base: (
-      state: AppState = DEFAULT_STATE,
-      {type, payload}: {type: string, payload: any},
-    ) => {
-      return (actionFuncMap[type] || NULL_ACTION)(state, payload);
-    },
-  }),
-  applyMiddleware(thunk),
-);
+const reducers = {
+  base: (
+    state: AppState = DEFAULT_STATE,
+    {type, payload}: {type: string, payload: any},
+  ) => {
+    console.log(type);
+    return (actionFuncMap[type] || NULL_ACTION)(state, payload);
+  },
+};
+export default function setUpState() {
+  return createStore(combineReducers(reducers), applyMiddleware(thunk));
+}

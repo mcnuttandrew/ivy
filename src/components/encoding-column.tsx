@@ -6,6 +6,7 @@ import Filter from './filter';
 import FilterTarget from './filter-target';
 import {ColumnHeader} from '../types';
 import Selector from './selector';
+import {get} from '../utils';
 
 import {PRIMITIVE_MARKS} from 'vega-lite/build/src/mark';
 
@@ -18,6 +19,7 @@ interface EncodingColumnProps {
   spec: any;
   iMspec: any;
   columns: ColumnHeader[];
+  metaColumns: ColumnHeader[];
   onDrop: any;
   onDropFilter: any;
 
@@ -32,6 +34,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
   render() {
     const {
       columns,
+      metaColumns,
       spec,
       iMspec,
       onDrop,
@@ -43,17 +46,19 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       onDropFilter,
       setNewSpec,
     } = this.props;
-
-    const makeShelf = (channel: string) => (
+    const encoding = get(spec, ['spec', 'encoding']) || get(spec, ['encoding']);
+    const makeShelf = (disable: boolean) => (channel: string) => (
       <Shelf
         setEncodingParameter={setEncodingParameter}
-        column={spec.encoding[channel]}
+        column={encoding[channel]}
         field={channel}
         key={channel}
         columns={columns}
+        metaColumns={metaColumns}
         onDrop={onDrop}
         iMspec={iMspec}
         setNewSpec={setNewSpec}
+        disable={disable}
       />
     );
     return (
@@ -67,7 +72,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           </div>
         </div>
         <div className="flex-down section-body">
-          {['x', 'y'].map(makeShelf)}
+          {['x', 'y'].map(makeShelf(false))}
         </div>
 
         {/* MARK STUFF */}
@@ -75,14 +80,20 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           <h1 className="section-title"> Marks </h1>
           <div>
             <Selector
-              selectedValue={spec.mark.type || spec.mark}
+              selectedValue={
+                get(spec, ['mark', 'type']) ||
+                get(spec, ['mark']) ||
+                get(spec, ['spec', 'mark', 'type']) ||
+                get(spec, ['spec', 'mark']) ||
+                ''
+              }
               onChange={value => changeMarkType(value)}
               options={MARK_TYPES}
             />
           </div>
         </div>
         <div className="flex-down section-body">
-          {['size', 'color', 'shape', 'detail', 'text'].map(makeShelf)}
+          {['size', 'color', 'shape', 'detail', 'text'].map(makeShelf(false))}
         </div>
 
         {/* FACET STUFF */}
@@ -90,26 +101,28 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           <h1 className="section-title flex"> Repeat / Small Multiply </h1>
         </div>
         <div className="flex-down section-body">
-          {['column', 'row'].map(makeShelf)}
+          {['column', 'row'].map(makeShelf(get(spec, ['spec', 'encoding'])))}
         </div>
 
         <h1 className="section-title"> Filter </h1>
         <div className="flex-down">
-          {spec.transform.map((filter: any, idx: number) => {
-            return (
-              <Filter
-                column={columns.find(
-                  ({field}) => field === filter.filter.field,
-                )}
-                filter={filter}
-                key={`${idx}-filter`}
-                updateFilter={(newFilterValue: any) => {
-                  updateFilter({newFilterValue, idx});
-                }}
-                deleteFilter={() => deleteFilter(idx)}
-              />
-            );
-          })}
+          {(spec.transform || get(spec, ['spec', 'transform']) || []).map(
+            (filter: any, idx: number) => {
+              return (
+                <Filter
+                  column={columns.find(
+                    ({field}) => field === filter.filter.field,
+                  )}
+                  filter={filter}
+                  key={`${idx}-filter`}
+                  updateFilter={(newFilterValue: any) => {
+                    updateFilter({newFilterValue, idx});
+                  }}
+                  deleteFilter={() => deleteFilter(idx)}
+                />
+              );
+            },
+          )}
         </div>
         <div>
           <FilterTarget onDrop={onDropFilter} />

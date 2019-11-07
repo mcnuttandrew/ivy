@@ -14,9 +14,8 @@ export const createFilter: ActionResponse = (state, payload) => {
       ),
     },
   };
-
   return state.updateIn(['spec', 'transform'], (arr: any) =>
-    arr.push(Immutable.fromJS(newFilter)),
+    (arr || Immutable.fromJS([])).push(Immutable.fromJS(newFilter)),
   );
 };
 

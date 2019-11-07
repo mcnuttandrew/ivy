@@ -6,7 +6,7 @@ interface SelectorProps {
   selectedValue?: string;
 }
 
-export default function SelectorFUCK(props: SelectorProps) {
+export default function Selector(props: SelectorProps) {
   const {options, onChange, selectedValue} = props;
 
   return (
