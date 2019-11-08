@@ -26,6 +26,7 @@ interface RootProps {
   columns?: ColumnHeader[];
   canUndo?: boolean;
   canRedo?: boolean;
+  editorError?: null | string;
   spec?: Spec;
   specCode?: string;
   data?: any; //TODO: define the data type
@@ -85,6 +86,7 @@ class RootComponent extends React.Component<RootProps> {
       data,
       dataModalOpen,
       deleteFilter,
+      editorError,
       iMspec,
       loadCustomDataset,
       metaColumns,
@@ -173,6 +175,7 @@ class RootComponent extends React.Component<RootProps> {
                 <CodeEditor
                   setNewSpecCode={setNewSpecCode}
                   currentCode={specCode}
+                  editorError={editorError}
                 />
               </div>
             )}
@@ -199,6 +202,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     canRedo: base.get('redoStack').size >= 1,
     columns: base.get('columns'),
     data: base.get('data'),
+    editorError: base.get('editorError'),
     spec: base.get('spec').toJS(),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),

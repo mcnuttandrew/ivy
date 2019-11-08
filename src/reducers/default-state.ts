@@ -23,7 +23,6 @@ export interface ActionResponse {
 // export type AppState = any;
 // TODO undo this embarrasment
 const defaultEmpty = Immutable.fromJS({
-  data: {name: 'myData'},
   transform: [],
   mark: {type: 'point', tooltip: true},
   encoding: {
@@ -35,6 +34,7 @@ export const EMPTY_SPEC = defaultEmpty;
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
   spec: EMPTY_SPEC,
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),
+  editorError: null,
   data: [],
   columns: [],
   metaColumns: [],

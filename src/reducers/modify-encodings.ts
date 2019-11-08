@@ -94,10 +94,11 @@ export const setNewSpec: ActionResponse = (state, payload) =>
 export const setNewSpecCode: ActionResponse = (state, payload) => {
   const {code, inError} = payload;
   if (inError) {
-    return state.set('specCode', code);
+    return state.set('specCode', code).set('editorError', inError);
   }
   return state
     .set('specCode', code)
+    .set('editorError', null)
     .set('spec', Immutable.fromJS(JSON.parse(code)));
 };
 

@@ -89,9 +89,19 @@ export function cleanSpec(spec: any) {
         width: 300,
         ...spec.spec,
       },
+      data: {
+        name: 'myData',
+      },
     };
   }
-  return {config: DEFAULT_CONFIG, padding: 50, ...spec};
+  return {
+    config: DEFAULT_CONFIG,
+    padding: 50,
+    ...spec,
+    data: {
+      name: 'myData',
+    },
+  };
   // return {
   //   config: DEFAULT_CONFIG,
   //   padding: 50,
