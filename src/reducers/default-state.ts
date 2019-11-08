@@ -25,10 +25,7 @@ export interface ActionResponse {
 const defaultEmpty = Immutable.fromJS({
   transform: [],
   mark: {type: 'point', tooltip: true},
-  encoding: {
-    x: {},
-    y: {},
-  },
+  encoding: {},
 });
 export const EMPTY_SPEC = defaultEmpty;
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
@@ -40,8 +37,8 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   metaColumns: [],
   currentlySelectedFile: 'barley.json',
   unprouncableInGrammer: false,
-  // selectedGUIMode: 'GRAMMAR',
-  selectedGUIMode: 'PROGRAMMATIC',
+  selectedGUIMode: 'GRAMMAR',
+  // selectedGUIMode: 'PROGRAMMATIC',
   dataModalOpen: false,
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),

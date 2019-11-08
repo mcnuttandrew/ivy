@@ -73,6 +73,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         disable={disable}
       />
     );
+
     return (
       <div className="flex-down column full-height background-3">
         {/* ENCODING STUFF */}
@@ -92,14 +93,14 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
           <h1 className="section-title"> Marks </h1>
           <div>
             <Selector
-              selectedValue={
+              selectedValue={(
                 get(spec, ['mark', 'type']) ||
                 get(spec, ['mark']) ||
                 get(spec, ['spec', 'mark', 'type']) ||
                 get(spec, ['spec', 'mark']) ||
                 ''
-              }
-              onChange={value => changeMarkType(value)}
+              ).toUpperCase()}
+              onChange={value => changeMarkType(value.toLowerCase())}
               options={MARK_TYPES}
             />
           </div>
