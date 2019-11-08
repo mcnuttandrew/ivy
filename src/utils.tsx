@@ -79,6 +79,18 @@ const DEFAULT_CONFIG = {
 };
 
 export function cleanSpec(spec: any) {
+  if (spec.spec) {
+    return {
+      padding: 100,
+      ...spec,
+      spec: {
+        config: DEFAULT_CONFIG,
+        height: 300,
+        width: 300,
+        ...spec.spec,
+      },
+    };
+  }
   return {config: DEFAULT_CONFIG, padding: 50, ...spec};
   // return {
   //   config: DEFAULT_CONFIG,

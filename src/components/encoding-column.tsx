@@ -8,7 +8,18 @@ import {ColumnHeader} from '../types';
 import Selector from './selector';
 import {get} from '../utils';
 
-import {PRIMITIVE_MARKS} from 'vega-lite/build/src/mark';
+const PRIMITIVE_MARKS = [
+  'AREA',
+  'BAR',
+  'CIRLCE',
+  'LINE',
+  'POINT',
+  'RECT',
+  'SQUARE',
+  'TEXT',
+  'TICK',
+  'TRAIL',
+];
 
 const MARK_TYPES = PRIMITIVE_MARKS.sort().map((x: string) => ({
   display: x,

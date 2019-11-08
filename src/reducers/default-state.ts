@@ -38,7 +38,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   data: [],
   columns: [],
   metaColumns: [],
-  currentlySelectedFile: 'iris.json',
+  currentlySelectedFile: 'stocks.csv',
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',
   dataModalOpen: false,
