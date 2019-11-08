@@ -80,6 +80,13 @@ const buildSpatialOptions = (
   predicate: () => true,
 });
 
+const channelTypePredicate = (dim: string, expected: string[]) => (
+  spec: any,
+) => {
+  const channelType = get(spec, ['encoding', dim, 'type']);
+  return expected.some((type: string) => channelType === type);
+};
+
 const typeRoute = (dim: string) => ['encoding', dim, 'scale', 'type'];
 const buildScaleOption = (dim: string): EncodingOption => ({
   optionType: 'Scale type',
@@ -87,7 +94,12 @@ const buildScaleOption = (dim: string): EncodingOption => ({
   optionSetter: (spec, option) => set(spec, typeRoute(dim), option),
   optionGetter: spec => get(spec, typeRoute(dim)) || 'linear',
   optionDefault: 'linear',
-  predicate: spec => !!get(spec, ['encoding', dim, 'field']),
+  predicate: spec => {
+    return (
+      get(spec, ['encoding', dim, 'field']) &&
+      channelTypePredicate(dim, ['quantitative', 'time'])(spec)
+    );
+  },
 });
 
 const zeroDomainRoute = (dim: string) => ['encoding', dim, 'scale', 'zero'];
@@ -102,11 +114,10 @@ const scaleDomain = (dim: string): EncodingOption => ({
   optionGetter: spec => `${get(spec, zeroDomainRoute(dim))}`,
   optionDefault: 'true',
   predicate: spec => {
-    if (!get(spec, ['encoding', dim, 'field'])) {
-      return false;
-    }
-    const channelType = get(spec, ['encoding', dim, 'type']);
-    return channelType === 'quantitative' || channelType === 'time';
+    return (
+      get(spec, ['encoding', dim, 'field']) &&
+      channelTypePredicate(dim, ['quantitative', 'time'])(spec)
+    );
   },
 });
 

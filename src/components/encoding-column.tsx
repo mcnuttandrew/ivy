@@ -57,7 +57,8 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       onDropFilter,
       setNewSpec,
     } = this.props;
-    const encoding = get(spec, ['spec', 'encoding']) || get(spec, ['encoding']);
+    const encoding =
+      get(spec, ['spec', 'encoding']) || get(spec, ['encoding']) || {};
     const makeShelf = (disable: boolean) => (channel: string) => (
       <Shelf
         setEncodingParameter={setEncodingParameter}
@@ -117,8 +118,12 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
 
         <h1 className="section-title"> Filter </h1>
         <div className="flex-down">
-          {(spec.transform || get(spec, ['spec', 'transform']) || []).map(
-            (filter: any, idx: number) => {
+          {(spec.transform || get(spec, ['spec', 'transform']) || [])
+            .filter((filter: any) => {
+              // dont try to render filters that we dont know how to render
+              return filter.filter;
+            })
+            .map((filter: any, idx: number) => {
               return (
                 <Filter
                   column={columns.find(
@@ -132,8 +137,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
                   deleteFilter={() => deleteFilter(idx)}
                 />
               );
-            },
-          )}
+            })}
         </div>
         <div>
           <FilterTarget onDrop={onDropFilter} />

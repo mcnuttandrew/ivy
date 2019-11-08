@@ -427,6 +427,10 @@ h1, h2, h3, h4, h5 {
   margin-right: 2px;
 }
 
+.error-container {
+  padding: 30px;
+  width: 460px;
+}
 
 .code-container {
   position: relative;

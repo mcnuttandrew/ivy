@@ -1,5 +1,6 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
+import {checkEncodingForValidity} from '../utils';
 // import {Spec} from 'vega-typings';
 
 import {
@@ -28,11 +29,18 @@ import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // GUI ACTIONS
 const changeGUIMode: ActionResponse = (state, payload) =>
-  state.set('selectedGUIMode', payload);
+  state
+    .set('selectedGUIMode', payload)
+    .set(
+      'unprouncableInGrammer',
+      !checkEncodingForValidity(state.get('spec').toJS()),
+    );
 const toggleDataModal: ActionResponse = state =>
   state.set('dataModalOpen', !state.get('dataModalOpen'));
 const changeTheme: ActionResponse = (state, payload) =>
   state.set('currentTheme', payload);
+const clearUnprounceWarning: ActionResponse = (state, payload) =>
+  state.set('unprouncableInGrammer', false);
 
 const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
   state,
@@ -71,6 +79,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'change-gui-mode': changeGUIMode,
   'change-theme': changeTheme,
   'toggle-data-modal': toggleDataModal,
+  'clear-unprouncable': clearUnprounceWarning,
 };
 const NULL_ACTION: ActionResponse = state => state;
 const reducers = {

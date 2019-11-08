@@ -137,9 +137,10 @@ export function get(obj: any, route: string[]): any {
 
 export function getAllInUseFields(spec: any): Set<string> {
   const inUse = new Set([]);
-  const encoding = spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']);
+  const encoding =
+    spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']) || [];
   encoding.forEach((x: any) => {
-    if (!x.size) {
+    if (!x || !x.size) {
       return;
     }
     const channel = x.toJS();
@@ -162,3 +163,13 @@ export const extractFieldStringsForType = (
   columns
     .filter((column: ColumnHeader) => column.type === type)
     .map((column: ColumnHeader) => column.field);
+
+export const checkEncodingForValidity = (spec: any) => {
+  if (spec.layer) {
+    return false;
+  }
+  if (!spec.encoding) {
+    return false;
+  }
+  return true;
+};

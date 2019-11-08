@@ -4,6 +4,7 @@ import {
   findField,
   getAllInUseFields,
   extractFieldStringsForType,
+  checkEncodingForValidity,
 } from '../utils';
 import {ActionResponse, EMPTY_SPEC} from './default-state';
 
@@ -96,8 +97,11 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
   if (inError) {
     return state.set('specCode', code).set('editorError', inError);
   }
+  const parsedCode = JSON.parse(code);
+  const isValid = checkEncodingForValidity(parsedCode);
   return state
     .set('specCode', code)
+    .set('unprouncableInGrammer', !isValid)
     .set('editorError', null)
     .set('spec', Immutable.fromJS(JSON.parse(code)));
 };

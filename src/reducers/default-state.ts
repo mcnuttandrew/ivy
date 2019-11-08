@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {splom} from '../constants/vega-examples';
+import {OLD_EXAMPLE} from '../constants/vega-examples';
 // import {ColumnHeader} from '../types';
 // import {Spec, Data} from 'vega-typings/types';
 export type AppState = Immutable.Map<any, any>;
@@ -38,9 +38,10 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   data: [],
   columns: [],
   metaColumns: [],
-  currentlySelectedFile: 'stocks.csv',
-  selectedGUIMode: 'GRAMMAR',
-  // selectedGUIMode: 'PROGRAMMATIC',
+  currentlySelectedFile: 'barley.json',
+  unprouncableInGrammer: false,
+  // selectedGUIMode: 'GRAMMAR',
+  selectedGUIMode: 'PROGRAMMATIC',
   dataModalOpen: false,
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),

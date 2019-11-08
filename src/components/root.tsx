@@ -36,6 +36,7 @@ interface RootProps {
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
+  unprouncableInGrammer?: boolean;
 
   addToNextOpenSlot?: GenericAction;
   changeGUIMode?: GenericAction;
@@ -44,6 +45,7 @@ interface RootProps {
   chainActions?: GenericAction;
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
+  clearUnprounceWarning?: GenericAction;
   createFilter?: GenericAction;
   coerceType?: GenericAction;
   loadCustomDataset?: GenericAction;
@@ -66,44 +68,147 @@ class RootComponent extends React.Component<RootProps> {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
   }
 
-  render() {
-    // TODO alphabetize
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('ERRPR', error, errorInfo);
+  }
+
+  secondaryControls() {
+    const {
+      currentTheme,
+      changeTheme,
+      selectedGUIMode,
+      spec,
+      setNewSpecCode,
+      changeGUIMode,
+    } = this.props;
+    return (
+      <SecondaryControls
+        currentTheme={currentTheme}
+        changeTheme={changeTheme}
+        selectedGUIMode={selectedGUIMode}
+        spec={spec}
+        setNewSpecCode={setNewSpecCode}
+        changeGUIMode={changeGUIMode}
+      />
+    );
+  }
+
+  grammarMenu() {
     const {
       addToNextOpenSlot,
-      canRedo,
-      canUndo,
       coerceType,
       columns,
-      changeSelectedFile,
       changeMarkType,
-      changeGUIMode,
-      changeTheme,
-      chainActions,
       clearEncoding,
       createFilter,
       currentlySelectedFile,
+      deleteFilter,
+      iMspec,
+      metaColumns,
+      spec,
+      setEncodingParameter,
+      setNewSpec,
+      setRepeats,
+      updateFilter,
+      toggleDataModal,
+    } = this.props;
+    return (
+      <div className="flex full-height">
+        <DndProvider backend={HTML5Backend}>
+          <DataColumn
+            addToNextOpenSlot={addToNextOpenSlot}
+            columns={columns}
+            coerceType={coerceType}
+            currentlySelectedFile={currentlySelectedFile}
+            createFilter={createFilter}
+            iMspec={iMspec}
+            metaColumns={metaColumns}
+            toggleDataModal={toggleDataModal}
+            setRepeats={setRepeats}
+          />
+          <EncodingColumn
+            iMspec={iMspec}
+            changeMarkType={changeMarkType}
+            setEncodingParameter={setEncodingParameter}
+            clearEncoding={clearEncoding}
+            spec={spec}
+            updateFilter={updateFilter}
+            deleteFilter={deleteFilter}
+            columns={columns}
+            metaColumns={metaColumns}
+            setNewSpec={setNewSpec}
+            onDrop={(item: any) => {
+              if (item.disable) {
+                return;
+              }
+              setEncodingParameter(item);
+            }}
+            onDropFilter={(item: any) => createFilter({field: item.text})}
+          />
+        </DndProvider>
+      </div>
+    );
+  }
+
+  programmaticMenu() {
+    const {setNewSpecCode, specCode, editorError} = this.props;
+    return (
+      <div className="flex full-height two-column">
+        <CodeEditor
+          setNewSpecCode={setNewSpecCode}
+          currentCode={specCode}
+          editorError={editorError}
+        />
+      </div>
+    );
+  }
+
+  errorMenu() {
+    const {clearUnprounceWarning} = this.props;
+    return (
+      <div className="full-height full-width inline-block error-container">
+        <h3>Error</h3>
+        <h5>
+          The Vega-lite Specification that you have constructed is not supported
+          by the grammar mode.
+        </h5>
+        <br />
+        <h5>
+          {' '}
+          You can resolve this error by modifying the spec. Please note that
+          layers are not supported at this time.
+        </h5>
+        <br />
+        <h5>
+          If you like you are welcome to try to over-ride this error, but the
+          application make construct suprirsing and less than satisfactory
+          result
+        </h5>
+        <button onClick={clearUnprounceWarning}>OVER RIDE</button>
+      </div>
+    );
+  }
+
+  render() {
+    // TODO alphabetize
+    const {
+      canRedo,
+      canUndo,
+      changeSelectedFile,
+      chainActions,
       currentTheme,
       data,
       dataModalOpen,
-      deleteFilter,
-      editorError,
       iMspec,
       loadCustomDataset,
-      metaColumns,
       selectedGUIMode,
       spec,
-      specCode,
-      setEncodingParameter,
-      setNewSpec,
-      setNewSpecCode,
-      setRepeats,
       swapXAndYChannels,
-      updateFilter,
       toggleDataModal,
       triggerUndo,
       triggerRedo,
+      unprouncableInGrammer,
     } = this.props;
-
     return (
       <div className="flex-down full-width full-height">
         {dataModalOpen && (
@@ -122,63 +227,10 @@ class RootComponent extends React.Component<RootProps> {
         />
         <div className="flex full-height">
           <div className="flex-down full-height control-container">
-            {SHOW_SECONDARY_CONTROLS && (
-              <SecondaryControls
-                currentTheme={currentTheme}
-                changeTheme={changeTheme}
-                selectedGUIMode={selectedGUIMode}
-                spec={spec}
-                setNewSpecCode={setNewSpecCode}
-                changeGUIMode={changeGUIMode}
-              />
-            )}
-            {selectedGUIMode === 'GRAMMAR' && (
-              <div className="flex full-height">
-                <DndProvider backend={HTML5Backend}>
-                  <DataColumn
-                    addToNextOpenSlot={addToNextOpenSlot}
-                    columns={columns}
-                    coerceType={coerceType}
-                    currentlySelectedFile={currentlySelectedFile}
-                    createFilter={createFilter}
-                    iMspec={iMspec}
-                    metaColumns={metaColumns}
-                    toggleDataModal={toggleDataModal}
-                    setRepeats={setRepeats}
-                  />
-                  <EncodingColumn
-                    iMspec={iMspec}
-                    changeMarkType={changeMarkType}
-                    setEncodingParameter={setEncodingParameter}
-                    clearEncoding={clearEncoding}
-                    spec={spec}
-                    updateFilter={updateFilter}
-                    deleteFilter={deleteFilter}
-                    columns={columns}
-                    metaColumns={metaColumns}
-                    setNewSpec={setNewSpec}
-                    onDrop={(item: any) => {
-                      if (item.disable) {
-                        return;
-                      }
-                      setEncodingParameter(item);
-                    }}
-                    onDropFilter={(item: any) =>
-                      createFilter({field: item.text})
-                    }
-                  />
-                </DndProvider>
-              </div>
-            )}
-            {selectedGUIMode === 'PROGRAMMATIC' && (
-              <div className="flex full-height two-column">
-                <CodeEditor
-                  setNewSpecCode={setNewSpecCode}
-                  currentCode={specCode}
-                  editorError={editorError}
-                />
-              </div>
-            )}
+            {SHOW_SECONDARY_CONTROLS && this.secondaryControls()}
+            {selectedGUIMode === 'GRAMMAR' &&
+              (unprouncableInGrammer ? this.errorMenu() : this.grammarMenu())}
+            {selectedGUIMode === 'PROGRAMMATIC' && this.programmaticMenu()}
           </div>
           <div>
             <ChartArea
@@ -211,6 +263,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
     currentTheme: base.get('currentTheme'),
+    unprouncableInGrammer: base.get('unprouncableInGrammer'),
   };
 }
 

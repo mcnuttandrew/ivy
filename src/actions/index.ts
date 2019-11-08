@@ -29,6 +29,8 @@ export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
 export const coerceType = buildEasyAction('coerce-type');
 
+export const clearUnprounceWarning = buildEasyAction('clear-unprouncable');
+
 export const triggerRedo = buildEasyAction('trigger-redo');
 export const triggerUndo = buildEasyAction('trigger-undo');
 
