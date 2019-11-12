@@ -165,10 +165,12 @@ export const extractFieldStringsForType = (
     .map((column: ColumnHeader) => column.field);
 
 export const checkEncodingForValidity = (spec: any) => {
-  if (spec.layer) {
+  const usingNested = !!spec.spec;
+
+  if (usingNested ? spec.spec.layer : spec.layer) {
     return false;
   }
-  if (!spec.encoding) {
+  if (usingNested ? !spec.spec.encodoing : !spec.encoding) {
     return false;
   }
   return true;

@@ -62,7 +62,10 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         <div className="flex space-between data-selection">
           <div className="flex center">
             <DiDatabase />
-            <div className="section-subtitle"> {currentlySelectedFile}</div>
+            <div className="section-subtitle">
+              {' '}
+              {currentlySelectedFile || 'SELECT FILE'}
+            </div>
           </div>
           <button onClick={toggleDataModal}>CHANGE</button>
         </div>

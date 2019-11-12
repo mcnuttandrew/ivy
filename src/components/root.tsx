@@ -65,7 +65,7 @@ interface RootProps {
 class RootComponent extends React.Component<RootProps> {
   componentDidMount() {
     // on start load the default selected file
-    this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
+    // this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
   }
 
   componentDidCatch(error: any, errorInfo: any) {
@@ -209,6 +209,8 @@ class RootComponent extends React.Component<RootProps> {
       triggerRedo,
       unprouncableInGrammer,
     } = this.props;
+    const hasLoadedData = !!data.length;
+    // console.log(data);
     return (
       <div className="flex-down full-width full-height">
         {dataModalOpen && (

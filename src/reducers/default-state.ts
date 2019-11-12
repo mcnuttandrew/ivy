@@ -32,15 +32,17 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   spec: EMPTY_SPEC,
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),
   editorError: null,
-  data: [],
   columns: [],
   metaColumns: [],
-  currentlySelectedFile: 'barley.json',
+  // currentlySelectedFile: 'barley.json',
+  currentlySelectedFile: null,
   unprouncableInGrammer: false,
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',
-  dataModalOpen: false,
+  dataModalOpen: true,
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
-});
+})
+  // need data to have a consistant type, i.e POJO, not immutable
+  .set('data', []);

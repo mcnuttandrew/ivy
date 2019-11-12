@@ -6,17 +6,24 @@ import VegaDatasetMeta from '../constants/vega-datasets-counts';
 import {getTypeSymbol} from '../utils';
 import {DataType} from '../types';
 
-interface DataModalProps {
+interface Props {
   changeSelectedFile: GenericAction;
   chainActions: GenericAction;
   loadCustomDataset: GenericAction;
   toggleDataModal: GenericAction;
 }
 
+interface State {
+  searchTerm?: string;
+}
+
 // TODO add a switch for internet vs local development
-export default class DataModal extends React.Component<DataModalProps> {
-  constructor(props: DataModalProps) {
+export default class DataModal extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
+    this.state = {
+      searchTerm: null,
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -33,56 +40,80 @@ export default class DataModal extends React.Component<DataModalProps> {
   }
   render() {
     const {changeSelectedFile, toggleDataModal, chainActions} = this.props;
+    const {searchTerm} = this.state;
 
     return (
       <div className="modal-container">
         <div className="modal-background" onClick={toggleDataModal} />
         <div className="flex-down data-modal">
           <div className="modal-header">
-            <h2>Change Dataset</h2>
+            <h2>Select Dataset</h2>
+            <p>
+              Users will create more effective charts (i.e. answer the base
+              questions more clearly) when they are asked any type of questions
+              (Placebo and Experiment). Users will be more confi- dent in their
+              final charts, but more distrustful of their initial data in
+              Placebo and Experiment.
+            </p>
           </div>
           <div className="modal-body flex-down">
-            <h3>Select A Predefined Dataset</h3>
+            <div className="flex space-between">
+              <h3>Predefined Datasets</h3>
+              <div>
+                <input
+                  value={searchTerm || ''}
+                  onChange={event => {
+                    this.setState({searchTerm: event.target.value});
+                  }}
+                  placeholder="Search for dataset"
+                />
+              </div>
+            </div>
             <div className="dataset-list">
-              {Object.keys(VegaDatasetMeta).map(datasetName => {
-                const datasetMeta = VegaDatasetMeta[datasetName];
-                return (
-                  <div
-                    onClick={() =>
-                      chainActions([
-                        () => changeSelectedFile(datasetName),
-                        () => toggleDataModal(),
-                      ])
-                    }
-                    className="flex dataset-list-item space-between"
-                    key={datasetName}
-                  >
-                    <div className="flex">
-                      <h5>{datasetName}</h5>
-                    </div>
-                    <div className="flex">
-                      <div className="icon-container">
-                        {datasetMeta.length} rows
+              {Object.keys(VegaDatasetMeta)
+                .filter((key: string) => {
+                  return key.includes(searchTerm || '');
+                })
+                .sort()
+                .map(datasetName => {
+                  const datasetMeta = VegaDatasetMeta[datasetName];
+                  return (
+                    <div
+                      onClick={() =>
+                        chainActions([
+                          () => changeSelectedFile(datasetName),
+                          () => toggleDataModal(),
+                        ])
+                      }
+                      className="flex dataset-list-item space-between"
+                      key={datasetName}
+                    >
+                      <div className="flex">
+                        <h5>{datasetName}</h5>
                       </div>
-                      {['MEASURE', 'DIMENSION', 'TIME'].map(
-                        (dataType: DataType) => {
-                          return (
-                            <div
-                              key={`${datasetName}-${dataType}`}
-                              className="flex icon-container"
-                            >
-                              <div className="icon">
-                                {getTypeSymbol(dataType)}
+                      <div className="flex">
+                        <div className="icon-container">
+                          {datasetMeta.length} rows
+                        </div>
+                        {['MEASURE', 'DIMENSION', 'TIME'].map(
+                          (dataType: DataType) => {
+                            return (
+                              <div
+                                key={`${datasetName}-${dataType}`}
+                                className="flex icon-container"
+                              >
+                                <div className="icon">
+                                  {getTypeSymbol(dataType)}
+                                </div>
+                                {datasetMeta[dataType] || 0}
                               </div>
-                              {datasetMeta[dataType] || 0}
-                            </div>
-                          );
-                        },
-                      )}
+                            );
+                          },
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
             <div className="custom-data">
               <h3>Upload a Custom Dataset</h3>

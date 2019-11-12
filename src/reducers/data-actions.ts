@@ -1,11 +1,18 @@
 import Immutable from 'immutable';
 import {EMPTY_SPEC, ActionResponse} from './default-state';
 import {ColumnHeader, DataType} from '../types';
+import {
+  selectDataModification,
+  executeDataModifcation,
+} from '../operations/data-ops';
 
 export const recieveData: ActionResponse = (state, payload) => {
   // this might be the wrong way to do this? it sort of depends on the internals of that vega component
+  const dataModification = selectDataModification(payload);
   return state
-    .set('data', payload)
+    .set('data', executeDataModifcation(payload, dataModification))
+    .set('originalData', payload)
+    .set('dataModification', dataModification)
     .set('spec', EMPTY_SPEC)
     .set('undoStack', Immutable.fromJS([]))
     .set('redoStack', Immutable.fromJS([]));
