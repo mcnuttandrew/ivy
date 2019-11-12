@@ -166,11 +166,12 @@ export const extractFieldStringsForType = (
 
 export const checkEncodingForValidity = (spec: any) => {
   const usingNested = !!spec.spec;
-
   if (usingNested ? spec.spec.layer : spec.layer) {
+    console.log('layer');
     return false;
   }
-  if (usingNested ? !spec.spec.encodoing : !spec.encoding) {
+  if (usingNested ? !spec.spec.encoding : !spec.encoding) {
+    console.log('encoding');
     return false;
   }
   return true;

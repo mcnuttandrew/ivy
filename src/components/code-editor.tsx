@@ -14,6 +14,23 @@ interface State {
   error?: string;
 }
 
+const SHORTCUTS = [
+  {
+    name: 'Add Height/Width',
+    action: (code: any) => {
+      const usingNested = !!code.spec;
+      if (usingNested) {
+        code.spec.height = 500;
+        code.spec.width = 500;
+      } else {
+        code.height = 500;
+        code.width = 500;
+      }
+      return code;
+    },
+  },
+];
+
 export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
@@ -40,6 +57,28 @@ export default class CodeEditor extends React.Component<Props, State> {
           })}
         >
           ERROR
+        </div>
+        <div>
+          {SHORTCUTS.map((shortcut: any) => {
+            const {action, name} = shortcut;
+            return (
+              <button
+                key={name}
+                onClick={() => {
+                  setNewSpecCode({
+                    code: JSON.stringify(
+                      action(JSON.parse(currentCode)),
+                      null,
+                      2,
+                    ),
+                    inError: false,
+                  });
+                }}
+              >
+                {name}
+              </button>
+            );
+          })}
         </div>
         <MonacoEditor
           language="json"

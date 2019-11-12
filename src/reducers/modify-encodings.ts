@@ -82,7 +82,13 @@ export const changeMarkType: ActionResponse = (state, payload) => {
     ? ['spec', 'spec', 'mark', 'type']
     : ['spec', 'mark', 'type'];
   if (!state.getIn(route)) {
-    return state.setIn(['spec', 'mark'], Immutable.fromJS({type: payload}));
+    return state.setIn(
+      ['spec', 'mark'],
+      Immutable.fromJS({
+        ...state.getIn(['spec', 'mark']).toJS(),
+        type: payload,
+      }),
+    );
   }
   return state.setIn(route, payload);
 };
