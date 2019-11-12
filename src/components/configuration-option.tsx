@@ -1,5 +1,6 @@
 import React from 'react';
 import {TiDeleteOutline} from 'react-icons/ti';
+import Switch from 'react-switch';
 
 import {GenericAction} from '../actions/index';
 import Selector from './selector';
@@ -15,25 +16,48 @@ interface ConfigurationOptionProps {
 
 export default function ConfigurationOption(props: ConfigurationOptionProps) {
   const {
-    option: {optionType, options, optionSetter, optionGetter, optionDefault},
+    option: {
+      optionType,
+      optionName,
+      options,
+      optionSetter,
+      optionGetter,
+      optionDefault,
+    },
     setNewSpec,
     iMspec,
   } = props;
+  const selected = optionGetter(iMspec);
   return (
-    <div key={optionType} className="option-row flex">
-      <div className="option-row-label">{optionType}</div>
-      <Selector
-        options={options}
-        selectedValue={optionGetter(iMspec) || ''}
-        onChange={(value: any) => setNewSpec(optionSetter(iMspec, value))}
-      />
+    <div key={optionName} className="option-row flex">
+      <div className="option-row-label">{optionName}</div>
+      {optionType === 'List' && (
+        <Selector
+          options={options}
+          selectedValue={selected || ''}
+          onChange={(value: any) => setNewSpec(optionSetter(iMspec, value))}
+        />
+      )}
+      {optionType === 'Switch' && (
+        <Switch
+          checked={!!selected}
+          offColor="#E1E9F2"
+          onColor="#36425C"
+          height={15}
+          checkedIcon={false}
+          width={50}
+          onChange={() => setNewSpec(optionSetter(iMspec, !selected))}
+        />
+      )}
 
-      <div
-        className="clear-option"
-        onClick={() => setNewSpec(optionSetter(iMspec, optionDefault))}
-      >
-        <TiDeleteOutline />
-      </div>
+      {optionType !== 'Switch' && (
+        <div
+          className="clear-option"
+          onClick={() => setNewSpec(optionSetter(iMspec, optionDefault))}
+        >
+          <TiDeleteOutline />
+        </div>
+      )}
     </div>
   );
 }

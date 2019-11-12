@@ -3,7 +3,7 @@ import React from 'react';
 interface SelectorProps {
   onChange?: (x: any) => any;
   options: any;
-  selectedValue?: string;
+  selectedValue?: any;
 }
 
 export default function Selector(props: SelectorProps) {

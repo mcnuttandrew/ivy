@@ -3,12 +3,14 @@ export interface OptionValue {
   display: string;
   value: string;
 }
+export type OptionType = 'Switch' | 'List';
 export interface EncodingOption {
-  optionType: string;
-  options: OptionValue[];
-  optionSetter: (spec: any, selectedOption: string) => any;
-  optionGetter: (spec: any) => string;
-  optionDefault: string;
+  optionName: string;
+  optionType: OptionType;
+  options?: OptionValue[];
+  optionSetter: (spec: any, selectedOption: string | boolean) => any;
+  optionGetter: (spec: any) => string | boolean;
+  optionDefault: string | boolean;
   predicate: (spec: any) => boolean;
 }
 
@@ -67,7 +69,8 @@ const buildSpatialOptions = (
   dimension: string,
   options: OptionValue[],
 ): EncodingOption => ({
-  optionType: 'Agg.',
+  optionName: 'Agg.',
+  optionType: 'List',
   options,
   optionSetter: (spec, selectedOption) => {
     const route = ['encoding', dimension];
@@ -80,6 +83,20 @@ const buildSpatialOptions = (
   predicate: () => true,
 });
 
+const binOption = (dim: string): EncodingOption => ({
+  optionName: 'Bin',
+  optionType: 'Switch',
+  optionSetter: (spec, option) => set(spec, ['encoding', dim, 'bin'], option),
+  optionGetter: spec => get(spec, ['encoding', dim, 'bin']),
+  optionDefault: false,
+  predicate: spec => {
+    return (
+      get(spec, ['encoding', dim, 'field']) &&
+      channelTypePredicate(dim, ['quantitative', 'time'])(spec)
+    );
+  },
+});
+
 const channelTypePredicate = (dim: string, expected: string[]) => (
   spec: any,
 ) => {
@@ -89,7 +106,8 @@ const channelTypePredicate = (dim: string, expected: string[]) => (
 
 const typeRoute = (dim: string) => ['encoding', dim, 'scale', 'type'];
 const buildScaleOption = (dim: string): EncodingOption => ({
-  optionType: 'Scale type',
+  optionName: 'Scale type',
+  optionType: 'List',
   options: ['linear', 'log'].map(toOption),
   optionSetter: (spec, option) => set(spec, typeRoute(dim), option),
   optionGetter: spec => get(spec, typeRoute(dim)) || 'linear',
@@ -103,16 +121,16 @@ const buildScaleOption = (dim: string): EncodingOption => ({
 });
 
 const zeroDomainRoute = (dim: string) => ['encoding', dim, 'scale', 'zero'];
+
 const scaleDomain = (dim: string): EncodingOption => ({
-  optionType: 'Domain',
-  options: [
-    {display: 'Include Zero', value: 'true'},
-    {display: 'Dont Include Zero', value: 'false'},
-  ],
-  optionSetter: (spec, option) =>
-    set(spec, zeroDomainRoute(dim), option === 'true'),
-  optionGetter: spec => `${get(spec, zeroDomainRoute(dim))}`,
-  optionDefault: 'true',
+  optionName: 'Include Zero',
+  optionType: 'Switch',
+  optionSetter: (spec, option) => set(spec, zeroDomainRoute(dim), option),
+  optionGetter: spec => {
+    const val = get(spec, zeroDomainRoute(dim));
+    return typeof val === 'boolean' ? val : true;
+  },
+  optionDefault: true,
   predicate: spec => {
     return (
       get(spec, ['encoding', dim, 'field']) &&
@@ -120,9 +138,28 @@ const scaleDomain = (dim: string): EncodingOption => ({
     );
   },
 });
+// const scaleDomain = (dim: string): EncodingOption => ({
+//   optionName: 'Domain',
+//   optionType: 'List',
+//   options: [
+//     {display: 'Include Zero', value: 'true'},
+//     {display: 'Dont Include Zero', value: 'false'},
+//   ],
+//   optionSetter: (spec, option) =>
+//     set(spec, zeroDomainRoute(dim), option === 'true'),
+//   optionGetter: spec => `${get(spec, zeroDomainRoute(dim))}`,
+//   optionDefault: 'true',
+//   predicate: spec => {
+//     return (
+//       get(spec, ['encoding', dim, 'field']) &&
+//       channelTypePredicate(dim, ['quantitative', 'time'])(spec)
+//     );
+//   },
+// });
 
 const buildTypeCoercion = (dim: string): EncodingOption => ({
-  optionType: 'Data type',
+  optionName: 'Data type',
+  optionType: 'List',
   options: ['nominal', 'ordinal', 'quantitative', 'temporal'].map(toOption),
   optionSetter: (spec, option) => set(spec, ['encoding', dim, 'type'], option),
   optionGetter: spec => get(spec, ['encoding', dim, 'type']),
@@ -146,6 +183,7 @@ const generateXorY = (dim: string) => [
   injectFieldPred(dim, buildTypeCoercion(dim)),
   buildScaleOption(dim),
   scaleDomain(dim),
+  binOption(dim),
   injectFieldPred(dim, buildSpatialOptions(dim, spatialAggs)),
   injectNofieldPred(dim, buildSpatialOptions(dim, justCountAgg)),
 ];
@@ -167,11 +205,13 @@ export const configurationOptions: any = {
     injectFieldPred('size', buildTypeCoercion('size')),
     injectFieldPred('size', buildSpatialOptions('size', binningOptions)),
     injectNofieldPred('size', buildSpatialOptions('size', justCountAgg)),
+    injectFieldPred('size', binOption('size')),
   ],
   color: [
     injectFieldPred('color', buildTypeCoercion('color')),
     injectFieldPred('color', buildSpatialOptions('color', binningOptions)),
     injectNofieldPred('color', buildSpatialOptions('color', justCountAgg)),
+    injectFieldPred('color', binOption('color')),
   ],
   shape: [
     injectFieldPred('shape', buildTypeCoercion('shape')),
