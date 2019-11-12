@@ -138,24 +138,6 @@ const scaleDomain = (dim: string): EncodingOption => ({
     );
   },
 });
-// const scaleDomain = (dim: string): EncodingOption => ({
-//   optionName: 'Domain',
-//   optionType: 'List',
-//   options: [
-//     {display: 'Include Zero', value: 'true'},
-//     {display: 'Dont Include Zero', value: 'false'},
-//   ],
-//   optionSetter: (spec, option) =>
-//     set(spec, zeroDomainRoute(dim), option === 'true'),
-//   optionGetter: spec => `${get(spec, zeroDomainRoute(dim))}`,
-//   optionDefault: 'true',
-//   predicate: spec => {
-//     return (
-//       get(spec, ['encoding', dim, 'field']) &&
-//       channelTypePredicate(dim, ['quantitative', 'time'])(spec)
-//     );
-//   },
-// });
 
 const buildTypeCoercion = (dim: string): EncodingOption => ({
   optionName: 'Data type',
