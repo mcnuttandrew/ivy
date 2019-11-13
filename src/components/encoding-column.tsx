@@ -2,8 +2,6 @@ import React from 'react';
 import {FaEraser} from 'react-icons/fa';
 import {GenericAction} from '../actions/index';
 import Shelf from './shelf';
-import Filter from './filter';
-import FilterTarget from './filter-target';
 import {ColumnHeader} from '../types';
 import Selector from './selector';
 import {get} from '../utils';
@@ -36,10 +34,8 @@ interface EncodingColumnProps {
 
   changeMarkType: GenericAction;
   clearEncoding: GenericAction;
-  deleteFilter: GenericAction;
   setNewSpec: GenericAction;
   setEncodingParameter: GenericAction;
-  updateFilter: GenericAction;
 }
 export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render() {
@@ -52,9 +48,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       setEncodingParameter,
       clearEncoding,
       changeMarkType,
-      deleteFilter,
-      updateFilter,
-      onDropFilter,
+
       setNewSpec,
     } = this.props;
     const encoding =
@@ -75,7 +69,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
     );
 
     return (
-      <div className="flex-down column full-height background-3">
+      <div className="column">
         {/* ENCODING STUFF */}
         <div className="flex space-between">
           <h1 className="section-title flex"> Encoding </h1>
@@ -115,33 +109,6 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         </div>
         <div className="flex-down section-body">
           {['column', 'row'].map(makeShelf(get(spec, ['spec', 'encoding'])))}
-        </div>
-
-        <h1 className="section-title"> Filter </h1>
-        <div className="flex-down">
-          {(spec.transform || get(spec, ['spec', 'transform']) || [])
-            .filter((filter: any) => {
-              // dont try to render filters that we dont know how to render
-              return filter.filter;
-            })
-            .map((filter: any, idx: number) => {
-              return (
-                <Filter
-                  column={columns.find(
-                    ({field}) => field === filter.filter.field,
-                  )}
-                  filter={filter}
-                  key={`${idx}-filter`}
-                  updateFilter={(newFilterValue: any) => {
-                    updateFilter({newFilterValue, idx});
-                  }}
-                  deleteFilter={() => deleteFilter(idx)}
-                />
-              );
-            })}
-        </div>
-        <div>
-          <FilterTarget onDrop={onDropFilter} />
         </div>
       </div>
     );

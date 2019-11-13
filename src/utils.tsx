@@ -176,3 +176,7 @@ export const checkEncodingForValidity = (spec: any) => {
   }
   return true;
 };
+
+export const getTemplate = (state: any, template: string) => {
+  return state.get('templates').find((d: any) => d.templateName === template);
+};

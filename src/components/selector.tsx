@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface SelectorProps {
-  onChange?: (x: any) => any;
-  options: any;
+  onChange: (x: any) => any;
+  options: {display: any, value: any}[];
   selectedValue?: any;
 }
 

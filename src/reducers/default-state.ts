@@ -28,21 +28,38 @@ const defaultEmpty = Immutable.fromJS({
   encoding: {},
 });
 export const EMPTY_SPEC = defaultEmpty;
+
+// if the goose mode should be on, then we shouldnt use defaults
+const GOOSE_MODE = false;
+const fileSpecificationDefaults = GOOSE_MODE
+  ? {
+      currentlySelectedFile: null,
+      dataModalOpen: true,
+      GOOSE_MODE,
+    }
+  : {
+      currentlySelectedFile: 'barley.json',
+      dataModalOpen: false,
+      GOOSE_MODE,
+    };
+
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
+  ...fileSpecificationDefaults,
   spec: EMPTY_SPEC,
   specCode: JSON.stringify(EMPTY_SPEC, null, 2),
   editorError: null,
   columns: [],
   metaColumns: [],
-  // currentlySelectedFile: 'barley.json',
-  currentlySelectedFile: null,
   unprouncableInGrammer: false,
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',
-  dataModalOpen: true,
+  encodingMode: 'grammer',
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
+
+  templates: [],
+  templateMap: {},
 })
   // need data to have a consistant type, i.e POJO, not immutable
   .set('data', []);

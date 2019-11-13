@@ -1,10 +1,8 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
-import {TiDeleteOutline} from 'react-icons/ti';
 
 import {GenericAction} from '../actions/index';
 import Pill from './pill';
-import Selector from './selector';
 import {ColumnHeader} from '../types';
 import {classnames, get} from '../utils';
 import {configurationOptions, EncodingOption} from '../constants';

@@ -40,7 +40,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
       <h5>SECONDARY CONTROLS</h5>
       <div className="mode-selector flex">
         Mode:{' '}
-        {['GRAMMAR', 'PROGRAMMATIC'].map(mode => {
+        {['GRAMMAR', 'PROGRAMMATIC', 'TEMPLATE BUILDER'].map(mode => {
           return (
             <div
               key={mode}
