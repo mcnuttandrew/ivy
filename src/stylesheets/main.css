@@ -405,6 +405,10 @@ h1, h2, h3, h4, h5 {
   font-size: 12px;
 }
 
+.modal-header .modal-close-button {
+  cursor: pointer;
+}
+
 .modal-container .modal-body {
   background: white;
   padding: 10px;
