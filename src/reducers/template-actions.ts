@@ -52,5 +52,13 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
 
 export const createTemplate: ActionResponse = (state, payload) => {
   console.log(payload);
-  return state.set('templates', state.get('templates').concat(payload));
+  return state.set(
+    'templates',
+    state
+      .get('templates')
+      .filter(
+        (template: Template) => template.templateName !== payload.templateName,
+      )
+      .concat(payload),
+  );
 };

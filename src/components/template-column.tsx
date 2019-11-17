@@ -1,7 +1,7 @@
 import React from 'react';
 import {GenericAction} from '../actions/index';
 import {ColumnHeader} from '../types';
-import {Template, TemplateWidget} from '../constants/templates';
+import {Template, TemplateWidget, TextWidget} from '../constants/templates';
 import TemplateShelf from './template-shelf';
 
 interface TemplateColumnProps {
@@ -24,6 +24,12 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       </div>
     );
   }
+
+  renderTextWidget(generalWidget: TemplateWidget) {
+    // @ts-ignore
+    const widget: TextWidget = generalWidget;
+    return <div key={widget.widgetName}>{widget.text}</div>;
+  }
   render() {
     const {template} = this.props;
     // NEXT STEPS KATY
@@ -40,6 +46,9 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
           {template.widgets.map(widget => {
             if (widget.widgetType === 'DataTarget') {
               return this.renderDataTargetWidget(widget);
+            }
+            if (widget.widgetType === 'Text') {
+              return this.renderTextWidget(widget);
             }
             return <div key={widget.widgetName}>{widget.widgetName}</div>;
           })}

@@ -1,6 +1,6 @@
 import {DataType} from '../types';
 // probably need to have a notion of typing for some of the widgets
-export type WidgetType = 'DataTarget' | 'List' | 'Switch';
+export type WidgetType = 'DataTarget' | 'List' | 'Switch' | 'Text';
 export interface TemplateWidget {
   widgetName: string;
   widgetType: WidgetType;
@@ -19,11 +19,21 @@ export interface SwitchWidget extends TemplateWidget {
   widgetType: 'Switch';
   defaultValue: boolean;
 }
+export interface TextWidget extends TemplateWidget {
+  widgetType: 'Text';
+  text: string;
+}
 
 export interface Template {
   templateName: string;
   code: string;
-  widgets: (TemplateWidget | DataTargetWidget | ListWidget | SwitchWidget)[];
+  widgets: (
+    | TemplateWidget
+    | DataTargetWidget
+    | ListWidget
+    | SwitchWidget
+    | TextWidget
+  )[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
 

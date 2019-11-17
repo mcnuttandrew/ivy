@@ -6,11 +6,12 @@ import {
   TemplateWidget,
   Template,
   SwitchWidget,
+  TextWidget,
+  ListWidget,
 } from '../constants/templates';
 import {DataType} from '../types';
 import {classnames} from '../utils';
 import MonacoEditor from 'react-monaco-editor';
-import Selector from './selector';
 import Select from 'react-select';
 import Switch from 'react-switch';
 import Modal from './modal';
@@ -32,12 +33,55 @@ function widgetInUse(code: string, widgetName: string) {
   return code.match(new RegExp(`\\[${widgetName}\\]`, 'g'));
 }
 function allWidgetsInUse(code: string, widgets: List<TemplateWidget>) {
-  return widgets.every(widget => !!widgetInUse(code, widget.widgetName));
+  return widgets
+    .filter((widget: TemplateWidget) => widget.widgetType !== 'Text')
+    .every((widget: TemplateWidget) => !!widgetInUse(code, widget.widgetName));
 }
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 const toSelectFormat = (arr: string[]) =>
   arr.map((x: string) => ({value: x, label: x}));
+
+const widgetFactory = {
+  List: (idx: number) => {
+    const allowedValues: string[] = [];
+    const newWidget: ListWidget = {
+      widgetName: `ListItem${idx}`,
+      widgetType: 'List',
+      required: true,
+      allowedValues,
+      defaultValue: null,
+    };
+    return newWidget;
+  },
+  DataTarget: (idx: number) => {
+    const newWidget: DataTargetWidget = {
+      widgetName: `Dim${idx}`,
+      widgetType: 'DataTarget',
+      allowedTypes: DATA_TYPES,
+      required: true,
+    };
+    return newWidget;
+  },
+  Switch: (idx: number) => {
+    const newWidget: SwitchWidget = {
+      widgetName: `Switch${idx}`,
+      widgetType: 'Switch',
+      defaultValue: true,
+      required: true,
+    };
+    return newWidget;
+  },
+  Text: (idx: number) => {
+    const newWidget: TextWidget = {
+      widgetName: `Text${idx}`,
+      widgetType: 'Text',
+      text: '',
+      required: false,
+    };
+    return newWidget;
+  },
+};
 
 // TODO add a switch for internet vs local development
 export default class DataModal extends React.Component<Props, State> {
@@ -120,50 +164,77 @@ export default class DataModal extends React.Component<Props, State> {
     return <div key={widget.widgetName}>List</div>;
   }
 
+  renderTextWidget(generalWidget: TemplateWidget, idx: number) {
+    // @ts-ignore
+    const widget: TextWidget = generalWidget;
+    return (
+      <div key={widget.widgetName}>
+        <textarea
+          placeholder="Type a message that will appear in the encoding area"
+          value={widget.text}
+          onChange={event =>
+            this.setWidgetValue('text', event.target.value, idx)
+          }
+        />
+      </div>
+    );
+  }
+
   widgetCommon(widget: TemplateWidget, idx: number) {
-    const {code} = this.state;
+    const {code, widgets} = this.state;
+    const showKey = widget.widgetType !== 'Text';
+    const showRequired = widget.widgetType !== 'Text';
+    const showInUs = widget.widgetType !== 'Text';
     return (
       <div key={widget.widgetName} className="widget">
         <div className="flex">
-          <div className="flex">
-            <h5>WidgetKey</h5>
-            <input
-              value={widget.widgetName}
-              onChange={event =>
-                this.setWidgetValue('widgetName', event.target.value, idx)
-              }
-            />
-          </div>
-          <Selector
-            onChange={(val: string) => {
-              this.setWidgetValue('widgetType', val, idx);
+          {showKey && (
+            <div className="flex">
+              <h5>WidgetKey</h5>
+              <input
+                value={widget.widgetName}
+                onChange={event =>
+                  this.setWidgetValue('widgetName', event.target.value, idx)
+                }
+              />
+            </div>
+          )}
+          {showRequired && (
+            <label>
+              Required
+              <Switch
+                checked={!!widget.required}
+                offColor="#E1E9F2"
+                onColor="#36425C"
+                height={15}
+                checkedIcon={false}
+                width={50}
+                onChange={() =>
+                  this.setWidgetValue('required', !widget.required, idx)
+                }
+              />
+            </label>
+          )}
+          <div
+            onClick={() => {
+              // @ts-ignore
+              const XXX: List<any> = widgets.filter((_, jdx) => jdx !== idx);
+              this.setState({
+                widgets: XXX,
+              });
             }}
-            options={['DataTarget', 'List', 'Switch'].map((d: string) => ({
-              display: d,
-              value: d,
-            }))}
-            selectedValue={widget.widgetType}
-          />
-          <label>
-            Required
-            <Switch
-              checked={!!widget.required}
-              offColor="#E1E9F2"
-              onColor="#36425C"
-              height={15}
-              checkedIcon={false}
-              width={50}
-              onChange={() =>
-                this.setWidgetValue('required', !widget.required, idx)
-              }
-            />
-          </label>
+          >
+            X
+          </div>
         </div>
-        <div>
-          {widgetInUse(code, widget.widgetName) ? 'in use' : 'not in use'}
-        </div>
+        {showInUs && (
+          <div>
+            {widgetInUse(code, widget.widgetName) ? 'in use' : 'not in use'}
+          </div>
+        )}
         {widget.widgetType === 'Switch' && this.renderSwitchWidget(widget, idx)}
         {widget.widgetType === 'List' && this.renderListWidget(widget, idx)}
+        {widget.widgetType === 'Text' && this.renderTextWidget(widget, idx)}
         {widget.widgetType === 'DataTarget' &&
           this.renderDataTargetWidget(widget, idx)}
       </div>
@@ -223,7 +294,7 @@ export default class DataModal extends React.Component<Props, State> {
 
   widgetPanel() {
     const {code, widgets, templateName} = this.state;
-    const {createTemplate} = this.props;
+    const {createTemplate, toggleTemplateBuilder} = this.props;
     const componentCanBeCreated = this.validatePotentialTemplate();
     return (
       <div className="widget-configuration-panel">
@@ -240,6 +311,7 @@ export default class DataModal extends React.Component<Props, State> {
               widgets: widgets.toJS(),
             };
             createTemplate(newTemplate);
+            toggleTemplateBuilder();
           }}
         >
           {componentCanBeCreated ? 'Create Template' : 'Template Not Complete'}
@@ -264,21 +336,21 @@ export default class DataModal extends React.Component<Props, State> {
           )}
         </div>
         <div className="flex">
-          <button
-            onClick={() => {
-              const newWidget: DataTargetWidget = {
-                widgetName: `Dim${widgets.size + 1}`,
-                widgetType: 'DataTarget',
-                allowedTypes: DATA_TYPES,
-                required: true,
-              };
-              this.setState({
-                widgets: widgets.push(newWidget),
-              });
-            }}
-          >
-            Add Widget
-          </button>
+          {Object.entries(widgetFactory).map((row: any) => {
+            const [key, widgetFactor] = row;
+            return (
+              <button
+                key={key}
+                onClick={() => {
+                  this.setState({
+                    widgets: widgets.push(widgetFactor(widgets.size + 1)),
+                  });
+                }}
+              >
+                {`Add ${key}`}
+              </button>
+            );
+          })}
         </div>
       </div>
     );
