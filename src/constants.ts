@@ -83,6 +83,13 @@ const buildSpatialOptions = (
   predicate: () => true,
 });
 
+const channelTypePredicate = (dim: string, expected: string[]) => (
+  spec: any,
+) => {
+  const channelType = get(spec, ['encoding', dim, 'type']);
+  return expected.some((type: string) => channelType === type);
+};
+
 const binOption = (dim: string): EncodingOption => ({
   optionName: 'Bin',
   optionType: 'Switch',
@@ -96,13 +103,6 @@ const binOption = (dim: string): EncodingOption => ({
     );
   },
 });
-
-const channelTypePredicate = (dim: string, expected: string[]) => (
-  spec: any,
-) => {
-  const channelType = get(spec, ['encoding', dim, 'type']);
-  return expected.some((type: string) => channelType === type);
-};
 
 const typeRoute = (dim: string) => ['encoding', dim, 'scale', 'type'];
 const buildScaleOption = (dim: string): EncodingOption => ({
