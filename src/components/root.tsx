@@ -305,15 +305,13 @@ class RootComponent extends React.Component<RootProps> {
               (unprouncableInGrammer ? this.errorMenu() : this.grammarMenu())}
             {selectedGUIMode === 'PROGRAMMATIC' && this.programmaticMenu()}
           </div>
-          <div>
-            <ChartArea
-              data={data}
-              spec={spec}
-              iMspec={iMspec}
-              swapXAndYChannels={swapXAndYChannels}
-              currentTheme={currentTheme}
-            />
-          </div>
+          <ChartArea
+            data={data}
+            spec={spec}
+            iMspec={iMspec}
+            swapXAndYChannels={swapXAndYChannels}
+            currentTheme={currentTheme}
+          />
         </div>
       </div>
     );
