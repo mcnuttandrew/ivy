@@ -83,7 +83,6 @@ const widgetFactory = {
   },
 };
 
-// TODO add a switch for internet vs local development
 export default class DataModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
