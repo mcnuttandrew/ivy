@@ -60,6 +60,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
 
   templates: [],
   templateMap: {},
+  templateBuilderModalOpen: false,
 })
   // need data to have a consistant type, i.e POJO, not immutable
   .set('data', []);

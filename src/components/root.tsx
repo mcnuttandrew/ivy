@@ -5,7 +5,10 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 import {Template, TemplateMap} from '../constants/templates';
 
-import {SHOW_SECONDARY_CONTROLS} from '../constants/CONFIG';
+import {
+  SHOW_SECONDARY_CONTROLS,
+  SHOW_TEMPLATE_CONTROLS,
+} from '../constants/CONFIG';
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
@@ -22,9 +25,9 @@ import ChartArea from './chart-area';
 import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
-import TemplateView from './template-view';
 import TemplateColumn from './template-column';
 import Selector from './selector';
+import TemplateBuilderModal from './template-builder-modal';
 
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
@@ -46,6 +49,7 @@ interface RootProps {
   unprouncableInGrammer?: boolean;
   templates?: Template[];
   templateMap?: TemplateMap;
+  templateBuilderModalOpen?: boolean;
 
   addToNextOpenSlot?: GenericAction;
   changeGUIMode?: GenericAction;
@@ -56,6 +60,7 @@ interface RootProps {
   clearEncoding?: GenericAction;
   clearUnprounceWarning?: GenericAction;
   createFilter?: GenericAction;
+  createTemplate?: GenericAction;
   coerceType?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
@@ -70,6 +75,7 @@ interface RootProps {
   setEncodingMode?: GenericAction;
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
+  toggleTemplateBuilder?: GenericAction;
   triggerUndo?: GenericAction;
   triggerRedo?: GenericAction;
 }
@@ -156,20 +162,22 @@ class RootComponent extends React.Component<RootProps> {
             onDropFilter={(item: any) => createFilter({field: item.text})}
           />
           <div className="flex-down full-height background-3">
-            <div className="flex-down encoding-mode-selector">
-              <h1 className="section-title">ENCODING MODE</h1>
-              <Selector
-                onChange={value => setEncodingMode(value)}
-                options={[
-                  {display: 'grammer', value: 'grammar'},
-                  ...templates.map(x => ({
-                    display: x.templateName,
-                    value: x.templateName,
-                  })),
-                ]}
-                selectedValue={encodingMode}
-              />
-            </div>
+            {SHOW_TEMPLATE_CONTROLS && (
+              <div className="flex-down encoding-mode-selector">
+                <h1 className="section-title">ENCODING MODE</h1>
+                <Selector
+                  onChange={value => setEncodingMode(value)}
+                  options={[
+                    {display: 'grammer', value: 'grammer'},
+                    ...templates.map(x => ({
+                      display: x.templateName,
+                      value: x.templateName,
+                    })),
+                  ]}
+                  selectedValue={encodingMode}
+                />
+              </div>
+            )}
             {encodingMode === 'grammer' && (
               <EncodingColumn
                 iMspec={iMspec}
@@ -242,15 +250,6 @@ class RootComponent extends React.Component<RootProps> {
     );
   }
 
-  templateView() {
-    const {templates} = this.props;
-    return (
-      <div className="flex full-height two-column">
-        <TemplateView templates={templates} />
-      </div>
-    );
-  }
-
   render() {
     // TODO alphabetize
     const {
@@ -259,6 +258,7 @@ class RootComponent extends React.Component<RootProps> {
       changeSelectedFile,
       chainActions,
       currentTheme,
+      createTemplate,
       data,
       dataModalOpen,
       iMspec,
@@ -270,6 +270,8 @@ class RootComponent extends React.Component<RootProps> {
       triggerUndo,
       triggerRedo,
       unprouncableInGrammer,
+      templateBuilderModalOpen,
+      toggleTemplateBuilder,
     } = this.props;
 
     return (
@@ -282,11 +284,19 @@ class RootComponent extends React.Component<RootProps> {
             loadCustomDataset={loadCustomDataset}
           />
         )}
+        {templateBuilderModalOpen && (
+          <TemplateBuilderModal
+            createTemplate={createTemplate}
+            toggleTemplateBuilder={toggleTemplateBuilder}
+            spec={spec}
+          />
+        )}
         <Header
           triggerUndo={triggerUndo}
           triggerRedo={triggerRedo}
           canRedo={canRedo}
           canUndo={canUndo}
+          toggleTemplateBuilder={toggleTemplateBuilder}
         />
         <div className="flex full-height">
           <div className="flex-down full-height control-container">
@@ -294,7 +304,6 @@ class RootComponent extends React.Component<RootProps> {
             {selectedGUIMode === 'GRAMMAR' &&
               (unprouncableInGrammer ? this.errorMenu() : this.grammarMenu())}
             {selectedGUIMode === 'PROGRAMMATIC' && this.programmaticMenu()}
-            {selectedGUIMode === 'TEMPLATE BUILDER' && this.templateView()}
           </div>
           <div>
             <ChartArea
@@ -327,6 +336,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
+    templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
     currentTheme: base.get('currentTheme'),
     unprouncableInGrammer: base.get('unprouncableInGrammer'),
     GOOSE_MODE: base.get('GOOSE_MODE'),

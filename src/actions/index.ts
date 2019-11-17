@@ -15,6 +15,7 @@ interface GenericActionCreator {
 
 const buildEasyAction: GenericActionCreator = type => payload => dispatch =>
   dispatch({type, payload});
+// TODO: organize these in literally any way
 export const setEncodingParameter = buildEasyAction('set-encoding-param');
 export const swapXAndYChannels = buildEasyAction('swap-x-and-y-channels');
 export const setRepeats = buildEasyAction('set-repeats');
@@ -31,6 +32,8 @@ export const deleteFilter = buildEasyAction('delete-filter');
 export const coerceType = buildEasyAction('coerce-type');
 export const setEncodingMode = buildEasyAction('set-encoding-mode');
 export const setTemplateValue = buildEasyAction('set-template-value');
+export const toggleTemplateBuilder = buildEasyAction('toggle-template-builder');
+export const createTemplate = buildEasyAction('create-template');
 
 export const clearUnprounceWarning = buildEasyAction('clear-unprouncable');
 

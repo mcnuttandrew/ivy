@@ -80,6 +80,7 @@ h1, h2, h3, h4, h5 {
   font-size: 12px;
 }
 
+
 .mode-selector .mode-option {
   cursor: pointer;
   margin: 0 5px;
@@ -379,6 +380,27 @@ h1, h2, h3, h4, h5 {
   z-index: 5002;
 }
 
+.modal-container .template-builder-modal {
+  background: #E1E9F2;
+  border-radius: 10px;
+  height: 90%;
+  padding: 10px;
+  width: 90%;
+  z-index: 5002;
+}
+
+.template-builder-modal .widget-configuration-panel {
+  padding: 10px;
+}
+
+.widget-configuration-panel .widget {
+  border: thin solid black;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 12px;
+  background: aliceblue;
+}
+
 .modal-container .modal-header p {
   font-size: 12px;
 }
@@ -433,6 +455,20 @@ h1, h2, h3, h4, h5 {
   margin-right: 2px;
 }
 
+.template-builder-modal .code-column {
+  border-right: thin solid black;
+  width: 100%;
+  max-width: 400px;
+}
+
+.code-wrapper {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+
+
 .error-container {
   padding: 30px;
   width: 460px;
@@ -454,13 +490,26 @@ h1, h2, h3, h4, h5 {
   height: 30px;
   justify-content: center;
   position: absolute;
-  top: -30px;
-  transition: top 1s;
   width: 100%;
 }
+/* ERROR BAR IN CODE EDITOR */
+.code-container .error-bar {
+  top: -30px;
+  transition: top 1s;
+}
 
-.error-bar.has-error {
+.code-container .error-bar.has-error {
   top: 0;
+  z-index: 1;
+}
+/* ERROR BAR IN TEMPLATE BUILDER */
+.code-wrapper .error-bar {
+  bottom: -100px;
+  transition: bottom 1s;
+}
+
+.code-wrapper .error-bar.has-error {
+  bottom: 30px;
   z-index: 1;
 }
 
@@ -550,10 +599,4 @@ h1, h2, h3, h4, h5 {
 
 .encoding-mode-selector {
   background: gray;
-}
-
-
-.template-view {
-  padding: 30px;
-  width: 460px;
 }

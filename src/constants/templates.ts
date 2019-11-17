@@ -1,15 +1,29 @@
+import {DataType} from '../types';
 // probably need to have a notion of typing for some of the widgets
 export type WidgetType = 'DataTarget' | 'List' | 'Switch';
 export interface TemplateWidget {
   widgetName: string;
   widgetType: WidgetType;
-  defaultValue?: any;
   required: boolean;
 }
+export interface DataTargetWidget extends TemplateWidget {
+  widgetType: 'DataTarget';
+  allowedTypes: DataType[];
+}
+export interface ListWidget extends TemplateWidget {
+  widgetType: 'List';
+  allowedValues: string[];
+  defaultValue: string;
+}
+export interface SwitchWidget extends TemplateWidget {
+  widgetType: 'Switch';
+  defaultValue: boolean;
+}
+
 export interface Template {
   templateName: string;
   code: string;
-  widgets: TemplateWidget[];
+  widgets: (TemplateWidget | DataTargetWidget | ListWidget | SwitchWidget)[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
 
@@ -41,13 +55,13 @@ const SCATTERPLOT_TEMPLATE: Template = {
     {
       widgetName: 'xDim',
       widgetType: 'DataTarget',
-      defaultValue: null,
+      allowedTypes: ['MEASURE'],
       required: true,
     },
     {
       widgetName: 'yDim',
       widgetType: 'DataTarget',
-      defaultValue: null,
+      allowedTypes: ['MEASURE'],
       required: true,
     },
   ],

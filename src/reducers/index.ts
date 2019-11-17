@@ -27,7 +27,11 @@ import {
   recieveTypeInferences,
   changeSelectedFile,
 } from './data-actions';
-import {recieveTemplates, setTemplateValue} from './template-actions';
+import {
+  recieveTemplates,
+  setTemplateValue,
+  createTemplate,
+} from './template-actions';
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // GUI ACTIONS
@@ -44,6 +48,9 @@ const changeTheme: ActionResponse = (state, payload) =>
   state.set('currentTheme', payload);
 const clearUnprounceWarning: ActionResponse = state =>
   state.set('unprouncableInGrammer', false);
+const toggleTemplateBuilder: ActionResponse = state =>
+  state.set('templateBuilderModalOpen', !state.get('templateBuilderModalOpen'));
+
 const setEncodingMode: ActionResponse = (state, payload) => {
   const newState = state.set('encodingMode', payload);
   if (payload !== 'grammer') {
@@ -95,10 +102,12 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'toggle-data-modal': toggleDataModal,
   'clear-unprouncable': clearUnprounceWarning,
   'set-encoding-mode': setEncodingMode,
+  'toggle-template-builder': toggleTemplateBuilder,
 
   // template
   'recieve-templates': recieveTemplates,
   'set-template-value': addUndo(setTemplateValue),
+  'create-template': createTemplate,
 };
 const NULL_ACTION: ActionResponse = state => state;
 const reducers = {

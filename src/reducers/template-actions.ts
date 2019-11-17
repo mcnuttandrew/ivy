@@ -31,6 +31,7 @@ function checkIfMapComplete(template: Template, templateMap: TemplateMap) {
 }
 
 export const recieveTemplates: ActionResponse = (state, payload) => {
+  console.log(payload);
   return state.set('templates', payload);
 };
 
@@ -47,4 +48,9 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   );
   console.log(updatedTemplate, '???');
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
+};
+
+export const createTemplate: ActionResponse = (state, payload) => {
+  console.log(payload);
+  return state.set('templates', state.get('templates').concat(payload));
 };
