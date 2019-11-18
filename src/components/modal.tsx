@@ -1,5 +1,6 @@
 import React from 'react';
 import {classnames} from '../utils';
+import {TiDelete} from 'react-icons/ti';
 
 interface Props {
   modalToggle: any;
@@ -34,7 +35,7 @@ export default class Modal extends React.PureComponent<Props> {
             <div className="flex space-between">
               <h2>{modalTitle}</h2>
               <div className="modal-close-button" onClick={modalToggle}>
-                X
+                <TiDelete />
               </div>
             </div>
             <p>{modalDetails}</p>

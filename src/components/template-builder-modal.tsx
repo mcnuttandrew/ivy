@@ -1,5 +1,6 @@
 import React from 'react';
 import {List} from 'immutable';
+import {TiDelete, TiArrowDownThick, TiArrowUpThick} from 'react-icons/ti';
 import {GenericAction} from '../actions/index';
 import {
   DataTargetWidget,
@@ -88,7 +89,6 @@ const widgetFactory = {
 export default class DataModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    console.log('hi hello', props);
     this.state = {
       code: JSON.stringify(this.props.spec, null, 2),
       templateName: null,
@@ -205,56 +205,99 @@ export default class DataModal extends React.Component<Props, State> {
     const showInUs = widget.widgetType !== 'Text';
     return (
       <div key={widget.widgetName} className="widget">
-        <div className="flex">
-          {showKey && (
-            <div className="flex">
-              <h5>WidgetKey</h5>
-              <input
-                value={widget.widgetName}
-                onChange={event =>
-                  this.setWidgetValue('widgetName', event.target.value, idx)
-                }
-              />
+        <div className="widget-handle">
+          <div className="flex-down">
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                // @ts-ignore
+                const updatedWidgets: List<any> = widgets.filter(
+                  (_, jdx) => jdx !== idx,
+                );
+                this.setState({
+                  widgets: updatedWidgets,
+                });
+              }}
+            >
+              <TiDelete />
             </div>
-          )}
-          {showRequired && (
-            <label>
-              Required
-              <Switch
-                checked={!!widget.required}
-                offColor="#E1E9F2"
-                onColor="#36425C"
-                height={15}
-                checkedIcon={false}
-                width={50}
-                onChange={() =>
-                  this.setWidgetValue('required', !widget.required, idx)
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                if (idx === 0) {
+                  return;
                 }
-              />
-            </label>
-          )}
-          <div
-            onClick={() => {
-              // @ts-ignore
-              const XXX: List<any> = widgets.filter((_, jdx) => jdx !== idx);
-              this.setState({
-                widgets: XXX,
-              });
-            }}
-          >
-            X
+                this.setState({
+                  widgets: widgets
+                    .set(idx - 1, widget)
+                    .set(idx, widgets.get(idx - 1)),
+                });
+              }}
+            >
+              <TiArrowUpThick />
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                if (idx === widgets.size - 1) {
+                  return;
+                }
+                this.setState({
+                  widgets: widgets
+                    .set(idx + 1, widget)
+                    .set(idx, widgets.get(idx + 1)),
+                });
+              }}
+            >
+              <TiArrowDownThick />
+            </div>
+          </div>
+          <div className="in-use-status">
+            {showInUs
+              ? widgetInUse(code, widget.widgetName)
+                ? 'in use'
+                : 'not used'
+              : ''}
           </div>
         </div>
-        {showInUs && (
-          <div>
-            {widgetInUse(code, widget.widgetName) ? 'in use' : 'not in use'}
+        <div className="widget-body">
+          <div className="flex">
+            {showKey && (
+              <div className="flex-down">
+                <span className="tool-description">WidgetKey</span>
+                <input
+                  value={widget.widgetName}
+                  onChange={event =>
+                    this.setWidgetValue('widgetName', event.target.value, idx)
+                  }
+                />
+              </div>
+            )}
+            {showRequired && (
+              <div className="flex-down">
+                <span className="tool-description">Required:</span>
+                <Switch
+                  checked={!!widget.required}
+                  offColor="#E1E9F2"
+                  onColor="#36425C"
+                  height={15}
+                  checkedIcon={false}
+                  width={50}
+                  onChange={() =>
+                    this.setWidgetValue('required', !widget.required, idx)
+                  }
+                />
+              </div>
+            )}
           </div>
-        )}
-        {widget.widgetType === 'Switch' && this.renderSwitchWidget(widget, idx)}
-        {widget.widgetType === 'List' && this.renderListWidget(widget, idx)}
-        {widget.widgetType === 'Text' && this.renderTextWidget(widget, idx)}
-        {widget.widgetType === 'DataTarget' &&
-          this.renderDataTargetWidget(widget, idx)}
+
+          {widget.widgetType === 'Switch' &&
+            this.renderSwitchWidget(widget, idx)}
+          {widget.widgetType === 'List' && this.renderListWidget(widget, idx)}
+          {widget.widgetType === 'Text' && this.renderTextWidget(widget, idx)}
+          {widget.widgetType === 'DataTarget' &&
+            this.renderDataTargetWidget(widget, idx)}
+        </div>
       </div>
     );
   }
@@ -347,8 +390,8 @@ export default class DataModal extends React.Component<Props, State> {
         </button>
         <h3>Template Meta Data</h3>
         <div>
-          <div>
-            Template name:
+          <div className="flex-down">
+            <span className="tool-description">Template name:</span>
             <input
               value={templateName || ''}
               placeholder="Fill out name here"
@@ -357,8 +400,8 @@ export default class DataModal extends React.Component<Props, State> {
               }}
             />
           </div>
-          <div>
-            Template Description:
+          <div className="flex-down">
+            <span className="tool-description">Template Description:</span>
             <textarea
               value={templateDescription || ''}
               placeholder="Fill out Description"

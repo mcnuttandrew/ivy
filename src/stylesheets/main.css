@@ -12,7 +12,15 @@ h1, h2, h3, h4, h5 {
   padding: 0;
 }
 
-
+/* button {
+  background: white;
+  cursor: pointer;
+  border: 2px solid black;
+  border-radius: 5px;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 900;
+} */
 .flex {
   display: flex;
 }
@@ -47,6 +55,9 @@ h1, h2, h3, h4, h5 {
 }
 .center {
   align-items: center;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .chart-container {
@@ -389,14 +400,43 @@ h1, h2, h3, h4, h5 {
 
 .template-builder-modal .widget-configuration-panel {
   padding: 10px;
+  width: 100%;
 }
 
 .widget-configuration-panel .widget {
   border: thin solid black;
   border-radius: 5px;
-  padding: 5px;
+  display: flex;
   font-size: 12px;
+}
+
+.widget-configuration-panel .widget-body {
+  padding: 5px;
   background: aliceblue;
+  width: 100%;
+}
+
+.widget-configuration-panel .widget-body textarea {
+  width: calc(100% - 5px);
+}
+
+.widget-configuration-panel .widget-handle {
+  background: lightgray;
+  display: flex;
+  padding: 3px 5px;
+}
+
+.in-use-status {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 7px;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+  height: 5px;
+  width: 5px;
+  display: flex;
+  flex-direction: row-reverse;
+
 }
 
 .modal-container .modal-header p {
@@ -647,4 +687,10 @@ h1, h2, h3, h4, h5 {
   border-color: transparent black transparent transparent;
   top: 5px;
   left: -20px;
+}
+
+.tool-description {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 10px;
 }

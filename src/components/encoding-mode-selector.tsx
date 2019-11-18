@@ -54,7 +54,6 @@ export default class EncodingMode extends React.Component<Props, State> {
                   </button>
                 </div>
                 {templates.map((template: Template) => {
-                  console.log(template);
                   return (
                     <div key={`${template.templateName}-describer`}>
                       <div>{`Template Name: ${template.templateName}`}</div>
