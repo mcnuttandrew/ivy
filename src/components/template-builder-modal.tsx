@@ -1,5 +1,5 @@
 import React from 'react';
-import Immutable, {List} from 'immutable';
+import {List} from 'immutable';
 import {GenericAction} from '../actions/index';
 import {
   DataTargetWidget,
@@ -20,12 +20,14 @@ interface Props {
   spec: any;
   toggleTemplateBuilder: GenericAction;
   createTemplate: GenericAction;
+  editFrom?: Template | boolean;
 }
 
 interface State {
   code: string;
   widgets: List<TemplateWidget>;
   templateName?: string;
+  templateDescription?: string;
   error: boolean;
 }
 
@@ -86,12 +88,29 @@ const widgetFactory = {
 export default class DataModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    console.log('hi hello', props);
     this.state = {
       code: JSON.stringify(this.props.spec, null, 2),
       templateName: null,
-      widgets: Immutable.fromJS([]),
+      widgets: List(),
       error: false,
+      templateDescription: null,
     };
+    if (props.editFrom) {
+      // @ts-ignore
+      const prevTemplate: Template = props.editFrom;
+      const {code, templateName, templateDescription, widgets} = prevTemplate;
+      this.state = {
+        code,
+        templateName,
+        widgets: widgets.reduce(
+          (acc: any, x: TemplateWidget) => acc.push(x),
+          List(),
+        ),
+        error: false,
+        templateDescription,
+      };
+    }
     this.editorDidMount = this.editorDidMount.bind(this);
     this.setWidgetValue = this.setWidgetValue.bind(this);
   }
@@ -273,27 +292,35 @@ export default class DataModal extends React.Component<Props, State> {
           >
             ERROR
           </div>
-          <MonacoEditor
-            language="json"
-            theme="vs-light"
-            value={code}
-            options={options}
-            onChange={(code: string) => {
-              Promise.resolve()
-                .then(() => JSON.parse(code))
-                .then(() => this.setState({code, error: false}))
-                .catch(() => this.setState({code, error: true}));
-            }}
-            editorDidMount={this.editorDidMount}
-          />
+          <div style={{height: 'calc(100% - 200px)'}}>
+            <MonacoEditor
+              language="json"
+              theme="vs-light"
+              value={code}
+              options={options}
+              onChange={(code: string) => {
+                Promise.resolve()
+                  .then(() => JSON.parse(code))
+                  .then(() => this.setState({code, error: false}))
+                  .catch(() => this.setState({code, error: true}));
+              }}
+              editorDidMount={this.editorDidMount}
+            />
+          </div>
+        </div>
+        <div className="flex-down">
+          <h5>Suggestions</h5>
+          <div>
+            <button>x -> y</button>
+          </div>
         </div>
       </div>
     );
   }
 
   widgetPanel() {
-    const {code, widgets, templateName} = this.state;
-    const {createTemplate, toggleTemplateBuilder} = this.props;
+    const {code, widgets, templateName, templateDescription} = this.state;
+    const {createTemplate, toggleTemplateBuilder, editFrom} = this.props;
     const componentCanBeCreated = this.validatePotentialTemplate();
     return (
       <div className="widget-configuration-panel">
@@ -305,6 +332,7 @@ export default class DataModal extends React.Component<Props, State> {
               return;
             }
             const newTemplate: Template = {
+              templateDescription,
               templateName,
               code,
               widgets: widgets.toJS(),
@@ -313,7 +341,9 @@ export default class DataModal extends React.Component<Props, State> {
             toggleTemplateBuilder();
           }}
         >
-          {componentCanBeCreated ? 'Create Template' : 'Template Not Complete'}
+          {componentCanBeCreated
+            ? `${editFrom ? 'Update' : 'Create'} Template`
+            : 'Template Not Complete'}
         </button>
         <h3>Template Meta Data</h3>
         <div>
@@ -324,6 +354,16 @@ export default class DataModal extends React.Component<Props, State> {
               placeholder="Fill out name here"
               onChange={event => {
                 this.setState({templateName: event.target.value});
+              }}
+            />
+          </div>
+          <div>
+            Template Description:
+            <textarea
+              value={templateDescription || ''}
+              placeholder="Fill out Description"
+              onChange={event => {
+                this.setState({templateDescription: event.target.value});
               }}
             />
           </div>

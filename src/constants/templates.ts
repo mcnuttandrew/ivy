@@ -26,6 +26,7 @@ export interface TextWidget extends TemplateWidget {
 
 export interface Template {
   templateName: string;
+  templateDescription?: string;
   code: string;
   widgets: (
     | TemplateWidget

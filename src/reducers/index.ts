@@ -31,6 +31,8 @@ import {
   recieveTemplates,
   setTemplateValue,
   createTemplate,
+  deleteTemplate,
+  startTemplateEdit,
 } from './template-actions';
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
@@ -108,6 +110,8 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-templates': recieveTemplates,
   'set-template-value': addUndo(setTemplateValue),
   'create-template': createTemplate,
+  'delete-template': deleteTemplate,
+  'start-edit-template': startTemplateEdit,
 };
 const NULL_ACTION: ActionResponse = state => state;
 const reducers = {

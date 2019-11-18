@@ -27,6 +27,7 @@ import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
 import Selector from './selector';
+import EncodingModeSelector from './encoding-mode-selector';
 import TemplateBuilderModal from './template-builder-modal';
 
 // TODO root props shouldn't all be optional, fix
@@ -62,6 +63,7 @@ interface RootProps {
   createFilter?: GenericAction;
   createTemplate?: GenericAction;
   coerceType?: GenericAction;
+  deleteTemplate?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
   loadTemplates?: GenericAction;
@@ -73,6 +75,7 @@ interface RootProps {
   setTemplateValue?: GenericAction;
   setRepeats?: GenericAction;
   setEncodingMode?: GenericAction;
+  startTemplateEdit?: GenericAction;
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
   toggleTemplateBuilder?: GenericAction;
@@ -126,6 +129,7 @@ class RootComponent extends React.Component<RootProps> {
       createFilter,
       currentlySelectedFile,
       deleteFilter,
+      deleteTemplate,
       encodingMode,
       iMspec,
       metaColumns,
@@ -135,6 +139,7 @@ class RootComponent extends React.Component<RootProps> {
       setNewSpec,
       setRepeats,
       setTemplateValue,
+      startTemplateEdit,
       updateFilter,
       templates,
       templateMap,
@@ -163,18 +168,16 @@ class RootComponent extends React.Component<RootProps> {
           />
           <div className="flex-down full-height background-3">
             {SHOW_TEMPLATE_CONTROLS && (
-              <div className="flex-down encoding-mode-selector">
-                <h1 className="section-title">ENCODING MODE</h1>
-                <Selector
-                  onChange={value => setEncodingMode(value)}
-                  options={[
-                    {display: 'grammer', value: 'grammer'},
-                    ...templates.map(x => ({
-                      display: x.templateName,
-                      value: x.templateName,
-                    })),
-                  ]}
-                  selectedValue={encodingMode}
+              <div className="encoding-mode-selector">
+                <div className="flex-down">
+                  <h1 className="section-title">ENCODING MODE</h1>
+                  <h3>{encodingMode}</h3>
+                </div>
+                <EncodingModeSelector
+                  deleteTemplate={deleteTemplate}
+                  templates={templates}
+                  setEncodingMode={setEncodingMode}
+                  startTemplateEdit={startTemplateEdit}
                 />
               </div>
             )}
@@ -270,6 +273,7 @@ class RootComponent extends React.Component<RootProps> {
       triggerUndo,
       triggerRedo,
       unprouncableInGrammer,
+      templates,
       templateBuilderModalOpen,
       toggleTemplateBuilder,
     } = this.props;
@@ -289,6 +293,13 @@ class RootComponent extends React.Component<RootProps> {
             createTemplate={createTemplate}
             toggleTemplateBuilder={toggleTemplateBuilder}
             spec={spec}
+            editFrom={
+              typeof templateBuilderModalOpen === 'string' &&
+              templates.find(
+                (template: Template) =>
+                  template.templateName === templateBuilderModalOpen,
+              )
+            }
           />
         )}
         <Header

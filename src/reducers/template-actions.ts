@@ -1,3 +1,4 @@
+import {get, set, clear} from 'idb-keyval';
 import Immutable from 'immutable';
 import {ActionResponse} from './default-state';
 import {Template, TemplateMap} from '../constants/templates';
@@ -50,15 +51,44 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
 };
 
+function getAndRemoveTemplate(state: any, templateName: string) {
+  console.log('?', templateName);
+  return state
+    .get('templates')
+    .filter((template: Template) => template.templateName !== templateName);
+}
+
 export const createTemplate: ActionResponse = (state, payload) => {
-  console.log(payload);
+  // this set and get on the db breaks encapsulation a little bit
+  // update the template catalog / create it
+  get('templates').then((templates: string[]) => {
+    let updatedTemplates = templates || [];
+    if (!updatedTemplates.find((x: string) => x === payload.templateName)) {
+      updatedTemplates.push(payload.templateName);
+    }
+    set('templates', updatedTemplates);
+  });
+  // blindly insert this template, allows for over-ride
+  set(payload.templateName, payload);
   return state.set(
     'templates',
-    state
-      .get('templates')
-      .filter(
-        (template: Template) => template.templateName !== payload.templateName,
-      )
-      .concat(payload),
+    getAndRemoveTemplate(state, payload.templateName).concat(payload),
   );
+};
+
+export const deleteTemplate: ActionResponse = (state, payload) => {
+  console.log('delete', payload);
+  // update the template catalog / create it
+  get('templates').then((templates: string[]) => {
+    const updatedTemplates = (templates || []).filter(
+      (x: string) => x !== payload,
+    );
+    set('templates', updatedTemplates);
+  });
+  set(payload, null);
+  return state.set('templates', getAndRemoveTemplate(state, payload));
+};
+
+export const startTemplateEdit: ActionResponse = (state, payload) => {
+  return state.set('templateBuilderModalOpen', payload);
 };

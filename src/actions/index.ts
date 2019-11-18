@@ -1,5 +1,6 @@
 import {Dispatch} from 'redux';
 import {csvParse} from 'd3-dsv';
+import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../constants/templates';
 
@@ -31,9 +32,11 @@ export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
 export const coerceType = buildEasyAction('coerce-type');
 export const setEncodingMode = buildEasyAction('set-encoding-mode');
-export const setTemplateValue = buildEasyAction('set-template-value');
 export const toggleTemplateBuilder = buildEasyAction('toggle-template-builder');
 export const createTemplate = buildEasyAction('create-template');
+export const startTemplateEdit = buildEasyAction('start-edit-template');
+export const deleteTemplate = buildEasyAction('delete-template');
+export const setTemplateValue = buildEasyAction('set-template-value');
 
 export const clearUnprounceWarning = buildEasyAction('clear-unprouncable');
 
@@ -115,10 +118,27 @@ export const loadCustomDataset: GenericAction = file => dispatch => {
 };
 
 export const loadTemplates: GenericAction = () => dispatch => {
-  dispatch({
-    type: 'recieve-templates',
-    payload: [...DEFAULT_TEMPLATES],
-  });
+  get('templates')
+    .then((templates: string[]) => {
+      return Promise.all(
+        (templates || []).map((templateKey: string) => get(templateKey)),
+      );
+    })
+    .then((templates: any) => {
+      const seen: any = {};
+      const payload = [
+        ...DEFAULT_TEMPLATES,
+        ...Object.values(templates || {}),
+      ].filter((d: any) => {
+        if (!d || seen[d.templateName]) {
+          return false;
+        }
+        console.log(d.templateName);
+        seen[d.templateName] = true;
+        return true;
+      });
+      dispatch({type: 'recieve-templates', payload});
+    });
 };
 
 export const changeSelectedFile: GenericAction = fileName => dispatch => {

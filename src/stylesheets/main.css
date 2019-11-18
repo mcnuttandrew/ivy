@@ -464,7 +464,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .code-wrapper {
-  height: 100%;
+  height: calc(100% - 200px);
   position: relative;
   width: 100%;
 }
@@ -506,7 +506,7 @@ h1, h2, h3, h4, h5 {
 }
 /* ERROR BAR IN TEMPLATE BUILDER */
 .code-wrapper .error-bar {
-  bottom: -100px;
+  bottom: -5000px;
   transition: bottom 1s;
 }
 
@@ -601,4 +601,50 @@ h1, h2, h3, h4, h5 {
 
 .encoding-mode-selector {
   background: gray;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* modal-tooltip */
+
+.modal-tooltip-container {
+  position: relative;
+}
+
+.tooltip-container .modal-background {
+  background: rgba(255, 255, 255, 0);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.modal-tooltip {
+  border: 3px solid black;
+  border-radius: 2px;
+  background: lightgray;
+  display: flex;
+  height: 300px;
+  left: 14px;
+  padding: 20px;
+  position: absolute;
+  width: 500px;
+  top: -6px;
+  z-index: 1000;
+}
+
+.modal-tooltip:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+  top: 5px;
+  left: -20px;
 }
