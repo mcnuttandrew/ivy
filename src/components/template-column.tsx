@@ -34,9 +34,6 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
     const {template} = this.props;
     // NEXT STEPS KATY
     // 1. make widgets have a configurable UI presence
-    // 2. build up widget builder
-    // 3. make user stored widgets be stored on the indexeddb
-    // 4. make the encoding more selector be cool and compelling looking
     // 5. make default view be composed of a automatically filled out versions of the templates
 
     return (
