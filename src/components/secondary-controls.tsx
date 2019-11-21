@@ -18,12 +18,13 @@ const VEGA_THEMES = [
   'vox',
 ].map((x: string) => ({display: x, value: x}));
 export interface SecondaryHeaderProps {
-  changeGUIMode: GenericAction;
-  changeTheme: GenericAction;
-  setNewSpecCode: GenericAction;
   currentTheme: VegaTheme;
   selectedGUIMode: string;
   spec?: Spec;
+
+  changeGUIMode: GenericAction;
+  changeTheme: GenericAction;
+  setNewSpecCode: GenericAction;
 }
 
 export default function SecondaryHeader(props: SecondaryHeaderProps) {
@@ -38,38 +39,40 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
   return (
     <div className="secondary-controls flex-down">
       <h5>SECONDARY CONTROLS</h5>
-      <div className="mode-selector flex">
-        Mode:{' '}
-        {['GRAMMAR', 'PROGRAMMATIC'].map(mode => {
-          return (
-            <div
-              key={mode}
-              onClick={() => {
-                changeGUIMode(mode);
-                if (mode === 'PROGRAMMATIC') {
-                  setNewSpecCode({
-                    code: JSON.stringify(spec, null, 2),
-                    inError: false,
-                  });
-                }
-              }}
-              className={classnames({
-                'mode-option': true,
-                'selected-mode': mode === selectedGUIMode,
-              })}
-            >
-              {mode}
-            </div>
-          );
-        })}
-      </div>
-      <div className="flex center">
-        <span>Theme:</span>
-        <Selector
-          selectedValue={currentTheme}
-          onChange={value => changeTheme(value)}
-          options={VEGA_THEMES}
-        />
+      <div className="flex space-between">
+        <div className="mode-selector flex">
+          Mode:{' '}
+          {['GRAMMAR', 'PROGRAMMATIC'].map(mode => {
+            return (
+              <div
+                key={mode}
+                onClick={() => {
+                  changeGUIMode(mode);
+                  if (mode === 'PROGRAMMATIC') {
+                    setNewSpecCode({
+                      code: JSON.stringify(spec, null, 2),
+                      inError: false,
+                    });
+                  }
+                }}
+                className={classnames({
+                  'mode-option': true,
+                  'selected-mode': mode === selectedGUIMode,
+                })}
+              >
+                {mode}
+              </div>
+            );
+          })}
+        </div>
+        <span className="flex">
+          <span>Theme:</span>
+          <Selector
+            selectedValue={currentTheme}
+            onChange={value => changeTheme(value)}
+            options={VEGA_THEMES}
+          />
+        </span>
       </div>
     </div>
   );

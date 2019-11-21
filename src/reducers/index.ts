@@ -1,6 +1,8 @@
+import Immutable from 'immutable';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import {checkEncodingForValidity} from '../utils';
+import {checkEncodingForValidity, getTemplate} from '../utils';
+import {EMPTY_SPEC} from './default-state';
 // import {Spec} from 'vega-typings';
 
 import {
@@ -25,6 +27,13 @@ import {
   recieveTypeInferences,
   changeSelectedFile,
 } from './data-actions';
+import {
+  recieveTemplates,
+  setTemplateValue,
+  createTemplate,
+  deleteTemplate,
+  startTemplateEdit,
+} from './template-actions';
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // GUI ACTIONS
@@ -39,8 +48,22 @@ const toggleDataModal: ActionResponse = state =>
   state.set('dataModalOpen', !state.get('dataModalOpen'));
 const changeTheme: ActionResponse = (state, payload) =>
   state.set('currentTheme', payload);
-const clearUnprounceWarning: ActionResponse = (state, payload) =>
+const clearUnprounceWarning: ActionResponse = state =>
   state.set('unprouncableInGrammer', false);
+const toggleTemplateBuilder: ActionResponse = state =>
+  state.set('templateBuilderModalOpen', !state.get('templateBuilderModalOpen'));
+
+const setEncodingMode: ActionResponse = (state, payload) => {
+  const newState = state.set('encodingMode', payload);
+  if (payload !== 'grammer') {
+    const updatedSpec = Immutable.fromJS(
+      JSON.parse(getTemplate(state, payload).code),
+    );
+    return newState.set('spec', updatedSpec);
+  } else {
+    return newState.set('spec', EMPTY_SPEC);
+  }
+};
 
 const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
   state,
@@ -80,6 +103,15 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'change-theme': changeTheme,
   'toggle-data-modal': toggleDataModal,
   'clear-unprouncable': clearUnprounceWarning,
+  'set-encoding-mode': setEncodingMode,
+  'toggle-template-builder': toggleTemplateBuilder,
+
+  // template
+  'recieve-templates': recieveTemplates,
+  'set-template-value': addUndo(setTemplateValue),
+  'create-template': createTemplate,
+  'delete-template': deleteTemplate,
+  'start-edit-template': startTemplateEdit,
 };
 const NULL_ACTION: ActionResponse = state => state;
 const reducers = {

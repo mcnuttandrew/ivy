@@ -3,7 +3,12 @@ import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import {SHOW_SECONDARY_CONTROLS} from '../constants/CONFIG';
+import {Template, TemplateMap} from '../constants/templates';
+
+import {
+  SHOW_SECONDARY_CONTROLS,
+  SHOW_TEMPLATE_CONTROLS,
+} from '../constants/CONFIG';
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
@@ -20,6 +25,10 @@ import ChartArea from './chart-area';
 import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
+import TemplateColumn from './template-column';
+import Selector from './selector';
+import EncodingModeSelector from './encoding-mode-selector';
+import TemplateBuilderModal from './template-builder-modal';
 
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
@@ -30,6 +39,8 @@ interface RootProps {
   spec?: Spec;
   specCode?: string;
   data?: any; //TODO: define the data type
+  encodingMode?: string;
+  GOOSE_MODE?: boolean;
   iMspec?: any;
   metaColumns?: ColumnHeader[];
   selectedGUIMode?: string;
@@ -37,6 +48,9 @@ interface RootProps {
   currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
   unprouncableInGrammer?: boolean;
+  templates?: Template[];
+  templateMap?: TemplateMap;
+  templateBuilderModalOpen?: boolean;
 
   addToNextOpenSlot?: GenericAction;
   changeGUIMode?: GenericAction;
@@ -47,17 +61,24 @@ interface RootProps {
   clearEncoding?: GenericAction;
   clearUnprounceWarning?: GenericAction;
   createFilter?: GenericAction;
+  createTemplate?: GenericAction;
   coerceType?: GenericAction;
+  deleteTemplate?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
+  loadTemplates?: GenericAction;
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
+  setTemplateValue?: GenericAction;
   setRepeats?: GenericAction;
+  setEncodingMode?: GenericAction;
+  startTemplateEdit?: GenericAction;
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
+  toggleTemplateBuilder?: GenericAction;
   triggerUndo?: GenericAction;
   triggerRedo?: GenericAction;
 }
@@ -65,7 +86,12 @@ interface RootProps {
 class RootComponent extends React.Component<RootProps> {
   componentDidMount() {
     // on start load the default selected file
-    // this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
+    if (!this.props.GOOSE_MODE) {
+      this.props.loadDataFromPredefinedDatasets(
+        this.props.currentlySelectedFile,
+      );
+    }
+    this.props.loadTemplates();
   }
 
   componentDidCatch(error: any, errorInfo: any) {
@@ -103,15 +129,25 @@ class RootComponent extends React.Component<RootProps> {
       createFilter,
       currentlySelectedFile,
       deleteFilter,
+      deleteTemplate,
+      encodingMode,
       iMspec,
       metaColumns,
       spec,
       setEncodingParameter,
+      setEncodingMode,
       setNewSpec,
       setRepeats,
+      setTemplateValue,
+      startTemplateEdit,
       updateFilter,
+      templates,
+      templateMap,
       toggleDataModal,
     } = this.props;
+    const foundTemplate = templates.find(
+      template => template.templateName === encodingMode,
+    );
     return (
       <div className="flex full-height">
         <DndProvider backend={HTML5Backend}>
@@ -125,26 +161,54 @@ class RootComponent extends React.Component<RootProps> {
             metaColumns={metaColumns}
             toggleDataModal={toggleDataModal}
             setRepeats={setRepeats}
-          />
-          <EncodingColumn
-            iMspec={iMspec}
-            changeMarkType={changeMarkType}
-            setEncodingParameter={setEncodingParameter}
-            clearEncoding={clearEncoding}
             spec={spec}
             updateFilter={updateFilter}
             deleteFilter={deleteFilter}
-            columns={columns}
-            metaColumns={metaColumns}
-            setNewSpec={setNewSpec}
-            onDrop={(item: any) => {
-              if (item.disable) {
-                return;
-              }
-              setEncodingParameter(item);
-            }}
             onDropFilter={(item: any) => createFilter({field: item.text})}
           />
+          <div className="flex-down full-height background-3">
+            {SHOW_TEMPLATE_CONTROLS && (
+              <div className="encoding-mode-selector">
+                <div className="flex-down">
+                  <h1 className="section-title">ENCODING MODE</h1>
+                  <h3>{encodingMode}</h3>
+                </div>
+                <EncodingModeSelector
+                  deleteTemplate={deleteTemplate}
+                  templates={templates}
+                  setEncodingMode={setEncodingMode}
+                  startTemplateEdit={startTemplateEdit}
+                />
+              </div>
+            )}
+            {encodingMode === 'grammer' && (
+              <EncodingColumn
+                iMspec={iMspec}
+                changeMarkType={changeMarkType}
+                setEncodingParameter={setEncodingParameter}
+                clearEncoding={clearEncoding}
+                spec={spec}
+                columns={columns}
+                metaColumns={metaColumns}
+                setNewSpec={setNewSpec}
+                onDrop={(item: any) => {
+                  if (item.disable) {
+                    return;
+                  }
+                  setEncodingParameter(item);
+                }}
+                onDropFilter={(item: any) => createFilter({field: item.text})}
+              />
+            )}
+            {encodingMode !== 'grammer' && foundTemplate && (
+              <TemplateColumn
+                template={foundTemplate}
+                templateMap={templateMap}
+                columns={columns}
+                onDrop={setTemplateValue}
+              />
+            )}
+          </div>
         </DndProvider>
       </div>
     );
@@ -197,6 +261,7 @@ class RootComponent extends React.Component<RootProps> {
       changeSelectedFile,
       chainActions,
       currentTheme,
+      createTemplate,
       data,
       dataModalOpen,
       iMspec,
@@ -208,9 +273,11 @@ class RootComponent extends React.Component<RootProps> {
       triggerUndo,
       triggerRedo,
       unprouncableInGrammer,
+      templates,
+      templateBuilderModalOpen,
+      toggleTemplateBuilder,
     } = this.props;
-    const hasLoadedData = !!data.length;
-    // console.log(data);
+
     return (
       <div className="flex-down full-width full-height">
         {dataModalOpen && (
@@ -221,11 +288,26 @@ class RootComponent extends React.Component<RootProps> {
             loadCustomDataset={loadCustomDataset}
           />
         )}
+        {templateBuilderModalOpen && (
+          <TemplateBuilderModal
+            createTemplate={createTemplate}
+            toggleTemplateBuilder={toggleTemplateBuilder}
+            spec={spec}
+            editFrom={
+              typeof templateBuilderModalOpen === 'string' &&
+              templates.find(
+                (template: Template) =>
+                  template.templateName === templateBuilderModalOpen,
+              )
+            }
+          />
+        )}
         <Header
           triggerUndo={triggerUndo}
           triggerRedo={triggerRedo}
           canRedo={canRedo}
           canUndo={canUndo}
+          toggleTemplateBuilder={toggleTemplateBuilder}
         />
         <div className="flex full-height">
           <div className="flex-down full-height control-container">
@@ -234,15 +316,13 @@ class RootComponent extends React.Component<RootProps> {
               (unprouncableInGrammer ? this.errorMenu() : this.grammarMenu())}
             {selectedGUIMode === 'PROGRAMMATIC' && this.programmaticMenu()}
           </div>
-          <div>
-            <ChartArea
-              data={data}
-              spec={spec}
-              iMspec={iMspec}
-              swapXAndYChannels={swapXAndYChannels}
-              currentTheme={currentTheme}
-            />
-          </div>
+          <ChartArea
+            data={data}
+            spec={spec}
+            iMspec={iMspec}
+            swapXAndYChannels={swapXAndYChannels}
+            currentTheme={currentTheme}
+          />
         </div>
       </div>
     );
@@ -257,6 +337,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     columns: base.get('columns'),
     data: base.get('data'),
     editorError: base.get('editorError'),
+    encodingMode: base.get('encodingMode'),
     spec: base.get('spec').toJS(),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
@@ -264,8 +345,12 @@ function mapStateToProps({base}: {base: AppState}): any {
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
+    templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
     currentTheme: base.get('currentTheme'),
     unprouncableInGrammer: base.get('unprouncableInGrammer'),
+    GOOSE_MODE: base.get('GOOSE_MODE'),
+    templates: base.get('templates'),
+    templateMap: base.get('templateMap').toJS(),
   };
 }
 

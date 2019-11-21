@@ -2,14 +2,17 @@ import React from 'react';
 import {DiDatabase} from 'react-icons/di';
 import {GenericAction} from '../actions/index';
 import {ColumnHeader} from '../types';
-import {getAllInUseFields} from '../utils';
+import {getAllInUseFields, get} from '../utils';
 import Pill from './pill';
+import Filter from './filter';
+import FilterTarget from './filter-target';
 import MetaColumnPicker from './meta-column-picker';
 
 interface DataColumnProps {
   columns: ColumnHeader[];
   currentlySelectedFile: string;
   iMspec: any;
+  spec: any;
   metaColumns: ColumnHeader[];
 
   addToNextOpenSlot: GenericAction;
@@ -17,6 +20,9 @@ interface DataColumnProps {
   createFilter: GenericAction;
   toggleDataModal: GenericAction;
   setRepeats: GenericAction;
+  onDropFilter: GenericAction;
+  deleteFilter: GenericAction;
+  updateFilter: GenericAction;
 }
 
 export default class DataColumn extends React.Component<DataColumnProps> {
@@ -30,7 +36,12 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       toggleDataModal,
       metaColumns,
       iMspec,
+      spec,
       setRepeats,
+
+      deleteFilter,
+      updateFilter,
+      onDropFilter,
     } = this.props;
     const inUseFields = getAllInUseFields(iMspec);
     const makePill = (checkOptions: boolean) => (column: ColumnHeader) => {
@@ -73,6 +84,33 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         <div className="flex-down">{columns.map(makePill(false))}</div>
         <h5>Meta Columns</h5>
         <div className="flex-down">{metaColumns.map(makePill(true))}</div>
+
+        <h1 className="section-title"> Filter </h1>
+        <div className="flex-down">
+          {(spec.transform || get(spec, ['spec', 'transform']) || [])
+            .filter((filter: any) => {
+              // dont try to render filters that we dont know how to render
+              return filter.filter;
+            })
+            .map((filter: any, idx: number) => {
+              return (
+                <Filter
+                  column={columns.find(
+                    ({field}) => field === filter.filter.field,
+                  )}
+                  filter={filter}
+                  key={`${idx}-filter`}
+                  updateFilter={(newFilterValue: any) => {
+                    updateFilter({newFilterValue, idx});
+                  }}
+                  deleteFilter={() => deleteFilter(idx)}
+                />
+              );
+            })}
+        </div>
+        <div>
+          <FilterTarget onDrop={onDropFilter} />
+        </div>
 
         <div className="bottom-fill" />
       </div>

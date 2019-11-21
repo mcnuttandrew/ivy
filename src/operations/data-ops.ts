@@ -5,20 +5,6 @@ type DATA_MODS =
   | 'full-bootstrap'
   | 'holdout-with-bootstrap';
 
-export const selectDataModification = (data: any): DATA_MODS => {
-  return 'none';
-};
-
-export const executeDataModifcation = (data: any, modification: DATA_MODS) => {
-  if (modification === 'none') {
-    return data;
-  }
-  if (modification === 'randomize') {
-    return randomize(data);
-  }
-  return data;
-};
-
 /**
  * Shuffles array in place.
  * @param {Array} a items An array containing the items.
@@ -73,3 +59,17 @@ function bootstrap(inputData: any[]) {
 export function fullResample(inputData: any) {
   return bootstrap(inputData).samples(inputData.length);
 }
+
+export const selectDataModification = (data: any): DATA_MODS => {
+  return 'none';
+};
+
+export const executeDataModifcation = (data: any, modification: DATA_MODS) => {
+  if (modification === 'none') {
+    return data;
+  }
+  if (modification === 'randomize') {
+    return randomize(data);
+  }
+  return data;
+};
