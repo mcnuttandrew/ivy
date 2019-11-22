@@ -11,7 +11,6 @@ import {
   changeMarkType,
   setNewSpec,
   setNewSpecCode,
-  addToNextOpenSlot,
   coerceType,
   triggerRedo,
   triggerUndo,
@@ -20,6 +19,8 @@ import {
   setChannelToMetaColumn,
   setRepeats,
 } from './modify-encodings';
+
+import {addToNextOpenSlot} from './apt-actions';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
 import {

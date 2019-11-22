@@ -335,21 +335,19 @@ export default class DataModal extends React.Component<Props, State> {
           >
             ERROR
           </div>
-          <div style={{height: 'calc(100% - 200px)'}}>
-            <MonacoEditor
-              language="json"
-              theme="vs-light"
-              value={code}
-              options={options}
-              onChange={(code: string) => {
-                Promise.resolve()
-                  .then(() => JSON.parse(code))
-                  .then(() => this.setState({code, error: false}))
-                  .catch(() => this.setState({code, error: true}));
-              }}
-              editorDidMount={this.editorDidMount}
-            />
-          </div>
+          <MonacoEditor
+            language="json"
+            theme="vs-light"
+            value={code}
+            options={options}
+            onChange={(code: string) => {
+              Promise.resolve()
+                .then(() => JSON.parse(code))
+                .then(() => this.setState({code, error: false}))
+                .catch(() => this.setState({code, error: true}));
+            }}
+            editorDidMount={this.editorDidMount}
+          />
         </div>
         <div className="flex-down">
           <h5>Suggestions</h5>
@@ -412,11 +410,10 @@ export default class DataModal extends React.Component<Props, State> {
           </div>
         </div>
         <h3>Widgets</h3>
-        <div className="flex-down">
-          {widgets.map((widget: TemplateWidget, idx: number) =>
-            this.widgetCommon(widget, idx),
-          )}
-        </div>
+        <h5>
+          Widgets are the way that users interact with the template you've
+          created.
+        </h5>
         <div className="flex">
           {Object.entries(widgetFactory).map((row: any) => {
             const [key, widgetFactor] = row;
@@ -434,6 +431,11 @@ export default class DataModal extends React.Component<Props, State> {
             );
           })}
         </div>
+        <div className="flex-down">
+          {widgets.map((widget: TemplateWidget, idx: number) =>
+            this.widgetCommon(widget, idx),
+          )}
+        </div>
       </div>
     );
   }
@@ -447,9 +449,7 @@ export default class DataModal extends React.Component<Props, State> {
         className="template-builder-modal"
         modalTitle="Template Builder"
         bodyDirectionDown={false}
-        modalDetails="DETAILTAILDETAILS DETAILTAILDETAILS DETAILTAILDETAILS
-      DETAILTAILDETAILS DETAILTAILDETAILS DETAILTAILDETAILS
-      DETAILTAILDETAILS DETAILTAILDETAILS DETAILTAILDETAILS"
+        modalDetails="In this view you can generalize vega or vega-lite charts that you have made either made locally or copied from the internet. MORE DETAILS MORE DETAILS MORE DETAILS MORE DETAILS MORE DETAILS"
       >
         {this.codeColumn()}
         {this.widgetPanel()}

@@ -7,70 +7,10 @@ import {
   checkEncodingForValidity,
 } from '../utils';
 import {ActionResponse, EMPTY_SPEC} from './default-state';
+import {TYPE_TRANSLATE} from './apt-actions';
 
 const usingNestedSpec = (state: any): boolean =>
   Boolean(state.getIn(['spec', 'spec']));
-
-const TYPE_TRANSLATE: {[s: string]: string} = {
-  DIMENSION: 'nominal',
-  MEASURE: 'quantitative',
-  TIME: 'temporal',
-};
-
-const positionPrefs = ['x', 'y'];
-const commonPrefs = ['text', 'column', 'rows'];
-// listings inspired by APT
-const dimensionFieldPreferences = [
-  ...positionPrefs,
-  'color',
-  'shape',
-  'detail',
-  'size',
-  ...commonPrefs,
-];
-const measureFieldPreferences = [
-  ...positionPrefs,
-  'size',
-  'color',
-  'shape',
-  'detail',
-  ...commonPrefs,
-];
-type setMap = {[s: string]: boolean};
-const usuallyContinuous: setMap = {
-  x: true,
-  y: true,
-  size: true,
-};
-// roughly follow APT for automatic suggestion
-function guessType(channel: string, type: string): string {
-  if (type === 'DIMENSION') {
-    return usuallyContinuous[channel] ? 'ordinal' : 'nominal';
-  }
-  return TYPE_TRANSLATE[type];
-}
-
-export const addToNextOpenSlot: ActionResponse = (state, payload) => {
-  // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
-  const encoding = state.getIn(['spec', 'encoding']).toJS();
-  const column = findField(state, payload.field);
-  const fields =
-    column.type === 'DIMENSION'
-      ? dimensionFieldPreferences
-      : measureFieldPreferences;
-  const channel = fields.find(field => {
-    return !encoding[field] || JSON.stringify(encoding[field]) === '{}';
-  });
-  // TODO add messaging about not being able to find a place to put the thing
-  if (!channel) {
-    return state;
-  }
-  encoding[channel] = {
-    field: payload.field,
-    type: guessType(channel, findField(state, payload.field).type),
-  };
-  return state.setIn(['spec', 'encoding'], Immutable.fromJS(encoding));
-};
 
 // remove the current encoding
 export const clearEncoding: ActionResponse = state =>
