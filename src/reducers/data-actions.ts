@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import Immutable, {List, Map} from 'immutable';
 import {EMPTY_SPEC, ActionResponse} from './default-state';
 import {ColumnHeader, DataType} from '../types';
 import {
@@ -14,8 +14,10 @@ export const recieveData: ActionResponse = (state, payload) => {
     .set('originalData', payload)
     .set('dataModification', dataModification)
     .set('spec', EMPTY_SPEC)
-    .set('undoStack', Immutable.fromJS([]))
-    .set('redoStack', Immutable.fromJS([]));
+    .set('views', List(['view1']))
+    .set('viewCatalog', Map())
+    .set('undoStack', List())
+    .set('redoStack', List());
 };
 
 export const recieveTypeInferences: ActionResponse = (state, payload) => {

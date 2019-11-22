@@ -38,6 +38,11 @@ export const startTemplateEdit = buildEasyAction('start-edit-template');
 export const deleteTemplate = buildEasyAction('delete-template');
 export const setTemplateValue = buildEasyAction('set-template-value');
 
+export const createNewView = buildEasyAction('create-new-view');
+export const deleteView = buildEasyAction('delete-view');
+export const switchView = buildEasyAction('switch-view');
+export const cloneView = buildEasyAction('clone-view');
+
 export const clearUnprounceWarning = buildEasyAction('clear-unprouncable');
 
 export const triggerRedo = buildEasyAction('trigger-redo');

@@ -36,6 +36,7 @@ interface EncodingColumnProps {
   clearEncoding: GenericAction;
   setNewSpec: GenericAction;
   setEncodingParameter: GenericAction;
+  swapXAndYChannels: GenericAction;
 }
 export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render() {
@@ -50,6 +51,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       changeMarkType,
 
       setNewSpec,
+      swapXAndYChannels,
     } = this.props;
     const encoding =
       get(spec, ['spec', 'encoding']) || get(spec, ['encoding']) || {};
@@ -80,6 +82,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         </div>
         <div className="flex-down section-body">
           {['x', 'y'].map(makeShelf(false))}
+          <button onClick={swapXAndYChannels}>Swap X/Y</button>
         </div>
 
         {/* MARK STUFF */}

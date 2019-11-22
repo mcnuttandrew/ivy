@@ -1,3 +1,4 @@
+import {List} from 'immutable';
 import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
@@ -26,7 +27,6 @@ import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
-import Selector from './selector';
 import EncodingModeSelector from './encoding-mode-selector';
 import TemplateBuilderModal from './template-builder-modal';
 
@@ -51,6 +51,13 @@ interface RootProps {
   templates?: Template[];
   templateMap?: TemplateMap;
   templateBuilderModalOpen?: boolean;
+  currentView?: string;
+  views?: List<string>;
+
+  createNewView?: GenericAction;
+  deleteView?: GenericAction;
+  switchView?: GenericAction;
+  cloneView?: GenericAction;
 
   addToNextOpenSlot?: GenericAction;
   changeGUIMode?: GenericAction;
@@ -140,6 +147,7 @@ class RootComponent extends React.Component<RootProps> {
       setRepeats,
       setTemplateValue,
       startTemplateEdit,
+      swapXAndYChannels,
       updateFilter,
       templates,
       templateMap,
@@ -191,6 +199,7 @@ class RootComponent extends React.Component<RootProps> {
                 columns={columns}
                 metaColumns={metaColumns}
                 setNewSpec={setNewSpec}
+                swapXAndYChannels={swapXAndYChannels}
                 onDrop={(item: any) => {
                   if (item.disable) {
                     return;
@@ -253,22 +262,46 @@ class RootComponent extends React.Component<RootProps> {
     );
   }
 
+  chartArea() {
+    const {
+      cloneView,
+      createNewView,
+      currentTheme,
+      currentView,
+      data,
+      deleteView,
+      iMspec,
+      spec,
+      switchView,
+      views,
+    } = this.props;
+    return (
+      <ChartArea
+        cloneView={cloneView}
+        createNewView={createNewView}
+        deleteView={deleteView}
+        switchView={switchView}
+        currentView={currentView}
+        data={data}
+        spec={spec}
+        iMspec={iMspec}
+        currentTheme={currentTheme}
+        views={views}
+      />
+    );
+  }
+
   render() {
-    // TODO alphabetize
     const {
       canRedo,
       canUndo,
       changeSelectedFile,
       chainActions,
-      currentTheme,
       createTemplate,
-      data,
       dataModalOpen,
-      iMspec,
       loadCustomDataset,
       selectedGUIMode,
       spec,
-      swapXAndYChannels,
       toggleDataModal,
       triggerUndo,
       triggerRedo,
@@ -316,13 +349,7 @@ class RootComponent extends React.Component<RootProps> {
               (unprouncableInGrammer ? this.errorMenu() : this.grammarMenu())}
             {selectedGUIMode === 'PROGRAMMATIC' && this.programmaticMenu()}
           </div>
-          <ChartArea
-            data={data}
-            spec={spec}
-            iMspec={iMspec}
-            swapXAndYChannels={swapXAndYChannels}
-            currentTheme={currentTheme}
-          />
+          {this.chartArea()}
         </div>
       </div>
     );
@@ -331,10 +358,12 @@ class RootComponent extends React.Component<RootProps> {
 
 // TODO figure out base type
 function mapStateToProps({base}: {base: AppState}): any {
+  // TODO alpha
   return {
     canUndo: base.get('undoStack').size >= 1,
     canRedo: base.get('redoStack').size >= 1,
     columns: base.get('columns'),
+    currentView: base.get('currentView'),
     data: base.get('data'),
     editorError: base.get('editorError'),
     encodingMode: base.get('encodingMode'),
@@ -351,6 +380,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     GOOSE_MODE: base.get('GOOSE_MODE'),
     templates: base.get('templates'),
     templateMap: base.get('templateMap').toJS(),
+    views: base.get('views'),
   };
 }
 

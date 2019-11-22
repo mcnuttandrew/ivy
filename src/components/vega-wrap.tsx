@@ -21,7 +21,6 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
 
   render() {
     const {spec, data, theme} = this.props;
-
     return (
       <Vega
         mode="vega-lite"

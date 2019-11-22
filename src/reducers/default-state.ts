@@ -38,7 +38,7 @@ const fileSpecificationDefaults = GOOSE_MODE
       GOOSE_MODE,
     }
   : {
-      currentlySelectedFile: 'barley.json',
+      currentlySelectedFile: 'climate.json',
       dataModalOpen: false,
       GOOSE_MODE,
     };
@@ -57,6 +57,10 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
+
+  views: ['view1'],
+  viewCatalog: {},
+  currentView: 'view1',
 
   templates: [],
   templateMap: {},

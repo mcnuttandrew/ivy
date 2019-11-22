@@ -211,28 +211,42 @@ export const setRepeats: ActionResponse = (state, payload) => {
   return state.setIn(['spec', 'repeat', target], Immutable.fromJS(repeats));
 };
 
+const createStackItem = (state: any) => {
+  return Map({
+    spec: state.get('spec'),
+    currentView: state.get('currentView'),
+    templateMap: state.get('templateMap'),
+    views: state.get('views'),
+  });
+};
+
+const applyStackItemToState = (state: any, stackItem: any) => {
+  return state
+    .set('spec', stackItem.get('spec'))
+    .set('currentView', stackItem.get('currentView'))
+    .set('templateMap', stackItem.get('templateMap'))
+    .set('views', stackItem.get('views'));
+};
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
 export function pushToUndoStack(oldState: any, newState: any) {
   return newState
-    .set('undoStack', newState.get('undoStack').push(oldState.get('spec')))
+    .set('undoStack', newState.get('undoStack').push(createStackItem(oldState)))
     .set('redoStack', Immutable.fromJS([]));
 }
 // TODO these are probably constructable as a single more elegant function
 export const triggerRedo: ActionResponse = state => {
   const undoStack = state.get('undoStack');
   const redoStack = state.get('redoStack');
-  return state
-    .set('spec', redoStack.last())
+  return applyStackItemToState(state, redoStack.last())
     .set('redoStack', redoStack.pop())
-    .set('undoStack', undoStack.push(state.get('spec')));
+    .set('undoStack', undoStack.push(createStackItem(state)));
 };
 
 export const triggerUndo: ActionResponse = state => {
   const undoStack = state.get('undoStack');
   const redoStack = state.get('redoStack');
-  return state
-    .set('spec', undoStack.last())
+  return applyStackItemToState(state, undoStack.last())
     .set('undoStack', undoStack.pop())
-    .set('redoStack', redoStack.push(state.get('spec')));
+    .set('redoStack', redoStack.push(createStackItem(state)));
 };

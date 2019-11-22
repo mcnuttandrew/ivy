@@ -35,6 +35,7 @@ import {
   deleteTemplate,
   startTemplateEdit,
 } from './template-actions';
+import {createNewView, deleteView, switchView, cloneView} from './view-actions';
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // GUI ACTIONS
@@ -113,6 +114,12 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'create-template': createTemplate,
   'delete-template': deleteTemplate,
   'start-edit-template': startTemplateEdit,
+
+  // views
+  'create-new-view': addUndo(createNewView),
+  'delete-view': addUndo(deleteView),
+  'switch-view': addUndo(switchView),
+  'clone-view': addUndo(cloneView),
 };
 const NULL_ACTION: ActionResponse = state => state;
 const reducers = {
