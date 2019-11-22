@@ -14,6 +14,7 @@ import {DataType} from '../types';
 import {classnames} from '../utils';
 import MonacoEditor from 'react-monaco-editor';
 import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import Switch from 'react-switch';
 import Modal from './modal';
 
@@ -47,11 +48,10 @@ const toSelectFormat = (arr: string[]) =>
 
 const widgetFactory = {
   List: (idx: number) => {
-    const allowedValues: string[] = [];
+    const allowedValues: {display: string, value: string}[] = [];
     const newWidget: ListWidget = {
       widgetName: `ListItem${idx}`,
       widgetType: 'List',
-      required: true,
       allowedValues,
       defaultValue: null,
     };
@@ -71,7 +71,6 @@ const widgetFactory = {
       widgetName: `Switch${idx}`,
       widgetType: 'Switch',
       defaultValue: true,
-      required: true,
     };
     return newWidget;
   },
@@ -80,7 +79,6 @@ const widgetFactory = {
       widgetName: `Text${idx}`,
       widgetType: 'Text',
       text: '',
-      required: false,
     };
     return newWidget;
   },
@@ -141,6 +139,20 @@ export default class DataModal extends React.Component<Props, State> {
     const widget: DataTargetWidget = generalWidget;
     return (
       <div key={widget.widgetName}>
+        <div className="flex-down">
+          <span className="tool-description">Required:</span>
+          <Switch
+            checked={!!widget.required}
+            offColor="#E1E9F2"
+            onColor="#36425C"
+            height={15}
+            checkedIcon={false}
+            width={50}
+            onChange={() =>
+              this.setWidgetValue('required', !widget.required, idx)
+            }
+          />
+        </div>
         <Select
           isMulti={true}
           value={toSelectFormat(widget.allowedTypes)}
@@ -178,8 +190,35 @@ export default class DataModal extends React.Component<Props, State> {
     );
   }
 
-  renderListWidget(widget: TemplateWidget, idx: number) {
-    return <div key={widget.widgetName}>List</div>;
+  renderListWidget(generalWidget: TemplateWidget, idx: number) {
+    // @ts-ignore
+    const widget: ListWidget = generalWidget;
+    return (
+      <div key={widget.widgetName}>
+        <div className="flex-down">
+          <span className="tool-description"> Default value </span>
+          <Select
+            onChange={(x: any) =>
+              this.setWidgetValue('defaultValue', x.value, idx)
+            }
+            options={toSelectFormat(widget.allowedValues.map(d => d.value))}
+          />
+        </div>
+        <div className="flex-down">
+          <span className="tool-description"> Options </span>
+          <CreatableSelect
+            isMulti
+            onChange={(x: any) => {
+              const updatedValues = x
+                .map((row: any) => row.label)
+                .map((row: any) => ({display: row, value: row}));
+              this.setWidgetValue('allowedValues', updatedValues, idx);
+            }}
+            options={widget.allowedValues}
+          />
+        </div>
+      </div>
+    );
   }
 
   renderTextWidget(generalWidget: TemplateWidget, idx: number) {
@@ -201,7 +240,6 @@ export default class DataModal extends React.Component<Props, State> {
   widgetCommon(widget: TemplateWidget, idx: number) {
     const {code, widgets} = this.state;
     const showKey = widget.widgetType !== 'Text';
-    const showRequired = widget.widgetType !== 'Text';
     const showInUs = widget.widgetType !== 'Text';
     return (
       <div key={widget.widgetName} className="widget">
@@ -269,22 +307,6 @@ export default class DataModal extends React.Component<Props, State> {
                   value={widget.widgetName}
                   onChange={event =>
                     this.setWidgetValue('widgetName', event.target.value, idx)
-                  }
-                />
-              </div>
-            )}
-            {showRequired && (
-              <div className="flex-down">
-                <span className="tool-description">Required:</span>
-                <Switch
-                  checked={!!widget.required}
-                  offColor="#E1E9F2"
-                  onColor="#36425C"
-                  height={15}
-                  checkedIcon={false}
-                  width={50}
-                  onChange={() =>
-                    this.setWidgetValue('required', !widget.required, idx)
                   }
                 />
               </div>

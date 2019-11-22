@@ -470,6 +470,13 @@ button:disabled {
   padding: 3px 5px;
 }
 
+.list-widget {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
 .in-use-status {
   text-transform: uppercase;
   font-weight: bold;

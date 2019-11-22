@@ -23,7 +23,8 @@ export const setTemplateValues = (
 
 function checkIfMapComplete(template: Template, templateMap: TemplateMap) {
   const requiredFields = template.widgets
-    .filter(d => d.required)
+    // @ts-ignore
+    .filter(d => d.widgetType === 'DataTarget' && d.required)
     .map(d => d.widgetName);
   const filledInFields = requiredFields
     .map((fieldName: string) => templateMap[fieldName])

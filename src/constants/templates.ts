@@ -4,15 +4,15 @@ export type WidgetType = 'DataTarget' | 'List' | 'Switch' | 'Text';
 export interface TemplateWidget {
   widgetName: string;
   widgetType: WidgetType;
-  required: boolean;
 }
 export interface DataTargetWidget extends TemplateWidget {
   widgetType: 'DataTarget';
   allowedTypes: DataType[];
+  required: boolean;
 }
 export interface ListWidget extends TemplateWidget {
   widgetType: 'List';
-  allowedValues: string[];
+  allowedValues: {display: string, value: string}[];
   defaultValue: string;
 }
 export interface SwitchWidget extends TemplateWidget {

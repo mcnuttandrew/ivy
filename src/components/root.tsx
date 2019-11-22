@@ -214,7 +214,7 @@ class RootComponent extends React.Component<RootProps> {
                 template={foundTemplate}
                 templateMap={templateMap}
                 columns={columns}
-                onDrop={setTemplateValue}
+                setTemplateValue={setTemplateValue}
               />
             )}
           </div>
