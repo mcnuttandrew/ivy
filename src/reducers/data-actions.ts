@@ -1,4 +1,4 @@
-import Immutable, {List, Map} from 'immutable';
+import {List, Map} from 'immutable';
 import {EMPTY_SPEC, ActionResponse} from './default-state';
 import {ColumnHeader, DataType} from '../types';
 import {

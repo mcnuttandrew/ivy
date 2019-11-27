@@ -78,4 +78,21 @@ const SCATTERPLOT_TEMPLATE: Template = {
   ],
 };
 
-export const DEFAULT_TEMPLATES: Template[] = [SCATTERPLOT_TEMPLATE];
+const OVERVIEW_TEMPLATE: Template = {
+  templateName: 'overview',
+  templateDescription:
+    'see an automatically generated overview of your template collection',
+  code: JSON.stringify({}),
+  widgets: [
+    {
+      widgetName: 'Explanation',
+      widgetType: 'Text',
+      text: 'using this view you will blah blah blah',
+    },
+  ],
+};
+
+export const DEFAULT_TEMPLATES: Template[] = [
+  OVERVIEW_TEMPLATE,
+  SCATTERPLOT_TEMPLATE,
+];

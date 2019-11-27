@@ -38,7 +38,7 @@ const fileSpecificationDefaults = GOOSE_MODE
       GOOSE_MODE,
     }
   : {
-      currentlySelectedFile: 'climate.json',
+      currentlySelectedFile: 'cars.json',
       dataModalOpen: false,
       GOOSE_MODE,
     };
@@ -54,6 +54,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   selectedGUIMode: 'GRAMMAR',
   // selectedGUIMode: 'PROGRAMMATIC',
   encodingMode: 'grammer',
+  // encodingMode: 'overview',
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
