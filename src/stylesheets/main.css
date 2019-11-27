@@ -588,12 +588,16 @@ button:disabled {
 }
 /* ERROR BAR IN CODE EDITOR */
 .code-container .error-bar {
-  top: -30px;
-  transition: top 1s;
+  display: none;
+  top: -60px;
+  transition: top 1s, opacity 1s;
+  opacity: 0;
 }
 
 .code-container .error-bar.has-error {
-  top: 0;
+  display: flex;
+  opacity: 1;
+  top: -30px;
   z-index: 1;
 }
 /* ERROR BAR IN TEMPLATE BUILDER */
@@ -750,4 +754,23 @@ button:disabled {
   text-transform: uppercase;
   font-weight: 600;
   font-size: 10px;
+}
+
+
+.code-editor-controls {
+  background-color: ghostwhite;
+  padding: 10px;
+  z-index: 10;
+}
+
+.code-editor-controls .execute-code-control {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.code-editor-controls .execute-code-control .execute-code-control-button {
+  cursor: pointer;
+  font-size: 20px;
 }

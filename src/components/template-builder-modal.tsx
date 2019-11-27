@@ -2,6 +2,7 @@ import React from 'react';
 import {List} from 'immutable';
 import {TiDelete, TiArrowDownThick, TiArrowUpThick} from 'react-icons/ti';
 import {GenericAction} from '../actions/index';
+import {EDITOR_OPTIONS} from '../constants/index';
 import {
   DataTargetWidget,
   TemplateWidget,
@@ -327,13 +328,6 @@ export default class DataModal extends React.Component<Props, State> {
   codeColumn() {
     const {code, error} = this.state;
     const {spec} = this.props;
-    const options = {
-      selectOnLineNumbers: true,
-      minimap: {
-        enabled: false,
-      },
-    };
-
     return (
       <div className="code-column">
         <div className="flex-down">
@@ -361,7 +355,7 @@ export default class DataModal extends React.Component<Props, State> {
             language="json"
             theme="vs-light"
             value={code}
-            options={options}
+            options={EDITOR_OPTIONS}
             onChange={(code: string) => {
               Promise.resolve()
                 .then(() => JSON.parse(code))
