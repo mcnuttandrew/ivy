@@ -14,6 +14,59 @@ interface State {
   open: boolean;
 }
 
+function generateButtonActions(props: any) {
+  const {setEncodingMode, startTemplateEdit, toggle, deleteTemplate} = props;
+  return (templateName: string) => ({
+    use: () => {
+      setEncodingMode(templateName);
+      toggle();
+    },
+    edit: () => {
+      startTemplateEdit(templateName);
+      toggle();
+    },
+    delete: () => {
+      deleteTemplate(templateName);
+    },
+  });
+}
+
+function encodingRow(
+  templateName: string,
+  templateDescription: string,
+  buttons: string[],
+  buttonActions: any,
+  idx: number,
+) {
+  const buttonResponses = buttonActions(templateName);
+  return (
+    <div
+      className="encoding-selection-option flex"
+      key={`${templateName}-${idx}`}
+    >
+      <div>
+        <img src="./assets/example-chart.png" />
+      </div>
+      <div className="flex-down">
+        <h3>{templateName}</h3>
+        {templateDescription && <h5>{`${templateDescription}`}</h5>}
+        <div className="flex">
+          {buttons.map((button: string) => {
+            return (
+              <button
+                onClick={buttonResponses[button.toLowerCase()]}
+                key={`${templateName}-${idx}-${button}`}
+              >
+                {button}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default class EncodingMode extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -30,6 +83,12 @@ export default class EncodingMode extends React.Component<Props, State> {
       deleteTemplate,
     } = this.props;
     const toggle = () => this.setState({open: !open});
+    const buttonActions = generateButtonActions({
+      setEncodingMode,
+      startTemplateEdit,
+      toggle,
+      deleteTemplate,
+    });
     return (
       <div className="flex tooltip-container">
         <div onClick={toggle}>
@@ -40,54 +99,22 @@ export default class EncodingMode extends React.Component<Props, State> {
           {open && (
             <div className="modal-tooltip">
               <div className="flex-down">
-                <div>
-                  <div>Template Name: Grammer</div>
-                  <div>
-                    Template Description: Tableau-style grammar of graphics
-                  </div>
-                  <button
-                    onClick={() => {
-                      setEncodingMode('grammer');
-                    }}
-                  >
-                    Use
-                  </button>
-                </div>
-                {templates.map((template: Template) => {
-                  return (
-                    <div key={`${template.templateName}-describer`}>
-                      <div>{`Template Name: ${template.templateName}`}</div>
-                      {template.templateDescription && (
-                        <div>
-                          {`Template Description: ${template.templateDescription}`}
-                        </div>
-                      )}
-                      <button
-                        onClick={() => {
-                          setEncodingMode(template.templateName);
-                          toggle();
-                        }}
-                      >
-                        Use
-                      </button>
-                      <button
-                        onClick={() => {
-                          startTemplateEdit(template.templateName);
-                          toggle();
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          deleteTemplate(template.templateName);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  );
-                })}
+                {encodingRow(
+                  'grammer',
+                  'Tableau-style grammar of graphics',
+                  ['Use'],
+                  buttonActions,
+                  -1,
+                )}
+                {templates.map((template: Template, idx: number) =>
+                  encodingRow(
+                    template.templateName,
+                    template.templateDescription,
+                    ['Use', 'Edit', 'Delete'],
+                    buttonActions,
+                    idx,
+                  ),
+                )}
               </div>
             </div>
           )}

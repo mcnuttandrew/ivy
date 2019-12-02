@@ -736,6 +736,18 @@ button:disabled {
   position: relative;
 }
 
+.modal-tooltip-container .modal-tooltip {
+  overflow-y: auto;
+}
+
+.modal-tooltip .encoding-selection-option {
+  margin-bottom: 15px;
+}
+
+.modal-tooltip .encoding-selection-option img {
+  height: 50px;
+}
+
 .tooltip-container .modal-background {
   background: rgba(255, 255, 255, 0);
   bottom: 0;
