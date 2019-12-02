@@ -68,7 +68,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       );
     };
     return (
-      <div className="flex-down column full-height background-2 font-white">
+      <div className="flex-down column full-height background-2 column-border">
         <h1 className="section-title">Data</h1>
         <div className="flex space-between data-selection">
           <div className="flex center">
@@ -85,7 +85,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         <h5>Meta Columns</h5>
         <div className="flex-down">{metaColumns.map(makePill(true))}</div>
 
-        <h1 className="section-title"> Filter </h1>
+        <h5> Filter </h5>
         <div className="flex-down">
           {(spec.transform || get(spec, ['spec', 'transform']) || [])
             .filter((filter: any) => {

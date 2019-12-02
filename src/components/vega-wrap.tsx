@@ -27,7 +27,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
         spec={spec}
         data={{myData: data}}
         theme={theme}
-        actions={false}
+        actions={true}
         tooltip={new Handler({}).call}
       />
     );

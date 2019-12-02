@@ -1,0 +1,1 @@
+/* core colors: #B5B5B5 #757575 #F5F5F5 #363636 #DBDBDB */

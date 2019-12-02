@@ -23,10 +23,6 @@ export default class Header extends React.Component<HeaderProps> {
     } = this.props;
     return (
       <div className="header flex full-width background-1">
-        <img
-          src="./logo.png"
-          alt="logo showing a chart inside of a warning symbol"
-        />
         <div>Hydra</div>
         <div className="flex state-action-controls">
           <div

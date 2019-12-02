@@ -157,7 +157,7 @@ class RootComponent extends React.Component<RootProps> {
       template => template.templateName === encodingMode,
     );
     return (
-      <div className="flex full-height">
+      <div className="flex full-height column-border">
         <DndProvider backend={HTML5Backend}>
           <DataColumn
             addToNextOpenSlot={addToNextOpenSlot}
