@@ -19,7 +19,8 @@ export default function TemplateShelf(props: TemplateShlef) {
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    drop: item => onDrop({...item, field}),
+    // @ts-ignore
+    drop: item => onDrop({...item, text: `"${item.text}"`, field}),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),

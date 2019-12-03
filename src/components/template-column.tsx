@@ -12,13 +12,25 @@ interface TemplateColumnProps {
   columns: ColumnHeader[];
   setTemplateValue: GenericAction;
 }
+// setting dimensions requires that dimension name be wrapped in a string
+// here we strip them off so that the channel cencoding can find the correct value
+function trim(dimName: string) {
+  if (!dimName || dimName.length < 2) {
+    return dimName;
+  }
+  if (dimName[0] === '"' && dimName[dimName.length - 1] === '"') {
+    return dimName.slice(1, dimName.length - 1);
+  }
+  return dimName;
+}
+
 export default class TemplateColumn extends React.Component<TemplateColumnProps> {
   renderDataTargetWidget(widget: TemplateWidget) {
     const {templateMap, columns, setTemplateValue} = this.props;
     return (
       <div key={widget.widgetName}>
         <TemplateShelf
-          channelEncoding={templateMap[widget.widgetName]}
+          channelEncoding={trim(templateMap[widget.widgetName])}
           field={widget.widgetName}
           columns={columns}
           onDrop={setTemplateValue}
@@ -78,10 +90,6 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
   }
   render() {
     const {template} = this.props;
-    console.log(this.props.templateMap);
-    // NEXT STEPS KATY
-    // 1. make widgets have a configurable UI presence
-    // 5. make default view be composed of a automatically filled out versions of the templates
 
     return (
       <div className="column">

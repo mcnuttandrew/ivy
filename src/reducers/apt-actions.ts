@@ -98,12 +98,9 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
 
   console.log(template);
 
-  // if () {
-  //   return setTemplateValue(state, {});
-  // }
   return setTemplateValue(state, {
     field: openDropTargets[0].widgetName,
-    text: payload.field,
+    text: `"${payload.field}"`,
   });
 };
 

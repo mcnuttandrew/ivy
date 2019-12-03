@@ -4,24 +4,18 @@ import {ActionResponse} from './default-state';
 import {Template, TemplateMap} from '../constants/templates';
 import {getTemplate} from '../utils';
 
-export const setTemplateValues = (
-  template: Template,
-  templateMap: TemplateMap,
-) => {
-  const filledInCode = Object.entries(templateMap).reduce(
-    (acc: string, keyValue: any) => {
-      const [key, value] = keyValue;
-      const reg = new RegExp(`\\[${key}\\]`, 'g');
-      console.log(reg);
-      return acc.replace(reg, value || `[${key}]`);
-    },
-    template.code,
-  );
-
-  return JSON.parse(filledInCode);
+const setTemplateValues = (code: string, templateMap: TemplateMap) => {
+  return Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
+    const [key, value] = keyValue;
+    const reg = new RegExp(`"\\[${key}\\]"`, 'g');
+    return acc.replace(reg, value || `[${key}]`);
+  }, code);
 };
 
-function checkIfMapComplete(template: Template, templateMap: TemplateMap) {
+export function checkIfMapComplete(
+  template: Template,
+  templateMap: TemplateMap,
+) {
   const requiredFields = template.widgets
     // @ts-ignore
     .filter(d => d.widgetType === 'DataTarget' && d.required)
@@ -33,7 +27,6 @@ function checkIfMapComplete(template: Template, templateMap: TemplateMap) {
 }
 
 export const recieveTemplates: ActionResponse = (state, payload) => {
-  console.log(payload);
   return state.set('templates', payload);
 };
 
@@ -44,16 +37,13 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   }
   const template = getTemplate(newState, newState.get('encodingMode'));
   newState = newState.setIn(['templateMap', payload.field], payload.text);
-  const updatedTemplate = setTemplateValues(
-    template,
-    newState.get('templateMap').toJS(),
+  const updatedTemplate = JSON.parse(
+    setTemplateValues(template.code, newState.get('templateMap').toJS()),
   );
-  console.log(updatedTemplate, '???');
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
 };
 
 function getAndRemoveTemplate(state: any, templateName: string) {
-  console.log('?', templateName);
   return state
     .get('templates')
     .filter((template: Template) => template.templateName !== templateName);
@@ -78,7 +68,6 @@ export const createTemplate: ActionResponse = (state, payload) => {
 };
 
 export const deleteTemplate: ActionResponse = (state, payload) => {
-  console.log('delete', payload);
   // update the template catalog / create it
   get('templates').then((templates: string[]) => {
     const updatedTemplates = (templates || []).filter(

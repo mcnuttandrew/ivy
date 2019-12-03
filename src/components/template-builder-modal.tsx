@@ -1,6 +1,5 @@
 import React from 'react';
 import {List} from 'immutable';
-import {TiDelete, TiArrowDownThick, TiArrowUpThick} from 'react-icons/ti';
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {
@@ -126,7 +125,7 @@ export default class DataModal extends React.Component<Props, State> {
   }
 
   codeColumn() {
-    const {code, error} = this.state;
+    const {code, error, widgets} = this.state;
     const {spec} = this.props;
     return (
       <div className="code-column">

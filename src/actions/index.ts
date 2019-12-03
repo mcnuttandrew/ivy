@@ -138,7 +138,6 @@ export const loadTemplates: GenericAction = () => dispatch => {
         if (!d || seen[d.templateName]) {
           return false;
         }
-        console.log(d.templateName);
         seen[d.templateName] = true;
         return true;
       });
