@@ -17,7 +17,9 @@ export interface ListWidget extends TemplateWidget {
 }
 export interface SwitchWidget extends TemplateWidget {
   widgetType: 'Switch';
-  defaultValue: boolean;
+  activeValue: string;
+  inactiveValue: string;
+  defaultsToActive: boolean;
 }
 export interface TextWidget extends TemplateWidget {
   widgetType: 'Text';

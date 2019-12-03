@@ -1,3 +1,5 @@
+import {List} from 'immutable';
+import {TemplateWidget} from './constants/templates';
 import React from 'react';
 import {
   TiSortNumerically,
@@ -180,3 +182,12 @@ export const checkEncodingForValidity = (spec: any) => {
 export const getTemplate = (state: any, template: string) => {
   return state.get('templates').find((d: any) => d.templateName === template);
 };
+
+export function widgetInUse(code: string, widgetName: string) {
+  return code.match(new RegExp(`\\[${widgetName}\\]`, 'g'));
+}
+export function allWidgetsInUse(code: string, widgets: List<TemplateWidget>) {
+  return widgets
+    .filter((widget: TemplateWidget) => widget.widgetType !== 'Text')
+    .every((widget: TemplateWidget) => !!widgetInUse(code, widget.widgetName));
+}

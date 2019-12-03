@@ -4,6 +4,7 @@ import {ColumnHeader} from '../types';
 import {Template, TemplateWidget, TextWidget} from '../constants/templates';
 import TemplateShelf from './template-shelf';
 import Selector from './selector';
+import Switch from 'react-switch';
 
 interface TemplateColumnProps {
   templateMap: any;
@@ -49,6 +50,32 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       </div>
     );
   }
+
+  renderSwitchWidget(generalWidget: TemplateWidget) {
+    const {templateMap, setTemplateValue} = this.props;
+    // @ts-ignore
+    const widget: SwitchWidget = generalWidget;
+    const isActive = templateMap[widget.widgetName] === widget.activeValue;
+    return (
+      <div key={widget.widgetName} className="switch-widget">
+        <div>{widget.widgetName}</div>
+        <Switch
+          checked={isActive}
+          offColor="#E1E9F2"
+          onColor="#36425C"
+          height={15}
+          checkedIcon={false}
+          width={50}
+          onChange={() =>
+            setTemplateValue({
+              field: widget.widgetName,
+              text: isActive ? widget.inactiveValue : widget.activeValue,
+            })
+          }
+        />
+      </div>
+    );
+  }
   render() {
     const {template} = this.props;
     console.log(this.props.templateMap);
@@ -69,6 +96,9 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
             }
             if (widget.widgetType === 'List') {
               return this.renderListWidget(widget);
+            }
+            if (widget.widgetType === 'Switch') {
+              return this.renderSwitchWidget(widget);
             }
             return <div key={widget.widgetName}>{widget.widgetName}</div>;
           })}
