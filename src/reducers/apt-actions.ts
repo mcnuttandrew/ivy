@@ -80,7 +80,6 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
     );
   const templateMap: TemplateMap = state.get('templateMap').toJS();
   const column = findField(state, payload.field);
-  console.log('drop column type data', column);
   const openDropTargets = template.widgets
     // select just the open drop targets
     .filter(
@@ -95,8 +94,6 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
     // TODO add messaging about this
     return state;
   }
-
-  console.log(template);
 
   return setTemplateValue(state, {
     field: openDropTargets[0].widgetName,

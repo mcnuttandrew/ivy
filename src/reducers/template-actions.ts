@@ -1,7 +1,7 @@
 import {get, set, clear} from 'idb-keyval';
 import Immutable from 'immutable';
 import {ActionResponse} from './default-state';
-import {Template, TemplateMap} from '../constants/templates';
+import {Template, TemplateMap, TemplateWidget} from '../constants/templates';
 import {getTemplate} from '../utils';
 
 const setTemplateValues = (code: string, templateMap: TemplateMap) => {
@@ -11,6 +11,35 @@ const setTemplateValues = (code: string, templateMap: TemplateMap) => {
     return acc.replace(reg, value || `[${key}]`);
   }, code);
 };
+
+// for template map holes that are NOT dimensions, fill em as best you can
+export function fillTemplateMapWithDefaults(state: any) {
+  const template = getTemplate(state, state.get('encodingMode'));
+  // const widgets =
+  const filledInTemplateMap = template.widgets
+    .filter((widget: TemplateWidget) => widget.widgetType !== 'DataTarget')
+    .reduce((acc: any, w: TemplateWidget) => {
+      let value = null;
+      if (w.widgetType === 'Text') {
+        return acc;
+      }
+      if (w.widgetType === 'List') {
+        // @ts-ignore
+        value = w.defaultValue;
+      }
+      if (w.widgetType === 'Switch') {
+        // @ts-ignore
+        value = w.defaultsToActive ? w.activeValue : w.inactiveValue;
+      }
+      return acc.set(w.widgetName, value);
+    }, Immutable.fromJS({}));
+  const newState = state.set('templateMap', filledInTemplateMap);
+  console.log(filledInTemplateMap.toJS(), 'fuck');
+  const updatedTemplate = JSON.parse(
+    setTemplateValues(template.code, newState.get('templateMap').toJS()),
+  );
+  return newState.set('spec', Immutable.fromJS(updatedTemplate));
+}
 
 export function checkIfMapComplete(
   template: Template,

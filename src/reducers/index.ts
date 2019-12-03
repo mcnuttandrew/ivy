@@ -34,6 +34,7 @@ import {
   createTemplate,
   deleteTemplate,
   startTemplateEdit,
+  fillTemplateMapWithDefaults,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView} from './view-actions';
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
@@ -58,10 +59,9 @@ const toggleTemplateBuilder: ActionResponse = state =>
 const setEncodingMode: ActionResponse = (state, payload) => {
   const newState = state.set('encodingMode', payload);
   if (payload !== 'grammer') {
-    const updatedSpec = Immutable.fromJS(
-      JSON.parse(getTemplate(state, payload).code),
-    );
-    return newState.set('spec', updatedSpec);
+    const template = getTemplate(state, payload);
+    const updatedSpec = Immutable.fromJS(JSON.parse(template.code));
+    return fillTemplateMapWithDefaults(newState.set('spec', updatedSpec));
   } else {
     return newState.set('spec', EMPTY_SPEC);
   }
