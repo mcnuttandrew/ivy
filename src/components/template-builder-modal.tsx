@@ -1,5 +1,7 @@
 import React from 'react';
 import {List} from 'immutable';
+import {DndProvider} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {
@@ -14,6 +16,7 @@ import {DataType} from '../types';
 import BuilderWidget from './widgets/builder-widget';
 import {classnames, allWidgetsInUse} from '../utils';
 import MonacoEditor from 'react-monaco-editor';
+import TemplateColumn from './template-column';
 
 import Modal from './modal';
 
@@ -30,6 +33,7 @@ interface State {
   templateName?: string;
   templateDescription?: string;
   error: boolean;
+  showPreview: boolean;
 }
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
@@ -83,6 +87,7 @@ export default class DataModal extends React.Component<Props, State> {
       widgets: List(),
       error: false,
       templateDescription: null,
+      showPreview: false,
     };
     if (props.editFrom) {
       // @ts-ignore
@@ -97,6 +102,7 @@ export default class DataModal extends React.Component<Props, State> {
         ),
         error: false,
         templateDescription,
+        showPreview: false,
       };
     }
     this.editorDidMount = this.editorDidMount.bind(this);
@@ -128,7 +134,7 @@ export default class DataModal extends React.Component<Props, State> {
     const {code, error, widgets} = this.state;
     const {spec} = this.props;
     return (
-      <div className="code-column">
+      <React.Fragment>
         <div className="flex-down">
           <button
             onClick={() => {
@@ -170,6 +176,44 @@ export default class DataModal extends React.Component<Props, State> {
             <button>x -> y</button>
           </div>
         </div>
+      </React.Fragment>
+    );
+  }
+
+  rightColumn() {
+    const {
+      code,
+      widgets,
+      templateName,
+      templateDescription,
+      showPreview,
+    } = this.state;
+    const newTemplate: Template = {
+      templateDescription,
+      templateName,
+      code,
+      widgets: widgets.toJS(),
+    };
+    // const NOOP: GenericAction = dispatch => {};
+    return (
+      <div className="code-column">
+        <button
+          onClick={() => {
+            this.setState({showPreview: !showPreview});
+          }}
+        >
+          toggle prevew
+        </button>
+        {!showPreview && this.codeColumn()}
+        {showPreview && (
+          <DndProvider backend={HTML5Backend}>
+            <TemplateColumn
+              template={newTemplate}
+              templateMap={{}}
+              columns={[]}
+            />
+          </DndProvider>
+        )}
       </div>
     );
   }
@@ -274,7 +318,7 @@ export default class DataModal extends React.Component<Props, State> {
         bodyDirectionDown={false}
         modalDetails="In this view you can generalize vega or vega-lite charts that you have made either made locally or copied from the internet. MORE DETAILS MORE DETAILS MORE DETAILS MORE DETAILS MORE DETAILS"
       >
-        {this.codeColumn()}
+        {this.rightColumn()}
         {this.widgetPanel()}
       </Modal>
     );
