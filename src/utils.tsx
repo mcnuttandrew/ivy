@@ -25,7 +25,7 @@ export function getUniques(data: any, field: string): string[] {
 }
 
 export function getDomain(data: any, field: string): number[] {
-  type domainType = {min: number, max: number};
+  type domainType = {min: number; max: number};
   return Object.values(
     data.reduce(
       (acc: domainType, row: any) => {
@@ -191,3 +191,8 @@ export function allWidgetsInUse(code: string, widgets: List<TemplateWidget>) {
     .filter((widget: TemplateWidget) => widget.widgetType !== 'Text')
     .every((widget: TemplateWidget) => !!widgetInUse(code, widget.widgetName));
 }
+
+export const toSelectFormat = (
+  arr: string[],
+): {value: string; label: string}[] =>
+  arr.map((x: string) => ({value: x, label: x}));

@@ -3,14 +3,12 @@ import Switch from 'react-switch';
 import Select from 'react-select';
 import {DataTargetWidget} from '../../constants/templates';
 import {DataType} from '../../types';
+import {toSelectFormat} from '../../utils';
 interface DataTargetBuilderWidgetProps {
   widget: DataTargetWidget;
   idx: number;
   setWidgetValue: any;
 }
-
-const toSelectFormat = (arr: string[]) =>
-  arr.map((x: string) => ({value: x, label: x}));
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 
 export default function DataTargetBuilderWidget(

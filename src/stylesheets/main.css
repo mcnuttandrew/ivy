@@ -499,11 +499,33 @@ button:disabled {
   padding: 3px 5px;
 }
 
+.fake-pill-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fake-pill-container .pill {
+  height: 23px;
+  margin-right: 10px;
+  margin-bottom: 2px;
+}
+
+.modal-body .code-column .column {
+  width: 250px;
+}
+
 .list-widget {
   align-items: center;
   display: flex;
   justify-content: center;
   height: 100%;
+}
+
+.switch-widget {
+  display: flex;
+  font-size: 12px;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .in-use-status {

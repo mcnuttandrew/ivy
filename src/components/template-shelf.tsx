@@ -10,7 +10,7 @@ interface TemplateShlef {
   channelEncoding?: string;
   columns: ColumnHeader[];
   field: string;
-  onDrop: GenericAction;
+  onDrop: any;
 }
 
 export default function TemplateShelf(props: TemplateShlef) {

@@ -1,22 +1,13 @@
 import React from 'react';
 import {List} from 'immutable';
-import {DndProvider} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import MonacoEditor from 'react-monaco-editor';
+
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {
-  DataTargetWidget,
-  TemplateWidget,
-  Template,
-  SwitchWidget,
-  TextWidget,
-  ListWidget,
-} from '../constants/templates';
-import {DataType} from '../types';
+import {TemplateWidget, Template, widgetFactory} from '../constants/templates';
 import BuilderWidget from './widgets/builder-widget';
 import {classnames, allWidgetsInUse} from '../utils';
-import MonacoEditor from 'react-monaco-editor';
-import TemplateColumn from './template-column';
+import TemplateColumnPreview from './widget-builder/template-column-preview';
 
 import Modal from './modal';
 
@@ -38,49 +29,10 @@ interface State {
   showTextualTemplate: boolean;
 }
 
-const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
-
-const widgetFactory = {
-  List: (idx: number) => {
-    const allowedValues: {display: string, value: string}[] = [];
-    const newWidget: ListWidget = {
-      widgetName: `ListItem${idx}`,
-      widgetType: 'List',
-      allowedValues,
-      defaultValue: null,
-    };
-    return newWidget;
-  },
-  DataTarget: (idx: number) => {
-    const newWidget: DataTargetWidget = {
-      widgetName: `Dim${idx}`,
-      widgetType: 'DataTarget',
-      allowedTypes: DATA_TYPES,
-      required: true,
-    };
-    return newWidget;
-  },
-  Switch: (idx: number) => {
-    const newWidget: SwitchWidget = {
-      widgetName: `Switch${idx}`,
-      widgetType: 'Switch',
-      activeValue: 'true',
-      inactiveValue: 'false',
-      defaultsToActive: true,
-    };
-    return newWidget;
-  },
-  Text: (idx: number) => {
-    const newWidget: TextWidget = {
-      widgetName: `Text${idx}`,
-      widgetType: 'Text',
-      text: '',
-    };
-    return newWidget;
-  },
-};
-
-export default class DataModal extends React.Component<Props, State> {
+export default class TemplateBuilderModal extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props);
     const common = {
@@ -136,7 +88,7 @@ export default class DataModal extends React.Component<Props, State> {
   }
 
   codeColumn() {
-    const {code, error, widgets} = this.state;
+    const {code, error} = this.state;
     const {spec} = this.props;
     return (
       <React.Fragment>
@@ -198,8 +150,8 @@ export default class DataModal extends React.Component<Props, State> {
       templateName,
       code,
       widgets: widgets.toJS(),
+      widgetValidations: [],
     };
-    // const NOOP: GenericAction = dispatch => {};
     return (
       <div className="code-column">
         <button
@@ -210,15 +162,7 @@ export default class DataModal extends React.Component<Props, State> {
           toggle prevew
         </button>
         {!showPreview && this.codeColumn()}
-        {showPreview && (
-          <DndProvider backend={HTML5Backend}>
-            <TemplateColumn
-              template={newTemplate}
-              templateMap={{}}
-              columns={[]}
-            />
-          </DndProvider>
-        )}
+        {showPreview && <TemplateColumnPreview newTemplate={newTemplate} />}
       </div>
     );
   }
@@ -269,6 +213,7 @@ export default class DataModal extends React.Component<Props, State> {
                 templateName,
                 code,
                 widgets: widgets.toJS(),
+                widgetValidations: [],
               };
               createTemplate(newTemplate);
               toggleTemplateBuilder();
@@ -287,8 +232,6 @@ export default class DataModal extends React.Component<Props, State> {
 
   widgetPanel() {
     const {code, widgets, templateName, templateDescription} = this.state;
-    const {createTemplate, toggleTemplateBuilder, editFrom} = this.props;
-    const componentCanBeCreated = this.validatePotentialTemplate();
     return (
       <React.Fragment>
         <div className="flex meta-data-builder-container">

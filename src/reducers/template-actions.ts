@@ -1,5 +1,5 @@
 import {get, set, clear} from 'idb-keyval';
-import Immutable from 'immutable';
+import Immutable, {Map} from 'immutable';
 import {ActionResponse} from './default-state';
 import {
   Template,
@@ -78,6 +78,17 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
     setTemplateValues(template.code, newState.get('templateMap').toJS()),
   );
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
+};
+
+export const setTemplateMapValue = (
+  templateMap: Map<string, any>,
+  payload: any,
+) => {
+  let newMap = templateMap;
+  if (payload.containingShelf) {
+    templateMap = templateMap.delete(payload.containingShelf);
+  }
+  return newMap.set(payload.field, payload.text);
 };
 
 function getAndRemoveTemplate(state: any, templateName: string) {

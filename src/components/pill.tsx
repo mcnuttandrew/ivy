@@ -82,7 +82,7 @@ export default function Pill(props: PillProps) {
           </div>
         </div>
       )}
-      {!isMeta && !inEncoding && (
+      {!isMeta && !inEncoding && coerceType && (
         <div className="fixed-symbol-width" onClick={() => toggleOpen(!open)}>
           {<GoTriangleDown />}
         </div>
@@ -91,7 +91,7 @@ export default function Pill(props: PillProps) {
         {getTypeSymbol(isMeta ? 'METACOLUMN' : column.type)}
       </div>
       <div className="pill-label">{column.field}</div>
-      {!isMeta && !inEncoding && (
+      {!isMeta && !inEncoding && createFilter && (
         <div
           className="fixed-symbol-width"
           onClick={() => {
@@ -104,7 +104,7 @@ export default function Pill(props: PillProps) {
           <TiFilter />
         </div>
       )}
-      {!isMeta && !inEncoding && (
+      {!isMeta && !inEncoding && addToNextOpenSlot && (
         <div
           className="fixed-symbol-width"
           onClick={() => addToNextOpenSlot(column)}

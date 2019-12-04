@@ -1,15 +1,13 @@
 import React from 'react';
 import CreatableSelect from 'react-select/creatable';
 import {ListWidget} from '../../constants/templates';
+import {toSelectFormat} from '../../utils';
 import Select from 'react-select';
 interface ListBuilderWidgetProps {
   widget: ListWidget;
   idx: number;
   setWidgetValue: any;
 }
-// TODO refactor this to utils
-const toSelectFormat = (arr: string[]) =>
-  arr.map((x: string) => ({value: x, label: x}));
 
 export default function ListBuilderWidget(props: ListBuilderWidgetProps) {
   const {widget, idx, setWidgetValue} = props;

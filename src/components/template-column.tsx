@@ -17,7 +17,7 @@ interface TemplateColumnProps {
   templateMap: any;
   template: Template;
   columns: ColumnHeader[];
-  setTemplateValue?: GenericAction;
+  setTemplateValue?: any;
 }
 // setting dimensions requires that dimension name be wrapped in a string
 // here we strip them off so that the channel cencoding can find the correct value
