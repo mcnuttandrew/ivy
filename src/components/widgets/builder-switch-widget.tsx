@@ -1,16 +1,14 @@
 import React from 'react';
 import Switch from 'react-switch';
-import {SwitchWidget, TemplateWidget} from '../../constants/templates';
+import {SwitchWidget} from '../../constants/templates';
 interface SwitchBuilderWidgetProps {
-  generalWidget: TemplateWidget;
+  widget: SwitchWidget;
   idx: number;
   setWidgetValue: any;
 }
 
 export default function SwitchBuilderWidget(props: SwitchBuilderWidgetProps) {
-  const {generalWidget, idx, setWidgetValue} = props;
-  // @ts-ignore
-  const widget: SwitchWidget = generalWidget;
+  const {widget, idx, setWidgetValue} = props;
   return (
     <div key={widget.widgetName} className="flex">
       <div className="flex-down">

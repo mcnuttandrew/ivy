@@ -1,7 +1,14 @@
 import React from 'react';
 import {GenericAction} from '../actions/index';
 import {ColumnHeader} from '../types';
-import {Template, TemplateWidget, TextWidget} from '../constants/templates';
+import {
+  Template,
+  TemplateWidget,
+  TextWidget,
+  ListWidget,
+  SwitchWidget,
+  DataTargetWidget,
+} from '../constants/templates';
 import TemplateShelf from './template-shelf';
 import Selector from './selector';
 import Switch from 'react-switch';
@@ -24,8 +31,10 @@ function trim(dimName: string) {
   return dimName;
 }
 
-export default class TemplateColumn extends React.Component<TemplateColumnProps> {
-  renderDataTargetWidget(widget: TemplateWidget) {
+export default class TemplateColumn extends React.Component<
+  TemplateColumnProps
+> {
+  renderDataTargetWidget(widget: DataTargetWidget) {
     const {templateMap, columns, setTemplateValue} = this.props;
     return (
       <div key={widget.widgetName}>
@@ -39,16 +48,12 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
     );
   }
 
-  renderTextWidget(generalWidget: TemplateWidget) {
-    // @ts-ignore
-    const widget: TextWidget = generalWidget;
+  renderTextWidget(widget: TextWidget) {
     return <div key={widget.widgetName}>{widget.text}</div>;
   }
 
-  renderListWidget(generalWidget: TemplateWidget) {
+  renderListWidget(widget: ListWidget) {
     const {templateMap, setTemplateValue} = this.props;
-    // @ts-ignore
-    const widget: ListWidget = generalWidget;
     return (
       <div key={widget.widgetName} className="list-widget">
         <div>{widget.widgetName}</div>
@@ -63,10 +68,8 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
     );
   }
 
-  renderSwitchWidget(generalWidget: TemplateWidget) {
+  renderSwitchWidget(widget: SwitchWidget) {
     const {templateMap, setTemplateValue} = this.props;
-    // @ts-ignore
-    const widget: SwitchWidget = generalWidget;
     const isActive = templateMap[widget.widgetName] === widget.activeValue;
     return (
       <div key={widget.widgetName} className="switch-widget">
@@ -97,16 +100,16 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         <div>
           {template.widgets.map(widget => {
             if (widget.widgetType === 'DataTarget') {
-              return this.renderDataTargetWidget(widget);
+              return this.renderDataTargetWidget(widget as DataTargetWidget);
             }
             if (widget.widgetType === 'Text') {
-              return this.renderTextWidget(widget);
+              return this.renderTextWidget(widget as TextWidget);
             }
             if (widget.widgetType === 'List') {
-              return this.renderListWidget(widget);
+              return this.renderListWidget(widget as ListWidget);
             }
             if (widget.widgetType === 'Switch') {
-              return this.renderSwitchWidget(widget);
+              return this.renderSwitchWidget(widget as SwitchWidget);
             }
             return <div key={widget.widgetName}>{widget.widgetName}</div>;
           })}

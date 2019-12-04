@@ -1,5 +1,4 @@
 import {DataType} from '../types';
-// probably need to have a notion of typing for some of the widgets
 export type WidgetType = 'DataTarget' | 'List' | 'Switch' | 'Text';
 export interface TemplateWidget {
   widgetName: string;
@@ -12,7 +11,7 @@ export interface DataTargetWidget extends TemplateWidget {
 }
 export interface ListWidget extends TemplateWidget {
   widgetType: 'List';
-  allowedValues: {display: string, value: string}[];
+  allowedValues: {display: string; value: string}[];
   defaultValue: string;
 }
 export interface SwitchWidget extends TemplateWidget {
@@ -35,8 +34,7 @@ export interface Template {
     | DataTargetWidget
     | ListWidget
     | SwitchWidget
-    | TextWidget
-  )[];
+    | TextWidget)[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
 

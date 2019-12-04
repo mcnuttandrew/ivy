@@ -1,10 +1,10 @@
 import React from 'react';
 import Switch from 'react-switch';
 import Select from 'react-select';
-import {DataTargetWidget, TemplateWidget} from '../../constants/templates';
+import {DataTargetWidget} from '../../constants/templates';
 import {DataType} from '../../types';
 interface DataTargetBuilderWidgetProps {
-  generalWidget: TemplateWidget;
+  widget: DataTargetWidget;
   idx: number;
   setWidgetValue: any;
 }
@@ -16,9 +16,7 @@ const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 export default function DataTargetBuilderWidget(
   props: DataTargetBuilderWidgetProps,
 ) {
-  const {generalWidget, idx, setWidgetValue} = props;
-  // @ts-ignore
-  const widget: DataTargetWidget = generalWidget;
+  const {widget, idx, setWidgetValue} = props;
   return (
     <div key={widget.widgetName} className="flex">
       <div className="flex-down">

@@ -326,13 +326,11 @@ class RootComponent extends React.Component<RootProps> {
             createTemplate={createTemplate}
             toggleTemplateBuilder={toggleTemplateBuilder}
             spec={spec}
-            editFrom={
-              typeof templateBuilderModalOpen === 'string' &&
-              templates.find(
-                (template: Template) =>
-                  template.templateName === templateBuilderModalOpen,
-              )
-            }
+            editFrom={templates.find(
+              (template: Template) =>
+                typeof templateBuilderModalOpen === 'string' &&
+                template.templateName === templateBuilderModalOpen,
+            )}
           />
         )}
         <Header

@@ -1,19 +1,18 @@
 import React from 'react';
 import CreatableSelect from 'react-select/creatable';
-import {ListWidget, TemplateWidget} from '../../constants/templates';
+import {ListWidget} from '../../constants/templates';
 import Select from 'react-select';
 interface ListBuilderWidgetProps {
-  generalWidget: TemplateWidget;
+  widget: ListWidget;
   idx: number;
   setWidgetValue: any;
 }
+// TODO refactor this to utils
 const toSelectFormat = (arr: string[]) =>
   arr.map((x: string) => ({value: x, label: x}));
 
 export default function ListBuilderWidget(props: ListBuilderWidgetProps) {
-  const {generalWidget, idx, setWidgetValue} = props;
-  // @ts-ignore
-  const widget: ListWidget = generalWidget;
+  const {widget, idx, setWidgetValue} = props;
   return (
     <div key={widget.widgetName}>
       <div className="flex">

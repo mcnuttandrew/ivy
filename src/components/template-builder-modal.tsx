@@ -24,7 +24,7 @@ interface Props {
   spec: any;
   toggleTemplateBuilder: GenericAction;
   createTemplate: GenericAction;
-  editFrom?: Template | boolean;
+  editFrom?: Template;
 }
 
 interface State {
@@ -33,7 +33,9 @@ interface State {
   templateName?: string;
   templateDescription?: string;
   error: boolean;
+  // TODO probably remake these into some GUI variables
   showPreview: boolean;
+  showTextualTemplate: boolean;
 }
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
@@ -81,18 +83,22 @@ const widgetFactory = {
 export default class DataModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    const common = {
+      error: false,
+      showPreview: false,
+      showTextualTemplate: false,
+    };
     this.state = {
       code: JSON.stringify(this.props.spec, null, 2),
       templateName: null,
       widgets: List(),
       error: false,
       templateDescription: null,
-      showPreview: false,
+      ...common,
     };
+    // use an old template
     if (props.editFrom) {
-      // @ts-ignore
-      const prevTemplate: Template = props.editFrom;
-      const {code, templateName, templateDescription, widgets} = prevTemplate;
+      const {code, templateName, templateDescription, widgets} = props.editFrom;
       this.state = {
         code,
         templateName,
@@ -100,9 +106,8 @@ export default class DataModal extends React.Component<Props, State> {
           (acc: any, x: TemplateWidget) => acc.push(x),
           List(),
         ),
-        error: false,
         templateDescription,
-        showPreview: false,
+        ...common,
       };
     }
     this.editorDidMount = this.editorDidMount.bind(this);
@@ -218,8 +223,14 @@ export default class DataModal extends React.Component<Props, State> {
     );
   }
 
-  widgetPanel() {
-    const {code, widgets, templateName, templateDescription} = this.state;
+  leftColumn() {
+    const {
+      widgets,
+      showTextualTemplate,
+      templateDescription,
+      templateName,
+      code,
+    } = this.state;
     const {createTemplate, toggleTemplateBuilder, editFrom} = this.props;
     const componentCanBeCreated = this.validatePotentialTemplate();
     return (
@@ -240,26 +251,13 @@ export default class DataModal extends React.Component<Props, State> {
               </button>
             );
           })}
-        </div>
-        <div className="flex-down widget-builder-container">
-          {widgets.map((widget: TemplateWidget, idx: number) => {
-            return (
-              <BuilderWidget
-                code={code}
-                widget={widget}
-                widgets={widgets}
-                idx={idx}
-                setWidgets={(widgets: List<TemplateWidget>) =>
-                  this.setState({widgets})
-                }
-                setWidgetValue={(key: string, value: any, idx: number) =>
-                  this.setWidgetValue(key, value, idx)
-                }
-              />
-            );
-          })}
-        </div>
-        <div className="flex meta-data-builder-container">
+          <button
+            onClick={() => {
+              this.setState({showTextualTemplate: !showTextualTemplate});
+            }}
+          >
+            toggle textual template
+          </button>
           <button
             disabled={!componentCanBeCreated}
             onClick={() => {
@@ -280,30 +278,107 @@ export default class DataModal extends React.Component<Props, State> {
               ? `${editFrom ? 'Update' : 'Create'} Template`
               : 'Template Not Complete'}
           </button>
-          <div>
-            <div className="flex-down">
-              <span className="tool-description">Template name:</span>
-              <input
-                value={templateName || ''}
-                placeholder="Fill out name here"
-                onChange={event => {
-                  this.setState({templateName: event.target.value});
-                }}
-              />
-            </div>
-            <div className="flex-down">
-              <span className="tool-description">Template Description:</span>
-              <textarea
-                value={templateDescription || ''}
-                placeholder="Fill out Description"
-                onChange={event => {
-                  this.setState({templateDescription: event.target.value});
-                }}
-              />
-            </div>
+        </div>
+        {!showTextualTemplate && this.widgetPanel()}
+        {showTextualTemplate && this.textualTemplate()}
+      </div>
+    );
+  }
+
+  widgetPanel() {
+    const {code, widgets, templateName, templateDescription} = this.state;
+    const {createTemplate, toggleTemplateBuilder, editFrom} = this.props;
+    const componentCanBeCreated = this.validatePotentialTemplate();
+    return (
+      <React.Fragment>
+        <div className="flex meta-data-builder-container">
+          <div className="flex-down">
+            <span className="tool-description">Template name:</span>
+            <input
+              value={templateName || ''}
+              placeholder="Fill out name here"
+              onChange={event => {
+                this.setState({templateName: event.target.value});
+              }}
+            />
+          </div>
+          <div className="flex-down">
+            <span className="tool-description">Template Description:</span>
+            <textarea
+              value={templateDescription || ''}
+              placeholder="Fill out Description"
+              onChange={event => {
+                this.setState({templateDescription: event.target.value});
+              }}
+            />
           </div>
         </div>
-      </div>
+        <div className="flex-down widget-builder-container">
+          {widgets.map((widget: TemplateWidget, idx: number) => {
+            return (
+              <BuilderWidget
+                code={code}
+                widget={widget}
+                widgets={widgets}
+                idx={idx}
+                setWidgets={(widgets: List<TemplateWidget>) =>
+                  this.setState({widgets})
+                }
+                setWidgetValue={(key: string, value: any, idx: number) =>
+                  this.setWidgetValue(key, value, idx)
+                }
+              />
+            );
+          })}
+          {!widgets.size && <h1>NO WIDGETS SELECTED</h1>}
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  textualTemplate() {
+    const {widgets, templateName, templateDescription} = this.state;
+    const serializedState = {
+      widgets,
+      templateName,
+      templateDescription,
+      code: '<SEE CODE PANEL>',
+    };
+    // TODO ADD ERROR HANDLING,
+    // TODO MAKE focus not suck
+    return (
+      <React.Fragment>
+        <div className="code-wrapper">
+          <MonacoEditor
+            language="json"
+            theme="vs-light"
+            value={JSON.stringify(serializedState, null, 2)}
+            options={EDITOR_OPTIONS}
+            onChange={(code: string) => {
+              Promise.resolve()
+                .then(() => JSON.parse(code))
+                .then(code => {
+                  console.log('wow', code);
+                  this.setState({
+                    templateName: code.templateName,
+                    templateDescription: code.templateDescription,
+                    widgets: List(code.widgets),
+                  });
+                })
+                .catch((e: any) => {
+                  console.error(e);
+                });
+              {
+                /* .then(() => this.setState({code, error: false}))
+                .catch(() => this.setState({code, error: true})); */
+              }
+              {
+                /* editorDidMount={this.editorDidMount} */
+              }
+            }}
+          />
+        </div>
+      </React.Fragment>
     );
   }
 
@@ -319,7 +394,7 @@ export default class DataModal extends React.Component<Props, State> {
         modalDetails="In this view you can generalize vega or vega-lite charts that you have made either made locally or copied from the internet. MORE DETAILS MORE DETAILS MORE DETAILS MORE DETAILS MORE DETAILS"
       >
         {this.rightColumn()}
-        {this.widgetPanel()}
+        {this.leftColumn()}
       </Modal>
     );
   }

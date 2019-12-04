@@ -4,7 +4,7 @@ import {useDrop} from 'react-dnd';
 
 import Pill from './pill';
 import {ColumnHeader} from '../types';
-import {classnames, get} from '../utils';
+import {classnames} from '../utils';
 
 interface TemplateShlef {
   channelEncoding?: string;
@@ -19,8 +19,7 @@ export default function TemplateShelf(props: TemplateShlef) {
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    // @ts-ignore
-    drop: item => onDrop({...item, text: `"${item.text}"`, field}),
+    drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field}),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),

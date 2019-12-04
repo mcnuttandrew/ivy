@@ -585,10 +585,16 @@ button:disabled {
 }
 
 .code-wrapper {
-  height: calc(100% - 200px);
   position: relative;
   width: 100%;
 }
+.code-column .code-wrapper {
+  height: calc(100% - 200px);
+}
+.widget-configuration-panel .code-wrapper {
+  height: 100%;
+}
+
 
 
 

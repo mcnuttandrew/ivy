@@ -7,7 +7,13 @@ import ListBuilderWidget from './builder-list-widget';
 import SwitchBuilderWidget from './builder-switch-widget';
 import TextBuilderWidget from './builder-text-widget';
 
-import {TemplateWidget} from '../../constants/templates';
+import {
+  TemplateWidget,
+  SwitchWidget,
+  ListWidget,
+  DataTargetWidget,
+  TextWidget,
+} from '../../constants/templates';
 import {widgetInUse} from '../../utils';
 
 interface BuilderWidgetProps {
@@ -21,7 +27,6 @@ interface BuilderWidgetProps {
 
 export default function BuilderWidget(props: BuilderWidgetProps) {
   const {code, widgets, widget, idx, setWidgets, setWidgetValue} = props;
-  const showKey = widget.widgetType !== 'Text';
   const showInUs = widget.widgetType !== 'Text';
   return (
     <div key={`${widget.widgetName}-${idx}`} className="widget">
@@ -30,11 +35,7 @@ export default function BuilderWidget(props: BuilderWidgetProps) {
           <div
             className="cursor-pointer"
             onClick={() => {
-              // @ts-ignore
-              const updatedWidgets: List<any> = widgets.filter(
-                (_, jdx) => jdx !== idx,
-              );
-              setWidgets(updatedWidgets);
+              setWidgets(widgets.filter((_, jdx) => jdx !== idx));
             }}
           >
             <TiDelete />
@@ -77,28 +78,28 @@ export default function BuilderWidget(props: BuilderWidgetProps) {
       <div className="widget-body">
         {widget.widgetType === 'Switch' && (
           <SwitchBuilderWidget
-            generalWidget={widget}
+            widget={widget as SwitchWidget}
             idx={idx}
             setWidgetValue={setWidgetValue}
           />
         )}
         {widget.widgetType === 'List' && (
           <ListBuilderWidget
-            generalWidget={widget}
+            widget={widget as ListWidget}
             idx={idx}
             setWidgetValue={setWidgetValue}
           />
         )}
         {widget.widgetType === 'Text' && (
           <TextBuilderWidget
-            generalWidget={widget}
+            widget={widget as TextWidget}
             idx={idx}
             setWidgetValue={setWidgetValue}
           />
         )}
         {widget.widgetType === 'DataTarget' && (
           <DataTargetBuilderWidget
-            generalWidget={widget}
+            widget={widget as DataTargetWidget}
             idx={idx}
             setWidgetValue={setWidgetValue}
           />

@@ -1,15 +1,13 @@
 import React from 'react';
-import {TextWidget, TemplateWidget} from '../../constants/templates';
+import {TextWidget} from '../../constants/templates';
 interface TextBuilderWidgetProps {
-  generalWidget: TemplateWidget;
+  widget: TextWidget;
   idx: number;
   setWidgetValue: any;
 }
 
 export default function TextBuilderWidget(props: TextBuilderWidgetProps) {
-  const {generalWidget, idx, setWidgetValue} = props;
-  // @ts-ignore
-  const widget: TextWidget = generalWidget;
+  const {widget, idx, setWidgetValue} = props;
   return (
     <div key={widget.widgetName}>
       <textarea

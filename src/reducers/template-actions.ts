@@ -1,7 +1,14 @@
 import {get, set, clear} from 'idb-keyval';
 import Immutable from 'immutable';
 import {ActionResponse} from './default-state';
-import {Template, TemplateMap, TemplateWidget} from '../constants/templates';
+import {
+  Template,
+  TemplateMap,
+  TemplateWidget,
+  ListWidget,
+  SwitchWidget,
+  DataTargetWidget,
+} from '../constants/templates';
 import {getTemplate} from '../utils';
 
 const setTemplateValues = (code: string, templateMap: TemplateMap) => {
@@ -24,12 +31,12 @@ export function fillTemplateMapWithDefaults(state: any) {
         return acc;
       }
       if (w.widgetType === 'List') {
-        // @ts-ignore
-        value = w.defaultValue;
+        value = (w as ListWidget).defaultValue;
       }
       if (w.widgetType === 'Switch') {
-        // @ts-ignore
-        value = w.defaultsToActive ? w.activeValue : w.inactiveValue;
+        value = (w as SwitchWidget).defaultsToActive
+          ? (w as SwitchWidget).activeValue
+          : (w as SwitchWidget).inactiveValue;
       }
       return acc.set(w.widgetName, value);
     }, Immutable.fromJS({}));
@@ -46,8 +53,9 @@ export function checkIfMapComplete(
   templateMap: TemplateMap,
 ) {
   const requiredFields = template.widgets
-    // @ts-ignore
-    .filter(d => d.widgetType === 'DataTarget' && d.required)
+    .filter(
+      d => d.widgetType === 'DataTarget' && (d as DataTargetWidget).required,
+    )
     .map(d => d.widgetName);
   const filledInFields = requiredFields
     .map((fieldName: string) => templateMap[fieldName])

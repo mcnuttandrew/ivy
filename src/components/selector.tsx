@@ -15,11 +15,13 @@ export default function Selector(props: SelectorProps) {
       value={selectedValue}
       onChange={({target: {value}}) => onChange(value)}
     >
-      {options.map(({display, value}: {display: any, value: any}) => (
-        <option value={value || ''} key={`${display}`}>
-          {display}
-        </option>
-      ))}
+      {options.map(
+        ({display, value}: {display: any, value: any}, idx: number) => (
+          <option value={value || ''} key={`${display | idx}-selector`}>
+            {display}
+          </option>
+        ),
+      )}
     </select>
   );
 }
