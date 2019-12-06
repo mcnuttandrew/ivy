@@ -1,4 +1,4 @@
-import {get, set, clear} from 'idb-keyval';
+import {get, set} from 'idb-keyval';
 import Immutable, {Map} from 'immutable';
 import {ActionResponse} from './default-state';
 import {
@@ -15,7 +15,8 @@ const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   return Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
     const [key, value] = keyValue;
     const reg = new RegExp(`"\\[${key}\\]"`, 'g');
-    return acc.replace(reg, value || `[${key}]`);
+    return acc.replace(reg, value || 'null');
+    // return acc.replace(reg, value || `[${key}]`);
   }, code);
 };
 

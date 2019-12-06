@@ -29,7 +29,7 @@ export const OLD_EXAMPLE = Immutable.fromJS({
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   width: 900,
   height: 400,
-  // data: {url: 'data/wheat.json'},
+  data: {url: 'data/wheat.json'},
   transform: [{calculate: '+datum.year + 5', as: 'year_end'}],
   layer: [
     {
@@ -132,7 +132,10 @@ export const OLD_EXAMPLE = Immutable.fromJS({
       },
     },
     {
-      data: {url: 'data/monarchs.json'},
+      data: {
+        url:
+          'https://raw.githubusercontent.com/vega/vega-datasets/master/data/monarchs.json',
+      },
       transform: [
         {
           calculate:
@@ -168,7 +171,8 @@ export const OLD_EXAMPLE = Immutable.fromJS({
     },
     {
       data: {
-        url: 'data/monarchs.json',
+        url:
+          'https://raw.githubusercontent.com/vega/vega-datasets/master/data/monarchs.json',
       },
       transform: [
         {
