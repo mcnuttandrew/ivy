@@ -1,9 +1,7 @@
 import React from 'react';
-import {GenericAction} from '../actions/index';
 import {ColumnHeader} from '../types';
 import {
   Template,
-  TemplateWidget,
   TextWidget,
   ListWidget,
   SwitchWidget,

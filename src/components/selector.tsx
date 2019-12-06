@@ -2,7 +2,7 @@ import React from 'react';
 
 interface SelectorProps {
   onChange: (x: any) => any;
-  options: {display: any, value: any}[];
+  options: {display: any; value: any}[];
   selectedValue?: any;
 }
 
@@ -16,8 +16,8 @@ export default function Selector(props: SelectorProps) {
       onChange={({target: {value}}) => onChange(value)}
     >
       {options.map(
-        ({display, value}: {display: any, value: any}, idx: number) => (
-          <option value={value || ''} key={`${display | idx}-selector`}>
+        ({display, value}: {display: any; value: any}, idx: number) => (
+          <option value={value || ''} key={idx}>
             {display}
           </option>
         ),

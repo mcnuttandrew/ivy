@@ -51,7 +51,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   columns: [],
   metaColumns: [],
   unprouncableInGrammer: false,
-  selectedGUIMode: 'GRAMMAR',
+  selectedGUIMode: 'GUI',
   // selectedGUIMode: 'PROGRAMMATIC',
   encodingMode: 'grammer',
   // encodingMode: 'overview',

@@ -41,7 +41,6 @@ export function fillTemplateMapWithDefaults(state: any) {
       return acc.set(w.widgetName, value);
     }, Immutable.fromJS({}));
   const newState = state.set('templateMap', filledInTemplateMap);
-  console.log(filledInTemplateMap.toJS(), 'fuck');
   const updatedTemplate = JSON.parse(
     setTemplateValues(template.code, newState.get('templateMap').toJS()),
   );

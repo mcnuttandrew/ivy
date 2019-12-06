@@ -343,7 +343,7 @@ class RootComponent extends React.Component<RootProps> {
         <div className="flex full-height">
           <div className="flex-down full-height control-container">
             {SHOW_SECONDARY_CONTROLS && this.secondaryControls()}
-            {selectedGUIMode === 'GRAMMAR' &&
+            {selectedGUIMode === 'GUI' &&
               (unprouncableInGrammer ? this.errorMenu() : this.grammarMenu())}
             {selectedGUIMode === 'PROGRAMMATIC' && this.programmaticMenu()}
           </div>

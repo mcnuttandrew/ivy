@@ -8,6 +8,7 @@ import {TemplateWidget, Template, widgetFactory} from '../constants/templates';
 import BuilderWidget from './widgets/builder-widget';
 import {classnames, allWidgetsInUse} from '../utils';
 import TemplateColumnPreview from './widget-builder/template-column-preview';
+import {EMPTY_SPEC} from '../reducers/default-state';
 
 import Modal from './modal';
 
@@ -92,7 +93,16 @@ export default class TemplateBuilderModal extends React.Component<
     const {spec} = this.props;
     return (
       <React.Fragment>
-        <div className="flex-down">
+        <div className="flex flex-wrap">
+          <button
+            onClick={() => {
+              this.setState({
+                code: JSON.stringify(EMPTY_SPEC.toJS(), null, 2),
+              });
+            }}
+          >
+            EMPTY VEGALITE SPEC
+          </button>
           <button
             onClick={() => {
               this.setState({
@@ -103,6 +113,15 @@ export default class TemplateBuilderModal extends React.Component<
             COPY CODE FROM CURRENT SELECTION
           </button>
           <button onClick={() => {}}>FORK EXTANT TEMPLATE</button>
+          <button
+            onClick={() => {
+              this.setState({
+                code: JSON.stringify(JSON.parse(code), null, 2),
+              });
+            }}
+          >
+            CLEAN UP
+          </button>
         </div>
         <div className="code-wrapper">
           <div
@@ -264,6 +283,7 @@ export default class TemplateBuilderModal extends React.Component<
                 widget={widget}
                 widgets={widgets}
                 idx={idx}
+                key={idx}
                 setWidgets={(widgets: List<TemplateWidget>) =>
                   this.setState({widgets})
                 }

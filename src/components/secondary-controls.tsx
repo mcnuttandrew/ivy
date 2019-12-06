@@ -42,7 +42,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
       <div className="flex space-between">
         <div className="mode-selector flex">
           Mode:{' '}
-          {['GRAMMAR', 'PROGRAMMATIC'].map(mode => {
+          {['GUI', 'PROGRAMMATIC'].map(mode => {
             return (
               <div
                 key={mode}
