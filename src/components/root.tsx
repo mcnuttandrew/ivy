@@ -13,6 +13,7 @@ import {
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
+import {currentTemplate} from '../utils';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
@@ -48,6 +49,7 @@ interface RootProps {
   currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
   unprouncableInGrammer?: boolean;
+  template?: Template;
   templates?: Template[];
   templateMap?: TemplateMap;
   templateBuilderModalOpen?: boolean;
@@ -273,6 +275,7 @@ class RootComponent extends React.Component<RootProps> {
       iMspec,
       spec,
       switchView,
+      template,
       views,
     } = this.props;
     return (
@@ -285,6 +288,7 @@ class RootComponent extends React.Component<RootProps> {
         data={data}
         spec={spec}
         iMspec={iMspec}
+        template={template}
         currentTheme={currentTheme}
         views={views}
       />
@@ -310,7 +314,6 @@ class RootComponent extends React.Component<RootProps> {
       templateBuilderModalOpen,
       toggleTemplateBuilder,
     } = this.props;
-
     return (
       <div className="flex-down full-width full-height">
         {dataModalOpen && (
@@ -356,7 +359,7 @@ class RootComponent extends React.Component<RootProps> {
 
 // TODO figure out base type
 function mapStateToProps({base}: {base: AppState}): any {
-  // TODO alpha
+  // TODO alphabetize
   return {
     canUndo: base.get('undoStack').size >= 1,
     canRedo: base.get('redoStack').size >= 1,
@@ -373,6 +376,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
     templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
+    template: currentTemplate(base),
     currentTheme: base.get('currentTheme'),
     unprouncableInGrammer: base.get('unprouncableInGrammer'),
     GOOSE_MODE: base.get('GOOSE_MODE'),

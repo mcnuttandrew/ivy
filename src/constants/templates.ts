@@ -1,4 +1,5 @@
 import {DataType} from '../types';
+import {SCATTERPLOT_TEMPLATE, PIECHART_TEMPLATE} from './example-templates';
 export type WidgetType = 'DataTarget' | 'List' | 'Switch' | 'Text' | 'Slider';
 export interface TemplateWidget {
   widgetName: string;
@@ -34,6 +35,7 @@ export interface SliderWidget extends TemplateWidget {
 // TODO slider widget
 
 export interface Template {
+  templateLanguage: string;
   templateName: string;
   templateDescription?: string;
   code: string;
@@ -45,7 +47,6 @@ export interface Template {
     | TextWidget)[];
   widgetValidations: widgetValidation[];
   // TODO MAYBE ADD A PREVIEW PIC?
-  // TODO maybe add language so that the rendered has an idea of how to interpret the template?
 }
 
 export interface widgetValidation {
@@ -104,60 +105,8 @@ export const widgetFactory = {
   },
 };
 
-const SCATTERPLOT_EXAMPLE: any = {
-  mark: {
-    type: 'point',
-    tooltip: true,
-  },
-  encoding: {
-    x: {
-      field: '[xDim]',
-      type: 'quantitative',
-    },
-    y: {
-      field: '[yDim]',
-      type: 'quantitative',
-    },
-  },
-};
-
-const SCATTERPLOT_TEMPLATE: Template = {
-  templateName: 'scatterplot',
-  code: JSON.stringify(SCATTERPLOT_EXAMPLE, null, 2),
-  widgets: [
-    {
-      widgetName: 'xDim',
-      widgetType: 'DataTarget',
-      allowedTypes: ['MEASURE'],
-      required: true,
-    },
-    {
-      widgetName: 'yDim',
-      widgetType: 'DataTarget',
-      allowedTypes: ['MEASURE'],
-      required: true,
-    },
-  ],
-  widgetValidations: [],
-};
-
-// TODO I'm not very happy with this special view stratagey?
-const OVERVIEW_TEMPLATE: Template = {
-  templateName: 'overview',
-  templateDescription:
-    'see an automatically generated overview of your template collection',
-  code: JSON.stringify({}),
-  widgets: [
-    {
-      widgetName: 'Explanation',
-      widgetType: 'Text',
-      text: 'using this view you will blah blah blah',
-    },
-  ],
-  widgetValidations: [],
-};
-
 export const DEFAULT_TEMPLATES: Template[] = [
-  OVERVIEW_TEMPLATE,
+  // OVERVIEW_TEMPLATE,
   SCATTERPLOT_TEMPLATE,
+  PIECHART_TEMPLATE,
 ];

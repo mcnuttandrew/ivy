@@ -70,7 +70,7 @@ export function findField(
     .find(({field}: {field: string}) => field === targetField);
 }
 
-function compareObjects(a: any, b: any) {
+export function compareObjects(a: any, b: any) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
@@ -182,6 +182,9 @@ export const checkEncodingForValidity = (spec: any) => {
 export const getTemplate = (state: any, template: string) => {
   return state.get('templates').find((d: any) => d.templateName === template);
 };
+
+export const currentTemplate = (state: any) =>
+  getTemplate(state, state.get('encodingMode'));
 
 export function widgetInUse(code: string, widgetName: string) {
   return code.match(new RegExp(`\\[${widgetName}\\]`, 'g'));
