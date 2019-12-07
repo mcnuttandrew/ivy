@@ -6,10 +6,10 @@ import {
   extractFieldStringsForType,
   checkEncodingForValidity,
 } from '../utils';
-import {ActionResponse, EMPTY_SPEC} from './default-state';
+import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 
-const usingNestedSpec = (state: any): boolean =>
+const usingNestedSpec = (state: AppState): boolean =>
   Boolean(state.getIn(['spec', 'spec']));
 
 // remove the current encoding
@@ -66,8 +66,8 @@ export const coerceType: ActionResponse = (state, payload) => {
 };
 
 function maybeRemoveRepeats(
-  oldState: any,
-  newState: any,
+  oldState: AppState,
+  newState: AppState,
   targetChannel: string,
 ) {
   const route = usingNestedSpec(newState)
@@ -87,12 +87,12 @@ function maybeRemoveRepeats(
   return newState.deleteIn(['spec', 'repeat', repeaterField]);
 }
 
-function noMetaUsage(state: any): boolean {
+function noMetaUsage(state: AppState): boolean {
   const inUse = getAllInUseFields(state.getIn(['spec']));
   return !(inUse.has('row') || inUse.has('column') || inUse.has('repeat'));
 }
 
-function addMetaEncoding(state: any) {
+function addMetaEncoding(state: AppState) {
   return state
     .setIn(['spec', 'spec'], Map())
     .setIn(['spec', 'spec', 'encoding'], state.getIn(['spec', 'encoding']))
@@ -101,7 +101,7 @@ function addMetaEncoding(state: any) {
     .deleteIn(['spec', 'mark']);
 }
 
-function removeMetaEncoding(state: any) {
+function removeMetaEncoding(state: AppState) {
   return state
     .setIn(['spec', 'encoding'], state.getIn(['spec', 'spec', 'encoding']))
     .setIn(['spec', 'mark'], state.getIn(['spec', 'spec', 'mark']))
@@ -211,7 +211,7 @@ export const setRepeats: ActionResponse = (state, payload) => {
   return state.setIn(['spec', 'repeat', target], Immutable.fromJS(repeats));
 };
 
-const createStackItem = (state: any) => {
+const createStackItem = (state: AppState) => {
   return Map({
     spec: state.get('spec'),
     currentView: state.get('currentView'),
@@ -220,7 +220,7 @@ const createStackItem = (state: any) => {
   });
 };
 
-const applyStackItemToState = (state: any, stackItem: any) => {
+const applyStackItemToState = (state: AppState, stackItem: any) => {
   return state
     .set('spec', stackItem.get('spec'))
     .set('currentView', stackItem.get('currentView'))
@@ -229,7 +229,7 @@ const applyStackItemToState = (state: any, stackItem: any) => {
 };
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
-export function pushToUndoStack(oldState: any, newState: any) {
+export function pushToUndoStack(oldState: AppState, newState: AppState) {
   return newState
     .set('undoStack', newState.get('undoStack').push(createStackItem(oldState)))
     .set('redoStack', Immutable.fromJS([]));

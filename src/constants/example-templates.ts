@@ -39,9 +39,10 @@ export const SCATTERPLOT_TEMPLATE: Template = {
 
 // https://observablehq.com/@simon-lang/simple-vega-pie-chart
 const PIECHART_EXAMPLE: any = {
-  $schema: 'https://vega.github.io/schema/vega/v4.json',
+  $schema: 'https://vega.github.io/schema/vega/v5.json',
   width: 200,
   height: 200,
+  padding: 50,
   autosize: 'fit',
 
   data: [
@@ -50,16 +51,24 @@ const PIECHART_EXAMPLE: any = {
       values: 'myData',
       transform: [
         {
-          type: 'formula',
-          expr: "datum.[category] + ': ' + datum.[value]",
-          as: 'tooltip',
+          type: 'aggregate',
+          groupby: ['[category]'],
+          fields: ['[value]'],
+          ops: ['[aggregate]'],
+          as: ['pieAg'],
         },
+
         {
           type: 'pie',
-          field: '[category]',
+          field: 'pieAg',
           startAngle: 0,
           endAngle: 6.29,
-          sort: true,
+          sort: '[Sort]',
+        },
+        {
+          type: 'formula',
+          expr: "datum.[category] + ': ' + datum.pieAg",
+          as: 'tooltip',
         },
       ],
     },
@@ -69,8 +78,15 @@ const PIECHART_EXAMPLE: any = {
     {
       name: 'color',
       type: 'ordinal',
-      domain: {data: 'table', field: '[value]'},
-      range: {scheme: 'category20c'},
+      domain: {data: 'table', field: '[category]'},
+      range: {scheme: '[colorScheme]'},
+    },
+    {
+      name: 'r',
+      type: 'sqrt',
+      domain: [0, 1],
+      zero: false,
+      range: [90, 100],
     },
   ],
 
@@ -85,15 +101,63 @@ const PIECHART_EXAMPLE: any = {
           y: {signal: 'height / 2'},
           startAngle: {field: 'startAngle'},
           endAngle: {field: 'endAngle'},
-          innerRadius: {value: 60},
+          innerRadius: {value: '[DonutChart]'},
           outerRadius: {signal: 'width / 2'},
           cornerRadius: {value: 0},
           tooltip: {field: 'tooltip'},
         },
       },
     },
+    {
+      type: 'text',
+      from: {data: 'table'},
+      encode: {
+        enter: {
+          x: {field: {group: 'width'}, mult: 0.5},
+          y: {field: {group: 'height'}, mult: 0.5},
+          radius: {scale: 'r', value: 1.3},
+          theta: {signal: '(datum.startAngle + datum.endAngle)/2'},
+          fill: {value: '#000'},
+          align: {value: 'center'},
+          baseline: {value: 'middle'},
+          text: {field: '[category]'},
+        },
+      },
+    },
   ],
 };
+
+const VEGA_CATEGORICAL_COLOR_SCHEMES = [
+  'accent',
+  'category10',
+  'category20',
+  'category20b',
+  'category20c',
+  'dark2',
+  'paired',
+  'pastel1',
+  'pastel2',
+  'set1',
+  'set2',
+  'set3',
+  'tableau10',
+  'tableau20',
+];
+const AGGREGATES = [
+  'count',
+  'missing',
+  'distinct',
+  'sum',
+  'mean',
+  'median',
+  'min',
+  'max',
+];
+const toList = (list: string[]) =>
+  list.map(display => ({
+    display,
+    value: `"${display}"`,
+  }));
 
 export const PIECHART_TEMPLATE: Template = {
   templateName: 'pie chart',
@@ -112,7 +176,26 @@ export const PIECHART_TEMPLATE: Template = {
       required: true,
     },
     {
-      widgetName: 'sortValues',
+      widgetName: 'aggregate',
+      widgetType: 'List',
+      allowedValues: toList(AGGREGATES),
+      defaultValue: '"mean"',
+    },
+    {
+      widgetName: 'colorScheme',
+      widgetType: 'List',
+      allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
+      defaultValue: '"category20"',
+    },
+    {
+      widgetName: 'DonutChart',
+      widgetType: 'Switch',
+      activeValue: '60',
+      inactiveValue: '0',
+      defaultsToActive: true,
+    },
+    {
+      widgetName: 'Sort',
       widgetType: 'Switch',
       activeValue: 'true',
       inactiveValue: 'false',

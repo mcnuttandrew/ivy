@@ -1,12 +1,6 @@
 import {List} from 'immutable';
 import {TemplateWidget} from './constants/templates';
-import React from 'react';
-import {
-  TiSortNumerically,
-  TiSortAlphabetically,
-  TiCalendar,
-} from 'react-icons/ti';
-
+import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 
 export function classnames(classObject: {[val: string]: boolean}): string {
@@ -39,20 +33,6 @@ export function getDomain(data: any, field: string): number[] {
   );
 }
 
-export function getTypeSymbol(type: DataType): JSX.Element {
-  switch (type) {
-    case 'MEASURE':
-      return <TiSortNumerically />;
-    case 'TIME':
-      return <TiCalendar />;
-    case 'METACOLUMN':
-      return <span>?</span>;
-    default:
-    case 'DIMENSION':
-      return <TiSortAlphabetically />;
-  }
-}
-
 export function executePromisesInSeries(tasks: any): any {
   return tasks.reduce(
     (promiseChain: any, task: any): any => promiseChain.then(task),
@@ -61,7 +41,7 @@ export function executePromisesInSeries(tasks: any): any {
 }
 
 export function findField(
-  state: any,
+  state: AppState,
   targetField: string,
   columnKey = 'columns',
 ) {
@@ -179,11 +159,11 @@ export const checkEncodingForValidity = (spec: any) => {
   return true;
 };
 
-export const getTemplate = (state: any, template: string) => {
+export const getTemplate = (state: AppState, template: string) => {
   return state.get('templates').find((d: any) => d.templateName === template);
 };
 
-export const currentTemplate = (state: any) =>
+export const currentTemplate = (state: AppState) =>
   getTemplate(state, state.get('encodingMode'));
 
 export function widgetInUse(code: string, widgetName: string) {
@@ -199,3 +179,15 @@ export const toSelectFormat = (
   arr: string[],
 ): {value: string; label: string}[] =>
   arr.map((x: string) => ({value: x, label: x}));
+
+// setting dimensions requires that dimension name be wrapped in a string
+// here we strip them off so that the channel cencoding can find the correct value
+export function trim(dimName: string) {
+  if (!dimName || dimName.length < 2) {
+    return dimName;
+  }
+  if (dimName[0] === '"' && dimName[dimName.length - 1] === '"') {
+    return dimName.slice(1, dimName.length - 1);
+  }
+  return dimName;
+}

@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-
+import {checkIfMapComplete} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../constants/templates';
 
 import {
@@ -52,6 +52,7 @@ interface RootProps {
   template?: Template;
   templates?: Template[];
   templateMap?: TemplateMap;
+  templateComplete?: boolean;
   templateBuilderModalOpen?: boolean;
   currentView?: string;
   views?: List<string>;
@@ -276,8 +277,10 @@ class RootComponent extends React.Component<RootProps> {
       spec,
       switchView,
       template,
+      templateComplete,
       views,
     } = this.props;
+    console.log('comlpete??', templateComplete);
     return (
       <ChartArea
         cloneView={cloneView}
@@ -289,6 +292,7 @@ class RootComponent extends React.Component<RootProps> {
         spec={spec}
         iMspec={iMspec}
         template={template}
+        templateComplete={templateComplete}
         currentTheme={currentTheme}
         views={views}
       />
@@ -357,13 +361,15 @@ class RootComponent extends React.Component<RootProps> {
   }
 }
 
-// TODO figure out base type
+// TODO alphabetize
 function mapStateToProps({base}: {base: AppState}): any {
-  // TODO alphabetize
+  const template = currentTemplate(base);
+  const templateMap = base.get('templateMap').toJS();
   return {
     canUndo: base.get('undoStack').size >= 1,
     canRedo: base.get('redoStack').size >= 1,
     columns: base.get('columns'),
+    templateComplete: template && checkIfMapComplete(template, templateMap),
     currentView: base.get('currentView'),
     data: base.get('data'),
     editorError: base.get('editorError'),
@@ -376,12 +382,12 @@ function mapStateToProps({base}: {base: AppState}): any {
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
     templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
-    template: currentTemplate(base),
+    template,
     currentTheme: base.get('currentTheme'),
     unprouncableInGrammer: base.get('unprouncableInGrammer'),
     GOOSE_MODE: base.get('GOOSE_MODE'),
     templates: base.get('templates'),
-    templateMap: base.get('templateMap').toJS(),
+    templateMap,
     views: base.get('views'),
   };
 }

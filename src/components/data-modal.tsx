@@ -3,7 +3,7 @@ import {GenericAction} from '../actions/index';
 // import VegaDataPreAlias from 'vega-datasets';
 // const VegaData: {[key: string]: any} = VegaDataPreAlias;
 import VegaDatasetMeta from '../constants/vega-datasets-counts';
-import {getTypeSymbol} from '../utils';
+import DataSymbol from './data-symbol';
 import {DataType} from '../types';
 import Modal from './modal';
 
@@ -100,9 +100,7 @@ export default class DataModal extends React.Component<Props, State> {
                             key={`${datasetName}-${dataType}`}
                             className="flex icon-container"
                           >
-                            <div className="icon">
-                              {getTypeSymbol(dataType)}
-                            </div>
+                            <div className="icon">{DataSymbol(dataType)}</div>
                             {datasetMeta[dataType] || 0}
                           </div>
                         );

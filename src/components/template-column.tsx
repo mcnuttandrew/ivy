@@ -10,23 +10,12 @@ import {
 import TemplateShelf from './template-shelf';
 import Selector from './selector';
 import Switch from 'react-switch';
-
+import {trim} from '../utils';
 interface TemplateColumnProps {
   templateMap: any;
   template: Template;
   columns: ColumnHeader[];
   setTemplateValue?: any;
-}
-// setting dimensions requires that dimension name be wrapped in a string
-// here we strip them off so that the channel cencoding can find the correct value
-function trim(dimName: string) {
-  if (!dimName || dimName.length < 2) {
-    return dimName;
-  }
-  if (dimName[0] === '"' && dimName[dimName.length - 1] === '"') {
-    return dimName.slice(1, dimName.length - 1);
-  }
-  return dimName;
 }
 
 export default class TemplateColumn extends React.Component<

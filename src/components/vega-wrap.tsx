@@ -22,19 +22,25 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
 
   render() {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
+
+    // this stratagey only supports one data set
     (spec.data || []).forEach((row: any, idx: number) => {
       if (row.values === 'myData') {
         spec.data[idx].values = data;
       }
     });
-    console.log(spec);
-    // {/* data={{myData: data}} */}
+    if (language === 'vega-lite') {
+      spec.data = {
+        values: data,
+      };
+    }
+
     return (
       <Vega
-        spec={spec}
-        mode={'vega'}
-        theme={theme}
         actions={false}
+        spec={spec}
+        mode={language}
+        theme={theme}
         tooltip={new Handler({}).call}
       />
     );

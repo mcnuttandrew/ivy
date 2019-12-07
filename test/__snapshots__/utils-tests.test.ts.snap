@@ -1,0 +1,354 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#fillTemplateMapWithDefaults 1`] = `
+Object {
+  "encoding": Object {
+    "x": Object {
+      "field": "[xDim]",
+      "type": "quantitative",
+    },
+    "y": Object {
+      "field": "[yDim]",
+      "type": "quantitative",
+    },
+  },
+  "mark": Object {
+    "tooltip": true,
+    "type": "point",
+  },
+}
+`;
+
+exports[`#fillTemplateMapWithDefaults 2`] = `Object {}`;
+
+exports[`#fillTemplateMapWithDefaults 3`] = `
+Object {
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "autosize": "fit",
+  "data": Array [
+    Object {
+      "name": "table",
+      "transform": Array [
+        Object {
+          "as": Array [
+            "pieAg",
+          ],
+          "fields": Array [
+            "[value]",
+          ],
+          "groupby": Array [
+            "[category]",
+          ],
+          "ops": Array [
+            "mean",
+          ],
+          "type": "aggregate",
+        },
+        Object {
+          "endAngle": 6.29,
+          "field": "pieAg",
+          "sort": true,
+          "startAngle": 0,
+          "type": "pie",
+        },
+        Object {
+          "as": "tooltip",
+          "expr": "datum.[category] + ': ' + datum.pieAg",
+          "type": "formula",
+        },
+      ],
+      "values": "myData",
+    },
+  ],
+  "height": 200,
+  "marks": Array [
+    Object {
+      "encode": Object {
+        "enter": Object {
+          "cornerRadius": Object {
+            "value": 0,
+          },
+          "endAngle": Object {
+            "field": "endAngle",
+          },
+          "fill": Object {
+            "field": "[category]",
+            "scale": "color",
+          },
+          "innerRadius": Object {
+            "value": 60,
+          },
+          "outerRadius": Object {
+            "signal": "width / 2",
+          },
+          "startAngle": Object {
+            "field": "startAngle",
+          },
+          "tooltip": Object {
+            "field": "tooltip",
+          },
+          "x": Object {
+            "signal": "width / 2",
+          },
+          "y": Object {
+            "signal": "height / 2",
+          },
+        },
+      },
+      "from": Object {
+        "data": "table",
+      },
+      "type": "arc",
+    },
+    Object {
+      "encode": Object {
+        "enter": Object {
+          "align": Object {
+            "value": "center",
+          },
+          "baseline": Object {
+            "value": "middle",
+          },
+          "fill": Object {
+            "value": "#000",
+          },
+          "radius": Object {
+            "scale": "r",
+            "value": 1.3,
+          },
+          "text": Object {
+            "field": "[category]",
+          },
+          "theta": Object {
+            "signal": "(datum.startAngle + datum.endAngle)/2",
+          },
+          "x": Object {
+            "field": Object {
+              "group": "width",
+            },
+            "mult": 0.5,
+          },
+          "y": Object {
+            "field": Object {
+              "group": "height",
+            },
+            "mult": 0.5,
+          },
+        },
+      },
+      "from": Object {
+        "data": "table",
+      },
+      "type": "text",
+    },
+  ],
+  "padding": 50,
+  "scales": Array [
+    Object {
+      "domain": Object {
+        "data": "table",
+        "field": "[category]",
+      },
+      "name": "color",
+      "range": Object {
+        "scheme": "category20",
+      },
+      "type": "ordinal",
+    },
+    Object {
+      "domain": Array [
+        0,
+        1,
+      ],
+      "name": "r",
+      "range": Array [
+        90,
+        100,
+      ],
+      "type": "sqrt",
+      "zero": false,
+    },
+  ],
+  "width": 200,
+}
+`;
+
+exports[`#fillTemplateMapWithDefaults 4`] = `
+Object {
+  "DonutChart": "60",
+  "Sort": "true",
+  "aggregate": "\\"mean\\"",
+  "colorScheme": "\\"category20\\"",
+}
+`;
+
+exports[`#setTemplateValues 1`] = `
+"{
+  \\"$schema\\": \\"https://vega.github.io/schema/vega/v5.json\\",
+  \\"width\\": 200,
+  \\"height\\": 200,
+  \\"padding\\": 50,
+  \\"autosize\\": \\"fit\\",
+  \\"data\\": [
+    {
+      \\"name\\": \\"table\\",
+      \\"values\\": \\"myData\\",
+      \\"transform\\": [
+        {
+          \\"type\\": \\"aggregate\\",
+          \\"groupby\\": [
+            \\"CATEGORY_TEST\\"
+          ],
+          \\"fields\\": [
+            \\"VALUE_TEST\\"
+          ],
+          \\"ops\\": [
+            \\"[aggregate]\\"
+          ],
+          \\"as\\": [
+            \\"pieAg\\"
+          ]
+        },
+        {
+          \\"type\\": \\"pie\\",
+          \\"field\\": \\"pieAg\\",
+          \\"startAngle\\": 0,
+          \\"endAngle\\": 6.29,
+          \\"sort\\": \\"[Sort]\\"
+        },
+        {
+          \\"type\\": \\"formula\\",
+          \\"expr\\": \\"datum.CATEGORY_TEST + ': ' + datum.pieAg\\",
+          \\"as\\": \\"tooltip\\"
+        }
+      ]
+    }
+  ],
+  \\"scales\\": [
+    {
+      \\"name\\": \\"color\\",
+      \\"type\\": \\"ordinal\\",
+      \\"domain\\": {
+        \\"data\\": \\"table\\",
+        \\"field\\": \\"CATEGORY_TEST\\"
+      },
+      \\"range\\": {
+        \\"scheme\\": \\"[colorScheme]\\"
+      }
+    },
+    {
+      \\"name\\": \\"r\\",
+      \\"type\\": \\"sqrt\\",
+      \\"domain\\": [
+        0,
+        1
+      ],
+      \\"zero\\": false,
+      \\"range\\": [
+        90,
+        100
+      ]
+    }
+  ],
+  \\"marks\\": [
+    {
+      \\"type\\": \\"arc\\",
+      \\"from\\": {
+        \\"data\\": \\"table\\"
+      },
+      \\"encode\\": {
+        \\"enter\\": {
+          \\"fill\\": {
+            \\"scale\\": \\"color\\",
+            \\"field\\": \\"CATEGORY_TEST\\"
+          },
+          \\"x\\": {
+            \\"signal\\": \\"width / 2\\"
+          },
+          \\"y\\": {
+            \\"signal\\": \\"height / 2\\"
+          },
+          \\"startAngle\\": {
+            \\"field\\": \\"startAngle\\"
+          },
+          \\"endAngle\\": {
+            \\"field\\": \\"endAngle\\"
+          },
+          \\"innerRadius\\": {
+            \\"value\\": \\"[DonutChart]\\"
+          },
+          \\"outerRadius\\": {
+            \\"signal\\": \\"width / 2\\"
+          },
+          \\"cornerRadius\\": {
+            \\"value\\": 0
+          },
+          \\"tooltip\\": {
+            \\"field\\": \\"tooltip\\"
+          }
+        }
+      }
+    },
+    {
+      \\"type\\": \\"text\\",
+      \\"from\\": {
+        \\"data\\": \\"table\\"
+      },
+      \\"encode\\": {
+        \\"enter\\": {
+          \\"x\\": {
+            \\"field\\": {
+              \\"group\\": \\"width\\"
+            },
+            \\"mult\\": 0.5
+          },
+          \\"y\\": {
+            \\"field\\": {
+              \\"group\\": \\"height\\"
+            },
+            \\"mult\\": 0.5
+          },
+          \\"radius\\": {
+            \\"scale\\": \\"r\\",
+            \\"value\\": 1.3
+          },
+          \\"theta\\": {
+            \\"signal\\": \\"(datum.startAngle + datum.endAngle)/2\\"
+          },
+          \\"fill\\": {
+            \\"value\\": \\"#000\\"
+          },
+          \\"align\\": {
+            \\"value\\": \\"center\\"
+          },
+          \\"baseline\\": {
+            \\"value\\": \\"middle\\"
+          },
+          \\"text\\": {
+            \\"field\\": \\"CATEGORY_TEST\\"
+          }
+        }
+      }
+    }
+  ]
+}"
+`;
+
+exports[`#setTemplateValues 2`] = `
+"{
+  \\"mark\\": {
+    \\"type\\": \\"point\\",
+    \\"tooltip\\": true
+  },
+  \\"encoding\\": {
+    \\"x\\": {
+      \\"field\\": \\"xDim_TEST\\",
+      \\"type\\": \\"quantitative\\"
+    },
+    \\"y\\": {
+      \\"field\\": \\"yDim_TEST\\",
+      \\"type\\": \\"quantitative\\"
+    }
+  }
+}"
+`;

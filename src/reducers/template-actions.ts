@@ -1,6 +1,6 @@
 import {get, set} from 'idb-keyval';
 import Immutable, {Map} from 'immutable';
-import {ActionResponse} from './default-state';
+import {ActionResponse, AppState} from './default-state';
 import {
   Template,
   TemplateMap,
@@ -9,11 +9,19 @@ import {
   SwitchWidget,
   DataTargetWidget,
 } from '../constants/templates';
-import {getTemplate} from '../utils';
+import {getTemplate, trim} from '../utils';
 
-const setTemplateValues = (code: string, templateMap: TemplateMap) => {
+export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   return Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
     const [key, value] = keyValue;
+    if (trim(value) !== value) {
+      // this supports the weird HACK required to make the interpolateion system
+      // not make everything a string
+      return acc
+        .replace(new RegExp(`"\\[${key}\\]"`, 'g'), value || 'null')
+        .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
+    }
+    // const reg = new RegExp(`"\\[${key}\\]"`, 'g');
     const reg = new RegExp(`"\\[${key}\\]"`, 'g');
     return acc.replace(reg, value || 'null');
     // return acc.replace(reg, value || `[${key}]`);
@@ -21,7 +29,7 @@ const setTemplateValues = (code: string, templateMap: TemplateMap) => {
 };
 
 // for template map holes that are NOT dimensions, fill em as best you can
-export function fillTemplateMapWithDefaults(state: any) {
+export function fillTemplateMapWithDefaults(state: AppState) {
   const template = getTemplate(state, state.get('encodingMode'));
   // const widgets =
   const filledInTemplateMap = template.widgets
@@ -60,6 +68,7 @@ export function checkIfMapComplete(
   const filledInFields = requiredFields
     .map((fieldName: string) => templateMap[fieldName])
     .filter((d: any) => d);
+  console.log(requiredFields, filledInFields);
   return filledInFields.length === requiredFields.length;
 }
 
@@ -91,7 +100,7 @@ export const setTemplateMapValue = (
   return newMap.set(payload.field, payload.text);
 };
 
-function getAndRemoveTemplate(state: any, templateName: string) {
+function getAndRemoveTemplate(state: AppState, templateName: string) {
   return state
     .get('templates')
     .filter((template: Template) => template.templateName !== templateName);

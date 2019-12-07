@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import Immutable, {Map} from 'immutable';
 import {OLD_EXAMPLE} from '../constants/vega-examples';
 // import {ColumnHeader} from '../types';
 // import {Spec, Data} from 'vega-typings/types';

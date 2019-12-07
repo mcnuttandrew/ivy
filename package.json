@@ -9,8 +9,11 @@
     "node": ">=9.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.5",
     "@types/d3-dsv": "^1.0.36",
-    "@types/enzyme": "^3.10.3",
+    "@types/enzyme": "^3.10.4",
+    "@types/jest": "^24.0.23",
     "@types/lodash.debounce": "^4.0.6",
     "@types/react": "^16.9.9",
     "@types/react-dom": "^16.9.2",
@@ -21,6 +24,7 @@
     "@typescript-eslint/parser": "^2.4.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^7.1.4",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.22.0",
@@ -36,11 +40,14 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.16.0",
     "hoopoe": "^1.0.1",
+    "jest": "^24.9.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "prettier": "^1.18.2",
+    "react-test-renderer": "^16.12.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "0.13.1",
     "tape": "^4.11.0",
+    "ts-jest": "^24.2.0",
     "ts-loader": "^6.2.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4",
@@ -81,13 +88,18 @@
     "build": "NODE_ENV=production webpack",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:fix": "eslint './src/**/*.{ts,tsx}'",
-    "test": "ts-node test/test-index.tsx"
+    "test": "jest"
   },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-2",
-      "react"
+
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testRegex": "(/__test__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
     ]
   }
 }

@@ -15,6 +15,7 @@ interface ChartAreaProps {
   iMspec: any;
   views: List<string>;
   template?: Template;
+  templateComplete: boolean;
 
   createNewView: GenericAction;
   deleteView: GenericAction;
@@ -35,6 +36,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       switchView,
       cloneView,
       template,
+      templateComplete,
     } = this.props;
 
     return (
@@ -66,13 +68,15 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           </div>
         </div>
         <div className="chart-container center full-width full-height">
-          <VegaWrapper
-            iMspec={iMspec}
-            spec={spec}
-            data={data}
-            theme={currentTheme}
-            language={template && template.templateLanguage}
-          />
+          {(!template || templateComplete) && (
+            <VegaWrapper
+              iMspec={iMspec}
+              spec={spec}
+              data={data}
+              theme={currentTheme}
+              language={template && template.templateLanguage}
+            />
+          )}
         </div>
       </div>
     );
