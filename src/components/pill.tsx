@@ -6,7 +6,8 @@ import {TiFilter, TiDeleteOutline} from 'react-icons/ti';
 import {GenericAction} from '../actions/index';
 import {useDrag} from 'react-dnd';
 import {ColumnHeader} from '../types';
-import {getTypeSymbol, classnames} from '../utils';
+import DataSymbol from './data-symbol';
+import {classnames} from '../utils';
 
 export interface PillProps {
   column: ColumnHeader;
@@ -88,7 +89,7 @@ export default function Pill(props: PillProps) {
         </div>
       )}
       <div className="fixed-symbol-width pill-symbol">
-        {getTypeSymbol(isMeta ? 'METACOLUMN' : column.type)}
+        {DataSymbol(isMeta ? 'METACOLUMN' : column.type)}
       </div>
       <div className="pill-label">{column.field}</div>
       {!isMeta && !inEncoding && createFilter && (

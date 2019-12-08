@@ -2,9 +2,9 @@ import {List} from 'immutable';
 import React from 'react';
 import VegaWrapper from './vega-wrap';
 import {VegaTheme} from '../types';
-import {cleanSpec} from '../utils';
+import {Template} from '../constants/templates';
+import {cleanSpec, classnames} from '../utils';
 import {MdContentCopy, MdNoteAdd} from 'react-icons/md';
-import {classnames} from '../utils';
 import {GenericAction} from '../actions';
 
 interface ChartAreaProps {
@@ -14,6 +14,8 @@ interface ChartAreaProps {
   currentTheme: VegaTheme;
   iMspec: any;
   views: List<string>;
+  template?: Template;
+  templateComplete: boolean;
 
   createNewView: GenericAction;
   deleteView: GenericAction;
@@ -33,6 +35,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       createNewView,
       switchView,
       cloneView,
+      template,
+      templateComplete,
     } = this.props;
 
     return (
@@ -64,12 +68,15 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           </div>
         </div>
         <div className="chart-container center full-width full-height">
-          <VegaWrapper
-            iMspec={iMspec}
-            spec={cleanSpec(spec)}
-            data={data}
-            theme={currentTheme}
-          />
+          {(!template || templateComplete) && (
+            <VegaWrapper
+              iMspec={iMspec}
+              spec={spec}
+              data={data}
+              theme={currentTheme}
+              language={template && template.templateLanguage}
+            />
+          )}
         </div>
       </div>
     );

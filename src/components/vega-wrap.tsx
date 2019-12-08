@@ -8,6 +8,7 @@ interface VegaWrapperProps {
   data: any;
   theme: VegaTheme;
   iMspec: any;
+  language?: any;
 }
 
 // This componenent has the simple task of disallowing renders other than when the spec has changed
@@ -20,14 +21,26 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
   }
 
   render() {
-    const {spec, data, theme} = this.props;
+    const {spec, data, theme, language = 'vega-lite'} = this.props;
+
+    // this stratagey only supports one data set
+    (spec.data || []).forEach((row: any, idx: number) => {
+      if (row.values === 'myData') {
+        spec.data[idx].values = data;
+      }
+    });
+    if (language === 'vega-lite') {
+      spec.data = {
+        values: data,
+      };
+    }
+
     return (
       <Vega
-        mode="vega-lite"
-        spec={spec}
-        data={{myData: data}}
-        theme={theme}
         actions={false}
+        spec={spec}
+        mode={language}
+        theme={theme}
         tooltip={new Handler({}).call}
       />
     );

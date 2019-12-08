@@ -24,3 +24,4 @@ dist/background-bundle.js
 *.lbl
 *.brf
 secrets.md
+coverage/*

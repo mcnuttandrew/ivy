@@ -1,12 +1,12 @@
 import Immutable from 'immutable';
-import {ActionResponse, EMPTY_SPEC} from './default-state';
+import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 
 const BLANK_CATALOG_ENTRY = Immutable.fromJS({
   spec: Immutable.fromJS(EMPTY_SPEC),
   encodingMode: 'grammer',
   templateMap: {},
 });
-function updateCatalogView(state: any, view: string) {
+function updateCatalogView(state: AppState, view: string) {
   const catalogEntry = Immutable.fromJS({
     spec: state.get('spec').toJS(),
     encodingMode: state.get('encodingMode'),

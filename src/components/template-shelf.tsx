@@ -1,5 +1,4 @@
 import React from 'react';
-import {GenericAction} from '../actions/index';
 import {useDrop} from 'react-dnd';
 
 import Pill from './pill';

@@ -6,8 +6,9 @@ import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {TemplateWidget, Template, widgetFactory} from '../constants/templates';
 import BuilderWidget from './widgets/builder-widget';
-import {classnames, allWidgetsInUse} from '../utils';
+import {classnames, allWidgetsInUse, toSelectFormat} from '../utils';
 import TemplateColumnPreview from './widget-builder/template-column-preview';
+import Selector from './selector';
 import {EMPTY_SPEC} from '../reducers/default-state';
 
 import Modal from './modal';
@@ -23,6 +24,7 @@ interface State {
   code: string;
   widgets: List<TemplateWidget>;
   templateName?: string;
+  templateLanguage: string;
   templateDescription?: string;
   error: boolean;
   // TODO probably remake these into some GUI variables
@@ -47,6 +49,7 @@ export default class TemplateBuilderModal extends React.Component<
       widgets: List(),
       error: false,
       templateDescription: null,
+      templateLanguage: 'vega-lite',
       ...common,
     };
     // use an old template
@@ -60,6 +63,7 @@ export default class TemplateBuilderModal extends React.Component<
           List(),
         ),
         templateDescription,
+        templateLanguage: 'vega-lite',
         ...common,
       };
     }
@@ -162,9 +166,11 @@ export default class TemplateBuilderModal extends React.Component<
       widgets,
       templateName,
       templateDescription,
+      templateLanguage,
       showPreview,
     } = this.state;
     const newTemplate: Template = {
+      templateLanguage,
       templateDescription,
       templateName,
       code,
@@ -191,14 +197,16 @@ export default class TemplateBuilderModal extends React.Component<
       widgets,
       showTextualTemplate,
       templateDescription,
+      templateLanguage,
       templateName,
+
       code,
     } = this.state;
     const {createTemplate, toggleTemplateBuilder, editFrom} = this.props;
     const componentCanBeCreated = this.validatePotentialTemplate();
     return (
       <div className="widget-configuration-panel">
-        <div className="flex">
+        <div className="flex flex-wrap">
           {Object.entries(widgetFactory).map((row: any) => {
             const [key, widgetFactor] = row;
             return (
@@ -221,6 +229,16 @@ export default class TemplateBuilderModal extends React.Component<
           >
             toggle textual template
           </button>
+          <div>
+            <Selector
+              options={['vega', 'vega-lite'].map((key: string) => ({
+                display: key,
+                value: key,
+              }))}
+              selectedValue={templateLanguage}
+              onChange={value => this.setState({templateLanguage: value})}
+            />
+          </div>
           <button
             disabled={!componentCanBeCreated}
             onClick={() => {
@@ -228,6 +246,7 @@ export default class TemplateBuilderModal extends React.Component<
                 return;
               }
               const newTemplate: Template = {
+                templateLanguage,
                 templateDescription,
                 templateName,
                 code,
