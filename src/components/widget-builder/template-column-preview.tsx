@@ -61,7 +61,6 @@ export default class TemplateColumnPreview extends React.Component<
           templateMap={templateMap}
           columns={fakeColumns}
           setTemplateValue={(value: any) => {
-            console.log(value);
             this.setState({
               templateMap: setTemplateMapValue(
                 Immutable.fromJS(templateMap),

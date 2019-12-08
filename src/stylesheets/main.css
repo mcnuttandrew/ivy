@@ -862,3 +862,14 @@ button:disabled {
   margin: 0;
   padding: 0;
 }
+
+.slide-widget {
+  font-size: 10px;
+}
+.slide-widget input{
+  height: 17px;
+  width: 100%;
+}
+.slide-widget input[type=number] {
+  max-width: 50px;
+}

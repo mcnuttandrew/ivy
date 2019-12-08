@@ -6,6 +6,7 @@ import {
   ListWidget,
   SwitchWidget,
   DataTargetWidget,
+  SliderWidget,
 } from '../constants/templates';
 import TemplateShelf from './template-shelf';
 import Selector from './selector';
@@ -78,6 +79,41 @@ export default class TemplateColumn extends React.Component<
       </div>
     );
   }
+
+  renderSliderWidget(widget: SliderWidget) {
+    const {templateMap, setTemplateValue} = this.props;
+    const clamp = (v: any) =>
+      Math.max(widget.minVal, Math.min(widget.maxVal, Number(v)));
+    const setVal = (text: any) =>
+      setTemplateValue({field: widget.widgetName, text: clamp(text)});
+    return (
+      <div className="slide-widget" key={widget.widgetName}>
+        <div>{widget.widgetName}</div>
+        <div className="flex">
+          <input
+            type="number"
+            value={templateMap[widget.widgetName]}
+            onChange={({target: {value}}) => setVal(value)}
+          />
+          <div className="flex-down">
+            <input
+              type="range"
+              min={widget.minVal}
+              max={widget.maxVal}
+              value={templateMap[widget.widgetName]}
+              onChange={event => setVal(event.target.value)}
+              step={widget.step}
+              className="slider"
+            />
+            <div className="flex space-between">
+              <span>{widget.minVal}</span>
+              <span>{widget.maxVal}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   render() {
     const {template} = this.props;
 
@@ -97,6 +133,9 @@ export default class TemplateColumn extends React.Component<
             }
             if (widget.widgetType === 'Switch') {
               return this.renderSwitchWidget(widget as SwitchWidget);
+            }
+            if (widget.widgetType === 'Slider') {
+              return this.renderSliderWidget(widget as SliderWidget);
             }
             return <div key={widget.widgetName}>{widget.widgetName}</div>;
           })}

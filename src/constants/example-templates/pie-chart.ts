@@ -1,42 +1,6 @@
-import {Template} from './templates';
-const SCATTERPLOT_EXAMPLE: any = {
-  mark: {
-    type: 'point',
-    tooltip: true,
-  },
-  encoding: {
-    x: {
-      field: '[xDim]',
-      type: 'quantitative',
-    },
-    y: {
-      field: '[yDim]',
-      type: 'quantitative',
-    },
-  },
-};
-
-export const SCATTERPLOT_TEMPLATE: Template = {
-  templateName: 'scatterplot',
-  templateLanguage: 'vega-lite',
-  code: JSON.stringify(SCATTERPLOT_EXAMPLE, null, 2),
-  widgets: [
-    {
-      widgetName: 'xDim',
-      widgetType: 'DataTarget',
-      allowedTypes: ['MEASURE'],
-      required: true,
-    },
-    {
-      widgetName: 'yDim',
-      widgetType: 'DataTarget',
-      allowedTypes: ['MEASURE'],
-      required: true,
-    },
-  ],
-  widgetValidations: [],
-};
-
+import {Template} from '../templates';
+import {VEGA_CATEGORICAL_COLOR_SCHEMES, AGGREGATES} from './vega-common';
+import {toList} from '../../utils';
 // https://observablehq.com/@simon-lang/simple-vega-pie-chart
 const PIECHART_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
@@ -127,39 +91,7 @@ const PIECHART_EXAMPLE: any = {
   ],
 };
 
-const VEGA_CATEGORICAL_COLOR_SCHEMES = [
-  'accent',
-  'category10',
-  'category20',
-  'category20b',
-  'category20c',
-  'dark2',
-  'paired',
-  'pastel1',
-  'pastel2',
-  'set1',
-  'set2',
-  'set3',
-  'tableau10',
-  'tableau20',
-];
-const AGGREGATES = [
-  'count',
-  'missing',
-  'distinct',
-  'sum',
-  'mean',
-  'median',
-  'min',
-  'max',
-];
-const toList = (list: string[]) =>
-  list.map(display => ({
-    display,
-    value: `"${display}"`,
-  }));
-
-export const PIECHART_TEMPLATE: Template = {
+const PieChart: Template = {
   templateName: 'pie chart',
   templateLanguage: 'vega',
   widgets: [
@@ -205,20 +137,4 @@ export const PIECHART_TEMPLATE: Template = {
   widgetValidations: [],
   code: JSON.stringify(PIECHART_EXAMPLE, null, 2),
 };
-
-// TODO I'm not very happy with this special view stratagey?
-// const OVERVIEW_TEMPLATE: Template = {
-//   templateName: 'overview',
-//   templateLanguage: 'vega-lite',
-//   templateDescription:
-//     'see an automatically generated overview of your template collection',
-//   code: JSON.stringify({}),
-//   widgets: [
-//     {
-//       widgetName: 'Explanation',
-//       widgetType: 'Text',
-//       text: 'using this view you will blah blah blah',
-//     },
-//   ],
-//   widgetValidations: [],
-// };
+export default PieChart;

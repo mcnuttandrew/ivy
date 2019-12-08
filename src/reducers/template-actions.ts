@@ -7,6 +7,7 @@ import {
   TemplateWidget,
   ListWidget,
   SwitchWidget,
+  SliderWidget,
   DataTargetWidget,
 } from '../constants/templates';
 import {getTemplate, trim} from '../utils';
@@ -47,6 +48,9 @@ export function fillTemplateMapWithDefaults(state: AppState) {
           ? (w as SwitchWidget).activeValue
           : (w as SwitchWidget).inactiveValue;
       }
+      if (w.widgetType === 'Slider') {
+        value = (w as SliderWidget).defaultValue;
+      }
       return acc.set(w.widgetName, value);
     }, Immutable.fromJS({}));
   const newState = state.set('templateMap', filledInTemplateMap);
@@ -68,7 +72,6 @@ export function checkIfMapComplete(
   const filledInFields = requiredFields
     .map((fieldName: string) => templateMap[fieldName])
     .filter((d: any) => d);
-  console.log(requiredFields, filledInFields);
   return filledInFields.length === requiredFields.length;
 }
 

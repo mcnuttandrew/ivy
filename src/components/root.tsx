@@ -280,7 +280,6 @@ class RootComponent extends React.Component<RootProps> {
       templateComplete,
       views,
     } = this.props;
-    console.log('comlpete??', templateComplete);
     return (
       <ChartArea
         cloneView={cloneView}

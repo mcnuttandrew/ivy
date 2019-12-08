@@ -191,3 +191,9 @@ export function trim(dimName: string) {
   }
   return dimName;
 }
+
+export const toList = (list: string[]) =>
+  list.map(display => ({
+    display,
+    value: `"${display}"`,
+  }));

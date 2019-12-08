@@ -6,6 +6,7 @@ import DataTargetBuilderWidget from './builder-data-target-widget';
 import ListBuilderWidget from './builder-list-widget';
 import SwitchBuilderWidget from './builder-switch-widget';
 import TextBuilderWidget from './builder-text-widget';
+import SliderBuilderWidget from './builder-slider-widget';
 
 import {
   TemplateWidget,
@@ -13,6 +14,7 @@ import {
   ListWidget,
   DataTargetWidget,
   TextWidget,
+  SliderWidget,
 } from '../../constants/templates';
 import {widgetInUse} from '../../utils';
 
@@ -100,6 +102,13 @@ export default function BuilderWidget(props: BuilderWidgetProps) {
         {widget.widgetType === 'DataTarget' && (
           <DataTargetBuilderWidget
             widget={widget as DataTargetWidget}
+            idx={idx}
+            setWidgetValue={setWidgetValue}
+          />
+        )}
+        {widget.widgetType === 'Slider' && (
+          <SliderBuilderWidget
+            widget={widget as SliderWidget}
             idx={idx}
             setWidgetValue={setWidgetValue}
           />

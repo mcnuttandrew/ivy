@@ -4,10 +4,8 @@ import {
   recieveTemplates,
 } from '../src/reducers/template-actions';
 import {DEFAULT_TEMPLATES} from '../src/constants/templates';
-import {
-  PIECHART_TEMPLATE,
-  SCATTERPLOT_TEMPLATE,
-} from '../src/constants/example-templates';
+import SCATTERPLOT_TEMPLATE from '../src/constants/example-templates/scatterplot';
+import PIECHART_TEMPLATE from '../src/constants/example-templates/pie-chart';
 
 import {DEFAULT_STATE} from '../src/reducers/default-state';
 

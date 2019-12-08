@@ -1,5 +1,8 @@
 import {DataType} from '../types';
-import {SCATTERPLOT_TEMPLATE, PIECHART_TEMPLATE} from './example-templates';
+import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
+import PIECHART_TEMPLATE from './example-templates/pie-chart';
+import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
+
 export type WidgetType = 'DataTarget' | 'List' | 'Switch' | 'Text' | 'Slider';
 export interface TemplateWidget {
   widgetName: string;
@@ -32,7 +35,6 @@ export interface SliderWidget extends TemplateWidget {
   step?: number;
   defaultValue: number;
 }
-// TODO slider widget
 
 export interface Template {
   templateLanguage: string;
@@ -44,7 +46,8 @@ export interface Template {
     | DataTargetWidget
     | ListWidget
     | SwitchWidget
-    | TextWidget)[];
+    | TextWidget
+    | SliderWidget)[];
   widgetValidations: widgetValidation[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
@@ -103,10 +106,39 @@ export const widgetFactory = {
     };
     return newWidget;
   },
+  Slider: (idx: number) => {
+    const newWidget: SliderWidget = {
+      widgetName: `Slider${idx}`,
+      widgetType: 'Slider',
+      minVal: 0,
+      maxVal: 10,
+      step: 1,
+      defaultValue: 5,
+    };
+    return newWidget;
+  },
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [
   // OVERVIEW_TEMPLATE,
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,
+  BEESWARM_TEMPLATE,
 ];
+
+// TODO I'm not very happy with this special view stratagey?
+// const OVERVIEW_TEMPLATE: Template = {
+//   templateName: 'overview',
+//   templateLanguage: 'vega-lite',
+//   templateDescription:
+//     'see an automatically generated overview of your template collection',
+//   code: JSON.stringify({}),
+//   widgets: [
+//     {
+//       widgetName: 'Explanation',
+//       widgetType: 'Text',
+//       text: 'using this view you will blah blah blah',
+//     },
+//   ],
+//   widgetValidations: [],
+// };
