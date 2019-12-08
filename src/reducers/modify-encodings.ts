@@ -40,11 +40,18 @@ export const setNewSpec: ActionResponse = (state, payload) =>
 // set the spec code
 export const setNewSpecCode: ActionResponse = (state, payload) => {
   const {code, inError} = payload;
+  if (state.get('currentTemplateInstance')) {
+    return state
+      .setIn(['currentTemplateInstance', 'code'], code)
+      .set('editorError', inError);
+  }
   if (inError) {
     return state.set('specCode', code).set('editorError', inError);
   }
   const parsedCode = JSON.parse(code);
+  // TODO this isValid stuff is wrong, remove it
   const isValid = checkEncodingForValidity(parsedCode);
+  // using shelf mode
   return state
     .set('specCode', code)
     .set('unprouncableInGrammer', !isValid)

@@ -13,7 +13,6 @@ import {
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
-import {currentTemplate} from '../utils';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
@@ -116,6 +115,7 @@ class RootComponent extends React.Component<RootProps> {
       spec,
       setNewSpecCode,
       changeGUIMode,
+      template,
     } = this.props;
     return (
       <SecondaryControls
@@ -125,6 +125,7 @@ class RootComponent extends React.Component<RootProps> {
         spec={spec}
         setNewSpecCode={setNewSpecCode}
         changeGUIMode={changeGUIMode}
+        template={template}
       />
     );
   }
@@ -227,12 +228,12 @@ class RootComponent extends React.Component<RootProps> {
   }
 
   programmaticMenu() {
-    const {setNewSpecCode, specCode, editorError} = this.props;
+    const {setNewSpecCode, specCode, editorError, template} = this.props;
     return (
       <div className="flex full-height two-column">
         <CodeEditor
           setNewSpecCode={setNewSpecCode}
-          currentCode={specCode}
+          currentCode={template ? template.code : specCode}
           editorError={editorError}
         />
       </div>
@@ -362,13 +363,13 @@ class RootComponent extends React.Component<RootProps> {
 
 // TODO alphabetize
 function mapStateToProps({base}: {base: AppState}): any {
-  const template = currentTemplate(base);
+  const template = base.get('currentTemplateInstance');
   const templateMap = base.get('templateMap').toJS();
   return {
     canUndo: base.get('undoStack').size >= 1,
     canRedo: base.get('redoStack').size >= 1,
     columns: base.get('columns'),
-    templateComplete: template && checkIfMapComplete(template, templateMap),
+
     currentView: base.get('currentView'),
     data: base.get('data'),
     editorError: base.get('editorError'),
@@ -377,11 +378,14 @@ function mapStateToProps({base}: {base: AppState}): any {
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
     specCode: base.get('specCode'),
+
     currentlySelectedFile: base.get('currentlySelectedFile'),
     selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
+    template: template && template.toJS(),
     templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
-    template,
+    templateComplete:
+      template && checkIfMapComplete(template.toJS(), templateMap),
     currentTheme: base.get('currentTheme'),
     unprouncableInGrammer: base.get('unprouncableInGrammer'),
     GOOSE_MODE: base.get('GOOSE_MODE'),

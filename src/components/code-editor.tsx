@@ -33,13 +33,17 @@ const SHORTCUTS = [
       return code;
     },
   },
+  {
+    name: 'Clean Up',
+    action: (code: any) => code,
+  },
 ];
 
 export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.editorDidMount = this.editorDidMount.bind(this);
-    this.executeCode = this.executeCode.bind(this);
+    this.handleCodeUpdate = this.handleCodeUpdate.bind(this);
     this.state = {
       error: null,
       updateMode: 'automatic',
@@ -61,7 +65,7 @@ export default class CodeEditor extends React.Component<Props, State> {
               // @ts-ignore
               const model = this.refs.monaco.editor.getModel();
               const value = model.getValue();
-              this.executeCode(value);
+              this.handleCodeUpdate(value);
             }}
           >
             <MdPlayCircleOutline />
@@ -104,7 +108,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     );
   }
 
-  executeCode(code: string) {
+  handleCodeUpdate(code: string) {
     const {setNewSpecCode} = this.props;
     Promise.resolve()
       .then(() => JSON.parse(code))
@@ -136,7 +140,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {
               if (updateMode === 'automatic') {
-                this.executeCode(code);
+                this.handleCodeUpdate(code);
               }
             }}
             editorDidMount={this.editorDidMount}

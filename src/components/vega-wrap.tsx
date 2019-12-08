@@ -22,7 +22,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
 
   render() {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
-    console.log(JSON.stringify(spec, null, 2));
+    // HACK to prevent changes to the data
     const finalSpec = JSON.parse(JSON.stringify(spec));
     // this stratagey only supports one data set
     (finalSpec.data || []).forEach((row: any, idx: number) => {
@@ -30,7 +30,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
         finalSpec.data[idx].values = data;
       }
     });
-    if (language === 'vega-lite') {
+    if (language === 'vega-lite' || !language) {
       finalSpec.data = {
         values: data,
       };

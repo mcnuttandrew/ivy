@@ -59,11 +59,18 @@ const toggleTemplateBuilder: ActionResponse = state =>
 export const setEncodingMode: ActionResponse = (state, payload) => {
   const newState = state.set('encodingMode', payload);
   if (payload !== 'grammer') {
+    // this will become the local copy of the template
     const template = getTemplate(state, payload);
     const updatedSpec = Immutable.fromJS(JSON.parse(template.code));
-    return fillTemplateMapWithDefaults(newState.set('spec', updatedSpec));
+    return fillTemplateMapWithDefaults(
+      newState
+        .set('currentTemplateInstance', Immutable.fromJS(template))
+        .set('spec', updatedSpec),
+    );
   } else {
-    return newState.set('spec', EMPTY_SPEC);
+    return newState
+      .set('spec', EMPTY_SPEC)
+      .set('currentTemplateInstance', null);
   }
 };
 

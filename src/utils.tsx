@@ -163,9 +163,6 @@ export const getTemplate = (state: AppState, template: string) => {
   return state.get('templates').find((d: any) => d.templateName === template);
 };
 
-export const currentTemplate = (state: AppState) =>
-  getTemplate(state, state.get('encodingMode'));
-
 export function widgetInUse(code: string, widgetName: string) {
   return code.match(new RegExp(`\\[${widgetName}\\]`, 'g'));
 }

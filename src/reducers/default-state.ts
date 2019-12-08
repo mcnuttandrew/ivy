@@ -58,7 +58,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
-
+  currentTemplateInstance: null,
   views: ['view1'],
   viewCatalog: {},
   currentView: 'view1',

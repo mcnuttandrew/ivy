@@ -10,7 +10,7 @@ import {
   SliderWidget,
   DataTargetWidget,
 } from '../constants/templates';
-import {getTemplate, trim} from '../utils';
+import {trim} from '../utils';
 import {setEncodingMode} from './index';
 
 export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
@@ -23,16 +23,14 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
         .replace(new RegExp(`"\\[${key}\\]"`, 'g'), value || 'null')
         .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
     }
-    // const reg = new RegExp(`"\\[${key}\\]"`, 'g');
     const reg = new RegExp(`"\\[${key}\\]"`, 'g');
     return acc.replace(reg, value || 'null');
-    // return acc.replace(reg, value || `[${key}]`);
   }, code);
 };
 
 // for template map holes that are NOT dimensions, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState) {
-  const template = getTemplate(state, state.get('encodingMode'));
+  const template = state.get('currentTemplateInstance').toJS();
   // const widgets =
   const filledInTemplateMap = template.widgets
     .filter((widget: TemplateWidget) => widget.widgetType !== 'DataTarget')
@@ -55,10 +53,11 @@ export function fillTemplateMapWithDefaults(state: AppState) {
       return acc.set(w.widgetName, value);
     }, Immutable.fromJS({}));
   const newState = state.set('templateMap', filledInTemplateMap);
-  const updatedTemplate = JSON.parse(
-    setTemplateValues(template.code, newState.get('templateMap').toJS()),
+  const filledInSpec = setTemplateValues(
+    template.code,
+    newState.get('templateMap').toJS(),
   );
-  return newState.set('spec', Immutable.fromJS(updatedTemplate));
+  return newState.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
 }
 
 export function checkIfMapComplete(
@@ -85,7 +84,7 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   if (payload.containingShelf) {
     newState = newState.deleteIn(['templateMap', payload.containingShelf]);
   }
-  const template = getTemplate(newState, newState.get('encodingMode'));
+  const template = state.get('currentTemplateInstance').toJS();
   newState = newState.setIn(['templateMap', payload.field], payload.text);
   const updatedTemplate = JSON.parse(
     setTemplateValues(template.code, newState.get('templateMap').toJS()),
@@ -138,6 +137,7 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
     set('templates', updatedTemplates);
   });
   set(payload, null);
+  // TODO check if current template is the one deleted?
   return state.set('templates', getAndRemoveTemplate(state, payload));
 };
 

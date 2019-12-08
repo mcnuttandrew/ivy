@@ -72,12 +72,7 @@ const grammarBasedGuess: ActionResponse = (state, payload) => {
 };
 
 const templateBasedGuess: ActionResponse = (state, payload) => {
-  const template = state
-    .get('templates')
-    .find(
-      (template: Template) =>
-        template.templateName === state.get('encodingMode'),
-    );
+  const template = state.get('currentTemplateInstance').toJS();
   const templateMap: TemplateMap = state.get('templateMap').toJS();
   const column = findField(state, payload.field);
   const openDropTargets = template.widgets

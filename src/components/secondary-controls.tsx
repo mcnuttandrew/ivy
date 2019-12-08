@@ -3,6 +3,7 @@ import {GenericAction} from '../actions/index';
 import {classnames} from '../utils';
 import {Spec} from 'vega-typings';
 import {VegaTheme} from '../types';
+import {Template} from '../constants/templates';
 
 import Selector from './selector';
 
@@ -21,6 +22,7 @@ export interface SecondaryHeaderProps {
   currentTheme: VegaTheme;
   selectedGUIMode: string;
   spec?: Spec;
+  template?: Template;
 
   changeGUIMode: GenericAction;
   changeTheme: GenericAction;
@@ -35,6 +37,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
     setNewSpecCode,
     spec,
     selectedGUIMode,
+    template,
   } = props;
   return (
     <div className="secondary-controls flex-down">
@@ -48,7 +51,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
                 key={mode}
                 onClick={() => {
                   changeGUIMode(mode);
-                  if (mode === 'PROGRAMMATIC') {
+                  if (mode === 'PROGRAMMATIC' && !template) {
                     setNewSpecCode({
                       code: JSON.stringify(spec, null, 2),
                       inError: false,

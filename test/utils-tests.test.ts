@@ -8,6 +8,7 @@ import SCATTERPLOT_TEMPLATE from '../src/constants/example-templates/scatterplot
 import PIECHART_TEMPLATE from '../src/constants/example-templates/pie-chart';
 
 import {DEFAULT_STATE} from '../src/reducers/default-state';
+import {setEncodingMode} from '../src/reducers/index';
 
 test('#setTemplateValues', () => {
   const filledOutPieTemplate = setTemplateValues(PIECHART_TEMPLATE.code, {
@@ -28,8 +29,8 @@ test('#setTemplateValues', () => {
 });
 
 test('#fillTemplateMapWithDefaults', () => {
-  const preparedState = recieveTemplates(DEFAULT_STATE, DEFAULT_TEMPLATES).set(
-    'encodingMode',
+  const preparedState = setEncodingMode(
+    recieveTemplates(DEFAULT_STATE, DEFAULT_TEMPLATES),
     'scatterplot',
   );
   const newState = fillTemplateMapWithDefaults(preparedState);
@@ -37,7 +38,7 @@ test('#fillTemplateMapWithDefaults', () => {
   expect(newState.get('templateMap').toJS()).toMatchSnapshot();
 
   const nextState = fillTemplateMapWithDefaults(
-    newState.set('encodingMode', 'pie chart'),
+    setEncodingMode(newState, 'pie chart'),
   );
   expect(nextState.get('spec').toJS()).toMatchSnapshot();
   expect(nextState.get('templateMap').toJS()).toMatchSnapshot();
