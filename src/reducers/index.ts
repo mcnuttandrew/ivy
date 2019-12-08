@@ -56,7 +56,7 @@ const clearUnprounceWarning: ActionResponse = state =>
 const toggleTemplateBuilder: ActionResponse = state =>
   state.set('templateBuilderModalOpen', !state.get('templateBuilderModalOpen'));
 
-const setEncodingMode: ActionResponse = (state, payload) => {
+export const setEncodingMode: ActionResponse = (state, payload) => {
   const newState = state.set('encodingMode', payload);
   if (payload !== 'grammer') {
     const template = getTemplate(state, payload);
@@ -125,7 +125,7 @@ const NULL_ACTION: ActionResponse = state => state;
 const reducers = {
   base: (
     state: AppState = DEFAULT_STATE,
-    {type, payload}: {type: string, payload: any},
+    {type, payload}: {type: string; payload: any},
   ) => {
     console.log(type);
     return (actionFuncMap[type] || NULL_ACTION)(state, payload);

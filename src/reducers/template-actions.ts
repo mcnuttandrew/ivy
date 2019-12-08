@@ -11,6 +11,7 @@ import {
   DataTargetWidget,
 } from '../constants/templates';
 import {getTemplate, trim} from '../utils';
+import {setEncodingMode} from './index';
 
 export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   return Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
@@ -121,10 +122,11 @@ export const createTemplate: ActionResponse = (state, payload) => {
   });
   // blindly insert this template, allows for over-ride
   set(payload.templateName, payload);
-  return state.set(
+  const updatedState = state.set(
     'templates',
     getAndRemoveTemplate(state, payload.templateName).concat(payload),
   );
+  return setEncodingMode(updatedState, payload.templateName);
 };
 
 export const deleteTemplate: ActionResponse = (state, payload) => {
