@@ -2,6 +2,7 @@ import React from 'react';
 import {Vega} from 'react-vega';
 import {VegaTheme} from '../types';
 import {Handler} from 'vega-tooltip';
+import {get} from '../utils';
 
 interface VegaWrapperProps {
   spec: any;
@@ -25,15 +26,19 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     // HACK to prevent changes to the data
     const finalSpec = JSON.parse(JSON.stringify(spec));
     // this stratagey only supports one data set
-    (finalSpec.data || []).forEach((row: any, idx: number) => {
-      if (row.values === 'myData') {
-        finalSpec.data[idx].values = data;
-      }
-    });
+    if (language === 'vega') {
+      (finalSpec.data || []).forEach((row: any, idx: number) => {
+        if (row.values === 'myData') {
+          finalSpec.data[idx].values = data;
+        }
+      });
+    }
     if (language === 'vega-lite' || !language) {
-      finalSpec.data = {
-        values: data,
-      };
+      if (!get(finalSpec, ['data', 'values'])) {
+        finalSpec.data = {
+          values: data,
+        };
+      }
     }
 
     return (

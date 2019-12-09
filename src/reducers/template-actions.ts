@@ -125,6 +125,7 @@ export const createTemplate: ActionResponse = (state, payload) => {
     'templates',
     getAndRemoveTemplate(state, payload.templateName).concat(payload),
   );
+  // set current template to the newly created one
   return setEncodingMode(updatedState, payload.templateName);
 };
 
