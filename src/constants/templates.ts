@@ -54,6 +54,7 @@ export interface Template {
 
 export interface widgetValidation {
   queryResult: 'show' | 'hide';
+  queryTarget: string;
   // * -> any val, used for setting things
   // null -> no val, used for checking empty
   // string -> equal to specific value, if this then that

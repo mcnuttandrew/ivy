@@ -39,13 +39,14 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: APP_DIR,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.css$/,
-        include: MONACO_DIR,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {plugins: [require('autoprefixer')]},
+          },
+        ],
       },
       {
         test: /\.js$/,

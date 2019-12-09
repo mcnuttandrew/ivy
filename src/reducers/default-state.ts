@@ -23,6 +23,7 @@ export interface ActionResponse {
 // export type AppState = any;
 // TODO undo this embarrasment
 const defaultEmpty = Immutable.fromJS({
+  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   transform: [],
   mark: {type: 'point', tooltip: true},
   encoding: {},
