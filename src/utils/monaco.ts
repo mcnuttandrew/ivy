@@ -62,7 +62,6 @@ const schemas = [
 ];
 
 export default function setupMonaco() {
-  console.log(Monaco.languages.json.jsonDefaults);
   Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
     allowComments: false,
     enableSchemaRequest: true,
