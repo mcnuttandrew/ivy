@@ -801,13 +801,24 @@ button:disabled {
   overflow-y: auto;
 }
 
+.flex-and-wrap{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
 .modal-tooltip .encoding-selection-option {
   margin-bottom: 15px;
+  width: 230px;
 }
 
 .modal-tooltip .encoding-selection-option img {
   height: 50px;
 }
+.modal-tooltip .encoding-selection-option h5 {
+  font-size: 10px;
+}
+
 
 .tooltip-container .modal-background {
   background: rgba(255, 255, 255, 0);
