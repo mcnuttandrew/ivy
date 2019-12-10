@@ -6,6 +6,7 @@ import {
 import {DEFAULT_TEMPLATES} from '../src/templates/types';
 import SCATTERPLOT_TEMPLATE from '../src/templates/example-templates/scatterplot';
 import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
+import TABLE from '../src/templates/example-templates/table';
 
 import {DEFAULT_STATE} from '../src/reducers/default-state';
 import {setEncodingMode} from '../src/reducers/index';
@@ -26,6 +27,11 @@ test('#setTemplateValues', () => {
     },
   );
   expect(filledOutScatterTemplate).toMatchSnapshot();
+
+  const filledOutTableTemplate = setTemplateValues(TABLE.code, {
+    columns: ['"xDim_TEST"', '"yDim_TEST"'],
+  });
+  expect(filledOutTableTemplate).toMatchSnapshot();
 });
 
 test('#fillTemplateMapWithDefaults', () => {
@@ -42,6 +48,12 @@ test('#fillTemplateMapWithDefaults', () => {
   );
   expect(nextState.get('spec').toJS()).toMatchSnapshot();
   expect(nextState.get('templateMap').toJS()).toMatchSnapshot();
+
+  const nextState2 = fillTemplateMapWithDefaults(
+    setEncodingMode(newState, 'Data Table'),
+  );
+  expect(nextState2.get('spec').toJS()).toMatchSnapshot();
+  expect(nextState2.get('templateMap').toJS()).toMatchSnapshot();
 });
 
 // // UGH come back to this later

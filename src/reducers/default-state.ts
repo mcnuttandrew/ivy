@@ -1,5 +1,6 @@
 import Immutable, {Map} from 'immutable';
 import {OLD_EXAMPLE} from '../constants/vega-examples';
+import TABLE from '../templates/example-templates/table';
 // import {ColumnHeader} from '../types';
 // import {Spec, Data} from 'vega-typings/types';
 export type AppState = Immutable.Map<any, any>;
@@ -55,11 +56,15 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   selectedGUIMode: 'GUI',
   // selectedGUIMode: 'PROGRAMMATIC',
   encodingMode: 'grammer',
+  currentTemplateInstance: null,
+
+  // encodingMode: 'Data Table',
+  // currentTemplateInstance: TABLE,
+
   // encodingMode: 'overview',
   currentTheme: 'default',
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
-  currentTemplateInstance: null,
   views: ['view1'],
   viewCatalog: {},
   currentView: 'view1',

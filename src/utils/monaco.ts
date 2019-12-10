@@ -23,7 +23,6 @@ function addMarkdownProps(value: any) {
 
 const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
 const vegaSchema = require('vega/build/vega-schema.json');
-console.log(vegaSchema);
 addMarkdownProps(vegaSchema);
 addMarkdownProps(vegaLiteSchema);
 

@@ -4,6 +4,7 @@ import {
   TemplateWidget,
   TemplateMap,
   DataTargetWidget,
+  MultiDataTargetWidget,
 } from '../templates/types';
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
@@ -75,6 +76,7 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
   const template = state.get('currentTemplateInstance').toJS();
   const templateMap: TemplateMap = state.get('templateMap').toJS();
   const column = findField(state, payload.field);
+
   const openDropTargets = template.widgets
     // select just the open drop targets
     .filter(
@@ -85,13 +87,34 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
     .filter((widget: DataTargetWidget) =>
       widget.allowedTypes.find((type: string) => type === column.type),
     );
-  if (!openDropTargets.length) {
+
+  const openMultiDropTargets = template.widgets
+    // select just the open drop targets
+    .filter((widget: TemplateWidget) => widget.widgetType === 'MultiDataTarget')
+    // and that allow the type of drop column
+    .filter(
+      (widget: MultiDataTargetWidget) =>
+        widget.allowedTypes.find((type: string) => type === column.type) &&
+        (templateMap[widget.widgetName] || []).length <
+          widget.maxNumberOfTargets,
+    );
+  const targets = [].concat(openDropTargets).concat(openMultiDropTargets);
+  if (!targets.length) {
     // TODO add messaging about this
     return state;
   }
-
+  const selectedWidget = targets[0];
+  if (selectedWidget.widgetType === 'MultiDataTarget') {
+    const oldVal = templateMap[selectedWidget.widgetName] || [];
+    return setTemplateValue(state, {
+      field: selectedWidget.widgetName,
+      // @ts-ignore
+      text: oldVal.filter(key => key !== payload.field).concat([payload.field]),
+    });
+  }
+  // else is single drop target
   return setTemplateValue(state, {
-    field: openDropTargets[0].widgetName,
+    field: selectedWidget.widgetName,
     text: `"${payload.field}"`,
   });
 };

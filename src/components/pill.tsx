@@ -14,7 +14,7 @@ export interface PillProps {
   containingField?: string;
   inEncoding: boolean;
   containingShelf?: string;
-  setEncodingParameter?: GenericAction;
+  setEncodingParameter?: any;
   addToNextOpenSlot?: GenericAction;
   createFilter?: GenericAction;
   coerceType?: GenericAction;
@@ -117,7 +117,7 @@ export default function Pill(props: PillProps) {
         <div
           className="fixed-symbol-width"
           onClick={() =>
-            setEncodingParameter({text: null, field: containingField})
+            setEncodingParameter({text: null, field: containingField, column})
           }
         >
           <TiDeleteOutline />

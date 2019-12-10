@@ -5,14 +5,14 @@ import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {classnames} from '../utils';
 
-interface TemplateShlef {
+interface TemplateShelf {
   channelEncoding?: string;
   columns: ColumnHeader[];
   field: string;
   onDrop: any;
 }
 
-export default function TemplateShelf(props: TemplateShlef) {
+export default function TemplateShelf(props: TemplateShelf) {
   const {channelEncoding, columns, field, onDrop} = props;
 
   // copy/pasta for drag and drop

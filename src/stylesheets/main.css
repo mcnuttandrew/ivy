@@ -239,6 +239,13 @@ button:disabled {
   margin-bottom: 5px;
 }
 
+.multi-shelf-container .pill-dropzone {
+  min-height: 22px;
+  width: calc(100% - 5px);
+}
+.multi-shelf-container .pill {
+  min-height: 22px;
+}
 .shelf {
   align-items: center;
   background: #757575;
@@ -250,6 +257,17 @@ button:disabled {
 
   padding: 0;
   padding-left: 5px;
+  z-index: 1;
+}
+
+.multi-shelf {
+  align-items: center;
+  background: #757575;
+  border: 2px solid #757575;
+  color: white;
+  border-radius: 5px;
+  font-size: 10px;
+  padding: 0;
   z-index: 1;
 }
 
@@ -300,7 +318,8 @@ button:disabled {
   opacity: 0.4;
 }
 
-.shelf .blank-pill {
+.shelf .blank-pill,
+.multi-shelf .blank-pill {
   align-items: center;
   background-color: white;
   color: rgba(0, 0, 0, 0.5);
@@ -872,4 +891,54 @@ button:disabled {
 }
 .slide-widget input[type=number] {
   max-width: 50px;
+}
+
+
+/* table styles: https://tablestyler.com/ */
+.hydra-data-table {
+  width: calc(100% - 40px);
+  text-align: center;
+}
+.hydra-data-table-controls {
+  font-size: 10px;
+  width: 100%;
+  flex-direction: row-reverse;
+}
+.hydra-data-table table {
+  border-collapse: collapse;
+  text-align: left;
+  width: 100%;
+}
+.hydra-data-table {
+  background: #fff;
+  overflow: hidden;
+  border: 1px solid #006699;
+}
+.hydra-data-table table td, .hydra-data-table table th {
+  padding: 0px 3px;
+}
+.hydra-data-table table thead th {
+  background-color: #006699;
+  color:#FFFFFF;
+  font-size: 15px;
+  font-weight: normal;
+}
+.hydra-data-table table thead th:first-child {
+  border: none;
+}
+.hydra-data-table table tbody td {
+  color: #00496B;
+  border-left: 1px solid #E1EEF4;
+  font-size: 12px;
+  font-weight: normal;
+}
+.hydra-data-table table tbody .alt td {
+  background: #E1EEF4;
+  color: #00496B;
+}
+.hydra-data-table table tbody td:first-child {
+  border-left: none;
+}
+.hydra-data-table table tbody tr:last-child td {
+  border-bottom: none;
 }

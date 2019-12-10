@@ -2,6 +2,7 @@
 
 exports[`#fillTemplateMapWithDefaults 1`] = `
 Object {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
     "x": Object {
       "field": "[xDim]",
@@ -47,7 +48,7 @@ Object {
         Object {
           "endAngle": 6.29,
           "field": "pieAg",
-          "sort": true,
+          "sort": "true",
           "startAngle": 0,
           "type": "pie",
         },
@@ -76,7 +77,7 @@ Object {
             "scale": "color",
           },
           "innerRadius": Object {
-            "value": 60,
+            "value": "60",
           },
           "outerRadius": Object {
             "signal": "width / 2",
@@ -179,6 +180,20 @@ Object {
   "Sort": "true",
   "aggregate": "\\"mean\\"",
   "colorScheme": "\\"category20\\"",
+}
+`;
+
+exports[`#fillTemplateMapWithDefaults 5`] = `
+Object {
+  "$schema": "hydra-data-table",
+  "columns": Array [],
+  "transforms": Array [],
+}
+`;
+
+exports[`#fillTemplateMapWithDefaults 6`] = `
+Object {
+  "columns": Array [],
 }
 `;
 
@@ -336,6 +351,7 @@ exports[`#setTemplateValues 1`] = `
 
 exports[`#setTemplateValues 2`] = `
 "{
+  \\"$schema\\": \\"https://vega.github.io/schema/vega-lite/v4.json\\",
   \\"mark\\": {
     \\"type\\": \\"point\\",
     \\"tooltip\\": true
@@ -350,5 +366,13 @@ exports[`#setTemplateValues 2`] = `
       \\"type\\": \\"quantitative\\"
     }
   }
+}"
+`;
+
+exports[`#setTemplateValues 3`] = `
+"{
+  \\"$schema\\": \\"hydra-data-table\\",
+  \\"transforms\\": [],
+  \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]
 }"
 `;

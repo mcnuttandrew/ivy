@@ -14,18 +14,22 @@ import {trim} from '../utils';
 import {setEncodingMode} from './index';
 
 export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
-  return Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
-    const [key, value] = keyValue;
-    if (trim(value) !== value) {
-      // this supports the weird HACK required to make the interpolateion system
-      // not make everything a string
-      return acc
-        .replace(new RegExp(`"\\[${key}\\]"`, 'g'), value || 'null')
-        .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
-    }
-    const reg = new RegExp(`"\\[${key}\\]"`, 'g');
-    return acc.replace(reg, value || 'null');
-  }, code);
+  const filledInSpec = Object.entries(templateMap).reduce(
+    (acc: string, keyValue: any) => {
+      const [key, value] = keyValue;
+      if (trim(value) !== value) {
+        // this supports the weird HACK required to make the interpolateion system
+        // not make everything a string
+        return acc
+          .replace(new RegExp(`"\\[${key}\\]"`, 'g'), value || 'null')
+          .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
+      }
+      const reg = new RegExp(`"\\[${key}\\]"`, 'g');
+      return acc.replace(reg, JSON.stringify(value) || 'null');
+    },
+    code,
+  );
+  return filledInSpec;
 };
 
 // for template map holes that are NOT dimensions, fill em as best you can
@@ -36,6 +40,9 @@ export function fillTemplateMapWithDefaults(state: AppState) {
     .filter((widget: TemplateWidget) => widget.widgetType !== 'DataTarget')
     .reduce((acc: any, w: TemplateWidget) => {
       let value = null;
+      if (w.widgetType === 'MultiDataTarget') {
+        value = [];
+      }
       if (w.widgetType === 'Text') {
         return acc;
       }
@@ -98,7 +105,11 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
     newState = newState.deleteIn(['templateMap', payload.containingShelf]);
   }
   const template = state.get('currentTemplateInstance').toJS();
-  newState = newState.setIn(['templateMap', payload.field], payload.text);
+  newState = newState.setIn(
+    ['templateMap', payload.field],
+    Immutable.fromJS(payload.text),
+  );
+
   const updatedTemplate = JSON.parse(
     setTemplateValues(template.code, newState.get('templateMap').toJS()),
   );

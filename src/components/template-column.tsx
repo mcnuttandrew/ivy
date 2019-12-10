@@ -7,8 +7,10 @@ import {
   SwitchWidget,
   DataTargetWidget,
   SliderWidget,
+  MultiDataTargetWidget,
 } from '../templates/types';
 import TemplateShelf from './template-shelf';
+import TemplateMultiShelf from './template-multi-shelf';
 import Selector from './selector';
 import Switch from 'react-switch';
 import {trim} from '../utils';
@@ -31,6 +33,21 @@ export default class TemplateColumn extends React.Component<
           field={widget.widgetName}
           columns={columns}
           onDrop={setTemplateValue}
+        />
+      </div>
+    );
+  }
+
+  renderMultiDataTargetWidget(widget: MultiDataTargetWidget) {
+    const {templateMap, columns, setTemplateValue} = this.props;
+    return (
+      <div key={widget.widgetName}>
+        <TemplateMultiShelf
+          channelEncodings={(templateMap[widget.widgetName] || []).map(trim)}
+          field={widget.widgetName}
+          columns={columns}
+          onDrop={setTemplateValue}
+          widget={widget}
         />
       </div>
     );
@@ -124,6 +141,11 @@ export default class TemplateColumn extends React.Component<
           {template.widgets.map(widget => {
             if (widget.widgetType === 'DataTarget') {
               return this.renderDataTargetWidget(widget as DataTargetWidget);
+            }
+            if (widget.widgetType === 'MultiDataTarget') {
+              return this.renderMultiDataTargetWidget(
+                widget as MultiDataTargetWidget,
+              );
             }
             if (widget.widgetType === 'Text') {
               return this.renderTextWidget(widget as TextWidget);

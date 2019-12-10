@@ -3,6 +3,7 @@ import {Vega} from 'react-vega';
 import {VegaTheme} from '../types';
 import {Handler} from 'vega-tooltip';
 import {get} from '../utils';
+import Table from './data-table';
 
 interface VegaWrapperProps {
   spec: any;
@@ -25,6 +26,9 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
     // HACK to prevent changes to the data
     const finalSpec = JSON.parse(JSON.stringify(spec));
+    if (language === 'hydra-data-table') {
+      return <Table data={data} spec={spec} />;
+    }
     // this stratagey only supports one data set
     if (language === 'vega') {
       (finalSpec.data || []).forEach((row: any, idx: number) => {

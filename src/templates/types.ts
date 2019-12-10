@@ -1,9 +1,16 @@
 import {DataType} from '../types';
+import DATATABLE from './example-templates/table';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
 
-export type WidgetType = 'DataTarget' | 'List' | 'Switch' | 'Text' | 'Slider';
+export type WidgetType =
+  | 'DataTarget'
+  | 'MultiDataTarget'
+  | 'List'
+  | 'Switch'
+  | 'Text'
+  | 'Slider';
 export interface TemplateWidget {
   widgetName: string;
   widgetType: WidgetType;
@@ -11,6 +18,13 @@ export interface TemplateWidget {
 export interface DataTargetWidget extends TemplateWidget {
   widgetType: 'DataTarget';
   allowedTypes: DataType[];
+  required: boolean;
+}
+export interface MultiDataTargetWidget extends TemplateWidget {
+  widgetType: 'MultiDataTarget';
+  allowedTypes: DataType[];
+  minNumberOfTargets?: number;
+  maxNumberOfTargets?: number;
   required: boolean;
 }
 export interface ListWidget extends TemplateWidget {
@@ -44,6 +58,7 @@ export interface Template {
   widgets: (
     | TemplateWidget
     | DataTargetWidget
+    | MultiDataTargetWidget
     | ListWidget
     | SwitchWidget
     | TextWidget
@@ -65,11 +80,30 @@ export interface widgetValidation {
 }
 
 export interface TemplateMap {
-  [key: string]: string;
+  [key: string]: string | string[];
 }
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 export const widgetFactory = {
+  DataTarget: (idx: number) => {
+    const newWidget: DataTargetWidget = {
+      widgetName: `Dim${idx}`,
+      widgetType: 'DataTarget',
+      allowedTypes: DATA_TYPES,
+      required: true,
+    };
+    return newWidget;
+  },
+  MultiDataTarget: (idx: number) => {
+    const newWidget: MultiDataTargetWidget = {
+      widgetName: `MultiDim${idx}`,
+      widgetType: 'MultiDataTarget',
+      allowedTypes: DATA_TYPES,
+      required: true,
+      minNumberOfTargets: 0,
+    };
+    return newWidget;
+  },
   List: (idx: number) => {
     const allowedValues: {display: string; value: string}[] = [];
     const newWidget: ListWidget = {
@@ -80,15 +114,7 @@ export const widgetFactory = {
     };
     return newWidget;
   },
-  DataTarget: (idx: number) => {
-    const newWidget: DataTargetWidget = {
-      widgetName: `Dim${idx}`,
-      widgetType: 'DataTarget',
-      allowedTypes: DATA_TYPES,
-      required: true,
-    };
-    return newWidget;
-  },
+
   Switch: (idx: number) => {
     const newWidget: SwitchWidget = {
       widgetName: `Switch${idx}`,
@@ -121,6 +147,7 @@ export const widgetFactory = {
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [
+  DATATABLE,
   // OVERVIEW_TEMPLATE,
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,
