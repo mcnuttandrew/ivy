@@ -6,7 +6,9 @@ import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {TemplateWidget, Template, widgetFactory} from '../templates/types';
 import BuilderWidget from './widgets/builder-widget';
-import {classnames, allWidgetsInUse, toSelectFormat} from '../utils';
+import {classnames, allWidgetsInUse} from '../utils';
+import {synthesizeSuggestions} from '../utils/introspect';
+
 import TemplateColumnPreview from './widget-builder/template-column-preview';
 import Selector from './selector';
 import {EMPTY_SPEC} from '../reducers/default-state';
@@ -93,8 +95,9 @@ export default class TemplateBuilderModal extends React.Component<
   }
 
   codeColumn() {
-    const {code, error} = this.state;
+    const {code, error, widgets} = this.state;
     const {spec} = this.props;
+
     return (
       <React.Fragment>
         <div className="flex flex-wrap">
@@ -153,7 +156,25 @@ export default class TemplateBuilderModal extends React.Component<
         <div className="flex-down">
           <h5>Suggestions</h5>
           <div>
-            <button>x -> y</button>
+            {synthesizeSuggestions(code, widgets).map((suggestion: any) => {
+              const {from, to, comment = '', sideEffect} = suggestion;
+              return (
+                <button
+                  onClick={() => {
+                    if (sideEffect) {
+                      const newWidget = sideEffect();
+                      this.setState({widgets: widgets.push(newWidget)});
+                    }
+                    this.setState({
+                      code: code.replace(new RegExp(from, 'g'), to),
+                    });
+                  }}
+                  key={`${from} -> ${to}`}
+                >
+                  {comment}
+                </button>
+              );
+            })}
           </div>
         </div>
       </React.Fragment>
@@ -327,7 +348,6 @@ export default class TemplateBuilderModal extends React.Component<
       code: '<SEE CODE PANEL>',
     };
     // TODO ADD ERROR HANDLING,
-    // TODO MAKE focus not suck
     return (
       <React.Fragment>
         <div className="code-wrapper">
