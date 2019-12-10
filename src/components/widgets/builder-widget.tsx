@@ -15,7 +15,7 @@ import {
   DataTargetWidget,
   TextWidget,
   SliderWidget,
-} from '../../constants/templates';
+} from '../../templates/types';
 import {widgetInUse} from '../../utils';
 
 interface BuilderWidgetProps {

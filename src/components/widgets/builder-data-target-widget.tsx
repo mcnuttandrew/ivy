@@ -1,7 +1,7 @@
 import React from 'react';
 import Switch from 'react-switch';
 import Select from 'react-select';
-import {DataTargetWidget} from '../../constants/templates';
+import {DataTargetWidget} from '../../templates/types';
 import {DataType} from '../../types';
 import {toSelectFormat} from '../../utils';
 interface DataTargetBuilderWidgetProps {

@@ -6,7 +6,7 @@ import TemplateColumn from '../template-column';
 import {ColumnHeader, DataType} from '../../types';
 import Pill from '../pill';
 
-import {Template} from '../../constants/templates';
+import {Template} from '../../templates/types';
 import {setTemplateMapValue} from '../../reducers/template-actions';
 
 interface Props {

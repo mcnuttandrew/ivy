@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {checkIfMapComplete} from '../reducers/template-actions';
-import {Template, TemplateMap} from '../constants/templates';
+import {Template, TemplateMap} from '../templates/types';
 
 import {
   SHOW_SECONDARY_CONTROLS,

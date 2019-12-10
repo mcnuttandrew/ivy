@@ -7,7 +7,7 @@ import {
   SwitchWidget,
   DataTargetWidget,
   SliderWidget,
-} from '../constants/templates';
+} from '../templates/types';
 import TemplateShelf from './template-shelf';
 import Selector from './selector';
 import Switch from 'react-switch';

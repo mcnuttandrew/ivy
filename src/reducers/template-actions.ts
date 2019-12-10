@@ -9,7 +9,7 @@ import {
   SwitchWidget,
   SliderWidget,
   DataTargetWidget,
-} from '../constants/templates';
+} from '../templates/types';
 import {trim} from '../utils';
 import {setEncodingMode} from './index';
 
@@ -58,6 +58,19 @@ export function fillTemplateMapWithDefaults(state: AppState) {
     newState.get('templateMap').toJS(),
   );
   return newState.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
+}
+
+export function respondToTemplateInstanceCodeChanges(
+  state: AppState,
+  payload: any,
+) {
+  const {code, inError} = payload;
+
+  const filledInSpec = setTemplateValues(code, state.get('templateMap').toJS());
+  return state
+    .setIn(['currentTemplateInstance', 'code'], code)
+    .set('editorError', inError)
+    .set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
 }
 
 export function checkIfMapComplete(

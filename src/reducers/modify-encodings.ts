@@ -8,6 +8,7 @@ import {
 } from '../utils';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
+import {respondToTemplateInstanceCodeChanges} from './template-actions';
 
 const usingNestedSpec = (state: AppState): boolean =>
   Boolean(state.getIn(['spec', 'spec']));
@@ -41,9 +42,7 @@ export const setNewSpec: ActionResponse = (state, payload) =>
 export const setNewSpecCode: ActionResponse = (state, payload) => {
   const {code, inError} = payload;
   if (state.get('currentTemplateInstance')) {
-    return state
-      .setIn(['currentTemplateInstance', 'code'], code)
-      .set('editorError', inError);
+    return respondToTemplateInstanceCodeChanges(state, payload);
   }
   if (inError) {
     return state.set('specCode', code).set('editorError', inError);

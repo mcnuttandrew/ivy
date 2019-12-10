@@ -4,7 +4,7 @@ import MonacoEditor from 'react-monaco-editor';
 
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {TemplateWidget, Template, widgetFactory} from '../constants/templates';
+import {TemplateWidget, Template, widgetFactory} from '../templates/types';
 import BuilderWidget from './widgets/builder-widget';
 import {classnames, allWidgetsInUse, toSelectFormat} from '../utils';
 import TemplateColumnPreview from './widget-builder/template-column-preview';

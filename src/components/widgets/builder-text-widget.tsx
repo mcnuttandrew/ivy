@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextWidget} from '../../constants/templates';
+import {TextWidget} from '../../templates/types';
 interface TextBuilderWidgetProps {
   widget: TextWidget;
   idx: number;

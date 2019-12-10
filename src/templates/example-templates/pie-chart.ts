@@ -1,4 +1,4 @@
-import {Template} from '../templates';
+import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES, AGGREGATES} from './vega-common';
 import {toList} from '../../utils';
 // https://observablehq.com/@simon-lang/simple-vega-pie-chart

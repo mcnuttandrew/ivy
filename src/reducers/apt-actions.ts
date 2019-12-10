@@ -4,7 +4,7 @@ import {
   TemplateWidget,
   TemplateMap,
   DataTargetWidget,
-} from '../constants/templates';
+} from '../templates/types';
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
 import {findField} from '../utils';

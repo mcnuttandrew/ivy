@@ -3,9 +3,9 @@ import {
   fillTemplateMapWithDefaults,
   recieveTemplates,
 } from '../src/reducers/template-actions';
-import {DEFAULT_TEMPLATES} from '../src/constants/templates';
-import SCATTERPLOT_TEMPLATE from '../src/constants/example-templates/scatterplot';
-import PIECHART_TEMPLATE from '../src/constants/example-templates/pie-chart';
+import {DEFAULT_TEMPLATES} from '../src/templates/types';
+import SCATTERPLOT_TEMPLATE from '../src/templates/example-templates/scatterplot';
+import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
 
 import {DEFAULT_STATE} from '../src/reducers/default-state';
 import {setEncodingMode} from '../src/reducers/index';

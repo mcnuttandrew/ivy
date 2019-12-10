@@ -1,5 +1,5 @@
 import {List} from 'immutable';
-import {TemplateWidget} from './constants/templates';
+import {TemplateWidget} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 

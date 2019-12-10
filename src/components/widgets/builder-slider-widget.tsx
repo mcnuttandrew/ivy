@@ -1,5 +1,5 @@
 import React from 'react';
-import {SliderWidget} from '../../constants/templates';
+import {SliderWidget} from '../../templates/types';
 interface SliderBuilderWidgetProps {
   widget: SliderWidget;
   idx: number;

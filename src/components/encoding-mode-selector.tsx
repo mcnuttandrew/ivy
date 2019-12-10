@@ -1,6 +1,6 @@
 import React from 'react';
 import {GenericAction} from '../actions/index';
-import {Template} from '../constants/templates';
+import {Template} from '../templates/types';
 import {TiExport} from 'react-icons/ti';
 
 interface Props {

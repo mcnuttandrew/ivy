@@ -1,4 +1,4 @@
-import {Template} from '../templates';
+import {Template} from '../types';
 import {toList} from '../../utils';
 const withConditional = (trueCondition: any, conditional: any) => {
   return {
@@ -9,6 +9,7 @@ const withConditional = (trueCondition: any, conditional: any) => {
 };
 
 const SHELF_TEMPLATE_CODE: any = {
+  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   transform: [],
   spec: {
     encoding: {

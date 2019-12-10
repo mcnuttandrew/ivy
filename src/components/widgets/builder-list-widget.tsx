@@ -1,6 +1,6 @@
 import React from 'react';
 import CreatableSelect from 'react-select/creatable';
-import {ListWidget} from '../../constants/templates';
+import {ListWidget} from '../../templates/types';
 import {toSelectFormat} from '../../utils';
 import Select from 'react-select';
 interface ListBuilderWidgetProps {

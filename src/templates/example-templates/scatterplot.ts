@@ -1,5 +1,6 @@
-import {Template} from '../templates';
+import {Template} from '../types';
 const SCATTERPLOT_EXAMPLE: any = {
+  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   mark: {
     type: 'point',
     tooltip: true,

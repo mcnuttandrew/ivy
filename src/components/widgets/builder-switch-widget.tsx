@@ -1,6 +1,6 @@
 import React from 'react';
 import Switch from 'react-switch';
-import {SwitchWidget} from '../../constants/templates';
+import {SwitchWidget} from '../../templates/types';
 interface SwitchBuilderWidgetProps {
   widget: SwitchWidget;
   idx: number;

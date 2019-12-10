@@ -1,4 +1,4 @@
-import {Template} from '../templates';
+import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './vega-common';
 import {toList} from '../../utils';
 

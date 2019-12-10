@@ -2,7 +2,7 @@ import {Dispatch} from 'redux';
 import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
-import {DEFAULT_TEMPLATES} from '../constants/templates';
+import {DEFAULT_TEMPLATES} from '../templates/types';
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;

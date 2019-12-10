@@ -3,7 +3,7 @@ import {GenericAction} from '../actions/index';
 import {classnames} from '../utils';
 import {Spec} from 'vega-typings';
 import {VegaTheme} from '../types';
-import {Template} from '../constants/templates';
+import {Template} from '../templates/types';
 
 import Selector from './selector';
 

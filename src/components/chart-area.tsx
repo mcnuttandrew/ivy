@@ -2,7 +2,7 @@ import {List} from 'immutable';
 import React from 'react';
 import VegaWrapper from './vega-wrap';
 import {VegaTheme} from '../types';
-import {Template} from '../constants/templates';
+import {Template} from '../templates/types';
 import {cleanSpec, classnames} from '../utils';
 import {MdContentCopy, MdNoteAdd} from 'react-icons/md';
 import {GenericAction} from '../actions';
