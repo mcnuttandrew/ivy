@@ -7,7 +7,7 @@ interface Props {
   className?: string;
   children?: React.ReactNode;
   modalTitle: string;
-  modalDetails: string;
+  modalDetails?: string;
   bodyDirectionDown?: boolean;
 }
 
@@ -17,7 +17,7 @@ export default class Modal extends React.PureComponent<Props> {
       modalToggle,
       children,
       modalTitle,
-      modalDetails,
+      modalDetails = '',
       className = '',
       bodyDirectionDown,
     } = this.props;

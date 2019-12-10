@@ -48,11 +48,6 @@ export default class DataModal extends React.Component<Props, State> {
         className="data-modal"
         modalTitle="Select Dataset"
         bodyDirectionDown={true}
-        modalDetails="Users will create more effective charts (i.e. answer the base
-        questions more clearly) when they are asked any type of questions
-        (Placebo and Experiment). Users will be more confi- dent in their
-        final charts, but more distrustful of their initial data in
-        Placebo and Experiment."
       >
         <div className="flex space-between">
           <h3>Predefined Datasets</h3>
