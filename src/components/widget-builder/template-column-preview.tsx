@@ -50,8 +50,8 @@ export default class TemplateColumnPreview extends React.Component<
         <div>
           <h3> Example Data Columns </h3>
           <div className="fake-pill-container">
-            {fakeColumns.map(column => {
-              return <Pill column={column} inEncoding={false} />;
+            {fakeColumns.map((column, idx: number) => {
+              return <Pill column={column} inEncoding={false} key={idx} />;
             })}
           </div>
         </div>

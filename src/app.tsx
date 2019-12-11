@@ -16,3 +16,8 @@ if (body) {
 
   ReactDOM.render(<AppWrap />, document.querySelector('#root-container'));
 }
+
+// TODO make this be enable on public builds
+// window.onbeforeunload = function() {
+//   return 'Are you sure you want to leave?';
+// };

@@ -12,7 +12,7 @@ interface ListBuilderWidgetProps {
 export default function ListBuilderWidget(props: ListBuilderWidgetProps) {
   const {widget, idx, setWidgetValue} = props;
   return (
-    <div key={widget.widgetName}>
+    <div>
       <div className="flex">
         <div className="flex-down">
           <span className="tool-description">WidgetKey</span>

@@ -51,7 +51,6 @@
     "tape": "^4.11.0",
     "ts-jest": "^24.2.0",
     "ts-loader": "^6.2.0",
-    "ts-node": "^8.4.1",
     "typescript": "^3.6.4",
     "vega-typings": "^0.10.2",
     "webpack": "4",

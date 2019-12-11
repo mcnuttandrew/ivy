@@ -6,7 +6,9 @@ import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {TemplateWidget, Template, widgetFactory} from '../templates/types';
 import BuilderWidget from './widgets/builder-widget';
-import {classnames, allWidgetsInUse, toSelectFormat} from '../utils';
+import {classnames, allWidgetsInUse} from '../utils';
+import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
+
 import TemplateColumnPreview from './widget-builder/template-column-preview';
 import Selector from './selector';
 import {EMPTY_SPEC} from '../reducers/default-state';
@@ -75,12 +77,15 @@ export default class TemplateBuilderModal extends React.Component<
   }
 
   setWidgetValue(key: string, value: any, idx: number) {
-    const {widgets} = this.state;
+    const {code, widgets} = this.state;
+    const oldWidget = widgets.get(idx);
+
+    // @ts-ignore
+    const oldValue = `\\[${oldWidget[key]}\\]`;
+    const re = new RegExp(oldValue, 'g');
     this.setState({
-      widgets: widgets.set(idx, {
-        ...widgets.get(idx),
-        [key]: value,
-      }),
+      widgets: widgets.set(idx, {...oldWidget, [key]: value}),
+      code: key === 'widgetName' ? code.replace(re, `[${value}]`) : code,
     });
   }
 
@@ -93,8 +98,9 @@ export default class TemplateBuilderModal extends React.Component<
   }
 
   codeColumn() {
-    const {code, error} = this.state;
+    const {code, error, widgets} = this.state;
     const {spec} = this.props;
+
     return (
       <React.Fragment>
         <div className="flex flex-wrap">
@@ -153,7 +159,26 @@ export default class TemplateBuilderModal extends React.Component<
         <div className="flex-down">
           <h5>Suggestions</h5>
           <div>
-            <button>x -> y</button>
+            {synthesizeSuggestions(code, widgets).map(
+              (suggestion: any, idx: number) => {
+                const {from, to, comment = '', sideEffect} = suggestion;
+                return (
+                  <button
+                    onClick={() => {
+                      this.setState({
+                        code: takeSuggestion(code, suggestion),
+                        widgets: sideEffect
+                          ? widgets.push(sideEffect())
+                          : widgets,
+                      });
+                    }}
+                    key={`${from} -> ${to}-${idx}`}
+                  >
+                    {comment}
+                  </button>
+                );
+              },
+            )}
           </div>
         </div>
       </React.Fragment>
@@ -300,12 +325,37 @@ export default class TemplateBuilderModal extends React.Component<
               <BuilderWidget
                 code={code}
                 widget={widget}
-                widgets={widgets}
                 idx={idx}
-                key={idx}
-                setWidgets={(widgets: List<TemplateWidget>) =>
-                  this.setState({widgets})
-                }
+                key={`${idx}`}
+                removeWidget={() => {
+                  const updatedWidgets = widgets.filter(
+                    (_, jdx) => jdx !== idx,
+                  );
+                  // @ts-ignore
+                  this.setState({
+                    widgets: updatedWidgets,
+                  });
+                }}
+                incrementOrder={() => {
+                  if (idx === widgets.size - 1) {
+                    return;
+                  }
+                  this.setState({
+                    widgets: widgets
+                      .set(idx + 1, widget)
+                      .set(idx, widgets.get(idx + 1)),
+                  });
+                }}
+                decrementOrder={() => {
+                  if (idx === 0) {
+                    return;
+                  }
+                  this.setState({
+                    widgets: widgets
+                      .set(idx - 1, widget)
+                      .set(idx, widgets.get(idx - 1)),
+                  });
+                }}
                 setWidgetValue={(key: string, value: any, idx: number) =>
                   this.setWidgetValue(key, value, idx)
                 }
@@ -327,7 +377,6 @@ export default class TemplateBuilderModal extends React.Component<
       code: '<SEE CODE PANEL>',
     };
     // TODO ADD ERROR HANDLING,
-    // TODO MAKE focus not suck
     return (
       <React.Fragment>
         <div className="code-wrapper">
@@ -340,7 +389,6 @@ export default class TemplateBuilderModal extends React.Component<
               Promise.resolve()
                 .then(() => JSON.parse(code))
                 .then(code => {
-                  console.log('wow', code);
                   this.setState({
                     templateName: code.templateName,
                     templateDescription: code.templateDescription,

@@ -9,7 +9,7 @@ interface TextBuilderWidgetProps {
 export default function TextBuilderWidget(props: TextBuilderWidgetProps) {
   const {widget, idx, setWidgetValue} = props;
   return (
-    <div key={widget.widgetName}>
+    <div>
       <textarea
         placeholder="Type a message that will appear in the encoding area"
         value={widget.text}

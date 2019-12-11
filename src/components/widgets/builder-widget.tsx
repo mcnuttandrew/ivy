@@ -1,5 +1,4 @@
 import React from 'react';
-import {List} from 'immutable';
 import {TiDelete, TiArrowDownThick, TiArrowUpThick} from 'react-icons/ti';
 
 import DataTargetBuilderWidget from './builder-data-target-widget';
@@ -21,51 +20,38 @@ import {widgetInUse} from '../../utils';
 interface BuilderWidgetProps {
   code: string;
   widget: TemplateWidget;
-  widgets: List<TemplateWidget>;
   idx: number;
-  setWidgets: any;
   setWidgetValue: any;
+
+  incrementOrder: any;
+  decrementOrder: any;
+  removeWidget: any;
 }
 
 export default function BuilderWidget(props: BuilderWidgetProps) {
-  const {code, widgets, widget, idx, setWidgets, setWidgetValue} = props;
+  const {
+    code,
+    widget,
+    idx,
+    setWidgetValue,
+    incrementOrder,
+    decrementOrder,
+    removeWidget,
+  } = props;
+
   const showInUs = widget.widgetType !== 'Text';
+  const common = {idx, setWidgetValue};
   return (
-    <div key={`${widget.widgetName}-${idx}`} className="widget">
+    <div className="widget">
       <div className="widget-handle">
         <div className="flex-down">
-          <div
-            className="cursor-pointer"
-            onClick={() => {
-              setWidgets(widgets.filter((_, jdx) => jdx !== idx));
-            }}
-          >
+          <div className="cursor-pointer" onClick={removeWidget}>
             <TiDelete />
           </div>
-          <div
-            className="cursor-pointer"
-            onClick={() => {
-              if (idx === 0) {
-                return;
-              }
-              setWidgets(
-                widgets.set(idx - 1, widget).set(idx, widgets.get(idx - 1)),
-              );
-            }}
-          >
+          <div className="cursor-pointer" onClick={decrementOrder}>
             <TiArrowUpThick />
           </div>
-          <div
-            className="cursor-pointer"
-            onClick={() => {
-              if (idx === widgets.size - 1) {
-                return;
-              }
-              setWidgets(
-                widgets.set(idx + 1, widget).set(idx, widgets.get(idx + 1)),
-              );
-            }}
-          >
+          <div className="cursor-pointer" onClick={incrementOrder}>
             <TiArrowDownThick />
           </div>
         </div>
@@ -79,39 +65,22 @@ export default function BuilderWidget(props: BuilderWidgetProps) {
       </div>
       <div className="widget-body">
         {widget.widgetType === 'Switch' && (
-          <SwitchBuilderWidget
-            widget={widget as SwitchWidget}
-            idx={idx}
-            setWidgetValue={setWidgetValue}
-          />
+          <SwitchBuilderWidget widget={widget as SwitchWidget} {...common} />
         )}
         {widget.widgetType === 'List' && (
-          <ListBuilderWidget
-            widget={widget as ListWidget}
-            idx={idx}
-            setWidgetValue={setWidgetValue}
-          />
+          <ListBuilderWidget widget={widget as ListWidget} {...common} />
         )}
         {widget.widgetType === 'Text' && (
-          <TextBuilderWidget
-            widget={widget as TextWidget}
-            idx={idx}
-            setWidgetValue={setWidgetValue}
-          />
+          <TextBuilderWidget widget={widget as TextWidget} {...common} />
         )}
         {widget.widgetType === 'DataTarget' && (
           <DataTargetBuilderWidget
             widget={widget as DataTargetWidget}
-            idx={idx}
-            setWidgetValue={setWidgetValue}
+            {...common}
           />
         )}
         {widget.widgetType === 'Slider' && (
-          <SliderBuilderWidget
-            widget={widget as SliderWidget}
-            idx={idx}
-            setWidgetValue={setWidgetValue}
-          />
+          <SliderBuilderWidget widget={widget as SliderWidget} {...common} />
         )}
       </div>
     </div>

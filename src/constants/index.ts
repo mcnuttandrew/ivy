@@ -7,4 +7,5 @@ export const EDITOR_OPTIONS = {
   minimap: {
     enabled: false,
   },
+  fontSize: 10,
 };
