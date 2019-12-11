@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppWrap from './components/app-wrap';
 import setupMonaco from './utils/monaco';
+import {PREVENT_ACCIDENTAL_LEAVE} from './constants/CONFIG';
 
 import './stylesheets/main.css';
 import './stylesheets/rc-slider.css';
@@ -18,6 +19,8 @@ if (body) {
 }
 
 // TODO make this be enable on public builds
-// window.onbeforeunload = function() {
-//   return 'Are you sure you want to leave?';
-// };
+if (PREVENT_ACCIDENTAL_LEAVE) {
+  window.onbeforeunload = function() {
+    return 'Are you sure you want to leave?';
+  };
+}
