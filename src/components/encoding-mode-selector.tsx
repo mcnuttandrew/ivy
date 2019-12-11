@@ -68,7 +68,6 @@ export default function EncodingMode(props: Props) {
   const [open, setOpen] = useState(false);
   const [searchKey, setSearch] = useState('');
   const toggle = () => setOpen(!open);
-  // const toggle = () => this.setState({open: !open});
   const buttonActions = generateButtonActions({
     setEncodingMode,
     startTemplateEdit,
