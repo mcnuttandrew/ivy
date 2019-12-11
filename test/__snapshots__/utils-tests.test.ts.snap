@@ -48,7 +48,7 @@ Object {
         Object {
           "endAngle": 6.29,
           "field": "pieAg",
-          "sort": "true",
+          "sort": true,
           "startAngle": 0,
           "type": "pie",
         },
@@ -77,7 +77,7 @@ Object {
             "scale": "color",
           },
           "innerRadius": Object {
-            "value": "60",
+            "value": 60,
           },
           "outerRadius": Object {
             "signal": "width / 2",

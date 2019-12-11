@@ -25,7 +25,10 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
           .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
       }
       const reg = new RegExp(`"\\[${key}\\]"`, 'g');
-      return acc.replace(reg, JSON.stringify(value) || 'null');
+      return acc.replace(
+        reg,
+        (Array.isArray(value) && JSON.stringify(value)) || value || 'null',
+      );
     },
     code,
   );
