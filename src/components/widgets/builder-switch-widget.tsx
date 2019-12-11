@@ -10,7 +10,7 @@ interface SwitchBuilderWidgetProps {
 export default function SwitchBuilderWidget(props: SwitchBuilderWidgetProps) {
   const {widget, idx, setWidgetValue} = props;
   return (
-    <div key={widget.widgetName} className="flex">
+    <div className="flex">
       <div className="flex-down">
         <div className="flex-down">
           <span className="tool-description">WidgetKey</span>

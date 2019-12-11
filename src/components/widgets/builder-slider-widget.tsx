@@ -9,7 +9,7 @@ interface SliderBuilderWidgetProps {
 export default function SliderBuilderWidget(props: SliderBuilderWidgetProps) {
   const {widget, idx, setWidgetValue} = props;
   return (
-    <div key={widget.widgetName} className="flex">
+    <div className="flex">
       <div className="flex-down">
         <span className="tool-description">WidgetKey</span>
         <input
