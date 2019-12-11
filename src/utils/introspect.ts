@@ -6,48 +6,9 @@ import {
   ListWidget,
   SwitchWidget,
   SliderWidget,
-  DataTargetWidget,
 } from '../templates/types';
 
-import {parse, View} from 'vega';
-import {
-  compile,
-  extractTransforms as vegaLiteExtractTransforms,
-} from 'vega-lite';
-
-// cache gets dumped across run times
-// might br problematic for a larger system but fine here
-// const vegaRenderingCache = {};
-/**
- * generateVegaRendering, takes in a vega spec and returns a rendering of it
- */
-export function generateVegaRendering(spec: any, language: string) {
-  const config = {
-    renderer: 'none',
-  };
-  return new Promise((resolve, reject) => {
-    if (['vega-lite', 'vega'].indexOf(language)) {
-      console.log('language not supported');
-      return;
-    }
-    const vegaSpec = language === 'vega-lite' ? compile(spec).spec : spec;
-
-    const runtime = parse(vegaSpec, {renderer: 'none'});
-    const view = new View(runtime, config).initialize();
-    view
-      .runAsync()
-      .then(x => {
-        console.log(vegaSpec);
-        console.log('middle introspect', view, compile(spec));
-      })
-      .catch(e => {
-        /* eslint-disable no-console */
-        console.error(e);
-        reject(e);
-        /* eslint-disable no-console */
-      });
-  });
-}
+import {compile} from 'vega-lite';
 
 // setting dimensions requires that dimension name be wrapped in a string
 // here we strip them off so that the channel cencoding can find the correct value
@@ -77,7 +38,8 @@ export function inferPossibleDataTargets(spec: any): string[] {
     console.log('compile error', e);
     vegaSpec = {};
   }
-  if (JSON.stringify(vegaSpec) === '{}') {
+  const code = JSON.stringify(vegaSpec);
+  if (code === '{}') {
     return [];
   }
   const transforms = vegaSpec.data.reduce((acc: any, dataSource: any) => {
@@ -85,18 +47,24 @@ export function inferPossibleDataTargets(spec: any): string[] {
       return acc;
     }
     dataSource.transform.forEach((transform: any) => {
-      console.log(transform);
-      // @ts-ignore
+      if (transform.groupby) {
+        transform.groupby.forEach((key: string) => {
+          acc[key] = true;
+        });
+        return;
+      }
+
       const expr = transform.expr;
       if (!expr) {
         return acc;
       }
-      expr.match(/\["(.*?)"\]/g).forEach((match: string) => {
+      (expr.match(/\["(.*?)"\]/g) || []).forEach((match: string) => {
         acc[match] = true;
       });
     });
     return acc;
   }, {});
+
   const inUseKeys = Object.keys(
     Object.keys(transforms)
       .filter((d: any) => d)
@@ -105,6 +73,15 @@ export function inferPossibleDataTargets(spec: any): string[] {
         return acc;
       }, {}),
   );
+  // match based on a hueristic
+  const hueristicTargets =
+    JSON.stringify(spec).match(/"field":\w*"(.*?)"/g) || [];
+  Object.keys(
+    hueristicTargets.reduce((acc: any, key: string) => {
+      acc[key.slice(0, key.length - 1).slice('"field":"'.length)] = true;
+      return acc;
+    }, {}),
+  ).forEach((key: string) => inUseKeys.push(key));
   return inUseKeys;
 }
 
@@ -121,7 +98,6 @@ function safeParse(code: string) {
   try {
     x = JSON.parse(code);
   } catch (e) {
-    console.log('eee', e);
     x = false;
   }
   return x;
@@ -153,39 +129,69 @@ function generateFullTemplateMap(widgets: List<TemplateWidget>) {
 export function synthesizeSuggestions(
   code: string,
   widgets: List<TemplateWidget>,
-): string[] {
+) {
   const parsedCode = safeParse(
     setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))),
   );
   if (!parsedCode) {
     return [];
   }
-
-  const maybeTargets = inferPossibleDataTargets(parsedCode);
-  // if fields are use as a value they are likely being used like [FIELDNAME]": "[key]
-  const likelyFields = maybeTargets.filter((key: string) =>
-    code.includes(`": "${key}`),
+  const widgetNames = widgets.reduce(
+    (acc: any, row: any) => ({
+      ...acc,
+      [row.widgetName]: true,
+      [`[${row.widgetName}]`]: true,
+    }),
+    {},
   );
-  console.log(likelyFields);
+
+  const maybeTargets: string[] = inferPossibleDataTargets(parsedCode);
+  const likelyFields = maybeTargets
+    // if fields are use as a value they are likely being used like [FIELDNAME]": "[key]
+    // ignore column names that are in there
+    .filter(key => code.includes(`": "${key}`) && !widgetNames[key]);
   const dropTargets = widgets
     .filter(widget => widget.widgetType === 'DataTarget')
     .map(widget => widget.widgetName)
     .toJS();
 
-  console.log(maybeTargets, dropTargets);
   const suggestions = likelyFields.reduce((acc: any[], from) => {
     dropTargets.forEach((to: string) => {
-      acc.push({from, to: `[${to}]`, comment: `${from} -> ${to}`});
+      acc.push({
+        from: `"${from}"`,
+        to: `"[${to}]"`,
+        comment: `${from} -> ${to}`,
+      });
     });
     const to = `Dim${widgets.size + 1}`;
     acc.push({
-      from,
-      to: `[${to}]`,
+      from: `"${from}"`,
+      to: `"[${to}]"`,
       comment: `${from} -> ${to} (CREATE ${to})`,
       sideEffect: () => widgetFactory.DataTarget(widgets.size + 1),
     });
     return acc;
   }, []);
-  return suggestions;
-  // [{from: 'X', to: 'Y', sideEffect: () => {}}];
+  // check to see if the values that are in the code are specifically defined
+  if (code.match(/"values": \[((.|\s|\S)+?)\]/)) {
+    suggestions.push({
+      from: code.match(/"values": \[((.|\s|\S)+?)\]/s)[0],
+      to: '"name": "myData"',
+      comment: 'remove specific data',
+      simpleReplace: true,
+    });
+  }
+  // @ts-ignore
+  const dedup = Object.values(
+    suggestions.reduce((acc, row) => ({...acc, [row.comment]: row}), {}),
+  );
+
+  return dedup;
+}
+
+export function takeSuggestion(code: string, suggestion: any) {
+  const {simpleReplace, from, to} = suggestion;
+  return simpleReplace
+    ? code.replace(from, to)
+    : code.replace(new RegExp(from, 'g'), to);
 }

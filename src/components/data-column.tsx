@@ -90,7 +90,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
           {(spec.transform || get(spec, ['spec', 'transform']) || [])
             .filter((filter: any) => {
               // dont try to render filters that we dont know how to render
-              return filter.filter;
+              return filter.filter && !filter.filter.and;
             })
             .map((filter: any, idx: number) => {
               return (

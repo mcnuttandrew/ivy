@@ -7,7 +7,7 @@ import {EDITOR_OPTIONS} from '../constants/index';
 import {TemplateWidget, Template, widgetFactory} from '../templates/types';
 import BuilderWidget from './widgets/builder-widget';
 import {classnames, allWidgetsInUse} from '../utils';
-import {synthesizeSuggestions} from '../utils/introspect';
+import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 
 import TemplateColumnPreview from './widget-builder/template-column-preview';
 import Selector from './selector';
@@ -156,25 +156,26 @@ export default class TemplateBuilderModal extends React.Component<
         <div className="flex-down">
           <h5>Suggestions</h5>
           <div>
-            {synthesizeSuggestions(code, widgets).map((suggestion: any) => {
-              const {from, to, comment = '', sideEffect} = suggestion;
-              return (
-                <button
-                  onClick={() => {
-                    if (sideEffect) {
-                      const newWidget = sideEffect();
-                      this.setState({widgets: widgets.push(newWidget)});
-                    }
-                    this.setState({
-                      code: code.replace(new RegExp(from, 'g'), to),
-                    });
-                  }}
-                  key={`${from} -> ${to}`}
-                >
-                  {comment}
-                </button>
-              );
-            })}
+            {synthesizeSuggestions(code, widgets).map(
+              (suggestion: any, idx: number) => {
+                const {from, to, comment = '', sideEffect} = suggestion;
+                return (
+                  <button
+                    onClick={() => {
+                      this.setState({
+                        code: takeSuggestion(code, suggestion),
+                        widgets: sideEffect
+                          ? widgets.push(sideEffect())
+                          : widgets,
+                      });
+                    }}
+                    key={`${from} -> ${to}-${idx}`}
+                  >
+                    {comment}
+                  </button>
+                );
+              },
+            )}
           </div>
         </div>
       </React.Fragment>
@@ -355,12 +356,15 @@ export default class TemplateBuilderModal extends React.Component<
             language="json"
             theme="vs-light"
             value={JSON.stringify(serializedState, null, 2)}
-            options={EDITOR_OPTIONS}
+            options={{
+              ...EDITOR_OPTIONS,
+              // @ts-ignore
+              fontSize: '10px',
+            }}
             onChange={(code: string) => {
               Promise.resolve()
                 .then(() => JSON.parse(code))
                 .then(code => {
-                  console.log('wow', code);
                   this.setState({
                     templateName: code.templateName,
                     templateDescription: code.templateDescription,

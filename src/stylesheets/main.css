@@ -623,7 +623,7 @@ button:disabled {
 
 .template-builder-modal .code-column {
   border-left: thin solid black;
-  max-width: 400px;
+  max-width: 50%;
   padding-left: 5px;
   width: 100%;
 }
