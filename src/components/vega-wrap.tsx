@@ -13,6 +13,17 @@ interface VegaWrapperProps {
   language?: any;
 }
 
+// no false positives
+function inferredLanguage(spec: any) {
+  if (spec.$schema.startsWith('https://vega.github.io/schema/vega-lite/')) {
+    return 'vega-lite';
+  }
+  if (spec.$schema.startsWith('https://vega.github.io/schema/vega/')) {
+    return 'vega';
+  }
+  return null;
+}
+
 // This componenent has the simple task of disallowing renders other than when the spec has changed
 // in effect it is a modest caching layer. It also allows us to obscure some of the odities of the vega interface
 export default class VegaWrapper extends React.Component<VegaWrapperProps> {
@@ -24,20 +35,21 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
 
   render() {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
+    const lang = inferredLanguage(spec) || language;
     // HACK to prevent changes to the data
     const finalSpec = JSON.parse(JSON.stringify(spec));
-    if (language === 'hydra-data-table') {
+    if (lang === 'hydra-data-table') {
       return <Table data={data} spec={spec} />;
     }
     // this stratagey only supports one data set
-    if (language === 'vega') {
+    if (lang === 'vega') {
       (finalSpec.data || []).forEach((row: any, idx: number) => {
         if (row.values === 'myData') {
           finalSpec.data[idx].values = data;
         }
       });
     }
-    if (language === 'vega-lite' || !language) {
+    if (lang === 'vega-lite' || !language) {
       if (!get(finalSpec, ['data', 'values'])) {
         finalSpec.data = {
           values: data,

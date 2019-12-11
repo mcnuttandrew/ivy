@@ -11,6 +11,7 @@ interface ListBuilderWidgetProps {
 
 export default function ListBuilderWidget(props: ListBuilderWidgetProps) {
   const {widget, idx, setWidgetValue} = props;
+  const options = toSelectFormat(widget.allowedValues.map(d => d.value));
   return (
     <div>
       <div className="flex">
@@ -28,7 +29,7 @@ export default function ListBuilderWidget(props: ListBuilderWidgetProps) {
           <Select
             classNamePrefix="hydra-import-select"
             onChange={(x: any) => setWidgetValue('defaultValue', x.value, idx)}
-            options={toSelectFormat(widget.allowedValues.map(d => d.value))}
+            options={options}
           />
         </div>
       </div>
@@ -43,7 +44,7 @@ export default function ListBuilderWidget(props: ListBuilderWidgetProps) {
               .map((row: any) => ({display: row, value: row}));
             setWidgetValue('allowedValues', updatedValues, idx);
           }}
-          options={widget.allowedValues}
+          options={options}
         />
       </div>
     </div>
