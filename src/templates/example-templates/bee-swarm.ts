@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './vega-common';
 import {toList} from '../../utils';
@@ -147,6 +148,6 @@ const BeeSwarm: Template = {
     },
   ],
   widgetValidations: [],
-  code: JSON.stringify(BEESWARM_EXAMPLE, null, 2),
+  code: stringify(BEESWARM_EXAMPLE),
 };
 export default BeeSwarm;

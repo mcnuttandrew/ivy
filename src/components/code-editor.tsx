@@ -1,6 +1,7 @@
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import {MdPlayCircleOutline} from 'react-icons/md';
+import stringify from 'json-stringify-pretty-compact';
 
 import {GenericAction} from '../actions';
 import {EDITOR_OPTIONS} from '../constants/index';
@@ -90,11 +91,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                 key={name}
                 onClick={() => {
                   setNewSpecCode({
-                    code: JSON.stringify(
-                      action(JSON.parse(currentCode)),
-                      null,
-                      2,
-                    ),
+                    code: stringify(action(JSON.parse(currentCode))),
                     inError: false,
                   });
                 }}
@@ -135,7 +132,7 @@ export default class CodeEditor extends React.Component<Props, State> {
           <MonacoEditor
             ref="monaco"
             language="json"
-            theme="vs-light"
+            theme="vs-dark"
             value={currentCode}
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {

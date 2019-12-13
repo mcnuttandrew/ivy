@@ -1,4 +1,5 @@
 import Immutable, {Map} from 'immutable';
+import stringify from 'json-stringify-pretty-compact';
 import {OLD_EXAMPLE} from '../constants/vega-examples';
 import TABLE from '../templates/example-templates/table';
 // import {ColumnHeader} from '../types';
@@ -11,8 +12,6 @@ export type AppState = Immutable.Map<any, any>;
 //   data: Data;
 //   columns: ColumnHeader[];
 //   currentlySelectedFile: string;
-//   selectedGUIMode: string;
-//   // selectedGUIMode: 'PROGRAMMATIC';
 //   dataModalOpen: boolean;
 //   currentTheme: string;
 //   undoStack: any;
@@ -48,13 +47,12 @@ const fileSpecificationDefaults = GOOSE_MODE
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
   ...fileSpecificationDefaults,
   spec: EMPTY_SPEC,
-  specCode: JSON.stringify(EMPTY_SPEC, null, 2),
+  specCode: stringify(EMPTY_SPEC),
   editorError: null,
   columns: [],
   metaColumns: [],
   unprouncableInGrammer: false,
-  selectedGUIMode: 'GUI',
-  // selectedGUIMode: 'PROGRAMMATIC',
+  showProgrammaticMode: true,
   encodingMode: 'grammer',
   currentTemplateInstance: null,
 

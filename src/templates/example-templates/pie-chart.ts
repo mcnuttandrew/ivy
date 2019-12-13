@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES, AGGREGATES} from './vega-common';
 import {toList} from '../../utils';
@@ -135,6 +136,6 @@ const PieChart: Template = {
     },
   ],
   widgetValidations: [],
-  code: JSON.stringify(PIECHART_EXAMPLE, null, 2),
+  code: stringify(PIECHART_EXAMPLE),
 };
 export default PieChart;

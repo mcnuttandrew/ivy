@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 const TABLE_EXAMPLE: any = {
   $schema: 'hydra-data-table',
@@ -8,7 +9,7 @@ const TABLE_EXAMPLE: any = {
 const DATATABLE: Template = {
   templateName: 'Data Table',
   templateLanguage: 'hydra-data-table',
-  code: JSON.stringify(TABLE_EXAMPLE, null, 2),
+  code: stringify(TABLE_EXAMPLE),
   widgets: [
     {
       widgetName: 'columns',

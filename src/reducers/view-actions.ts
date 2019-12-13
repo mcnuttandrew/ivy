@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import stringify from 'json-stringify-pretty-compact';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 
 const BLANK_CATALOG_ENTRY = Immutable.fromJS({
@@ -32,7 +33,7 @@ export const switchView: ActionResponse = (state, payload) => {
   return updateCatalogView(state, state.get('currentView'))
     .set('currentView', payload)
     .set('spec', newCatalog.get('spec'))
-    .set('specCode', JSON.stringify(newCatalog.get('spec').toJS(), null, 2))
+    .set('specCode', stringify(newCatalog.get('spec').toJS()))
     .set('encodingMode', newCatalog.get('encodingMode'))
     .set('templateMap', newCatalog.get('templateMap'));
 };

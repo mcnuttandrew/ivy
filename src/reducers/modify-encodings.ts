@@ -1,10 +1,10 @@
 import Immutable, {Map} from 'immutable';
+import stringify from 'json-stringify-pretty-compact';
 
 import {
   findField,
   getAllInUseFields,
   extractFieldStringsForType,
-  checkEncodingForValidity,
 } from '../utils';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
@@ -47,13 +47,9 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
   if (inError) {
     return state.set('specCode', code).set('editorError', inError);
   }
-  const parsedCode = JSON.parse(code);
-  // TODO this isValid stuff is wrong, remove it
-  const isValid = checkEncodingForValidity(parsedCode);
   // using shelf mode
   return state
     .set('specCode', code)
-    .set('unprouncableInGrammer', !isValid)
     .set('editorError', null)
     .set('spec', Immutable.fromJS(JSON.parse(code)));
 };
@@ -162,6 +158,10 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
     type: 'quantitative',
   });
   return newState.setIn(fieldRoute, newFieldVal);
+};
+
+export const updateCodeRepresentation: ActionResponse = (_, newState) => {
+  return newState.set('specCode', stringify(newState.get('spec')));
 };
 
 // move a field from one channel to another (origin field might be null)

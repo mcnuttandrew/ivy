@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {toList} from '../../utils';
 const withConditional = (trueCondition: any, conditional: any) => {
@@ -75,7 +76,7 @@ const makeDimWithType = (dim: string) => {
 const SHELF: Template = {
   templateName: 'scatterplot',
   templateLanguage: 'vega-lite',
-  code: JSON.stringify(SHELF_TEMPLATE_CODE, null, 2),
+  code: stringify(SHELF_TEMPLATE_CODE),
   widgets: [
     ...['X', 'Y', 'SIZE', 'COLOR', 'SHAPE', 'DETAIL'].reduce(
       (acc: any[], key: string) => acc.concat(makeDimWithType(key)),

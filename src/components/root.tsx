@@ -43,11 +43,11 @@ interface RootProps {
   GOOSE_MODE?: boolean;
   iMspec?: any;
   metaColumns?: ColumnHeader[];
-  selectedGUIMode?: string;
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
   unprouncableInGrammer?: boolean;
+  showProgrammaticMode?: boolean;
   template?: Template;
   templates?: Template[];
   templateMap?: TemplateMap;
@@ -62,7 +62,6 @@ interface RootProps {
   cloneView?: GenericAction;
 
   addToNextOpenSlot?: GenericAction;
-  changeGUIMode?: GenericAction;
   changeMarkType?: GenericAction;
   changeTheme?: GenericAction;
   chainActions?: GenericAction;
@@ -88,6 +87,7 @@ interface RootProps {
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
   toggleTemplateBuilder?: GenericAction;
+  setProgrammaticView?: GenericAction;
   triggerUndo?: GenericAction;
   triggerRedo?: GenericAction;
 }
@@ -111,21 +111,15 @@ class RootComponent extends React.Component<RootProps> {
     const {
       currentTheme,
       changeTheme,
-      selectedGUIMode,
-      spec,
-      setNewSpecCode,
-      changeGUIMode,
-      template,
+      showProgrammaticMode,
+      setProgrammaticView,
     } = this.props;
     return (
       <SecondaryControls
+        setProgrammaticView={setProgrammaticView}
+        showProgrammaticMode={showProgrammaticMode}
         currentTheme={currentTheme}
         changeTheme={changeTheme}
-        selectedGUIMode={selectedGUIMode}
-        spec={spec}
-        setNewSpecCode={setNewSpecCode}
-        changeGUIMode={changeGUIMode}
-        template={template}
       />
     );
   }
@@ -230,7 +224,7 @@ class RootComponent extends React.Component<RootProps> {
   programmaticMenu() {
     const {setNewSpecCode, specCode, editorError, template} = this.props;
     return (
-      <div className="flex full-height two-column">
+      <div className="flex full-height editor-column background-1">
         <CodeEditor
           setNewSpecCode={setNewSpecCode}
           currentCode={template ? template.code : specCode}
@@ -308,12 +302,11 @@ class RootComponent extends React.Component<RootProps> {
       createTemplate,
       dataModalOpen,
       loadCustomDataset,
-      selectedGUIMode,
       spec,
       toggleDataModal,
       triggerUndo,
       triggerRedo,
-      unprouncableInGrammer,
+      showProgrammaticMode,
       templates,
       templateBuilderModalOpen,
       toggleTemplateBuilder,
@@ -348,11 +341,12 @@ class RootComponent extends React.Component<RootProps> {
           toggleTemplateBuilder={toggleTemplateBuilder}
         />
         <div className="flex full-height">
-          <div className="flex-down full-height control-container">
-            {SHOW_SECONDARY_CONTROLS && this.secondaryControls()}
-            {selectedGUIMode === 'GUI' &&
-              (unprouncableInGrammer ? this.errorMenu() : this.grammarMenu())}
-            {selectedGUIMode === 'PROGRAMMATIC' && this.programmaticMenu()}
+          <div className="flex full-height control-container">
+            {showProgrammaticMode && this.programmaticMenu()}
+            <div className="flex-down">
+              {SHOW_SECONDARY_CONTROLS && this.secondaryControls()}
+              {this.grammarMenu()}
+            </div>
           </div>
           {this.chartArea()}
         </div>
@@ -378,9 +372,9 @@ function mapStateToProps({base}: {base: AppState}): any {
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
     specCode: base.get('specCode'),
+    showProgrammaticMode: base.get('showProgrammaticMode'),
 
     currentlySelectedFile: base.get('currentlySelectedFile'),
-    selectedGUIMode: base.get('selectedGUIMode'),
     dataModalOpen: base.get('dataModalOpen'),
     template: template && template.toJS(),
     templateBuilderModalOpen: base.get('templateBuilderModalOpen'),

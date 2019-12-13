@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import {checkEncodingForValidity, getTemplate} from '../utils';
+import {getTemplate} from '../utils';
 import {EMPTY_SPEC} from './default-state';
 // import {Spec} from 'vega-typings';
 
@@ -18,6 +18,7 @@ import {
   swapXAndYChannels,
   setChannelToMetaColumn,
   setRepeats,
+  updateCodeRepresentation,
 } from './modify-encodings';
 
 import {addToNextOpenSlot} from './apt-actions';
@@ -40,13 +41,8 @@ import {createNewView, deleteView, switchView, cloneView} from './view-actions';
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // GUI ACTIONS
-const changeGUIMode: ActionResponse = (state, payload) =>
-  state
-    .set('selectedGUIMode', payload)
-    .set(
-      'unprouncableInGrammer',
-      !checkEncodingForValidity(state.get('spec').toJS()),
-    );
+const setProgrammaticView: ActionResponse = (state, payload) =>
+  state.set('showProgrammaticMode', !state.get('showProgrammaticMode'));
 const toggleDataModal: ActionResponse = state =>
   state.set('dataModalOpen', !state.get('dataModalOpen'));
 const changeTheme: ActionResponse = (state, payload) =>
@@ -81,6 +77,9 @@ const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
 const addUndo = (func: ActionResponse): ActionResponse =>
   wrap(func, pushToUndoStack);
 
+const addUpdateCode = (func: ActionResponse): ActionResponse =>
+  wrap(func, updateCodeRepresentation);
+
 const actionFuncMap: {[val: string]: ActionResponse} = {
   // data modifications
   'change-selected-file': changeSelectedFile,
@@ -88,32 +87,32 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'recieve-type-inferences': recieveTypeInferences,
 
   // encoding modifications
-  'add-to-next-open-slot': addUndo(addToNextOpenSlot),
-  'change-mark-type': addUndo(changeMarkType),
-  'clear-encoding': addUndo(clearEncoding),
-  'coerce-type': addUndo(coerceType),
-  'set-encoding-param': addUndo(setEncodingParameter),
-  'set-channel-to-meta-colum': addUndo(setChannelToMetaColumn),
-  'set-new-encoding': addUndo(setNewSpec),
+  'add-to-next-open-slot': addUndo(addUpdateCode(addToNextOpenSlot)),
+  'change-mark-type': addUndo(addUpdateCode(changeMarkType)),
+  'clear-encoding': addUndo(addUpdateCode(clearEncoding)),
+  'coerce-type': addUndo(addUpdateCode(coerceType)),
+  'set-encoding-param': addUndo(addUpdateCode(setEncodingParameter)),
+  'set-channel-to-meta-colum': addUndo(addUpdateCode(setChannelToMetaColumn)),
+  'set-new-encoding': addUndo(addUpdateCode(setNewSpec)),
   'set-new-encoding-code': addUndo(setNewSpecCode),
-  'set-repeats': addUndo(setRepeats),
-  'swap-x-and-y-channels': addUndo(swapXAndYChannels),
+  'set-repeats': addUndo(addUpdateCode(setRepeats)),
+  'swap-x-and-y-channels': addUndo(addUpdateCode(swapXAndYChannels)),
 
-  'trigger-redo': triggerRedo,
-  'trigger-undo': triggerUndo,
+  'trigger-redo': addUpdateCode(triggerRedo),
+  'trigger-undo': addUpdateCode(triggerUndo),
 
   // filter modifications
-  'create-filter': addUndo(createFilter),
-  'delete-filter': addUndo(deleteFilter),
-  'update-filter': addUndo(updateFilter),
+  'create-filter': addUndo(addUpdateCode(createFilter)),
+  'delete-filter': addUndo(addUpdateCode(deleteFilter)),
+  'update-filter': addUndo(addUpdateCode(updateFilter)),
 
   // gui modifications
-  'change-gui-mode': changeGUIMode,
   'change-theme': changeTheme,
   'toggle-data-modal': toggleDataModal,
   'clear-unprouncable': clearUnprounceWarning,
   'set-encoding-mode': setEncodingMode,
   'toggle-template-builder': toggleTemplateBuilder,
+  'toggle-programmatic-view': setProgrammaticView,
 
   // template
   'recieve-templates': recieveTemplates,

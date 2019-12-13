@@ -178,8 +178,8 @@ button:disabled {
   width: 200px;
 }
 
-.two-column {
-  width: 460px;
+.editor-column {
+  width: 400px;
 }
 
 .control-container {
@@ -864,10 +864,16 @@ button:disabled {
 
 
 .code-editor-controls {
-  background-color: ghostwhite;
-  padding: 10px;
+  /* background-color: whitesmoke; */
+  color: white;
+  padding: 2px;
   z-index: 10;
 }
+.code-editor-controls button,
+.code-editor-controls .hydra-selector {
+  color: white;
+}
+
 
 .code-editor-controls .execute-code-control {
   align-items: center;

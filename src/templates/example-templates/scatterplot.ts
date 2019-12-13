@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
@@ -20,7 +21,7 @@ const SCATTERPLOT_EXAMPLE: any = {
 const SCATTERPLOT: Template = {
   templateName: 'scatterplot',
   templateLanguage: 'vega-lite',
-  code: JSON.stringify(SCATTERPLOT_EXAMPLE, null, 2),
+  code: stringify(SCATTERPLOT_EXAMPLE),
   widgets: [
     {
       widgetName: 'xDim',

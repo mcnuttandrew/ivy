@@ -146,6 +146,7 @@ export const extractFieldStringsForType = (
     .filter((column: ColumnHeader) => column.type === type)
     .map((column: ColumnHeader) => column.field);
 
+// currently unused
 export const checkEncodingForValidity = (spec: any) => {
   const usingNested = !!spec.spec;
   if (usingNested ? spec.spec.layer : spec.layer) {

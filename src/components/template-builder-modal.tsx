@@ -1,6 +1,7 @@
 import React from 'react';
 import {List} from 'immutable';
 import MonacoEditor from 'react-monaco-editor';
+import stringify from 'json-stringify-pretty-compact';
 
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
@@ -46,7 +47,7 @@ export default class TemplateBuilderModal extends React.Component<
       showTextualTemplate: false,
     };
     this.state = {
-      code: JSON.stringify(this.props.spec, null, 2),
+      code: stringify(this.props.spec),
       templateName: null,
       widgets: List(),
       error: false,
@@ -107,7 +108,7 @@ export default class TemplateBuilderModal extends React.Component<
           <button
             onClick={() => {
               this.setState({
-                code: JSON.stringify(EMPTY_SPEC.toJS(), null, 2),
+                code: stringify(EMPTY_SPEC.toJS()),
               });
             }}
           >
@@ -116,7 +117,7 @@ export default class TemplateBuilderModal extends React.Component<
           <button
             onClick={() => {
               this.setState({
-                code: JSON.stringify(spec, null, 2),
+                code: stringify(spec),
               });
             }}
           >
@@ -126,7 +127,7 @@ export default class TemplateBuilderModal extends React.Component<
           <button
             onClick={() => {
               this.setState({
-                code: JSON.stringify(JSON.parse(code), null, 2),
+                code: stringify(JSON.parse(code)),
               });
             }}
           >
@@ -383,7 +384,7 @@ export default class TemplateBuilderModal extends React.Component<
           <MonacoEditor
             language="json"
             theme="vs-light"
-            value={JSON.stringify(serializedState, null, 2)}
+            value={stringify(serializedState)}
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {
               Promise.resolve()
