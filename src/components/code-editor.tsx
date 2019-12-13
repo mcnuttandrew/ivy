@@ -52,6 +52,14 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
   editorDidMount(editor: any) {
     editor.focus();
+    // @ts-ignore
+    import('monaco-themes/themes/Cobalt.json').then(data => {
+      console.log(data, '???');
+      // @ts-ignore
+      monaco.editor.defineTheme('birds', data);
+      // @ts-ignore
+      monaco.editor.setTheme('birds');
+    });
   }
 
   editorControls() {
@@ -132,7 +140,7 @@ export default class CodeEditor extends React.Component<Props, State> {
           <MonacoEditor
             ref="monaco"
             language="json"
-            theme="vs-dark"
+            theme="monokai"
             value={currentCode}
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {
