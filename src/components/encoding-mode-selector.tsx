@@ -78,7 +78,7 @@ export default function EncodingMode(props: Props) {
   return (
     <div className="flex tooltip-container">
       <div onClick={toggle}>
-        <TiExport />
+        <TiExport /> Select
       </div>
       {open && <div className="modal-background" onClick={toggle} />}
       <div className="modal-tooltip-container">

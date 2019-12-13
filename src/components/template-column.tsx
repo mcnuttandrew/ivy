@@ -136,7 +136,6 @@ export default class TemplateColumn extends React.Component<
 
     return (
       <div className="column">
-        <h1 className="section-title flex"> {template.templateName}</h1>
         <div>
           {template.widgets.map(widget => {
             if (widget.widgetType === 'DataTarget') {

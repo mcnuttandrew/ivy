@@ -8,14 +8,22 @@ import {
 } from '../utils';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
-import {respondToTemplateInstanceCodeChanges} from './template-actions';
+import {
+  respondToTemplateInstanceCodeChanges,
+  fillTemplateMapWithDefaults,
+} from './template-actions';
 
 const usingNestedSpec = (state: AppState): boolean =>
   Boolean(state.getIn(['spec', 'spec']));
 
 // remove the current encoding
-export const clearEncoding: ActionResponse = state =>
-  state.set('spec', EMPTY_SPEC);
+export const clearEncoding: ActionResponse = state => {
+  if (state.get('currentTemplateInstance')) {
+    return fillTemplateMapWithDefaults(state);
+  } else {
+    return state.set('spec', EMPTY_SPEC);
+  }
+};
 
 // change the mark type
 export const changeMarkType: ActionResponse = (state, payload) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FaEraser} from 'react-icons/fa';
+
 import {GenericAction} from '../actions/index';
 import Shelf from './shelf';
 import {ColumnHeader} from '../types';
@@ -33,12 +33,13 @@ interface EncodingColumnProps {
   onDropFilter: any;
 
   changeMarkType: GenericAction;
-  clearEncoding: GenericAction;
   setNewSpec: GenericAction;
   setEncodingParameter: GenericAction;
   swapXAndYChannels: GenericAction;
 }
-export default class EncodingColumn extends React.Component<EncodingColumnProps> {
+export default class EncodingColumn extends React.Component<
+  EncodingColumnProps
+> {
   render() {
     const {
       columns,
@@ -47,7 +48,6 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       iMspec,
       onDrop,
       setEncodingParameter,
-      clearEncoding,
       changeMarkType,
 
       setNewSpec,
@@ -73,13 +73,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
     return (
       <div className="column">
         {/* ENCODING STUFF */}
-        <div className="flex space-between">
-          <h1 className="section-title flex"> Encoding </h1>
-          <div className="clear-encoding" onClick={clearEncoding}>
-            <FaEraser />
-            Clear
-          </div>
-        </div>
+        <h1 className="section-title flex"> Encoding </h1>
         <div className="flex-down section-body">
           {['x', 'y'].map(makeShelf(false))}
           <button onClick={swapXAndYChannels}>Swap X/Y</button>

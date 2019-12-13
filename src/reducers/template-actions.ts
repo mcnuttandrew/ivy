@@ -35,7 +35,7 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   return filledInSpec;
 };
 
-// for template map holes that are NOT dimensions, fill em as best you can
+// for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState) {
   const template = state.get('currentTemplateInstance').toJS();
   // const widgets =

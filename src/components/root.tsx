@@ -3,6 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import {FaEraser} from 'react-icons/fa';
 import {checkIfMapComplete} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
@@ -179,12 +180,18 @@ class RootComponent extends React.Component<RootProps> {
                   <h1 className="section-title">ENCODING MODE</h1>
                   <h3>{encodingMode}</h3>
                 </div>
-                <EncodingModeSelector
-                  deleteTemplate={deleteTemplate}
-                  templates={templates}
-                  setEncodingMode={setEncodingMode}
-                  startTemplateEdit={startTemplateEdit}
-                />
+                <div className="flex-down">
+                  <EncodingModeSelector
+                    deleteTemplate={deleteTemplate}
+                    templates={templates}
+                    setEncodingMode={setEncodingMode}
+                    startTemplateEdit={startTemplateEdit}
+                  />
+                  <div className="clear-encoding" onClick={clearEncoding}>
+                    <FaEraser />
+                    Clear
+                  </div>
+                </div>
               </div>
             )}
             {encodingMode === 'grammer' && (
@@ -192,7 +199,6 @@ class RootComponent extends React.Component<RootProps> {
                 iMspec={iMspec}
                 changeMarkType={changeMarkType}
                 setEncodingParameter={setEncodingParameter}
-                clearEncoding={clearEncoding}
                 spec={spec}
                 columns={columns}
                 metaColumns={metaColumns}
