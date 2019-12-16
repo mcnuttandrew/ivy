@@ -40,7 +40,6 @@ export default function SwitchBuilderWidget(
     <div className="flex-down">
       <div className="flex-down">
         <div className="flex-down">
-          <span className="tool-description">WidgetKey</span>
           <input
             value={widget.widgetName}
             onChange={event =>
@@ -49,7 +48,7 @@ export default function SwitchBuilderWidget(
           />
         </div>
         <div className="flex">
-          <span>Defaults to be </span>
+          <span className="tool-description">Defaults to be </span>
           <Switch
             checked={!!widget.defaultsToActive}
             offColor="#E1E9F2"
@@ -63,23 +62,25 @@ export default function SwitchBuilderWidget(
           />
         </div>
       </div>
-      <div className="flex-down">
-        <span className="tool-description">Active Value</span>
-        <input
-          value={widget.activeValue}
-          onChange={event =>
-            setWidgetValue('activeValue', event.target.value, idx)
-          }
-        />
-      </div>
-      <div className="flex-down">
-        <span className="tool-description">Inactive Value</span>
-        <input
-          value={widget.inactiveValue}
-          onChange={event =>
-            setWidgetValue('inactiveValue', event.target.value, idx)
-          }
-        />
+      <div className="flex">
+        <div className="flex-down">
+          <span className="tool-description">Active Value</span>
+          <input
+            value={widget.activeValue}
+            onChange={event =>
+              setWidgetValue('activeValue', event.target.value, idx)
+            }
+          />
+        </div>
+        <div className="flex-down">
+          <span className="tool-description">Inactive Value</span>
+          <input
+            value={widget.inactiveValue}
+            onChange={event =>
+              setWidgetValue('inactiveValue', event.target.value, idx)
+            }
+          />
+        </div>
       </div>
     </div>
   );

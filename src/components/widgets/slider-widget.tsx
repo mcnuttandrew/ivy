@@ -49,7 +49,6 @@ export default function SliderBuilderWidget(
   return (
     <div className="flex">
       <div className="flex-down">
-        <span className="tool-description">WidgetKey</span>
         <input
           value={widget.widgetName}
           onChange={event =>

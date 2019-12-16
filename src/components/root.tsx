@@ -3,7 +3,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import {FaEraser} from 'react-icons/fa';
 import {checkIfMapComplete} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
@@ -28,8 +27,8 @@ import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
-import EncodingModeSelector from './encoding-mode-selector';
 import TemplateBuilderModal from './template-builder-modal';
+import EncodingControls from './encoding-controls';
 
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
@@ -152,13 +151,12 @@ class RootComponent extends React.Component<RootProps> {
       startTemplateEdit,
       swapXAndYChannels,
       updateFilter,
+      template,
       templates,
       templateMap,
       toggleDataModal,
     } = this.props;
-    const foundTemplate = templates.find(
-      template => template.templateName === encodingMode,
-    );
+
     return (
       <div className="flex full-height column-border">
         <DndProvider backend={HTML5Backend}>
@@ -179,30 +177,16 @@ class RootComponent extends React.Component<RootProps> {
           />
           <div className="flex-down full-height background-3 encoding-column-container">
             {SHOW_TEMPLATE_CONTROLS && (
-              <div className="encoding-mode-selector">
-                <div className="flex-down">
-                  <h1 className="section-title">ENCODING MODE</h1>
-                  <h3>{encodingMode}</h3>
-                </div>
-                <div className="flex-down">
-                  <EncodingModeSelector
-                    deleteTemplate={deleteTemplate}
-                    templates={templates}
-                    setEncodingMode={setEncodingMode}
-                    startTemplateEdit={startTemplateEdit}
-                  />
-                  <div className="clear-encoding" onClick={clearEncoding}>
-                    <FaEraser />
-                    Clear
-                  </div>
-                  <div
-                    className="clear-encoding"
-                    onClick={() => setEditMode(!editMode)}
-                  >
-                    {editMode ? 'STOP EDIT' : 'START EDIT'}
-                  </div>
-                </div>
-              </div>
+              <EncodingControls
+                encodingMode={encodingMode}
+                deleteTemplate={deleteTemplate}
+                templates={templates}
+                setEncodingMode={setEncodingMode}
+                startTemplateEdit={startTemplateEdit}
+                clearEncoding={clearEncoding}
+                editMode={editMode}
+                setEditMode={setEditMode}
+              />
             )}
             {encodingMode === 'grammer' && (
               <EncodingColumn
@@ -223,10 +207,10 @@ class RootComponent extends React.Component<RootProps> {
                 onDropFilter={(item: any) => createFilter({field: item.text})}
               />
             )}
-            {encodingMode !== 'grammer' && foundTemplate && (
+            {encodingMode !== 'grammer' && template && (
               <TemplateColumn
                 editMode={editMode}
-                template={foundTemplate}
+                template={template}
                 templateMap={templateMap}
                 columns={columns}
                 setTemplateValue={setTemplateValue}

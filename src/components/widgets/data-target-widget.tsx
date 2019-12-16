@@ -46,25 +46,44 @@ export default function DataTargetBuilderWidget(
         widget={widget}
         setName={(value: string) => setWidgetValue('widgetName', value, idx)}
       />
-      <div className="flex">
-        <span className="tool-description">Required:</span>
-        <input
-          type="checkbox"
-          onChange={() => setWidgetValue('required', !widget.required, idx)}
-          checked={!!widget.required}
-        />
-      </div>
-      <div className="flex-down">
-        <span className="tool-description">Allowed Data Types</span>
+      <div className="flex space-evenly">
+        <div className="flex-down">
+          <span className="tool-description">Allowed Data Types</span>
+          <div className="flex">
+            {DATA_TYPES.map(type => {
+              const checked = allowedTypesSet.has(type);
+              return (
+                <div className="flex" key={type}>
+                  <DataSymbol type={type} />
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => {
+                      if (checked) {
+                        allowedTypesSet.delete(type);
+                      } else {
+                        allowedTypesSet.add(type);
+                      }
+
+                      setWidgetValue(
+                        'allowedTypes',
+                        Array.from(allowedTypesSet),
+                        idx,
+                      );
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
         <div className="flex">
-          {DATA_TYPES.map(type => {
-            return (
-              <div>
-                <DataSymbol type={type} />
-                <input type="checkbox" checked={allowedTypesSet.has(type)} />
-              </div>
-            );
-          })}
+          <span className="tool-description">Required:</span>
+          <input
+            type="checkbox"
+            onChange={() => setWidgetValue('required', !widget.required, idx)}
+            checked={!!widget.required}
+          />
         </div>
         {/* <Select
           isMulti={true}

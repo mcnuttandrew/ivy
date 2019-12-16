@@ -34,7 +34,6 @@ export default function ListBuilderWidget(props: GeneralWidget<ListWidget>) {
     <div>
       <div className="flex-down">
         <div className="flex-down">
-          <span className="tool-description">WidgetKey</span>
           <input
             value={widget.widgetName}
             onChange={event =>

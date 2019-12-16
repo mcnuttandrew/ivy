@@ -61,6 +61,10 @@ button:disabled {
   justify-content: space-between;
 }
 
+.space-evenly {
+  justify-content: space-evenly;
+}
+
 .margin-right {
   margin-right: 5px;
 }
@@ -169,6 +173,7 @@ button:disabled {
 
 .encoding-column-container {
   min-width: 230px;
+  max-width: 230px;
 }
 
 .column-border {
@@ -531,10 +536,14 @@ button:disabled {
 .widget-handle {
   background: #B5B5B5;
   display: flex;
+  flex-direction: column;
   padding: 3px 5px;
 }
 .widget input {
-  /* background: none; */
+  background: none;
+  border: none;
+  width: 100%;
+  border-bottom: thin dotted black;
 }
 
 .fake-pill-container {
@@ -556,6 +565,7 @@ button:disabled {
 .list-widget {
   align-items: center;
   display: flex;
+  font-size: 12px;
   justify-content: center;
   height: 100%;
 }
@@ -565,6 +575,10 @@ button:disabled {
   font-size: 12px;
   width: 100%;
   justify-content: space-between;
+}
+
+.text-widget {
+  font-size: 12px;
 }
 
 .in-use-status {
@@ -792,11 +806,13 @@ button:disabled {
 }
 
 .encoding-mode-selector {
+  align-items: center;
   background: #FAFAFA;
   display: flex;
+  flex-direction: column;
   padding: 5px 10px;
-  align-items: center;
   justify-content: space-between;
+  white-space: nowrap;
 }
 
 .encoding-mode-selector h1 {
