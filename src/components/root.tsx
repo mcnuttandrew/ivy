@@ -177,7 +177,7 @@ class RootComponent extends React.Component<RootProps> {
             deleteFilter={deleteFilter}
             onDropFilter={(item: any) => createFilter({field: item.text})}
           />
-          <div className="flex-down full-height background-3">
+          <div className="flex-down full-height background-3 encoding-column-container">
             {SHOW_TEMPLATE_CONTROLS && (
               <div className="encoding-mode-selector">
                 <div className="flex-down">

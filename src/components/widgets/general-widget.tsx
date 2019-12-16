@@ -31,7 +31,7 @@ export interface GeneralWidget<T> {
   columns: ColumnHeader[];
 }
 
-interface BuilderWidgetProps {
+interface Props {
   code: string;
   widget: TemplateWidget;
   idx: number;
@@ -47,7 +47,7 @@ interface BuilderWidgetProps {
   setTemplateValue: GenericAction;
 }
 
-function PlacementControls(props: BuilderWidgetProps) {
+function PlacementControls(props: Props) {
   const {
     code,
     widget,
@@ -84,7 +84,7 @@ function PlacementControls(props: BuilderWidgetProps) {
   );
 }
 
-export default function BuilderWidget(props: BuilderWidgetProps) {
+export default function GeneralWidget(props: Props) {
   const {
     columns,
     editMode,
@@ -104,7 +104,7 @@ export default function BuilderWidget(props: BuilderWidgetProps) {
     columns,
   };
   return (
-    <div className="widget">
+    <div className="widget flex">
       <PlacementControls {...props} />
       <div className="widget-body">
         {widget.widgetType === 'Switch' && (

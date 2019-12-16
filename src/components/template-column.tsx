@@ -2,6 +2,7 @@ import React from 'react';
 import {ColumnHeader} from '../types';
 import {GenericAction} from '../actions';
 import {Template} from '../templates/types';
+import {classnames} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
 
@@ -28,7 +29,13 @@ export default class TemplateColumn extends React.Component<
     } = this.props;
 
     return (
-      <div className="column">
+      <div
+        className={classnames({
+          column: true,
+          'template-column': true,
+          'edit-mode': editMode,
+        })}
+      >
         <div>
           {template.widgets.map((widget, idx) => {
             return (

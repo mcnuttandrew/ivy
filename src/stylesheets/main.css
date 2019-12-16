@@ -167,6 +167,10 @@ button:disabled {
   font-size: 12px;
 }
 
+.encoding-column-container {
+  min-width: 230px;
+}
+
 .column-border {
   border-right: thin solid #B5B5B5;
 }
@@ -176,6 +180,12 @@ button:disabled {
   overflow-y: scroll;
   padding: 15px;
   width: 200px;
+}
+
+
+.template-column.column.edit-mode {
+  padding: 0;
+  width: 100%;
 }
 
 .editor-column {
@@ -505,17 +515,20 @@ button:disabled {
   font-size: 12px;
 }
 
-.widget-configuration-panel .widget-body {
-  padding: 5px;
-  background: #F5F5F5;
+
+.widget {
+  margin-bottom: 5px;
+}
+
+.widget-body {
   width: 100%;
 }
 
-.widget-configuration-panel .widget-body textarea {
+.widget-body textarea {
   width: calc(100% - 5px);
 }
 
-.widget-configuration-panel .widget-handle {
+.widget-handle {
   background: #B5B5B5;
   display: flex;
   padding: 3px 5px;
@@ -535,6 +548,7 @@ button:disabled {
 .modal-body .code-column .column {
   width: 250px;
 }
+
 
 .list-widget {
   align-items: center;

@@ -19,7 +19,7 @@ export default function DataTargetBuilderWidget(
   if (!editMode) {
     const fieldValue = templateMap[widget.widgetName];
     return (
-      <div key={widget.widgetName}>
+      <div>
         <TemplateMultiShelf
           channelEncodings={(Array.isArray(fieldValue)
             ? (fieldValue as string[])

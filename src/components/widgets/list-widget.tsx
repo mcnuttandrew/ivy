@@ -2,7 +2,6 @@ import React from 'react';
 import CreatableSelect from 'react-select/creatable';
 import {ListWidget} from '../../templates/types';
 import {toSelectFormat} from '../../utils';
-import Select from 'react-select';
 import Selector from '../selector';
 
 import {GeneralWidget} from './general-widget';
@@ -19,7 +18,7 @@ export default function ListBuilderWidget(props: GeneralWidget<ListWidget>) {
   const options = toSelectFormat(widget.allowedValues.map(d => d.value));
   if (!editMode) {
     return (
-      <div key={widget.widgetName} className="list-widget">
+      <div className="list-widget">
         <div>{widget.widgetName}</div>
         <Selector
           options={widget.allowedValues}
@@ -33,7 +32,7 @@ export default function ListBuilderWidget(props: GeneralWidget<ListWidget>) {
   }
   return (
     <div>
-      <div className="flex">
+      <div className="flex-down">
         <div className="flex-down">
           <span className="tool-description">WidgetKey</span>
           <input
@@ -45,10 +44,15 @@ export default function ListBuilderWidget(props: GeneralWidget<ListWidget>) {
         </div>
         <div className="flex-down full-width">
           <span className="tool-description"> Default value </span>
-          <Select
-            classNamePrefix="hydra-import-select"
-            onChange={(x: any) => setWidgetValue('defaultValue', x.value, idx)}
-            options={options}
+          <Selector
+            options={widget.allowedValues}
+            selectedValue={templateMap[widget.widgetName]}
+            onChange={(value: any) => {
+              setWidgetValue('defaultValue', value, idx);
+              {
+                /* setTemplateValue({field: widget.widgetName, text: value}); */
+              }
+            }}
           />
         </div>
       </div>

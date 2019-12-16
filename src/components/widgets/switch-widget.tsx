@@ -17,7 +17,7 @@ export default function SwitchBuilderWidget(
   if (!editMode) {
     const isActive = templateMap[widget.widgetName] === widget.activeValue;
     return (
-      <div key={widget.widgetName} className="switch-widget">
+      <div className="switch-widget">
         <div>{widget.widgetName}</div>
         <Switch
           checked={isActive}
@@ -37,7 +37,7 @@ export default function SwitchBuilderWidget(
     );
   }
   return (
-    <div className="flex">
+    <div className="flex-down">
       <div className="flex-down">
         <div className="flex-down">
           <span className="tool-description">WidgetKey</span>

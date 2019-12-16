@@ -19,7 +19,7 @@ export default function SliderBuilderWidget(
     const setVal = (text: any) =>
       setTemplateValue({field: widget.widgetName, text: clamp(text)});
     return (
-      <div className="slide-widget" key={widget.widgetName}>
+      <div className="slide-widget">
         <div>{widget.widgetName}</div>
         <div className="flex">
           <input

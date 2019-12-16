@@ -4,6 +4,7 @@ import Select from 'react-select';
 import {DataTargetWidget} from '../../templates/types';
 import {DataType} from '../../types';
 import {toSelectFormat, trim} from '../../utils';
+import DataSymbol from '../data-symbol';
 import {GeneralWidget} from './general-widget';
 import TemplateShelf from '../template-shelf';
 
@@ -21,46 +22,51 @@ export default function DataTargetBuilderWidget(
     columns,
     setTemplateValue,
   } = props;
+  const fieldValue = templateMap[widget.widgetName];
   if (!editMode) {
-    const fieldValue = templateMap[widget.widgetName];
     return (
-      <div key={widget.widgetName}>
-        <TemplateShelf
-          channelEncoding={trim(fieldValue as string)}
-          field={widget.widgetName}
-          columns={columns}
-          onDrop={setTemplateValue}
-          widget={widget}
-        />
-      </div>
+      <TemplateShelf
+        channelEncoding={trim(fieldValue as string)}
+        field={widget.widgetName}
+        columns={columns}
+        onDrop={setTemplateValue}
+        widget={widget}
+      />
     );
   }
+  const allowedTypesSet = new Set(widget.allowedTypes);
+
   return (
-    <div className="flex">
-      <div className="flex-down">
-        <span className="tool-description">WidgetKey</span>
+    <div className="flex-down">
+      <TemplateShelf
+        channelEncoding={trim(fieldValue as string)}
+        field={widget.widgetName}
+        columns={columns}
+        onDrop={setTemplateValue}
+        widget={widget}
+        setName={(value: string) => setWidgetValue('widgetName', value, idx)}
+      />
+      <div className="flex">
+        <span className="tool-description">Required:</span>
         <input
-          value={widget.widgetName}
-          onChange={event =>
-            setWidgetValue('widgetName', event.target.value, idx)
-          }
+          type="checkbox"
+          onChange={() => setWidgetValue('required', !widget.required, idx)}
+          checked={!!widget.required}
         />
-        <div className="flex">
-          <span className="tool-description">Required:</span>
-          <Switch
-            checked={!!widget.required}
-            offColor="#E1E9F2"
-            onColor="#36425C"
-            height={15}
-            checkedIcon={false}
-            width={50}
-            onChange={() => setWidgetValue('required', !widget.required, idx)}
-          />
-        </div>
       </div>
       <div className="flex-down">
         <span className="tool-description">Allowed Data Types</span>
-        <Select
+        <div className="flex">
+          {DATA_TYPES.map(type => {
+            return (
+              <div>
+                <DataSymbol type={type} />
+                <input type="checkbox" checked={allowedTypesSet.has(type)} />
+              </div>
+            );
+          })}
+        </div>
+        {/* <Select
           isMulti={true}
           value={toSelectFormat(widget.allowedTypes)}
           options={toSelectFormat(DATA_TYPES)}
@@ -72,7 +78,7 @@ export default function DataTargetBuilderWidget(
               idx,
             );
           }}
-        />
+        /> */}
       </div>
     </div>
   );
