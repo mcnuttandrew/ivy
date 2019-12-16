@@ -8,4 +8,6 @@ export const EDITOR_OPTIONS = {
     enabled: false,
   },
   fontSize: 10,
+  lineDecorationsWidth: 0,
+  lineNumbersMinChars: 3,
 };
