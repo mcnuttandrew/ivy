@@ -11,7 +11,7 @@ import {
   DataTargetWidget,
 } from '../templates/types';
 import {trim} from '../utils';
-import {setEncodingMode} from './index';
+import {setEncodingMode} from './gui-actions';
 
 export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   const filledInSpec = Object.entries(templateMap).reduce(

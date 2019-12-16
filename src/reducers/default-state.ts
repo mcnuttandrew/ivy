@@ -51,22 +51,27 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   editorError: null,
   columns: [],
   metaColumns: [],
-  unprouncableInGrammer: false,
-  showProgrammaticMode: true,
+  currentTheme: 'default',
   encodingMode: 'grammer',
+
   currentTemplateInstance: null,
+  showProgrammaticMode: true,
 
   // encodingMode: 'Data Table',
   // currentTemplateInstance: TABLE,
 
   // encodingMode: 'overview',
-  currentTheme: 'default',
+
+  // undo redo
   undoStack: Immutable.fromJS([]),
   redoStack: Immutable.fromJS([]),
+
+  // view stuff
   views: ['view1'],
   viewCatalog: {},
   currentView: 'view1',
 
+  // template stuff
   templates: [],
   templateMap: {},
   templateBuilderModalOpen: false,

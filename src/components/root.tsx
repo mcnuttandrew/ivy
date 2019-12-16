@@ -47,7 +47,6 @@ interface RootProps {
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
-  unprouncableInGrammer?: boolean;
   showProgrammaticMode?: boolean;
   template?: Template;
   templates?: Template[];
@@ -68,7 +67,6 @@ interface RootProps {
   chainActions?: GenericAction;
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
-  clearUnprounceWarning?: GenericAction;
   createFilter?: GenericAction;
   createTemplate?: GenericAction;
   coerceType?: GenericAction;
@@ -240,31 +238,31 @@ class RootComponent extends React.Component<RootProps> {
     );
   }
 
-  errorMenu() {
-    const {clearUnprounceWarning} = this.props;
-    return (
-      <div className="full-height full-width inline-block error-container">
-        <h3>Error</h3>
-        <h5>
-          The Vega-lite Specification that you have constructed is not supported
-          by the grammar mode.
-        </h5>
-        <br />
-        <h5>
-          {' '}
-          You can resolve this error by modifying the spec. Please note that
-          layers are not supported at this time.
-        </h5>
-        <br />
-        <h5>
-          If you like you are welcome to try to over-ride this error, but the
-          application make construct suprirsing and less than satisfactory
-          result
-        </h5>
-        <button onClick={clearUnprounceWarning}>OVER RIDE</button>
-      </div>
-    );
-  }
+  // errorMenu() {
+  //   const {clearUnprounceWarning} = this.props;
+  //   return (
+  //     <div className="full-height full-width inline-block error-container">
+  //       <h3>Error</h3>
+  //       <h5>
+  //         The Vega-lite Specification that you have constructed is not supported
+  //         by the grammar mode.
+  //       </h5>
+  //       <br />
+  //       <h5>
+  //         {' '}
+  //         You can resolve this error by modifying the spec. Please note that
+  //         layers are not supported at this time.
+  //       </h5>
+  //       <br />
+  //       <h5>
+  //         If you like you are welcome to try to over-ride this error, but the
+  //         application make construct suprirsing and less than satisfactory
+  //         result
+  //       </h5>
+  //       <button onClick={clearUnprounceWarning}>OVER RIDE</button>
+  //     </div>
+  //   );
+  // }
 
   chartArea() {
     const {
@@ -387,7 +385,6 @@ function mapStateToProps({base}: {base: AppState}): any {
     templateComplete:
       template && checkIfMapComplete(template.toJS(), templateMap),
     currentTheme: base.get('currentTheme'),
-    unprouncableInGrammer: base.get('unprouncableInGrammer'),
     GOOSE_MODE: base.get('GOOSE_MODE'),
     templates: base.get('templates'),
     templateMap,

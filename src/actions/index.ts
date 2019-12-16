@@ -25,9 +25,7 @@ export const changeMarkType = buildEasyAction('change-mark-type');
 export const setNewSpec = buildEasyAction('set-new-encoding');
 export const setNewSpecCode = buildEasyAction('set-new-encoding-code');
 export const addToNextOpenSlot = buildEasyAction('add-to-next-open-slot');
-export const setProgrammaticView = buildEasyAction(
-  'toggle-programmatic-view',
-);
+export const setProgrammaticView = buildEasyAction('toggle-programmatic-view');
 export const changeTheme = buildEasyAction('change-theme');
 export const createFilter = buildEasyAction('create-filter');
 export const updateFilter = buildEasyAction('update-filter');
@@ -44,8 +42,6 @@ export const createNewView = buildEasyAction('create-new-view');
 export const deleteView = buildEasyAction('delete-view');
 export const switchView = buildEasyAction('switch-view');
 export const cloneView = buildEasyAction('clone-view');
-
-export const clearUnprounceWarning = buildEasyAction('clear-unprouncable');
 
 export const triggerRedo = buildEasyAction('trigger-redo');
 export const triggerUndo = buildEasyAction('trigger-undo');

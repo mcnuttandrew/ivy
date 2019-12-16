@@ -9,7 +9,7 @@ import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
 import TABLE from '../src/templates/example-templates/table';
 
 import {DEFAULT_STATE} from '../src/reducers/default-state';
-import {setEncodingMode} from '../src/reducers/index';
+import {setEncodingMode} from '../src/reducers/gui-actions';
 
 test('#setTemplateValues', () => {
   const filledOutPieTemplate = setTemplateValues(PIECHART_TEMPLATE.code, {
