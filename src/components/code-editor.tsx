@@ -54,11 +54,10 @@ export default class CodeEditor extends React.Component<Props, State> {
     editor.focus();
     // @ts-ignore
     import('monaco-themes/themes/Cobalt.json').then(data => {
-      console.log(data, '???');
       // @ts-ignore
-      monaco.editor.defineTheme('birds', data);
+      monaco.editor.defineTheme('cobalt', data);
       // @ts-ignore
-      monaco.editor.setTheme('birds');
+      monaco.editor.setTheme('cobalt');
     });
   }
 

@@ -1,13 +1,12 @@
 import React from 'react';
 import {TextWidget} from '../../templates/types';
-interface TextBuilderWidgetProps {
-  widget: TextWidget;
-  idx: number;
-  setWidgetValue: any;
-}
+import {GeneralWidget} from './general-widget';
 
-export default function TextBuilderWidget(props: TextBuilderWidgetProps) {
-  const {widget, idx, setWidgetValue} = props;
+export default function TextBuilderWidget(props: GeneralWidget<TextWidget>) {
+  const {widget, idx, setWidgetValue, editMode} = props;
+  if (!editMode) {
+    return <div>{widget.text}</div>;
+  }
   return (
     <div>
       <textarea

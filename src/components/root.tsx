@@ -37,6 +37,7 @@ interface RootProps {
   canUndo?: boolean;
   canRedo?: boolean;
   editorError?: null | string;
+  editMode?: boolean;
   spec?: Spec;
   specCode?: string;
   data?: any; //TODO: define the data type
@@ -71,6 +72,7 @@ interface RootProps {
   createTemplate?: GenericAction;
   coerceType?: GenericAction;
   deleteTemplate?: GenericAction;
+  setEditMode?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
   loadTemplates?: GenericAction;
@@ -82,6 +84,7 @@ interface RootProps {
   setTemplateValue?: GenericAction;
   setRepeats?: GenericAction;
   setEncodingMode?: GenericAction;
+  setWidgetValue?: GenericAction;
   startTemplateEdit?: GenericAction;
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
@@ -134,15 +137,18 @@ class RootComponent extends React.Component<RootProps> {
       currentlySelectedFile,
       deleteFilter,
       deleteTemplate,
+      editMode,
       encodingMode,
       iMspec,
       metaColumns,
       spec,
+      setEditMode,
       setEncodingParameter,
       setEncodingMode,
       setNewSpec,
       setRepeats,
       setTemplateValue,
+      setWidgetValue,
       startTemplateEdit,
       swapXAndYChannels,
       updateFilter,
@@ -189,6 +195,12 @@ class RootComponent extends React.Component<RootProps> {
                     <FaEraser />
                     Clear
                   </div>
+                  <div
+                    className="clear-encoding"
+                    onClick={() => setEditMode(!editMode)}
+                  >
+                    {editMode ? 'STOP EDIT' : 'START EDIT'}
+                  </div>
                 </div>
               </div>
             )}
@@ -213,10 +225,12 @@ class RootComponent extends React.Component<RootProps> {
             )}
             {encodingMode !== 'grammer' && foundTemplate && (
               <TemplateColumn
+                editMode={editMode}
                 template={foundTemplate}
                 templateMap={templateMap}
                 columns={columns}
                 setTemplateValue={setTemplateValue}
+                setWidgetValue={setWidgetValue}
               />
             )}
           </div>
@@ -237,32 +251,6 @@ class RootComponent extends React.Component<RootProps> {
       </div>
     );
   }
-
-  // errorMenu() {
-  //   const {clearUnprounceWarning} = this.props;
-  //   return (
-  //     <div className="full-height full-width inline-block error-container">
-  //       <h3>Error</h3>
-  //       <h5>
-  //         The Vega-lite Specification that you have constructed is not supported
-  //         by the grammar mode.
-  //       </h5>
-  //       <br />
-  //       <h5>
-  //         {' '}
-  //         You can resolve this error by modifying the spec. Please note that
-  //         layers are not supported at this time.
-  //       </h5>
-  //       <br />
-  //       <h5>
-  //         If you like you are welcome to try to over-ride this error, but the
-  //         application make construct suprirsing and less than satisfactory
-  //         result
-  //       </h5>
-  //       <button onClick={clearUnprounceWarning}>OVER RIDE</button>
-  //     </div>
-  //   );
-  // }
 
   chartArea() {
     const {
@@ -372,6 +360,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     data: base.get('data'),
     editorError: base.get('editorError'),
     encodingMode: base.get('encodingMode'),
+    editMode: base.get('editMode'),
     spec: base.get('spec').toJS(),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),

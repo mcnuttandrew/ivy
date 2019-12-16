@@ -13,6 +13,8 @@ export const changeTheme: ActionResponse = (state, payload) =>
   state.set('currentTheme', payload);
 export const toggleTemplateBuilder: ActionResponse = state =>
   state.set('templateBuilderModalOpen', !state.get('templateBuilderModalOpen'));
+export const setEditMode: ActionResponse = (state, payload) =>
+  state.set('editMode', payload);
 
 export const setEncodingMode: ActionResponse = (state, payload) => {
   const newState = state.set('encodingMode', payload);

@@ -1,14 +1,41 @@
 import React from 'react';
 import Switch from 'react-switch';
 import {SwitchWidget} from '../../templates/types';
-interface SwitchBuilderWidgetProps {
-  widget: SwitchWidget;
-  idx: number;
-  setWidgetValue: any;
-}
+import {GeneralWidget} from './general-widget';
 
-export default function SwitchBuilderWidget(props: SwitchBuilderWidgetProps) {
-  const {widget, idx, setWidgetValue} = props;
+export default function SwitchBuilderWidget(
+  props: GeneralWidget<SwitchWidget>,
+) {
+  const {
+    widget,
+    idx,
+    setWidgetValue,
+    editMode,
+    templateMap,
+    setTemplateValue,
+  } = props;
+  if (!editMode) {
+    const isActive = templateMap[widget.widgetName] === widget.activeValue;
+    return (
+      <div key={widget.widgetName} className="switch-widget">
+        <div>{widget.widgetName}</div>
+        <Switch
+          checked={isActive}
+          offColor="#E1E9F2"
+          onColor="#36425C"
+          height={15}
+          checkedIcon={false}
+          width={50}
+          onChange={() =>
+            setTemplateValue({
+              field: widget.widgetName,
+              text: isActive ? widget.inactiveValue : widget.activeValue,
+            })
+          }
+        />
+      </div>
+    );
+  }
   return (
     <div className="flex">
       <div className="flex-down">

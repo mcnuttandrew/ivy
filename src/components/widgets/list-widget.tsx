@@ -3,15 +3,34 @@ import CreatableSelect from 'react-select/creatable';
 import {ListWidget} from '../../templates/types';
 import {toSelectFormat} from '../../utils';
 import Select from 'react-select';
-interface ListBuilderWidgetProps {
-  widget: ListWidget;
-  idx: number;
-  setWidgetValue: any;
-}
+import Selector from '../selector';
 
-export default function ListBuilderWidget(props: ListBuilderWidgetProps) {
-  const {widget, idx, setWidgetValue} = props;
+import {GeneralWidget} from './general-widget';
+
+export default function ListBuilderWidget(props: GeneralWidget<ListWidget>) {
+  const {
+    widget,
+    idx,
+    setWidgetValue,
+    editMode,
+    templateMap,
+    setTemplateValue,
+  } = props;
   const options = toSelectFormat(widget.allowedValues.map(d => d.value));
+  if (!editMode) {
+    return (
+      <div key={widget.widgetName} className="list-widget">
+        <div>{widget.widgetName}</div>
+        <Selector
+          options={widget.allowedValues}
+          selectedValue={templateMap[widget.widgetName]}
+          onChange={(value: any) => {
+            setTemplateValue({field: widget.widgetName, text: value});
+          }}
+        />
+      </div>
+    );
+  }
   return (
     <div>
       <div className="flex">

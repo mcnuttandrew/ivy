@@ -169,6 +169,24 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
   return state.set('templates', getAndRemoveTemplate(state, payload));
 };
 
+// TODO i think this can be deleted
 export const startTemplateEdit: ActionResponse = (state, payload) => {
   return state.set('templateBuilderModalOpen', payload);
+};
+
+export const setWidgetValue: ActionResponse = (state, payload) => {
+  const {key, value, idx} = payload;
+  const template = {...state.get('currentTemplateInstance')};
+  const {code, widgets} = template;
+  const oldWidget = widgets[idx];
+
+  const oldValue = `\\[${oldWidget[key]}\\]`;
+  const re = new RegExp(oldValue, 'g');
+  template.code = key === 'widgetName' ? code.replace(re, `[${value}]`) : code;
+  template.widgets[idx] = {...oldWidget, [key]: value};
+  // this.setState({
+  //   widgets: widgets.set(idx, {...oldWidget, [key]: value}),
+  //   code: key === 'widgetName' ? code.replace(re, `[${value}]`) : code,
+  // });
+  return state.set('currentTemplateInstance', template);
 };

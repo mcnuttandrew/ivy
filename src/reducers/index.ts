@@ -31,6 +31,7 @@ import {
   createTemplate,
   deleteTemplate,
   startTemplateEdit,
+  setWidgetValue,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView} from './view-actions';
 import {
@@ -39,6 +40,7 @@ import {
   setEncodingMode,
   toggleTemplateBuilder,
   setProgrammaticView,
+  setEditMode,
 } from './gui-actions';
 
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
@@ -85,6 +87,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'set-encoding-mode': setEncodingMode,
   'toggle-template-builder': toggleTemplateBuilder,
   'toggle-programmatic-view': setProgrammaticView,
+  'set-edit-mode': setEditMode,
 
   // template
   'recieve-templates': recieveTemplates,
@@ -92,6 +95,8 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'create-template': createTemplate,
   'delete-template': deleteTemplate,
   'start-edit-template': startTemplateEdit,
+
+  'set-widget-value': setWidgetValue,
 
   // views
   'create-new-view': addUndo(createNewView),

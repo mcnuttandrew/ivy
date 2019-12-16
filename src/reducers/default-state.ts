@@ -1,26 +1,12 @@
-import Immutable, {Map} from 'immutable';
+import Immutable from 'immutable';
 import stringify from 'json-stringify-pretty-compact';
-import {OLD_EXAMPLE} from '../constants/vega-examples';
-import TABLE from '../templates/example-templates/table';
-// import {ColumnHeader} from '../types';
-// import {Spec, Data} from 'vega-typings/types';
+import SCATTERPLOT from '../templates/example-templates/scatterplot';
 export type AppState = Immutable.Map<any, any>;
 
-// {
-//   spec: Spec;
-//   specCode: string;
-//   data: Data;
-//   columns: ColumnHeader[];
-//   currentlySelectedFile: string;
-//   dataModalOpen: boolean;
-//   currentTheme: string;
-//   undoStack: any;
-//   redoStack: any;
-// }
 export interface ActionResponse {
   (state: AppState, payload: any): AppState;
 }
-// export type AppState = any;
+
 // TODO undo this embarrasment
 const defaultEmpty = Immutable.fromJS({
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
@@ -46,21 +32,23 @@ const fileSpecificationDefaults = GOOSE_MODE
 
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
   ...fileSpecificationDefaults,
-  spec: EMPTY_SPEC,
-  specCode: stringify(EMPTY_SPEC),
-  editorError: null,
+
+  // meta-data
   columns: [],
   metaColumns: [],
+
+  // spec configs
+  spec: EMPTY_SPEC,
+  specCode: stringify(EMPTY_SPEC),
   currentTheme: 'default',
-  encodingMode: 'grammer',
+  editorError: null,
+  editMode: true,
 
-  currentTemplateInstance: null,
+  // GUI
+  currentTemplateInstance: SCATTERPLOT,
+  encodingMode: 'Scatterplot',
+  // encodingMode: 'grammer',
   showProgrammaticMode: true,
-
-  // encodingMode: 'Data Table',
-  // currentTemplateInstance: TABLE,
-
-  // encodingMode: 'overview',
 
   // undo redo
   undoStack: Immutable.fromJS([]),
@@ -72,6 +60,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   currentView: 'view1',
 
   // template stuff
+
   templates: [],
   templateMap: {},
   templateBuilderModalOpen: false,

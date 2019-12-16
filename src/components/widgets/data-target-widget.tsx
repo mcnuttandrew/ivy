@@ -3,18 +3,38 @@ import Switch from 'react-switch';
 import Select from 'react-select';
 import {DataTargetWidget} from '../../templates/types';
 import {DataType} from '../../types';
-import {toSelectFormat} from '../../utils';
-interface DataTargetBuilderWidgetProps {
-  widget: DataTargetWidget;
-  idx: number;
-  setWidgetValue: any;
-}
+import {toSelectFormat, trim} from '../../utils';
+import {GeneralWidget} from './general-widget';
+import TemplateShelf from '../template-shelf';
+
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 
 export default function DataTargetBuilderWidget(
-  props: DataTargetBuilderWidgetProps,
+  props: GeneralWidget<DataTargetWidget>,
 ) {
-  const {widget, idx, setWidgetValue} = props;
+  const {
+    widget,
+    idx,
+    setWidgetValue,
+    editMode,
+    templateMap,
+    columns,
+    setTemplateValue,
+  } = props;
+  if (!editMode) {
+    const fieldValue = templateMap[widget.widgetName];
+    return (
+      <div key={widget.widgetName}>
+        <TemplateShelf
+          channelEncoding={trim(fieldValue as string)}
+          field={widget.widgetName}
+          columns={columns}
+          onDrop={setTemplateValue}
+          widget={widget}
+        />
+      </div>
+    );
+  }
   return (
     <div className="flex">
       <div className="flex-down">

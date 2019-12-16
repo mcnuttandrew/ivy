@@ -56,7 +56,7 @@ export default class TemplateColumnPreview extends React.Component<
           </div>
         </div>
         <h3>Live Template Preview</h3>
-        <TemplateColumn
+        {/* <TemplateColumn
           template={newTemplate}
           templateMap={templateMap}
           columns={fakeColumns}
@@ -68,7 +68,7 @@ export default class TemplateColumnPreview extends React.Component<
               ).toJS(),
             });
           }}
-        />
+        /> */}
       </DndProvider>
     );
   }

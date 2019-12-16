@@ -37,6 +37,8 @@ export const createTemplate = buildEasyAction('create-template');
 export const startTemplateEdit = buildEasyAction('start-edit-template');
 export const deleteTemplate = buildEasyAction('delete-template');
 export const setTemplateValue = buildEasyAction('set-template-value');
+export const setEditMode = buildEasyAction('set-edit-mode');
+export const setWidgetValue = buildEasyAction('set-widget-value');
 
 export const createNewView = buildEasyAction('create-new-view');
 export const deleteView = buildEasyAction('delete-view');

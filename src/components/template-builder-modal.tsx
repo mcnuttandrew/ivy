@@ -6,7 +6,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {TemplateWidget, Template, widgetFactory} from '../templates/types';
-import BuilderWidget from './widgets/builder-widget';
+import BuilderWidget from './widgets/general-widget';
 import {classnames, allWidgetsInUse} from '../utils';
 import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 
@@ -296,77 +296,79 @@ export default class TemplateBuilderModal extends React.Component<
 
   widgetPanel() {
     const {code, widgets, templateName, templateDescription} = this.state;
-    return (
-      <React.Fragment>
-        <div className="flex meta-data-builder-container">
-          <div className="flex-down">
-            <span className="tool-description">Template name:</span>
-            <input
-              value={templateName || ''}
-              placeholder="Fill out name here"
-              onChange={event => {
-                this.setState({templateName: event.target.value});
-              }}
-            />
-          </div>
-          <div className="flex-down">
-            <span className="tool-description">Template Description:</span>
-            <textarea
-              value={templateDescription || ''}
-              placeholder="Fill out Description"
-              onChange={event => {
-                this.setState({templateDescription: event.target.value});
-              }}
-            />
-          </div>
-        </div>
-        <div className="flex-down widget-builder-container">
-          {widgets.map((widget: TemplateWidget, idx: number) => {
-            return (
-              <BuilderWidget
-                code={code}
-                widget={widget}
-                idx={idx}
-                key={`${idx}`}
-                removeWidget={() => {
-                  const updatedWidgets = widgets.filter(
-                    (_, jdx) => jdx !== idx,
-                  );
-                  // @ts-ignore
-                  this.setState({
-                    widgets: updatedWidgets,
-                  });
-                }}
-                incrementOrder={() => {
-                  if (idx === widgets.size - 1) {
-                    return;
-                  }
-                  this.setState({
-                    widgets: widgets
-                      .set(idx + 1, widget)
-                      .set(idx, widgets.get(idx + 1)),
-                  });
-                }}
-                decrementOrder={() => {
-                  if (idx === 0) {
-                    return;
-                  }
-                  this.setState({
-                    widgets: widgets
-                      .set(idx - 1, widget)
-                      .set(idx, widgets.get(idx - 1)),
-                  });
-                }}
-                setWidgetValue={(key: string, value: any, idx: number) =>
-                  this.setWidgetValue(key, value, idx)
-                }
-              />
-            );
-          })}
-          {!widgets.size && <h1>NO WIDGETS SELECTED</h1>}
-        </div>
-      </React.Fragment>
-    );
+    return <div />;
+    // return (
+    //   <React.Fragment>
+    //     <div className="flex meta-data-builder-container">
+    //       <div className="flex-down">
+    //         <span className="tool-description">Template name:</span>
+    //         <input
+    //           value={templateName || ''}
+    //           placeholder="Fill out name here"
+    //           onChange={event => {
+    //             this.setState({templateName: event.target.value});
+    //           }}
+    //         />
+    //       </div>
+    //       <div className="flex-down">
+    //         <span className="tool-description">Template Description:</span>
+    //         <textarea
+    //           value={templateDescription || ''}
+    //           placeholder="Fill out Description"
+    //           onChange={event => {
+    //             this.setState({templateDescription: event.target.value});
+    //           }}
+    //         />
+    //       </div>
+    //     </div>
+    //     <div className="flex-down widget-builder-container">
+    //       {widgets.map((widget: TemplateWidget, idx: number) => {
+    //         return (
+    //           <BuilderWidget
+    //             editMode={true}
+    //             code={code}
+    //             widget={widget}
+    //             idx={idx}
+    //             key={`${idx}`}
+    //             removeWidget={() => {
+    //               const updatedWidgets = widgets.filter(
+    //                 (_, jdx) => jdx !== idx,
+    //               );
+    //               // @ts-ignore
+    //               this.setState({
+    //                 widgets: updatedWidgets,
+    //               });
+    //             }}
+    //             incrementOrder={() => {
+    //               if (idx === widgets.size - 1) {
+    //                 return;
+    //               }
+    //               this.setState({
+    //                 widgets: widgets
+    //                   .set(idx + 1, widget)
+    //                   .set(idx, widgets.get(idx + 1)),
+    //               });
+    //             }}
+    //             decrementOrder={() => {
+    //               if (idx === 0) {
+    //                 return;
+    //               }
+    //               this.setState({
+    //                 widgets: widgets
+    //                   .set(idx - 1, widget)
+    //                   .set(idx, widgets.get(idx - 1)),
+    //               });
+    //             }}
+    //             setWidgetValue={(key: string, value: any, idx: number) =>
+    //               this.setWidgetValue(key, value, idx)
+    //             }
+    //           />
+    //         );
+    //       })}
+    //       {!widgets.size && <h1>NO WIDGETS SELECTED</h1>}
+    //     </div>
+    //   </React.Fragment>
+    // );
   }
 
   textualTemplate() {
