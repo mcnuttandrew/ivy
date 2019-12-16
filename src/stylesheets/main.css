@@ -533,6 +533,9 @@ button:disabled {
   display: flex;
   padding: 3px 5px;
 }
+.widget input {
+  /* background: none; */
+}
 
 .fake-pill-container {
   display: flex;
