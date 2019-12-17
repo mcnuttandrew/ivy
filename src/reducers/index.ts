@@ -43,6 +43,7 @@ import {
   toggleTemplateBuilder,
   setProgrammaticView,
   setEditMode,
+  setCodeMode,
 } from './gui-actions';
 
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
@@ -90,6 +91,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'toggle-template-builder': toggleTemplateBuilder,
   'toggle-programmatic-view': setProgrammaticView,
   'set-edit-mode': setEditMode,
+  'set-code-mode': setCodeMode,
 
   // template
   'recieve-templates': recieveTemplates,

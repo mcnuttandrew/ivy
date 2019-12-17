@@ -1,5 +1,6 @@
+import stringify from 'json-stringify-pretty-compact';
 import {List} from 'immutable';
-import {TemplateWidget} from './templates/types';
+import {TemplateWidget, Template} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 
@@ -195,3 +196,27 @@ export const toList = (list: string[]) =>
     display,
     value: `"${display}"`,
   }));
+
+export function serializeTemplate(template: Template): string {
+  return stringify({
+    $schema: 'hydra-template-language',
+    templateName: template.templateName,
+    templateDescription: template.templateDescription,
+    code: 'SEE CODE EDITOR',
+    templateLanguage: template.templateLanguage,
+    widgets: template.widgets,
+    widgetValidations: template.widgetValidations,
+  });
+}
+
+export function deserializeTemplate(templateString: string): Template {
+  const code = JSON.parse(templateString);
+  return {
+    templateName: code.templateName,
+    templateDescription: code.templateDescription,
+    code: 'SEE CODE EDITOR',
+    templateLanguage: code.templateLanguage,
+    widgets: code.widgets,
+    widgetValidations: code.widgetValidations,
+  };
+}

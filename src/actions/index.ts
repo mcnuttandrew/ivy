@@ -2,7 +2,7 @@ import {Dispatch} from 'redux';
 import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
-import {DEFAULT_TEMPLATES} from '../templates/types';
+import {DEFAULT_TEMPLATES} from '../templates';
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
@@ -41,6 +41,8 @@ export const setEditMode = buildEasyAction('set-edit-mode');
 export const setWidgetValue = buildEasyAction('set-widget-value');
 export const addWidget = buildEasyAction('add-widget-to-template');
 export const removeWidget = buildEasyAction('remove-widget-from-template');
+
+export const setCodeMode = buildEasyAction('set-code-mode');
 
 export const createNewView = buildEasyAction('create-new-view');
 export const deleteView = buildEasyAction('delete-view');

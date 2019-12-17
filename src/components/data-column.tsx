@@ -1,5 +1,6 @@
 import React from 'react';
 import {DiDatabase} from 'react-icons/di';
+import {Template} from '../templates/types';
 import {GenericAction} from '../actions/index';
 import {ColumnHeader} from '../types';
 import {getAllInUseFields, get} from '../utils';
@@ -14,6 +15,7 @@ interface DataColumnProps {
   iMspec: any;
   spec: any;
   metaColumns: ColumnHeader[];
+  template?: Template;
 
   addToNextOpenSlot: GenericAction;
   coerceType: GenericAction;
@@ -38,6 +40,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       iMspec,
       spec,
       setRepeats,
+      template,
 
       deleteFilter,
       updateFilter,
@@ -82,8 +85,10 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         </div>
         <h5>Data Columns</h5>
         <div className="flex-down">{columns.map(makePill(false))}</div>
-        <h5>Meta Columns</h5>
-        <div className="flex-down">{metaColumns.map(makePill(true))}</div>
+        {!template && <h5>Meta Columns</h5>}
+        {!template && (
+          <div className="flex-down">{metaColumns.map(makePill(true))}</div>
+        )}
 
         <h5> Filter </h5>
         <div className="flex-down">

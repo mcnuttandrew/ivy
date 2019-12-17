@@ -4,17 +4,18 @@ import Immutable from 'immutable';
 import {EMPTY_SPEC} from './default-state';
 
 import {fillTemplateMapWithDefaults} from './template-actions';
+const blindSet = (key: string): ActionResponse => (state, payload) =>
+  state.set(key, payload);
+const toggle = (key: string): ActionResponse => state =>
+  state.set(key, !state.get(key));
 
-export const setProgrammaticView: ActionResponse = state =>
-  state.set('showProgrammaticMode', !state.get('showProgrammaticMode'));
-export const toggleDataModal: ActionResponse = state =>
-  state.set('dataModalOpen', !state.get('dataModalOpen'));
-export const changeTheme: ActionResponse = (state, payload) =>
-  state.set('currentTheme', payload);
-export const toggleTemplateBuilder: ActionResponse = state =>
-  state.set('templateBuilderModalOpen', !state.get('templateBuilderModalOpen'));
-export const setEditMode: ActionResponse = (state, payload) =>
-  state.set('editMode', payload);
+export const setProgrammaticView = toggle('showProgrammaticMode');
+export const toggleDataModal = toggle('dataModalOpen');
+export const toggleTemplateBuilder = toggle('templateBuilderModalOpen');
+
+export const changeTheme = blindSet('currentTheme');
+export const setEditMode = blindSet('editMode');
+export const setCodeMode = blindSet('codeMode');
 
 export const setEncodingMode: ActionResponse = (state, payload) => {
   const newState = state.set('encodingMode', payload);

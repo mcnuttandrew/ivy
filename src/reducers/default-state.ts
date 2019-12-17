@@ -49,6 +49,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   encodingMode: 'Scatterplot',
   // encodingMode: 'grammer',
   showProgrammaticMode: true,
+  codeMode: 'CODE',
 
   // undo redo
   undoStack: Immutable.fromJS([]),

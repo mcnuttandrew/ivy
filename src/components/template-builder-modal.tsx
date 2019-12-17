@@ -5,7 +5,8 @@ import stringify from 'json-stringify-pretty-compact';
 
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {TemplateWidget, Template, widgetFactory} from '../templates/types';
+import {TemplateWidget, Template} from '../templates/types';
+import {widgetFactory} from '../templates';
 import Widget from './widgets/general-widget';
 import {classnames, allWidgetsInUse} from '../utils';
 import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';

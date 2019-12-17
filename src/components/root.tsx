@@ -35,6 +35,7 @@ interface RootProps {
   columns?: ColumnHeader[];
   canUndo?: boolean;
   canRedo?: boolean;
+  codeMode?: string;
   editorError?: null | string;
   editMode?: boolean;
   spec?: Spec;
@@ -79,6 +80,7 @@ interface RootProps {
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
   removeWidget?: GenericAction;
+  setCodeMode?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
@@ -173,6 +175,7 @@ class RootComponent extends React.Component<RootProps> {
             iMspec={iMspec}
             metaColumns={metaColumns}
             toggleDataModal={toggleDataModal}
+            template={template}
             setRepeats={setRepeats}
             spec={spec}
             updateFilter={updateFilter}
@@ -230,12 +233,24 @@ class RootComponent extends React.Component<RootProps> {
   }
 
   programmaticMenu() {
-    const {setNewSpecCode, specCode, editorError, template} = this.props;
+    const {
+      setNewSpecCode,
+      specCode,
+      editorError,
+      template,
+      codeMode,
+      setCodeMode,
+      spec,
+    } = this.props;
     return (
       <div className="flex full-height editor-column background-1">
         <CodeEditor
+          setCodeMode={setCodeMode}
+          codeMode={codeMode}
           setNewSpecCode={setNewSpecCode}
-          currentCode={template ? template.code : specCode}
+          template={template}
+          specCode={specCode}
+          spec={spec}
           editorError={editorError}
         />
       </div>
@@ -348,7 +363,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     canUndo: base.get('undoStack').size >= 1,
     canRedo: base.get('redoStack').size >= 1,
     columns: base.get('columns'),
-
+    codeMode: base.get('codeMode'),
     currentView: base.get('currentView'),
     data: base.get('data'),
     editorError: base.get('editorError'),

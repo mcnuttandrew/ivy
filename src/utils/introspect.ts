@@ -1,12 +1,12 @@
-import Immutable, {List} from 'immutable';
+import Immutable from 'immutable';
 import {setTemplateValues} from '../reducers/template-actions';
 import {
   TemplateWidget,
-  widgetFactory,
   ListWidget,
   SwitchWidget,
   SliderWidget,
 } from '../templates/types';
+import {widgetFactory} from '../templates';
 
 import {compile} from 'vega-lite';
 

@@ -3,23 +3,27 @@ import MonacoEditor from 'react-monaco-editor';
 import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
 import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
-import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 
+import {Template} from '../templates/types';
+import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 import {GenericAction} from '../actions';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {classnames} from '../utils';
+import {classnames, serializeTemplate, deserializeTemplate} from '../utils';
 import Selector from './selector';
 
 interface Props {
-  currentCode: string;
+  codeMode: string;
   editorError: null | string;
+  specCode: string;
+  spec: any;
+  template?: Template;
   setNewSpecCode: GenericAction;
+  setCodeMode: GenericAction;
 }
 type updateMode = 'automatic' | 'manual';
 interface State {
   error?: string;
   updateMode: updateMode;
-  tabMode: string;
   suggestionBox: boolean;
 }
 
@@ -52,7 +56,6 @@ export default class CodeEditor extends React.Component<Props, State> {
     this.state = {
       error: null,
       updateMode: 'automatic',
-      tabMode: 'CODE',
       suggestionBox: true,
     };
   }
@@ -67,8 +70,21 @@ export default class CodeEditor extends React.Component<Props, State> {
     });
   }
 
+  getCurrentCode() {
+    const {template, codeMode, specCode, spec} = this.props;
+    if (codeMode === 'CODE') {
+      return template ? template.code : specCode;
+    }
+    if (codeMode === 'TEMPLATE') {
+      return template ? serializeTemplate(template) : 'TEMPLATE NOT AVAILABLE';
+    }
+    if (codeMode === 'OUTPUT') {
+      return stringify(spec);
+    }
+  }
+
   editorControls() {
-    const {currentCode, setNewSpecCode} = this.props;
+    const {setNewSpecCode} = this.props;
     const {updateMode} = this.state;
     return (
       <div className="flex code-editor-controls">
@@ -103,8 +119,11 @@ export default class CodeEditor extends React.Component<Props, State> {
               <button
                 key={name}
                 onClick={() => {
+                  {
+                    /* code: stringify(action(JSON.parse(currentCode))), */
+                  }
                   setNewSpecCode({
-                    code: stringify(action(JSON.parse(currentCode))),
+                    code: '',
                     inError: false,
                   });
                 }}
@@ -127,8 +146,9 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const {currentCode, editorError} = this.props;
-    const {updateMode, tabMode, suggestionBox} = this.state;
+    const {editorError, setCodeMode, codeMode} = this.props;
+    const {updateMode, suggestionBox} = this.state;
+    const currentCode = this.getCurrentCode();
 
     return (
       <div className="full-height full-width">
@@ -143,15 +163,15 @@ export default class CodeEditor extends React.Component<Props, State> {
             ERROR
           </div>
           <div className="code-option-tabs">
-            {['CODE', 'TEMPLATE', 'OUTPUT', 'STATE_MAP'].map(key => {
+            {['CODE', 'TEMPLATE', 'OUTPUT'].map(key => {
               return (
                 <div
                   className={classnames({
                     'code-option-tab': true,
-                    'selected-tab': key === tabMode,
+                    'selected-tab': key === codeMode,
                   })}
                   key={key}
-                  onClick={() => this.setState({tabMode: key})}
+                  onClick={() => setCodeMode(key)}
                 >
                   {key}
                 </div>
@@ -166,6 +186,9 @@ export default class CodeEditor extends React.Component<Props, State> {
             value={currentCode}
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {
+              if (codeMode !== 'CODE') {
+                return;
+              }
               if (updateMode === 'automatic') {
                 this.handleCodeUpdate(code);
               }

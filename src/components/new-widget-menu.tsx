@@ -2,11 +2,8 @@ import React, {Fragment} from 'react';
 import Popover from './popover';
 import {AiOutlinePlusCircle} from 'react-icons/ai';
 import {GenericAction} from '../actions';
-import {
-  widgetFactory,
-  preconfiguredWidgets,
-  TemplateWidget,
-} from '../templates/types';
+import {TemplateWidget} from '../templates/types';
+import {widgetFactory, preconfiguredWidgets} from '../templates';
 
 interface Props {
   addWidget: GenericAction;
