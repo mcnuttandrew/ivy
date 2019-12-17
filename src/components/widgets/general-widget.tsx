@@ -1,6 +1,7 @@
 import React from 'react';
 import {TiDelete} from 'react-icons/ti';
 
+import MultiDataTargetComponent from './multi-data-target-widget';
 import DataTargetWidgetComponent from './data-target-widget';
 import ListWidgetComponent from './list-widget';
 import SwitchWidgetComponent from './switch-widget';
@@ -15,6 +16,7 @@ import {
   TextWidget,
   SliderWidget,
   TemplateMap,
+  MultiDataTargetWidget,
 } from '../../templates/types';
 import {ColumnHeader} from '../../types';
 import {GenericAction} from '../../actions';
@@ -103,26 +105,33 @@ export default function GeneralWidget(props: Props) {
     setTemplateValue,
     columns,
   };
+  const widgetType = widget.widgetType;
   return (
     <div className="widget flex">
       <PlacementControls {...props} />
       <div className="widget-body">
-        {widget.widgetType === 'Switch' && (
+        {widgetType === 'MultiDataTarget' && (
+          <MultiDataTargetComponent
+            widget={widget as MultiDataTargetWidget}
+            {...common}
+          />
+        )}
+        {widgetType === 'Switch' && (
           <SwitchWidgetComponent widget={widget as SwitchWidget} {...common} />
         )}
-        {widget.widgetType === 'List' && (
+        {widgetType === 'List' && (
           <ListWidgetComponent widget={widget as ListWidget} {...common} />
         )}
-        {widget.widgetType === 'Text' && (
+        {widgetType === 'Text' && (
           <TextWidgetComponent widget={widget as TextWidget} {...common} />
         )}
-        {widget.widgetType === 'DataTarget' && (
+        {widgetType === 'DataTarget' && (
           <DataTargetWidgetComponent
             widget={widget as DataTargetWidget}
             {...common}
           />
         )}
-        {widget.widgetType === 'Slider' && (
+        {widgetType === 'Slider' && (
           <SliderWidgetComponent widget={widget as SliderWidget} {...common} />
         )}
       </div>

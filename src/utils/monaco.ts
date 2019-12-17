@@ -23,8 +23,10 @@ function addMarkdownProps(value: any) {
 
 const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
 const vegaSchema = require('vega/build/vega-schema.json');
+const hydraSchema = require('../../assets/hydra-template-lang-schema.json');
 addMarkdownProps(vegaSchema);
 addMarkdownProps(vegaLiteSchema);
+addMarkdownProps(hydraSchema);
 
 const schemas = [
   {
@@ -34,6 +36,11 @@ const schemas = [
   {
     schema: vegaLiteSchema,
     uri: 'https://vega.github.io/schema/vega-lite/v4.json',
+  },
+  {
+    schema: hydraSchema,
+    uri:
+      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template-lang-schema.json',
   },
   {
     // @ts-ignore

@@ -177,14 +177,18 @@ export const startTemplateEdit: ActionResponse = (state, payload) => {
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
   let template = state.get('currentTemplateInstance');
+  let newState = state;
   const code = template.get('code');
   if (key === 'widgetName') {
     const oldValue = `\\[${template.getIn(['widgets', idx, key])}\\]`;
     const re = new RegExp(oldValue, 'g');
     template = template.set('code', code.replace(re, `[${value}]`));
+    newState = newState
+      .deleteIn(['templateMap', oldValue])
+      .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
   }
   template = template.setIn(['widgets', idx, key], Immutable.fromJS(value));
-  return state.set('currentTemplateInstance', template);
+  return newState.set('currentTemplateInstance', template);
 };
 
 // hey it's a lense

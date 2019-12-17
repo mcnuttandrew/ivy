@@ -84,7 +84,7 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   editorControls() {
-    const {setNewSpecCode} = this.props;
+    const {setNewSpecCode, codeMode} = this.props;
     const {updateMode} = this.state;
     return (
       <div className="flex code-editor-controls">
@@ -119,11 +119,11 @@ export default class CodeEditor extends React.Component<Props, State> {
               <button
                 key={name}
                 onClick={() => {
-                  {
-                    /* code: stringify(action(JSON.parse(currentCode))), */
+                  if (codeMode !== 'CODE') {
+                    return;
                   }
                   setNewSpecCode({
-                    code: '',
+                    code: stringify(action(JSON.parse(this.getCurrentCode()))),
                     inError: false,
                   });
                 }}
@@ -138,11 +138,19 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   handleCodeUpdate(code: string) {
-    const {setNewSpecCode} = this.props;
-    Promise.resolve()
-      .then(() => JSON.parse(code))
-      .then(() => setNewSpecCode({code, inError: false}))
-      .catch(() => setNewSpecCode({code, inError: true}));
+    const {setNewSpecCode, codeMode} = this.props;
+    if (codeMode === 'TEMPLATE') {
+      // TODO allow text editing on template
+      // Promise.resolve()
+      // .then(() => JSON.parse(code))
+      // .then(() => setNewTemplate({code, inError: false}))
+      // .catch(() => setNewTemplate({code, inError: true}));
+    } else {
+      Promise.resolve()
+        .then(() => JSON.parse(code))
+        .then(() => setNewSpecCode({code, inError: false}))
+        .catch(() => setNewSpecCode({code, inError: true}));
+    }
   }
 
   render() {
@@ -186,9 +194,10 @@ export default class CodeEditor extends React.Component<Props, State> {
             value={currentCode}
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {
-              if (codeMode !== 'CODE') {
+              if (codeMode === 'OUTPUT') {
                 return;
               }
+
               if (updateMode === 'automatic') {
                 this.handleCodeUpdate(code);
               }

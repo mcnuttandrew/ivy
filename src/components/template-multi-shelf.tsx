@@ -2,6 +2,7 @@ import React from 'react';
 import {useDrop} from 'react-dnd';
 import {MultiDataTargetWidget} from '../templates/types';
 
+import DataSymbol from './data-symbol';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {classnames} from '../utils';
@@ -12,10 +13,11 @@ interface Props {
   field: string;
   onDrop: any;
   widget: MultiDataTargetWidget;
+  setName?: any;
 }
 
 export default function TemplateMultiShelf(props: Props) {
-  const {channelEncodings, columns, field, onDrop, widget} = props;
+  const {channelEncodings, columns, field, onDrop, widget, setName} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -48,7 +50,18 @@ export default function TemplateMultiShelf(props: Props) {
     >
       <div className="multi-shelf flex-down">
         <div className="field-label flex space-around">
-          <div>{field}</div>
+          {!setName && <div>{field}</div>}
+          {setName && (
+            <input
+              value={widget.widgetName}
+              onChange={event => setName(event.target.value)}
+            />
+          )}
+          <div className="flex">
+            {widget.allowedTypes.map(type => {
+              return <DataSymbol type={type} key={type} />;
+            })}
+          </div>
         </div>
         <div className="pill-dropzone">
           {columnHeaders.map((columnHeader, idx: number) => {
