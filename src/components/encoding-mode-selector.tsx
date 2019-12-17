@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {GenericAction} from '../actions/index';
 import {Template} from '../templates/types';
 import {TiExport} from 'react-icons/ti';
+import Popover from './popover';
 
 interface Props {
   templates: Template[];
@@ -65,25 +66,25 @@ function encodingRow(
 
 export default function EncodingMode(props: Props) {
   const {templates, setEncodingMode, startTemplateEdit, deleteTemplate} = props;
-  const [open, setOpen] = useState(false);
   const [searchKey, setSearch] = useState('');
-  const toggle = () => setOpen(!open);
-  const buttonActions = generateButtonActions({
-    setEncodingMode,
-    startTemplateEdit,
-    toggle,
-    deleteTemplate,
-  });
 
   return (
-    <div className="flex tooltip-container">
-      <div onClick={toggle}>
-        <TiExport /> Select
-      </div>
-      {open && <div className="modal-background" onClick={toggle} />}
-      <div className="modal-tooltip-container">
-        {open && (
-          <div className="modal-tooltip flex-down">
+    <Popover
+      clickTarget={
+        <React.Fragment>
+          {' '}
+          <TiExport /> Select
+        </React.Fragment>
+      }
+      body={(toggle: any) => {
+        const buttonActions = generateButtonActions({
+          setEncodingMode,
+          startTemplateEdit,
+          toggle,
+          deleteTemplate,
+        });
+        return (
+          <React.Fragment>
             <div>
               <input
                 value={searchKey || ''}
@@ -120,9 +121,9 @@ export default function EncodingMode(props: Props) {
                   ),
                 )}
             </div>
-          </div>
-        )}
-      </div>
-    </div>
+          </React.Fragment>
+        );
+      }}
+    />
   );
 }

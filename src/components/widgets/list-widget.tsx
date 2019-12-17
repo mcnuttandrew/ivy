@@ -6,7 +6,7 @@ import Selector from '../selector';
 
 import {GeneralWidget} from './general-widget';
 
-export default function ListBuilderWidget(props: GeneralWidget<ListWidget>) {
+export default function ListWidget(props: GeneralWidget<ListWidget>) {
   const {
     widget,
     idx,

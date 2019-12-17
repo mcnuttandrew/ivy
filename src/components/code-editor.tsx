@@ -2,6 +2,8 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
+import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
+import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 
 import {GenericAction} from '../actions';
 import {EDITOR_OPTIONS} from '../constants/index';
@@ -17,6 +19,8 @@ type updateMode = 'automatic' | 'manual';
 interface State {
   error?: string;
   updateMode: updateMode;
+  tabMode: string;
+  suggestionBox: boolean;
 }
 
 const SHORTCUTS = [
@@ -48,6 +52,8 @@ export default class CodeEditor extends React.Component<Props, State> {
     this.state = {
       error: null,
       updateMode: 'automatic',
+      tabMode: 'CODE',
+      suggestionBox: true,
     };
   }
   editorDidMount(editor: any) {
@@ -122,7 +128,7 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   render() {
     const {currentCode, editorError} = this.props;
-    const {updateMode} = this.state;
+    const {updateMode, tabMode, suggestionBox} = this.state;
 
     return (
       <div className="full-height full-width">
@@ -136,10 +142,27 @@ export default class CodeEditor extends React.Component<Props, State> {
           >
             ERROR
           </div>
+          <div className="code-option-tabs">
+            {['CODE', 'TEMPLATE', 'OUTPUT', 'STATE_MAP'].map(key => {
+              return (
+                <div
+                  className={classnames({
+                    'code-option-tab': true,
+                    'selected-tab': key === tabMode,
+                  })}
+                  key={key}
+                  onClick={() => this.setState({tabMode: key})}
+                >
+                  {key}
+                </div>
+              );
+            })}
+          </div>
           <MonacoEditor
             ref="monaco"
             language="json"
             theme="monokai"
+            height={suggestionBox ? 'calc(100% - 300px)' : 'calc(100% - 110px)'}
             value={currentCode}
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {
@@ -149,6 +172,43 @@ export default class CodeEditor extends React.Component<Props, State> {
             }}
             editorDidMount={this.editorDidMount}
           />
+          <div>
+            <div className="suggestion-box-header flex space-between">
+              <h5>Suggestions</h5>
+              <div
+                onClick={() => this.setState({suggestionBox: !suggestionBox})}
+              >
+                {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
+              </div>
+            </div>
+            {suggestionBox && (
+              <div className="suggestion-box-body">
+                {false &&
+                  synthesizeSuggestions(currentCode, []).map(
+                    (suggestion: any, idx: number) => {
+                      const {from, to, comment = '', sideEffect} = suggestion;
+                      return (
+                        <button
+                          onClick={() => {
+                            {
+                              /* this.setState({
+                          code: takeSuggestion(code, suggestion),
+                          widgets: sideEffect
+                            ? widgets.push(sideEffect())
+                            : widgets,
+                        }); */
+                            }
+                          }}
+                          key={`${from} -> ${to}-${idx}`}
+                        >
+                          {comment}
+                        </button>
+                      );
+                    },
+                  )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

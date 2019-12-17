@@ -3,7 +3,7 @@ import Switch from 'react-switch';
 import {SwitchWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
 
-export default function SwitchBuilderWidget(
+export default function SwitchWidget(
   props: GeneralWidget<SwitchWidget>,
 ) {
   const {

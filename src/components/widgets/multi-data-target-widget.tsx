@@ -4,7 +4,7 @@ import {GeneralWidget} from './general-widget';
 import TemplateMultiShelf from '../template-multi-shelf';
 import {trim} from '../../utils';
 
-export default function DataTargetBuilderWidget(
+export default function DataTargetWidget(
   props: GeneralWidget<MultiDataTargetWidget>,
 ) {
   const {

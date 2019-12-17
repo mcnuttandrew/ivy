@@ -85,65 +85,52 @@ export interface TemplateMap {
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 export const widgetFactory = {
-  DataTarget: (idx: number) => {
-    const newWidget: DataTargetWidget = {
+  DataTarget: (idx: number) =>
+    ({
       widgetName: `Dim${idx}`,
       widgetType: 'DataTarget',
       allowedTypes: DATA_TYPES,
       required: true,
-    };
-    return newWidget;
-  },
-  MultiDataTarget: (idx: number) => {
-    const newWidget: MultiDataTargetWidget = {
+    } as DataTargetWidget),
+  MultiDataTarget: (idx: number) =>
+    ({
       widgetName: `MultiDim${idx}`,
       widgetType: 'MultiDataTarget',
       allowedTypes: DATA_TYPES,
       required: true,
       minNumberOfTargets: 0,
-    };
-    return newWidget;
-  },
-  List: (idx: number) => {
-    const allowedValues: {display: string; value: string}[] = [];
-    const newWidget: ListWidget = {
+    } as MultiDataTargetWidget),
+  List: (idx: number) =>
+    ({
       widgetName: `ListItem${idx}`,
       widgetType: 'List',
-      allowedValues,
+      allowedValues: [] as {display: string; value: string}[],
       defaultValue: null,
-    };
-    return newWidget;
-  },
+    } as ListWidget),
 
-  Switch: (idx: number) => {
-    const newWidget: SwitchWidget = {
+  Switch: (idx: number) =>
+    ({
       widgetName: `Switch${idx}`,
       widgetType: 'Switch',
       activeValue: 'true',
       inactiveValue: 'false',
       defaultsToActive: true,
-    };
-    return newWidget;
-  },
-  Text: (idx: number) => {
-    const newWidget: TextWidget = {
+    } as SwitchWidget),
+  Text: (idx: number) =>
+    ({
       widgetName: `Text${idx}`,
       widgetType: 'Text',
       text: '',
-    };
-    return newWidget;
-  },
-  Slider: (idx: number) => {
-    const newWidget: SliderWidget = {
+    } as TextWidget),
+  Slider: (idx: number) =>
+    ({
       widgetName: `Slider${idx}`,
       widgetType: 'Slider',
       minVal: 0,
       maxVal: 10,
       step: 1,
       defaultValue: 5,
-    };
-    return newWidget;
-  },
+    } as SliderWidget),
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [

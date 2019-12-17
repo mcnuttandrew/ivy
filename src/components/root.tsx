@@ -62,6 +62,7 @@ interface RootProps {
   cloneView?: GenericAction;
 
   addToNextOpenSlot?: GenericAction;
+  addWidget?: GenericAction;
   changeMarkType?: GenericAction;
   changeTheme?: GenericAction;
   chainActions?: GenericAction;
@@ -77,6 +78,7 @@ interface RootProps {
   loadTemplates?: GenericAction;
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
+  removeWidget?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
@@ -127,6 +129,7 @@ class RootComponent extends React.Component<RootProps> {
 
   grammarMenu() {
     const {
+      addWidget,
       addToNextOpenSlot,
       coerceType,
       columns,
@@ -140,6 +143,7 @@ class RootComponent extends React.Component<RootProps> {
       encodingMode,
       iMspec,
       metaColumns,
+      removeWidget,
       spec,
       setEditMode,
       setEncodingParameter,
@@ -209,10 +213,12 @@ class RootComponent extends React.Component<RootProps> {
             )}
             {encodingMode !== 'grammer' && template && (
               <TemplateColumn
+                addWidget={addWidget}
                 editMode={editMode}
                 template={template}
                 templateMap={templateMap}
                 columns={columns}
+                removeWidget={removeWidget}
                 setTemplateValue={setTemplateValue}
                 setWidgetValue={setWidgetValue}
               />

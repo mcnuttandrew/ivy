@@ -6,7 +6,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {GenericAction} from '../actions/index';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {TemplateWidget, Template, widgetFactory} from '../templates/types';
-import BuilderWidget from './widgets/general-widget';
+import Widget from './widgets/general-widget';
 import {classnames, allWidgetsInUse} from '../utils';
 import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 
@@ -160,7 +160,7 @@ export default class TemplateBuilderModal extends React.Component<
         <div className="flex-down">
           <h5>Suggestions</h5>
           <div>
-            {synthesizeSuggestions(code, widgets).map(
+            {/* {synthesizeSuggestions(code, widgets).map(
               (suggestion: any, idx: number) => {
                 const {from, to, comment = '', sideEffect} = suggestion;
                 return (
@@ -178,7 +178,7 @@ export default class TemplateBuilderModal extends React.Component<
                     {comment}
                   </button>
                 );
-              },
+              }, */}
             )}
           </div>
         </div>
@@ -324,7 +324,7 @@ export default class TemplateBuilderModal extends React.Component<
     //     <div className="flex-down widget-builder-container">
     //       {widgets.map((widget: TemplateWidget, idx: number) => {
     //         return (
-    //           <BuilderWidget
+    //           <Widget
     //             editMode={true}
     //             code={code}
     //             widget={widget}

@@ -2,7 +2,7 @@ import React from 'react';
 import {TextWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
 
-export default function TextBuilderWidget(props: GeneralWidget<TextWidget>) {
+export default function TextWidget(props: GeneralWidget<TextWidget>) {
   const {widget, idx, setWidgetValue, editMode} = props;
   if (!editMode) {
     return <div className="text-widget">{widget.text}</div>;

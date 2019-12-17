@@ -32,6 +32,8 @@ import {
   deleteTemplate,
   startTemplateEdit,
   setWidgetValue,
+  addWidget,
+  removeWidget,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView} from './view-actions';
 import {
@@ -97,6 +99,8 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'start-edit-template': startTemplateEdit,
 
   'set-widget-value': setWidgetValue,
+  'add-widget-to-template': addWidget,
+  'remove-widget-from-template': removeWidget,
 
   // views
   'create-new-view': addUndo(createNewView),

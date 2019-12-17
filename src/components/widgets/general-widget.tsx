@@ -1,11 +1,11 @@
 import React from 'react';
-import {TiDelete, TiArrowDownThick, TiArrowUpThick} from 'react-icons/ti';
+import {TiDelete} from 'react-icons/ti';
 
-import DataTargetBuilderWidget from './data-target-widget';
-import ListBuilderWidget from './list-widget';
-import SwitchBuilderWidget from './switch-widget';
-import TextBuilderWidget from './text-widget';
-import SliderBuilderWidget from './slider-widget';
+import DataTargetWidgetComponent from './data-target-widget';
+import ListWidgetComponent from './list-widget';
+import SwitchWidgetComponent from './switch-widget';
+import TextWidgetComponent from './text-widget';
+import SliderWidgetComponent from './slider-widget';
 
 import {
   TemplateWidget,
@@ -41,10 +41,10 @@ interface Props {
 
   incrementOrder: any;
   decrementOrder: any;
-  removeWidget: any;
 
   templateMap: TemplateMap;
   setTemplateValue: GenericAction;
+  removeWidget: any;
 }
 
 function PlacementControls(props: Props) {
@@ -108,22 +108,22 @@ export default function GeneralWidget(props: Props) {
       <PlacementControls {...props} />
       <div className="widget-body">
         {widget.widgetType === 'Switch' && (
-          <SwitchBuilderWidget widget={widget as SwitchWidget} {...common} />
+          <SwitchWidgetComponent widget={widget as SwitchWidget} {...common} />
         )}
         {widget.widgetType === 'List' && (
-          <ListBuilderWidget widget={widget as ListWidget} {...common} />
+          <ListWidgetComponent widget={widget as ListWidget} {...common} />
         )}
         {widget.widgetType === 'Text' && (
-          <TextBuilderWidget widget={widget as TextWidget} {...common} />
+          <TextWidgetComponent widget={widget as TextWidget} {...common} />
         )}
         {widget.widgetType === 'DataTarget' && (
-          <DataTargetBuilderWidget
+          <DataTargetWidgetComponent
             widget={widget as DataTargetWidget}
             {...common}
           />
         )}
         {widget.widgetType === 'Slider' && (
-          <SliderBuilderWidget widget={widget as SliderWidget} {...common} />
+          <SliderWidgetComponent widget={widget as SliderWidget} {...common} />
         )}
       </div>
     </div>

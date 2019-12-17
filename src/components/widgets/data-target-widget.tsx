@@ -8,9 +8,9 @@ import DataSymbol from '../data-symbol';
 import {GeneralWidget} from './general-widget';
 import TemplateShelf from '../template-shelf';
 
-const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
+const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
-export default function DataTargetBuilderWidget(
+export default function DataTargetWidget(
   props: GeneralWidget<DataTargetWidget>,
 ) {
   const {
@@ -48,13 +48,15 @@ export default function DataTargetBuilderWidget(
       />
       <div className="flex space-evenly">
         <div className="flex-down">
-          <span className="tool-description">Allowed Data Types</span>
+          <span className="tool-description">Data Types</span>
           <div className="flex">
             {DATA_TYPES.map(type => {
               const checked = allowedTypesSet.has(type);
               return (
-                <div className="flex" key={type}>
-                  <DataSymbol type={type} />
+                <div className="flex" key={type} style={{marginRight: '10px'}}>
+                  <div>
+                    <DataSymbol type={type} />
+                  </div>
                   <input
                     type="checkbox"
                     checked={checked}

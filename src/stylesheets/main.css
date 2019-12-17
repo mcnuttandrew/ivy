@@ -28,6 +28,12 @@ button {
 button:disabled {
   cursor: not-allowed;
 }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+
+   opacity: 1;
+
+}
 
 .flex {
   display: flex;
@@ -580,6 +586,11 @@ button:disabled {
 .text-widget {
   font-size: 12px;
 }
+.text-widget textarea {
+
+  background: none;
+  border: none;
+}
 
 .in-use-status {
   text-transform: uppercase;
@@ -682,9 +693,6 @@ button:disabled {
   position: relative;
 }
 
-.code-container .react-monaco-editor-container {
-  margin-top: 30px;
-}
 
 .error-bar {
   align-items: center;
@@ -939,6 +947,9 @@ button:disabled {
   height: 17px;
   width: 100%;
 }
+.edit-mode .slide-widget  {
+  width: 90%;
+}
 .slide-widget input[type=number] {
   max-width: 50px;
 }
@@ -991,4 +1002,26 @@ button:disabled {
 }
 .hydra-data-table table tbody tr:last-child td {
   border-bottom: none;
+}
+
+.suggestion-box-header {
+  padding: 0 15px;
+}
+
+.code-option-tabs {
+  cursor: pointer;
+  color: #ce9178;
+  display: flex;
+  font-size: 12px;
+  height: 30px;
+}
+.code-option-tab {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.code-option-tab.selected-tab {
+  background: #002340;
 }

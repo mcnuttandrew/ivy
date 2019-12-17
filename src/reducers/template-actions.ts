@@ -188,3 +188,14 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
 
   return state.set('currentTemplateInstance', template);
 };
+
+// hey it's a lense
+const modifyCurrentWidgets = (state: any, mod: (x: any) => any) =>
+  state.setIn(
+    ['currentTemplateInstance', 'widgets'],
+    mod(state.getIn(['currentTemplateInstance', 'widgets'])),
+  );
+export const addWidget: ActionResponse = (state, payload) =>
+  modifyCurrentWidgets(state, d => d.push(payload));
+export const removeWidget: ActionResponse = (state, payload) =>
+  modifyCurrentWidgets(state, d => d.deleteIn([payload]));
