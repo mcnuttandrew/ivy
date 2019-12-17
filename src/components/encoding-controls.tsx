@@ -10,7 +10,6 @@ interface Props {
   editMode: boolean;
 
   setEncodingMode: GenericAction;
-  startTemplateEdit: GenericAction;
   deleteTemplate: GenericAction;
   clearEncoding: GenericAction;
   setEditMode: GenericAction;
@@ -22,7 +21,6 @@ export default function EncodingControls(props: Props) {
     deleteTemplate,
     templates,
     setEncodingMode,
-    startTemplateEdit,
     clearEncoding,
     editMode,
     setEditMode,
@@ -39,7 +37,6 @@ export default function EncodingControls(props: Props) {
             deleteTemplate={deleteTemplate}
             templates={templates}
             setEncodingMode={setEncodingMode}
-            startTemplateEdit={startTemplateEdit}
           />
           <div className="clear-encoding" onClick={clearEncoding}>
             <FaEraser />

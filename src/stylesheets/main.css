@@ -494,44 +494,6 @@ input[type=number]::-webkit-outer-spin-button {
   z-index: 5002;
 }
 
-.modal-container .template-builder-modal {
-  background: #DBDBDB;
-  border-radius: 10px;
-  height: 90%;
-  padding: 10px;
-  width: 90%;
-  z-index: 5002;
-}
-
-.template-builder-modal .widget-configuration-panel {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  width: 100%;
-  height: 100%;
-}
-
-.template-builder-modal .modal-body {
-  flex-direction: row-reverse;
-}
-
-.meta-data-builder-container {
-  width: 100%;
-}
-
-.widget-configuration-panel .widget-builder-container {
-  height: 100%;
-  margin: 10px 0;
-  overflow-y: auto;
-}
-.widget-configuration-panel .widget {
-  border: thin solid black;
-  border-radius: 5px;
-  display: flex;
-  font-size: 12px;
-}
-
-
 .widget {
   margin-bottom: 5px;
 }
@@ -556,22 +518,6 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
   border-bottom: thin dotted black;
 }
-
-.fake-pill-container {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.fake-pill-container .pill {
-  height: 23px;
-  margin-right: 10px;
-  margin-bottom: 2px;
-}
-
-.modal-body .code-column .column {
-  width: 250px;
-}
-
 
 .list-widget {
   font-size: 12px;
@@ -662,32 +608,6 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   align-items: center;
   margin-right: 2px;
-}
-
-.template-builder-modal .code-column {
-  border-left: thin solid black;
-  max-width: 50%;
-  padding-left: 5px;
-  width: 100%;
-}
-
-.code-wrapper {
-  position: relative;
-  width: 100%;
-}
-.code-column .code-wrapper {
-  height: calc(100% - 200px);
-}
-.widget-configuration-panel .code-wrapper {
-  height: 100%;
-}
-
-
-
-
-.error-container {
-  padding: 30px;
-  width: 460px;
 }
 
 .code-container {

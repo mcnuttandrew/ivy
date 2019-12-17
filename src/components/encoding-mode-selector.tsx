@@ -7,19 +7,19 @@ import Popover from './popover';
 interface Props {
   templates: Template[];
   deleteTemplate: GenericAction;
-  startTemplateEdit: GenericAction;
+
   setEncodingMode: GenericAction;
 }
 
 function generateButtonActions(props: any) {
-  const {setEncodingMode, startTemplateEdit, toggle, deleteTemplate} = props;
+  const {setEncodingMode, toggle, deleteTemplate} = props;
   return (templateName: string) => ({
     use: () => {
       setEncodingMode(templateName);
       toggle();
     },
     edit: () => {
-      startTemplateEdit(templateName);
+      console.log('TODO CURRENTLY BROKEN');
       toggle();
     },
     delete: () => {
@@ -65,7 +65,7 @@ function encodingRow(
 }
 
 export default function EncodingMode(props: Props) {
-  const {templates, setEncodingMode, startTemplateEdit, deleteTemplate} = props;
+  const {templates, setEncodingMode, deleteTemplate} = props;
   const [searchKey, setSearch] = useState('');
 
   return (
@@ -79,7 +79,6 @@ export default function EncodingMode(props: Props) {
       body={(toggle: any) => {
         const buttonActions = generateButtonActions({
           setEncodingMode,
-          startTemplateEdit,
           toggle,
           deleteTemplate,
         });

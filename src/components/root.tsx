@@ -27,7 +27,7 @@ import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
-import TemplateBuilderModal from './template-builder-modal';
+
 import EncodingControls from './encoding-controls';
 
 // TODO root props shouldn't all be optional, fix
@@ -53,7 +53,6 @@ interface RootProps {
   templates?: Template[];
   templateMap?: TemplateMap;
   templateComplete?: boolean;
-  templateBuilderModalOpen?: boolean;
   currentView?: string;
   views?: List<string>;
 
@@ -88,10 +87,8 @@ interface RootProps {
   setRepeats?: GenericAction;
   setEncodingMode?: GenericAction;
   setWidgetValue?: GenericAction;
-  startTemplateEdit?: GenericAction;
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
-  toggleTemplateBuilder?: GenericAction;
   setProgrammaticView?: GenericAction;
   triggerUndo?: GenericAction;
   triggerRedo?: GenericAction;
@@ -154,7 +151,6 @@ class RootComponent extends React.Component<RootProps> {
       setRepeats,
       setTemplateValue,
       setWidgetValue,
-      startTemplateEdit,
       swapXAndYChannels,
       updateFilter,
       template,
@@ -189,7 +185,6 @@ class RootComponent extends React.Component<RootProps> {
                 deleteTemplate={deleteTemplate}
                 templates={templates}
                 setEncodingMode={setEncodingMode}
-                startTemplateEdit={startTemplateEdit}
                 clearEncoding={clearEncoding}
                 editMode={editMode}
                 setEditMode={setEditMode}
@@ -296,17 +291,12 @@ class RootComponent extends React.Component<RootProps> {
       canUndo,
       changeSelectedFile,
       chainActions,
-      createTemplate,
       dataModalOpen,
       loadCustomDataset,
-      spec,
       toggleDataModal,
       triggerUndo,
       triggerRedo,
       showProgrammaticMode,
-      templates,
-      templateBuilderModalOpen,
-      toggleTemplateBuilder,
     } = this.props;
     return (
       <div className="flex-down full-width full-height">
@@ -318,24 +308,11 @@ class RootComponent extends React.Component<RootProps> {
             loadCustomDataset={loadCustomDataset}
           />
         )}
-        {templateBuilderModalOpen && (
-          <TemplateBuilderModal
-            createTemplate={createTemplate}
-            toggleTemplateBuilder={toggleTemplateBuilder}
-            spec={spec}
-            editFrom={templates.find(
-              (template: Template) =>
-                typeof templateBuilderModalOpen === 'string' &&
-                template.templateName === templateBuilderModalOpen,
-            )}
-          />
-        )}
         <Header
           triggerUndo={triggerUndo}
           triggerRedo={triggerRedo}
           canRedo={canRedo}
           canUndo={canUndo}
-          toggleTemplateBuilder={toggleTemplateBuilder}
         />
         <div className="flex full-height">
           <div className="flex full-height control-container">
@@ -378,7 +355,6 @@ function mapStateToProps({base}: {base: AppState}): any {
     currentlySelectedFile: base.get('currentlySelectedFile'),
     dataModalOpen: base.get('dataModalOpen'),
     template: template && template.toJS(),
-    templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
     templateComplete,
     currentTheme: base.get('currentTheme'),
     GOOSE_MODE: base.get('GOOSE_MODE'),

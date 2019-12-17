@@ -11,7 +11,6 @@ const toggle = (key: string): ActionResponse => state =>
 
 export const setProgrammaticView = toggle('showProgrammaticMode');
 export const toggleDataModal = toggle('dataModalOpen');
-export const toggleTemplateBuilder = toggle('templateBuilderModalOpen');
 
 export const changeTheme = blindSet('currentTheme');
 export const setEditMode = blindSet('editMode');

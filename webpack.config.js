@@ -61,24 +61,6 @@ module.exports = {
       maxModules: 0, // Set the maximum number of modules to be shown
     },
   },
-  // devServer: {
-  //   host: '0.0.0.0',
-  //   stats: {
-  //     colors: true,
-  //   },
-  //   compress: true,
-  //   // overlay: {
-  //   //   warnings: true,
-  //   //   errors: true,
-  //   // },
-  //   progress: true,
-  //   open: false,
-  //   // contentBase: path.join(__dirname, 'public'),
-  //   watchContentBase: true,
-  //   watchOptions: {
-  //     ignored: /node_modules/,
-  //   },
-  // },
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development', // eslint-disable-line
   devtool:
     process.env.NODE_ENV === 'production' // eslint-disable-line

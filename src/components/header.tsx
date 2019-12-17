@@ -2,25 +2,17 @@ import React from 'react';
 import {MdUndo, MdRedo} from 'react-icons/md';
 import {GenericAction} from '../actions/index';
 import {classnames} from '../utils';
-import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
 interface HeaderProps {
   triggerUndo: GenericAction;
   triggerRedo: GenericAction;
-  toggleTemplateBuilder: GenericAction;
   canRedo: boolean;
   canUndo: boolean;
 }
 
 export default class Header extends React.Component<HeaderProps> {
   render() {
-    const {
-      triggerUndo,
-      triggerRedo,
-      canRedo,
-      canUndo,
-      toggleTemplateBuilder,
-    } = this.props;
+    const {triggerUndo, triggerRedo, canRedo, canUndo} = this.props;
     return (
       <div className="header flex full-width background-1">
         <img src="logo.png" />
@@ -46,9 +38,6 @@ export default class Header extends React.Component<HeaderProps> {
             <span>REDO</span>
           </div>
         </div>
-        {SHOW_TEMPLATE_CONTROLS && (
-          <button onClick={toggleTemplateBuilder}> TEMPLATE BUILDER </button>
-        )}
       </div>
     );
   }

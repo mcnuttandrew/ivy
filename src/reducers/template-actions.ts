@@ -169,11 +169,6 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
   return state.set('templates', getAndRemoveTemplate(state, payload));
 };
 
-// TODO i think this can be deleted
-export const startTemplateEdit: ActionResponse = (state, payload) => {
-  return state.set('templateBuilderModalOpen', payload);
-};
-
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
   let template = state.get('currentTemplateInstance');
