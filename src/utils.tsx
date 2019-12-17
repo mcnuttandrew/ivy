@@ -5,7 +5,7 @@ import {DataType, ColumnHeader} from './types';
 
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
-    .filter(name => classObject[name])
+    .filter(name => classObject[name] && name)
     .join(' ');
 }
 

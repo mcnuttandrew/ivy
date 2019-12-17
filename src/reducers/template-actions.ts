@@ -176,7 +176,6 @@ export const startTemplateEdit: ActionResponse = (state, payload) => {
 
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
-  console.log(payload);
   let template = state.get('currentTemplateInstance');
   const code = template.get('code');
   if (key === 'widgetName') {
@@ -184,8 +183,7 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
     const re = new RegExp(oldValue, 'g');
     template = template.set('code', code.replace(re, `[${value}]`));
   }
-  template = template.setIn(['widgets', idx, key], value);
-
+  template = template.setIn(['widgets', idx, key], Immutable.fromJS(value));
   return state.set('currentTemplateInstance', template);
 };
 

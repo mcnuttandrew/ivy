@@ -341,6 +341,9 @@ class RootComponent extends React.Component<RootProps> {
 function mapStateToProps({base}: {base: AppState}): any {
   const template = base.get('currentTemplateInstance');
   const templateMap = base.get('templateMap').toJS();
+  const templateComplete =
+    template && checkIfMapComplete(template.toJS(), templateMap);
+
   return {
     canUndo: base.get('undoStack').size >= 1,
     canRedo: base.get('redoStack').size >= 1,
@@ -361,8 +364,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     dataModalOpen: base.get('dataModalOpen'),
     template: template && template.toJS(),
     templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
-    templateComplete:
-      template && checkIfMapComplete(template.toJS(), templateMap),
+    templateComplete,
     currentTheme: base.get('currentTheme'),
     GOOSE_MODE: base.get('GOOSE_MODE'),
     templates: base.get('templates'),

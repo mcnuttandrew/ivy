@@ -34,7 +34,7 @@ export default class TemplateColumn extends React.Component<
     } = this.props;
 
     return (
-      <div>
+      <div className="full-height">
         <NewWidgetMenu widgets={template.widgets} addWidget={addWidget} />
         <div
           className={classnames({

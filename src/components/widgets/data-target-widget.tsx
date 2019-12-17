@@ -1,6 +1,4 @@
 import React from 'react';
-import Switch from 'react-switch';
-import Select from 'react-select';
 import {DataTargetWidget} from '../../templates/types';
 import {DataType} from '../../types';
 import {toSelectFormat, trim} from '../../utils';
@@ -87,19 +85,6 @@ export default function DataTargetWidget(
             checked={!!widget.required}
           />
         </div>
-        {/* <Select
-          isMulti={true}
-          value={toSelectFormat(widget.allowedTypes)}
-          options={toSelectFormat(DATA_TYPES)}
-          classNamePrefix="hydra-import-select"
-          onChange={(actionResult: any) => {
-            setWidgetValue(
-              'allowedTypes',
-              (actionResult || []).map((d: any) => d.value),
-              idx,
-            );
-          }}
-        /> */}
       </div>
     </div>
   );

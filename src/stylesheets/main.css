@@ -195,8 +195,13 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 .template-column.column.edit-mode {
+  height: 100%;
   padding: 0;
   width: 100%;
+}
+
+.template-column.column.edit-mode > div {
+  margin-bottom: 200px;
 }
 
 .editor-column {
@@ -569,11 +574,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 .list-widget {
-  align-items: center;
-  display: flex;
   font-size: 12px;
-  justify-content: center;
-  height: 100%;
 }
 
 .switch-widget {
@@ -897,6 +898,27 @@ input[type=number]::-webkit-outer-spin-button {
   left: -20px;
 }
 
+.tooltip-click-target {
+  cursor: pointer;
+}
+
+.new-widget-menu.modal-tooltip-container .modal-tooltip {
+  width:200px;
+}
+
+.list-options-popover.modal-tooltip-container .modal-tooltip {
+  height: 200px;
+  left: -75px;
+  overflow-y: scroll;
+  top: 18px;
+  width: 165px;
+}
+
+.list-options-popover .delete-option-button {
+  cursor: pointer;
+  font-size: 15px;
+}
+
 .tool-description {
   text-transform: uppercase;
   font-weight: 600;
@@ -926,18 +948,6 @@ input[type=number]::-webkit-outer-spin-button {
 .code-editor-controls .execute-code-control .execute-code-control-button {
   cursor: pointer;
   font-size: 20px;
-}
-
-.hydra-import-select__control {
-  font-size: 10px;
-  padding: 0;
-  margin: 0;
-  min-height: 0 !important;
-}
-
-.hydra-import-select__indicator.hydra-import-select__dropdown-indicator {
-  margin: 0;
-  padding: 0;
 }
 
 .slide-widget {

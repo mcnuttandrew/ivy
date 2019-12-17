@@ -1,4 +1,6 @@
 import {DataType} from '../types';
+import {toList} from '../utils';
+import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
 import DATATABLE from './example-templates/table';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
@@ -131,6 +133,23 @@ export const widgetFactory = {
       step: 1,
       defaultValue: 5,
     } as SliderWidget),
+};
+
+export const preconfiguredWidgets = {
+  'Discrete Color Options': (idx: number) =>
+    ({
+      widgetName: `ColorList${idx}`,
+      widgetType: 'List',
+      allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
+      defaultValue: null,
+    } as ListWidget),
+  'Data Types Options': (idx: number) =>
+    ({
+      widgetName: `DataTypeOptions${idx}`,
+      widgetType: 'List',
+      allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal']),
+      defaultValue: null,
+    } as ListWidget),
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [

@@ -45,7 +45,6 @@ export default function SliderWidget(props: GeneralWidget<SliderWidget>) {
           <div className="flex space-between">
             {!editMode && <span>{widget.minVal}</span>}
             {!editMode && <span>{widget.maxVal}</span>}
-            {!editMode && <span>{widget.minVal}</span>}
             {editMode && (
               <input
                 value={widget.minVal}
@@ -67,58 +66,4 @@ export default function SliderWidget(props: GeneralWidget<SliderWidget>) {
       </div>
     </div>
   );
-  // return (
-  //   <div className="flex">
-  //     <div className="flex-down">
-  //       <input
-  //         value={widget.widgetName}
-  //         onChange={event =>
-  //           setWidgetValue('widgetName', event.target.value, idx)
-  //         }
-  //       />
-  //     </div>
-  //     <div className="flex-down">
-  //       <div className="flex">
-  //         <div className="flex-down">
-  //           <span className="tool-description">Min </span>
-  //           <input
-  //             value={widget.minVal}
-  //             onChange={event =>
-  //               setWidgetValue('minVal', event.target.value, idx)
-  //             }
-  //           />
-  //         </div>
-  //         <div className="flex-down">
-  //           <span className="tool-description">Max</span>
-  //           <input
-  //             value={widget.maxVal}
-  //             onChange={event =>
-  //               setWidgetValue('maxVal', event.target.value, idx)
-  //             }
-  //           />
-  //         </div>
-  //       </div>
-  //       <div className="flex">
-  //         <div className="flex-down">
-  //           <span className="tool-description">Step Size</span>
-  //           <input
-  //             value={widget.step}
-  //             onChange={event =>
-  //               setWidgetValue('step', event.target.value, idx)
-  //             }
-  //           />
-  //         </div>
-  //         <div className="flex-down">
-  //           <span className="tool-description">Default Value</span>
-  //           <input
-  //             value={widget.defaultValue}
-  //             onChange={event =>
-  //               setWidgetValue('defaultValue', event.target.value, idx)
-  //             }
-  //           />
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 }

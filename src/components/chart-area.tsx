@@ -38,7 +38,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       template,
       templateComplete,
     } = this.props;
-
     return (
       <div className="flex-down full-width full-height">
         <div className="chart-controls full-width flex">
