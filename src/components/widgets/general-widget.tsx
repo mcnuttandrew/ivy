@@ -68,12 +68,6 @@ function PlacementControls(props: Props) {
         <div className="cursor-pointer" onClick={removeWidget}>
           <TiDelete />
         </div>
-        {/* <div className="cursor-pointer" onClick={decrementOrder}>
-          <TiArrowUpThick />
-        </div>
-        <div className="cursor-pointer" onClick={incrementOrder}>
-          <TiArrowDownThick />
-        </div> */}
       </div>
       <div className="in-use-status">
         {showInUse
