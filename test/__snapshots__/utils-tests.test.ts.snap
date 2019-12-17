@@ -6,10 +6,16 @@ Object {
   "encoding": Object {
     "x": Object {
       "field": "[xDim]",
+      "scale": Object {
+        "zero": true,
+      },
       "type": "quantitative",
     },
     "y": Object {
       "field": "[yDim]",
+      "scale": Object {
+        "zero": true,
+      },
       "type": "quantitative",
     },
   },
@@ -20,7 +26,14 @@ Object {
 }
 `;
 
-exports[`#fillTemplateMapWithDefaults 2`] = `Object {}`;
+exports[`#fillTemplateMapWithDefaults 2`] = `
+Object {
+  "SliderX": 5,
+  "Zeroes": "true",
+  "xType": "\\"quantitative\\"",
+  "yType": "\\"quantitative\\"",
+}
+`;
 
 exports[`#fillTemplateMapWithDefaults 3`] = `
 Object {
@@ -289,8 +302,8 @@ exports[`#setTemplateValues 2`] = `
   \\"$schema\\": \\"https://vega.github.io/schema/vega-lite/v4.json\\",
   \\"mark\\": {\\"type\\": \\"point\\", \\"tooltip\\": true},
   \\"encoding\\": {
-    \\"x\\": {\\"field\\": \\"xDim_TEST\\", \\"type\\": \\"quantitative\\"},
-    \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"quantitative\\"}
+    \\"x\\": {\\"field\\": \\"xDim_TEST\\", \\"type\\": \\"[xType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
+    \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"[yType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}}
   }
 }"
 `;

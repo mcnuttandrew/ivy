@@ -20,9 +20,11 @@ function addMarkdownProps(value: any) {
   }
   return value;
 }
-
+// @ts-ignore
 const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
+// @ts-ignore
 const vegaSchema = require('vega/build/vega-schema.json');
+// @ts-ignore
 const hydraSchema = require('../../assets/hydra-template-lang-schema.json');
 addMarkdownProps(vegaSchema);
 addMarkdownProps(vegaLiteSchema);

@@ -59,6 +59,7 @@ export interface Template {
     | SwitchWidget
     | TextWidget
     | SliderWidget)[];
+
   widgetValidations: widgetValidation[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
