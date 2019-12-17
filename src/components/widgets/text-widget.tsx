@@ -1,15 +1,14 @@
 import React from 'react';
 import {TextWidget} from '../../templates/types';
-interface TextBuilderWidgetProps {
-  widget: TextWidget;
-  idx: number;
-  setWidgetValue: any;
-}
+import {GeneralWidget} from './general-widget';
 
-export default function TextBuilderWidget(props: TextBuilderWidgetProps) {
-  const {widget, idx, setWidgetValue} = props;
+export default function TextWidget(props: GeneralWidget<TextWidget>) {
+  const {widget, idx, setWidgetValue, editMode} = props;
+  if (!editMode) {
+    return <div className="text-widget">{widget.text}</div>;
+  }
   return (
-    <div>
+    <div className="text-widget">
       <textarea
         placeholder="Type a message that will appear in the encoding area"
         value={widget.text}

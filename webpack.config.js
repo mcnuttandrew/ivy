@@ -1,7 +1,6 @@
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
-  devtool: 'source-map',
   plugins: [
     new MonacoWebpackPlugin({
       // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
@@ -56,5 +55,15 @@ module.exports = {
       },
     ],
   },
+  devServer: {
+    stats: {
+      children: false, // Hide children information
+      maxModules: 0, // Set the maximum number of modules to be shown
+    },
+  },
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development', // eslint-disable-line
+  devtool:
+    process.env.NODE_ENV === 'production' // eslint-disable-line
+      ? 'source-map'
+      : 'cheap-module-source-map',
 };

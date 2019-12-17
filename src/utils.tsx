@@ -1,11 +1,12 @@
+import stringify from 'json-stringify-pretty-compact';
 import {List} from 'immutable';
-import {TemplateWidget} from './templates/types';
+import {TemplateWidget, Template} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
-    .filter(name => classObject[name])
+    .filter(name => classObject[name] && name)
     .join(' ');
 }
 
@@ -195,3 +196,28 @@ export const toList = (list: string[]) =>
     display,
     value: `"${display}"`,
   }));
+
+export function serializeTemplate(template: Template): string {
+  return stringify({
+    $schema:
+      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template-lang-schema.json',
+    templateName: template.templateName,
+    templateDescription: template.templateDescription,
+    code: 'SEE CODE EDITOR',
+    templateLanguage: template.templateLanguage,
+    widgets: template.widgets,
+    widgetValidations: template.widgetValidations,
+  });
+}
+
+export function deserializeTemplate(templateString: string): Template {
+  const code = JSON.parse(templateString);
+  return {
+    templateName: code.templateName,
+    templateDescription: code.templateDescription,
+    code: 'SEE CODE EDITOR',
+    templateLanguage: code.templateLanguage,
+    widgets: code.widgets,
+    widgetValidations: code.widgetValidations,
+  };
+}

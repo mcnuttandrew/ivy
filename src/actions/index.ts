@@ -2,7 +2,7 @@ import {Dispatch} from 'redux';
 import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
-import {DEFAULT_TEMPLATES} from '../templates/types';
+import {DEFAULT_TEMPLATES} from '../templates';
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
@@ -25,27 +25,27 @@ export const changeMarkType = buildEasyAction('change-mark-type');
 export const setNewSpec = buildEasyAction('set-new-encoding');
 export const setNewSpecCode = buildEasyAction('set-new-encoding-code');
 export const addToNextOpenSlot = buildEasyAction('add-to-next-open-slot');
-export const setProgrammaticView = buildEasyAction(
-  'toggle-programmatic-view',
-);
+export const setProgrammaticView = buildEasyAction('toggle-programmatic-view');
 export const changeTheme = buildEasyAction('change-theme');
 export const createFilter = buildEasyAction('create-filter');
 export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
 export const coerceType = buildEasyAction('coerce-type');
 export const setEncodingMode = buildEasyAction('set-encoding-mode');
-export const toggleTemplateBuilder = buildEasyAction('toggle-template-builder');
 export const createTemplate = buildEasyAction('create-template');
-export const startTemplateEdit = buildEasyAction('start-edit-template');
 export const deleteTemplate = buildEasyAction('delete-template');
 export const setTemplateValue = buildEasyAction('set-template-value');
+export const setEditMode = buildEasyAction('set-edit-mode');
+export const setWidgetValue = buildEasyAction('set-widget-value');
+export const addWidget = buildEasyAction('add-widget-to-template');
+export const removeWidget = buildEasyAction('remove-widget-from-template');
+
+export const setCodeMode = buildEasyAction('set-code-mode');
 
 export const createNewView = buildEasyAction('create-new-view');
 export const deleteView = buildEasyAction('delete-view');
 export const switchView = buildEasyAction('switch-view');
 export const cloneView = buildEasyAction('clone-view');
-
-export const clearUnprounceWarning = buildEasyAction('clear-unprouncable');
 
 export const triggerRedo = buildEasyAction('trigger-redo');
 export const triggerUndo = buildEasyAction('trigger-undo');

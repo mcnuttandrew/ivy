@@ -3,13 +3,13 @@ import {
   fillTemplateMapWithDefaults,
   recieveTemplates,
 } from '../src/reducers/template-actions';
-import {DEFAULT_TEMPLATES} from '../src/templates/types';
+import {DEFAULT_TEMPLATES} from '../src/templates';
 import SCATTERPLOT_TEMPLATE from '../src/templates/example-templates/scatterplot';
 import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
 import TABLE from '../src/templates/example-templates/table';
 
 import {DEFAULT_STATE} from '../src/reducers/default-state';
-import {setEncodingMode} from '../src/reducers/index';
+import {setEncodingMode} from '../src/reducers/gui-actions';
 
 test('#setTemplateValues', () => {
   const filledOutPieTemplate = setTemplateValues(PIECHART_TEMPLATE.code, {
@@ -37,7 +37,7 @@ test('#setTemplateValues', () => {
 test('#fillTemplateMapWithDefaults', () => {
   const preparedState = setEncodingMode(
     recieveTemplates(DEFAULT_STATE, DEFAULT_TEMPLATES),
-    'scatterplot',
+    'Scatterplot',
   );
   const newState = fillTemplateMapWithDefaults(preparedState);
   expect(newState.get('spec').toJS()).toMatchSnapshot();

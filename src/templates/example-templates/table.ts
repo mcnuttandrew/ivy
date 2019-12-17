@@ -14,7 +14,7 @@ const DATATABLE: Template = {
     {
       widgetName: 'columns',
       widgetType: 'MultiDataTarget',
-      allowedTypes: ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'],
+      allowedTypes: ['MEASURE', 'DIMENSION', 'TIME'],
       required: true,
       minNumberOfTargets: 0,
       maxNumberOfTargets: 5,

@@ -89,7 +89,7 @@ export default function Pill(props: PillProps) {
         </div>
       )}
       <div className="fixed-symbol-width pill-symbol">
-        {DataSymbol(isMeta ? 'METACOLUMN' : column.type)}
+        <DataSymbol type={isMeta ? 'METACOLUMN' : column.type} />
       </div>
       <div className="pill-label">{column.field}</div>
       {!isMeta && !inEncoding && createFilter && (

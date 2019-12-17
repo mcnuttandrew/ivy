@@ -2,21 +2,29 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
+import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
 
+import {Template} from '../templates/types';
+import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 import {GenericAction} from '../actions';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {classnames} from '../utils';
+import {classnames, serializeTemplate, deserializeTemplate} from '../utils';
 import Selector from './selector';
 
 interface Props {
-  currentCode: string;
+  codeMode: string;
   editorError: null | string;
+  specCode: string;
+  spec: any;
+  template?: Template;
   setNewSpecCode: GenericAction;
+  setCodeMode: GenericAction;
 }
 type updateMode = 'automatic' | 'manual';
 interface State {
   error?: string;
   updateMode: updateMode;
+  suggestionBox: boolean;
 }
 
 const SHORTCUTS = [
@@ -48,22 +56,35 @@ export default class CodeEditor extends React.Component<Props, State> {
     this.state = {
       error: null,
       updateMode: 'automatic',
+      suggestionBox: true,
     };
   }
   editorDidMount(editor: any) {
     editor.focus();
     // @ts-ignore
     import('monaco-themes/themes/Cobalt.json').then(data => {
-      console.log(data, '???');
       // @ts-ignore
-      monaco.editor.defineTheme('birds', data);
+      monaco.editor.defineTheme('cobalt', data);
       // @ts-ignore
-      monaco.editor.setTheme('birds');
+      monaco.editor.setTheme('cobalt');
     });
   }
 
+  getCurrentCode() {
+    const {template, codeMode, specCode, spec} = this.props;
+    if (codeMode === 'CODE') {
+      return template ? template.code : specCode;
+    }
+    if (codeMode === 'TEMPLATE') {
+      return template ? serializeTemplate(template) : 'TEMPLATE NOT AVAILABLE';
+    }
+    if (codeMode === 'OUTPUT') {
+      return stringify(spec);
+    }
+  }
+
   editorControls() {
-    const {currentCode, setNewSpecCode} = this.props;
+    const {setNewSpecCode, codeMode} = this.props;
     const {updateMode} = this.state;
     return (
       <div className="flex code-editor-controls">
@@ -98,8 +119,11 @@ export default class CodeEditor extends React.Component<Props, State> {
               <button
                 key={name}
                 onClick={() => {
+                  if (codeMode !== 'CODE') {
+                    return;
+                  }
                   setNewSpecCode({
-                    code: stringify(action(JSON.parse(currentCode))),
+                    code: stringify(action(JSON.parse(this.getCurrentCode()))),
                     inError: false,
                   });
                 }}
@@ -114,16 +138,25 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   handleCodeUpdate(code: string) {
-    const {setNewSpecCode} = this.props;
-    Promise.resolve()
-      .then(() => JSON.parse(code))
-      .then(() => setNewSpecCode({code, inError: false}))
-      .catch(() => setNewSpecCode({code, inError: true}));
+    const {setNewSpecCode, codeMode} = this.props;
+    if (codeMode === 'TEMPLATE') {
+      // TODO allow text editing on template
+      // Promise.resolve()
+      // .then(() => JSON.parse(code))
+      // .then(() => setNewTemplate({code, inError: false}))
+      // .catch(() => setNewTemplate({code, inError: true}));
+    } else {
+      Promise.resolve()
+        .then(() => JSON.parse(code))
+        .then(() => setNewSpecCode({code, inError: false}))
+        .catch(() => setNewSpecCode({code, inError: true}));
+    }
   }
 
   render() {
-    const {currentCode, editorError} = this.props;
-    const {updateMode} = this.state;
+    const {editorError, setCodeMode, codeMode} = this.props;
+    const {updateMode, suggestionBox} = this.state;
+    const currentCode = this.getCurrentCode();
 
     return (
       <div className="full-height full-width">
@@ -137,19 +170,77 @@ export default class CodeEditor extends React.Component<Props, State> {
           >
             ERROR
           </div>
+          <div className="code-option-tabs">
+            {['CODE', 'TEMPLATE', 'OUTPUT'].map(key => {
+              return (
+                <div
+                  className={classnames({
+                    'code-option-tab': true,
+                    'selected-tab': key === codeMode,
+                  })}
+                  key={key}
+                  onClick={() => setCodeMode(key)}
+                >
+                  {key}
+                </div>
+              );
+            })}
+          </div>
           <MonacoEditor
             ref="monaco"
             language="json"
             theme="monokai"
+            height={suggestionBox ? 'calc(100% - 300px)' : 'calc(100% - 110px)'}
             value={currentCode}
             options={EDITOR_OPTIONS}
             onChange={(code: string) => {
+              if (codeMode === 'OUTPUT') {
+                return;
+              }
+
               if (updateMode === 'automatic') {
                 this.handleCodeUpdate(code);
               }
             }}
             editorDidMount={this.editorDidMount}
           />
+          <div>
+            <div className="suggestion-box-header flex space-between">
+              <h5>Suggestions</h5>
+              <div
+                onClick={() => this.setState({suggestionBox: !suggestionBox})}
+              >
+                {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
+              </div>
+            </div>
+            {suggestionBox && (
+              <div className="suggestion-box-body">
+                {false &&
+                  synthesizeSuggestions(currentCode, []).map(
+                    (suggestion: any, idx: number) => {
+                      const {from, to, comment = '', sideEffect} = suggestion;
+                      return (
+                        <button
+                          onClick={() => {
+                            {
+                              /* this.setState({
+                          code: takeSuggestion(code, suggestion),
+                          widgets: sideEffect
+                            ? widgets.push(sideEffect())
+                            : widgets,
+                        }); */
+                            }
+                          }}
+                          key={`${from} -> ${to}-${idx}`}
+                        >
+                          {comment}
+                        </button>
+                      );
+                    },
+                  )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

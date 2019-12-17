@@ -1,9 +1,5 @@
-import Immutable from 'immutable';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import {getTemplate} from '../utils';
-import {EMPTY_SPEC} from './default-state';
-// import {Spec} from 'vega-typings';
 
 import {
   setEncodingParameter,
@@ -34,49 +30,29 @@ import {
   setTemplateValue,
   createTemplate,
   deleteTemplate,
-  startTemplateEdit,
-  fillTemplateMapWithDefaults,
+  setWidgetValue,
+  addWidget,
+  removeWidget,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView} from './view-actions';
+import {
+  changeTheme,
+  toggleDataModal,
+  setEncodingMode,
+  setProgrammaticView,
+  setEditMode,
+  setCodeMode,
+} from './gui-actions';
+
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
-// GUI ACTIONS
-const setProgrammaticView: ActionResponse = (state, payload) =>
-  state.set('showProgrammaticMode', !state.get('showProgrammaticMode'));
-const toggleDataModal: ActionResponse = state =>
-  state.set('dataModalOpen', !state.get('dataModalOpen'));
-const changeTheme: ActionResponse = (state, payload) =>
-  state.set('currentTheme', payload);
-const clearUnprounceWarning: ActionResponse = state =>
-  state.set('unprouncableInGrammer', false);
-const toggleTemplateBuilder: ActionResponse = state =>
-  state.set('templateBuilderModalOpen', !state.get('templateBuilderModalOpen'));
-
-export const setEncodingMode: ActionResponse = (state, payload) => {
-  const newState = state.set('encodingMode', payload);
-  if (payload !== 'grammer') {
-    // this will become the local copy of the template
-    const template = getTemplate(state, payload);
-    const updatedSpec = Immutable.fromJS(JSON.parse(template.code));
-    return fillTemplateMapWithDefaults(
-      newState
-        .set('currentTemplateInstance', Immutable.fromJS(template))
-        .set('spec', updatedSpec),
-    );
-  } else {
-    return newState
-      .set('spec', EMPTY_SPEC)
-      .set('currentTemplateInstance', null);
-  }
-};
-
+// second order effects
 const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
   state,
   payload,
 ) => wrapper(state, func(state, payload));
 const addUndo = (func: ActionResponse): ActionResponse =>
   wrap(func, pushToUndoStack);
-
 const addUpdateCode = (func: ActionResponse): ActionResponse =>
   wrap(func, updateCodeRepresentation);
 
@@ -109,17 +85,20 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   // gui modifications
   'change-theme': changeTheme,
   'toggle-data-modal': toggleDataModal,
-  'clear-unprouncable': clearUnprounceWarning,
   'set-encoding-mode': setEncodingMode,
-  'toggle-template-builder': toggleTemplateBuilder,
   'toggle-programmatic-view': setProgrammaticView,
+  'set-edit-mode': setEditMode,
+  'set-code-mode': setCodeMode,
 
   // template
   'recieve-templates': recieveTemplates,
   'set-template-value': addUndo(setTemplateValue),
   'create-template': createTemplate,
   'delete-template': deleteTemplate,
-  'start-edit-template': startTemplateEdit,
+
+  'set-widget-value': setWidgetValue,
+  'add-widget-to-template': addWidget,
+  'remove-widget-from-template': removeWidget,
 
   // views
   'create-new-view': addUndo(createNewView),

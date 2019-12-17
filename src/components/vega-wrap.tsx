@@ -56,7 +56,6 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
         };
       }
     }
-
     return (
       <Vega
         actions={false}

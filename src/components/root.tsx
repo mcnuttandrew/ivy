@@ -3,7 +3,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import {FaEraser} from 'react-icons/fa';
 import {checkIfMapComplete} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
@@ -28,15 +27,17 @@ import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
-import EncodingModeSelector from './encoding-mode-selector';
-import TemplateBuilderModal from './template-builder-modal';
+
+import EncodingControls from './encoding-controls';
 
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
   columns?: ColumnHeader[];
   canUndo?: boolean;
   canRedo?: boolean;
+  codeMode?: string;
   editorError?: null | string;
+  editMode?: boolean;
   spec?: Spec;
   specCode?: string;
   data?: any; //TODO: define the data type
@@ -47,13 +48,11 @@ interface RootProps {
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
-  unprouncableInGrammer?: boolean;
   showProgrammaticMode?: boolean;
   template?: Template;
   templates?: Template[];
   templateMap?: TemplateMap;
   templateComplete?: boolean;
-  templateBuilderModalOpen?: boolean;
   currentView?: string;
   views?: List<string>;
 
@@ -63,31 +62,33 @@ interface RootProps {
   cloneView?: GenericAction;
 
   addToNextOpenSlot?: GenericAction;
+  addWidget?: GenericAction;
   changeMarkType?: GenericAction;
   changeTheme?: GenericAction;
   chainActions?: GenericAction;
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
-  clearUnprounceWarning?: GenericAction;
   createFilter?: GenericAction;
   createTemplate?: GenericAction;
   coerceType?: GenericAction;
   deleteTemplate?: GenericAction;
+  setEditMode?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
   loadTemplates?: GenericAction;
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
+  removeWidget?: GenericAction;
+  setCodeMode?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
   setTemplateValue?: GenericAction;
   setRepeats?: GenericAction;
   setEncodingMode?: GenericAction;
-  startTemplateEdit?: GenericAction;
+  setWidgetValue?: GenericAction;
   swapXAndYChannels?: GenericAction;
   toggleDataModal?: GenericAction;
-  toggleTemplateBuilder?: GenericAction;
   setProgrammaticView?: GenericAction;
   triggerUndo?: GenericAction;
   triggerRedo?: GenericAction;
@@ -127,6 +128,7 @@ class RootComponent extends React.Component<RootProps> {
 
   grammarMenu() {
     const {
+      addWidget,
       addToNextOpenSlot,
       coerceType,
       columns,
@@ -136,25 +138,27 @@ class RootComponent extends React.Component<RootProps> {
       currentlySelectedFile,
       deleteFilter,
       deleteTemplate,
+      editMode,
       encodingMode,
       iMspec,
       metaColumns,
+      removeWidget,
       spec,
+      setEditMode,
       setEncodingParameter,
       setEncodingMode,
       setNewSpec,
       setRepeats,
       setTemplateValue,
-      startTemplateEdit,
+      setWidgetValue,
       swapXAndYChannels,
       updateFilter,
+      template,
       templates,
       templateMap,
       toggleDataModal,
     } = this.props;
-    const foundTemplate = templates.find(
-      template => template.templateName === encodingMode,
-    );
+
     return (
       <div className="flex full-height column-border">
         <DndProvider backend={HTML5Backend}>
@@ -167,32 +171,24 @@ class RootComponent extends React.Component<RootProps> {
             iMspec={iMspec}
             metaColumns={metaColumns}
             toggleDataModal={toggleDataModal}
+            template={template}
             setRepeats={setRepeats}
             spec={spec}
             updateFilter={updateFilter}
             deleteFilter={deleteFilter}
             onDropFilter={(item: any) => createFilter({field: item.text})}
           />
-          <div className="flex-down full-height background-3">
+          <div className="flex-down full-height background-3 encoding-column-container">
             {SHOW_TEMPLATE_CONTROLS && (
-              <div className="encoding-mode-selector">
-                <div className="flex-down">
-                  <h1 className="section-title">ENCODING MODE</h1>
-                  <h3>{encodingMode}</h3>
-                </div>
-                <div className="flex-down">
-                  <EncodingModeSelector
-                    deleteTemplate={deleteTemplate}
-                    templates={templates}
-                    setEncodingMode={setEncodingMode}
-                    startTemplateEdit={startTemplateEdit}
-                  />
-                  <div className="clear-encoding" onClick={clearEncoding}>
-                    <FaEraser />
-                    Clear
-                  </div>
-                </div>
-              </div>
+              <EncodingControls
+                encodingMode={encodingMode}
+                deleteTemplate={deleteTemplate}
+                templates={templates}
+                setEncodingMode={setEncodingMode}
+                clearEncoding={clearEncoding}
+                editMode={editMode}
+                setEditMode={setEditMode}
+              />
             )}
             {encodingMode === 'grammer' && (
               <EncodingColumn
@@ -213,12 +209,16 @@ class RootComponent extends React.Component<RootProps> {
                 onDropFilter={(item: any) => createFilter({field: item.text})}
               />
             )}
-            {encodingMode !== 'grammer' && foundTemplate && (
+            {encodingMode !== 'grammer' && template && (
               <TemplateColumn
-                template={foundTemplate}
+                addWidget={addWidget}
+                editMode={editMode}
+                template={template}
                 templateMap={templateMap}
                 columns={columns}
+                removeWidget={removeWidget}
                 setTemplateValue={setTemplateValue}
+                setWidgetValue={setWidgetValue}
               />
             )}
           </div>
@@ -228,40 +228,26 @@ class RootComponent extends React.Component<RootProps> {
   }
 
   programmaticMenu() {
-    const {setNewSpecCode, specCode, editorError, template} = this.props;
+    const {
+      setNewSpecCode,
+      specCode,
+      editorError,
+      template,
+      codeMode,
+      setCodeMode,
+      spec,
+    } = this.props;
     return (
       <div className="flex full-height editor-column background-1">
         <CodeEditor
+          setCodeMode={setCodeMode}
+          codeMode={codeMode}
           setNewSpecCode={setNewSpecCode}
-          currentCode={template ? template.code : specCode}
+          template={template}
+          specCode={specCode}
+          spec={spec}
           editorError={editorError}
         />
-      </div>
-    );
-  }
-
-  errorMenu() {
-    const {clearUnprounceWarning} = this.props;
-    return (
-      <div className="full-height full-width inline-block error-container">
-        <h3>Error</h3>
-        <h5>
-          The Vega-lite Specification that you have constructed is not supported
-          by the grammar mode.
-        </h5>
-        <br />
-        <h5>
-          {' '}
-          You can resolve this error by modifying the spec. Please note that
-          layers are not supported at this time.
-        </h5>
-        <br />
-        <h5>
-          If you like you are welcome to try to over-ride this error, but the
-          application make construct suprirsing and less than satisfactory
-          result
-        </h5>
-        <button onClick={clearUnprounceWarning}>OVER RIDE</button>
       </div>
     );
   }
@@ -305,17 +291,12 @@ class RootComponent extends React.Component<RootProps> {
       canUndo,
       changeSelectedFile,
       chainActions,
-      createTemplate,
       dataModalOpen,
       loadCustomDataset,
-      spec,
       toggleDataModal,
       triggerUndo,
       triggerRedo,
       showProgrammaticMode,
-      templates,
-      templateBuilderModalOpen,
-      toggleTemplateBuilder,
     } = this.props;
     return (
       <div className="flex-down full-width full-height">
@@ -327,24 +308,11 @@ class RootComponent extends React.Component<RootProps> {
             loadCustomDataset={loadCustomDataset}
           />
         )}
-        {templateBuilderModalOpen && (
-          <TemplateBuilderModal
-            createTemplate={createTemplate}
-            toggleTemplateBuilder={toggleTemplateBuilder}
-            spec={spec}
-            editFrom={templates.find(
-              (template: Template) =>
-                typeof templateBuilderModalOpen === 'string' &&
-                template.templateName === templateBuilderModalOpen,
-            )}
-          />
-        )}
         <Header
           triggerUndo={triggerUndo}
           triggerRedo={triggerRedo}
           canRedo={canRedo}
           canUndo={canUndo}
-          toggleTemplateBuilder={toggleTemplateBuilder}
         />
         <div className="flex full-height">
           <div className="flex full-height control-container">
@@ -365,15 +333,19 @@ class RootComponent extends React.Component<RootProps> {
 function mapStateToProps({base}: {base: AppState}): any {
   const template = base.get('currentTemplateInstance');
   const templateMap = base.get('templateMap').toJS();
+  const templateComplete =
+    template && checkIfMapComplete(template.toJS(), templateMap);
+
   return {
     canUndo: base.get('undoStack').size >= 1,
     canRedo: base.get('redoStack').size >= 1,
     columns: base.get('columns'),
-
+    codeMode: base.get('codeMode'),
     currentView: base.get('currentView'),
     data: base.get('data'),
     editorError: base.get('editorError'),
     encodingMode: base.get('encodingMode'),
+    editMode: base.get('editMode'),
     spec: base.get('spec').toJS(),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
@@ -383,11 +355,8 @@ function mapStateToProps({base}: {base: AppState}): any {
     currentlySelectedFile: base.get('currentlySelectedFile'),
     dataModalOpen: base.get('dataModalOpen'),
     template: template && template.toJS(),
-    templateBuilderModalOpen: base.get('templateBuilderModalOpen'),
-    templateComplete:
-      template && checkIfMapComplete(template.toJS(), templateMap),
+    templateComplete,
     currentTheme: base.get('currentTheme'),
-    unprouncableInGrammer: base.get('unprouncableInGrammer'),
     GOOSE_MODE: base.get('GOOSE_MODE'),
     templates: base.get('templates'),
     templateMap,

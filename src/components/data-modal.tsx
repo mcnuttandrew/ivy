@@ -95,7 +95,9 @@ export default class DataModal extends React.Component<Props, State> {
                             key={`${datasetName}-${dataType}`}
                             className="flex icon-container"
                           >
-                            <div className="icon">{DataSymbol(dataType)}</div>
+                            <div className="icon">
+                              <DataSymbol type={dataType} />
+                            </div>
                             {datasetMeta[dataType] || 0}
                           </div>
                         );

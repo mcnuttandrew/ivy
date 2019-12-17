@@ -1,12 +1,12 @@
-import Immutable, {List} from 'immutable';
+import Immutable from 'immutable';
 import {setTemplateValues} from '../reducers/template-actions';
 import {
   TemplateWidget,
-  widgetFactory,
   ListWidget,
   SwitchWidget,
   SliderWidget,
 } from '../templates/types';
+import {widgetFactory} from '../templates';
 
 import {compile} from 'vega-lite';
 
@@ -104,7 +104,7 @@ function safeParse(code: string) {
 }
 
 const DUMMY = 'xxxxxEXAMPLExxxx';
-function generateFullTemplateMap(widgets: List<TemplateWidget>) {
+function generateFullTemplateMap(widgets: TemplateWidget[]) {
   return widgets.reduce((acc: any, widget: TemplateWidget) => {
     const widgetType = widget.widgetType;
     if (widgetType === 'DataTarget') {
@@ -126,10 +126,7 @@ function generateFullTemplateMap(widgets: List<TemplateWidget>) {
   }, {});
 }
 
-export function synthesizeSuggestions(
-  code: string,
-  widgets: List<TemplateWidget>,
-) {
+export function synthesizeSuggestions(code: string, widgets: TemplateWidget[]) {
   const parsedCode = safeParse(
     setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))),
   );
@@ -152,8 +149,7 @@ export function synthesizeSuggestions(
     .filter(key => code.includes(`": "${key}`) && !widgetNames[key]);
   const dropTargets = widgets
     .filter(widget => widget.widgetType === 'DataTarget')
-    .map(widget => widget.widgetName)
-    .toJS();
+    .map(widget => widget.widgetName);
 
   const suggestions = likelyFields.reduce((acc: any[], from) => {
     dropTargets.forEach((to: string) => {
@@ -163,12 +159,12 @@ export function synthesizeSuggestions(
         comment: `${from} -> ${to}`,
       });
     });
-    const to = `Dim${widgets.size + 1}`;
+    const to = `Dim${widgets.length + 1}`;
     acc.push({
       from: `"${from}"`,
       to: `"[${to}]"`,
       comment: `${from} -> ${to} (CREATE ${to})`,
-      sideEffect: () => widgetFactory.DataTarget(widgets.size + 1),
+      sideEffect: () => widgetFactory.DataTarget(widgets.length + 1),
     });
     return acc;
   }, []);

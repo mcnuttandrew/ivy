@@ -1,8 +1,4 @@
-import {DataType} from '../types';
-import DATATABLE from './example-templates/table';
-import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
-import PIECHART_TEMPLATE from './example-templates/pie-chart';
-import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
+export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN';
 
 export type WidgetType =
   | 'DataTarget'
@@ -63,6 +59,7 @@ export interface Template {
     | SwitchWidget
     | TextWidget
     | SliderWidget)[];
+
   widgetValidations: widgetValidation[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
@@ -82,91 +79,3 @@ export interface widgetValidation {
 export interface TemplateMap {
   [key: string]: string | string[];
 }
-
-const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
-export const widgetFactory = {
-  DataTarget: (idx: number) => {
-    const newWidget: DataTargetWidget = {
-      widgetName: `Dim${idx}`,
-      widgetType: 'DataTarget',
-      allowedTypes: DATA_TYPES,
-      required: true,
-    };
-    return newWidget;
-  },
-  MultiDataTarget: (idx: number) => {
-    const newWidget: MultiDataTargetWidget = {
-      widgetName: `MultiDim${idx}`,
-      widgetType: 'MultiDataTarget',
-      allowedTypes: DATA_TYPES,
-      required: true,
-      minNumberOfTargets: 0,
-    };
-    return newWidget;
-  },
-  List: (idx: number) => {
-    const allowedValues: {display: string; value: string}[] = [];
-    const newWidget: ListWidget = {
-      widgetName: `ListItem${idx}`,
-      widgetType: 'List',
-      allowedValues,
-      defaultValue: null,
-    };
-    return newWidget;
-  },
-
-  Switch: (idx: number) => {
-    const newWidget: SwitchWidget = {
-      widgetName: `Switch${idx}`,
-      widgetType: 'Switch',
-      activeValue: 'true',
-      inactiveValue: 'false',
-      defaultsToActive: true,
-    };
-    return newWidget;
-  },
-  Text: (idx: number) => {
-    const newWidget: TextWidget = {
-      widgetName: `Text${idx}`,
-      widgetType: 'Text',
-      text: '',
-    };
-    return newWidget;
-  },
-  Slider: (idx: number) => {
-    const newWidget: SliderWidget = {
-      widgetName: `Slider${idx}`,
-      widgetType: 'Slider',
-      minVal: 0,
-      maxVal: 10,
-      step: 1,
-      defaultValue: 5,
-    };
-    return newWidget;
-  },
-};
-
-export const DEFAULT_TEMPLATES: Template[] = [
-  DATATABLE,
-  // OVERVIEW_TEMPLATE,
-  SCATTERPLOT_TEMPLATE,
-  PIECHART_TEMPLATE,
-  BEESWARM_TEMPLATE,
-];
-
-// TODO I'm not very happy with this special view stratagey?
-// const OVERVIEW_TEMPLATE: Template = {
-//   templateName: 'overview',
-//   templateLanguage: 'vega-lite',
-//   templateDescription:
-//     'see an automatically generated overview of your template collection',
-//   code: JSON.stringify({}),
-//   widgets: [
-//     {
-//       widgetName: 'Explanation',
-//       widgetType: 'Text',
-//       text: 'using this view you will blah blah blah',
-//     },
-//   ],
-//   widgetValidations: [],
-// };

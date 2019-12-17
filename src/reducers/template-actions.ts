@@ -11,7 +11,7 @@ import {
   DataTargetWidget,
 } from '../templates/types';
 import {trim} from '../utils';
-import {setEncodingMode} from './index';
+import {setEncodingMode} from './gui-actions';
 
 export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   const filledInSpec = Object.entries(templateMap).reduce(
@@ -169,6 +169,30 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
   return state.set('templates', getAndRemoveTemplate(state, payload));
 };
 
-export const startTemplateEdit: ActionResponse = (state, payload) => {
-  return state.set('templateBuilderModalOpen', payload);
+export const setWidgetValue: ActionResponse = (state, payload) => {
+  const {key, value, idx} = payload;
+  let template = state.get('currentTemplateInstance');
+  let newState = state;
+  const code = template.get('code');
+  if (key === 'widgetName') {
+    const oldValue = `\\[${template.getIn(['widgets', idx, key])}\\]`;
+    const re = new RegExp(oldValue, 'g');
+    template = template.set('code', code.replace(re, `[${value}]`));
+    newState = newState
+      .deleteIn(['templateMap', oldValue])
+      .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
+  }
+  template = template.setIn(['widgets', idx, key], Immutable.fromJS(value));
+  return newState.set('currentTemplateInstance', template);
 };
+
+// hey it's a lense
+const modifyCurrentWidgets = (state: any, mod: (x: any) => any) =>
+  state.setIn(
+    ['currentTemplateInstance', 'widgets'],
+    mod(state.getIn(['currentTemplateInstance', 'widgets'])),
+  );
+export const addWidget: ActionResponse = (state, payload) =>
+  modifyCurrentWidgets(state, d => d.push(payload));
+export const removeWidget: ActionResponse = (state, payload) =>
+  modifyCurrentWidgets(state, d => d.deleteIn([payload]));

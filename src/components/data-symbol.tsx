@@ -5,7 +5,11 @@ import {
   TiCalendar,
 } from 'react-icons/ti';
 import {DataType} from '../types';
-export default function DataSymbol(type: DataType): JSX.Element {
+interface Props {
+  type: DataType;
+}
+export default function DataSymbol(props: Props): JSX.Element {
+  const {type} = props;
   switch (type) {
     case 'MEASURE':
       return <TiSortNumerically />;

@@ -2,7 +2,9 @@ import React from 'react';
 import {useDrop} from 'react-dnd';
 
 import Pill from './pill';
+import DataSymbol from './data-symbol';
 import {ColumnHeader} from '../types';
+import {DataTargetWidget} from '../templates/types';
 import {classnames} from '../utils';
 
 interface TemplateShelf {
@@ -10,10 +12,12 @@ interface TemplateShelf {
   columns: ColumnHeader[];
   field: string;
   onDrop: any;
+  setName?: any;
+  widget: DataTargetWidget;
 }
 
 export default function TemplateShelf(props: TemplateShelf) {
-  const {channelEncoding, columns, field, onDrop} = props;
+  const {channelEncoding, columns, field, onDrop, widget, setName} = props;
 
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
@@ -38,7 +42,20 @@ export default function TemplateShelf(props: TemplateShelf) {
     >
       <div className="shelf flex">
         <div className="field-label flex space-around">
-          <div>{field}</div>
+          <div className="flex-down">
+            {!setName && <div>{field}</div>}
+            {setName && (
+              <input
+                value={widget.widgetName}
+                onChange={event => setName(event.target.value)}
+              />
+            )}
+            <div className="flex">
+              {widget.allowedTypes.map(type => {
+                return <DataSymbol type={type} key={type} />;
+              })}
+            </div>
+          </div>
         </div>
         <div className="pill-dropzone">
           {!columnHeader && (
