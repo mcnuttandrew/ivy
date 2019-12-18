@@ -28,11 +28,13 @@ import {
 import {
   recieveTemplates,
   setTemplateValue,
-  createTemplate,
   deleteTemplate,
   setWidgetValue,
   addWidget,
   removeWidget,
+  saveCurrentTemplate,
+  modifyValueOnTemplate,
+  setBlankTemplate,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView} from './view-actions';
 import {
@@ -93,12 +95,13 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   // template
   'recieve-templates': recieveTemplates,
   'set-template-value': addUndo(setTemplateValue),
-  'create-template': createTemplate,
   'delete-template': deleteTemplate,
-
+  'save-template': saveCurrentTemplate,
   'set-widget-value': setWidgetValue,
   'add-widget-to-template': addWidget,
   'remove-widget-from-template': removeWidget,
+  'modify-value-on-template': addUpdateCode(modifyValueOnTemplate),
+  'set-blank-template': addUpdateCode(setBlankTemplate),
 
   // views
   'create-new-view': addUndo(createNewView),

@@ -1,7 +1,7 @@
 import React from 'react';
 import {DataTargetWidget} from '../../templates/types';
 import {DataType} from '../../types';
-import {toSelectFormat, trim} from '../../utils';
+import {trim} from '../../utils';
 import DataSymbol from '../data-symbol';
 import {GeneralWidget} from './general-widget';
 import TemplateShelf from '../template-shelf';

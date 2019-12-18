@@ -1,6 +1,6 @@
 import {get, set} from 'idb-keyval';
 import Immutable, {Map} from 'immutable';
-import {ActionResponse, AppState} from './default-state';
+import {ActionResponse, AppState, blindSet} from './default-state';
 import {
   Template,
   TemplateMap,
@@ -10,8 +10,8 @@ import {
   SliderWidget,
   DataTargetWidget,
 } from '../templates/types';
+import {BLANK_TEMPLATE} from '../templates';
 import {trim} from '../utils';
-import {setEncodingMode} from './gui-actions';
 
 export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   const filledInSpec = Object.entries(templateMap).reduce(
@@ -87,20 +87,25 @@ export function checkIfMapComplete(
   template: Template,
   templateMap: TemplateMap,
 ) {
+  const missing = getMissingFields(template, templateMap);
+  return missing.length === 0;
+}
+
+export function getMissingFields(template: Template, templateMap: TemplateMap) {
   const requiredFields = template.widgets
     .filter(
       d => d.widgetType === 'DataTarget' && (d as DataTargetWidget).required,
     )
     .map(d => d.widgetName);
-  const filledInFields = requiredFields
-    .map((fieldName: string) => templateMap[fieldName])
-    .filter((d: any) => d);
-  return filledInFields.length === requiredFields.length;
+  const missingFileds = requiredFields
+    .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
+    .filter((d: any) => d.value)
+    .map(d => d.fieldName);
+
+  return missingFileds;
 }
 
-export const recieveTemplates: ActionResponse = (state, payload) => {
-  return state.set('templates', payload);
-};
+export const recieveTemplates = blindSet('templates');
 
 export const setTemplateValue: ActionResponse = (state, payload) => {
   let newState = state;
@@ -135,26 +140,61 @@ function getAndRemoveTemplate(state: AppState, templateName: string) {
     .get('templates')
     .filter((template: Template) => template.templateName !== templateName);
 }
+//
+// export const createTemplate: ActionResponse = (state, payload) => {
+//   // this set and get on the db breaks encapsulation a little bit
+//   // update the template catalog / create it
+//   get('templates').then((templates: string[]) => {
+//     let updatedTemplates = templates || [];
+//     if (!updatedTemplates.find((x: string) => x === payload.templateName)) {
+//       updatedTemplates.push(payload.templateName);
+//     }
+//     set('templates', updatedTemplates);
+//   });
+//   // blindly insert this template, allows for over-ride
+//   set(payload.templateName, payload);
+//   const updatedState = state.set(
+//     'templates',
+//     getAndRemoveTemplate(state, payload.templateName).concat(payload),
+//   );
+//   // set current template to the newly created one
+//   return setEncodingMode(updatedState, payload.templateName);
+// };
 
-export const createTemplate: ActionResponse = (state, payload) => {
+export const saveCurrentTemplate: ActionResponse = state => {
+  const template = state.get('currentTemplateInstance').toJS();
   // this set and get on the db breaks encapsulation a little bit
   // update the template catalog / create it
   get('templates').then((templates: string[]) => {
     let updatedTemplates = templates || [];
-    if (!updatedTemplates.find((x: string) => x === payload.templateName)) {
-      updatedTemplates.push(payload.templateName);
+    if (!updatedTemplates.find((x: string) => x === template.templateName)) {
+      updatedTemplates.push(template.templateName);
     }
     set('templates', updatedTemplates);
   });
   // blindly insert this template, allows for over-ride
-  set(payload.templateName, payload);
+  set(template.templateName, template);
   const updatedState = state.set(
     'templates',
-    getAndRemoveTemplate(state, payload.templateName).concat(payload),
+    getAndRemoveTemplate(state, template.templateName).concat(template),
   );
   // set current template to the newly created one
-  return setEncodingMode(updatedState, payload.templateName);
+  return updatedState;
 };
+
+export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
+  const {value, key} = payload;
+  let newState = state.setIn(['currentTemplateInstance', key], value);
+  if (key === 'templateName') {
+    newState = newState.set('encodingMode', value);
+  }
+  return newState;
+};
+
+export const setBlankTemplate: ActionResponse = state =>
+  state
+    .set('currentTemplateInstance', Immutable.fromJS(BLANK_TEMPLATE))
+    .set('encodingMode', BLANK_TEMPLATE.templateName);
 
 export const deleteTemplate: ActionResponse = (state, payload) => {
   // update the template catalog / create it

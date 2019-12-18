@@ -45,8 +45,8 @@ export default function SwitchWidget(props: GeneralWidget<SwitchWidget>) {
       </div>
       {editMode && (
         <div className="flex-down">
-          <div className="flex">
-            <span className="tool-description">Defaults to be </span>
+          <div className="flex-down">
+            <span className="tool-description">Defaults to </span>
             <Switch
               checked={!!widget.defaultsToActive}
               offColor="#E1E9F2"

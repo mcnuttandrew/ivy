@@ -1,25 +1,39 @@
 import React, {useState} from 'react';
 import {GenericAction} from '../actions/index';
 import {Template} from '../templates/types';
-import {TiExport} from 'react-icons/ti';
 import Popover from './popover';
 
 interface Props {
   templates: Template[];
-  deleteTemplate: GenericAction;
+  clickTarget: any;
 
+  setEditMode: GenericAction;
+  deleteTemplate: GenericAction;
   setEncodingMode: GenericAction;
+  chainActions: GenericAction;
 }
 
 function generateButtonActions(props: any) {
-  const {setEncodingMode, toggle, deleteTemplate} = props;
+  const {
+    setEncodingMode,
+    toggle,
+    deleteTemplate,
+    chainActions,
+    setEditMode,
+  } = props;
   return (templateName: string) => ({
     use: () => {
-      setEncodingMode(templateName);
+      chainActions([
+        () => setEncodingMode(templateName),
+        () => setEditMode(false),
+      ]);
       toggle();
     },
     edit: () => {
-      console.log('TODO CURRENTLY BROKEN');
+      chainActions([
+        () => setEncodingMode(templateName),
+        () => setEditMode(true),
+      ]);
       toggle();
     },
     delete: () => {
@@ -65,22 +79,26 @@ function encodingRow(
 }
 
 export default function EncodingMode(props: Props) {
-  const {templates, setEncodingMode, deleteTemplate} = props;
+  const {
+    templates,
+    setEncodingMode,
+    deleteTemplate,
+    chainActions,
+    setEditMode,
+    clickTarget,
+  } = props;
   const [searchKey, setSearch] = useState('');
 
   return (
     <Popover
-      clickTarget={
-        <React.Fragment>
-          {' '}
-          <TiExport /> Select
-        </React.Fragment>
-      }
+      clickTarget={clickTarget}
       body={(toggle: any) => {
         const buttonActions = generateButtonActions({
           setEncodingMode,
           toggle,
           deleteTemplate,
+          chainActions,
+          setEditMode,
         });
         return (
           <React.Fragment>

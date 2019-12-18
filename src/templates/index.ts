@@ -1,3 +1,4 @@
+import stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
   MultiDataTargetWidget,
@@ -7,6 +8,7 @@ import {
   SliderWidget,
   Template,
 } from './types';
+import {EMPTY_SPEC} from '../reducers/default-state';
 import {DataType} from '../types';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
@@ -14,6 +16,15 @@ import DATATABLE from './example-templates/table';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
+
+export const BLANK_TEMPLATE: Template = {
+  templateLanguage: 'vega-lite',
+  templateName: 'BLANK TEMPLATE',
+  templateDescription: 'FILL IN DESCRIPTION',
+  code: stringify(EMPTY_SPEC),
+  widgets: [],
+  widgetValidations: [],
+};
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 export const widgetFactory = {

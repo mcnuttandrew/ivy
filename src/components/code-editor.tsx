@@ -17,6 +17,7 @@ interface Props {
   specCode: string;
   spec: any;
   template?: Template;
+  addWidget?: GenericAction;
   setNewSpecCode: GenericAction;
   setCodeMode: GenericAction;
 }
@@ -154,7 +155,13 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const {editorError, setCodeMode, codeMode} = this.props;
+    const {
+      editorError,
+      setCodeMode,
+      codeMode,
+      template,
+      addWidget,
+    } = this.props;
     const {updateMode, suggestionBox} = this.state;
     const currentCode = this.getCurrentCode();
 
@@ -204,7 +211,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             }}
             editorDidMount={this.editorDidMount}
           />
-          <div>
+          <div className="suggestion-box" style={{height: '185px'}}>
             <div className="suggestion-box-header flex space-between">
               <h5>Suggestions</h5>
               <div
@@ -215,20 +222,18 @@ export default class CodeEditor extends React.Component<Props, State> {
             </div>
             {suggestionBox && (
               <div className="suggestion-box-body">
-                {false &&
-                  synthesizeSuggestions(currentCode, []).map(
+                {template &&
+                  synthesizeSuggestions(currentCode, template.widgets).map(
                     (suggestion: any, idx: number) => {
                       const {from, to, comment = '', sideEffect} = suggestion;
                       return (
                         <button
                           onClick={() => {
-                            {
-                              /* this.setState({
-                          code: takeSuggestion(code, suggestion),
-                          widgets: sideEffect
-                            ? widgets.push(sideEffect())
-                            : widgets,
-                        }); */
+                            this.handleCodeUpdate(
+                              takeSuggestion(currentCode, suggestion),
+                            );
+                            if (sideEffect) {
+                              addWidget(sideEffect());
                             }
                           }}
                           key={`${from} -> ${to}-${idx}`}

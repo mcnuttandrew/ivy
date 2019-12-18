@@ -7,6 +7,11 @@ export interface ActionResponse {
   (state: AppState, payload: any): AppState;
 }
 
+export const blindSet = (key: string): ActionResponse => (state, payload) =>
+  state.set(key, payload);
+export const toggle = (key: string): ActionResponse => state =>
+  state.set(key, !state.get(key));
+
 // TODO undo this embarrasment
 const defaultEmpty = Immutable.fromJS({
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',

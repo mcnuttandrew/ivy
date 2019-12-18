@@ -1,5 +1,5 @@
 import stringify from 'json-stringify-pretty-compact';
-import {List} from 'immutable';
+import Immutable, {List} from 'immutable';
 import {TemplateWidget, Template} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
@@ -220,4 +220,22 @@ export function deserializeTemplate(templateString: string): Template {
     widgets: code.widgets,
     widgetValidations: code.widgetValidations,
   };
+}
+
+export function getTemplateSaveState(base: AppState) {
+  const template = base.get('currentTemplateInstance');
+  // using the grammar mode
+  if (!template) {
+    return 'NA';
+  }
+  const associatedUpstreamTemplate = getTemplate(
+    base,
+    template.get('templateName'),
+  );
+  if (!associatedUpstreamTemplate) {
+    return 'NOT FOUND';
+  }
+  return Immutable.fromJS(associatedUpstreamTemplate).equals(template)
+    ? 'EQUAL'
+    : 'DIFFERENT';
 }

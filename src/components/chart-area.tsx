@@ -13,6 +13,7 @@ interface ChartAreaProps {
   currentView: string;
   currentTheme: VegaTheme;
   iMspec: any;
+  missingFields: string[];
   views: List<string>;
   template?: Template;
   templateComplete: boolean;
@@ -32,12 +33,14 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       currentView,
       iMspec,
       views,
+      missingFields,
       createNewView,
       switchView,
       cloneView,
       template,
       templateComplete,
     } = this.props;
+    const showChart = !template || templateComplete;
     return (
       <div className="flex-down full-width full-height">
         <div className="chart-controls full-width flex">
@@ -67,7 +70,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           </div>
         </div>
         <div className="chart-container center full-width full-height">
-          {(!template || templateComplete) && (
+          {showChart && (
             <VegaWrapper
               iMspec={iMspec}
               spec={spec}
@@ -75,6 +78,14 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               theme={currentTheme}
               language={template && template.templateLanguage}
             />
+          )}
+          {!showChart && (
+            <div className="chart-unfullfilled">
+              <h2> Chart is not yet filled out </h2>
+              <h5>{`Select values for the following fields: ${missingFields.join(
+                ', ',
+              )}`}</h5>
+            </div>
           )}
         </div>
       </div>

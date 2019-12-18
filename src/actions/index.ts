@@ -32,11 +32,15 @@ export const updateFilter = buildEasyAction('update-filter');
 export const deleteFilter = buildEasyAction('delete-filter');
 export const coerceType = buildEasyAction('coerce-type');
 export const setEncodingMode = buildEasyAction('set-encoding-mode');
-export const createTemplate = buildEasyAction('create-template');
+export const setBlankTemplate = buildEasyAction('set-blank-template');
+export const saveCurrentTemplate = buildEasyAction('save-template');
 export const deleteTemplate = buildEasyAction('delete-template');
 export const setTemplateValue = buildEasyAction('set-template-value');
 export const setEditMode = buildEasyAction('set-edit-mode');
 export const setWidgetValue = buildEasyAction('set-widget-value');
+export const modifyValueOnTemplate = buildEasyAction(
+  'modify-value-on-template',
+);
 export const addWidget = buildEasyAction('add-widget-to-template');
 export const removeWidget = buildEasyAction('remove-widget-from-template');
 

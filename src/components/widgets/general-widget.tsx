@@ -50,14 +50,7 @@ interface Props {
 }
 
 function PlacementControls(props: Props) {
-  const {
-    code,
-    widget,
-    incrementOrder,
-    decrementOrder,
-    removeWidget,
-    editMode,
-  } = props;
+  const {code, widget, removeWidget, editMode} = props;
   const showInUse = widget.widgetType !== 'Text';
   if (!editMode) {
     return <div />;

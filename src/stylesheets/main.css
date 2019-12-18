@@ -90,6 +90,19 @@ input[type=number]::-webkit-outer-spin-button {
   overflow: scroll;
 }
 
+.chart-unfullfilled {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-weight: 800;
+  height: 100%;
+  justify-content: center;
+  opacity: 0.5;
+  text-transform: uppercase;
+  white-space: pre;
+  width: 100%;
+}
+
 .chart-controls {
   background: whitesmoke;
   height: 38px;
@@ -418,15 +431,6 @@ input[type=number]::-webkit-outer-spin-button {
   color: white;
 }
 
-.clear-encoding {
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  font-size: 12px;
-  justify-content: space-between;
-  width: 50px;
-}
-
 .filter-container {
   border: 2px solid #F1F1F1;
   border-radius: 2px;
@@ -744,13 +748,35 @@ input[type=number]::-webkit-outer-spin-button {
   white-space: nowrap;
 }
 
+.encoding-mode-selector img {
+  height: 30px;
+  margin-right: 10px;
+}
+
 .encoding-mode-selector h1 {
   font-size: 10px;
 }
 
 .encoding-mode-selector h3 {
   font-size: 12px;
+  max-width: 150px;
   text-transform: uppercase;
+  white-space: normal;
+}
+
+.template-modification-control {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+}
+
+.template-modification-control.template-modification-control--disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
+}
+.template-modification-control-label {
+  margin-left: 3px;
 }
 
 /* modal-tooltip */
@@ -936,6 +962,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 .suggestion-box-header {
   padding: 0 15px;
+}
+
+.suggestion-box-body {
+  background: #DBDBDB;
+  height: 100%;
+  padding: 10px;
 }
 
 .code-option-tabs {

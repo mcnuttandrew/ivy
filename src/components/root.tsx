@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import {checkIfMapComplete} from '../reducers/template-actions';
+import {getMissingFields} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
 import {
@@ -13,6 +13,7 @@ import {
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
+import {getTemplateSaveState} from '../utils';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
@@ -48,9 +49,11 @@ interface RootProps {
   currentlySelectedFile?: string;
   currentTheme?: VegaTheme;
   dataModalOpen?: boolean;
+  missingFields?: string[];
   showProgrammaticMode?: boolean;
   template?: Template;
   templates?: Template[];
+  templateSaveState?: string;
   templateMap?: TemplateMap;
   templateComplete?: boolean;
   currentView?: string;
@@ -69,16 +72,18 @@ interface RootProps {
   changeSelectedFile?: GenericAction;
   clearEncoding?: GenericAction;
   createFilter?: GenericAction;
-  createTemplate?: GenericAction;
   coerceType?: GenericAction;
   deleteTemplate?: GenericAction;
   setEditMode?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
   loadTemplates?: GenericAction;
+  modifyValueOnTemplate?: GenericAction;
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
   removeWidget?: GenericAction;
+  saveCurrentTemplate?: GenericAction;
+  setBlankTemplate?: GenericAction;
   setCodeMode?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
@@ -130,6 +135,7 @@ class RootComponent extends React.Component<RootProps> {
     const {
       addWidget,
       addToNextOpenSlot,
+      chainActions,
       coerceType,
       columns,
       changeMarkType,
@@ -142,8 +148,11 @@ class RootComponent extends React.Component<RootProps> {
       encodingMode,
       iMspec,
       metaColumns,
+      modifyValueOnTemplate,
       removeWidget,
+      saveCurrentTemplate,
       spec,
+      setBlankTemplate,
       setEditMode,
       setEncodingParameter,
       setEncodingMode,
@@ -156,6 +165,7 @@ class RootComponent extends React.Component<RootProps> {
       template,
       templates,
       templateMap,
+      templateSaveState,
       toggleDataModal,
     } = this.props;
 
@@ -181,13 +191,19 @@ class RootComponent extends React.Component<RootProps> {
           <div className="flex-down full-height background-3 encoding-column-container">
             {SHOW_TEMPLATE_CONTROLS && (
               <EncodingControls
+                chainActions={chainActions}
                 encodingMode={encodingMode}
                 deleteTemplate={deleteTemplate}
                 templates={templates}
                 setEncodingMode={setEncodingMode}
                 clearEncoding={clearEncoding}
                 editMode={editMode}
+                setBlankTemplate={setBlankTemplate}
                 setEditMode={setEditMode}
+                template={template}
+                saveCurrentTemplate={saveCurrentTemplate}
+                templateSaveState={templateSaveState}
+                modifyValueOnTemplate={modifyValueOnTemplate}
               />
             )}
             {encodingMode === 'grammer' && (
@@ -229,6 +245,7 @@ class RootComponent extends React.Component<RootProps> {
 
   programmaticMenu() {
     const {
+      addWidget,
       setNewSpecCode,
       specCode,
       editorError,
@@ -240,6 +257,7 @@ class RootComponent extends React.Component<RootProps> {
     return (
       <div className="flex full-height editor-column background-1">
         <CodeEditor
+          addWidget={addWidget}
           setCodeMode={setCodeMode}
           codeMode={codeMode}
           setNewSpecCode={setNewSpecCode}
@@ -261,6 +279,7 @@ class RootComponent extends React.Component<RootProps> {
       data,
       deleteView,
       iMspec,
+      missingFields,
       spec,
       switchView,
       template,
@@ -277,6 +296,7 @@ class RootComponent extends React.Component<RootProps> {
         data={data}
         spec={spec}
         iMspec={iMspec}
+        missingFields={missingFields}
         template={template}
         templateComplete={templateComplete}
         currentTheme={currentTheme}
@@ -298,6 +318,7 @@ class RootComponent extends React.Component<RootProps> {
       triggerRedo,
       showProgrammaticMode,
     } = this.props;
+
     return (
       <div className="flex-down full-width full-height">
         {dataModalOpen && (
@@ -333,8 +354,8 @@ class RootComponent extends React.Component<RootProps> {
 function mapStateToProps({base}: {base: AppState}): any {
   const template = base.get('currentTemplateInstance');
   const templateMap = base.get('templateMap').toJS();
-  const templateComplete =
-    template && checkIfMapComplete(template.toJS(), templateMap);
+  const missingFields =
+    (template && getMissingFields(template.toJS(), templateMap)) || [];
 
   return {
     canUndo: base.get('undoStack').size >= 1,
@@ -351,11 +372,13 @@ function mapStateToProps({base}: {base: AppState}): any {
     metaColumns: base.get('metaColumns'),
     specCode: base.get('specCode'),
     showProgrammaticMode: base.get('showProgrammaticMode'),
+    templateSaveState: getTemplateSaveState(base),
+    missingFields,
 
     currentlySelectedFile: base.get('currentlySelectedFile'),
     dataModalOpen: base.get('dataModalOpen'),
     template: template && template.toJS(),
-    templateComplete,
+    templateComplete: !missingFields.length,
     currentTheme: base.get('currentTheme'),
     GOOSE_MODE: base.get('GOOSE_MODE'),
     templates: base.get('templates'),
