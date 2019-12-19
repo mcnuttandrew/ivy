@@ -48,6 +48,8 @@ export default function EncodingControls(props: Props) {
     templateSaveState,
     modifyValueOnTemplate,
   } = props;
+
+  const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   return (
     <div className="encoding-mode-selector">
       <div className="flex-down full-width space-between">
@@ -128,11 +130,10 @@ export default function EncodingControls(props: Props) {
           <div
             className={classnames({
               'template-modification-control': true,
-              'template-modification-control--disabled':
-                editMode || !UPDATE_TEMPLATE[templateSaveState],
+              'template-modification-control--disabled': !canSave,
             })}
             onClick={() => {
-              if (!editMode || !UPDATE_TEMPLATE[templateSaveState]) {
+              if (!canSave) {
                 return;
               }
               saveCurrentTemplate();

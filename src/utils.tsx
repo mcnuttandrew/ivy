@@ -200,7 +200,7 @@ export const toList = (list: string[]) =>
 export function serializeTemplate(template: Template): string {
   return stringify({
     $schema:
-      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template-lang-schema.json',
+      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
     templateName: template.templateName,
     templateDescription: template.templateDescription,
     code: 'SEE CODE EDITOR',

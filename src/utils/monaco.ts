@@ -25,7 +25,7 @@ const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
 // @ts-ignore
 const vegaSchema = require('vega/build/vega-schema.json');
 // @ts-ignore
-const hydraSchema = require('../../assets/hydra-template-lang-schema.json');
+const hydraSchema = require('../../assets/hydra-template.json');
 addMarkdownProps(vegaSchema);
 addMarkdownProps(vegaLiteSchema);
 addMarkdownProps(hydraSchema);
@@ -42,7 +42,7 @@ const schemas = [
   {
     schema: hydraSchema,
     uri:
-      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template-lang-schema.json',
+      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
   },
   {
     // @ts-ignore

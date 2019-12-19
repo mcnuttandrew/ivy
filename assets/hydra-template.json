@@ -1,0 +1,296 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "DataTargetWidget": {
+      "properties": {
+        "allowedTypes": {
+          "items": {
+            "enum": [
+              "DIMENSION",
+              "MEASURE",
+              "METACOLUMN",
+              "TIME"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "widgetName": {
+          "type": "string"
+        },
+        "widgetType": {
+          "enum": [
+            "DataTarget"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DataType": {
+      "enum": [
+        "DIMENSION",
+        "MEASURE",
+        "METACOLUMN",
+        "TIME"
+      ],
+      "type": "string"
+    },
+    "ListWidget": {
+      "properties": {
+        "allowedValues": {
+          "items": {
+            "properties": {
+              "display": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "widgetName": {
+          "type": "string"
+        },
+        "widgetType": {
+          "enum": [
+            "List"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MultiDataTargetWidget": {
+      "properties": {
+        "allowedTypes": {
+          "items": {
+            "enum": [
+              "DIMENSION",
+              "MEASURE",
+              "METACOLUMN",
+              "TIME"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "maxNumberOfTargets": {
+          "type": "number"
+        },
+        "minNumberOfTargets": {
+          "type": "number"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "widgetName": {
+          "type": "string"
+        },
+        "widgetType": {
+          "enum": [
+            "MultiDataTarget"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SliderWidget": {
+      "properties": {
+        "defaultValue": {
+          "type": "number"
+        },
+        "maxVal": {
+          "type": "number"
+        },
+        "minVal": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number"
+        },
+        "widgetName": {
+          "type": "string"
+        },
+        "widgetType": {
+          "enum": [
+            "Slider"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SwitchWidget": {
+      "properties": {
+        "activeValue": {
+          "type": "string"
+        },
+        "defaultsToActive": {
+          "type": "boolean"
+        },
+        "inactiveValue": {
+          "type": "string"
+        },
+        "widgetName": {
+          "type": "string"
+        },
+        "widgetType": {
+          "enum": [
+            "Switch"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Template": {
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "templateDescription": {
+          "type": "string"
+        },
+        "templateLanguage": {
+          "type": "string"
+        },
+        "templateName": {
+          "type": "string"
+        },
+        "widgetValidations": {
+          "items": {
+            "$ref": "#/definitions/widgetValidation"
+          },
+          "type": "array"
+        },
+        "widgets": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/TemplateWidget"
+              },
+              {
+                "$ref": "#/definitions/DataTargetWidget"
+              },
+              {
+                "$ref": "#/definitions/MultiDataTargetWidget"
+              },
+              {
+                "$ref": "#/definitions/ListWidget"
+              },
+              {
+                "$ref": "#/definitions/SwitchWidget"
+              },
+              {
+                "$ref": "#/definitions/TextWidget"
+              },
+              {
+                "$ref": "#/definitions/SliderWidget"
+              }
+            ]
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "TemplateMap": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "type": "object"
+    },
+    "TemplateWidget": {
+      "properties": {
+        "widgetName": {
+          "type": "string"
+        },
+        "widgetType": {
+          "$ref": "#/definitions/WidgetType"
+        }
+      },
+      "type": "object"
+    },
+    "TextWidget": {
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "widgetName": {
+          "type": "string"
+        },
+        "widgetType": {
+          "enum": [
+            "Text"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "WidgetType": {
+      "enum": [
+        "DataTarget",
+        "List",
+        "MultiDataTarget",
+        "Slider",
+        "Switch",
+        "Text"
+      ],
+      "type": "string"
+    },
+    "widgetValidation": {
+      "properties": {
+        "query": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "type": "object"
+        },
+        "queryResult": {
+          "enum": [
+            "hide",
+            "show"
+          ],
+          "type": "string"
+        },
+        "queryTarget": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "$ref": "#/definitions/Spec"
+}
