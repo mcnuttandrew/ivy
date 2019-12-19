@@ -50,6 +50,7 @@ export default function EncodingControls(props: Props) {
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
+  const isGrammar = !template;
   return (
     <div className="encoding-mode-selector">
       <div className="flex-down full-width space-between">
@@ -64,6 +65,7 @@ export default function EncodingControls(props: Props) {
                 <React.Fragment>
                   <h1 className="section-title">MODE:</h1>
                   <input
+                    type="text"
                     value={template.templateName}
                     onChange={event =>
                       modifyValueOnTemplate({
@@ -83,6 +85,7 @@ export default function EncodingControls(props: Props) {
               )}
               {editMode && template && (
                 <input
+                  type="text"
                   value={template.templateDescription}
                   onChange={event =>
                     modifyValueOnTemplate({
@@ -119,8 +122,12 @@ export default function EncodingControls(props: Props) {
           <div
             className={classnames({
               'template-modification-control': true,
+              'template-modification-control--disabled': isGrammar,
             })}
             onClick={() => {
+              if (isGrammar) {
+                return;
+              }
               setBlankTemplate();
             }}
           >
@@ -130,10 +137,10 @@ export default function EncodingControls(props: Props) {
           <div
             className={classnames({
               'template-modification-control': true,
-              'template-modification-control--disabled': !canSave,
+              'template-modification-control--disabled': !canSave || isGrammar,
             })}
             onClick={() => {
-              if (!canSave) {
+              if (!canSave || isGrammar) {
                 return;
               }
               saveCurrentTemplate();
@@ -144,8 +151,11 @@ export default function EncodingControls(props: Props) {
           </div>
 
           <div
-            className="template-modification-control"
-            onClick={() => setEditMode(!editMode)}
+            className={classnames({
+              'template-modification-control': true,
+              'template-modification-control--disabled': isGrammar,
+            })}
+            onClick={isGrammar ? () => {} : () => setEditMode(!editMode)}
           >
             <IoIosSettings />
             <span className="template-modification-control-label">

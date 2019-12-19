@@ -104,6 +104,7 @@ export default function EncodingMode(props: Props) {
           <React.Fragment>
             <div>
               <input
+                type="text"
                 value={searchKey || ''}
                 onChange={event => setSearch(event.target.value)}
                 placeholder="Search for Template"

@@ -94,6 +94,7 @@ export default function MultiDataTarget(
               <span className="tool-description">Min Targets</span>
               <input
                 value={widget.widget.minNumberOfTargets}
+                type="number"
                 onChange={event =>
                   setWidgetValue('minNumberOfTargets', event.target.value, idx)
                 }
@@ -102,6 +103,7 @@ export default function MultiDataTarget(
             <div className="flex-down">
               <span className="tool-description">Max Targets</span>
               <input
+                type="number"
                 value={widget.widget.maxNumberOfTargets}
                 onChange={event =>
                   setWidgetValue('maxNumberOfTargets', event.target.value, idx)

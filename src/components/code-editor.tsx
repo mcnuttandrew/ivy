@@ -223,6 +223,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             {suggestionBox && (
               <div className="suggestion-box-body">
                 {template &&
+                  codeMode === 'CODE' &&
                   synthesizeSuggestions(currentCode, template.widgets).map(
                     (suggestion: any, idx: number) => {
                       const {from, to, comment = '', sideEffect} = suggestion;

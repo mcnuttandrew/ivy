@@ -57,14 +57,15 @@ export default function DataTargetWidget(
                   </div>
                   <input
                     type="checkbox"
-                    checked={checked}
-                    onChange={() => {
+                    defaultChecked={checked}
+                    onClick={event => {
+                      console.log(event);
                       if (checked) {
                         allowedTypesSet.delete(type);
                       } else {
                         allowedTypesSet.add(type);
                       }
-
+                      console.log('????');
                       setWidgetValue(
                         'allowedTypes',
                         Array.from(allowedTypesSet),
@@ -81,10 +82,10 @@ export default function DataTargetWidget(
           <span className="tool-description">Required:</span>
           <input
             type="checkbox"
-            onChange={() =>
+            onClick={() =>
               setWidgetValue('required', !widget.widget.required, idx)
             }
-            checked={!!widget.widget.required}
+            defaultChecked={!!widget.widget.required}
           />
         </div>
       </div>

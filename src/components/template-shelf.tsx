@@ -46,6 +46,7 @@ export default function TemplateShelf(props: TemplateShelf) {
             {!setName && <div>{field}</div>}
             {setName && (
               <input
+                type="text"
                 value={widget.widgetName}
                 onChange={event => setName(event.target.value)}
               />

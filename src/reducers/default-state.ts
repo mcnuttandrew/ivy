@@ -47,7 +47,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   specCode: stringify(EMPTY_SPEC),
   currentTheme: 'default',
   editorError: null,
-  editMode: true,
+  editMode: false,
 
   // GUI
   currentTemplateInstance: SCATTERPLOT,

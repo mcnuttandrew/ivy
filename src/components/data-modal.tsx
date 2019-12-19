@@ -53,6 +53,7 @@ export default class DataModal extends React.Component<Props, State> {
           <h3>Predefined Datasets</h3>
           <div>
             <input
+              type="text"
               value={searchTerm || ''}
               onChange={event => {
                 this.setState({searchTerm: event.target.value});

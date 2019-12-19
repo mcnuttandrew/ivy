@@ -218,6 +218,7 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
 
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
+  console.log(payload);
   let template = state.get('currentTemplateInstance');
   let newState = state;
   const code = template.get('code');
@@ -229,7 +230,10 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
       .deleteIn(['templateMap', oldValue])
       .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
   }
-  template = template.setIn(['widgets', idx, key], Immutable.fromJS(value));
+  template = template.setIn(
+    ['widgets', idx, 'widget', key],
+    Immutable.fromJS(value),
+  );
   return newState.set('currentTemplateInstance', template);
 };
 

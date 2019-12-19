@@ -52,6 +52,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
                   <div className="flex-down">
                     <input
                       value={value.value}
+                      type="text"
                       onChange={event => {
                         const newVal = event.target.value;
                         setWidgetValue(
@@ -104,6 +105,7 @@ export default function ListWidget(
         {editMode && (
           <input
             value={widget.widgetName}
+            type="text"
             onChange={event =>
               setWidgetValue('widgetName', event.target.value, idx)
             }

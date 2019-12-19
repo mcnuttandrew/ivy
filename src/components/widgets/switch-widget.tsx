@@ -23,6 +23,7 @@ export default function SwitchWidget(
           {editMode && (
             <input
               value={widget.widgetName}
+              type="text"
               onChange={event =>
                 setWidgetValue('widgetName', event.target.value, idx)
               }
@@ -60,7 +61,7 @@ export default function SwitchWidget(
               width={50}
               onChange={() =>
                 setWidgetValue(
-                  'defaultValue',
+                  'defaultsToActive',
                   !widget.widget.defaultsToActive,
                   idx,
                 )
@@ -72,6 +73,7 @@ export default function SwitchWidget(
               <span className="tool-description">Active Value</span>
               <input
                 value={widget.widget.activeValue}
+                type="text"
                 onChange={event =>
                   setWidgetValue('activeValue', event.target.value, idx)
                 }
@@ -81,6 +83,7 @@ export default function SwitchWidget(
               <span className="tool-description">Inactive Value</span>
               <input
                 value={widget.widget.inactiveValue}
+                type="text"
                 onChange={event =>
                   setWidgetValue('inactiveValue', event.target.value, idx)
                 }

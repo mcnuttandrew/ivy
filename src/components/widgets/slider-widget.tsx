@@ -23,6 +23,7 @@ export default function SliderWidget(
       {editMode && (
         <input
           value={widget.widgetName}
+          type="text"
           onChange={event =>
             setWidgetValue('widgetName', event.target.value, idx)
           }
@@ -50,6 +51,7 @@ export default function SliderWidget(
             {editMode && (
               <input
                 value={widget.widget.minVal}
+                type="number"
                 onChange={event =>
                   setWidgetValue('minVal', event.target.value, idx)
                 }
@@ -58,6 +60,7 @@ export default function SliderWidget(
             {editMode && (
               <input
                 value={widget.widget.maxVal}
+                type="number"
                 onChange={event =>
                   setWidgetValue('maxVal', event.target.value, idx)
                 }

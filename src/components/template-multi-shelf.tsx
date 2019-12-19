@@ -53,6 +53,7 @@ export default function TemplateMultiShelf(props: Props) {
           {!setName && <div>{field}</div>}
           {setName && (
             <input
+              type="text"
               value={widget.widgetName}
               onChange={event => setName(event.target.value)}
             />

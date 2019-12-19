@@ -30,9 +30,7 @@ button:disabled {
 }
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-
    opacity: 1;
-
 }
 
 .flex {
@@ -516,7 +514,8 @@ input[type=number]::-webkit-outer-spin-button {
   flex-direction: column;
   padding: 3px 5px;
 }
-.widget input {
+.widget input[type="text"],
+.widget input[type="number"] {
   background: none;
   border: none;
   width: 100%;
