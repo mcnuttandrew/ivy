@@ -5,6 +5,7 @@ import {
   TemplateMap,
   DataTargetWidget,
   MultiDataTargetWidget,
+  WidgetSubType,
 } from '../templates/types';
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
@@ -80,23 +81,28 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
   const openDropTargets = template.widgets
     // select just the open drop targets
     .filter(
-      (widget: TemplateWidget) =>
+      (widget: TemplateWidget<WidgetSubType>) =>
         widget.widgetType === 'DataTarget' && !templateMap[widget.widgetName],
     )
     // and that allow the type of drop column
-    .filter((widget: DataTargetWidget) =>
-      widget.allowedTypes.find((type: string) => type === column.type),
+    .filter((widget: TemplateWidget<DataTargetWidget>) =>
+      widget.widget.allowedTypes.find((type: string) => type === column.type),
     );
 
   const openMultiDropTargets = template.widgets
     // select just the open drop targets
-    .filter((widget: TemplateWidget) => widget.widgetType === 'MultiDataTarget')
+    .filter(
+      (widget: TemplateWidget<WidgetSubType>) =>
+        widget.widgetType === 'MultiDataTarget',
+    )
     // and that allow the type of drop column
     .filter(
-      (widget: MultiDataTargetWidget) =>
-        widget.allowedTypes.find((type: string) => type === column.type) &&
+      (widget: TemplateWidget<MultiDataTargetWidget>) =>
+        widget.widget.allowedTypes.find(
+          (type: string) => type === column.type,
+        ) &&
         (templateMap[widget.widgetName] || []).length <
-          widget.maxNumberOfTargets,
+          widget.widget.maxNumberOfTargets,
     );
   const targets = [].concat(openDropTargets).concat(openMultiDropTargets);
   if (!targets.length) {

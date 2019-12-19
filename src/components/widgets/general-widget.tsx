@@ -17,6 +17,7 @@ import {
   SliderWidget,
   TemplateMap,
   MultiDataTargetWidget,
+  WidgetSubType,
 } from '../../templates/types';
 import {ColumnHeader} from '../../types';
 import {GenericAction} from '../../actions';
@@ -35,7 +36,7 @@ export interface GeneralWidget<T> {
 
 interface Props {
   code: string;
-  widget: TemplateWidget;
+  widget: TemplateWidget<WidgetSubType>;
   idx: number;
   editMode: boolean;
   setWidgetValue: any;
@@ -99,27 +100,39 @@ export default function GeneralWidget(props: Props) {
       <div className="widget-body">
         {widgetType === 'MultiDataTarget' && (
           <MultiDataTargetComponent
-            widget={widget as MultiDataTargetWidget}
+            widget={widget as TemplateWidget<MultiDataTargetWidget>}
             {...common}
           />
         )}
         {widgetType === 'Switch' && (
-          <SwitchWidgetComponent widget={widget as SwitchWidget} {...common} />
+          <SwitchWidgetComponent
+            widget={widget as TemplateWidget<SwitchWidget>}
+            {...common}
+          />
         )}
         {widgetType === 'List' && (
-          <ListWidgetComponent widget={widget as ListWidget} {...common} />
+          <ListWidgetComponent
+            widget={widget as TemplateWidget<ListWidget>}
+            {...common}
+          />
         )}
         {widgetType === 'Text' && (
-          <TextWidgetComponent widget={widget as TextWidget} {...common} />
+          <TextWidgetComponent
+            widget={widget as TemplateWidget<TextWidget>}
+            {...common}
+          />
         )}
         {widgetType === 'DataTarget' && (
           <DataTargetWidgetComponent
-            widget={widget as DataTargetWidget}
+            widget={widget as TemplateWidget<DataTargetWidget>}
             {...common}
           />
         )}
         {widgetType === 'Slider' && (
-          <SliderWidgetComponent widget={widget as SliderWidget} {...common} />
+          <SliderWidgetComponent
+            widget={widget as TemplateWidget<SliderWidget>}
+            {...common}
+          />
         )}
       </div>
     </div>

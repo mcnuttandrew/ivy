@@ -1,5 +1,5 @@
 import React from 'react';
-import {MultiDataTargetWidget} from '../../templates/types';
+import {MultiDataTargetWidget, TemplateWidget} from '../../templates/types';
 import {DataType} from '../../types';
 import {GeneralWidget} from './general-widget';
 import TemplateMultiShelf from '../template-multi-shelf';
@@ -9,7 +9,7 @@ import {trim} from '../../utils';
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
 export default function MultiDataTarget(
-  props: GeneralWidget<MultiDataTargetWidget>,
+  props: GeneralWidget<TemplateWidget<MultiDataTargetWidget>>,
 ) {
   const {
     widget,
@@ -21,7 +21,7 @@ export default function MultiDataTarget(
     setTemplateValue,
   } = props;
   const fieldValue = templateMap[widget.widgetName];
-  const allowedTypesSet = new Set(widget.allowedTypes);
+  const allowedTypesSet = new Set(widget.widget.allowedTypes);
   return (
     <div>
       <TemplateMultiShelf
@@ -83,9 +83,9 @@ export default function MultiDataTarget(
               <input
                 type="checkbox"
                 onChange={() =>
-                  setWidgetValue('required', !widget.required, idx)
+                  setWidgetValue('required', !widget.widget.required, idx)
                 }
-                checked={!!widget.required}
+                checked={!!widget.widget.required}
               />
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function MultiDataTarget(
             <div className="flex-down">
               <span className="tool-description">Min Targets</span>
               <input
-                value={widget.minNumberOfTargets}
+                value={widget.widget.minNumberOfTargets}
                 onChange={event =>
                   setWidgetValue('minNumberOfTargets', event.target.value, idx)
                 }
@@ -102,7 +102,7 @@ export default function MultiDataTarget(
             <div className="flex-down">
               <span className="tool-description">Max Targets</span>
               <input
-                value={widget.maxNumberOfTargets}
+                value={widget.widget.maxNumberOfTargets}
                 onChange={event =>
                   setWidgetValue('maxNumberOfTargets', event.target.value, idx)
                 }

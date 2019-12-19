@@ -9,6 +9,7 @@ import {
   SwitchWidget,
   SliderWidget,
   DataTargetWidget,
+  WidgetSubType,
 } from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
 import {trim} from '../utils';
@@ -40,8 +41,11 @@ export function fillTemplateMapWithDefaults(state: AppState) {
   const template = state.get('currentTemplateInstance').toJS();
   // const widgets =
   const filledInTemplateMap = template.widgets
-    .filter((widget: TemplateWidget) => widget.widgetType !== 'DataTarget')
-    .reduce((acc: any, w: TemplateWidget) => {
+    .filter(
+      (widget: TemplateWidget<WidgetSubType>) =>
+        widget.widgetType !== 'DataTarget',
+    )
+    .reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
       let value = null;
       if (w.widgetType === 'MultiDataTarget') {
         value = [];
@@ -50,15 +54,16 @@ export function fillTemplateMapWithDefaults(state: AppState) {
         return acc;
       }
       if (w.widgetType === 'List') {
-        value = (w as ListWidget).defaultValue;
+        value = (w as TemplateWidget<ListWidget>).widget.defaultValue;
       }
       if (w.widgetType === 'Switch') {
-        value = (w as SwitchWidget).defaultsToActive
-          ? (w as SwitchWidget).activeValue
-          : (w as SwitchWidget).inactiveValue;
+        const localW = w as TemplateWidget<SwitchWidget>;
+        value = localW.widget.defaultsToActive
+          ? localW.widget.activeValue
+          : localW.widget.inactiveValue;
       }
       if (w.widgetType === 'Slider') {
-        value = (w as SliderWidget).defaultValue;
+        value = (w as TemplateWidget<SliderWidget>).widget.defaultValue;
       }
       return acc.set(w.widgetName, value);
     }, Immutable.fromJS({}));
@@ -94,7 +99,9 @@ export function checkIfMapComplete(
 export function getMissingFields(template: Template, templateMap: TemplateMap) {
   const requiredFields = template.widgets
     .filter(
-      d => d.widgetType === 'DataTarget' && (d as DataTargetWidget).required,
+      d =>
+        d.widgetType === 'DataTarget' &&
+        (d as TemplateWidget<DataTargetWidget>).widget.required,
     )
     .map(d => d.widgetName);
   const missingFileds = requiredFields

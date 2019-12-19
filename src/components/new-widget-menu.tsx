@@ -2,12 +2,12 @@ import React, {Fragment} from 'react';
 import Popover from './popover';
 import {AiOutlinePlusCircle} from 'react-icons/ai';
 import {GenericAction} from '../actions';
-import {TemplateWidget} from '../templates/types';
+import {TemplateWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory, preconfiguredWidgets} from '../templates';
 
 interface Props {
   addWidget: GenericAction;
-  widgets: TemplateWidget[];
+  widgets: TemplateWidget<WidgetSubType>[];
 }
 
 export default function NewWidgetMenu(props: Props) {

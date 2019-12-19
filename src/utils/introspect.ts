@@ -5,6 +5,7 @@ import {
   ListWidget,
   SwitchWidget,
   SliderWidget,
+  WidgetSubType,
 } from '../templates/types';
 import {widgetFactory} from '../templates';
 
@@ -104,8 +105,8 @@ function safeParse(code: string) {
 }
 
 const DUMMY = 'xxxxxEXAMPLExxxx';
-function generateFullTemplateMap(widgets: TemplateWidget[]) {
-  return widgets.reduce((acc: any, widget: TemplateWidget) => {
+function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]) {
+  return widgets.reduce((acc: any, widget: TemplateWidget<WidgetSubType>) => {
     const widgetType = widget.widgetType;
     if (widgetType === 'DataTarget') {
       acc[widget.widgetName] = `"${DUMMY}"`;
@@ -114,19 +115,25 @@ function generateFullTemplateMap(widgets: TemplateWidget[]) {
       acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
     }
     if (widgetType === 'List') {
-      acc[widget.widgetName] = (widget as ListWidget).defaultValue;
+      const localW = widget as TemplateWidget<ListWidget>;
+      acc[widget.widgetName] = localW.widget.defaultValue;
     }
     if (widgetType === 'Switch') {
-      acc[widget.widgetName] = (widget as SwitchWidget).activeValue;
+      const localW = widget as TemplateWidget<SwitchWidget>;
+      acc[widget.widgetName] = localW.widget.activeValue;
     }
     if (widgetType === 'Slider') {
-      acc[widget.widgetName] = (widget as SliderWidget).defaultValue;
+      const localW = widget as TemplateWidget<SliderWidget>;
+      acc[widget.widgetName] = localW.widget.defaultValue;
     }
     return acc;
   }, {});
 }
 
-export function synthesizeSuggestions(code: string, widgets: TemplateWidget[]) {
+export function synthesizeSuggestions(
+  code: string,
+  widgets: TemplateWidget<WidgetSubType>[],
+) {
   const parsedCode = safeParse(
     setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))),
   );

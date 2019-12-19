@@ -1,9 +1,11 @@
 import React from 'react';
 import Switch from 'react-switch';
-import {SwitchWidget} from '../../templates/types';
+import {SwitchWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
 
-export default function SwitchWidget(props: GeneralWidget<SwitchWidget>) {
+export default function SwitchWidget(
+  props: GeneralWidget<TemplateWidget<SwitchWidget>>,
+) {
   const {
     widget,
     idx,
@@ -12,7 +14,7 @@ export default function SwitchWidget(props: GeneralWidget<SwitchWidget>) {
     templateMap,
     setTemplateValue,
   } = props;
-  const isActive = templateMap[widget.widgetName] === widget.activeValue;
+  const isActive = templateMap[widget.widgetName] === widget.widget.activeValue;
 
   return (
     <div className="flex-down switch-widget">
@@ -37,7 +39,9 @@ export default function SwitchWidget(props: GeneralWidget<SwitchWidget>) {
             onChange={() =>
               setTemplateValue({
                 field: widget.widgetName,
-                text: isActive ? widget.inactiveValue : widget.activeValue,
+                text: isActive
+                  ? widget.widget.inactiveValue
+                  : widget.widget.activeValue,
               })
             }
           />
@@ -48,14 +52,18 @@ export default function SwitchWidget(props: GeneralWidget<SwitchWidget>) {
           <div className="flex-down">
             <span className="tool-description">Defaults to </span>
             <Switch
-              checked={!!widget.defaultsToActive}
+              checked={!!widget.widget.defaultsToActive}
               offColor="#E1E9F2"
               onColor="#36425C"
               height={15}
               checkedIcon={false}
               width={50}
               onChange={() =>
-                setWidgetValue('defaultValue', !widget.defaultsToActive, idx)
+                setWidgetValue(
+                  'defaultValue',
+                  !widget.widget.defaultsToActive,
+                  idx,
+                )
               }
             />
           </div>
@@ -63,7 +71,7 @@ export default function SwitchWidget(props: GeneralWidget<SwitchWidget>) {
             <div className="flex-down">
               <span className="tool-description">Active Value</span>
               <input
-                value={widget.activeValue}
+                value={widget.widget.activeValue}
                 onChange={event =>
                   setWidgetValue('activeValue', event.target.value, idx)
                 }
@@ -72,7 +80,7 @@ export default function SwitchWidget(props: GeneralWidget<SwitchWidget>) {
             <div className="flex-down">
               <span className="tool-description">Inactive Value</span>
               <input
-                value={widget.inactiveValue}
+                value={widget.widget.inactiveValue}
                 onChange={event =>
                   setWidgetValue('inactiveValue', event.target.value, idx)
                 }

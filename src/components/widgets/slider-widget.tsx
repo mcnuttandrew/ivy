@@ -1,8 +1,10 @@
 import React from 'react';
-import {SliderWidget} from '../../templates/types';
+import {SliderWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
 
-export default function SliderWidget(props: GeneralWidget<SliderWidget>) {
+export default function SliderWidget(
+  props: GeneralWidget<TemplateWidget<SliderWidget>>,
+) {
   const {
     widget,
     idx,
@@ -12,7 +14,7 @@ export default function SliderWidget(props: GeneralWidget<SliderWidget>) {
     setTemplateValue,
   } = props;
   const clamp = (v: any) =>
-    Math.max(widget.minVal, Math.min(widget.maxVal, Number(v)));
+    Math.max(widget.widget.minVal, Math.min(widget.widget.maxVal, Number(v)));
   const setVal = (text: any) =>
     setTemplateValue({field: widget.widgetName, text: clamp(text)});
   return (
@@ -35,19 +37,19 @@ export default function SliderWidget(props: GeneralWidget<SliderWidget>) {
         <div className="flex-down">
           <input
             type="range"
-            min={widget.minVal}
-            max={widget.maxVal}
+            min={widget.widget.minVal}
+            max={widget.widget.maxVal}
             value={templateMap[widget.widgetName]}
             onChange={event => setVal(event.target.value)}
-            step={widget.step}
+            step={widget.widget.step}
             className="slider"
           />
           <div className="flex space-between">
-            {!editMode && <span>{widget.minVal}</span>}
-            {!editMode && <span>{widget.maxVal}</span>}
+            {!editMode && <span>{widget.widget.minVal}</span>}
+            {!editMode && <span>{widget.widget.maxVal}</span>}
             {editMode && (
               <input
-                value={widget.minVal}
+                value={widget.widget.minVal}
                 onChange={event =>
                   setWidgetValue('minVal', event.target.value, idx)
                 }
@@ -55,7 +57,7 @@ export default function SliderWidget(props: GeneralWidget<SliderWidget>) {
             )}
             {editMode && (
               <input
-                value={widget.maxVal}
+                value={widget.widget.maxVal}
                 onChange={event =>
                   setWidgetValue('maxVal', event.target.value, idx)
                 }

@@ -1,6 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import Immutable, {List} from 'immutable';
-import {TemplateWidget, Template} from './templates/types';
+import {TemplateWidget, Template, WidgetSubType} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 
@@ -168,10 +168,18 @@ export const getTemplate = (state: AppState, template: string) => {
 export function widgetInUse(code: string, widgetName: string) {
   return code.match(new RegExp(`\\[${widgetName}\\]`, 'g'));
 }
-export function allWidgetsInUse(code: string, widgets: List<TemplateWidget>) {
+export function allWidgetsInUse(
+  code: string,
+  widgets: List<TemplateWidget<WidgetSubType>>,
+) {
   return widgets
-    .filter((widget: TemplateWidget) => widget.widgetType !== 'Text')
-    .every((widget: TemplateWidget) => !!widgetInUse(code, widget.widgetName));
+    .filter(
+      (widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'Text',
+    )
+    .every(
+      (widget: TemplateWidget<WidgetSubType>) =>
+        !!widgetInUse(code, widget.widgetName),
+    );
 }
 
 export const toSelectFormat = (

@@ -99,40 +99,52 @@ const PieChart: Template = {
     {
       widgetName: 'category',
       widgetType: 'DataTarget',
-      allowedTypes: ['DIMENSION'],
-      required: true,
+      widget: {
+        allowedTypes: ['DIMENSION'],
+        required: true,
+      },
     },
     {
       widgetName: 'value',
       widgetType: 'DataTarget',
-      allowedTypes: ['MEASURE'],
-      required: true,
+      widget: {
+        allowedTypes: ['MEASURE'],
+        required: true,
+      },
     },
     {
       widgetName: 'aggregate',
       widgetType: 'List',
-      allowedValues: toList(AGGREGATES),
-      defaultValue: '"mean"',
+      widget: {
+        allowedValues: toList(AGGREGATES),
+        defaultValue: '"mean"',
+      },
     },
     {
       widgetName: 'colorScheme',
       widgetType: 'List',
-      allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
-      defaultValue: '"category20"',
+      widget: {
+        allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
+        defaultValue: '"category20"',
+      },
     },
     {
       widgetName: 'DonutChart',
       widgetType: 'Switch',
-      activeValue: '60',
-      inactiveValue: '0',
-      defaultsToActive: true,
+      widget: {
+        activeValue: '60',
+        inactiveValue: '0',
+        defaultsToActive: true,
+      },
     },
     {
       widgetName: 'Sort',
       widgetType: 'Switch',
-      activeValue: 'true',
-      inactiveValue: 'false',
-      defaultsToActive: true,
+      widget: {
+        activeValue: 'true',
+        inactiveValue: 'false',
+        defaultsToActive: true,
+      },
     },
   ],
   widgetValidations: [],

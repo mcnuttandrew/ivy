@@ -62,14 +62,18 @@ const makeDimWithType = (dim: string) => {
     {
       widgetName: dim,
       widgetType: 'DataTarget',
-      allowedTypes: ALLDATA_TYPES,
-      required: true,
+      widget: {
+        allowedTypes: ALLDATA_TYPES,
+        required: true,
+      },
     },
     {
       widgetName: `${dim}DataType`,
       widgetType: 'List',
-      allowedValues: toList(ALLDATA_TYPES),
-      defaultValue: '"mean"',
+      widget: {
+        allowedValues: toList(ALLDATA_TYPES),
+        defaultValue: '"mean"',
+      },
     },
   ];
 };

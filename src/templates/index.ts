@@ -6,6 +6,7 @@ import {
   SwitchWidget,
   TextWidget,
   SliderWidget,
+  TemplateWidget,
   Template,
 } from './types';
 import {EMPTY_SPEC} from '../reducers/default-state';
@@ -32,48 +33,60 @@ export const widgetFactory = {
     ({
       widgetName: `Dim${idx}`,
       widgetType: 'DataTarget',
-      allowedTypes: DATA_TYPES,
-      required: true,
-    } as DataTargetWidget),
+      widget: {
+        allowedTypes: DATA_TYPES,
+        required: true,
+      },
+    } as TemplateWidget<DataTargetWidget>),
   MultiDataTarget: (idx: number) =>
     ({
       widgetName: `MultiDim${idx}`,
       widgetType: 'MultiDataTarget',
-      allowedTypes: DATA_TYPES,
-      required: true,
-      minNumberOfTargets: 0,
-    } as MultiDataTargetWidget),
+      widget: {
+        allowedTypes: DATA_TYPES,
+        required: true,
+        minNumberOfTargets: 0,
+      },
+    } as TemplateWidget<MultiDataTargetWidget>),
   List: (idx: number) =>
     ({
       widgetName: `ListItem${idx}`,
       widgetType: 'List',
-      allowedValues: [] as {display: string; value: string}[],
-      defaultValue: null,
-    } as ListWidget),
+      widget: {
+        allowedValues: [] as {display: string; value: string}[],
+        defaultValue: null,
+      },
+    } as TemplateWidget<ListWidget>),
 
   Switch: (idx: number) =>
     ({
       widgetName: `Switch${idx}`,
       widgetType: 'Switch',
-      activeValue: 'true',
-      inactiveValue: 'false',
-      defaultsToActive: true,
-    } as SwitchWidget),
+      widget: {
+        activeValue: 'true',
+        inactiveValue: 'false',
+        defaultsToActive: true,
+      },
+    } as TemplateWidget<SwitchWidget>),
   Text: (idx: number) =>
     ({
       widgetName: `Text${idx}`,
       widgetType: 'Text',
-      text: '',
-    } as TextWidget),
+      widget: {
+        text: '',
+      },
+    } as TemplateWidget<TextWidget>),
   Slider: (idx: number) =>
     ({
       widgetName: `Slider${idx}`,
       widgetType: 'Slider',
-      minVal: 0,
-      maxVal: 10,
-      step: 1,
-      defaultValue: 5,
-    } as SliderWidget),
+      widget: {
+        minVal: 0,
+        maxVal: 10,
+        step: 1,
+        defaultValue: 5,
+      },
+    } as TemplateWidget<SliderWidget>),
 };
 
 export const preconfiguredWidgets = {
@@ -81,16 +94,25 @@ export const preconfiguredWidgets = {
     ({
       widgetName: `ColorList${idx}`,
       widgetType: 'List',
-      allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
-      defaultValue: null,
-    } as ListWidget),
+      widget: {
+        allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
+        defaultValue: null,
+      },
+    } as TemplateWidget<ListWidget>),
   'Data Types Options': (idx: number) =>
     ({
       widgetName: `DataTypeOptions${idx}`,
       widgetType: 'List',
-      allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal']),
-      defaultValue: null,
-    } as ListWidget),
+      widget: {
+        allowedValues: toList([
+          'quantitative',
+          'temporal',
+          'ordinal',
+          'nominal',
+        ]),
+        defaultValue: null,
+      },
+    } as TemplateWidget<ListWidget>),
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [

@@ -4,7 +4,7 @@ import {useDrop} from 'react-dnd';
 import Pill from './pill';
 import DataSymbol from './data-symbol';
 import {ColumnHeader} from '../types';
-import {DataTargetWidget} from '../templates/types';
+import {DataTargetWidget, TemplateWidget} from '../templates/types';
 import {classnames} from '../utils';
 
 interface TemplateShelf {
@@ -13,7 +13,7 @@ interface TemplateShelf {
   field: string;
   onDrop: any;
   setName?: any;
-  widget: DataTargetWidget;
+  widget: TemplateWidget<DataTargetWidget>;
 }
 
 export default function TemplateShelf(props: TemplateShelf) {
@@ -51,7 +51,7 @@ export default function TemplateShelf(props: TemplateShelf) {
               />
             )}
             <div className="flex">
-              {widget.allowedTypes.map(type => {
+              {widget.widget.allowedTypes.map(type => {
                 return <DataSymbol type={type} key={type} />;
               })}
             </div>

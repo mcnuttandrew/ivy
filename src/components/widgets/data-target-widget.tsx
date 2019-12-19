@@ -1,5 +1,5 @@
 import React from 'react';
-import {DataTargetWidget} from '../../templates/types';
+import {DataTargetWidget, TemplateWidget} from '../../templates/types';
 import {DataType} from '../../types';
 import {trim} from '../../utils';
 import DataSymbol from '../data-symbol';
@@ -9,7 +9,7 @@ import TemplateShelf from '../template-shelf';
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
 export default function DataTargetWidget(
-  props: GeneralWidget<DataTargetWidget>,
+  props: GeneralWidget<TemplateWidget<DataTargetWidget>>,
 ) {
   const {
     widget,
@@ -32,7 +32,7 @@ export default function DataTargetWidget(
       />
     );
   }
-  const allowedTypesSet = new Set(widget.allowedTypes);
+  const allowedTypesSet = new Set(widget.widget.allowedTypes);
 
   return (
     <div className="flex-down">
@@ -81,8 +81,10 @@ export default function DataTargetWidget(
           <span className="tool-description">Required:</span>
           <input
             type="checkbox"
-            onChange={() => setWidgetValue('required', !widget.required, idx)}
-            checked={!!widget.required}
+            onChange={() =>
+              setWidgetValue('required', !widget.widget.required, idx)
+            }
+            checked={!!widget.widget.required}
           />
         </div>
       </div>

@@ -14,52 +14,66 @@ const SCATTERPLOT: Template = {
     {
       widgetName: 'xDim',
       widgetType: 'DataTarget',
-      allowedTypes: ['MEASURE', 'DIMENSION'],
-      required: true,
+      widget: {
+        allowedTypes: ['MEASURE', 'DIMENSION'],
+        required: true,
+      },
     },
     {
       widgetName: 'xType',
       widgetType: 'List',
-      allowedValues: [
-        {display: '"quantitative"', value: '"quantitative"'},
-        {display: '"ordinal"', value: '"ordinal"'},
-      ],
-      defaultValue: '"quantitative"',
+      widget: {
+        allowedValues: [
+          {display: '"quantitative"', value: '"quantitative"'},
+          {display: '"ordinal"', value: '"ordinal"'},
+        ],
+        defaultValue: '"quantitative"',
+      },
     },
     {
       widgetName: 'yDim',
       widgetType: 'DataTarget',
-      allowedTypes: ['MEASURE', 'DIMENSION'],
-      required: true,
+      widget: {
+        allowedTypes: ['MEASURE', 'DIMENSION'],
+        required: true,
+      },
     },
     {
       widgetName: 'yType',
       widgetType: 'List',
-      allowedValues: [
-        {display: '"quantitative"', value: '"quantitative"'},
-        {display: '"ordinal"', value: '"ordinal"'},
-      ],
-      defaultValue: '"quantitative"',
+      widget: {
+        allowedValues: [
+          {display: '"quantitative"', value: '"quantitative"'},
+          {display: '"ordinal"', value: '"ordinal"'},
+        ],
+        defaultValue: '"quantitative"',
+      },
     },
     {
       widgetName: 'Zeroes',
       widgetType: 'Switch',
-      activeValue: 'true',
-      inactiveValue: 'false',
-      defaultsToActive: true,
+      widget: {
+        activeValue: 'true',
+        inactiveValue: 'false',
+        defaultsToActive: true,
+      },
     },
     {
       widgetName: 'Text6',
       widgetType: 'Text',
-      text: 'This is a test message',
+      widget: {
+        text: 'This is a test message',
+      },
     },
     {
       widgetName: `SliderX`,
       widgetType: 'Slider',
-      minVal: 0,
-      maxVal: 10,
-      step: 1,
-      defaultValue: 5,
+      widget: {
+        minVal: 0,
+        maxVal: 10,
+        step: 1,
+        defaultValue: 5,
+      },
     },
   ],
   widgetValidations: [],

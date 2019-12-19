@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
-import {MultiDataTargetWidget} from '../templates/types';
+import {MultiDataTargetWidget, TemplateWidget} from '../templates/types';
 
 import DataSymbol from './data-symbol';
 import Pill from './pill';
@@ -12,7 +12,7 @@ interface Props {
   columns: ColumnHeader[];
   field: string;
   onDrop: any;
-  widget: MultiDataTargetWidget;
+  widget: TemplateWidget<MultiDataTargetWidget>;
   setName?: any;
 }
 
@@ -39,7 +39,7 @@ export default function TemplateMultiShelf(props: Props) {
     )
     .filter(d => d);
   const maxValsHit =
-    (widget.maxNumberOfTargets || Infinity) < columnHeaders.length;
+    (widget.widget.maxNumberOfTargets || Infinity) < columnHeaders.length;
   return (
     <div
       ref={drop}
@@ -58,7 +58,7 @@ export default function TemplateMultiShelf(props: Props) {
             />
           )}
           <div className="flex">
-            {widget.allowedTypes.map(type => {
+            {widget.widget.allowedTypes.map(type => {
               return <DataSymbol type={type} key={type} />;
             })}
           </div>

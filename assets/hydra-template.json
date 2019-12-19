@@ -17,15 +17,6 @@
         },
         "required": {
           "type": "boolean"
-        },
-        "widgetName": {
-          "type": "string"
-        },
-        "widgetType": {
-          "enum": [
-            "DataTarget"
-          ],
-          "type": "string"
         }
       },
       "type": "object"
@@ -57,15 +48,6 @@
         },
         "defaultValue": {
           "type": "string"
-        },
-        "widgetName": {
-          "type": "string"
-        },
-        "widgetType": {
-          "enum": [
-            "List"
-          ],
-          "type": "string"
         }
       },
       "type": "object"
@@ -92,15 +74,6 @@
         },
         "required": {
           "type": "boolean"
-        },
-        "widgetName": {
-          "type": "string"
-        },
-        "widgetType": {
-          "enum": [
-            "MultiDataTarget"
-          ],
-          "type": "string"
         }
       },
       "type": "object"
@@ -118,15 +91,6 @@
         },
         "step": {
           "type": "number"
-        },
-        "widgetName": {
-          "type": "string"
-        },
-        "widgetType": {
-          "enum": [
-            "Slider"
-          ],
-          "type": "string"
         }
       },
       "type": "object"
@@ -141,64 +105,43 @@
         },
         "inactiveValue": {
           "type": "string"
-        },
-        "widgetName": {
-          "type": "string"
-        },
-        "widgetType": {
-          "enum": [
-            "Switch"
-          ],
-          "type": "string"
         }
       },
       "type": "object"
     },
+    "T": {
+      "type": "object"
+    },
     "Template": {
+      "description": "The main configuration object for templates",
       "properties": {
         "code": {
+          "description": "The code to be interpreted by the renderer",
           "type": "string"
         },
         "templateDescription": {
+          "description": "The description that users will see in the chart chooser gallery",
           "type": "string"
         },
         "templateLanguage": {
+          "description": "The language of the code, determines how the code will be interpreted.\nHydra currently supports vega, vega-lite, and it's own data table system\n\n  __Default value:__ `vega-lite`",
           "type": "string"
         },
         "templateName": {
+          "description": "The name of the template. Template names must be unique, so this can over-ride other extant templates",
           "type": "string"
         },
         "widgetValidations": {
+          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
           "items": {
             "$ref": "#/definitions/widgetValidation"
           },
           "type": "array"
         },
         "widgets": {
+          "description": "The mechanism by which users interact with your template",
           "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/TemplateWidget"
-              },
-              {
-                "$ref": "#/definitions/DataTargetWidget"
-              },
-              {
-                "$ref": "#/definitions/MultiDataTargetWidget"
-              },
-              {
-                "$ref": "#/definitions/ListWidget"
-              },
-              {
-                "$ref": "#/definitions/SwitchWidget"
-              },
-              {
-                "$ref": "#/definitions/TextWidget"
-              },
-              {
-                "$ref": "#/definitions/SliderWidget"
-              }
-            ]
+            "$ref": "#/definitions/TemplateWidget<WidgetSubType>"
           },
           "type": "array"
         }
@@ -223,11 +166,51 @@
     },
     "TemplateWidget": {
       "properties": {
+        "widget": {
+          "$ref": "#/definitions/T"
+        },
         "widgetName": {
+          "description": "The name of widget to be used, this name will be swapped into the code string",
           "type": "string"
         },
         "widgetType": {
-          "$ref": "#/definitions/WidgetType"
+          "$ref": "#/definitions/WidgetType",
+          "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
+        }
+      },
+      "type": "object"
+    },
+    "TemplateWidget<WidgetSubType>": {
+      "properties": {
+        "widget": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DataTargetWidget"
+            },
+            {
+              "$ref": "#/definitions/MultiDataTargetWidget"
+            },
+            {
+              "$ref": "#/definitions/ListWidget"
+            },
+            {
+              "$ref": "#/definitions/SwitchWidget"
+            },
+            {
+              "$ref": "#/definitions/TextWidget"
+            },
+            {
+              "$ref": "#/definitions/SliderWidget"
+            }
+          ]
+        },
+        "widgetName": {
+          "description": "The name of widget to be used, this name will be swapped into the code string",
+          "type": "string"
+        },
+        "widgetType": {
+          "$ref": "#/definitions/WidgetType",
+          "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
         }
       },
       "type": "object"
@@ -236,18 +219,31 @@
       "properties": {
         "text": {
           "type": "string"
-        },
-        "widgetName": {
-          "type": "string"
-        },
-        "widgetType": {
-          "enum": [
-            "Text"
-          ],
-          "type": "string"
         }
       },
       "type": "object"
+    },
+    "WidgetSubType": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/DataTargetWidget"
+        },
+        {
+          "$ref": "#/definitions/MultiDataTargetWidget"
+        },
+        {
+          "$ref": "#/definitions/ListWidget"
+        },
+        {
+          "$ref": "#/definitions/SwitchWidget"
+        },
+        {
+          "$ref": "#/definitions/TextWidget"
+        },
+        {
+          "$ref": "#/definitions/SliderWidget"
+        }
+      ]
     },
     "WidgetType": {
       "enum": [
@@ -276,9 +272,11 @@
               }
             ]
           },
+          "description": "the query object. Multiple key in an object is interpreted as an AND\n* -> any val, used for setting things\nnull -> no val, used for checking empty\nstring -> equal to specific value, if this then that\nstring[] -> one of vals",
           "type": "object"
         },
         "queryResult": {
+          "description": "What to do in response to the result of the query",
           "enum": [
             "hide",
             "show"
@@ -286,11 +284,12 @@
           "type": "string"
         },
         "queryTarget": {
+          "description": "The name of the variable being targeted",
           "type": "string"
         }
       },
       "type": "object"
     }
   },
-  "$ref": "#/definitions/Spec"
+  "$ref": "#/definitions/Template"
 }
