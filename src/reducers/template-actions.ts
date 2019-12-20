@@ -225,7 +225,6 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
 
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
-  console.log(payload);
   let template = state.get('currentTemplateInstance');
   let newState = state;
   const code = template.get('code');

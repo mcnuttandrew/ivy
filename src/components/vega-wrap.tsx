@@ -39,11 +39,11 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
   render() {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
     const lang = inferredLanguage(spec) || language;
-    // HACK to prevent changes to the data
-    const finalSpec = JSON.parse(JSON.stringify(spec));
     if (lang === 'hydra-data-table') {
       return <Table data={data} spec={spec} />;
     }
+    // HACK to prevent changes to the data
+    const finalSpec = JSON.parse(JSON.stringify(spec));
     // this stratagey only supports one data set
     if (lang === 'vega') {
       (finalSpec.data || []).forEach((row: any, idx: number) => {

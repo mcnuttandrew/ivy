@@ -61,7 +61,6 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
                               ? {display: newVal, value: newVal}
                               : {...d},
                         );
-                        console.log(updatedWidgets);
                         setWidgetValue('allowedValues', updatedWidgets, idx);
                       }}
                     />

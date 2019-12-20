@@ -74,7 +74,6 @@ export default function MetaColumnPicker({
                       } else {
                         selectedVals.add(option);
                       }
-                      console.log(Array.from(selectedVals));
                       setRepeats({
                         target: field,
                         repeats: Array.from(selectedVals),

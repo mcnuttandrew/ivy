@@ -59,13 +59,11 @@ export default function DataTargetWidget(
                     type="checkbox"
                     checked={checked}
                     onChange={event => {
-                      console.log(event);
                       if (checked) {
                         allowedTypesSet.delete(type);
                       } else {
                         allowedTypesSet.add(type);
                       }
-                      console.log('????');
                       setWidgetValue(
                         'allowedTypes',
                         Array.from(allowedTypesSet),

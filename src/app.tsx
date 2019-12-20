@@ -9,16 +9,11 @@ import './stylesheets/rc-slider.css';
 
 setupMonaco();
 
-const appContainer = document.createElement('div');
-appContainer.setAttribute('id', 'root-container');
-const body = document.querySelector('body');
-if (body) {
-  body.appendChild(appContainer);
-
-  ReactDOM.render(<AppWrap />, document.querySelector('#root-container'));
+ReactDOM.render(<AppWrap />, document.querySelector('#root-container'));
+if (document.querySelector('.loading-msg')) {
+  document.querySelector('.loading-msg').remove();
 }
 
-// TODO make this be enable on public builds
 if (PREVENT_ACCIDENTAL_LEAVE) {
   window.onbeforeunload = function() {
     return 'Are you sure you want to leave?';
