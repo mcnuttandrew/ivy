@@ -198,10 +198,17 @@ export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   return newState;
 };
 
-export const setBlankTemplate: ActionResponse = state =>
-  state
-    .set('currentTemplateInstance', Immutable.fromJS(BLANK_TEMPLATE))
+export const setBlankTemplate: ActionResponse = (state, fork) => {
+  const currentCode =
+    state.getIn(['currentTemplateInstance', 'code']) || state.get('specCode');
+  let newTemplate = Immutable.fromJS(BLANK_TEMPLATE);
+  if (fork) {
+    newTemplate = newTemplate.set('code', currentCode);
+  }
+  return state
+    .set('currentTemplateInstance', newTemplate)
     .set('encodingMode', BLANK_TEMPLATE.templateName);
+};
 
 export const deleteTemplate: ActionResponse = (state, payload) => {
   // update the template catalog / create it
@@ -223,17 +230,21 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
   let newState = state;
   const code = template.get('code');
   if (key === 'widgetName') {
+    // update the old code with the new name
     const oldValue = `\\[${template.getIn(['widgets', idx, key])}\\]`;
     const re = new RegExp(oldValue, 'g');
     template = template.set('code', code.replace(re, `[${value}]`));
     newState = newState
       .deleteIn(['templateMap', oldValue])
       .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
+    // change the variable
+    template = template.setIn(['widgets', idx, key], value);
+  } else {
+    template = template.setIn(
+      ['widgets', idx, 'widget', key],
+      Immutable.fromJS(value),
+    );
   }
-  template = template.setIn(
-    ['widgets', idx, 'widget', key],
-    Immutable.fromJS(value),
-  );
   return newState.set('currentTemplateInstance', template);
 };
 
@@ -244,6 +255,6 @@ const modifyCurrentWidgets = (state: any, mod: (x: any) => any) =>
     mod(state.getIn(['currentTemplateInstance', 'widgets'])),
   );
 export const addWidget: ActionResponse = (state, payload) =>
-  modifyCurrentWidgets(state, d => d.push(payload));
+  modifyCurrentWidgets(state, d => d.push(Immutable.fromJS(payload)));
 export const removeWidget: ActionResponse = (state, payload) =>
   modifyCurrentWidgets(state, d => d.deleteIn([payload]));

@@ -1,5 +1,6 @@
 import React from 'react';
 import {FaEraser, FaSave} from 'react-icons/fa';
+import {GoRepoForked} from 'react-icons/go';
 import {TiExport} from 'react-icons/ti';
 import {IoIosCreate, IoIosSettings} from 'react-icons/io';
 import {GenericAction} from '../actions/index';
@@ -122,17 +123,30 @@ export default function EncodingControls(props: Props) {
           <div
             className={classnames({
               'template-modification-control': true,
-              'template-modification-control--disabled': isGrammar,
             })}
             onClick={() => {
-              if (isGrammar) {
-                return;
-              }
-              setBlankTemplate();
+              chainActions([
+                () => setBlankTemplate(false),
+                () => setEditMode(true),
+              ]);
             }}
           >
             <IoIosCreate />{' '}
             <span className="template-modification-control-label">NEW</span>
+          </div>
+          <div
+            className={classnames({
+              'template-modification-control': true,
+            })}
+            onClick={() => {
+              chainActions([
+                () => setBlankTemplate(true),
+                () => setEditMode(true),
+              ]);
+            }}
+          >
+            <GoRepoForked />{' '}
+            <span className="template-modification-control-label">FORK</span>
           </div>
           <div
             className={classnames({

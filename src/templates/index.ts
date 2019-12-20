@@ -27,7 +27,9 @@ export const BLANK_TEMPLATE: Template = {
   widgetValidations: [],
 };
 
-const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
+// META COLUMNS NOT CURRENTLY ALLOWED IN TEMPLATES
+const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
+// const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 export const widgetFactory = {
   DataTarget: (idx: number) =>
     ({

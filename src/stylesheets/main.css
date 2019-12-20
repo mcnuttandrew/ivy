@@ -768,6 +768,7 @@ input[type=number]::-webkit-outer-spin-button {
   cursor: pointer;
   display: flex;
   font-size: 12px;
+  margin-right: 5px;
 }
 
 .template-modification-control.template-modification-control--disabled {

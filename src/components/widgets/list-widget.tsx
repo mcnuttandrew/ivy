@@ -55,15 +55,14 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
                       type="text"
                       onChange={event => {
                         const newVal = event.target.value;
-                        setWidgetValue(
-                          'allowedValues',
-                          widget.widget.allowedValues.map((d, indx) =>
-                            indx === idx
+                        const updatedWidgets = widget.widget.allowedValues.map(
+                          (d, indx) =>
+                            indx === jdx
                               ? {display: newVal, value: newVal}
                               : {...d},
-                          ),
-                          idx,
                         );
+                        console.log(updatedWidgets);
+                        setWidgetValue('allowedValues', updatedWidgets, idx);
                       }}
                     />
                   </div>

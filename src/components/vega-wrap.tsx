@@ -4,6 +4,9 @@ import {VegaTheme} from '../types';
 import {Handler} from 'vega-tooltip';
 import {get} from '../utils';
 import Table from './data-table';
+// @ts-ignore
+// import UnitVis from 'unit-vis';
+// console.log(UnitVis);
 
 interface VegaWrapperProps {
   spec: any;

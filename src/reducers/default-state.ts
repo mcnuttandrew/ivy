@@ -50,9 +50,10 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   editMode: false,
 
   // GUI
-  currentTemplateInstance: SCATTERPLOT,
-  encodingMode: 'Scatterplot',
-  // encodingMode: 'grammer',
+  // currentTemplateInstance: SCATTERPLOT,
+  // encodingMode: 'Scatterplot',
+  currentTemplateInstance: null,
+  encodingMode: 'grammer',
   showProgrammaticMode: true,
   codeMode: 'CODE',
 
