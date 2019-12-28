@@ -4,9 +4,7 @@ import {VegaTheme} from '../types';
 import {Handler} from 'vega-tooltip';
 import {get} from '../utils';
 import Table from './data-table';
-// @ts-ignore
-// import UnitVis from 'unit-vis';
-// console.log(UnitVis);
+import UnitVisChart from './unit-vis-renderer';
 
 interface VegaWrapperProps {
   spec: any;
@@ -39,6 +37,9 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
   render() {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
     const lang = inferredLanguage(spec) || language;
+    if (lang === 'unit-vis') {
+      return <UnitVisChart data={data} spec={spec} />;
+    }
     if (lang === 'hydra-data-table') {
       return <Table data={data} spec={spec} />;
     }

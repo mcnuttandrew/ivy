@@ -17,6 +17,7 @@ import DATATABLE from './example-templates/table';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
+import UNITVIS from './example-templates/unit-vis';
 
 export const BLANK_TEMPLATE: Template = {
   templateLanguage: 'vega-lite',
@@ -122,4 +123,5 @@ export const DEFAULT_TEMPLATES: Template[] = [
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,
   BEESWARM_TEMPLATE,
+  UNITVIS,
 ];

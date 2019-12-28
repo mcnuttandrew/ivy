@@ -9,7 +9,7 @@ import {get} from '../utils';
 const PRIMITIVE_MARKS = [
   'AREA',
   'BAR',
-  'CIRLCE',
+  'CIRCLE',
   'LINE',
   'POINT',
   'RECT',

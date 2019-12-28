@@ -26,6 +26,8 @@ const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
 const vegaSchema = require('vega/build/vega-schema.json');
 // @ts-ignore
 const hydraSchema = require('../../assets/hydra-template.json');
+// @ts-ignore
+const unitVisSchema = require('unit-vis/unit-vis-schema.json');
 addMarkdownProps(vegaSchema);
 addMarkdownProps(vegaLiteSchema);
 addMarkdownProps(hydraSchema);
@@ -38,6 +40,10 @@ const schemas = [
   {
     schema: vegaLiteSchema,
     uri: 'https://vega.github.io/schema/vega-lite/v4.json',
+  },
+  {
+    schema: unitVisSchema,
+    uri: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
   },
   {
     schema: hydraSchema,

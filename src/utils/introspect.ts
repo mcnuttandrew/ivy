@@ -27,7 +27,7 @@ function specialTrim(dimName: string) {
 }
 
 export function inferPossibleDataTargets(spec: any): string[] {
-  if (spec.$schema === 'https://vega.github.io/schema/vega/v5.json') {
+  if (!spec.$schema.includes('vega-lite')) {
     return [];
   }
 
