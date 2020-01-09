@@ -22,10 +22,10 @@ export const recieveData: ActionResponse = (state, payload) => {
 
 export const recieveTypeInferences: ActionResponse = (state, payload) => {
   type DestructType = {
-    key: string,
-    type: string,
-    category: DataType,
-    domain: number[] | string[],
+    key: string;
+    type: string;
+    category: DataType;
+    domain: number[] | string[];
   };
   const modifiedColumns = payload.map(
     ({key, type, category, domain}: DestructType) => {
@@ -75,6 +75,7 @@ export const recieveTypeInferences: ActionResponse = (state, payload) => {
   return state.set('columns', orderedColumns).set('metaColumns', metaColumns);
 };
 
+// TODO this can be a blind set
 export const changeSelectedFile: ActionResponse = (state, payload) => {
   return state.set('currentlySelectedFile', payload);
 };

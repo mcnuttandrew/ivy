@@ -4,7 +4,7 @@ import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
 import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
 
-import {Template} from '../templates/types';
+import {Template, TemplateMap} from '../templates/types';
 import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
 import {GenericAction} from '../actions';
 import {EDITOR_OPTIONS} from '../constants/index';
@@ -16,6 +16,7 @@ interface Props {
   editorError: null | string;
   specCode: string;
   spec: any;
+  templateMap?: TemplateMap;
   template?: Template;
   addWidget?: GenericAction;
   setNewSpecCode: GenericAction;
@@ -72,7 +73,7 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   getCurrentCode() {
-    const {template, codeMode, specCode, spec} = this.props;
+    const {template, codeMode, specCode, spec, templateMap} = this.props;
     if (codeMode === 'CODE') {
       return template ? template.code : specCode;
     }
@@ -81,6 +82,9 @@ export default class CodeEditor extends React.Component<Props, State> {
     }
     if (codeMode === 'OUTPUT') {
       return stringify(spec);
+    }
+    if (codeMode === 'VAR-TAB') {
+      return JSON.stringify(templateMap, null, 2);
     }
   }
 
@@ -178,7 +182,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             ERROR
           </div>
           <div className="code-option-tabs">
-            {['CODE', 'TEMPLATE', 'OUTPUT'].map(key => {
+            {['CODE', 'TEMPLATE', 'OUTPUT', 'VAR-TAB'].map(key => {
               return (
                 <div
                   className={classnames({
