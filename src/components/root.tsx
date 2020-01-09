@@ -79,6 +79,7 @@ interface RootProps {
   loadDataFromPredefinedDatasets?: GenericAction;
   loadTemplates?: GenericAction;
   modifyValueOnTemplate?: GenericAction;
+  moveWidget?: GenericAction;
   updateFilter?: GenericAction;
   deleteFilter?: GenericAction;
   removeWidget?: GenericAction;
@@ -149,6 +150,7 @@ class RootComponent extends React.Component<RootProps> {
       iMspec,
       metaColumns,
       modifyValueOnTemplate,
+      moveWidget,
       removeWidget,
       saveCurrentTemplate,
       spec,
@@ -232,6 +234,7 @@ class RootComponent extends React.Component<RootProps> {
                 template={template}
                 templateMap={templateMap}
                 columns={columns}
+                moveWidget={moveWidget}
                 removeWidget={removeWidget}
                 setTemplateValue={setTemplateValue}
                 setWidgetValue={setWidgetValue}
@@ -387,7 +390,4 @@ function mapStateToProps({base}: {base: AppState}): any {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  actionCreators,
-)(RootComponent);
+export default connect(mapStateToProps, actionCreators)(RootComponent);

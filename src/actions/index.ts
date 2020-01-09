@@ -43,6 +43,7 @@ export const modifyValueOnTemplate = buildEasyAction(
 );
 export const addWidget = buildEasyAction('add-widget-to-template');
 export const removeWidget = buildEasyAction('remove-widget-from-template');
+export const moveWidget = buildEasyAction('move-widget-in-template');
 
 export const setCodeMode = buildEasyAction('set-code-mode');
 

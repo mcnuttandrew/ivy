@@ -10,7 +10,7 @@ interface Props {
   widgets: TemplateWidget<WidgetSubType>[];
 }
 
-export default function NewWidgetMenu(props: Props) {
+export default function TemplateColumnAddNewWidgetPopover(props: Props) {
   const {addWidget, widgets} = props;
   const options = Object.entries(widgetFactory).concat(
     Object.entries(preconfiguredWidgets),

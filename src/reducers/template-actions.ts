@@ -257,3 +257,13 @@ export const addWidget: ActionResponse = (state, payload) =>
   modifyCurrentWidgets(state, d => d.push(Immutable.fromJS(payload)));
 export const removeWidget: ActionResponse = (state, payload) =>
   modifyCurrentWidgets(state, d => d.deleteIn([payload]));
+
+export const moveWidget: ActionResponse = (state, payload) => {
+  const {fromIdx, toIdx} = payload;
+  if (fromIdx === undefined || toIdx === undefined) {
+    return state;
+  }
+  return modifyCurrentWidgets(state, d =>
+    d.delete(fromIdx).insert(toIdx, d.get(fromIdx)),
+  );
+};

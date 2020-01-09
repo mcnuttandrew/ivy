@@ -1,5 +1,11 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {TiDelete} from 'react-icons/ti';
+import {useDrag, useDrop, DropTargetMonitor} from 'react-dnd';
+import {XYCoord} from 'dnd-core';
+
+import {classnames} from '../../utils';
+
+import {FaGripVertical} from 'react-icons/fa';
 
 import MultiDataTargetComponent from './multi-data-target-widget';
 import DataTargetWidgetComponent from './data-target-widget';
@@ -28,6 +34,7 @@ export interface GeneralWidget<T> {
   idx: number;
   setWidgetValue: any;
   editMode: boolean;
+  moveWidget: (...args: any[]) => void;
 
   templateMap: TemplateMap;
   setTemplateValue: GenericAction;
@@ -41,9 +48,7 @@ interface Props {
   editMode: boolean;
   setWidgetValue: any;
   columns: ColumnHeader[];
-
-  incrementOrder: any;
-  decrementOrder: any;
+  moveWidget: (...args: any[]) => void;
 
   templateMap: TemplateMap;
   setTemplateValue: GenericAction;
@@ -57,7 +62,7 @@ function PlacementControls(props: Props) {
     return <div />;
   }
   return (
-    <div className="widget-handle">
+    <div className="widget-handle flex-down">
       <div className="flex-down">
         <div className="cursor-pointer" onClick={removeWidget}>
           <TiDelete />
@@ -70,10 +75,15 @@ function PlacementControls(props: Props) {
             : 'not used'
           : ''}
       </div>
+      <div className="widget-handle-grip">
+        <FaGripVertical />
+      </div>
     </div>
   );
 }
 
+// dragging functionality cribbed from
+// https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
 export default function GeneralWidget(props: Props) {
   const {
     columns,
@@ -83,6 +93,7 @@ export default function GeneralWidget(props: Props) {
     setWidgetValue,
     templateMap,
     setTemplateValue,
+    moveWidget,
   } = props;
 
   const common = {
@@ -92,10 +103,87 @@ export default function GeneralWidget(props: Props) {
     templateMap,
     setTemplateValue,
     columns,
+    moveWidget,
   };
   const widgetType = widget.widgetType;
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [, drop] = useDrop({
+    accept: 'WIDGET',
+    hover(item: any, monitor: DropTargetMonitor) {
+      if (!editMode) {
+        return;
+      }
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = idx;
+
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current!.getBoundingClientRect();
+
+      // Get vertical middle
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+
+      // Get pixels to the top
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      // Time to actually perform the action
+      moveWidget(dragIndex, hoverIndex);
+
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{isDragging}, drag] = useDrag({
+    item: {type: 'WIDGET', widget, idx},
+    collect: (monitor: any) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const opacity = isDragging ? 0.4 : 1;
+  if (editMode) {
+    drag(drop(ref));
+  }
   return (
-    <div className="widget flex">
+    <div
+      ref={ref}
+      style={{opacity}}
+      className={classnames({
+        widget: true,
+        flex: true,
+        'widget-drag': isDragging,
+      })}
+    >
       <PlacementControls {...props} />
       <div className="widget-body">
         {widgetType === 'MultiDataTarget' && (

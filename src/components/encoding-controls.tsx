@@ -157,7 +157,10 @@ export default function EncodingControls(props: Props) {
               if (!canSave || isGrammar) {
                 return;
               }
-              saveCurrentTemplate();
+              chainActions([
+                () => saveCurrentTemplate(),
+                () => setEditMode(false),
+              ]);
             }}
           >
             <FaSave />

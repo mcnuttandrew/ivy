@@ -3,7 +3,7 @@ import {ColumnHeader} from '../types';
 import {GenericAction} from '../actions';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
-import NewWidgetMenu from './new-widget-menu';
+import TemplateColumnAddNewWidgetPopover from './template-column-add-new-widget-popover';
 import GeneralWidget from './widgets/general-widget';
 
 interface TemplateColumnProps {
@@ -16,6 +16,7 @@ interface TemplateColumnProps {
   addWidget: GenericAction;
   removeWidget: GenericAction;
   setWidgetValue: GenericAction;
+  moveWidget: GenericAction;
 }
 
 export default class TemplateColumn extends React.Component<
@@ -31,12 +32,16 @@ export default class TemplateColumn extends React.Component<
       template,
       templateMap,
       removeWidget,
+      moveWidget,
     } = this.props;
 
     return (
       <div className="full-height">
         {editMode && (
-          <NewWidgetMenu widgets={template.widgets} addWidget={addWidget} />
+          <TemplateColumnAddNewWidgetPopover
+            widgets={template.widgets}
+            addWidget={addWidget}
+          />
         )}
         <div
           className={classnames({
@@ -58,30 +63,7 @@ export default class TemplateColumn extends React.Component<
                   idx={idx}
                   key={`${idx}`}
                   removeWidget={() => removeWidget(idx)}
-                  incrementOrder={() => {
-                    if (idx === template.widgets.length - 1) {
-                      return;
-                    }
-                    {
-                      /* this.setState({
-                    widgets: widgets
-                      .set(idx + 1, widget)
-                      .set(idx, widgets.get(idx + 1)),
-                  }); */
-                    }
-                  }}
-                  decrementOrder={() => {
-                    if (idx === 0) {
-                      return;
-                    }
-                    {
-                      /* this.setState({
-                    widgets: widgets
-                      .set(idx - 1, widget)
-                      .set(idx, widgets.get(idx - 1)),
-                  }); */
-                    }
-                  }}
+                  moveWidget={(fromIdx, toIdx) => moveWidget({fromIdx, toIdx})}
                   setWidgetValue={(key: string, value: any, idx: number) =>
                     setWidgetValue({key, value, idx})
                   }

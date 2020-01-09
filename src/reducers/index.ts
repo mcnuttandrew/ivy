@@ -32,6 +32,7 @@ import {
   setWidgetValue,
   addWidget,
   removeWidget,
+  moveWidget,
   saveCurrentTemplate,
   modifyValueOnTemplate,
   setBlankTemplate,
@@ -100,6 +101,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'set-widget-value': setWidgetValue,
   'add-widget-to-template': addWidget,
   'remove-widget-from-template': removeWidget,
+  'move-widget-in-template': moveWidget,
   'modify-value-on-template': addUpdateCode(modifyValueOnTemplate),
   'set-blank-template': addUpdateCode(setBlankTemplate),
 
