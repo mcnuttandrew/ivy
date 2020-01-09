@@ -67,12 +67,16 @@ export function fillTemplateMapWithDefaults(state: AppState) {
       }
       return acc.set(w.widgetName, value);
     }, Immutable.fromJS({}));
-  const newState = state.set('templateMap', filledInTemplateMap);
+
+  return templateEval(state.set('templateMap', filledInTemplateMap));
+}
+
+export function templateEval(state: AppState) {
   const filledInSpec = setTemplateValues(
-    template.code,
-    newState.get('templateMap').toJS(),
+    state.getIn(['currentTemplateInstance', 'code']),
+    state.get('templateMap').toJS(),
   );
-  return newState.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
+  return state.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
 }
 
 export function respondToTemplateInstanceCodeChanges(
@@ -147,26 +151,6 @@ function getAndRemoveTemplate(state: AppState, templateName: string) {
     .get('templates')
     .filter((template: Template) => template.templateName !== templateName);
 }
-//
-// export const createTemplate: ActionResponse = (state, payload) => {
-//   // this set and get on the db breaks encapsulation a little bit
-//   // update the template catalog / create it
-//   get('templates').then((templates: string[]) => {
-//     let updatedTemplates = templates || [];
-//     if (!updatedTemplates.find((x: string) => x === payload.templateName)) {
-//       updatedTemplates.push(payload.templateName);
-//     }
-//     set('templates', updatedTemplates);
-//   });
-//   // blindly insert this template, allows for over-ride
-//   set(payload.templateName, payload);
-//   const updatedState = state.set(
-//     'templates',
-//     getAndRemoveTemplate(state, payload.templateName).concat(payload),
-//   );
-//   // set current template to the newly created one
-//   return setEncodingMode(updatedState, payload.templateName);
-// };
 
 export const saveCurrentTemplate: ActionResponse = state => {
   const template = state.get('currentTemplateInstance').toJS();

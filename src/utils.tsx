@@ -119,6 +119,7 @@ export function get(obj: any, route: string[]): any {
 }
 
 export function getAllInUseFields(spec: any): Set<string> {
+  // this only works for vega-lite
   const inUse = new Set([]);
   const encoding =
     spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']) || [];

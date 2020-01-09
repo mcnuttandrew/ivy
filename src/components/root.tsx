@@ -255,6 +255,7 @@ class RootComponent extends React.Component<RootProps> {
       template,
       codeMode,
       setCodeMode,
+      templateMap,
       spec,
     } = this.props;
     return (
@@ -267,6 +268,7 @@ class RootComponent extends React.Component<RootProps> {
           template={template}
           specCode={specCode}
           spec={spec}
+          templateMap={templateMap}
           editorError={editorError}
         />
       </div>
