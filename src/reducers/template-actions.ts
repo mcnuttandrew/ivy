@@ -67,14 +67,8 @@ export function fillTemplateMapWithDefaults(state: AppState) {
       }
       return acc.set(w.widgetName, value);
     }, Immutable.fromJS({}));
-  const newState = state.set('templateMap', filledInTemplateMap);
 
-  return templateEval(newState);
-  // const filledInSpec = setTemplateValues(
-  //   template.code,
-  //   newState.get('templateMap').toJS(),
-  // );
-  // return newState.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
+  return templateEval(state.set('templateMap', filledInTemplateMap));
 }
 
 export function templateEval(state: AppState) {

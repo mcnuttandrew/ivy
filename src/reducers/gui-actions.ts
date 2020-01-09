@@ -16,10 +16,7 @@ export const changeTheme = blindSet('currentTheme');
 export const setEditMode = blindSet('editMode');
 export const setCodeMode = blindSet('codeMode');
 
-const quoteTrim = (x: string): string => {
-  return x.replace(/["']/g, '');
-  // return x.slice(1, x.length - 1);
-};
+const quoteTrim = (x: string): string => x.replace(/["']/g, '');
 
 function activeColumns(state: any): string[] {
   const template = state.get('currentTemplateInstance');
@@ -42,61 +39,8 @@ function activeColumns(state: any): string[] {
 
       return acc;
     }, new Set());
-  console.log(templateInUse);
   return Array.from(templateInUse).map((key: string) => quoteTrim(key));
 }
-
-// // given a list of columns you want to use, try to fill them into the current template map
-// // TODO: i think this function can really general later for constructing example charts
-// // Also just lots of auto fill functionality
-// const fillTemplateMapWithColumns = (state: any, columns: ColumnHeader[]) => {
-//   const template = state.get('currentTemplateInstance');
-//   const typePiles = columns.reduce((acc: any, column: ColumnHeader) => {
-//     acc[column.type] = (acc[column.type] || []).concat(column);
-//     return acc;
-//   }, {});
-//   const selectPile = (allowedTypes: any) =>
-//     allowedTypes
-//       .toJS()
-//       .find((type: string) => typePiles[type] && typePiles[type].length);
-//   // we're using these piles as stacks, so need to reverse em
-//   Object.keys(typePiles).forEach(key => typePiles[key].reverse());
-//
-//   const updatedMap = template
-//     .get('widgets')
-//     .reduce((acc: Map<string, string>, widget: any) => {
-//       const widgetName = widget.get('widgetName');
-//       const widgetType = widget.get('widgetType');
-//       const allowedTypes = widget.getIn(['widget', 'allowedTypes']);
-//       // we only care about the data containing columns
-//       if (widgetType === 'MultiDataTarget') {
-//         const maxCols = Math.max(
-//           widget.getIn(['widget', 'maxNumberOfTargets']),
-//           5,
-//         );
-//         const selectedColumns = [...new Array(maxCols)].reduce(
-//           (mem: string[], _) => {
-//             const targetType = selectPile(allowedTypes);
-//             return targetType
-//               ? mem.concat(typePiles[targetType].pop().field)
-//               : mem;
-//           },
-//           [],
-//         );
-//         // unsure if this should be ummutable
-//         return acc.set(widgetName, selectedColumns);
-//       }
-//       if (widgetType === 'DataTarget') {
-//         const targetType = selectPile(allowedTypes);
-//         return targetType
-//           ? acc.set(widgetName, `"${typePiles[targetType].pop().field}"`)
-//           : acc;
-//       }
-//
-//       return acc;
-//     }, state.get('templateMap'));
-//   return templateEval(state.set('templateMap', updatedMap));
-// };
 
 export const setEncodingMode: ActionResponse = (state, payload) => {
   let updatedState = state;
@@ -118,8 +62,6 @@ export const setEncodingMode: ActionResponse = (state, payload) => {
   const columnMap = state
     .get('columns')
     .reduce((acc: any, x: ColumnHeader) => acc.set(x.field, x), Map());
-  const carriedColumns = activeColumns(state).map(key => columnMap.get(key));
-  console.log('columns', columnMap.toJS(), carriedColumns);
   return activeColumns(state).reduce((acc: AppState, columnKey: string) => {
     return addToNextOpenSlot(acc, columnMap.get(columnKey));
   }, updatedState);
