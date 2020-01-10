@@ -72,20 +72,20 @@ const buildSpatialOptions = (
   optionName: 'Agg.',
   optionType: 'List',
   options,
-  optionSetter: (spec, selectedOption) => {
+  optionSetter: (spec, selectedOption): any => {
     const route = ['encoding', dimension];
     const newSpec = set(spec, [...route, 'aggregate'], selectedOption);
-    const addType = (x: any) => set(x, [...route, 'type'], 'quantitative');
+    const addType = (x: any): any => set(x, [...route, 'type'], 'quantitative');
     return get(newSpec, [...route, 'field']) ? newSpec : addType(newSpec);
   },
-  optionGetter: spec => get(spec, ['encoding', dimension, 'aggregate']),
+  optionGetter: (spec): any => get(spec, ['encoding', dimension, 'aggregate']),
   optionDefault: 'none',
-  predicate: () => true,
+  predicate: (): boolean => true,
 });
 
 const channelTypePredicate = (dim: string, expected: string[]) => (
   spec: any,
-) => {
+): any => {
   const channelType = get(spec, ['encoding', dim, 'type']);
   return expected.some((type: string) => channelType === type);
 };
@@ -93,10 +93,11 @@ const channelTypePredicate = (dim: string, expected: string[]) => (
 const binOption = (dim: string): EncodingOption => ({
   optionName: 'Bin',
   optionType: 'Switch',
-  optionSetter: (spec, option) => set(spec, ['encoding', dim, 'bin'], option),
-  optionGetter: spec => get(spec, ['encoding', dim, 'bin']),
+  optionSetter: (spec, option): any =>
+    set(spec, ['encoding', dim, 'bin'], option),
+  optionGetter: (spec): any => get(spec, ['encoding', dim, 'bin']),
   optionDefault: false,
-  predicate: spec => {
+  predicate: (spec): boolean => {
     return (
       get(spec, ['encoding', dim, 'field']) &&
       channelTypePredicate(dim, ['quantitative', 'time'])(spec)
@@ -104,15 +105,15 @@ const binOption = (dim: string): EncodingOption => ({
   },
 });
 
-const typeRoute = (dim: string) => ['encoding', dim, 'scale', 'type'];
+const typeRoute = (dim: string): string[] => ['encoding', dim, 'scale', 'type'];
 const buildScaleOption = (dim: string): EncodingOption => ({
   optionName: 'Scale type',
   optionType: 'List',
   options: ['linear', 'log'].map(toOption),
-  optionSetter: (spec, option) => set(spec, typeRoute(dim), option),
-  optionGetter: spec => get(spec, typeRoute(dim)) || 'linear',
+  optionSetter: (spec, option): any => set(spec, typeRoute(dim), option),
+  optionGetter: (spec): any => get(spec, typeRoute(dim)) || 'linear',
   optionDefault: 'linear',
-  predicate: spec => {
+  predicate: (spec): boolean => {
     return (
       get(spec, ['encoding', dim, 'field']) &&
       channelTypePredicate(dim, ['quantitative', 'time'])(spec)
@@ -120,18 +121,23 @@ const buildScaleOption = (dim: string): EncodingOption => ({
   },
 });
 
-const zeroDomainRoute = (dim: string) => ['encoding', dim, 'scale', 'zero'];
+const zeroDomainRoute = (dim: string): string[] => [
+  'encoding',
+  dim,
+  'scale',
+  'zero',
+];
 
 const scaleDomain = (dim: string): EncodingOption => ({
   optionName: 'Include Zero',
   optionType: 'Switch',
-  optionSetter: (spec, option) => set(spec, zeroDomainRoute(dim), option),
-  optionGetter: spec => {
+  optionSetter: (spec, option): any => set(spec, zeroDomainRoute(dim), option),
+  optionGetter: (spec): any => {
     const val = get(spec, zeroDomainRoute(dim));
     return typeof val === 'boolean' ? val : true;
   },
   optionDefault: true,
-  predicate: spec => {
+  predicate: (spec): boolean => {
     return (
       get(spec, ['encoding', dim, 'field']) &&
       channelTypePredicate(dim, ['quantitative', 'time'])(spec)
@@ -143,10 +149,11 @@ const buildTypeCoercion = (dim: string): EncodingOption => ({
   optionName: 'Data type',
   optionType: 'List',
   options: ['nominal', 'ordinal', 'quantitative', 'temporal'].map(toOption),
-  optionSetter: (spec, option) => set(spec, ['encoding', dim, 'type'], option),
-  optionGetter: spec => get(spec, ['encoding', dim, 'type']),
+  optionSetter: (spec, option): any =>
+    set(spec, ['encoding', dim, 'type'], option),
+  optionGetter: (spec): any => get(spec, ['encoding', dim, 'type']),
   optionDefault: undefined,
-  predicate: () => true,
+  predicate: (): boolean => true,
 });
 
 // take in an encoding option and create a predicate that rejects that option
@@ -154,14 +161,14 @@ const buildTypeCoercion = (dim: string): EncodingOption => ({
 type predicateInject = (dim: string, option: EncodingOption) => EncodingOption;
 const injectFieldPred: predicateInject = (dim, option) => ({
   ...option,
-  predicate: spec => !!get(spec, ['encoding', dim, 'field']),
+  predicate: (spec): boolean => !!get(spec, ['encoding', dim, 'field']),
 });
 const injectNofieldPred: predicateInject = (dim, option) => ({
   ...option,
-  predicate: spec => !get(spec, ['encoding', dim, 'field']),
+  predicate: (spec): boolean => !get(spec, ['encoding', dim, 'field']),
 });
 
-const generateXorY = (dim: string) => [
+const generateXorY = (dim: string): EncodingOption[] => [
   injectFieldPred(dim, buildTypeCoercion(dim)),
   buildScaleOption(dim),
   scaleDomain(dim),

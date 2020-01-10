@@ -27,18 +27,21 @@ export default class DataModal extends React.Component<Props, State> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(event: any) {
+  handleSubmit(event: any): void {
     const {loadCustomDataset, toggleDataModal} = this.props;
     const file = event.target.files[0];
     const reader = new FileReader();
-    reader.onload = event => {
+    reader.onload = (event): void => {
+      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+      // @ts-ignore
       loadCustomDataset({fileName: file.name, data: event.target.result});
+      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
       toggleDataModal();
     };
 
     reader.readAsText(file);
   }
-  render() {
+  render(): JSX.Element {
     const {changeSelectedFile, toggleDataModal, chainActions} = this.props;
     const {searchTerm} = this.state;
 
@@ -55,7 +58,7 @@ export default class DataModal extends React.Component<Props, State> {
             <input
               type="text"
               value={searchTerm || ''}
-              onChange={event => {
+              onChange={(event): void => {
                 this.setState({searchTerm: event.target.value});
               }}
               placeholder="Search for dataset"
@@ -73,10 +76,10 @@ export default class DataModal extends React.Component<Props, State> {
               const datasetMeta = VegaDatasetMeta[datasetName];
               return (
                 <div
-                  onClick={() =>
+                  onClick={(): any =>
                     chainActions([
-                      () => changeSelectedFile(datasetName),
-                      () => toggleDataModal(),
+                      (): any => changeSelectedFile(datasetName),
+                      (): any => toggleDataModal(),
                     ])
                   }
                   className="flex dataset-list-item space-between"

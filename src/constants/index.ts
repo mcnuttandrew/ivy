@@ -3,7 +3,7 @@ type ON = 'on';
 export const EDITOR_OPTIONS = {
   selectOnLineNumbers: true,
   automaticLayout: true,
-  wordWrap: <ON>'on',
+  wordWrap: 'on' as ON,
   minimap: {
     enabled: false,
   },

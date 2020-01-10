@@ -90,11 +90,11 @@ export interface Template {
    * Sometimes you want to decative certain values depending on the state of the UI
    * This advanced features allows you to do that
    */
-  widgetValidations: widgetValidation[];
+  widgetValidations: WidgetValidation[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
 
-export interface widgetValidation {
+export interface WidgetValidation {
   /**
    * What to do in response to the result of the query
    */

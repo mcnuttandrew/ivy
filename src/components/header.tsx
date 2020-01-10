@@ -1,7 +1,7 @@
 import React from 'react';
 import {MdUndo, MdRedo} from 'react-icons/md';
 import {GenericAction} from '../actions/index';
-import {classnames} from '../utils';
+import {classnames, NULL} from '../utils';
 
 interface HeaderProps {
   triggerUndo: GenericAction;
@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 
 export default class Header extends React.Component<HeaderProps> {
-  render() {
+  render(): JSX.Element {
     const {triggerUndo, triggerRedo, canRedo, canUndo} = this.props;
     return (
       <div className="header flex full-width background-1">
@@ -23,7 +23,7 @@ export default class Header extends React.Component<HeaderProps> {
               'action-deactivated': !canUndo,
               'state-action-button': true,
             })}
-            onClick={canUndo ? triggerUndo : () => {}}
+            onClick={canUndo ? triggerUndo : NULL}
           >
             <MdUndo /> <span>UNDO</span>
           </div>
@@ -32,7 +32,7 @@ export default class Header extends React.Component<HeaderProps> {
               'action-deactivated': !canRedo,
               'state-action-button': true,
             })}
-            onClick={canRedo ? triggerRedo : () => {}}
+            onClick={canRedo ? triggerRedo : NULL}
           >
             <MdRedo />
             <span>REDO</span>

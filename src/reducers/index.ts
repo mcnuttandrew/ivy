@@ -53,7 +53,7 @@ import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
   state,
   payload,
-) => wrapper(state, func(state, payload));
+): AppState => wrapper(state, func(state, payload));
 const addUndo = (func: ActionResponse): ActionResponse =>
   wrap(func, pushToUndoStack);
 const addUpdateCode = (func: ActionResponse): ActionResponse =>
@@ -116,11 +116,11 @@ const reducers = {
   base: (
     state: AppState = DEFAULT_STATE,
     {type, payload}: {type: string; payload: any},
-  ) => {
+  ): AppState => {
     console.log(type);
     return (actionFuncMap[type] || NULL_ACTION)(state, payload);
   },
 };
-export default function setUpState() {
+export default function setUpState(): any {
   return createStore(combineReducers(reducers), applyMiddleware(thunk));
 }

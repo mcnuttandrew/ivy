@@ -1,9 +1,9 @@
 type datasetMeta = {
-  file: string,
-  length: number,
-  DIMENSION?: number,
-  MEASURE?: number,
-  TIME?: number,
+  file: string;
+  length: number;
+  DIMENSION?: number;
+  MEASURE?: number;
+  TIME?: number;
 };
 const metaData: any = {
   'anscombe.json': {

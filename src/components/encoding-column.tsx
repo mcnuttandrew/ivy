@@ -40,7 +40,7 @@ interface EncodingColumnProps {
 export default class EncodingColumn extends React.Component<
   EncodingColumnProps
 > {
-  render() {
+  render(): JSX.Element {
     const {
       columns,
       metaColumns,
@@ -55,7 +55,7 @@ export default class EncodingColumn extends React.Component<
     } = this.props;
     const encoding =
       get(spec, ['spec', 'encoding']) || get(spec, ['encoding']) || {};
-    const makeShelf = (disable: boolean) => (channel: string) => (
+    const makeShelf = (disable: boolean) => (channel: string): JSX.Element => (
       <Shelf
         setEncodingParameter={setEncodingParameter}
         column={encoding[channel]}
@@ -91,7 +91,7 @@ export default class EncodingColumn extends React.Component<
                 get(spec, ['spec', 'mark']) ||
                 ''
               ).toUpperCase()}
-              onChange={value => changeMarkType(value.toLowerCase())}
+              onChange={(value): any => changeMarkType(value.toLowerCase())}
               options={MARK_TYPES}
             />
           </div>

@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default class Modal extends React.PureComponent<Props> {
-  render() {
+  render(): JSX.Element {
     const {
       modalToggle,
       children,

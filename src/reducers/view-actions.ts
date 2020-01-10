@@ -7,7 +7,7 @@ const BLANK_CATALOG_ENTRY = Immutable.fromJS({
   encodingMode: 'grammer',
   templateMap: {},
 });
-function updateCatalogView(state: AppState, view: string) {
+function updateCatalogView(state: AppState, view: string): AppState {
   const catalogEntry = Immutable.fromJS({
     spec: state.get('spec').toJS(),
     encodingMode: state.get('encodingMode'),
@@ -15,18 +15,6 @@ function updateCatalogView(state: AppState, view: string) {
   });
   return state.setIn(['viewCatalog', view], catalogEntry);
 }
-
-export const createNewView: ActionResponse = state => {
-  const newViewName = `view${state.get('views').size + 1}`;
-  const newState = state
-    .set('views', state.get('views').push(newViewName))
-    .setIn(['viewCatalog', newViewName], BLANK_CATALOG_ENTRY);
-
-  return switchView(newState, newViewName);
-};
-export const deleteView: ActionResponse = (state, payload) => {
-  return state;
-};
 
 export const switchView: ActionResponse = (state, payload) => {
   const newCatalog = state.getIn(['viewCatalog', payload]);
@@ -37,6 +25,20 @@ export const switchView: ActionResponse = (state, payload) => {
     .set('encodingMode', newCatalog.get('encodingMode'))
     .set('templateMap', newCatalog.get('templateMap'));
 };
+
+export const createNewView: ActionResponse = state => {
+  const newViewName = `view${state.get('views').size + 1}`;
+  const newState = state
+    .set('views', state.get('views').push(newViewName))
+    .setIn(['viewCatalog', newViewName], BLANK_CATALOG_ENTRY);
+
+  return switchView(newState, newViewName);
+};
+export const deleteView: ActionResponse = (state, payload) => {
+  console.log('TODO', payload);
+  return state;
+};
+
 export const cloneView: ActionResponse = state => {
   const newViewName = `view${state.get('views').size + 1}`;
   const updatedState = updateCatalogView(state, state.get('currentView'));

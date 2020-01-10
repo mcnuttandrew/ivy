@@ -15,7 +15,5 @@ if (document.querySelector('.loading-msg')) {
 }
 
 if (PREVENT_ACCIDENTAL_LEAVE) {
-  window.onbeforeunload = function() {
-    return 'Are you sure you want to leave?';
-  };
+  window.onbeforeunload = (): string => 'Are you sure you want to leave?';
 }

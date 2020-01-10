@@ -79,7 +79,7 @@ function maybeRemoveRepeats(
   oldState: AppState,
   newState: AppState,
   targetChannel: string,
-) {
+): AppState {
   const route = usingNestedSpec(newState)
     ? ['spec', 'spec', 'encoding']
     : ['spec', 'encoding'];
@@ -102,7 +102,7 @@ function noMetaUsage(state: AppState): boolean {
   return !(inUse.has('row') || inUse.has('column') || inUse.has('repeat'));
 }
 
-function addMetaEncoding(state: AppState) {
+function addMetaEncoding(state: AppState): AppState {
   return state
     .setIn(['spec', 'spec'], Map())
     .setIn(['spec', 'spec', 'encoding'], state.getIn(['spec', 'encoding']))
@@ -111,7 +111,7 @@ function addMetaEncoding(state: AppState) {
     .deleteIn(['spec', 'mark']);
 }
 
-function removeMetaEncoding(state: AppState) {
+function removeMetaEncoding(state: AppState): AppState {
   return state
     .setIn(['spec', 'encoding'], state.getIn(['spec', 'spec', 'encoding']))
     .setIn(['spec', 'mark'], state.getIn(['spec', 'spec', 'mark']))
@@ -225,7 +225,7 @@ export const setRepeats: ActionResponse = (state, payload) => {
   return state.setIn(['spec', 'repeat', target], Immutable.fromJS(repeats));
 };
 
-const createStackItem = (state: AppState) => {
+const createStackItem = (state: AppState): AppState => {
   return Map({
     spec: state.get('spec'),
     currentView: state.get('currentView'),
@@ -234,7 +234,7 @@ const createStackItem = (state: AppState) => {
   });
 };
 
-const applyStackItemToState = (state: AppState, stackItem: any) => {
+const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
   return state
     .set('spec', stackItem.get('spec'))
     .set('currentView', stackItem.get('currentView'))
@@ -243,7 +243,10 @@ const applyStackItemToState = (state: AppState, stackItem: any) => {
 };
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
-export function pushToUndoStack(oldState: AppState, newState: AppState) {
+export function pushToUndoStack(
+  oldState: AppState,
+  newState: AppState,
+): AppState {
   return newState
     .set('undoStack', newState.get('undoStack').push(createStackItem(oldState)))
     .set('redoStack', Immutable.fromJS([]));

@@ -9,7 +9,7 @@ import {configurationOptions, EncodingOption} from '../constants';
 import ConfigurationOption from './configuration-option';
 
 interface ShelfProps {
-  column?: {field: string, type: string};
+  column?: {field: string; type: string};
   columns: ColumnHeader[];
   disable: boolean;
   field: string;
@@ -21,7 +21,7 @@ interface ShelfProps {
   setNewSpec: GenericAction;
 }
 
-export default function Shelf(props: ShelfProps) {
+export default function Shelf(props: ShelfProps): JSX.Element {
   const {
     column,
     columns,
@@ -43,9 +43,9 @@ export default function Shelf(props: ShelfProps) {
       canDrop: monitor.canDrop(),
     }),
   });
-  const optionsToRender = (configurationOptions[field] || []).filter(
-    (option: EncodingOption) => option.predicate(iMspec),
-  );
+  const optionsToRender = (
+    configurationOptions[field] || []
+  ).filter((option: EncodingOption) => option.predicate(iMspec));
 
   const configurationOpen = Boolean(optionsToRender.length);
   let definedField = columns.find(

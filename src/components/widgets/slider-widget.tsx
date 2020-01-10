@@ -2,9 +2,9 @@ import React from 'react';
 import {SliderWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
 
-export default function SliderWidget(
+export default function SliderWidgetComponent(
   props: GeneralWidget<TemplateWidget<SliderWidget>>,
-) {
+): JSX.Element {
   const {
     widget,
     idx,
@@ -13,9 +13,9 @@ export default function SliderWidget(
     templateMap,
     setTemplateValue,
   } = props;
-  const clamp = (v: any) =>
+  const clamp = (v: any): number =>
     Math.max(widget.widget.minVal, Math.min(widget.widget.maxVal, Number(v)));
-  const setVal = (text: any) =>
+  const setVal = (text: any): any =>
     setTemplateValue({field: widget.widgetName, text: clamp(text)});
   return (
     <div className="slide-widget">
@@ -24,7 +24,7 @@ export default function SliderWidget(
         <input
           value={widget.widgetName}
           type="text"
-          onChange={event =>
+          onChange={(event): any =>
             setWidgetValue('widgetName', event.target.value, idx)
           }
         />
@@ -33,7 +33,7 @@ export default function SliderWidget(
         <input
           type="number"
           value={templateMap[widget.widgetName]}
-          onChange={({target: {value}}) => setVal(value)}
+          onChange={({target: {value}}): any => setVal(value)}
         />
         <div className="flex-down">
           <input
@@ -41,7 +41,7 @@ export default function SliderWidget(
             min={widget.widget.minVal}
             max={widget.widget.maxVal}
             value={templateMap[widget.widgetName]}
-            onChange={event => setVal(event.target.value)}
+            onChange={(event): any => setVal(event.target.value)}
             step={widget.widget.step}
             className="slider"
           />
@@ -52,7 +52,7 @@ export default function SliderWidget(
               <input
                 value={widget.widget.minVal}
                 type="number"
-                onChange={event =>
+                onChange={(event): any =>
                   setWidgetValue('minVal', event.target.value, idx)
                 }
               />
@@ -61,7 +61,7 @@ export default function SliderWidget(
               <input
                 value={widget.widget.maxVal}
                 type="number"
-                onChange={event =>
+                onChange={(event): any =>
                   setWidgetValue('maxVal', event.target.value, idx)
                 }
               />

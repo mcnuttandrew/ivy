@@ -10,7 +10,9 @@ interface Props {
   widgets: TemplateWidget<WidgetSubType>[];
 }
 
-export default function TemplateColumnAddNewWidgetPopover(props: Props) {
+export default function TemplateColumnAddNewWidgetPopover(
+  props: Props,
+): JSX.Element {
   const {addWidget, widgets} = props;
   const options = Object.entries(widgetFactory).concat(
     Object.entries(preconfiguredWidgets),
@@ -23,7 +25,7 @@ export default function TemplateColumnAddNewWidgetPopover(props: Props) {
           Add Widget <AiOutlinePlusCircle />
         </Fragment>
       }
-      body={(toggle: any) => {
+      body={(toggle: any): JSX.Element => {
         return (
           <Fragment>
             <h3>Add New Widget</h3>
@@ -33,7 +35,7 @@ export default function TemplateColumnAddNewWidgetPopover(props: Props) {
                 return (
                   <button
                     key={key}
-                    onClick={() => {
+                    onClick={(): void => {
                       addWidget(widget(widgets.length));
                       toggle();
                     }}

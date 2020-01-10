@@ -7,7 +7,7 @@ interface FilterTargetProps {
   onDrop: any;
 }
 
-export default function FilterTarget({onDrop}: FilterTargetProps) {
+export default function FilterTarget({onDrop}: FilterTargetProps): JSX.Element {
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
     drop: item => onDrop({...item}),

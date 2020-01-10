@@ -6,28 +6,29 @@ import {mergeDeep} from 'vega-lite/build/src/util';
 /**
  * Adds markdownDescription props to a schema. See https://github.com/Microsoft/monaco-editor/issues/885
  */
-function addMarkdownProps(value: any) {
+function addMarkdownProps(value: any): any {
   if (typeof value === 'object' && value !== null) {
     if (value.description) {
       value.markdownDescription = value.description;
     }
 
     for (const key in value) {
+      /* eslint-disable */
       if (value.hasOwnProperty(key)) {
         value[key] = addMarkdownProps(value[key]);
       }
+      /* eslint-enable */
     }
   }
   return value;
 }
-// @ts-ignore
+
+/* eslint-disable @typescript-eslint/no-var-requires */
 const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
-// @ts-ignore
 const vegaSchema = require('vega/build/vega-schema.json');
-// @ts-ignore
 const hydraSchema = require('../../assets/hydra-template.json');
-// @ts-ignore
 const unitVisSchema = require('unit-vis/unit-vis-schema.json');
+/* eslint-enable @typescript-eslint/no-var-requires */
 addMarkdownProps(vegaSchema);
 addMarkdownProps(vegaLiteSchema);
 addMarkdownProps(hydraSchema);
@@ -51,7 +52,6 @@ const schemas = [
       'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
   },
   {
-    // @ts-ignore
     schema: mergeDeep({}, vegaLiteSchema, {
       $ref: '#/definitions/Config',
       definitions: {
@@ -75,7 +75,7 @@ const schemas = [
   },
 ];
 
-export default function setupMonaco() {
+export default function setupMonaco(): void {
   Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
     allowComments: false,
     enableSchemaRequest: true,
@@ -98,8 +98,8 @@ export default function setupMonaco() {
   Monaco.languages.registerDocumentFormattingEditProvider('json', {
     provideDocumentFormattingEdits(
       model: Monaco.editor.ITextModel,
-      options: Monaco.languages.FormattingOptions,
-      token: Monaco.CancellationToken,
+      // options: Monaco.languages.FormattingOptions,
+      // token: Monaco.CancellationToken,
     ): Monaco.languages.TextEdit[] {
       return [
         {
