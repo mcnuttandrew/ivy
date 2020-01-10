@@ -57,6 +57,7 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   currentTemplateInstance: null,
   encodingMode: 'grammer',
   showProgrammaticMode: true,
+  showSimpleDisplay: false,
   codeMode: 'CODE',
 
   // undo redo

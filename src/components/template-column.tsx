@@ -7,11 +7,12 @@ import TemplateColumnAddNewWidgetPopover from './template-column-add-new-widget-
 import GeneralWidget from './widgets/general-widget';
 
 interface TemplateColumnProps {
-  editMode: boolean;
-  templateMap: any;
-  template: Template;
   columns: ColumnHeader[];
+  editMode: boolean;
   setTemplateValue?: any;
+  showSimpleDisplay: boolean;
+  template: Template;
+  templateMap: any;
 
   addWidget: GenericAction;
   removeWidget: GenericAction;
@@ -29,6 +30,7 @@ export default class TemplateColumn extends React.Component<
       editMode,
       setTemplateValue,
       setWidgetValue,
+      showSimpleDisplay,
       template,
       templateMap,
       removeWidget,
@@ -37,6 +39,11 @@ export default class TemplateColumn extends React.Component<
 
     return (
       <div className="full-height">
+        {showSimpleDisplay && (
+          <div>
+            <h3>{template.templateName}</h3>
+          </div>
+        )}
         {editMode && (
           <TemplateColumnAddNewWidgetPopover
             widgets={template.widgets}
@@ -62,6 +69,7 @@ export default class TemplateColumn extends React.Component<
                   widget={widget}
                   idx={idx}
                   key={`${idx}`}
+                  showSimpleDisplay={showSimpleDisplay}
                   removeWidget={(): any => removeWidget(idx)}
                   moveWidget={(fromIdx, toIdx): any =>
                     moveWidget({fromIdx, toIdx})

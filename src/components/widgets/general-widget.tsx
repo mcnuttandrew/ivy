@@ -30,29 +30,29 @@ import {GenericAction} from '../../actions';
 import {widgetInUse} from '../../utils';
 
 export interface GeneralWidget<T> {
-  widget: T;
-  idx: number;
-  setWidgetValue: any;
-  editMode: boolean;
-  moveWidget: (...args: any[]) => void;
-
-  templateMap: TemplateMap;
-  setTemplateValue: GenericAction;
   columns: ColumnHeader[];
+  editMode: boolean;
+  idx: number;
+  moveWidget: (...args: any[]) => void;
+  setTemplateValue: GenericAction;
+  setWidgetValue: any;
+  showSimpleDisplay: boolean;
+  templateMap: TemplateMap;
+  widget: T;
 }
 
 interface Props {
   code: string;
-  widget: TemplateWidget<WidgetSubType>;
-  idx: number;
-  editMode: boolean;
-  setWidgetValue: any;
   columns: ColumnHeader[];
+  editMode: boolean;
+  idx: number;
   moveWidget: (...args: any[]) => void;
-
-  templateMap: TemplateMap;
-  setTemplateValue: GenericAction;
   removeWidget: any;
+  setTemplateValue: GenericAction;
+  setWidgetValue: any;
+  showSimpleDisplay: boolean;
+  templateMap: TemplateMap;
+  widget: TemplateWidget<WidgetSubType>;
 }
 
 function PlacementControls(props: Props): JSX.Element {
@@ -94,6 +94,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     templateMap,
     setTemplateValue,
     moveWidget,
+    showSimpleDisplay,
   } = props;
 
   const common = {
@@ -104,6 +105,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     setTemplateValue,
     columns,
     moveWidget,
+    showSimpleDisplay,
   };
   const widgetType = widget.widgetType;
   const ref = useRef<HTMLDivElement>(null);

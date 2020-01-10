@@ -2,18 +2,18 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 
 import {
-  setEncodingParameter,
-  clearEncoding,
   changeMarkType,
+  clearEncoding,
+  coerceType,
+  pushToUndoStack,
+  setChannelToMetaColumn,
+  setEncodingParameter,
   setNewSpec,
   setNewSpecCode,
-  coerceType,
+  setRepeats,
+  swapXAndYChannels,
   triggerRedo,
   triggerUndo,
-  pushToUndoStack,
-  swapXAndYChannels,
-  setChannelToMetaColumn,
-  setRepeats,
   updateCodeRepresentation,
 } from './modify-encodings';
 
@@ -21,30 +21,31 @@ import {addToNextOpenSlot} from './apt-actions';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
 import {
+  changeSelectedFile,
   recieveData,
   recieveTypeInferences,
-  changeSelectedFile,
 } from './data-actions';
 import {
-  recieveTemplates,
-  setTemplateValue,
-  deleteTemplate,
-  setWidgetValue,
   addWidget,
-  removeWidget,
-  moveWidget,
-  saveCurrentTemplate,
+  deleteTemplate,
   modifyValueOnTemplate,
+  moveWidget,
+  recieveTemplates,
+  removeWidget,
+  saveCurrentTemplate,
   setBlankTemplate,
+  setTemplateValue,
+  setWidgetValue,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView} from './view-actions';
 import {
   changeTheme,
-  toggleDataModal,
+  setCodeMode,
+  setEditMode,
   setEncodingMode,
   setProgrammaticView,
-  setEditMode,
-  setCodeMode,
+  setSimpleDisplay,
+  toggleDataModal,
 } from './gui-actions';
 
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
@@ -70,8 +71,8 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'change-mark-type': addUndo(addUpdateCode(changeMarkType)),
   'clear-encoding': addUndo(addUpdateCode(clearEncoding)),
   'coerce-type': addUndo(addUpdateCode(coerceType)),
-  'set-encoding-param': addUndo(addUpdateCode(setEncodingParameter)),
   'set-channel-to-meta-colum': addUndo(addUpdateCode(setChannelToMetaColumn)),
+  'set-encoding-param': addUndo(addUpdateCode(setEncodingParameter)),
   'set-new-encoding': addUndo(addUpdateCode(setNewSpec)),
   'set-new-encoding-code': addUndo(setNewSpecCode),
   'set-repeats': addUndo(addUpdateCode(setRepeats)),
@@ -87,29 +88,30 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
 
   // gui modifications
   'change-theme': changeTheme,
-  'toggle-data-modal': toggleDataModal,
-  'set-encoding-mode': setEncodingMode,
-  'toggle-programmatic-view': setProgrammaticView,
-  'set-edit-mode': setEditMode,
   'set-code-mode': setCodeMode,
+  'set-edit-mode': setEditMode,
+  'set-encoding-mode': setEncodingMode,
+  'set-simple-display': setSimpleDisplay,
+  'toggle-data-modal': toggleDataModal,
+  'toggle-programmatic-view': setProgrammaticView,
 
   // template
-  'recieve-templates': recieveTemplates,
-  'set-template-value': addUndo(setTemplateValue),
-  'delete-template': deleteTemplate,
-  'save-template': saveCurrentTemplate,
-  'set-widget-value': setWidgetValue,
   'add-widget-to-template': addWidget,
-  'remove-widget-from-template': removeWidget,
-  'move-widget-in-template': moveWidget,
+  'delete-template': deleteTemplate,
   'modify-value-on-template': addUpdateCode(modifyValueOnTemplate),
+  'move-widget-in-template': moveWidget,
+  'recieve-templates': recieveTemplates,
+  'remove-widget-from-template': removeWidget,
+  'save-template': saveCurrentTemplate,
   'set-blank-template': addUpdateCode(setBlankTemplate),
+  'set-template-value': addUndo(setTemplateValue),
+  'set-widget-value': setWidgetValue,
 
   // views
+  'clone-view': addUndo(cloneView),
   'create-new-view': addUndo(createNewView),
   'delete-view': addUndo(deleteView),
   'switch-view': addUndo(switchView),
-  'clone-view': addUndo(cloneView),
 };
 const NULL_ACTION: ActionResponse = state => state;
 const reducers = {

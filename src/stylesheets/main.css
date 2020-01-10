@@ -376,6 +376,7 @@ input[type=number]::-webkit-outer-spin-button {
   color: black;
   height: 100%;
   margin: 0 5px;
+  position: relative;
   width: 100%;
 }
 
@@ -812,6 +813,20 @@ input[type=number]::-webkit-outer-spin-button {
 .modal-tooltip .encoding-selection-option h5 {
   font-size: 10px;
 }
+
+.template-preview-column .encoding-selection-option  h3 {
+  font-size: 10px;
+}
+
+.template-preview-column .encoding-selection-option  img {
+  height: 50px;
+}
+
+.shelf-dropdown {
+  top: 3px;
+  position: relative;
+}
+
 
 
 .tooltip-container .modal-background {

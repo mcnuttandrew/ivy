@@ -11,3 +11,9 @@ export const EDITOR_OPTIONS = {
   lineDecorationsWidth: 0,
   lineNumbersMinChars: 3,
 };
+
+export const TEXT_TYPE: {[x: string]: string} = {
+  MEASURE: '123',
+  DIMENSION: 'ABC',
+  TIME: '🕑',
+};

@@ -20,46 +20,43 @@ const buildEasyAction: GenericActionCreator = type => payload => (
 ): void => {
   dispatch({type, payload});
 };
-// TODO: organize these in literally any way
-export const setEncodingParameter = buildEasyAction('set-encoding-param');
-export const swapXAndYChannels = buildEasyAction('swap-x-and-y-channels');
-export const setRepeats = buildEasyAction('set-repeats');
-export const clearEncoding = buildEasyAction('clear-encoding');
-export const changeMarkType = buildEasyAction('change-mark-type');
-export const setNewSpec = buildEasyAction('set-new-encoding');
-export const setNewSpecCode = buildEasyAction('set-new-encoding-code');
+
 export const addToNextOpenSlot = buildEasyAction('add-to-next-open-slot');
-export const setProgrammaticView = buildEasyAction('toggle-programmatic-view');
+export const addWidget = buildEasyAction('add-widget-to-template');
+export const changeMarkType = buildEasyAction('change-mark-type');
 export const changeTheme = buildEasyAction('change-theme');
-export const createFilter = buildEasyAction('create-filter');
-export const updateFilter = buildEasyAction('update-filter');
-export const deleteFilter = buildEasyAction('delete-filter');
+export const clearEncoding = buildEasyAction('clear-encoding');
+export const cloneView = buildEasyAction('clone-view');
 export const coerceType = buildEasyAction('coerce-type');
-export const setEncodingMode = buildEasyAction('set-encoding-mode');
-export const setBlankTemplate = buildEasyAction('set-blank-template');
-export const saveCurrentTemplate = buildEasyAction('save-template');
+export const createFilter = buildEasyAction('create-filter');
+export const createNewView = buildEasyAction('create-new-view');
+export const deleteFilter = buildEasyAction('delete-filter');
 export const deleteTemplate = buildEasyAction('delete-template');
-export const setTemplateValue = buildEasyAction('set-template-value');
-export const setEditMode = buildEasyAction('set-edit-mode');
-export const setWidgetValue = buildEasyAction('set-widget-value');
+export const deleteView = buildEasyAction('delete-view');
 export const modifyValueOnTemplate = buildEasyAction(
   'modify-value-on-template',
 );
-export const addWidget = buildEasyAction('add-widget-to-template');
-export const removeWidget = buildEasyAction('remove-widget-from-template');
 export const moveWidget = buildEasyAction('move-widget-in-template');
-
+export const removeWidget = buildEasyAction('remove-widget-from-template');
+export const saveCurrentTemplate = buildEasyAction('save-template');
+export const setBlankTemplate = buildEasyAction('set-blank-template');
 export const setCodeMode = buildEasyAction('set-code-mode');
-
-export const createNewView = buildEasyAction('create-new-view');
-export const deleteView = buildEasyAction('delete-view');
+export const setEditMode = buildEasyAction('set-edit-mode');
+export const setEncodingMode = buildEasyAction('set-encoding-mode');
+export const setEncodingParameter = buildEasyAction('set-encoding-param');
+export const setNewSpec = buildEasyAction('set-new-encoding');
+export const setNewSpecCode = buildEasyAction('set-new-encoding-code');
+export const setProgrammaticView = buildEasyAction('toggle-programmatic-view');
+export const setRepeats = buildEasyAction('set-repeats');
+export const setSimpleDisplay = buildEasyAction('set-simple-display');
+export const setTemplateValue = buildEasyAction('set-template-value');
+export const setWidgetValue = buildEasyAction('set-widget-value');
+export const swapXAndYChannels = buildEasyAction('swap-x-and-y-channels');
 export const switchView = buildEasyAction('switch-view');
-export const cloneView = buildEasyAction('clone-view');
-
+export const toggleDataModal = buildEasyAction('toggle-data-modal');
 export const triggerRedo = buildEasyAction('trigger-redo');
 export const triggerUndo = buildEasyAction('trigger-undo');
-
-export const toggleDataModal = buildEasyAction('toggle-data-modal');
+export const updateFilter = buildEasyAction('update-filter');
 
 export const chainActions = (actions: GenericAction[]) => (
   dispatch: Dispatch,

@@ -28,76 +28,78 @@ import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
 import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
+import TemplatePreviewColumn from './template-preview-column';
 
 import EncodingControls from './encoding-controls';
 
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
-  columns?: ColumnHeader[];
-  canUndo?: boolean;
-  canRedo?: boolean;
-  codeMode?: string;
-  editorError?: null | string;
-  editMode?: boolean;
-  spec?: Spec;
-  specCode?: string;
-  data?: any; //TODO: define the data type
-  encodingMode?: string;
   GOOSE_MODE?: boolean;
+  canRedo?: boolean;
+  canUndo?: boolean;
+  codeMode?: string;
+  columns?: ColumnHeader[];
+  currentTheme?: VegaTheme;
+  currentView?: string;
+  currentlySelectedFile?: string;
+  data?: any; //TODO: define the data type
+  dataModalOpen?: boolean;
+  editMode?: boolean;
+  editorError?: null | string;
+  encodingMode?: string;
   iMspec?: any;
   metaColumns?: ColumnHeader[];
-  currentlySelectedFile?: string;
-  currentTheme?: VegaTheme;
-  dataModalOpen?: boolean;
   missingFields?: string[];
   showProgrammaticMode?: boolean;
+  showSimpleDisplay?: boolean;
+  spec?: Spec;
+  specCode?: string;
   template?: Template;
-  templates?: Template[];
-  templateSaveState?: string;
-  templateMap?: TemplateMap;
   templateComplete?: boolean;
-  currentView?: string;
+  templateMap?: TemplateMap;
+  templateSaveState?: string;
+  templates?: Template[];
   views?: List<string>;
-
-  createNewView?: GenericAction;
-  deleteView?: GenericAction;
-  switchView?: GenericAction;
-  cloneView?: GenericAction;
 
   addToNextOpenSlot?: GenericAction;
   addWidget?: GenericAction;
-  changeMarkType?: GenericAction;
-  changeTheme?: GenericAction;
   chainActions?: GenericAction;
+  changeMarkType?: GenericAction;
   changeSelectedFile?: GenericAction;
+  changeTheme?: GenericAction;
   clearEncoding?: GenericAction;
-  createFilter?: GenericAction;
+  cloneView?: GenericAction;
   coerceType?: GenericAction;
+  createFilter?: GenericAction;
+  createNewView?: GenericAction;
+  deleteFilter?: GenericAction;
   deleteTemplate?: GenericAction;
-  setEditMode?: GenericAction;
+  deleteView?: GenericAction;
   loadCustomDataset?: GenericAction;
   loadDataFromPredefinedDatasets?: GenericAction;
   loadTemplates?: GenericAction;
   modifyValueOnTemplate?: GenericAction;
   moveWidget?: GenericAction;
-  updateFilter?: GenericAction;
-  deleteFilter?: GenericAction;
   removeWidget?: GenericAction;
   saveCurrentTemplate?: GenericAction;
   setBlankTemplate?: GenericAction;
   setCodeMode?: GenericAction;
+  setEditMode?: GenericAction;
+  setEncodingMode?: GenericAction;
   setEncodingParameter?: GenericAction;
   setNewSpec?: GenericAction;
   setNewSpecCode?: GenericAction;
-  setTemplateValue?: GenericAction;
+  setProgrammaticView?: GenericAction;
   setRepeats?: GenericAction;
-  setEncodingMode?: GenericAction;
+  setSimpleDisplay?: GenericAction;
+  setTemplateValue?: GenericAction;
   setWidgetValue?: GenericAction;
   swapXAndYChannels?: GenericAction;
+  switchView?: GenericAction;
   toggleDataModal?: GenericAction;
-  setProgrammaticView?: GenericAction;
-  triggerUndo?: GenericAction;
   triggerRedo?: GenericAction;
+  triggerUndo?: GenericAction;
+  updateFilter?: GenericAction;
 }
 
 class RootComponent extends React.Component<RootProps> {
@@ -121,26 +123,30 @@ class RootComponent extends React.Component<RootProps> {
       changeTheme,
       showProgrammaticMode,
       setProgrammaticView,
+      setSimpleDisplay,
+      showSimpleDisplay,
     } = this.props;
     return (
       <SecondaryControls
-        setProgrammaticView={setProgrammaticView}
-        showProgrammaticMode={showProgrammaticMode}
-        currentTheme={currentTheme}
         changeTheme={changeTheme}
+        currentTheme={currentTheme}
+        setProgrammaticView={setProgrammaticView}
+        setSimpleDisplay={setSimpleDisplay}
+        showProgrammaticMode={showProgrammaticMode}
+        showSimpleDisplay={showSimpleDisplay}
       />
     );
   }
 
   grammarMenu(): JSX.Element {
     const {
-      addWidget,
       addToNextOpenSlot,
+      addWidget,
       chainActions,
-      coerceType,
-      columns,
       changeMarkType,
       clearEncoding,
+      coerceType,
+      columns,
       createFilter,
       currentlySelectedFile,
       deleteFilter,
@@ -153,71 +159,78 @@ class RootComponent extends React.Component<RootProps> {
       moveWidget,
       removeWidget,
       saveCurrentTemplate,
-      spec,
       setBlankTemplate,
       setEditMode,
-      setEncodingParameter,
       setEncodingMode,
+      setEncodingParameter,
       setNewSpec,
       setRepeats,
       setTemplateValue,
       setWidgetValue,
+      showSimpleDisplay,
+      spec,
       swapXAndYChannels,
-      updateFilter,
       template,
-      templates,
       templateMap,
       templateSaveState,
+      templates,
       toggleDataModal,
+      updateFilter,
     } = this.props;
 
     return (
       <div className="flex full-height column-border">
         <DndProvider backend={HTML5Backend}>
-          <DataColumn
-            addToNextOpenSlot={addToNextOpenSlot}
-            columns={columns}
-            coerceType={coerceType}
-            currentlySelectedFile={currentlySelectedFile}
-            createFilter={createFilter}
-            iMspec={iMspec}
-            metaColumns={metaColumns}
-            toggleDataModal={toggleDataModal}
-            template={template}
-            setRepeats={setRepeats}
-            spec={spec}
-            updateFilter={updateFilter}
-            deleteFilter={deleteFilter}
-            onDropFilter={(item: any): any => createFilter({field: item.text})}
-          />
+          {showSimpleDisplay && (
+            <TemplatePreviewColumn
+              setEncodingMode={setEncodingMode}
+              templates={templates}
+            />
+          )}
+          {!showSimpleDisplay && (
+            <DataColumn
+              addToNextOpenSlot={addToNextOpenSlot}
+              coerceType={coerceType}
+              columns={columns}
+              createFilter={createFilter}
+              currentlySelectedFile={currentlySelectedFile}
+              deleteFilter={deleteFilter}
+              iMspec={iMspec}
+              metaColumns={metaColumns}
+              onDropFilter={(item: any): any =>
+                createFilter({field: item.text})
+              }
+              setRepeats={setRepeats}
+              spec={spec}
+              template={template}
+              toggleDataModal={toggleDataModal}
+              updateFilter={updateFilter}
+            />
+          )}
           <div className="flex-down full-height background-3 encoding-column-container">
-            {SHOW_TEMPLATE_CONTROLS && (
+            {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
               <EncodingControls
                 chainActions={chainActions}
-                encodingMode={encodingMode}
-                deleteTemplate={deleteTemplate}
-                templates={templates}
-                setEncodingMode={setEncodingMode}
                 clearEncoding={clearEncoding}
+                deleteTemplate={deleteTemplate}
                 editMode={editMode}
+                encodingMode={encodingMode}
+                modifyValueOnTemplate={modifyValueOnTemplate}
+                saveCurrentTemplate={saveCurrentTemplate}
                 setBlankTemplate={setBlankTemplate}
                 setEditMode={setEditMode}
+                setEncodingMode={setEncodingMode}
                 template={template}
-                saveCurrentTemplate={saveCurrentTemplate}
                 templateSaveState={templateSaveState}
-                modifyValueOnTemplate={modifyValueOnTemplate}
+                templates={templates}
               />
             )}
             {encodingMode === 'grammer' && (
               <EncodingColumn
-                iMspec={iMspec}
                 changeMarkType={changeMarkType}
-                setEncodingParameter={setEncodingParameter}
-                spec={spec}
                 columns={columns}
+                iMspec={iMspec}
                 metaColumns={metaColumns}
-                setNewSpec={setNewSpec}
-                swapXAndYChannels={swapXAndYChannels}
                 onDrop={(item: any): void => {
                   if (item.disable) {
                     return;
@@ -227,19 +240,25 @@ class RootComponent extends React.Component<RootProps> {
                 onDropFilter={(item: any): any =>
                   createFilter({field: item.text})
                 }
+                setEncodingParameter={setEncodingParameter}
+                setNewSpec={setNewSpec}
+                showSimpleDisplay={showSimpleDisplay}
+                spec={spec}
+                swapXAndYChannels={swapXAndYChannels}
               />
             )}
             {encodingMode !== 'grammer' && template && (
               <TemplateColumn
                 addWidget={addWidget}
-                editMode={editMode}
-                template={template}
-                templateMap={templateMap}
                 columns={columns}
+                editMode={editMode}
                 moveWidget={moveWidget}
                 removeWidget={removeWidget}
                 setTemplateValue={setTemplateValue}
                 setWidgetValue={setWidgetValue}
+                showSimpleDisplay={showSimpleDisplay}
+                template={template}
+                templateMap={templateMap}
               />
             )}
           </div>
@@ -365,31 +384,31 @@ function mapStateToProps({base}: {base: AppState}): any {
     (template && getMissingFields(template.toJS(), templateMap)) || [];
 
   return {
-    canUndo: base.get('undoStack').size >= 1,
+    GOOSE_MODE: base.get('GOOSE_MODE'),
     canRedo: base.get('redoStack').size >= 1,
-    columns: base.get('columns'),
+    canUndo: base.get('undoStack').size >= 1,
     codeMode: base.get('codeMode'),
+    columns: base.get('columns'),
+    currentTheme: base.get('currentTheme'),
     currentView: base.get('currentView'),
+    currentlySelectedFile: base.get('currentlySelectedFile'),
     data: base.get('data'),
+    dataModalOpen: base.get('dataModalOpen'),
+    editMode: base.get('editMode'),
     editorError: base.get('editorError'),
     encodingMode: base.get('encodingMode'),
-    editMode: base.get('editMode'),
-    spec: base.get('spec').toJS(),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
-    specCode: base.get('specCode'),
-    showProgrammaticMode: base.get('showProgrammaticMode'),
-    templateSaveState: getTemplateSaveState(base),
     missingFields,
-
-    currentlySelectedFile: base.get('currentlySelectedFile'),
-    dataModalOpen: base.get('dataModalOpen'),
+    showProgrammaticMode: base.get('showProgrammaticMode'),
+    showSimpleDisplay: base.get('showSimpleDisplay'),
+    spec: base.get('spec').toJS(),
+    specCode: base.get('specCode'),
     template: template && template.toJS(),
     templateComplete: !missingFields.length,
-    currentTheme: base.get('currentTheme'),
-    GOOSE_MODE: base.get('GOOSE_MODE'),
-    templates: base.get('templates'),
     templateMap,
+    templateSaveState: getTemplateSaveState(base),
+    templates: base.get('templates'),
     views: base.get('views'),
   };
 }
