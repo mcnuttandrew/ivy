@@ -8,9 +8,9 @@ import {trim} from '../../utils';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
-export default function MultiDataTarget(
+export default function MultiDataTargetComponent(
   props: GeneralWidget<TemplateWidget<MultiDataTargetWidget>>,
-) {
+): JSX.Element {
   const {
     widget,
     idx,
@@ -35,7 +35,7 @@ export default function MultiDataTarget(
         widget={widget}
         setName={
           editMode
-            ? (value: string) => setWidgetValue('widgetName', value, idx)
+            ? (value: string): any => setWidgetValue('widgetName', value, idx)
             : null
         }
       />
@@ -59,7 +59,7 @@ export default function MultiDataTarget(
                       <input
                         type="checkbox"
                         checked={checked}
-                        onChange={() => {
+                        onChange={(): void => {
                           if (checked) {
                             allowedTypesSet.delete(type);
                           } else {
@@ -82,7 +82,7 @@ export default function MultiDataTarget(
               <span className="tool-description">Required:</span>
               <input
                 type="checkbox"
-                onChange={() =>
+                onChange={(): any =>
                   setWidgetValue('required', !widget.widget.required, idx)
                 }
                 checked={!!widget.widget.required}
@@ -95,7 +95,7 @@ export default function MultiDataTarget(
               <input
                 value={widget.widget.minNumberOfTargets}
                 type="number"
-                onChange={event =>
+                onChange={(event): any =>
                   setWidgetValue('minNumberOfTargets', event.target.value, idx)
                 }
               />
@@ -105,7 +105,7 @@ export default function MultiDataTarget(
               <input
                 type="number"
                 value={widget.widget.maxNumberOfTargets}
-                onChange={event =>
+                onChange={(event): any =>
                   setWidgetValue('maxNumberOfTargets', event.target.value, idx)
                 }
               />

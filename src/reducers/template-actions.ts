@@ -14,7 +14,10 @@ import {
 import {BLANK_TEMPLATE} from '../templates';
 import {trim} from '../utils';
 
-export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
+export const setTemplateValues = (
+  code: string,
+  templateMap: TemplateMap,
+): string => {
   const filledInSpec = Object.entries(templateMap).reduce(
     (acc: string, keyValue: any) => {
       const [key, value] = keyValue;
@@ -36,8 +39,16 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap) => {
   return filledInSpec;
 };
 
+export function templateEval(state: AppState): AppState {
+  const filledInSpec = setTemplateValues(
+    state.getIn(['currentTemplateInstance', 'code']),
+    state.get('templateMap').toJS(),
+  );
+  return state.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
+}
+
 // for template map holes that are NOT data columns, fill em as best you can
-export function fillTemplateMapWithDefaults(state: AppState) {
+export function fillTemplateMapWithDefaults(state: AppState): AppState {
   const template = state.get('currentTemplateInstance').toJS();
   // const widgets =
   const filledInTemplateMap = template.widgets
@@ -71,18 +82,10 @@ export function fillTemplateMapWithDefaults(state: AppState) {
   return templateEval(state.set('templateMap', filledInTemplateMap));
 }
 
-export function templateEval(state: AppState) {
-  const filledInSpec = setTemplateValues(
-    state.getIn(['currentTemplateInstance', 'code']),
-    state.get('templateMap').toJS(),
-  );
-  return state.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
-}
-
 export function respondToTemplateInstanceCodeChanges(
   state: AppState,
   payload: any,
-) {
+): AppState {
   const {code, inError} = payload;
 
   const filledInSpec = setTemplateValues(code, state.get('templateMap').toJS());
@@ -92,15 +95,10 @@ export function respondToTemplateInstanceCodeChanges(
     .set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
 }
 
-export function checkIfMapComplete(
+export function getMissingFields(
   template: Template,
   templateMap: TemplateMap,
-) {
-  const missing = getMissingFields(template, templateMap);
-  return missing.length === 0;
-}
-
-export function getMissingFields(template: Template, templateMap: TemplateMap) {
+): string[] {
   const requiredFields = template.widgets
     .filter(
       d =>
@@ -114,6 +112,14 @@ export function getMissingFields(template: Template, templateMap: TemplateMap) {
     .map(d => d.fieldName);
 
   return missingFileds;
+}
+
+export function checkIfMapComplete(
+  template: Template,
+  templateMap: TemplateMap,
+): boolean {
+  const missing = getMissingFields(template, templateMap);
+  return missing.length === 0;
 }
 
 export const recieveTemplates = blindSet('templates');
@@ -137,16 +143,16 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
 
 export const setTemplateMapValue = (
   templateMap: Map<string, any>,
-  payload: any,
-) => {
-  let newMap = templateMap;
+  payload: {field: string; text: string; containingShelf?: string},
+): Map<string, any> => {
+  const newMap = templateMap;
   if (payload.containingShelf) {
     templateMap = templateMap.delete(payload.containingShelf);
   }
   return newMap.set(payload.field, payload.text);
 };
 
-function getAndRemoveTemplate(state: AppState, templateName: string) {
+function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
   return state
     .get('templates')
     .filter((template: Template) => template.templateName !== templateName);
@@ -157,7 +163,7 @@ export const saveCurrentTemplate: ActionResponse = state => {
   // this set and get on the db breaks encapsulation a little bit
   // update the template catalog / create it
   get('templates').then((templates: string[]) => {
-    let updatedTemplates = templates || [];
+    const updatedTemplates = templates || [];
     if (!updatedTemplates.find((x: string) => x === template.templateName)) {
       updatedTemplates.push(template.templateName);
     }
@@ -232,7 +238,8 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
 };
 
 // hey it's a lense
-const modifyCurrentWidgets = (state: any, mod: (x: any) => any) =>
+type modifyWidgetLense = (state: AppState, mod: (x: any) => any) => AppState;
+const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
   state.setIn(
     ['currentTemplateInstance', 'widgets'],
     mod(state.getIn(['currentTemplateInstance', 'widgets'])),

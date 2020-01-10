@@ -6,7 +6,7 @@ import {EMPTY_SPEC, toggle, blindSet} from './default-state';
 import {ColumnHeader} from '../types';
 
 import {addToNextOpenSlot} from './apt-actions';
-import {fillTemplateMapWithDefaults, templateEval} from './template-actions';
+import {fillTemplateMapWithDefaults} from './template-actions';
 import {getAllInUseFields} from '../utils';
 
 export const setProgrammaticView = toggle('showProgrammaticMode');

@@ -6,7 +6,7 @@ import {IoIosCreate, IoIosSettings} from 'react-icons/io';
 import {GenericAction} from '../actions/index';
 import EncodingModeSelector from './encoding-mode-selector';
 import {Template} from '../templates/types';
-import {classnames} from '../utils';
+import {classnames, NULL} from '../utils';
 
 interface Props {
   encodingMode: string;
@@ -29,11 +29,8 @@ const UPDATE_TEMPLATE: {[x: string]: boolean} = {
   'NOT FOUND': true,
   DIFFERENT: true,
 };
-// const UPDATE_TEMPLATE: {[x: string]: boolean} = {
-//   DIFFERENT: true,
-// };
 
-export default function EncodingControls(props: Props) {
+export default function EncodingControls(props: Props): JSX.Element {
   const {
     encodingMode,
     deleteTemplate,
@@ -68,7 +65,7 @@ export default function EncodingControls(props: Props) {
                   <input
                     type="text"
                     value={template.templateName}
-                    onChange={event =>
+                    onChange={(event): any =>
                       modifyValueOnTemplate({
                         value: event.target.value,
                         key: 'templateName',
@@ -88,7 +85,7 @@ export default function EncodingControls(props: Props) {
                 <input
                   type="text"
                   value={template.templateDescription}
-                  onChange={event =>
+                  onChange={(event): any =>
                     modifyValueOnTemplate({
                       value: event.target.value,
                       key: 'templateDescription',
@@ -109,25 +106,14 @@ export default function EncodingControls(props: Props) {
         </div>
 
         <div className="flex space-between full-width flex-wrap">
-          {/* <div
-            className={classnames({
-              'template-modification-control': true,
-              'template-modification-control--disabled': !MAKE_NEW_TEMPLATE[
-                templateSaveState
-              ],
-            })}
-          >
-            <IoIosCreate />{' '}
-            <span className="template-modification-control-label">NEW</span>
-          </div> */}
           <div
             className={classnames({
               'template-modification-control': true,
             })}
-            onClick={() => {
+            onClick={(): void => {
               chainActions([
-                () => setBlankTemplate(false),
-                () => setEditMode(true),
+                (): any => setBlankTemplate(false),
+                (): any => setEditMode(true),
               ]);
             }}
           >
@@ -138,10 +124,10 @@ export default function EncodingControls(props: Props) {
             className={classnames({
               'template-modification-control': true,
             })}
-            onClick={() => {
+            onClick={(): void => {
               chainActions([
-                () => setBlankTemplate(true),
-                () => setEditMode(true),
+                (): any => setBlankTemplate(true),
+                (): any => setEditMode(true),
               ]);
             }}
           >
@@ -153,13 +139,13 @@ export default function EncodingControls(props: Props) {
               'template-modification-control': true,
               'template-modification-control--disabled': !canSave || isGrammar,
             })}
-            onClick={() => {
+            onClick={(): void => {
               if (!canSave || isGrammar) {
                 return;
               }
               chainActions([
-                () => saveCurrentTemplate(),
-                () => setEditMode(false),
+                (): any => saveCurrentTemplate(),
+                (): any => setEditMode(false),
               ]);
             }}
           >
@@ -172,7 +158,7 @@ export default function EncodingControls(props: Props) {
               'template-modification-control': true,
               'template-modification-control--disabled': isGrammar,
             })}
-            onClick={isGrammar ? () => {} : () => setEditMode(!editMode)}
+            onClick={isGrammar ? NULL : (): any => setEditMode(!editMode)}
           >
             <IoIosSettings />
             <span className="template-modification-control-label">

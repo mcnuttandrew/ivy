@@ -1,5 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
+/* eslint-disable @typescript-eslint/camelcase */
 const TABLE_EXAMPLE: any = {
   layouts: [
     {
@@ -32,6 +33,7 @@ const TABLE_EXAMPLE: any = {
   },
   $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
 };
+/* eslint-enable @typescript-eslint/camelcase */
 
 const UNITVIS: Template = {
   templateName: 'UnitVis Test',

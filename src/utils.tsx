@@ -4,6 +4,10 @@ import {TemplateWidget, Template, WidgetSubType} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 
+/* eslint-disable @typescript-eslint/no-empty-function*/
+export const NULL = (): void => {};
+/* eslint-enable @typescript-eslint/no-empty-function*/
+
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
     .filter(name => classObject[name] && name)
@@ -45,13 +49,13 @@ export function findField(
   state: AppState,
   targetField: string,
   columnKey = 'columns',
-) {
+): ColumnHeader {
   return state
     .get(columnKey)
     .find(({field}: {field: string}) => field === targetField);
 }
 
-export function compareObjects(a: any, b: any) {
+export function compareObjects(a: any, b: any): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
@@ -61,7 +65,7 @@ const DEFAULT_CONFIG = {
   scale: {useRawDomain: false},
 };
 
-export function cleanSpec(spec: any) {
+export function cleanSpec(spec: any): any {
   if (spec.spec) {
     return {
       padding: 100,
@@ -143,13 +147,13 @@ export function getAllInUseFields(spec: any): Set<string> {
 export const extractFieldStringsForType = (
   columns: ColumnHeader[],
   type: DataType,
-) =>
+): string[] =>
   columns
     .filter((column: ColumnHeader) => column.type === type)
     .map((column: ColumnHeader) => column.field);
 
 // currently unused
-export const checkEncodingForValidity = (spec: any) => {
+export function checkEncodingForValidity(spec: any): boolean {
   const usingNested = !!spec.spec;
   if (usingNested ? spec.spec.layer : spec.layer) {
     console.log('layer');
@@ -160,19 +164,22 @@ export const checkEncodingForValidity = (spec: any) => {
     return false;
   }
   return true;
-};
+}
 
-export const getTemplate = (state: AppState, template: string) => {
+export const getTemplate = (
+  state: AppState,
+  template: string,
+): Template | null => {
   return state.get('templates').find((d: any) => d.templateName === template);
 };
 
-export function widgetInUse(code: string, widgetName: string) {
-  return code.match(new RegExp(`\\[${widgetName}\\]`, 'g'));
+export function widgetInUse(code: string, widgetName: string): boolean {
+  return Boolean(code.match(new RegExp(`\\[${widgetName}\\]`, 'g')));
 }
 export function allWidgetsInUse(
   code: string,
   widgets: List<TemplateWidget<WidgetSubType>>,
-) {
+): boolean {
   return widgets
     .filter(
       (widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'Text',
@@ -190,7 +197,7 @@ export const toSelectFormat = (
 
 // setting dimensions requires that dimension name be wrapped in a string
 // here we strip them off so that the channel cencoding can find the correct value
-export function trim(dimName: string) {
+export function trim(dimName: string): string {
   if (!dimName || dimName.length < 2) {
     return dimName;
   }
@@ -200,7 +207,7 @@ export function trim(dimName: string) {
   return dimName;
 }
 
-export const toList = (list: string[]) =>
+export const toList = (list: string[]): {display: string; value: string}[] =>
   list.map(display => ({
     display,
     value: `"${display}"`,
@@ -231,7 +238,8 @@ export function deserializeTemplate(templateString: string): Template {
   };
 }
 
-export function getTemplateSaveState(base: AppState) {
+type SaveState = 'NA' | 'NOT FOUND' | 'EQUAL' | 'DIFFERENT';
+export function getTemplateSaveState(base: AppState): SaveState {
   const template = base.get('currentTemplateInstance');
   // using the grammar mode
   if (!template) {

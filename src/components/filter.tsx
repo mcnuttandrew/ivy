@@ -15,13 +15,14 @@ export default function Filter({
   filter,
   updateFilter,
   deleteFilter,
-}: FilterProps) {
+}: FilterProps): JSX.Element {
   const {
     filter: {range, field, oneOf},
   } = filter;
   const {domain} = column;
-  const selectedVals = (oneOf || []).reduce(
-    (acc: {[x: string]: boolean}, key: string) => {
+  type selType = {[x: string]: boolean};
+  const selectedVals: selType = (oneOf || []).reduce(
+    (acc: selType, key: string) => {
       acc[key] = true;
       return acc;
     },
@@ -44,7 +45,7 @@ export default function Filter({
                 className="grid-col-2"
                 type="number"
                 value={range[0]}
-                onChange={({target: {value}}) =>
+                onChange={({target: {value}}): any =>
                   updateFilter([Number(value), range[1]])
                 }
               />
@@ -53,7 +54,7 @@ export default function Filter({
                 className="grid-col-2"
                 type="number"
                 value={range[1]}
-                onChange={({target: {value}}) =>
+                onChange={({target: {value}}): any =>
                   updateFilter([range[0], Number(value)])
                 }
               />
@@ -66,7 +67,7 @@ export default function Filter({
                 step={(domain[1] - domain[0]) / 100}
                 marks={{[domain[0]]: domain[0], [domain[1]]: domain[1]}}
                 defaultValue={range}
-                onChange={(x: number[]) => updateFilter(x)}
+                onChange={(x: number[]): any => updateFilter(x)}
               />
             </div>
           </div>
@@ -75,14 +76,14 @@ export default function Filter({
           <div className="flex-down">
             <div className="flex space-between">
               <div
-                onClick={() => {
+                onClick={(): void => {
                   updateFilter(domain);
                 }}
               >
                 Select All
               </div>
               <div
-                onClick={() => {
+                onClick={(): void => {
                   updateFilter([]);
                 }}
               >
@@ -99,7 +100,7 @@ export default function Filter({
                     <input
                       type="checkbox"
                       checked={selectedVals[option] ? true : false}
-                      onChange={() => {
+                      onChange={(): void => {
                         selectedVals[option] = !selectedVals[option];
                         updateFilter(
                           Object.entries(selectedVals)

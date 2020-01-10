@@ -28,7 +28,7 @@ interface DataColumnProps {
 }
 
 export default class DataColumn extends React.Component<DataColumnProps> {
-  render() {
+  render(): JSX.Element {
     const {
       columns,
       coerceType,
@@ -47,7 +47,9 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       onDropFilter,
     } = this.props;
     const inUseFields = getAllInUseFields(iMspec);
-    const makePill = (checkOptions: boolean) => (column: ColumnHeader) => {
+    const makePill = (checkOptions: boolean) => (
+      column: ColumnHeader,
+    ): JSX.Element => {
       return (
         <div className="pill-container" key={column.field}>
           <Pill
@@ -105,10 +107,10 @@ export default class DataColumn extends React.Component<DataColumnProps> {
                   )}
                   filter={filter}
                   key={`${idx}-filter`}
-                  updateFilter={(newFilterValue: any) => {
+                  updateFilter={(newFilterValue: any): void => {
                     updateFilter({newFilterValue, idx});
                   }}
-                  deleteFilter={() => deleteFilter(idx)}
+                  deleteFilter={(): any => deleteFilter(idx)}
                 />
               );
             })}

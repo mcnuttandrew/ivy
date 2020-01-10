@@ -3,9 +3,9 @@ import Switch from 'react-switch';
 import {SwitchWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
 
-export default function SwitchWidget(
+export default function SwitchWidgetComponent(
   props: GeneralWidget<TemplateWidget<SwitchWidget>>,
-) {
+): JSX.Element {
   const {
     widget,
     idx,
@@ -24,9 +24,9 @@ export default function SwitchWidget(
             <input
               value={widget.widgetName}
               type="text"
-              onChange={event =>
-                setWidgetValue('widgetName', event.target.value, idx)
-              }
+              onChange={(event): void => {
+                setWidgetValue('widgetName', event.target.value, idx);
+              }}
             />
           )}
           {!editMode && <div>{widget.widgetName}</div>}
@@ -37,14 +37,14 @@ export default function SwitchWidget(
             height={15}
             checkedIcon={false}
             width={50}
-            onChange={() =>
+            onChange={(): void => {
               setTemplateValue({
                 field: widget.widgetName,
                 text: isActive
                   ? widget.widget.inactiveValue
                   : widget.widget.activeValue,
-              })
-            }
+              });
+            }}
           />
         </div>
       </div>
@@ -59,13 +59,13 @@ export default function SwitchWidget(
               height={15}
               checkedIcon={false}
               width={50}
-              onChange={() =>
+              onChange={(): void => {
                 setWidgetValue(
                   'defaultsToActive',
                   !widget.widget.defaultsToActive,
                   idx,
-                )
-              }
+                );
+              }}
             />
           </div>
           <div className="flex">
@@ -74,9 +74,9 @@ export default function SwitchWidget(
               <input
                 value={widget.widget.activeValue}
                 type="text"
-                onChange={event =>
-                  setWidgetValue('activeValue', event.target.value, idx)
-                }
+                onChange={(event): void => {
+                  setWidgetValue('activeValue', event.target.value, idx);
+                }}
               />
             </div>
             <div className="flex-down">
@@ -84,9 +84,9 @@ export default function SwitchWidget(
               <input
                 value={widget.widget.inactiveValue}
                 type="text"
-                onChange={event =>
-                  setWidgetValue('inactiveValue', event.target.value, idx)
-                }
+                onChange={(event): void => {
+                  setWidgetValue('inactiveValue', event.target.value, idx);
+                }}
               />
             </div>
           </div>

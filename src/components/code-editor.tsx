@@ -5,10 +5,14 @@ import stringify from 'json-stringify-pretty-compact';
 import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
 
 import {Template, TemplateMap} from '../templates/types';
-import {synthesizeSuggestions, takeSuggestion} from '../utils/introspect';
+import {
+  synthesizeSuggestions,
+  takeSuggestion,
+  Suggestion,
+} from '../utils/introspect';
 import {GenericAction} from '../actions';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {classnames, serializeTemplate, deserializeTemplate} from '../utils';
+import {classnames, serializeTemplate} from '../utils';
 import Selector from './selector';
 
 interface Props {
@@ -32,7 +36,7 @@ interface State {
 const SHORTCUTS = [
   {
     name: 'Add Height/Width',
-    action: (code: any) => {
+    action: (code: any): any => {
       const usingNested = !!code.spec;
       if (usingNested) {
         code.spec.height = 500;
@@ -46,7 +50,7 @@ const SHORTCUTS = [
   },
   {
     name: 'Clean Up',
-    action: (code: any) => code,
+    action: (code: any): any => code,
   },
 ];
 
@@ -61,8 +65,9 @@ export default class CodeEditor extends React.Component<Props, State> {
       suggestionBox: true,
     };
   }
-  editorDidMount(editor: any) {
+  editorDidMount(editor: any): void {
     editor.focus();
+    /* eslint-disable */
     // @ts-ignore
     import('monaco-themes/themes/Cobalt.json').then(data => {
       // @ts-ignore
@@ -70,9 +75,10 @@ export default class CodeEditor extends React.Component<Props, State> {
       // @ts-ignore
       monaco.editor.setTheme('cobalt');
     });
+    /* eslint-enable */
   }
 
-  getCurrentCode() {
+  getCurrentCode(): string {
     const {template, codeMode, specCode, spec, templateMap} = this.props;
     if (codeMode === 'CODE') {
       return template ? template.code : specCode;
@@ -88,7 +94,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     }
   }
 
-  editorControls() {
+  editorControls(): JSX.Element {
     const {setNewSpecCode, codeMode} = this.props;
     const {updateMode} = this.state;
     return (
@@ -96,9 +102,12 @@ export default class CodeEditor extends React.Component<Props, State> {
         <div className="execute-code-control">
           <div
             className="execute-code-control-button"
-            onClick={() => {
+            onClick={(): void => {
+              /* eslint-disable */
               // @ts-ignore
               const model = this.refs.monaco.editor.getModel();
+              /* eslint-enable */
+
               const value = model.getValue();
               this.handleCodeUpdate(value);
             }}
@@ -106,7 +115,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             <MdPlayCircleOutline />
           </div>
           <Selector
-            onChange={newMode => {
+            onChange={(newMode): void => {
               this.setState({updateMode: newMode});
             }}
             selectedValue={updateMode}
@@ -123,7 +132,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             return (
               <button
                 key={name}
-                onClick={() => {
+                onClick={(): void => {
                   if (codeMode !== 'CODE') {
                     return;
                   }
@@ -142,7 +151,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     );
   }
 
-  handleCodeUpdate(code: string) {
+  handleCodeUpdate(code: string): void {
     const {setNewSpecCode, codeMode} = this.props;
     if (codeMode === 'TEMPLATE') {
       // TODO allow text editing on template
@@ -158,7 +167,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const {
       editorError,
       setCodeMode,
@@ -190,36 +199,45 @@ export default class CodeEditor extends React.Component<Props, State> {
                     'selected-tab': key === codeMode,
                   })}
                   key={key}
-                  onClick={() => setCodeMode(key)}
+                  onClick={(): any => setCodeMode(key)}
                 >
                   {key}
                 </div>
               );
             })}
           </div>
-          <MonacoEditor
-            ref="monaco"
-            language="json"
-            theme="monokai"
-            height={suggestionBox ? 'calc(100% - 300px)' : 'calc(100% - 110px)'}
-            value={currentCode}
-            options={EDITOR_OPTIONS}
-            onChange={(code: string) => {
-              if (codeMode === 'OUTPUT') {
-                return;
+          {
+            /*eslint-disable react/no-string-refs*/
+            <MonacoEditor
+              ref="monaco"
+              language="json"
+              theme="monokai"
+              height={
+                suggestionBox ? 'calc(100% - 300px)' : 'calc(100% - 110px)'
               }
+              value={currentCode}
+              options={EDITOR_OPTIONS}
+              onChange={(code: string): void => {
+                if (codeMode === 'OUTPUT') {
+                  return;
+                }
 
-              if (updateMode === 'automatic') {
-                this.handleCodeUpdate(code);
-              }
-            }}
-            editorDidMount={this.editorDidMount}
-          />
+                if (updateMode === 'automatic') {
+                  this.handleCodeUpdate(code);
+                }
+              }}
+              editorDidMount={this.editorDidMount}
+            />
+            /*eslint-enable react/no-string-refs*/
+          }
+
           <div className="suggestion-box" style={{height: '185px'}}>
             <div className="suggestion-box-header flex space-between">
               <h5>Suggestions</h5>
               <div
-                onClick={() => this.setState({suggestionBox: !suggestionBox})}
+                onClick={(): any =>
+                  this.setState({suggestionBox: !suggestionBox})
+                }
               >
                 {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
               </div>
@@ -229,11 +247,11 @@ export default class CodeEditor extends React.Component<Props, State> {
                 {template &&
                   codeMode === 'CODE' &&
                   synthesizeSuggestions(currentCode, template.widgets).map(
-                    (suggestion: any, idx: number) => {
+                    (suggestion: Suggestion, idx: number) => {
                       const {from, to, comment = '', sideEffect} = suggestion;
                       return (
                         <button
-                          onClick={() => {
+                          onClick={(): void => {
                             this.handleCodeUpdate(
                               takeSuggestion(currentCode, suggestion),
                             );

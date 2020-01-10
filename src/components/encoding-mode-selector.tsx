@@ -13,7 +13,8 @@ interface Props {
   chainActions: GenericAction;
 }
 
-function generateButtonActions(props: any) {
+type buttonFactory = {[action: string]: () => void};
+function generateButtonActions(props: any): (x: string) => buttonFactory {
   const {
     setEncodingMode,
     toggle,
@@ -21,22 +22,22 @@ function generateButtonActions(props: any) {
     chainActions,
     setEditMode,
   } = props;
-  return (templateName: string) => ({
-    use: () => {
+  return (templateName: string): buttonFactory => ({
+    use: (): void => {
       chainActions([
-        () => setEncodingMode(templateName),
-        () => setEditMode(false),
+        (): void => setEncodingMode(templateName),
+        (): void => setEditMode(false),
       ]);
       toggle();
     },
-    edit: () => {
+    edit: (): void => {
       chainActions([
-        () => setEncodingMode(templateName),
-        () => setEditMode(true),
+        (): void => setEncodingMode(templateName),
+        (): void => setEditMode(true),
       ]);
       toggle();
     },
-    delete: () => {
+    delete: (): void => {
       deleteTemplate(templateName);
     },
   });
@@ -48,7 +49,7 @@ function encodingRow(
   buttons: string[],
   buttonActions: any,
   idx: number,
-) {
+): JSX.Element {
   const buttonResponses = buttonActions(templateName);
   return (
     <div
@@ -78,7 +79,7 @@ function encodingRow(
   );
 }
 
-export default function EncodingMode(props: Props) {
+export default function EncodingMode(props: Props): JSX.Element {
   const {
     templates,
     setEncodingMode,
@@ -92,7 +93,7 @@ export default function EncodingMode(props: Props) {
   return (
     <Popover
       clickTarget={clickTarget}
-      body={(toggle: any) => {
+      body={(toggle: any): JSX.Element => {
         const buttonActions = generateButtonActions({
           setEncodingMode,
           toggle,
@@ -106,7 +107,7 @@ export default function EncodingMode(props: Props) {
               <input
                 type="text"
                 value={searchKey || ''}
-                onChange={event => setSearch(event.target.value)}
+                onChange={(event): any => setSearch(event.target.value)}
                 placeholder="Search for Template"
               />
             </div>

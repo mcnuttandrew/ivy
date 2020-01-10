@@ -55,7 +55,7 @@ interface Props {
   removeWidget: any;
 }
 
-function PlacementControls(props: Props) {
+function PlacementControls(props: Props): JSX.Element {
   const {code, widget, removeWidget, editMode} = props;
   const showInUse = widget.widgetType !== 'Text';
   if (!editMode) {
@@ -84,7 +84,7 @@ function PlacementControls(props: Props) {
 
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
-export default function GeneralWidget(props: Props) {
+export default function GeneralWidgetComponent(props: Props): JSX.Element {
   const {
     columns,
     editMode,
@@ -126,7 +126,9 @@ export default function GeneralWidget(props: Props) {
       }
 
       // Determine rectangle on screen
+      /* eslint-disable  @typescript-eslint/no-non-null-assertion */
       const hoverBoundingRect = ref.current!.getBoundingClientRect();
+      /* eslint-enable  @typescript-eslint/no-non-null-assertion */
 
       // Get vertical middle
       const hoverMiddleY =

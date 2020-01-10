@@ -16,28 +16,28 @@ export default function MetaColumnPicker({
   iMspec,
   columns,
   setRepeats,
-}: MetaColumnPickerTypes) {
+}: MetaColumnPickerTypes): JSX.Element {
   const selectedDomain = iMspec.getIn(['repeat', field]).toJS() || [];
   const selectedVals = new Set(selectedDomain);
   const domain = columns.map((column: ColumnHeader) => column.field);
-  const set = (repeats: string[]) => setRepeats({target: field, repeats});
+  const set = (repeats: string[]): any => setRepeats({target: field, repeats});
   const options = [
     {
       name: 'Select All',
-      effect: () => set(domain),
+      effect: (): any => set(domain),
     },
-    {name: 'Clear all', effect: () => set([])},
+    {name: 'Clear all', effect: (): any => set([])},
     {
       name: 'Measures Only',
-      effect: () => set(extractFieldStringsForType(columns, 'MEASURE')),
+      effect: (): any => set(extractFieldStringsForType(columns, 'MEASURE')),
     },
     {
       name: 'Dimensions Only',
-      effect: () => set(extractFieldStringsForType(columns, 'DIMENSION')),
+      effect: (): any => set(extractFieldStringsForType(columns, 'DIMENSION')),
     },
     {
       name: 'Time Only',
-      effect: () => set(extractFieldStringsForType(columns, 'TIME')),
+      effect: (): any => set(extractFieldStringsForType(columns, 'TIME')),
     },
   ];
 
@@ -68,7 +68,7 @@ export default function MetaColumnPicker({
                   <input
                     type="checkbox"
                     checked={selectedVals.has(option)}
-                    onChange={() => {
+                    onChange={(): void => {
                       if (selectedVals.has(option)) {
                         selectedVals.delete(option);
                       } else {

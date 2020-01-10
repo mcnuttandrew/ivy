@@ -7,7 +7,9 @@ import Popover from '../popover';
 
 import {GeneralWidget} from './general-widget';
 
-function DefaultValue(props: GeneralWidget<TemplateWidget<ListWidget>>) {
+function DefaultValue(
+  props: GeneralWidget<TemplateWidget<ListWidget>>,
+): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
   return (
     <div className="flex">
@@ -15,13 +17,17 @@ function DefaultValue(props: GeneralWidget<TemplateWidget<ListWidget>>) {
       <Selector
         options={widget.widget.allowedValues}
         selectedValue={widget.widget.defaultValue}
-        onChange={(value: any) => setWidgetValue('defaultValue', value, idx)}
+        onChange={(value: any): any =>
+          setWidgetValue('defaultValue', value, idx)
+        }
       />
     </div>
   );
 }
 
-function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
+function OptionController(
+  props: GeneralWidget<TemplateWidget<ListWidget>>,
+): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
   return (
     <Popover
@@ -31,7 +37,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
           <MdSettings /> Options{' '}
         </span>
       }
-      body={() => {
+      body={(): JSX.Element => {
         return (
           <div>
             <h3>List Options</h3>
@@ -40,7 +46,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
                 <div key={jdx} className="flex">
                   <div
                     className="delete-option-button"
-                    onClick={() => {
+                    onClick={(): void => {
                       const updated = [...widget.widget.allowedValues].filter(
                         (_, jdx) => jdx !== idx,
                       );
@@ -53,7 +59,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
                     <input
                       value={value.value}
                       type="text"
-                      onChange={event => {
+                      onChange={(event): any => {
                         const newVal = event.target.value;
                         const updatedWidgets = widget.widget.allowedValues.map(
                           (d, indx) =>
@@ -69,7 +75,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
               );
             })}
             <button
-              onClick={() => {
+              onClick={(): void => {
                 const updated = [
                   ...widget.widget.allowedValues,
                   {display: 'X', value: 'X'},
@@ -86,9 +92,9 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>) {
   );
 }
 
-export default function ListWidget(
+export default function ListWidgetComponent(
   props: GeneralWidget<TemplateWidget<ListWidget>>,
-) {
+): JSX.Element {
   const {
     widget,
     idx,
@@ -104,7 +110,7 @@ export default function ListWidget(
           <input
             value={widget.widgetName}
             type="text"
-            onChange={event =>
+            onChange={(event): any =>
               setWidgetValue('widgetName', event.target.value, idx)
             }
           />
@@ -113,7 +119,7 @@ export default function ListWidget(
         <Selector
           options={widget.widget.allowedValues}
           selectedValue={templateMap[widget.widgetName]}
-          onChange={(value: any) => {
+          onChange={(value: any): any => {
             setTemplateValue({field: widget.widgetName, text: value});
           }}
         />

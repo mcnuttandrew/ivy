@@ -22,7 +22,7 @@ interface TemplateColumnProps {
 export default class TemplateColumn extends React.Component<
   TemplateColumnProps
 > {
-  render() {
+  render(): JSX.Element {
     const {
       addWidget,
       columns,
@@ -62,9 +62,11 @@ export default class TemplateColumn extends React.Component<
                   widget={widget}
                   idx={idx}
                   key={`${idx}`}
-                  removeWidget={() => removeWidget(idx)}
-                  moveWidget={(fromIdx, toIdx) => moveWidget({fromIdx, toIdx})}
-                  setWidgetValue={(key: string, value: any, idx: number) =>
+                  removeWidget={(): any => removeWidget(idx)}
+                  moveWidget={(fromIdx, toIdx): any =>
+                    moveWidget({fromIdx, toIdx})
+                  }
+                  setWidgetValue={(key: string, value: any, idx: number): any =>
                     setWidgetValue({key, value, idx})
                   }
                 />

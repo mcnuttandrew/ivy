@@ -13,7 +13,7 @@ import {compile} from 'vega-lite';
 
 // setting dimensions requires that dimension name be wrapped in a string
 // here we strip them off so that the channel cencoding can find the correct value
-function specialTrim(dimName: string) {
+function specialTrim(dimName: string): string {
   if (!dimName || dimName.length < 3) {
     return dimName;
   }
@@ -87,11 +87,11 @@ export function inferPossibleDataTargets(spec: any): string[] {
 }
 
 // https://www.rosettacode.org/wiki/Balanced_brackets#Iterative
-function isBalanced(str: string) {
+function isBalanced(str: string): boolean {
   // a very very dumb hack
   return (str.match(/\[/g) || []).length === (str.match(/\]/g) || []).length;
 }
-function safeParse(code: string) {
+function safeParse(code: string): string | boolean {
   let x = null;
   if (!isBalanced(code)) {
     return false;
@@ -105,35 +105,54 @@ function safeParse(code: string) {
 }
 
 const DUMMY = 'xxxxxEXAMPLExxxx';
-function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]) {
-  return widgets.reduce((acc: any, widget: TemplateWidget<WidgetSubType>) => {
-    const widgetType = widget.widgetType;
-    if (widgetType === 'DataTarget') {
-      acc[widget.widgetName] = `"${DUMMY}"`;
-    }
-    if (widgetType === 'MultiDataTarget') {
-      acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
-    }
-    if (widgetType === 'List') {
-      const localW = widget as TemplateWidget<ListWidget>;
-      acc[widget.widgetName] = localW.widget.defaultValue;
-    }
-    if (widgetType === 'Switch') {
-      const localW = widget as TemplateWidget<SwitchWidget>;
-      acc[widget.widgetName] = localW.widget.activeValue;
-    }
-    if (widgetType === 'Slider') {
-      const localW = widget as TemplateWidget<SliderWidget>;
-      acc[widget.widgetName] = localW.widget.defaultValue;
-    }
-    return acc;
-  }, {});
+type generateFullTemplateMapReturn = {
+  [x: string]: any;
+};
+function generateFullTemplateMap(
+  widgets: TemplateWidget<WidgetSubType>[],
+): generateFullTemplateMapReturn {
+  return widgets.reduce(
+    (
+      acc: generateFullTemplateMapReturn,
+      widget: TemplateWidget<WidgetSubType>,
+    ) => {
+      const widgetType = widget.widgetType;
+      if (widgetType === 'DataTarget') {
+        acc[widget.widgetName] = `"${DUMMY}"`;
+      }
+      if (widgetType === 'MultiDataTarget') {
+        acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
+      }
+      if (widgetType === 'List') {
+        const localW = widget as TemplateWidget<ListWidget>;
+        acc[widget.widgetName] = localW.widget.defaultValue;
+      }
+      if (widgetType === 'Switch') {
+        const localW = widget as TemplateWidget<SwitchWidget>;
+        acc[widget.widgetName] = localW.widget.activeValue;
+      }
+      if (widgetType === 'Slider') {
+        const localW = widget as TemplateWidget<SliderWidget>;
+        acc[widget.widgetName] = localW.widget.defaultValue;
+      }
+      return acc;
+    },
+    {},
+  );
+}
+
+export interface Suggestion {
+  from: string;
+  to: string;
+  comment: string;
+  sideEffect?: any;
+  simpleReplace: boolean;
 }
 
 export function synthesizeSuggestions(
   code: string,
   widgets: TemplateWidget<WidgetSubType>[],
-) {
+): Suggestion[] {
   const parsedCode = safeParse(
     setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))),
   );
@@ -184,15 +203,15 @@ export function synthesizeSuggestions(
       simpleReplace: true,
     });
   }
-  // @ts-ignore
-  const dedup = Object.values(
+
+  const dedup: Suggestion[] = Object.values(
     suggestions.reduce((acc, row) => ({...acc, [row.comment]: row}), {}),
   );
 
   return dedup;
 }
 
-export function takeSuggestion(code: string, suggestion: any) {
+export function takeSuggestion(code: string, suggestion: Suggestion): string {
   const {simpleReplace, from, to} = suggestion;
   return simpleReplace
     ? code.replace(from, to)

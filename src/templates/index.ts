@@ -8,6 +8,7 @@ import {
   SliderWidget,
   TemplateWidget,
   Template,
+  WidgetSubType,
 } from './types';
 import {EMPTY_SPEC} from '../reducers/default-state';
 import {DataType} from '../types';
@@ -31,8 +32,9 @@ export const BLANK_TEMPLATE: Template = {
 // META COLUMNS NOT CURRENTLY ALLOWED IN TEMPLATES
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 // const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
-export const widgetFactory = {
-  DataTarget: (idx: number) =>
+type WidgetFactoryFunc = (idx: number) => TemplateWidget<WidgetSubType>;
+export const widgetFactory: {[widgetType: string]: WidgetFactoryFunc} = {
+  DataTarget: idx =>
     ({
       widgetName: `Dim${idx}`,
       widgetType: 'DataTarget',
@@ -41,7 +43,7 @@ export const widgetFactory = {
         required: true,
       },
     } as TemplateWidget<DataTargetWidget>),
-  MultiDataTarget: (idx: number) =>
+  MultiDataTarget: idx =>
     ({
       widgetName: `MultiDim${idx}`,
       widgetType: 'MultiDataTarget',
@@ -51,7 +53,7 @@ export const widgetFactory = {
         minNumberOfTargets: 0,
       },
     } as TemplateWidget<MultiDataTargetWidget>),
-  List: (idx: number) =>
+  List: idx =>
     ({
       widgetName: `ListItem${idx}`,
       widgetType: 'List',
@@ -61,7 +63,7 @@ export const widgetFactory = {
       },
     } as TemplateWidget<ListWidget>),
 
-  Switch: (idx: number) =>
+  Switch: idx =>
     ({
       widgetName: `Switch${idx}`,
       widgetType: 'Switch',
@@ -71,7 +73,7 @@ export const widgetFactory = {
         defaultsToActive: true,
       },
     } as TemplateWidget<SwitchWidget>),
-  Text: (idx: number) =>
+  Text: idx =>
     ({
       widgetName: `Text${idx}`,
       widgetType: 'Text',
@@ -79,7 +81,7 @@ export const widgetFactory = {
         text: '',
       },
     } as TemplateWidget<TextWidget>),
-  Slider: (idx: number) =>
+  Slider: idx =>
     ({
       widgetName: `Slider${idx}`,
       widgetType: 'Slider',
@@ -92,8 +94,8 @@ export const widgetFactory = {
     } as TemplateWidget<SliderWidget>),
 };
 
-export const preconfiguredWidgets = {
-  'Discrete Color Options': (idx: number) =>
+export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
+  'Discrete Color Options': idx =>
     ({
       widgetName: `ColorList${idx}`,
       widgetType: 'List',
@@ -102,7 +104,7 @@ export const preconfiguredWidgets = {
         defaultValue: null,
       },
     } as TemplateWidget<ListWidget>),
-  'Data Types Options': (idx: number) =>
+  'Data Types Options': idx =>
     ({
       widgetName: `DataTypeOptions${idx}`,
       widgetType: 'List',

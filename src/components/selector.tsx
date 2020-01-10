@@ -6,14 +6,14 @@ interface SelectorProps {
   selectedValue?: any;
 }
 
-export default function Selector(props: SelectorProps) {
+export default function Selector(props: SelectorProps): JSX.Element {
   const {options, onChange, selectedValue} = props;
 
   return (
     <select
       className="hydra-selector"
       value={selectedValue}
-      onChange={({target: {value}}) => onChange(value)}
+      onChange={({target: {value}}): any => onChange(value)}
     >
       {options.map(
         ({display, value}: {display: any; value: any}, idx: number) => (

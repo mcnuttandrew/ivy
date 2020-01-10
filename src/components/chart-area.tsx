@@ -3,7 +3,7 @@ import React from 'react';
 import VegaWrapper from './vega-wrap';
 import {VegaTheme} from '../types';
 import {Template} from '../templates/types';
-import {cleanSpec, classnames} from '../utils';
+import {classnames} from '../utils';
 import {MdContentCopy, MdNoteAdd} from 'react-icons/md';
 import {GenericAction} from '../actions';
 
@@ -25,7 +25,7 @@ interface ChartAreaProps {
 }
 
 export default class ChartArea extends React.Component<ChartAreaProps> {
-  render() {
+  render(): JSX.Element {
     const {
       spec,
       data,
@@ -57,7 +57,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               return (
                 <div
                   key={view}
-                  onClick={() => switchView(view)}
+                  onClick={(): any => switchView(view)}
                   className={classnames({
                     'view-control': true,
                     selected: view === currentView,

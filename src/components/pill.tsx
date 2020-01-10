@@ -20,7 +20,7 @@ export interface PillProps {
   coerceType?: GenericAction;
 }
 
-export default function Pill(props: PillProps) {
+export default function Pill(props: PillProps): JSX.Element {
   const {
     column,
     inEncoding,
@@ -56,7 +56,7 @@ export default function Pill(props: PillProps) {
         <div>
           <div
             className="coercion-tooltip-background"
-            onClick={() => toggleOpen(false)}
+            onClick={(): any => toggleOpen(false)}
           />
           <div className="coercion-tooltip-container">
             <div className="coercion-tooltip">
@@ -67,7 +67,7 @@ export default function Pill(props: PillProps) {
                     className={classnames({
                       'selected-dimension': column.type === type,
                     })}
-                    onClick={() => coerceType({field, type})}
+                    onClick={(): any => coerceType({field, type})}
                     key={type}
                   >
                     {type}
@@ -75,7 +75,9 @@ export default function Pill(props: PillProps) {
                 );
               })}
               <button
-                onClick={() => coerceType({field, type: column.originalType})}
+                onClick={(): any =>
+                  coerceType({field, type: column.originalType})
+                }
               >
                 RESET TO ORIGINAL
               </button>
@@ -84,7 +86,10 @@ export default function Pill(props: PillProps) {
         </div>
       )}
       {!isMeta && !inEncoding && coerceType && (
-        <div className="fixed-symbol-width" onClick={() => toggleOpen(!open)}>
+        <div
+          className="fixed-symbol-width"
+          onClick={(): any => toggleOpen(!open)}
+        >
           {<GoTriangleDown />}
         </div>
       )}
@@ -95,7 +100,7 @@ export default function Pill(props: PillProps) {
       {!isMeta && !inEncoding && createFilter && (
         <div
           className="fixed-symbol-width"
-          onClick={() => {
+          onClick={(): any => {
             if (inEncoding) {
               return;
             }
@@ -108,7 +113,7 @@ export default function Pill(props: PillProps) {
       {!isMeta && !inEncoding && addToNextOpenSlot && (
         <div
           className="fixed-symbol-width"
-          onClick={() => addToNextOpenSlot(column)}
+          onClick={(): any => addToNextOpenSlot(column)}
         >
           <GoPlus />
         </div>
@@ -116,7 +121,7 @@ export default function Pill(props: PillProps) {
       {inEncoding && (
         <div
           className="fixed-symbol-width"
-          onClick={() =>
+          onClick={(): any =>
             setEncodingParameter({text: null, field: containingField, column})
           }
         >

@@ -16,7 +16,7 @@ interface TemplateShelf {
   widget: TemplateWidget<DataTargetWidget>;
 }
 
-export default function TemplateShelf(props: TemplateShelf) {
+export default function TemplateShelf(props: TemplateShelf): JSX.Element {
   const {channelEncoding, columns, field, onDrop, widget, setName} = props;
 
   // copy/pasta for drag and drop
@@ -48,7 +48,7 @@ export default function TemplateShelf(props: TemplateShelf) {
               <input
                 type="text"
                 value={widget.widgetName}
-                onChange={event => setName(event.target.value)}
+                onChange={(event): any => setName(event.target.value)}
               />
             )}
             <div className="flex">

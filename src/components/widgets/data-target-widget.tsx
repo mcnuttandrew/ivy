@@ -8,9 +8,9 @@ import TemplateShelf from '../template-shelf';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
-export default function DataTargetWidget(
+export default function DataTargetWidgetComponent(
   props: GeneralWidget<TemplateWidget<DataTargetWidget>>,
-) {
+): JSX.Element {
   const {
     widget,
     idx,
@@ -42,7 +42,9 @@ export default function DataTargetWidget(
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
-        setName={(value: string) => setWidgetValue('widgetName', value, idx)}
+        setName={(value: string): any =>
+          setWidgetValue('widgetName', value, idx)
+        }
       />
       <div className="flex space-evenly">
         <div className="flex-down">
@@ -58,7 +60,7 @@ export default function DataTargetWidget(
                   <input
                     type="checkbox"
                     checked={checked}
-                    onChange={event => {
+                    onChange={(): void => {
                       if (checked) {
                         allowedTypesSet.delete(type);
                       } else {
@@ -80,7 +82,7 @@ export default function DataTargetWidget(
           <span className="tool-description">Required:</span>
           <input
             type="checkbox"
-            onChange={() =>
+            onChange={(): any =>
               setWidgetValue('required', !widget.widget.required, idx)
             }
             checked={!!widget.widget.required}

@@ -11,8 +11,9 @@ const PAGE_SIZE = 30;
 const abstractCompare = (sortKey: string, reverseSort: boolean) => (
   a: any,
   b: any,
-) => (reverseSort ? -1 : 1) * `${a[sortKey]}`.localeCompare(`${b[sortKey]}`);
-export default function DataTable(props: Props) {
+): number =>
+  (reverseSort ? -1 : 1) * `${a[sortKey]}`.localeCompare(`${b[sortKey]}`);
+export default function DataTable(props: Props): JSX.Element {
   const {
     spec: {columns = []},
     data = [],
@@ -30,16 +31,16 @@ export default function DataTable(props: Props) {
   return (
     <div className="hydra-data-table">
       <div className="flex hydra-data-table-controls">
-        <button onClick={() => setPage(0)}>Reset</button>
+        <button onClick={(): any => setPage(0)}>Reset</button>
         <button
           disabled={!nextPageExists}
-          onClick={() => nextPageExists && setPage(page + 1)}
+          onClick={(): any => nextPageExists && setPage(page + 1)}
         >
           Next Page
         </button>
         <button
           disabled={!prevPageExists}
-          onClick={() => prevPageExists && setPage(page - 1)}
+          onClick={(): any => prevPageExists && setPage(page - 1)}
         >
           Prev Page
         </button>
@@ -53,7 +54,7 @@ export default function DataTable(props: Props) {
               return (
                 <th
                   key={column}
-                  onClick={() =>
+                  onClick={(): any =>
                     isSort ? setSortOrder(!reverseSort) : setSort(column)
                   }
                 >

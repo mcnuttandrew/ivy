@@ -16,7 +16,7 @@ interface Props {
   setName?: any;
 }
 
-export default function TemplateMultiShelf(props: Props) {
+export default function TemplateMultiShelf(props: Props): JSX.Element {
   const {channelEncodings, columns, field, onDrop, widget, setName} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
@@ -55,7 +55,7 @@ export default function TemplateMultiShelf(props: Props) {
             <input
               type="text"
               value={widget.widgetName}
-              onChange={event => setName(event.target.value)}
+              onChange={(event): any => setName(event.target.value)}
             />
           )}
           <div className="flex">
@@ -73,7 +73,7 @@ export default function TemplateMultiShelf(props: Props) {
                 containingShelf={field}
                 containingField={field}
                 column={columnHeader}
-                setEncodingParameter={(x: any) => {
+                setEncodingParameter={(x: any): void => {
                   const text = channelEncodings.filter(
                     d => d !== x.column.field,
                   );

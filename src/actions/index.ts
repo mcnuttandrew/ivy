@@ -3,6 +3,7 @@ import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
+import {Template} from '../templates/types';
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
@@ -14,8 +15,11 @@ interface GenericActionCreator {
   (type: string): GenericAction;
 }
 
-const buildEasyAction: GenericActionCreator = type => payload => dispatch =>
+const buildEasyAction: GenericActionCreator = type => payload => (
+  dispatch,
+): void => {
   dispatch({type, payload});
+};
 // TODO: organize these in literally any way
 export const setEncodingParameter = buildEasyAction('set-encoding-param');
 export const swapXAndYChannels = buildEasyAction('swap-x-and-y-channels');
@@ -59,15 +63,17 @@ export const toggleDataModal = buildEasyAction('toggle-data-modal');
 
 export const chainActions = (actions: GenericAction[]) => (
   dispatch: Dispatch,
-) => {
+): void => {
   executePromisesInSeries(
     actions.map((action: GenericAction) => {
-      return () => Promise.resolve().then(() => action(dispatch));
+      return (): Promise<any> => Promise.resolve().then(() => action(dispatch));
     }),
   );
 };
 
-export const generateTypeInferences: GenericAction = data => dispatch => {
+export const generateTypeInferences: GenericAction = data => (
+  dispatch,
+): void => {
   dispatch({
     type: 'recieve-type-inferences',
     payload: computeColMeta(data).map((columnMeta: any) => {
@@ -80,26 +86,31 @@ export const generateTypeInferences: GenericAction = data => dispatch => {
   });
 };
 
-const csvReader = (data: string) => csvParse(data);
-const jsonReader = (data: string) => JSON.parse(data);
-const getReader = (fileName: string) => {
+type dataRow = {[x: string]: any};
+type Reader = (x: string) => dataRow[];
+const csvReader = (data: string): dataRow[] => csvParse(data);
+const jsonReader = (data: string): dataRow[] => JSON.parse(data);
+const getReader = (fileName: string): Reader => {
   if (fileName.includes('.csv')) {
     return csvReader;
   }
   if (fileName.includes('.json')) {
     return jsonReader;
   }
-  return (): any[] => [];
+  return (): dataRow[] => [];
 };
 
 // when the application is deployed on the internet don't try to get data from a folder that doesn't exisit
 const vegaDatasetAdress =
   window.location.origin === 'http://localhost:8080'
-    ? (fileName: string) => `node_modules/vega-datasets/data/${fileName}`
-    : (fileName: string) =>
+    ? (fileName: string): string =>
+        `node_modules/vega-datasets/data/${fileName}`
+    : (fileName: string): string =>
         `https://raw.githubusercontent.com/vega/vega-datasets/master/data/${fileName}`;
 
-export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatch => {
+export const loadDataFromPredefinedDatasets: GenericAction = fileName => (
+  dispatch,
+): void => {
   fetch(vegaDatasetAdress(fileName))
     .then(d => d.text())
     .then(d => getReader(fileName)(d))
@@ -113,7 +124,7 @@ export const loadDataFromPredefinedDatasets: GenericAction = fileName => dispatc
     });
 };
 
-export const loadCustomDataset: GenericAction = file => dispatch => {
+export const loadCustomDataset: GenericAction = file => (dispatch): void => {
   const {fileName, data} = file;
   dispatch({
     type: 'change-selected-file',
@@ -129,14 +140,14 @@ export const loadCustomDataset: GenericAction = file => dispatch => {
   generateTypeInferences(liveData)(dispatch);
 };
 
-export const loadTemplates: GenericAction = () => dispatch => {
+export const loadTemplates: GenericAction = () => (dispatch): void => {
   get('templates')
     .then((templates: string[]) => {
       return Promise.all(
         (templates || []).map((templateKey: string) => get(templateKey)),
       );
     })
-    .then((templates: any) => {
+    .then((templates: Template[]) => {
       const seen: any = {};
       const payload = [
         ...DEFAULT_TEMPLATES,
@@ -152,7 +163,9 @@ export const loadTemplates: GenericAction = () => dispatch => {
     });
 };
 
-export const changeSelectedFile: GenericAction = fileName => dispatch => {
+export const changeSelectedFile: GenericAction = fileName => (
+  dispatch,
+): void => {
   dispatch({
     type: 'change-selected-file',
     payload: fileName,

@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
 import {
-  Template,
   TemplateWidget,
   TemplateMap,
   DataTargetWidget,
@@ -114,8 +113,9 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
     const oldVal = templateMap[selectedWidget.widgetName] || [];
     return setTemplateValue(state, {
       field: selectedWidget.widgetName,
-      // @ts-ignore
-      text: oldVal.filter(key => key !== payload.field).concat([payload.field]),
+      text: (oldVal as string[])
+        .filter((key: any) => key !== payload.field)
+        .concat([payload.field]),
     });
   }
   // else is single drop target

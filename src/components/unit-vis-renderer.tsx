@@ -6,7 +6,7 @@ interface Props {
   data: any;
 }
 
-export default function Chart(props: Props) {
+export default function Chart(props: Props): JSX.Element {
   const {spec, data} = props;
   const specString = JSON.stringify(spec);
   useEffect(() => {
@@ -17,8 +17,12 @@ export default function Chart(props: Props) {
       oldSvg.remove();
     }
     if (spec) {
+      // D O N T  T E L L  M E  W H A T  T O  D O
+      // Y O U   A R E  N O T  M Y  D A D
+      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       UnitVis('special-hydra-target', specCopy);
+      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     }
   }, [specString]);
 

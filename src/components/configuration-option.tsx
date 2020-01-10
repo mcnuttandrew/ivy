@@ -14,7 +14,9 @@ interface ConfigurationOptionProps {
   setNewSpec: GenericAction;
 }
 
-export default function ConfigurationOption(props: ConfigurationOptionProps) {
+export default function ConfigurationOption(
+  props: ConfigurationOptionProps,
+): JSX.Element {
   const {
     option: {
       optionType,
@@ -35,7 +37,9 @@ export default function ConfigurationOption(props: ConfigurationOptionProps) {
         <Selector
           options={options}
           selectedValue={selected || ''}
-          onChange={(value: any) => setNewSpec(optionSetter(iMspec, value))}
+          onChange={(value: any): any =>
+            setNewSpec(optionSetter(iMspec, value))
+          }
         />
       )}
       {optionType === 'Switch' && (
@@ -46,14 +50,14 @@ export default function ConfigurationOption(props: ConfigurationOptionProps) {
           height={15}
           checkedIcon={false}
           width={50}
-          onChange={() => setNewSpec(optionSetter(iMspec, !selected))}
+          onChange={(): any => setNewSpec(optionSetter(iMspec, !selected))}
         />
       )}
 
       {optionType !== 'Switch' && (
         <div
           className="clear-option"
-          onClick={() => setNewSpec(optionSetter(iMspec, optionDefault))}
+          onClick={(): any => setNewSpec(optionSetter(iMspec, optionDefault))}
         >
           <TiDeleteOutline />
         </div>

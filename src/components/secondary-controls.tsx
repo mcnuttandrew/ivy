@@ -23,7 +23,9 @@ export interface SecondaryHeaderProps {
   setProgrammaticView: GenericAction;
 }
 
-export default function SecondaryHeader(props: SecondaryHeaderProps) {
+export default function SecondaryHeader(
+  props: SecondaryHeaderProps,
+): JSX.Element {
   const {
     changeTheme,
     currentTheme,
@@ -40,7 +42,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
             return (
               <div
                 key={mode}
-                onClick={() =>
+                onClick={(): any =>
                   setProgrammaticView(mode === 'HIDE' ? false : true)
                 }
                 className={classnames({
@@ -59,7 +61,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps) {
           <span>Theme:</span>
           <Selector
             selectedValue={currentTheme}
-            onChange={value => changeTheme(value)}
+            onChange={(value): any => changeTheme(value)}
             options={VEGA_THEMES}
           />
         </span>

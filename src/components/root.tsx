@@ -101,7 +101,7 @@ interface RootProps {
 }
 
 class RootComponent extends React.Component<RootProps> {
-  componentDidMount() {
+  componentDidMount(): void {
     // on start load the default selected file
     if (!this.props.GOOSE_MODE) {
       this.props.loadDataFromPredefinedDatasets(
@@ -111,11 +111,11 @@ class RootComponent extends React.Component<RootProps> {
     this.props.loadTemplates();
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
+  componentDidCatch(error: any, errorInfo: any): void {
     console.error('ERRPR', error, errorInfo);
   }
 
-  secondaryControls() {
+  secondaryControls(): JSX.Element {
     const {
       currentTheme,
       changeTheme,
@@ -132,7 +132,7 @@ class RootComponent extends React.Component<RootProps> {
     );
   }
 
-  grammarMenu() {
+  grammarMenu(): JSX.Element {
     const {
       addWidget,
       addToNextOpenSlot,
@@ -188,7 +188,7 @@ class RootComponent extends React.Component<RootProps> {
             spec={spec}
             updateFilter={updateFilter}
             deleteFilter={deleteFilter}
-            onDropFilter={(item: any) => createFilter({field: item.text})}
+            onDropFilter={(item: any): any => createFilter({field: item.text})}
           />
           <div className="flex-down full-height background-3 encoding-column-container">
             {SHOW_TEMPLATE_CONTROLS && (
@@ -218,13 +218,15 @@ class RootComponent extends React.Component<RootProps> {
                 metaColumns={metaColumns}
                 setNewSpec={setNewSpec}
                 swapXAndYChannels={swapXAndYChannels}
-                onDrop={(item: any) => {
+                onDrop={(item: any): void => {
                   if (item.disable) {
                     return;
                   }
                   setEncodingParameter(item);
                 }}
-                onDropFilter={(item: any) => createFilter({field: item.text})}
+                onDropFilter={(item: any): any =>
+                  createFilter({field: item.text})
+                }
               />
             )}
             {encodingMode !== 'grammer' && template && (
@@ -246,7 +248,7 @@ class RootComponent extends React.Component<RootProps> {
     );
   }
 
-  programmaticMenu() {
+  programmaticMenu(): JSX.Element {
     const {
       addWidget,
       setNewSpecCode,
@@ -275,7 +277,7 @@ class RootComponent extends React.Component<RootProps> {
     );
   }
 
-  chartArea() {
+  chartArea(): JSX.Element {
     const {
       cloneView,
       createNewView,
@@ -310,7 +312,7 @@ class RootComponent extends React.Component<RootProps> {
     );
   }
 
-  render() {
+  render(): JSX.Element {
     const {
       canRedo,
       canUndo,

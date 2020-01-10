@@ -1,15 +1,17 @@
 import Immutable from 'immutable';
 import stringify from 'json-stringify-pretty-compact';
-import SCATTERPLOT from '../templates/example-templates/scatterplot';
+// import SCATTERPLOT from '../templates/example-templates/scatterplot';
 export type AppState = Immutable.Map<any, any>;
 
 export interface ActionResponse {
   (state: AppState, payload: any): AppState;
 }
 
-export const blindSet = (key: string): ActionResponse => (state, payload) =>
-  state.set(key, payload);
-export const toggle = (key: string): ActionResponse => state =>
+export const blindSet = (key: string): ActionResponse => (
+  state,
+  payload,
+): AppState => state.set(key, payload);
+export const toggle = (key: string): ActionResponse => (state): AppState =>
   state.set(key, !state.get(key));
 
 // TODO undo this embarrasment
