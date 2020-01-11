@@ -120,6 +120,7 @@ export default function EncodingMode(props: Props): JSX.Element {
                 -1,
               )}
               {templates
+                .filter(template => template.templateName !== '_____none_____')
                 .filter((template: Template) => {
                   const {templateName, templateDescription} = template;
                   const matchDescription =

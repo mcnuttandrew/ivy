@@ -6,22 +6,25 @@ import {GenericAction} from '../actions/index';
 interface Props {
   templates: Template[];
   setEncodingMode: GenericAction;
+  encodingMode: string;
 }
 
-function encodingMode(
+function renderEncodingModeOption(
   templateName: string,
   templateDescription: string,
   idx: number,
   setEncodingMode: GenericAction,
+  encodingMode: string,
 ): JSX.Element {
   return (
     <div
-      className="encoding-selection-option flex"
+      className={classnames({
+        'encoding-selection-option': true,
+        flex: true,
+        encodingMode: encodingMode === templateName,
+      })}
       key={`${templateName}-${idx}`}
-      onClick={(): void => {
-        setEncodingMode(templateName);
-        console.log('ugh');
-      }}
+      onClick={(): any => setEncodingMode(templateName)}
     >
       <div>
         <img src="./assets/example-chart.png" />
@@ -36,7 +39,7 @@ function encodingMode(
 
 export default class TemplatePreviewColumn extends React.Component<Props> {
   render(): JSX.Element {
-    const {templates, setEncodingMode} = this.props;
+    const {templates, setEncodingMode, encodingMode} = this.props;
 
     return (
       <div className="full-height">
@@ -47,20 +50,24 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
           })}
         >
           <div>Available Charts</div>
-          {encodingMode(
+          {renderEncodingModeOption(
             'grammer',
             'Tableau-style grammar of graphics',
             -1,
             setEncodingMode,
+            encodingMode,
           )}
-          {templates.map((template, idx) =>
-            encodingMode(
-              template.templateName,
-              template.templateDescription,
-              idx,
-              setEncodingMode,
-            ),
-          )}
+          {templates
+            .filter(template => template.templateName !== '_____none_____')
+            .map((template, idx) =>
+              renderEncodingModeOption(
+                template.templateName,
+                template.templateDescription,
+                idx,
+                setEncodingMode,
+                encodingMode,
+              ),
+            )}
         </div>
       </div>
     );

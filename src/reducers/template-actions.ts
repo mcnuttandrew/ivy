@@ -1,6 +1,7 @@
 import {get, set} from 'idb-keyval';
 import Immutable, {Map} from 'immutable';
-import {ActionResponse, AppState, blindSet} from './default-state';
+import {ActionResponse, AppState} from './default-state';
+// import {setEncodingMode} from './gui-actions';
 import {
   Template,
   TemplateMap,
@@ -122,7 +123,10 @@ export function checkIfMapComplete(
   return missing.length === 0;
 }
 
-export const recieveTemplates = blindSet('templates');
+export const recieveTemplates: ActionResponse = (state, payload) => {
+  return state.set('templates', payload);
+  // return setEncodingMode(state.set('templates', payload), '_____none_____');
+};
 
 export const setTemplateValue: ActionResponse = (state, payload) => {
   let newState = state;

@@ -40,7 +40,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       template,
       templateComplete,
     } = this.props;
-    const showChart = !template || templateComplete;
+    const noneTemplate = template && template.templateLanguage === 'none';
+    const showChart = !noneTemplate && (!template || templateComplete);
     return (
       <div className="flex-down full-width full-height">
         <div className="chart-controls full-width flex">
@@ -79,7 +80,13 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               language={template && template.templateLanguage}
             />
           )}
-          {!showChart && (
+          {noneTemplate && (
+            <div className="chart-unfullfilled">
+              <h2> Select a chart to begin </h2>
+              <h5>{`HINT HINT HINT HINT`}</h5>
+            </div>
+          )}
+          {!showChart && !noneTemplate && (
             <div className="chart-unfullfilled">
               <h2> Chart is not yet filled out </h2>
               <h5>{`Select values for the following fields: ${missingFields.join(

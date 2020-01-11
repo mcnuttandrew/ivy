@@ -19,6 +19,7 @@ export default function MultiDataTargetComponent(
     templateMap,
     columns,
     setTemplateValue,
+    showSimpleDisplay,
   } = props;
   const fieldValue = templateMap[widget.widgetName];
   const allowedTypesSet = new Set(widget.widget.allowedTypes);
@@ -33,6 +34,7 @@ export default function MultiDataTargetComponent(
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
+        showSimpleDisplay={showSimpleDisplay}
         setName={
           editMode
             ? (value: string): any => setWidgetValue('widgetName', value, idx)

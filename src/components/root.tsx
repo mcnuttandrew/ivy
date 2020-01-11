@@ -183,6 +183,7 @@ class RootComponent extends React.Component<RootProps> {
         <DndProvider backend={HTML5Backend}>
           {showSimpleDisplay && (
             <TemplatePreviewColumn
+              encodingMode={encodingMode}
               setEncodingMode={setEncodingMode}
               templates={templates}
             />

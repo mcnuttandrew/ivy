@@ -814,6 +814,28 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 10px;
 }
 
+.template-preview-column {
+  overflow: scroll;
+}
+
+.template-preview-column .encoding-selection-option {
+  border: thin solid rgba(0, 0, 0, 0);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.template-preview-column .encoding-selection-option.selected {
+  border: thin solid rgba(125, 125, 125, 0);
+}
+
+.template-preview-column .encoding-selection-option:hover {
+  border: thin solid rgba(0, 0, 0, 1);
+}
+
+.template-preview-column .encoding-selection-option:last-of-type {
+  margin-bottom: 300px;
+}
+
 .template-preview-column .encoding-selection-option  h3 {
   font-size: 10px;
 }
