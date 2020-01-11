@@ -48,18 +48,14 @@ export default function MetaColumnPicker({
           <div className="flex space-between">
             <div className="flex meta-column-filter-option-container">
               {options.map(({name, effect}: any) => (
-                <div
-                  key={name}
-                  className="meta-column-filter-option"
-                  onClick={effect}
-                >
+                <div key={name} className="meta-column-filter-option" onClick={effect}>
                   {name}
                 </div>
               ))}
             </div>
-            <div className="meta-column-filter-count">{`(${
-              (selectedDomain || []).length
-            } / ${domain.length})`}</div>
+            <div className="meta-column-filter-count">{`(${(selectedDomain || []).length} / ${
+              domain.length
+            })`}</div>
           </div>
           {domain.map((option: string) => {
             return (

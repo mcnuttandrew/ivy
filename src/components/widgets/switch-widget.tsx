@@ -6,14 +6,7 @@ import {GeneralWidget} from './general-widget';
 export default function SwitchWidgetComponent(
   props: GeneralWidget<TemplateWidget<SwitchWidget>>,
 ): JSX.Element {
-  const {
-    widget,
-    idx,
-    setWidgetValue,
-    editMode,
-    templateMap,
-    setTemplateValue,
-  } = props;
+  const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
   const isActive = templateMap[widget.widgetName] === widget.widget.activeValue;
 
   return (
@@ -40,9 +33,7 @@ export default function SwitchWidgetComponent(
             onChange={(): void => {
               setTemplateValue({
                 field: widget.widgetName,
-                text: isActive
-                  ? widget.widget.inactiveValue
-                  : widget.widget.activeValue,
+                text: isActive ? widget.widget.inactiveValue : widget.widget.activeValue,
               });
             }}
           />
@@ -60,11 +51,7 @@ export default function SwitchWidgetComponent(
               checkedIcon={false}
               width={50}
               onChange={(): void => {
-                setWidgetValue(
-                  'defaultsToActive',
-                  !widget.widget.defaultsToActive,
-                  idx,
-                );
+                setWidgetValue('defaultsToActive', !widget.widget.defaultsToActive, idx);
               }}
             />
           </div>

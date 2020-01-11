@@ -20,15 +20,7 @@ interface TemplateShelf {
 }
 
 export default function TemplateShelf(props: TemplateShelf): JSX.Element {
-  const {
-    channelEncoding,
-    columns,
-    field,
-    onDrop,
-    setName,
-    showSimpleDisplay,
-    widget,
-  } = props;
+  const {channelEncoding, columns, field, onDrop, setName, showSimpleDisplay, widget} = props;
 
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
@@ -40,18 +32,12 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
     }),
   });
 
-  const columnHeader = columns.find(
-    ({field}) => channelEncoding && field === channelEncoding,
-  );
-  const options = [
-    {display: 'Select a value', value: null, group: null},
-  ].concat(
+  const columnHeader = columns.find(({field}) => channelEncoding && field === channelEncoding);
+  const options = [{display: 'Select a value', value: null, group: null}].concat(
     columns.map(column => ({
       display: `${column.field} ${TEXT_TYPE[column.type]}`,
       value: column.field,
-      group: widget.widget.allowedTypes.includes(column.type)
-        ? 'RECOMENDED'
-        : 'OUT OF TYPE',
+      group: widget.widget.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
     })),
   );
   return (

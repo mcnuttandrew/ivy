@@ -17,10 +17,7 @@ function specialTrim(dimName: string): string {
   if (!dimName || dimName.length < 3) {
     return dimName;
   }
-  if (
-    dimName.slice(0, 2) === '["' &&
-    dimName.slice(dimName.length - 2) === '"]'
-  ) {
+  if (dimName.slice(0, 2) === '["' && dimName.slice(dimName.length - 2) === '"]') {
     return dimName.slice(2, dimName.length - 2);
   }
   return dimName;
@@ -75,8 +72,7 @@ export function inferPossibleDataTargets(spec: any): string[] {
       }, {}),
   );
   // match based on a hueristic
-  const hueristicTargets =
-    JSON.stringify(spec).match(/"field":\w*"(.*?)"/g) || [];
+  const hueristicTargets = JSON.stringify(spec).match(/"field":\w*"(.*?)"/g) || [];
   Object.keys(
     hueristicTargets.reduce((acc: any, key: string) => {
       acc[key.slice(0, key.length - 1).slice('"field":"'.length)] = true;
@@ -112,10 +108,7 @@ function generateFullTemplateMap(
   widgets: TemplateWidget<WidgetSubType>[],
 ): generateFullTemplateMapReturn {
   return widgets.reduce(
-    (
-      acc: generateFullTemplateMapReturn,
-      widget: TemplateWidget<WidgetSubType>,
-    ) => {
+    (acc: generateFullTemplateMapReturn, widget: TemplateWidget<WidgetSubType>) => {
       const widgetType = widget.widgetType;
       if (widgetType === 'DataTarget') {
         acc[widget.widgetName] = `"${DUMMY}"`;
@@ -213,7 +206,5 @@ export function synthesizeSuggestions(
 
 export function takeSuggestion(code: string, suggestion: Suggestion): string {
   const {simpleReplace, from, to} = suggestion;
-  return simpleReplace
-    ? code.replace(from, to)
-    : code.replace(new RegExp(from, 'g'), to);
+  return simpleReplace ? code.replace(from, to) : code.replace(new RegExp(from, 'g'), to);
 }

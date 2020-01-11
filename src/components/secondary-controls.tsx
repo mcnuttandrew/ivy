@@ -25,9 +25,7 @@ export interface SecondaryHeaderProps {
   showSimpleDisplay: boolean;
 }
 
-export default function SecondaryHeader(
-  props: SecondaryHeaderProps,
-): JSX.Element {
+export default function SecondaryHeader(props: SecondaryHeaderProps): JSX.Element {
   const {
     changeTheme,
     currentTheme,

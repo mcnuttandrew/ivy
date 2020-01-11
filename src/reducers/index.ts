@@ -20,11 +20,7 @@ import {
 import {addToNextOpenSlot} from './apt-actions';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
-import {
-  changeSelectedFile,
-  recieveData,
-  recieveTypeInferences,
-} from './data-actions';
+import {changeSelectedFile, recieveData, recieveTypeInferences} from './data-actions';
 import {
   addWidget,
   deleteTemplate,
@@ -51,12 +47,9 @@ import {
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // second order effects
-const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
-  state,
-  payload,
-): AppState => wrapper(state, func(state, payload));
-const addUndo = (func: ActionResponse): ActionResponse =>
-  wrap(func, pushToUndoStack);
+const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (state, payload): AppState =>
+  wrapper(state, func(state, payload));
+const addUndo = (func: ActionResponse): ActionResponse => wrap(func, pushToUndoStack);
 const addUpdateCode = (func: ActionResponse): ActionResponse =>
   wrap(func, updateCodeRepresentation);
 

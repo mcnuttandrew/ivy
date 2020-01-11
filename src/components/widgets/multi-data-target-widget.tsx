@@ -26,20 +26,13 @@ export default function MultiDataTargetComponent(
   return (
     <div>
       <TemplateMultiShelf
-        channelEncodings={(Array.isArray(fieldValue)
-          ? (fieldValue as string[])
-          : []
-        ).map(trim)}
+        channelEncodings={(Array.isArray(fieldValue) ? (fieldValue as string[]) : []).map(trim)}
         field={widget.widgetName}
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
         showSimpleDisplay={showSimpleDisplay}
-        setName={
-          editMode
-            ? (value: string): any => setWidgetValue('widgetName', value, idx)
-            : null
-        }
+        setName={editMode ? (value: string): any => setWidgetValue('widgetName', value, idx) : null}
       />
       {editMode && (
         <div className="flex-down">
@@ -50,11 +43,7 @@ export default function MultiDataTargetComponent(
                 {DATA_TYPES.map(type => {
                   const checked = allowedTypesSet.has(type);
                   return (
-                    <div
-                      className="flex"
-                      key={type}
-                      style={{marginRight: '10px'}}
-                    >
+                    <div className="flex" key={type} style={{marginRight: '10px'}}>
                       <div>
                         <DataSymbol type={type} />
                       </div>
@@ -68,11 +57,7 @@ export default function MultiDataTargetComponent(
                             allowedTypesSet.add(type);
                           }
 
-                          setWidgetValue(
-                            'allowedTypes',
-                            Array.from(allowedTypesSet),
-                            idx,
-                          );
+                          setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
                         }}
                       />
                     </div>
@@ -84,9 +69,7 @@ export default function MultiDataTargetComponent(
               <span className="tool-description">Required:</span>
               <input
                 type="checkbox"
-                onChange={(): any =>
-                  setWidgetValue('required', !widget.widget.required, idx)
-                }
+                onChange={(): any => setWidgetValue('required', !widget.widget.required, idx)}
                 checked={!!widget.widget.required}
               />
             </div>

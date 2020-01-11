@@ -48,8 +48,7 @@ const schemas = [
   },
   {
     schema: hydraSchema,
-    uri:
-      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
+    uri: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
   },
   {
     schema: mergeDeep({}, vegaLiteSchema, {

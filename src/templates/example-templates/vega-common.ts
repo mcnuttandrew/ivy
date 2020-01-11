@@ -14,13 +14,4 @@ export const VEGA_CATEGORICAL_COLOR_SCHEMES = [
   'tableau10',
   'tableau20',
 ];
-export const AGGREGATES = [
-  'count',
-  'missing',
-  'distinct',
-  'sum',
-  'mean',
-  'median',
-  'min',
-  'max',
-];
+export const AGGREGATES = ['count', 'missing', 'distinct', 'sum', 'mean', 'median', 'min', 'max'];

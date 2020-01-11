@@ -7,10 +7,8 @@ export interface ActionResponse {
   (state: AppState, payload: any): AppState;
 }
 
-export const blindSet = (key: string): ActionResponse => (
-  state,
-  payload,
-): AppState => state.set(key, payload);
+export const blindSet = (key: string): ActionResponse => (state, payload): AppState =>
+  state.set(key, payload);
 export const toggle = (key: string): ActionResponse => (state): AppState =>
   state.set(key, !state.get(key));
 

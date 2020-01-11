@@ -45,9 +45,7 @@ export default function DataTargetWidgetComponent(
         onDrop={setTemplateValue}
         widget={widget}
         showSimpleDisplay={showSimpleDisplay}
-        setName={(value: string): any =>
-          setWidgetValue('widgetName', value, idx)
-        }
+        setName={(value: string): any => setWidgetValue('widgetName', value, idx)}
       />
       <div className="flex space-evenly">
         <div className="flex-down">
@@ -69,11 +67,7 @@ export default function DataTargetWidgetComponent(
                       } else {
                         allowedTypesSet.add(type);
                       }
-                      setWidgetValue(
-                        'allowedTypes',
-                        Array.from(allowedTypesSet),
-                        idx,
-                      );
+                      setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
                     }}
                   />
                 </div>
@@ -85,9 +79,7 @@ export default function DataTargetWidgetComponent(
           <span className="tool-description">Required:</span>
           <input
             type="checkbox"
-            onChange={(): any =>
-              setWidgetValue('required', !widget.widget.required, idx)
-            }
+            onChange={(): any => setWidgetValue('required', !widget.widget.required, idx)}
             checked={!!widget.widget.required}
           />
         </div>

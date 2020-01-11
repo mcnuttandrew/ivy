@@ -6,10 +6,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import {getMissingFields} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
-import {
-  SHOW_SECONDARY_CONTROLS,
-  SHOW_TEMPLATE_CONTROLS,
-} from '../constants/CONFIG';
+import {SHOW_SECONDARY_CONTROLS, SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
@@ -106,9 +103,7 @@ class RootComponent extends React.Component<RootProps> {
   componentDidMount(): void {
     // on start load the default selected file
     if (!this.props.GOOSE_MODE) {
-      this.props.loadDataFromPredefinedDatasets(
-        this.props.currentlySelectedFile,
-      );
+      this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     }
     this.props.loadTemplates();
   }
@@ -198,9 +193,7 @@ class RootComponent extends React.Component<RootProps> {
               deleteFilter={deleteFilter}
               iMspec={iMspec}
               metaColumns={metaColumns}
-              onDropFilter={(item: any): any =>
-                createFilter({field: item.text})
-              }
+              onDropFilter={(item: any): any => createFilter({field: item.text})}
               setRepeats={setRepeats}
               spec={spec}
               template={template}
@@ -238,9 +231,7 @@ class RootComponent extends React.Component<RootProps> {
                   }
                   setEncodingParameter(item);
                 }}
-                onDropFilter={(item: any): any =>
-                  createFilter({field: item.text})
-                }
+                onDropFilter={(item: any): any => createFilter({field: item.text})}
                 setEncodingParameter={setEncodingParameter}
                 setNewSpec={setNewSpec}
                 showSimpleDisplay={showSimpleDisplay}
@@ -381,8 +372,7 @@ class RootComponent extends React.Component<RootProps> {
 function mapStateToProps({base}: {base: AppState}): any {
   const template = base.get('currentTemplateInstance');
   const templateMap = base.get('templateMap').toJS();
-  const missingFields =
-    (template && getMissingFields(template.toJS(), templateMap)) || [];
+  const missingFields = (template && getMissingFields(template.toJS(), templateMap)) || [];
 
   return {
     GOOSE_MODE: base.get('GOOSE_MODE'),

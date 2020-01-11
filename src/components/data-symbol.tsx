@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  TiSortNumerically,
-  TiSortAlphabetically,
-  TiCalendar,
-} from 'react-icons/ti';
+import {TiSortNumerically, TiSortAlphabetically, TiCalendar} from 'react-icons/ti';
 import {DataType} from '../types';
 interface Props {
   type: DataType;

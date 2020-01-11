@@ -14,9 +14,7 @@ export default function TextWidgetComponent(
       <textarea
         placeholder="Type a message that will appear in the encoding area"
         value={widget.widget.text}
-        onChange={(event): any =>
-          setWidgetValue('text', event.target.value, idx)
-        }
+        onChange={(event): any => setWidgetValue('text', event.target.value, idx)}
       />
     </div>
   );

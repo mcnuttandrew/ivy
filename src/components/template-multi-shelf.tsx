@@ -21,15 +21,7 @@ interface Props {
 }
 
 export default function TemplateMultiShelf(props: Props): JSX.Element {
-  const {
-    channelEncodings,
-    columns,
-    field,
-    onDrop,
-    setName,
-    showSimpleDisplay,
-    widget,
-  } = props;
+  const {channelEncodings, columns, field, onDrop, setName, showSimpleDisplay, widget} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -45,24 +37,17 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       canDrop: monitor.canDrop(),
     }),
   });
-  const options = [
-    {display: 'Select a value', value: null, group: null},
-  ].concat(
+  const options = [{display: 'Select a value', value: null, group: null}].concat(
     columns.map(column => ({
       display: `${column.field} ${TEXT_TYPE[column.type]}`,
       value: column.field,
-      group: widget.widget.allowedTypes.includes(column.type)
-        ? 'RECOMENDED'
-        : 'OUT OF TYPE',
+      group: widget.widget.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
     })),
   );
   const columnHeaders = channelEncodings
-    .map(channelEncoding =>
-      columns.find(({field}) => channelEncoding && field === channelEncoding),
-    )
+    .map(channelEncoding => columns.find(({field}) => channelEncoding && field === channelEncoding))
     .filter(d => d);
-  const maxValsHit =
-    (widget.widget.maxNumberOfTargets || Infinity) < columnHeaders.length;
+  const maxValsHit = (widget.widget.maxNumberOfTargets || Infinity) < columnHeaders.length;
   const dropCommon = {field, multiTarget: true};
   return (
     <div
@@ -92,10 +77,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
           {columnHeaders.map((columnHeader, idx: number) => {
             if (showSimpleDisplay) {
               return (
-                <div
-                  className="shelf-dropdown flex"
-                  key={`${columnHeader.field}-${idx}`}
-                >
+                <div className="shelf-dropdown flex" key={`${columnHeader.field}-${idx}`}>
                   <Selector
                     useGroups={true}
                     options={options}
@@ -109,9 +91,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
                   <div
                     className="cursor-pointer"
                     onClick={(): void => {
-                      const newColumns = channelEncodings.filter(
-                        d => d !== columnHeader.field,
-                      );
+                      const newColumns = channelEncodings.filter(d => d !== columnHeader.field);
                       onDrop({text: newColumns, ...dropCommon});
                     }}
                   >
@@ -151,9 +131,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
               <div>Add a new field</div>
               <Selector
                 useGroups={true}
-                options={options.filter(
-                  d => !channelEncodings.includes(d.value),
-                )}
+                options={options.filter(d => !channelEncodings.includes(d.value))}
                 selectedValue={' '}
                 onChange={(x: any): void => {
                   onDrop({

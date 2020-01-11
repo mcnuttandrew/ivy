@@ -37,9 +37,7 @@ interface EncodingColumnProps {
   spec: any;
   swapXAndYChannels: GenericAction;
 }
-export default class EncodingColumn extends React.Component<
-  EncodingColumnProps
-> {
+export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render(): JSX.Element {
     const {
       changeMarkType,
@@ -53,8 +51,7 @@ export default class EncodingColumn extends React.Component<
       spec,
       swapXAndYChannels,
     } = this.props;
-    const encoding =
-      get(spec, ['spec', 'encoding']) || get(spec, ['encoding']) || {};
+    const encoding = get(spec, ['spec', 'encoding']) || get(spec, ['encoding']) || {};
     const makeShelf = (disable: boolean) => (channel: string): JSX.Element => (
       <Shelf
         setEncodingParameter={setEncodingParameter}

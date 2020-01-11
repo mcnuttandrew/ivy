@@ -15,26 +15,14 @@ interface Props {
 
 type buttonFactory = {[action: string]: () => void};
 function generateButtonActions(props: any): (x: string) => buttonFactory {
-  const {
-    setEncodingMode,
-    toggle,
-    deleteTemplate,
-    chainActions,
-    setEditMode,
-  } = props;
+  const {setEncodingMode, toggle, deleteTemplate, chainActions, setEditMode} = props;
   return (templateName: string): buttonFactory => ({
     use: (): void => {
-      chainActions([
-        (): void => setEncodingMode(templateName),
-        (): void => setEditMode(false),
-      ]);
+      chainActions([(): void => setEncodingMode(templateName), (): void => setEditMode(false)]);
       toggle();
     },
     edit: (): void => {
-      chainActions([
-        (): void => setEncodingMode(templateName),
-        (): void => setEditMode(true),
-      ]);
+      chainActions([(): void => setEncodingMode(templateName), (): void => setEditMode(true)]);
       toggle();
     },
     delete: (): void => {
@@ -52,10 +40,7 @@ function encodingRow(
 ): JSX.Element {
   const buttonResponses = buttonActions(templateName);
   return (
-    <div
-      className="encoding-selection-option flex"
-      key={`${templateName}-${idx}`}
-    >
+    <div className="encoding-selection-option flex" key={`${templateName}-${idx}`}>
       <div>
         <img src="./assets/example-chart.png" />
       </div>
@@ -127,8 +112,7 @@ export default function EncodingMode(props: Props): JSX.Element {
                     templateDescription &&
                     templateDescription.toLowerCase().includes(searchKey || '');
                   const matchName =
-                    templateName &&
-                    templateName.toLowerCase().includes(searchKey || '');
+                    templateName && templateName.toLowerCase().includes(searchKey || '');
                   return matchDescription || matchName;
                 })
                 .map((template: Template, idx: number) =>

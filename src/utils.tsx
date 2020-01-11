@@ -50,9 +50,7 @@ export function findField(
   targetField: string,
   columnKey = 'columns',
 ): ColumnHeader {
-  return state
-    .get(columnKey)
-    .find(({field}: {field: string}) => field === targetField);
+  return state.get(columnKey).find(({field}: {field: string}) => field === targetField);
 }
 
 export function compareObjects(a: any, b: any): boolean {
@@ -125,8 +123,7 @@ export function get(obj: any, route: string[]): any {
 export function getAllInUseFields(spec: any): Set<string> {
   // this only works for vega-lite
   const inUse = new Set([]);
-  const encoding =
-    spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']) || [];
+  const encoding = spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']) || [];
   encoding.forEach((x: any) => {
     if (!x || !x.size) {
       return;
@@ -144,10 +141,7 @@ export function getAllInUseFields(spec: any): Set<string> {
   return inUse;
 }
 
-export const extractFieldStringsForType = (
-  columns: ColumnHeader[],
-  type: DataType,
-): string[] =>
+export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
   columns
     .filter((column: ColumnHeader) => column.type === type)
     .map((column: ColumnHeader) => column.field);
@@ -166,10 +160,7 @@ export function checkEncodingForValidity(spec: any): boolean {
   return true;
 }
 
-export const getTemplate = (
-  state: AppState,
-  template: string,
-): Template | null => {
+export const getTemplate = (state: AppState, template: string): Template | null => {
   return state.get('templates').find((d: any) => d.templateName === template);
 };
 
@@ -181,18 +172,11 @@ export function allWidgetsInUse(
   widgets: List<TemplateWidget<WidgetSubType>>,
 ): boolean {
   return widgets
-    .filter(
-      (widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'Text',
-    )
-    .every(
-      (widget: TemplateWidget<WidgetSubType>) =>
-        !!widgetInUse(code, widget.widgetName),
-    );
+    .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'Text')
+    .every((widget: TemplateWidget<WidgetSubType>) => !!widgetInUse(code, widget.widgetName));
 }
 
-export const toSelectFormat = (
-  arr: string[],
-): {value: string; label: string}[] =>
+export const toSelectFormat = (arr: string[]): {value: string; label: string}[] =>
   arr.map((x: string) => ({value: x, label: x}));
 
 // setting dimensions requires that dimension name be wrapped in a string
@@ -215,8 +199,7 @@ export const toList = (list: string[]): {display: string; value: string}[] =>
 
 export function serializeTemplate(template: Template): string {
   return stringify({
-    $schema:
-      'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
+    $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
     templateName: template.templateName,
     templateDescription: template.templateDescription,
     code: 'SEE CODE EDITOR',
@@ -245,14 +228,9 @@ export function getTemplateSaveState(base: AppState): SaveState {
   if (!template) {
     return 'NA';
   }
-  const associatedUpstreamTemplate = getTemplate(
-    base,
-    template.get('templateName'),
-  );
+  const associatedUpstreamTemplate = getTemplate(base, template.get('templateName'));
   if (!associatedUpstreamTemplate) {
     return 'NOT FOUND';
   }
-  return Immutable.fromJS(associatedUpstreamTemplate).equals(template)
-    ? 'EQUAL'
-    : 'DIFFERENT';
+  return Immutable.fromJS(associatedUpstreamTemplate).equals(template) ? 'EQUAL' : 'DIFFERENT';
 }

@@ -15,9 +15,7 @@ interface GenericActionCreator {
   (type: string): GenericAction;
 }
 
-const buildEasyAction: GenericActionCreator = type => payload => (
-  dispatch,
-): void => {
+const buildEasyAction: GenericActionCreator = type => payload => (dispatch): void => {
   dispatch({type, payload});
 };
 
@@ -33,9 +31,7 @@ export const createNewView = buildEasyAction('create-new-view');
 export const deleteFilter = buildEasyAction('delete-filter');
 export const deleteTemplate = buildEasyAction('delete-template');
 export const deleteView = buildEasyAction('delete-view');
-export const modifyValueOnTemplate = buildEasyAction(
-  'modify-value-on-template',
-);
+export const modifyValueOnTemplate = buildEasyAction('modify-value-on-template');
 export const moveWidget = buildEasyAction('move-widget-in-template');
 export const removeWidget = buildEasyAction('remove-widget-from-template');
 export const saveCurrentTemplate = buildEasyAction('save-template');
@@ -58,9 +54,7 @@ export const triggerRedo = buildEasyAction('trigger-redo');
 export const triggerUndo = buildEasyAction('trigger-undo');
 export const updateFilter = buildEasyAction('update-filter');
 
-export const chainActions = (actions: GenericAction[]) => (
-  dispatch: Dispatch,
-): void => {
+export const chainActions = (actions: GenericAction[]) => (dispatch: Dispatch): void => {
   executePromisesInSeries(
     actions.map((action: GenericAction) => {
       return (): Promise<any> => Promise.resolve().then(() => action(dispatch));
@@ -68,9 +62,7 @@ export const chainActions = (actions: GenericAction[]) => (
   );
 };
 
-export const generateTypeInferences: GenericAction = data => (
-  dispatch,
-): void => {
+export const generateTypeInferences: GenericAction = data => (dispatch): void => {
   dispatch({
     type: 'recieve-type-inferences',
     payload: computeColMeta(data).map((columnMeta: any) => {
@@ -100,14 +92,11 @@ const getReader = (fileName: string): Reader => {
 // when the application is deployed on the internet don't try to get data from a folder that doesn't exisit
 const vegaDatasetAdress =
   window.location.origin === 'http://localhost:8080'
-    ? (fileName: string): string =>
-        `node_modules/vega-datasets/data/${fileName}`
+    ? (fileName: string): string => `node_modules/vega-datasets/data/${fileName}`
     : (fileName: string): string =>
         `https://raw.githubusercontent.com/vega/vega-datasets/master/data/${fileName}`;
 
-export const loadDataFromPredefinedDatasets: GenericAction = fileName => (
-  dispatch,
-): void => {
+export const loadDataFromPredefinedDatasets: GenericAction = fileName => (dispatch): void => {
   fetch(vegaDatasetAdress(fileName))
     .then(d => d.text())
     .then(d => getReader(fileName)(d))
@@ -140,16 +129,11 @@ export const loadCustomDataset: GenericAction = file => (dispatch): void => {
 export const loadTemplates: GenericAction = () => (dispatch): void => {
   get('templates')
     .then((templates: string[]) => {
-      return Promise.all(
-        (templates || []).map((templateKey: string) => get(templateKey)),
-      );
+      return Promise.all((templates || []).map((templateKey: string) => get(templateKey)));
     })
     .then((templates: Template[]) => {
       const seen: any = {};
-      const payload = [
-        ...DEFAULT_TEMPLATES,
-        ...Object.values(templates || {}),
-      ].filter((d: any) => {
+      const payload = [...DEFAULT_TEMPLATES, ...Object.values(templates || {})].filter((d: any) => {
         if (!d || seen[d.templateName]) {
           return false;
         }
@@ -160,9 +144,7 @@ export const loadTemplates: GenericAction = () => (dispatch): void => {
     });
 };
 
-export const changeSelectedFile: GenericAction = fileName => (
-  dispatch,
-): void => {
+export const changeSelectedFile: GenericAction = fileName => (dispatch): void => {
   dispatch({
     type: 'change-selected-file',
     payload: fileName,

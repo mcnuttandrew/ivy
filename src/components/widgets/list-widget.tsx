@@ -7,9 +7,7 @@ import Popover from '../popover';
 
 import {GeneralWidget} from './general-widget';
 
-function DefaultValue(
-  props: GeneralWidget<TemplateWidget<ListWidget>>,
-): JSX.Element {
+function DefaultValue(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
   return (
     <div className="flex">
@@ -17,17 +15,13 @@ function DefaultValue(
       <Selector
         options={widget.widget.allowedValues}
         selectedValue={widget.widget.defaultValue}
-        onChange={(value: any): any =>
-          setWidgetValue('defaultValue', value, idx)
-        }
+        onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
       />
     </div>
   );
 }
 
-function OptionController(
-  props: GeneralWidget<TemplateWidget<ListWidget>>,
-): JSX.Element {
+function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
   return (
     <Popover
@@ -61,11 +55,8 @@ function OptionController(
                       type="text"
                       onChange={(event): any => {
                         const newVal = event.target.value;
-                        const updatedWidgets = widget.widget.allowedValues.map(
-                          (d, indx) =>
-                            indx === jdx
-                              ? {display: newVal, value: newVal}
-                              : {...d},
+                        const updatedWidgets = widget.widget.allowedValues.map((d, indx) =>
+                          indx === jdx ? {display: newVal, value: newVal} : {...d},
                         );
                         setWidgetValue('allowedValues', updatedWidgets, idx);
                       }}
@@ -76,10 +67,7 @@ function OptionController(
             })}
             <button
               onClick={(): void => {
-                const updated = [
-                  ...widget.widget.allowedValues,
-                  {display: 'X', value: 'X'},
-                ];
+                const updated = [...widget.widget.allowedValues, {display: 'X', value: 'X'}];
                 setWidgetValue('allowedValues', updated, idx);
               }}
             >
@@ -95,14 +83,7 @@ function OptionController(
 export default function ListWidgetComponent(
   props: GeneralWidget<TemplateWidget<ListWidget>>,
 ): JSX.Element {
-  const {
-    widget,
-    idx,
-    setWidgetValue,
-    editMode,
-    templateMap,
-    setTemplateValue,
-  } = props;
+  const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
   return (
     <div className="list-widget">
       <div className="flex">
@@ -110,9 +91,7 @@ export default function ListWidgetComponent(
           <input
             value={widget.widgetName}
             type="text"
-            onChange={(event): any =>
-              setWidgetValue('widgetName', event.target.value, idx)
-            }
+            onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
           />
         )}
         {!editMode && <div>{widget.widgetName}</div>}

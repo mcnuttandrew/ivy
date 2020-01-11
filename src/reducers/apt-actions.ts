@@ -54,10 +54,7 @@ const grammarBasedGuess: ActionResponse = (state, payload) => {
   // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
   const encoding = state.getIn(['spec', 'encoding']).toJS();
   const column = findField(state, payload.field);
-  const fields =
-    column.type === 'DIMENSION'
-      ? dimensionFieldPreferences
-      : measureFieldPreferences;
+  const fields = column.type === 'DIMENSION' ? dimensionFieldPreferences : measureFieldPreferences;
   const channel = fields.find(field => {
     return !encoding[field] || JSON.stringify(encoding[field]) === '{}';
   });
@@ -90,18 +87,12 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
 
   const openMultiDropTargets = template.widgets
     // select just the open drop targets
-    .filter(
-      (widget: TemplateWidget<WidgetSubType>) =>
-        widget.widgetType === 'MultiDataTarget',
-    )
+    .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType === 'MultiDataTarget')
     // and that allow the type of drop column
     .filter(
       (widget: TemplateWidget<MultiDataTargetWidget>) =>
-        widget.widget.allowedTypes.find(
-          (type: string) => type === column.type,
-        ) &&
-        (templateMap[widget.widgetName] || []).length <
-          widget.widget.maxNumberOfTargets,
+        widget.widget.allowedTypes.find((type: string) => type === column.type) &&
+        (templateMap[widget.widgetName] || []).length < widget.widget.maxNumberOfTargets,
     );
   const targets = [].concat(openDropTargets).concat(openMultiDropTargets);
   if (!targets.length) {
@@ -127,8 +118,5 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
 
 export const addToNextOpenSlot: ActionResponse = (state, payload) => {
   const encodingMode = state.get('encodingMode');
-  return (encodingMode !== 'grammer' ? templateBasedGuess : grammarBasedGuess)(
-    state,
-    payload,
-  );
+  return (encodingMode !== 'grammer' ? templateBasedGuess : grammarBasedGuess)(state, payload);
 };

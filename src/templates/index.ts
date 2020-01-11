@@ -110,12 +110,7 @@ export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
       widgetName: `DataTypeOptions${idx}`,
       widgetType: 'List',
       widget: {
-        allowedValues: toList([
-          'quantitative',
-          'temporal',
-          'ordinal',
-          'nominal',
-        ]),
+        allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal']),
         defaultValue: null,
       },
     } as TemplateWidget<ListWidget>),

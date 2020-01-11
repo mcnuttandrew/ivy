@@ -21,13 +21,10 @@ export default function Filter({
   } = filter;
   const {domain} = column;
   type selType = {[x: string]: boolean};
-  const selectedVals: selType = (oneOf || []).reduce(
-    (acc: selType, key: string) => {
-      acc[key] = true;
-      return acc;
-    },
-    {},
-  );
+  const selectedVals: selType = (oneOf || []).reduce((acc: selType, key: string) => {
+    acc[key] = true;
+    return acc;
+  }, {});
   return (
     <div className="flex-down filter-container">
       <div className="flex space-between filter-header">
@@ -45,18 +42,14 @@ export default function Filter({
                 className="grid-col-2"
                 type="number"
                 value={range[0]}
-                onChange={({target: {value}}): any =>
-                  updateFilter([Number(value), range[1]])
-                }
+                onChange={({target: {value}}): any => updateFilter([Number(value), range[1]])}
               />
               <span className="grid-col-1">max</span>
               <input
                 className="grid-col-2"
                 type="number"
                 value={range[1]}
-                onChange={({target: {value}}): any =>
-                  updateFilter([range[0], Number(value)])
-                }
+                onChange={({target: {value}}): any => updateFilter([range[0], Number(value)])}
               />
             </div>
             <div className="range-wrap ">

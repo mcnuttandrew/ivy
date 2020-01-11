@@ -1,9 +1,4 @@
-type DATA_MODS =
-  | 'none'
-  | 'holdout'
-  | 'randomize'
-  | 'full-bootstrap'
-  | 'holdout-with-bootstrap';
+type DATA_MODS = 'none' | 'holdout' | 'randomize' | 'full-bootstrap' | 'holdout-with-bootstrap';
 
 /**
  * Shuffles array in place.
@@ -20,16 +15,12 @@ export function shuffle(arr: any[]): any[] {
   return copyArr;
 }
 
-const transpose = (m: any[]): any[] =>
-  m[0].map((x: any, i: number) => m.map(x => x[i]));
+const transpose = (m: any[]): any[] => m[0].map((x: any, i: number) => m.map(x => x[i]));
 function randomize(data: any): any[] {
-  const shuffledColumns = Object.keys(data[0]).reduce(
-    (acc: any, key: string) => {
-      acc[key] = shuffle(data.map((row: any) => row[key]));
-      return acc;
-    },
-    {},
-  );
+  const shuffledColumns = Object.keys(data[0]).reduce((acc: any, key: string) => {
+    acc[key] = shuffle(data.map((row: any) => row[key]));
+    return acc;
+  }, {});
   const keys = Object.keys(shuffledColumns);
   return transpose(Object.values(shuffledColumns)).map((row: any) => {
     return row.reduce((acc: any, val: any, idx: number) => {
@@ -62,15 +53,11 @@ export function fullResample(inputData: any): any[] {
 
 /* eslint-disable*/
 export const selectDataModification = (data: any): DATA_MODS => {
-
   return 'none';
 };
 /* eslint-enable*/
 
-export const executeDataModifcation = (
-  data: any,
-  modification: DATA_MODS,
-): any => {
+export const executeDataModifcation = (data: any, modification: DATA_MODS): any => {
   if (modification === 'none') {
     return data;
   }

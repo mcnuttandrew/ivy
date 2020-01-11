@@ -89,24 +89,17 @@ export default class DataModal extends React.Component<Props, State> {
                     <h5>{datasetName}</h5>
                   </div>
                   <div className="flex">
-                    <div className="icon-container">
-                      {datasetMeta.length} rows
-                    </div>
-                    {['MEASURE', 'DIMENSION', 'TIME'].map(
-                      (dataType: DataType) => {
-                        return (
-                          <div
-                            key={`${datasetName}-${dataType}`}
-                            className="flex icon-container"
-                          >
-                            <div className="icon">
-                              <DataSymbol type={dataType} />
-                            </div>
-                            {datasetMeta[dataType] || 0}
+                    <div className="icon-container">{datasetMeta.length} rows</div>
+                    {['MEASURE', 'DIMENSION', 'TIME'].map((dataType: DataType) => {
+                      return (
+                        <div key={`${datasetName}-${dataType}`} className="flex icon-container">
+                          <div className="icon">
+                            <DataSymbol type={dataType} />
                           </div>
-                        );
-                      },
-                    )}
+                          {datasetMeta[dataType] || 0}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );

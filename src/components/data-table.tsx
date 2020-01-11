@@ -8,10 +8,7 @@ interface Props {
 }
 
 const PAGE_SIZE = 30;
-const abstractCompare = (sortKey: string, reverseSort: boolean) => (
-  a: any,
-  b: any,
-): number =>
+const abstractCompare = (sortKey: string, reverseSort: boolean) => (a: any, b: any): number =>
   (reverseSort ? -1 : 1) * `${a[sortKey]}`.localeCompare(`${b[sortKey]}`);
 export default function DataTable(props: Props): JSX.Element {
   const {
@@ -32,16 +29,10 @@ export default function DataTable(props: Props): JSX.Element {
     <div className="hydra-data-table">
       <div className="flex hydra-data-table-controls">
         <button onClick={(): any => setPage(0)}>Reset</button>
-        <button
-          disabled={!nextPageExists}
-          onClick={(): any => nextPageExists && setPage(page + 1)}
-        >
+        <button disabled={!nextPageExists} onClick={(): any => nextPageExists && setPage(page + 1)}>
           Next Page
         </button>
-        <button
-          disabled={!prevPageExists}
-          onClick={(): any => prevPageExists && setPage(page - 1)}
-        >
+        <button disabled={!prevPageExists} onClick={(): any => prevPageExists && setPage(page - 1)}>
           Prev Page
         </button>
         <div>{`PAGE: ${page} / ${numPages}`}</div>
@@ -54,13 +45,10 @@ export default function DataTable(props: Props): JSX.Element {
               return (
                 <th
                   key={column}
-                  onClick={(): any =>
-                    isSort ? setSortOrder(!reverseSort) : setSort(column)
-                  }
+                  onClick={(): any => (isSort ? setSortOrder(!reverseSort) : setSort(column))}
                 >
                   {column}
-                  {isSort &&
-                    (reverseSort ? <TiArrowSortedUp /> : <TiArrowSortedDown />)}
+                  {isSort && (reverseSort ? <TiArrowSortedUp /> : <TiArrowSortedDown />)}
                 </th>
               );
             })}
@@ -74,9 +62,7 @@ export default function DataTable(props: Props): JSX.Element {
               return (
                 <tr key={idx}>
                   {columns.map((column, jdx: number) => {
-                    return (
-                      <td key={`${column}-${idx}-${jdx}`}>{row[column]}</td>
-                    );
+                    return <td key={`${column}-${idx}-${jdx}`}>{row[column]}</td>;
                   })}
                 </tr>
               );

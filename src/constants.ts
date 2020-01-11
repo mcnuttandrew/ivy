@@ -37,8 +37,7 @@ const maybePrefixWithSpec = (spec: any, route: string[]): string[] =>
 const set = (spec: any, route: string[], value: any): any =>
   spec.setIn(maybePrefixWithSpec(spec, route), value);
 
-const get = (spec: any, route: string[]): any =>
-  spec.getIn(maybePrefixWithSpec(spec, route));
+const get = (spec: any, route: string[]): any => spec.getIn(maybePrefixWithSpec(spec, route));
 
 const justCountAgg = [
   {display: 'none', value: undefined},
@@ -65,10 +64,7 @@ const binningOptions = [
   'median',
 ].map(toOption);
 
-const buildSpatialOptions = (
-  dimension: string,
-  options: OptionValue[],
-): EncodingOption => ({
+const buildSpatialOptions = (dimension: string, options: OptionValue[]): EncodingOption => ({
   optionName: 'Agg.',
   optionType: 'List',
   options,
@@ -83,9 +79,7 @@ const buildSpatialOptions = (
   predicate: (): boolean => true,
 });
 
-const channelTypePredicate = (dim: string, expected: string[]) => (
-  spec: any,
-): any => {
+const channelTypePredicate = (dim: string, expected: string[]) => (spec: any): any => {
   const channelType = get(spec, ['encoding', dim, 'type']);
   return expected.some((type: string) => channelType === type);
 };
@@ -93,8 +87,7 @@ const channelTypePredicate = (dim: string, expected: string[]) => (
 const binOption = (dim: string): EncodingOption => ({
   optionName: 'Bin',
   optionType: 'Switch',
-  optionSetter: (spec, option): any =>
-    set(spec, ['encoding', dim, 'bin'], option),
+  optionSetter: (spec, option): any => set(spec, ['encoding', dim, 'bin'], option),
   optionGetter: (spec): any => get(spec, ['encoding', dim, 'bin']),
   optionDefault: false,
   predicate: (spec): boolean => {
@@ -121,12 +114,7 @@ const buildScaleOption = (dim: string): EncodingOption => ({
   },
 });
 
-const zeroDomainRoute = (dim: string): string[] => [
-  'encoding',
-  dim,
-  'scale',
-  'zero',
-];
+const zeroDomainRoute = (dim: string): string[] => ['encoding', dim, 'scale', 'zero'];
 
 const scaleDomain = (dim: string): EncodingOption => ({
   optionName: 'Include Zero',
@@ -149,8 +137,7 @@ const buildTypeCoercion = (dim: string): EncodingOption => ({
   optionName: 'Data type',
   optionType: 'List',
   options: ['nominal', 'ordinal', 'quantitative', 'temporal'].map(toOption),
-  optionSetter: (spec, option): any =>
-    set(spec, ['encoding', dim, 'type'], option),
+  optionSetter: (spec, option): any => set(spec, ['encoding', dim, 'type'], option),
   optionGetter: (spec): any => get(spec, ['encoding', dim, 'type']),
   optionDefault: undefined,
   predicate: (): boolean => true,
