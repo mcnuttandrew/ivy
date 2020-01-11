@@ -149,20 +149,19 @@ input[type=number]::-webkit-outer-spin-button {
 .bottom-fill {
   margin-bottom: 100px;
 }
-.secondary-controls {
-  background: #757575;
-  color: #FAFAFA;
-  height: 36px;
-  padding: 5px 15px;
-  z-index: 10;
-}
-.secondary-controls .hydra-selector  {
-    color: #FAFAFA;
+.secondary-controls,
+.about-box {
+  font-size: 12px;
+  padding: 0 15px;
+  padding-top: 10px;
+  width: 200px;
 }
 
-.secondary-controls {
-  font-size: 12px;
+.about-box h5,
+.secondary-controls h5 {
+  font-size: 15px;
 }
+
 
 
 .mode-selector .mode-option {

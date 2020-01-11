@@ -170,7 +170,9 @@ export default class CodeEditor extends React.Component<Props, State> {
 
     return (
       <div className="full-height full-width">
-        {this.editorControls()}
+        {
+          // this.editorControls()
+        }
         <div className="full-height full-width inline-block code-container">
           <div
             className={classnames({
@@ -219,7 +221,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             /*eslint-enable react/no-string-refs*/
           }
 
-          <div className="suggestion-box" style={{height: '185px'}}>
+          {/* <div className="suggestion-box" style={{height: '185px'}}>
             <div className="suggestion-box-header flex space-between">
               <h5>Suggestions</h5>
               <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
@@ -250,7 +252,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                   )}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     );

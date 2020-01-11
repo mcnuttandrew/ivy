@@ -35,9 +35,9 @@ export default function SecondaryHeader(props: SecondaryHeaderProps): JSX.Elemen
     showSimpleDisplay,
   } = props;
   return (
-    <div className="secondary-controls flex-down">
+    <div className="secondary-controls background-2 flex-down">
       <h5>SECONDARY CONTROLS</h5>
-      <div className="flex space-between">
+      <div className="flex-down">
         <div className="mode-selector flex">
           <span>{'Code: '}</span>
           {['HIDE', 'SHOW'].map(mode => {
