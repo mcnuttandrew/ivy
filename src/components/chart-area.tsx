@@ -89,9 +89,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           {!showChart && !noneTemplate && (
             <div className="chart-unfullfilled">
               <h2> Chart is not yet filled out </h2>
-              <h5>{`Select values for the following fields: ${missingFields.join(
-                ', ',
-              )}`}</h5>
+              <h5>{`Select values for the following fields: ${missingFields.join(', ')}`}</h5>
             </div>
           )}
         </div>

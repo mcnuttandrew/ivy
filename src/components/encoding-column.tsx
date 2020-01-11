@@ -6,18 +6,7 @@ import {ColumnHeader} from '../types';
 import Selector from './selector';
 import {get} from '../utils';
 
-const PRIMITIVE_MARKS = [
-  'AREA',
-  'BAR',
-  'CIRCLE',
-  'LINE',
-  'POINT',
-  'RECT',
-  'SQUARE',
-  'TEXT',
-  'TICK',
-  'TRAIL',
-];
+const PRIMITIVE_MARKS = ['AREA', 'BAR', 'CIRCLE', 'LINE', 'POINT', 'RECT', 'SQUARE', 'TEXT', 'TICK', 'TRAIL'];
 
 const MARK_TYPES = PRIMITIVE_MARKS.sort().map((x: string) => ({
   display: x,
@@ -37,9 +26,7 @@ interface EncodingColumnProps {
   spec: any;
   swapXAndYChannels: GenericAction;
 }
-export default class EncodingColumn extends React.Component<
-  EncodingColumnProps
-> {
+export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render(): JSX.Element {
     const {
       changeMarkType,
@@ -53,8 +40,7 @@ export default class EncodingColumn extends React.Component<
       spec,
       swapXAndYChannels,
     } = this.props;
-    const encoding =
-      get(spec, ['spec', 'encoding']) || get(spec, ['encoding']) || {};
+    const encoding = get(spec, ['spec', 'encoding']) || get(spec, ['encoding']) || {};
     const makeShelf = (disable: boolean) => (channel: string): JSX.Element => (
       <Shelf
         setEncodingParameter={setEncodingParameter}

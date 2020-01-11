@@ -25,21 +25,19 @@ function activeColumns(state: any): string[] {
     return Array.from(getAllInUseFields(state.get('spec')));
   }
   const templateMap = state.get('templateMap');
-  const templateInUse = template
-    .get('widgets')
-    .reduce((acc: Set<string>, widget: any) => {
-      const widgetType = widget.get('widgetType');
-      const val = templateMap.get(widget.get('widgetName'));
-      // we only care about the data containing columns
-      if (widgetType === 'MultiDataTarget') {
-        return val.reduce((mem: Set<string>, key: string) => mem.add(key), acc);
-      }
-      if (widgetType === 'DataTarget' && val) {
-        return acc.add(val);
-      }
+  const templateInUse = template.get('widgets').reduce((acc: Set<string>, widget: any) => {
+    const widgetType = widget.get('widgetType');
+    const val = templateMap.get(widget.get('widgetName'));
+    // we only care about the data containing columns
+    if (widgetType === 'MultiDataTarget') {
+      return val.reduce((mem: Set<string>, key: string) => mem.add(key), acc);
+    }
+    if (widgetType === 'DataTarget' && val) {
+      return acc.add(val);
+    }
 
-      return acc;
-    }, new Set());
+    return acc;
+  }, new Set());
   return Array.from(templateInUse).map((key: string) => quoteTrim(key));
 }
 
@@ -60,9 +58,7 @@ export const setEncodingMode: ActionResponse = (state, payload) => {
       .set('currentTemplateInstance', null);
   }
   // figure out what the currently in use columns are and iteratively try to add them to the new one
-  const columnMap = state
-    .get('columns')
-    .reduce((acc: any, x: ColumnHeader) => acc.set(x.field, x), Map());
+  const columnMap = state.get('columns').reduce((acc: any, x: ColumnHeader) => acc.set(x.field, x), Map());
   return activeColumns(state).reduce((acc: AppState, columnKey: string) => {
     return addToNextOpenSlot(acc, columnMap.get(columnKey));
   }, updatedState);

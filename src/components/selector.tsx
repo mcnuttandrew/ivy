@@ -16,10 +16,7 @@ function groupBy(options: optionRow[]): {[group: string]: optionRow[]} {
   }, {});
 }
 
-function renderOption(
-  {display, value}: {display: any; value: any},
-  idx: number,
-): JSX.Element {
+function renderOption({display, value}: {display: any; value: any}, idx: number): JSX.Element {
   return (
     <option value={value || ''} key={idx}>
       {display}

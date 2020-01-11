@@ -15,26 +15,14 @@ interface Props {
 
 type buttonFactory = {[action: string]: () => void};
 function generateButtonActions(props: any): (x: string) => buttonFactory {
-  const {
-    setEncodingMode,
-    toggle,
-    deleteTemplate,
-    chainActions,
-    setEditMode,
-  } = props;
+  const {setEncodingMode, toggle, deleteTemplate, chainActions, setEditMode} = props;
   return (templateName: string): buttonFactory => ({
     use: (): void => {
-      chainActions([
-        (): void => setEncodingMode(templateName),
-        (): void => setEditMode(false),
-      ]);
+      chainActions([(): void => setEncodingMode(templateName), (): void => setEditMode(false)]);
       toggle();
     },
     edit: (): void => {
-      chainActions([
-        (): void => setEncodingMode(templateName),
-        (): void => setEditMode(true),
-      ]);
+      chainActions([(): void => setEncodingMode(templateName), (): void => setEditMode(true)]);
       toggle();
     },
     delete: (): void => {
@@ -52,10 +40,7 @@ function encodingRow(
 ): JSX.Element {
   const buttonResponses = buttonActions(templateName);
   return (
-    <div
-      className="encoding-selection-option flex"
-      key={`${templateName}-${idx}`}
-    >
+    <div className="encoding-selection-option flex" key={`${templateName}-${idx}`}>
       <div>
         <img src="./assets/example-chart.png" />
       </div>
@@ -80,14 +65,7 @@ function encodingRow(
 }
 
 export default function EncodingMode(props: Props): JSX.Element {
-  const {
-    chainActions,
-    clickTarget,
-    deleteTemplate,
-    setEditMode,
-    setEncodingMode,
-    templates,
-  } = props;
+  const {chainActions, clickTarget, deleteTemplate, setEditMode, setEncodingMode, templates} = props;
   const [searchKey, setSearch] = useState('');
 
   return (
@@ -112,23 +90,14 @@ export default function EncodingMode(props: Props): JSX.Element {
               />
             </div>
             <div className="flex-and-wrap">
-              {encodingRow(
-                'grammer',
-                'Tableau-style grammar of graphics',
-                ['Use'],
-                buttonActions,
-                -1,
-              )}
+              {encodingRow('grammer', 'Tableau-style grammar of graphics', ['Use'], buttonActions, -1)}
               {templates
                 .filter(template => template.templateName !== '_____none_____')
                 .filter((template: Template) => {
                   const {templateName, templateDescription} = template;
                   const matchDescription =
-                    templateDescription &&
-                    templateDescription.toLowerCase().includes(searchKey || '');
-                  const matchName =
-                    templateName &&
-                    templateName.toLowerCase().includes(searchKey || '');
+                    templateDescription && templateDescription.toLowerCase().includes(searchKey || '');
+                  const matchName = templateName && templateName.toLowerCase().includes(searchKey || '');
                   return matchDescription || matchName;
                 })
                 .map((template: Template, idx: number) =>

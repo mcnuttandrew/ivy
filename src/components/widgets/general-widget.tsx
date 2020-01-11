@@ -69,11 +69,7 @@ function PlacementControls(props: Props): JSX.Element {
         </div>
       </div>
       <div className="in-use-status">
-        {showInUse
-          ? widgetInUse(code, widget.widgetName)
-            ? 'in use'
-            : 'not used'
-          : ''}
+        {showInUse ? (widgetInUse(code, widget.widgetName) ? 'in use' : 'not used') : ''}
       </div>
       <div className="widget-handle-grip">
         <FaGripVertical />
@@ -133,8 +129,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
       /* eslint-enable  @typescript-eslint/no-non-null-assertion */
 
       // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
       // Determine mouse position
       const clientOffset = monitor.getClientOffset();
@@ -191,40 +186,22 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
       <PlacementControls {...props} />
       <div className="widget-body">
         {widgetType === 'MultiDataTarget' && (
-          <MultiDataTargetComponent
-            widget={widget as TemplateWidget<MultiDataTargetWidget>}
-            {...common}
-          />
+          <MultiDataTargetComponent widget={widget as TemplateWidget<MultiDataTargetWidget>} {...common} />
         )}
         {widgetType === 'Switch' && (
-          <SwitchWidgetComponent
-            widget={widget as TemplateWidget<SwitchWidget>}
-            {...common}
-          />
+          <SwitchWidgetComponent widget={widget as TemplateWidget<SwitchWidget>} {...common} />
         )}
         {widgetType === 'List' && (
-          <ListWidgetComponent
-            widget={widget as TemplateWidget<ListWidget>}
-            {...common}
-          />
+          <ListWidgetComponent widget={widget as TemplateWidget<ListWidget>} {...common} />
         )}
         {widgetType === 'Text' && (
-          <TextWidgetComponent
-            widget={widget as TemplateWidget<TextWidget>}
-            {...common}
-          />
+          <TextWidgetComponent widget={widget as TemplateWidget<TextWidget>} {...common} />
         )}
         {widgetType === 'DataTarget' && (
-          <DataTargetWidgetComponent
-            widget={widget as TemplateWidget<DataTargetWidget>}
-            {...common}
-          />
+          <DataTargetWidgetComponent widget={widget as TemplateWidget<DataTargetWidget>} {...common} />
         )}
         {widgetType === 'Slider' && (
-          <SliderWidgetComponent
-            widget={widget as TemplateWidget<SliderWidget>}
-            {...common}
-          />
+          <SliderWidgetComponent widget={widget as TemplateWidget<SliderWidget>} {...common} />
         )}
       </div>
     </div>

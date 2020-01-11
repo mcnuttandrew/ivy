@@ -54,10 +54,7 @@ export default function Pill(props: PillProps): JSX.Element {
     >
       {open && (
         <div>
-          <div
-            className="coercion-tooltip-background"
-            onClick={(): any => toggleOpen(false)}
-          />
+          <div className="coercion-tooltip-background" onClick={(): any => toggleOpen(false)} />
           <div className="coercion-tooltip-container">
             <div className="coercion-tooltip">
               <h5>Change Base Type</h5>
@@ -74,11 +71,7 @@ export default function Pill(props: PillProps): JSX.Element {
                   </button>
                 );
               })}
-              <button
-                onClick={(): any =>
-                  coerceType({field, type: column.originalType})
-                }
-              >
+              <button onClick={(): any => coerceType({field, type: column.originalType})}>
                 RESET TO ORIGINAL
               </button>
             </div>
@@ -86,10 +79,7 @@ export default function Pill(props: PillProps): JSX.Element {
         </div>
       )}
       {!isMeta && !inEncoding && coerceType && (
-        <div
-          className="fixed-symbol-width"
-          onClick={(): any => toggleOpen(!open)}
-        >
+        <div className="fixed-symbol-width" onClick={(): any => toggleOpen(!open)}>
           {<GoTriangleDown />}
         </div>
       )}
@@ -111,19 +101,14 @@ export default function Pill(props: PillProps): JSX.Element {
         </div>
       )}
       {!isMeta && !inEncoding && addToNextOpenSlot && (
-        <div
-          className="fixed-symbol-width"
-          onClick={(): any => addToNextOpenSlot(column)}
-        >
+        <div className="fixed-symbol-width" onClick={(): any => addToNextOpenSlot(column)}>
           <GoPlus />
         </div>
       )}
       {inEncoding && (
         <div
           className="fixed-symbol-width"
-          onClick={(): any =>
-            setEncodingParameter({text: null, field: containingField, column})
-          }
+          onClick={(): any => setEncodingParameter({text: null, field: containingField, column})}
         >
           <TiDeleteOutline />
         </div>

@@ -56,9 +56,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           <div className="flex">
             <img src="logo.png" />
             <div className="flex-down">
-              {!editMode && (
-                <h1 className="section-title">{`MODE: ${encodingMode}`}</h1>
-              )}
+              {!editMode && <h1 className="section-title">{`MODE: ${encodingMode}`}</h1>}
               {editMode && template && (
                 <React.Fragment>
                   <h1 className="section-title">MODE:</h1>
@@ -75,11 +73,7 @@ export default function EncodingControls(props: Props): JSX.Element {
                 </React.Fragment>
               )}
               {!editMode && (
-                <h3>
-                  {template
-                    ? template.templateDescription
-                    : 'Tableau-style grammar of graphics'}
-                </h3>
+                <h3>{template ? template.templateDescription : 'Tableau-style grammar of graphics'}</h3>
               )}
               {editMode && template && (
                 <input
@@ -111,28 +105,20 @@ export default function EncodingControls(props: Props): JSX.Element {
               'template-modification-control': true,
             })}
             onClick={(): void => {
-              chainActions([
-                (): any => setBlankTemplate(false),
-                (): any => setEditMode(true),
-              ]);
+              chainActions([(): any => setBlankTemplate(false), (): any => setEditMode(true)]);
             }}
           >
-            <IoIosCreate />{' '}
-            <span className="template-modification-control-label">NEW</span>
+            <IoIosCreate /> <span className="template-modification-control-label">NEW</span>
           </div>
           <div
             className={classnames({
               'template-modification-control': true,
             })}
             onClick={(): void => {
-              chainActions([
-                (): any => setBlankTemplate(true),
-                (): any => setEditMode(true),
-              ]);
+              chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]);
             }}
           >
-            <GoRepoForked />{' '}
-            <span className="template-modification-control-label">FORK</span>
+            <GoRepoForked /> <span className="template-modification-control-label">FORK</span>
           </div>
           <div
             className={classnames({
@@ -143,10 +129,7 @@ export default function EncodingControls(props: Props): JSX.Element {
               if (!canSave || isGrammar) {
                 return;
               }
-              chainActions([
-                (): any => saveCurrentTemplate(),
-                (): any => setEditMode(false),
-              ]);
+              chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
             }}
           >
             <FaSave />
@@ -166,10 +149,7 @@ export default function EncodingControls(props: Props): JSX.Element {
             </span>
           </div>
 
-          <div
-            className="template-modification-control"
-            onClick={clearEncoding}
-          >
+          <div className="template-modification-control" onClick={clearEncoding}>
             <FaEraser />
 
             <span className="template-modification-control-label">RESET</span>

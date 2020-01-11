@@ -20,11 +20,7 @@ import {
 import {addToNextOpenSlot} from './apt-actions';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
-import {
-  changeSelectedFile,
-  recieveData,
-  recieveTypeInferences,
-} from './data-actions';
+import {changeSelectedFile, recieveData, recieveTypeInferences} from './data-actions';
 import {
   addWidget,
   deleteTemplate,
@@ -51,14 +47,10 @@ import {
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // second order effects
-const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (
-  state,
-  payload,
-): AppState => wrapper(state, func(state, payload));
-const addUndo = (func: ActionResponse): ActionResponse =>
-  wrap(func, pushToUndoStack);
-const addUpdateCode = (func: ActionResponse): ActionResponse =>
-  wrap(func, updateCodeRepresentation);
+const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (state, payload): AppState =>
+  wrapper(state, func(state, payload));
+const addUndo = (func: ActionResponse): ActionResponse => wrap(func, pushToUndoStack);
+const addUpdateCode = (func: ActionResponse): ActionResponse => wrap(func, updateCodeRepresentation);
 
 const actionFuncMap: {[val: string]: ActionResponse} = {
   // data modifications
@@ -115,10 +107,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
 };
 const NULL_ACTION: ActionResponse = state => state;
 const reducers = {
-  base: (
-    state: AppState = DEFAULT_STATE,
-    {type, payload}: {type: string; payload: any},
-  ): AppState => {
+  base: (state: AppState = DEFAULT_STATE, {type, payload}: {type: string; payload: any}): AppState => {
     console.log(type);
     return (actionFuncMap[type] || NULL_ACTION)(state, payload);
   },

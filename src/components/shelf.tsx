@@ -49,19 +49,15 @@ export default function Shelf(props: ShelfProps): JSX.Element {
       canDrop: monitor.canDrop(),
     }),
   });
-  const optionsToRender = (
-    configurationOptions[field] || []
-  ).filter((option: EncodingOption) => option.predicate(iMspec));
+  const optionsToRender = (configurationOptions[field] || []).filter((option: EncodingOption) =>
+    option.predicate(iMspec),
+  );
 
   const configurationOpen = Boolean(optionsToRender.length);
-  let definedField = columns.find(
-    ({field}) => column && field === column.field,
-  );
+  let definedField = columns.find(({field}) => column && field === column.field);
   const repeatKey = get(column, ['field', 'repeat']);
   if (repeatKey && typeof repeatKey === 'string') {
-    definedField = metaColumns.find(
-      ({field}: {field: string}) => repeatKey === field,
-    );
+    definedField = metaColumns.find(({field}: {field: string}) => repeatKey === field);
   }
   const options = [{display: 'Select a value', value: null}].concat(
     columns.map(({field}) => ({display: field, value: field})),
@@ -104,9 +100,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
             <div className="shelf-dropdown">
               <Selector
                 options={options}
-                selectedValue={
-                  (definedField && definedField.field) || 'SELECT A VALUE'
-                }
+                selectedValue={(definedField && definedField.field) || 'SELECT A VALUE'}
                 onChange={(text: string): void => {
                   onDrop({field, type: 'CARD', text, disable: false});
                 }}

@@ -5,11 +5,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
 
 import {Template, TemplateMap} from '../templates/types';
-import {
-  synthesizeSuggestions,
-  takeSuggestion,
-  Suggestion,
-} from '../utils/introspect';
+import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 import {GenericAction} from '../actions';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {classnames, serializeTemplate} from '../utils';
@@ -168,13 +164,7 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render(): JSX.Element {
-    const {
-      editorError,
-      setCodeMode,
-      codeMode,
-      template,
-      addWidget,
-    } = this.props;
+    const {editorError, setCodeMode, codeMode, template, addWidget} = this.props;
     const {updateMode, suggestionBox} = this.state;
     const currentCode = this.getCurrentCode();
 
@@ -212,9 +202,7 @@ export default class CodeEditor extends React.Component<Props, State> {
               ref="monaco"
               language="json"
               theme="monokai"
-              height={
-                suggestionBox ? 'calc(100% - 300px)' : 'calc(100% - 110px)'
-              }
+              height={suggestionBox ? 'calc(100% - 300px)' : 'calc(100% - 110px)'}
               value={currentCode}
               options={EDITOR_OPTIONS}
               onChange={(code: string): void => {
@@ -234,11 +222,7 @@ export default class CodeEditor extends React.Component<Props, State> {
           <div className="suggestion-box" style={{height: '185px'}}>
             <div className="suggestion-box-header flex space-between">
               <h5>Suggestions</h5>
-              <div
-                onClick={(): any =>
-                  this.setState({suggestionBox: !suggestionBox})
-                }
-              >
+              <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
                 {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
               </div>
             </div>
@@ -252,9 +236,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                       return (
                         <button
                           onClick={(): void => {
-                            this.handleCodeUpdate(
-                              takeSuggestion(currentCode, suggestion),
-                            );
+                            this.handleCodeUpdate(takeSuggestion(currentCode, suggestion));
                             if (sideEffect) {
                               addWidget(sideEffect());
                             }

@@ -47,9 +47,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       onDropFilter,
     } = this.props;
     const inUseFields = getAllInUseFields(iMspec);
-    const makePill = (checkOptions: boolean) => (
-      column: ColumnHeader,
-    ): JSX.Element => {
+    const makePill = (checkOptions: boolean) => (column: ColumnHeader): JSX.Element => {
       return (
         <div className="pill-container" key={column.field}>
           <Pill
@@ -78,19 +76,14 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         <div className="flex space-between data-selection">
           <div className="flex center">
             <DiDatabase />
-            <div className="section-subtitle">
-              {' '}
-              {currentlySelectedFile || 'SELECT FILE'}
-            </div>
+            <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
           </div>
           <button onClick={toggleDataModal}>CHANGE</button>
         </div>
         <h5>Data Columns</h5>
         <div className="flex-down">{columns.map(makePill(false))}</div>
         {!template && <h5>Meta Columns</h5>}
-        {!template && (
-          <div className="flex-down">{metaColumns.map(makePill(true))}</div>
-        )}
+        {!template && <div className="flex-down">{metaColumns.map(makePill(true))}</div>}
 
         <h5> Filter </h5>
         <div className="flex-down">
@@ -102,9 +95,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
             .map((filter: any, idx: number) => {
               return (
                 <Filter
-                  column={columns.find(
-                    ({field}) => field === filter.filter.field,
-                  )}
+                  column={columns.find(({field}) => field === filter.filter.field)}
                   filter={filter}
                   key={`${idx}-filter`}
                   updateFilter={(newFilterValue: any): void => {

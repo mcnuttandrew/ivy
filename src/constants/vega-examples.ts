@@ -59,13 +59,7 @@ export const OLD_EXAMPLE = Immutable.fromJS({
     },
     {
       data: {
-        values: [
-          {year: '1600'},
-          {year: '1650'},
-          {year: '1700'},
-          {year: '1750'},
-          {year: '1800'},
-        ],
+        values: [{year: '1600'}, {year: '1650'}, {year: '1700'}, {year: '1750'}, {year: '1800'}],
       },
       mark: {
         type: 'rule',
@@ -133,13 +127,11 @@ export const OLD_EXAMPLE = Immutable.fromJS({
     },
     {
       data: {
-        url:
-          'https://raw.githubusercontent.com/vega/vega-datasets/master/data/monarchs.json',
+        url: 'https://raw.githubusercontent.com/vega/vega-datasets/master/data/monarchs.json',
       },
       transform: [
         {
-          calculate:
-            '((!datum.commonwealth && datum.index % 2) ? -1: 1) * 2 + 95',
+          calculate: '((!datum.commonwealth && datum.index % 2) ? -1: 1) * 2 + 95',
           as: 'offset',
         },
         {calculate: '95', as: 'y'},
@@ -171,8 +163,7 @@ export const OLD_EXAMPLE = Immutable.fromJS({
     },
     {
       data: {
-        url:
-          'https://raw.githubusercontent.com/vega/vega-datasets/master/data/monarchs.json',
+        url: 'https://raw.githubusercontent.com/vega/vega-datasets/master/data/monarchs.json',
       },
       transform: [
         {

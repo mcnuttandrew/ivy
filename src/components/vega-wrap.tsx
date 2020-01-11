@@ -61,13 +61,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
       }
     }
     return (
-      <Vega
-        actions={false}
-        spec={finalSpec}
-        mode={language}
-        theme={theme}
-        tooltip={new Handler({}).call}
-      />
+      <Vega actions={false} spec={finalSpec} mode={language} theme={theme} tooltip={new Handler({}).call} />
     );
   }
 }

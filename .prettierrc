@@ -4,5 +4,6 @@
   "bracketSpacing": false,
   "jsxBracketSameLine": false,
   "semi": true,
-  "parser": "typescript"
+  "parser": "typescript",
+  "printWidth": 110
 }

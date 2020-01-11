@@ -20,9 +20,7 @@ interface TemplateColumnProps {
   moveWidget: GenericAction;
 }
 
-export default class TemplateColumn extends React.Component<
-  TemplateColumnProps
-> {
+export default class TemplateColumn extends React.Component<TemplateColumnProps> {
   render(): JSX.Element {
     const {
       addWidget,
@@ -44,12 +42,7 @@ export default class TemplateColumn extends React.Component<
             <h3>{template.templateName}</h3>
           </div>
         )}
-        {editMode && (
-          <TemplateColumnAddNewWidgetPopover
-            widgets={template.widgets}
-            addWidget={addWidget}
-          />
-        )}
+        {editMode && <TemplateColumnAddNewWidgetPopover widgets={template.widgets} addWidget={addWidget} />}
         <div
           className={classnames({
             column: true,
@@ -71,9 +64,7 @@ export default class TemplateColumn extends React.Component<
                   key={`${idx}`}
                   showSimpleDisplay={showSimpleDisplay}
                   removeWidget={(): any => removeWidget(idx)}
-                  moveWidget={(fromIdx, toIdx): any =>
-                    moveWidget({fromIdx, toIdx})
-                  }
+                  moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
                   setWidgetValue={(key: string, value: any, idx: number): any =>
                     setWidgetValue({key, value, idx})
                   }

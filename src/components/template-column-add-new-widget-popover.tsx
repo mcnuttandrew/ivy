@@ -10,13 +10,9 @@ interface Props {
   widgets: TemplateWidget<WidgetSubType>[];
 }
 
-export default function TemplateColumnAddNewWidgetPopover(
-  props: Props,
-): JSX.Element {
+export default function TemplateColumnAddNewWidgetPopover(props: Props): JSX.Element {
   const {addWidget, widgets} = props;
-  const options = Object.entries(widgetFactory).concat(
-    Object.entries(preconfiguredWidgets),
-  );
+  const options = Object.entries(widgetFactory).concat(Object.entries(preconfiguredWidgets));
   return (
     <Popover
       className="new-widget-menu"

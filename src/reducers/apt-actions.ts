@@ -19,22 +19,8 @@ export const TYPE_TRANSLATE: {[s: string]: string} = {
 const positionPrefs = ['x', 'y'];
 const commonPrefs = ['text', 'column', 'rows'];
 // listings inspired by APT
-const dimensionFieldPreferences = [
-  ...positionPrefs,
-  'color',
-  'shape',
-  'detail',
-  'size',
-  ...commonPrefs,
-];
-const measureFieldPreferences = [
-  ...positionPrefs,
-  'size',
-  'color',
-  'shape',
-  'detail',
-  ...commonPrefs,
-];
+const dimensionFieldPreferences = [...positionPrefs, 'color', 'shape', 'detail', 'size', ...commonPrefs];
+const measureFieldPreferences = [...positionPrefs, 'size', 'color', 'shape', 'detail', ...commonPrefs];
 type setMap = {[s: string]: boolean};
 
 const usuallyContinuous: setMap = {
@@ -54,10 +40,7 @@ const grammarBasedGuess: ActionResponse = (state, payload) => {
   // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
   const encoding = state.getIn(['spec', 'encoding']).toJS();
   const column = findField(state, payload.field);
-  const fields =
-    column.type === 'DIMENSION'
-      ? dimensionFieldPreferences
-      : measureFieldPreferences;
+  const fields = column.type === 'DIMENSION' ? dimensionFieldPreferences : measureFieldPreferences;
   const channel = fields.find(field => {
     return !encoding[field] || JSON.stringify(encoding[field]) === '{}';
   });
@@ -90,18 +73,12 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
 
   const openMultiDropTargets = template.widgets
     // select just the open drop targets
-    .filter(
-      (widget: TemplateWidget<WidgetSubType>) =>
-        widget.widgetType === 'MultiDataTarget',
-    )
+    .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType === 'MultiDataTarget')
     // and that allow the type of drop column
     .filter(
       (widget: TemplateWidget<MultiDataTargetWidget>) =>
-        widget.widget.allowedTypes.find(
-          (type: string) => type === column.type,
-        ) &&
-        (templateMap[widget.widgetName] || []).length <
-          widget.widget.maxNumberOfTargets,
+        widget.widget.allowedTypes.find((type: string) => type === column.type) &&
+        (templateMap[widget.widgetName] || []).length < widget.widget.maxNumberOfTargets,
     );
   const targets = [].concat(openDropTargets).concat(openMultiDropTargets);
   if (!targets.length) {
@@ -113,9 +90,7 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
     const oldVal = templateMap[selectedWidget.widgetName] || [];
     return setTemplateValue(state, {
       field: selectedWidget.widgetName,
-      text: (oldVal as string[])
-        .filter((key: any) => key !== payload.field)
-        .concat([payload.field]),
+      text: (oldVal as string[]).filter((key: any) => key !== payload.field).concat([payload.field]),
     });
   }
   // else is single drop target
@@ -127,8 +102,5 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
 
 export const addToNextOpenSlot: ActionResponse = (state, payload) => {
   const encodingMode = state.get('encodingMode');
-  return (encodingMode !== 'grammer' ? templateBasedGuess : grammarBasedGuess)(
-    state,
-    payload,
-  );
+  return (encodingMode !== 'grammer' ? templateBasedGuess : grammarBasedGuess)(state, payload);
 };

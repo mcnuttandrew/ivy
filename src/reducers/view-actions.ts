@@ -44,10 +44,7 @@ export const cloneView: ActionResponse = state => {
   const updatedState = updateCatalogView(state, state.get('currentView'));
   const newState = updatedState
     .set('views', updatedState.get('views').push(newViewName))
-    .setIn(
-      ['viewCatalog', newViewName],
-      updatedState.getIn(['viewCatalog', state.get('currentView')]),
-    );
+    .setIn(['viewCatalog', newViewName], updatedState.getIn(['viewCatalog', state.get('currentView')]));
 
   return switchView(newState, newViewName);
 };

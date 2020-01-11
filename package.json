@@ -93,7 +93,8 @@
     "build": "NODE_ENV=production webpack",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:fix": "eslint './src/**/*.{ts,tsx}'",
-    "test": "jest"
+    "test": "jest",
+    "prettify": "prettier --write 'src/**/*.{ts,tsx}'"
   },
   "jest": {
     "transform": {

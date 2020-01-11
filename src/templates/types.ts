@@ -1,12 +1,6 @@
 export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN';
 
-export type WidgetType =
-  | 'DataTarget'
-  | 'MultiDataTarget'
-  | 'List'
-  | 'Switch'
-  | 'Text'
-  | 'Slider';
+export type WidgetType = 'DataTarget' | 'MultiDataTarget' | 'List' | 'Switch' | 'Text' | 'Slider';
 export interface TemplateWidget<T> {
   /**
    *   The name of widget to be used, this name will be swapped into the code string

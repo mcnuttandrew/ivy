@@ -1,12 +1,6 @@
 import Immutable from 'immutable';
 import {setTemplateValues} from '../reducers/template-actions';
-import {
-  TemplateWidget,
-  ListWidget,
-  SwitchWidget,
-  SliderWidget,
-  WidgetSubType,
-} from '../templates/types';
+import {TemplateWidget, ListWidget, SwitchWidget, SliderWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory} from '../templates';
 
 import {compile} from 'vega-lite';
@@ -17,10 +11,7 @@ function specialTrim(dimName: string): string {
   if (!dimName || dimName.length < 3) {
     return dimName;
   }
-  if (
-    dimName.slice(0, 2) === '["' &&
-    dimName.slice(dimName.length - 2) === '"]'
-  ) {
+  if (dimName.slice(0, 2) === '["' && dimName.slice(dimName.length - 2) === '"]') {
     return dimName.slice(2, dimName.length - 2);
   }
   return dimName;
@@ -75,8 +66,7 @@ export function inferPossibleDataTargets(spec: any): string[] {
       }, {}),
   );
   // match based on a hueristic
-  const hueristicTargets =
-    JSON.stringify(spec).match(/"field":\w*"(.*?)"/g) || [];
+  const hueristicTargets = JSON.stringify(spec).match(/"field":\w*"(.*?)"/g) || [];
   Object.keys(
     hueristicTargets.reduce((acc: any, key: string) => {
       acc[key.slice(0, key.length - 1).slice('"field":"'.length)] = true;
@@ -108,37 +98,29 @@ const DUMMY = 'xxxxxEXAMPLExxxx';
 type generateFullTemplateMapReturn = {
   [x: string]: any;
 };
-function generateFullTemplateMap(
-  widgets: TemplateWidget<WidgetSubType>[],
-): generateFullTemplateMapReturn {
-  return widgets.reduce(
-    (
-      acc: generateFullTemplateMapReturn,
-      widget: TemplateWidget<WidgetSubType>,
-    ) => {
-      const widgetType = widget.widgetType;
-      if (widgetType === 'DataTarget') {
-        acc[widget.widgetName] = `"${DUMMY}"`;
-      }
-      if (widgetType === 'MultiDataTarget') {
-        acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
-      }
-      if (widgetType === 'List') {
-        const localW = widget as TemplateWidget<ListWidget>;
-        acc[widget.widgetName] = localW.widget.defaultValue;
-      }
-      if (widgetType === 'Switch') {
-        const localW = widget as TemplateWidget<SwitchWidget>;
-        acc[widget.widgetName] = localW.widget.activeValue;
-      }
-      if (widgetType === 'Slider') {
-        const localW = widget as TemplateWidget<SliderWidget>;
-        acc[widget.widgetName] = localW.widget.defaultValue;
-      }
-      return acc;
-    },
-    {},
-  );
+function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]): generateFullTemplateMapReturn {
+  return widgets.reduce((acc: generateFullTemplateMapReturn, widget: TemplateWidget<WidgetSubType>) => {
+    const widgetType = widget.widgetType;
+    if (widgetType === 'DataTarget') {
+      acc[widget.widgetName] = `"${DUMMY}"`;
+    }
+    if (widgetType === 'MultiDataTarget') {
+      acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
+    }
+    if (widgetType === 'List') {
+      const localW = widget as TemplateWidget<ListWidget>;
+      acc[widget.widgetName] = localW.widget.defaultValue;
+    }
+    if (widgetType === 'Switch') {
+      const localW = widget as TemplateWidget<SwitchWidget>;
+      acc[widget.widgetName] = localW.widget.activeValue;
+    }
+    if (widgetType === 'Slider') {
+      const localW = widget as TemplateWidget<SliderWidget>;
+      acc[widget.widgetName] = localW.widget.defaultValue;
+    }
+    return acc;
+  }, {});
 }
 
 export interface Suggestion {
@@ -149,13 +131,8 @@ export interface Suggestion {
   simpleReplace: boolean;
 }
 
-export function synthesizeSuggestions(
-  code: string,
-  widgets: TemplateWidget<WidgetSubType>[],
-): Suggestion[] {
-  const parsedCode = safeParse(
-    setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))),
-  );
+export function synthesizeSuggestions(code: string, widgets: TemplateWidget<WidgetSubType>[]): Suggestion[] {
+  const parsedCode = safeParse(setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))));
   if (!parsedCode) {
     return [];
   }
@@ -213,7 +190,5 @@ export function synthesizeSuggestions(
 
 export function takeSuggestion(code: string, suggestion: Suggestion): string {
   const {simpleReplace, from, to} = suggestion;
-  return simpleReplace
-    ? code.replace(from, to)
-    : code.replace(new RegExp(from, 'g'), to);
+  return simpleReplace ? code.replace(from, to) : code.replace(new RegExp(from, 'g'), to);
 }
