@@ -2,10 +2,12 @@ import React from 'react';
 import {useDrop} from 'react-dnd';
 
 import Pill from './pill';
+import Selector from './selector';
 import DataSymbol from './data-symbol';
 import {ColumnHeader} from '../types';
 import {DataTargetWidget, TemplateWidget} from '../templates/types';
 import {classnames} from '../utils';
+import {TEXT_TYPE} from '../constants/index';
 
 interface TemplateShelf {
   channelEncoding?: string;
@@ -13,11 +15,20 @@ interface TemplateShelf {
   field: string;
   onDrop: any;
   setName?: any;
+  showSimpleDisplay: boolean;
   widget: TemplateWidget<DataTargetWidget>;
 }
 
 export default function TemplateShelf(props: TemplateShelf): JSX.Element {
-  const {channelEncoding, columns, field, onDrop, widget, setName} = props;
+  const {
+    channelEncoding,
+    columns,
+    field,
+    onDrop,
+    setName,
+    showSimpleDisplay,
+    widget,
+  } = props;
 
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
@@ -31,6 +42,17 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
 
   const columnHeader = columns.find(
     ({field}) => channelEncoding && field === channelEncoding,
+  );
+  const options = [
+    {display: 'Select a value', value: null, group: null},
+  ].concat(
+    columns.map(column => ({
+      display: `${column.field} ${TEXT_TYPE[column.type]}`,
+      value: column.field,
+      group: widget.widget.allowedTypes.includes(column.type)
+        ? 'RECOMENDED'
+        : 'OUT OF TYPE',
+    })),
   );
   return (
     <div
@@ -59,7 +81,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
           </div>
         </div>
         <div className="pill-dropzone">
-          {!columnHeader && (
+          {!columnHeader && !showSimpleDisplay && (
             <div
               className={classnames({
                 'blank-pill': true,
@@ -69,7 +91,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
               {'drop a field here'}
             </div>
           )}
-          {channelEncoding && columnHeader && (
+          {channelEncoding && columnHeader && !showSimpleDisplay && (
             <Pill
               inEncoding={true}
               containingShelf={field}
@@ -78,6 +100,23 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
               setEncodingParameter={onDrop}
             />
           )}
+          <div className="shelf-dropdown">
+            <Selector
+              useGroups={true}
+              options={options}
+              selectedValue={channelEncoding || ' '}
+              onChange={(text: string): void => {
+                // drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field}),
+                console.log('ondrop', text, field);
+                onDrop({
+                  field,
+                  type: 'CARD',
+                  text: `"${text}"`,
+                  disable: false,
+                });
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

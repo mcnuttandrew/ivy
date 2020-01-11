@@ -9,20 +9,20 @@ import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
 
 interface Props {
-  encodingMode: string;
-  templates?: Template[];
-  template?: Template;
   editMode: boolean;
+  encodingMode: string;
+  template?: Template;
   templateSaveState: string;
+  templates?: Template[];
 
   chainActions: GenericAction;
-  setEncodingMode: GenericAction;
-  deleteTemplate: GenericAction;
   clearEncoding: GenericAction;
+  deleteTemplate: GenericAction;
+  modifyValueOnTemplate: GenericAction;
   saveCurrentTemplate: GenericAction;
   setBlankTemplate: GenericAction;
-  modifyValueOnTemplate: GenericAction;
   setEditMode: GenericAction;
+  setEncodingMode: GenericAction;
 }
 
 const UPDATE_TEMPLATE: {[x: string]: boolean} = {

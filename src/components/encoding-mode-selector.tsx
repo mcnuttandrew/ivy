@@ -4,13 +4,13 @@ import {Template} from '../templates/types';
 import Popover from './popover';
 
 interface Props {
-  templates: Template[];
   clickTarget: any;
+  templates: Template[];
 
-  setEditMode: GenericAction;
-  deleteTemplate: GenericAction;
-  setEncodingMode: GenericAction;
   chainActions: GenericAction;
+  deleteTemplate: GenericAction;
+  setEditMode: GenericAction;
+  setEncodingMode: GenericAction;
 }
 
 type buttonFactory = {[action: string]: () => void};
@@ -81,12 +81,12 @@ function encodingRow(
 
 export default function EncodingMode(props: Props): JSX.Element {
   const {
-    templates,
-    setEncodingMode,
-    deleteTemplate,
     chainActions,
-    setEditMode,
     clickTarget,
+    deleteTemplate,
+    setEditMode,
+    setEncodingMode,
+    templates,
   } = props;
   const [searchKey, setSearch] = useState('');
 
@@ -95,11 +95,11 @@ export default function EncodingMode(props: Props): JSX.Element {
       clickTarget={clickTarget}
       body={(toggle: any): JSX.Element => {
         const buttonActions = generateButtonActions({
+          chainActions,
+          deleteTemplate,
+          setEditMode,
           setEncodingMode,
           toggle,
-          deleteTemplate,
-          chainActions,
-          setEditMode,
         });
         return (
           <React.Fragment>
@@ -120,6 +120,7 @@ export default function EncodingMode(props: Props): JSX.Element {
                 -1,
               )}
               {templates
+                .filter(template => template.templateName !== '_____none_____')
                 .filter((template: Template) => {
                   const {templateName, templateDescription} = template;
                   const matchDescription =

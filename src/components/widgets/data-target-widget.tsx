@@ -19,11 +19,13 @@ export default function DataTargetWidgetComponent(
     templateMap,
     columns,
     setTemplateValue,
+    showSimpleDisplay,
   } = props;
   const fieldValue = templateMap[widget.widgetName];
   if (!editMode) {
     return (
       <TemplateShelf
+        showSimpleDisplay={showSimpleDisplay}
         channelEncoding={trim(fieldValue as string)}
         field={widget.widgetName}
         columns={columns}
@@ -42,6 +44,7 @@ export default function DataTargetWidgetComponent(
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
+        showSimpleDisplay={showSimpleDisplay}
         setName={(value: string): any =>
           setWidgetValue('widgetName', value, idx)
         }

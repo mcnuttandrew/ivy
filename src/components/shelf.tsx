@@ -3,6 +3,7 @@ import {useDrop} from 'react-dnd';
 
 import {GenericAction} from '../actions/index';
 import Pill from './pill';
+import Selector from './selector';
 import {ColumnHeader} from '../types';
 import {classnames, get} from '../utils';
 import {configurationOptions, EncodingOption} from '../constants';
@@ -16,6 +17,7 @@ interface ShelfProps {
   iMspec: any;
   metaColumns: ColumnHeader[];
   onDrop: any;
+  showSimpleDisplay: boolean;
 
   setEncodingParameter: GenericAction;
   setNewSpec: GenericAction;
@@ -32,12 +34,16 @@ export default function Shelf(props: ShelfProps): JSX.Element {
     onDrop,
     setEncodingParameter,
     setNewSpec,
+    showSimpleDisplay,
   } = props;
 
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    drop: item => onDrop({...item, field, disable}),
+    drop: item => {
+      console.log({...item, field, disable});
+      return onDrop({...item, field, disable});
+    },
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -57,6 +63,10 @@ export default function Shelf(props: ShelfProps): JSX.Element {
       ({field}: {field: string}) => repeatKey === field,
     );
   }
+  const options = [{display: 'Select a value', value: null}].concat(
+    columns.map(({field}) => ({display: field, value: field})),
+  );
+
   return (
     <div
       ref={drop}
@@ -71,7 +81,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
           <div>{field}</div>
         </div>
         <div className="pill-dropzone">
-          {!definedField && (
+          {!definedField && !showSimpleDisplay && (
             <div
               className={classnames({
                 'blank-pill': true,
@@ -81,7 +91,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
               {'drop a field here'}
             </div>
           )}
-          {column && definedField && (
+          {column && definedField && !showSimpleDisplay && (
             <Pill
               inEncoding={true}
               containingShelf={field}
@@ -89,6 +99,19 @@ export default function Shelf(props: ShelfProps): JSX.Element {
               containingField={field}
               column={definedField}
             />
+          )}
+          {showSimpleDisplay && (
+            <div className="shelf-dropdown">
+              <Selector
+                options={options}
+                selectedValue={
+                  (definedField && definedField.field) || 'SELECT A VALUE'
+                }
+                onChange={(text: string): void => {
+                  onDrop({field, type: 'CARD', text, disable: false});
+                }}
+              />
+            </div>
           )}
         </div>
       </div>

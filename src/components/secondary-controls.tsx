@@ -6,8 +6,8 @@ import {VegaTheme} from '../types';
 import Selector from './selector';
 
 const VEGA_THEMES = [
-  'default',
   'dark',
+  'default',
   'excel',
   'fivethirtyeight',
   'ggplot2',
@@ -17,10 +17,12 @@ const VEGA_THEMES = [
   'vox',
 ].map((x: string) => ({display: x, value: x}));
 export interface SecondaryHeaderProps {
-  currentTheme: VegaTheme;
-  showProgrammaticMode: boolean;
   changeTheme: GenericAction;
+  currentTheme: VegaTheme;
   setProgrammaticView: GenericAction;
+  setSimpleDisplay: GenericAction;
+  showProgrammaticMode: boolean;
+  showSimpleDisplay: boolean;
 }
 
 export default function SecondaryHeader(
@@ -29,22 +31,22 @@ export default function SecondaryHeader(
   const {
     changeTheme,
     currentTheme,
-    showProgrammaticMode,
     setProgrammaticView,
+    setSimpleDisplay,
+    showProgrammaticMode,
+    showSimpleDisplay,
   } = props;
   return (
     <div className="secondary-controls flex-down">
       <h5>SECONDARY CONTROLS</h5>
       <div className="flex space-between">
         <div className="mode-selector flex">
-          Text View:{' '}
+          <span>{'Code: '}</span>
           {['HIDE', 'SHOW'].map(mode => {
             return (
               <div
                 key={mode}
-                onClick={(): any =>
-                  setProgrammaticView(mode === 'HIDE' ? false : true)
-                }
+                onClick={(): any => setProgrammaticView(mode === 'SHOW')}
                 className={classnames({
                   'mode-option': true,
                   'selected-mode':
@@ -57,12 +59,31 @@ export default function SecondaryHeader(
             );
           })}
         </div>
+        <div className="mode-selector flex">
+          <span>{'Input: '}</span>
+          {['SIMPLE', 'GOG'].map(mode => {
+            return (
+              <div
+                key={mode}
+                onClick={(): any => setSimpleDisplay(mode === 'SIMPLE')}
+                className={classnames({
+                  'mode-option': true,
+                  'selected-mode':
+                    (mode === 'GOG' && !showSimpleDisplay) ||
+                    (mode === 'SIMPLE' && showSimpleDisplay),
+                })}
+              >
+                {mode}
+              </div>
+            );
+          })}
+        </div>
         <span className="flex">
           <span>Theme:</span>
           <Selector
-            selectedValue={currentTheme}
             onChange={(value): any => changeTheme(value)}
             options={VEGA_THEMES}
+            selectedValue={currentTheme}
           />
         </span>
       </div>

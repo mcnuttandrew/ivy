@@ -10,26 +10,26 @@ import DataSymbol from './data-symbol';
 import {classnames} from '../utils';
 
 export interface PillProps {
+  addToNextOpenSlot?: GenericAction;
+  coerceType?: GenericAction;
   column: ColumnHeader;
   containingField?: string;
-  inEncoding: boolean;
   containingShelf?: string;
-  setEncodingParameter?: any;
-  addToNextOpenSlot?: GenericAction;
   createFilter?: GenericAction;
-  coerceType?: GenericAction;
+  inEncoding: boolean;
+  setEncodingParameter?: any;
 }
 
 export default function Pill(props: PillProps): JSX.Element {
   const {
-    column,
-    inEncoding,
-    setEncodingParameter,
-    containingField,
     addToNextOpenSlot,
+    coerceType,
+    column,
+    containingField,
     containingShelf,
     createFilter,
-    coerceType,
+    inEncoding,
+    setEncodingParameter,
   } = props;
   const field = column.field;
   const isMeta = column.metaColumn;
