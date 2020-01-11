@@ -824,8 +824,8 @@ input[type=number]::-webkit-outer-spin-button {
   margin-bottom: 20px;
 }
 
-.template-preview-column .encoding-selection-option.selected {
-  border: thin solid rgba(125, 125, 125, 0);
+.template-preview-column .encoding-selection-option.selected-encoding-option {
+  border: thin solid rgba(125, 125, 125, 1);
 }
 
 .template-preview-column .encoding-selection-option:hover {

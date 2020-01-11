@@ -21,7 +21,7 @@ function renderEncodingModeOption(
       className={classnames({
         'encoding-selection-option': true,
         flex: true,
-        encodingMode: encodingMode === templateName,
+        'selected-encoding-option': encodingMode === templateName,
       })}
       key={`${templateName}-${idx}`}
       onClick={(): any => setEncodingMode(templateName)}
