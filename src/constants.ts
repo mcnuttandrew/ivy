@@ -91,10 +91,7 @@ const binOption = (dim: string): EncodingOption => ({
   optionGetter: (spec): any => get(spec, ['encoding', dim, 'bin']),
   optionDefault: false,
   predicate: (spec): boolean => {
-    return (
-      get(spec, ['encoding', dim, 'field']) &&
-      channelTypePredicate(dim, ['quantitative', 'time'])(spec)
-    );
+    return get(spec, ['encoding', dim, 'field']) && channelTypePredicate(dim, ['quantitative', 'time'])(spec);
   },
 });
 
@@ -107,10 +104,7 @@ const buildScaleOption = (dim: string): EncodingOption => ({
   optionGetter: (spec): any => get(spec, typeRoute(dim)) || 'linear',
   optionDefault: 'linear',
   predicate: (spec): boolean => {
-    return (
-      get(spec, ['encoding', dim, 'field']) &&
-      channelTypePredicate(dim, ['quantitative', 'time'])(spec)
-    );
+    return get(spec, ['encoding', dim, 'field']) && channelTypePredicate(dim, ['quantitative', 'time'])(spec);
   },
 });
 
@@ -126,10 +120,7 @@ const scaleDomain = (dim: string): EncodingOption => ({
   },
   optionDefault: true,
   predicate: (spec): boolean => {
-    return (
-      get(spec, ['encoding', dim, 'field']) &&
-      channelTypePredicate(dim, ['quantitative', 'time'])(spec)
-    );
+    return get(spec, ['encoding', dim, 'field']) && channelTypePredicate(dim, ['quantitative', 'time'])(spec);
   },
 });
 

@@ -39,17 +39,10 @@ export function getDomain(data: any, field: string): number[] {
 }
 
 export function executePromisesInSeries(tasks: any): any {
-  return tasks.reduce(
-    (promiseChain: any, task: any): any => promiseChain.then(task),
-    Promise.resolve([]),
-  );
+  return tasks.reduce((promiseChain: any, task: any): any => promiseChain.then(task), Promise.resolve([]));
 }
 
-export function findField(
-  state: AppState,
-  targetField: string,
-  columnKey = 'columns',
-): ColumnHeader {
+export function findField(state: AppState, targetField: string, columnKey = 'columns'): ColumnHeader {
   return state.get(columnKey).find(({field}: {field: string}) => field === targetField);
 }
 
@@ -142,9 +135,7 @@ export function getAllInUseFields(spec: any): Set<string> {
 }
 
 export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
-  columns
-    .filter((column: ColumnHeader) => column.type === type)
-    .map((column: ColumnHeader) => column.field);
+  columns.filter((column: ColumnHeader) => column.type === type).map((column: ColumnHeader) => column.field);
 
 // currently unused
 export function checkEncodingForValidity(spec: any): boolean {
@@ -167,10 +158,7 @@ export const getTemplate = (state: AppState, template: string): Template | null 
 export function widgetInUse(code: string, widgetName: string): boolean {
   return Boolean(code.match(new RegExp(`\\[${widgetName}\\]`, 'g')));
 }
-export function allWidgetsInUse(
-  code: string,
-  widgets: List<TemplateWidget<WidgetSubType>>,
-): boolean {
+export function allWidgetsInUse(code: string, widgets: List<TemplateWidget<WidgetSubType>>): boolean {
   return widgets
     .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'Text')
     .every((widget: TemplateWidget<WidgetSubType>) => !!widgetInUse(code, widget.widgetName));

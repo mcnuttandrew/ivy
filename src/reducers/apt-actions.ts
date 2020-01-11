@@ -19,22 +19,8 @@ export const TYPE_TRANSLATE: {[s: string]: string} = {
 const positionPrefs = ['x', 'y'];
 const commonPrefs = ['text', 'column', 'rows'];
 // listings inspired by APT
-const dimensionFieldPreferences = [
-  ...positionPrefs,
-  'color',
-  'shape',
-  'detail',
-  'size',
-  ...commonPrefs,
-];
-const measureFieldPreferences = [
-  ...positionPrefs,
-  'size',
-  'color',
-  'shape',
-  'detail',
-  ...commonPrefs,
-];
+const dimensionFieldPreferences = [...positionPrefs, 'color', 'shape', 'detail', 'size', ...commonPrefs];
+const measureFieldPreferences = [...positionPrefs, 'size', 'color', 'shape', 'detail', ...commonPrefs];
 type setMap = {[s: string]: boolean};
 
 const usuallyContinuous: setMap = {
@@ -104,9 +90,7 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
     const oldVal = templateMap[selectedWidget.widgetName] || [];
     return setTemplateValue(state, {
       field: selectedWidget.widgetName,
-      text: (oldVal as string[])
-        .filter((key: any) => key !== payload.field)
-        .concat([payload.field]),
+      text: (oldVal as string[]).filter((key: any) => key !== payload.field).concat([payload.field]),
     });
   }
   // else is single drop target

@@ -186,10 +186,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
       <PlacementControls {...props} />
       <div className="widget-body">
         {widgetType === 'MultiDataTarget' && (
-          <MultiDataTargetComponent
-            widget={widget as TemplateWidget<MultiDataTargetWidget>}
-            {...common}
-          />
+          <MultiDataTargetComponent widget={widget as TemplateWidget<MultiDataTargetWidget>} {...common} />
         )}
         {widgetType === 'Switch' && (
           <SwitchWidgetComponent widget={widget as TemplateWidget<SwitchWidget>} {...common} />
@@ -201,10 +198,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
           <TextWidgetComponent widget={widget as TemplateWidget<TextWidget>} {...common} />
         )}
         {widgetType === 'DataTarget' && (
-          <DataTargetWidgetComponent
-            widget={widget as TemplateWidget<DataTargetWidget>}
-            {...common}
-          />
+          <DataTargetWidgetComponent widget={widget as TemplateWidget<DataTargetWidget>} {...common} />
         )}
         {widgetType === 'Slider' && (
           <SliderWidgetComponent widget={widget as TemplateWidget<SliderWidget>} {...common} />

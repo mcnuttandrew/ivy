@@ -80,9 +80,7 @@ export default function MultiDataTargetComponent(
               <input
                 value={widget.widget.minNumberOfTargets}
                 type="number"
-                onChange={(event): any =>
-                  setWidgetValue('minNumberOfTargets', event.target.value, idx)
-                }
+                onChange={(event): any => setWidgetValue('minNumberOfTargets', event.target.value, idx)}
               />
             </div>
             <div className="flex-down">
@@ -90,9 +88,7 @@ export default function MultiDataTargetComponent(
               <input
                 type="number"
                 value={widget.widget.maxNumberOfTargets}
-                onChange={(event): any =>
-                  setWidgetValue('maxNumberOfTargets', event.target.value, idx)
-                }
+                onChange={(event): any => setWidgetValue('maxNumberOfTargets', event.target.value, idx)}
               />
             </div>
           </div>

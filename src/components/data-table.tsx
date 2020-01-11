@@ -43,10 +43,7 @@ export default function DataTable(props: Props): JSX.Element {
             {columns.map(column => {
               const isSort = column === sortKey;
               return (
-                <th
-                  key={column}
-                  onClick={(): any => (isSort ? setSortOrder(!reverseSort) : setSort(column))}
-                >
+                <th key={column} onClick={(): any => (isSort ? setSortOrder(!reverseSort) : setSort(column))}>
                   {column}
                   {isSort && (reverseSort ? <TiArrowSortedUp /> : <TiArrowSortedDown />)}
                 </th>

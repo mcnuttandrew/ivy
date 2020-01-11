@@ -8,10 +8,7 @@ export const createFilter: ActionResponse = (state, payload) => {
     filter: {
       field: payload.field,
       // todo this is really slick, but we should probably be caching these values on load
-      [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(
-        state.get('data'),
-        payload.field,
-      ),
+      [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(state.get('data'), payload.field),
     },
   };
   return state.updateIn(['spec', 'transform'], (arr: any) =>

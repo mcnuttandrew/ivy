@@ -6,18 +6,7 @@ import {ColumnHeader} from '../types';
 import Selector from './selector';
 import {get} from '../utils';
 
-const PRIMITIVE_MARKS = [
-  'AREA',
-  'BAR',
-  'CIRCLE',
-  'LINE',
-  'POINT',
-  'RECT',
-  'SQUARE',
-  'TEXT',
-  'TICK',
-  'TRAIL',
-];
+const PRIMITIVE_MARKS = ['AREA', 'BAR', 'CIRCLE', 'LINE', 'POINT', 'RECT', 'SQUARE', 'TEXT', 'TICK', 'TRAIL'];
 
 const MARK_TYPES = PRIMITIVE_MARKS.sort().map((x: string) => ({
   display: x,

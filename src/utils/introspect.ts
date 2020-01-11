@@ -1,12 +1,6 @@
 import Immutable from 'immutable';
 import {setTemplateValues} from '../reducers/template-actions';
-import {
-  TemplateWidget,
-  ListWidget,
-  SwitchWidget,
-  SliderWidget,
-  WidgetSubType,
-} from '../templates/types';
+import {TemplateWidget, ListWidget, SwitchWidget, SliderWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory} from '../templates';
 
 import {compile} from 'vega-lite';
@@ -104,34 +98,29 @@ const DUMMY = 'xxxxxEXAMPLExxxx';
 type generateFullTemplateMapReturn = {
   [x: string]: any;
 };
-function generateFullTemplateMap(
-  widgets: TemplateWidget<WidgetSubType>[],
-): generateFullTemplateMapReturn {
-  return widgets.reduce(
-    (acc: generateFullTemplateMapReturn, widget: TemplateWidget<WidgetSubType>) => {
-      const widgetType = widget.widgetType;
-      if (widgetType === 'DataTarget') {
-        acc[widget.widgetName] = `"${DUMMY}"`;
-      }
-      if (widgetType === 'MultiDataTarget') {
-        acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
-      }
-      if (widgetType === 'List') {
-        const localW = widget as TemplateWidget<ListWidget>;
-        acc[widget.widgetName] = localW.widget.defaultValue;
-      }
-      if (widgetType === 'Switch') {
-        const localW = widget as TemplateWidget<SwitchWidget>;
-        acc[widget.widgetName] = localW.widget.activeValue;
-      }
-      if (widgetType === 'Slider') {
-        const localW = widget as TemplateWidget<SliderWidget>;
-        acc[widget.widgetName] = localW.widget.defaultValue;
-      }
-      return acc;
-    },
-    {},
-  );
+function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]): generateFullTemplateMapReturn {
+  return widgets.reduce((acc: generateFullTemplateMapReturn, widget: TemplateWidget<WidgetSubType>) => {
+    const widgetType = widget.widgetType;
+    if (widgetType === 'DataTarget') {
+      acc[widget.widgetName] = `"${DUMMY}"`;
+    }
+    if (widgetType === 'MultiDataTarget') {
+      acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
+    }
+    if (widgetType === 'List') {
+      const localW = widget as TemplateWidget<ListWidget>;
+      acc[widget.widgetName] = localW.widget.defaultValue;
+    }
+    if (widgetType === 'Switch') {
+      const localW = widget as TemplateWidget<SwitchWidget>;
+      acc[widget.widgetName] = localW.widget.activeValue;
+    }
+    if (widgetType === 'Slider') {
+      const localW = widget as TemplateWidget<SliderWidget>;
+      acc[widget.widgetName] = localW.widget.defaultValue;
+    }
+    return acc;
+  }, {});
 }
 
 export interface Suggestion {
@@ -142,13 +131,8 @@ export interface Suggestion {
   simpleReplace: boolean;
 }
 
-export function synthesizeSuggestions(
-  code: string,
-  widgets: TemplateWidget<WidgetSubType>[],
-): Suggestion[] {
-  const parsedCode = safeParse(
-    setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))),
-  );
+export function synthesizeSuggestions(code: string, widgets: TemplateWidget<WidgetSubType>[]): Suggestion[] {
+  const parsedCode = safeParse(setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))));
   if (!parsedCode) {
     return [];
   }

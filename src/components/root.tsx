@@ -347,12 +347,7 @@ class RootComponent extends React.Component<RootProps> {
             loadCustomDataset={loadCustomDataset}
           />
         )}
-        <Header
-          triggerUndo={triggerUndo}
-          triggerRedo={triggerRedo}
-          canRedo={canRedo}
-          canUndo={canUndo}
-        />
+        <Header triggerUndo={triggerUndo} triggerRedo={triggerRedo} canRedo={canRedo} canUndo={canUndo} />
         <div className="flex full-height">
           <div className="flex full-height control-container">
             {showProgrammaticMode && this.programmaticMenu()}

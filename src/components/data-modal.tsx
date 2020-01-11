@@ -77,10 +77,7 @@ export default class DataModal extends React.Component<Props, State> {
               return (
                 <div
                   onClick={(): any =>
-                    chainActions([
-                      (): any => changeSelectedFile(datasetName),
-                      (): any => toggleDataModal(),
-                    ])
+                    chainActions([(): any => changeSelectedFile(datasetName), (): any => toggleDataModal()])
                   }
                   className="flex dataset-list-item space-between"
                   key={datasetName}

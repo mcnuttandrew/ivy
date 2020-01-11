@@ -10,12 +10,7 @@ interface FilterProps {
   deleteFilter: any;
 }
 
-export default function Filter({
-  column,
-  filter,
-  updateFilter,
-  deleteFilter,
-}: FilterProps): JSX.Element {
+export default function Filter({column, filter, updateFilter, deleteFilter}: FilterProps): JSX.Element {
   const {
     filter: {range, field, oneOf},
   } = filter;

@@ -73,9 +73,7 @@ export default function EncodingControls(props: Props): JSX.Element {
                 </React.Fragment>
               )}
               {!editMode && (
-                <h3>
-                  {template ? template.templateDescription : 'Tableau-style grammar of graphics'}
-                </h3>
+                <h3>{template ? template.templateDescription : 'Tableau-style grammar of graphics'}</h3>
               )}
               {editMode && template && (
                 <input

@@ -58,9 +58,7 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
       }
       if (w.widgetType === 'Switch') {
         const localW = w as TemplateWidget<SwitchWidget>;
-        value = localW.widget.defaultsToActive
-          ? localW.widget.activeValue
-          : localW.widget.inactiveValue;
+        value = localW.widget.defaultsToActive ? localW.widget.activeValue : localW.widget.inactiveValue;
       }
       if (w.widgetType === 'Slider') {
         value = (w as TemplateWidget<SliderWidget>).widget.defaultValue;
@@ -83,9 +81,7 @@ export function respondToTemplateInstanceCodeChanges(state: AppState, payload: a
 
 export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
   const requiredFields = template.widgets
-    .filter(
-      d => d.widgetType === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).widget.required,
-    )
+    .filter(d => d.widgetType === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).widget.required)
     .map(d => d.widgetName);
   const missingFileds = requiredFields
     .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
@@ -113,9 +109,7 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   const template = state.get('currentTemplateInstance').toJS();
   newState = newState.setIn(['templateMap', payload.field], Immutable.fromJS(payload.text));
 
-  const updatedTemplate = JSON.parse(
-    setTemplateValues(template.code, newState.get('templateMap').toJS()),
-  );
+  const updatedTemplate = JSON.parse(setTemplateValues(template.code, newState.get('templateMap').toJS()));
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
 };
 
@@ -131,9 +125,7 @@ export const setTemplateMapValue = (
 };
 
 function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
-  return state
-    .get('templates')
-    .filter((template: Template) => template.templateName !== templateName);
+  return state.get('templates').filter((template: Template) => template.templateName !== templateName);
 }
 
 export const saveCurrentTemplate: ActionResponse = state => {
@@ -172,9 +164,7 @@ export const setBlankTemplate: ActionResponse = (state, fork) => {
   if (fork) {
     newTemplate = newTemplate.set('code', currentCode);
   }
-  return state
-    .set('currentTemplateInstance', newTemplate)
-    .set('encodingMode', BLANK_TEMPLATE.templateName);
+  return state.set('currentTemplateInstance', newTemplate).set('encodingMode', BLANK_TEMPLATE.templateName);
 };
 
 export const deleteTemplate: ActionResponse = (state, payload) => {

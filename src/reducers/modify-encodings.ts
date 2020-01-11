@@ -4,10 +4,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {findField, getAllInUseFields, extractFieldStringsForType} from '../utils';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
-import {
-  respondToTemplateInstanceCodeChanges,
-  fillTemplateMapWithDefaults,
-} from './template-actions';
+import {respondToTemplateInstanceCodeChanges, fillTemplateMapWithDefaults} from './template-actions';
 
 const usingNestedSpec = (state: AppState): boolean => Boolean(state.getIn(['spec', 'spec']));
 
@@ -36,8 +33,7 @@ export const changeMarkType: ActionResponse = (state, payload) => {
 };
 
 // blindly set a new spec
-export const setNewSpec: ActionResponse = (state, payload) =>
-  state.set('spec', Immutable.fromJS(payload));
+export const setNewSpec: ActionResponse = (state, payload) => state.set('spec', Immutable.fromJS(payload));
 
 // set the spec code
 export const setNewSpecCode: ActionResponse = (state, payload) => {
@@ -66,11 +62,7 @@ export const coerceType: ActionResponse = (state, payload) => {
   );
 };
 
-function maybeRemoveRepeats(
-  oldState: AppState,
-  newState: AppState,
-  targetChannel: string,
-): AppState {
+function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChannel: string): AppState {
   const route = usingNestedSpec(newState) ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
   // figure out if target removing field is a metacolumn
   const oldField = oldState.getIn([...route, targetChannel]);
@@ -167,11 +159,7 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
     );
   } else {
     // removing field
-    newState = maybeRemoveRepeats(
-      state,
-      newState.setIn([...route, payload.field], Map()),
-      payload.field,
-    );
+    newState = maybeRemoveRepeats(state, newState.setIn([...route, payload.field], Map()), payload.field);
   }
   // if the card is being moved, remove where it was before
   if (payload.containingShelf) {

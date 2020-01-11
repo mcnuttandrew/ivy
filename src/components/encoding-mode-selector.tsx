@@ -65,14 +65,7 @@ function encodingRow(
 }
 
 export default function EncodingMode(props: Props): JSX.Element {
-  const {
-    chainActions,
-    clickTarget,
-    deleteTemplate,
-    setEditMode,
-    setEncodingMode,
-    templates,
-  } = props;
+  const {chainActions, clickTarget, deleteTemplate, setEditMode, setEncodingMode, templates} = props;
   const [searchKey, setSearch] = useState('');
 
   return (
@@ -97,22 +90,14 @@ export default function EncodingMode(props: Props): JSX.Element {
               />
             </div>
             <div className="flex-and-wrap">
-              {encodingRow(
-                'grammer',
-                'Tableau-style grammar of graphics',
-                ['Use'],
-                buttonActions,
-                -1,
-              )}
+              {encodingRow('grammer', 'Tableau-style grammar of graphics', ['Use'], buttonActions, -1)}
               {templates
                 .filter(template => template.templateName !== '_____none_____')
                 .filter((template: Template) => {
                   const {templateName, templateDescription} = template;
                   const matchDescription =
-                    templateDescription &&
-                    templateDescription.toLowerCase().includes(searchKey || '');
-                  const matchName =
-                    templateName && templateName.toLowerCase().includes(searchKey || '');
+                    templateDescription && templateDescription.toLowerCase().includes(searchKey || '');
+                  const matchName = templateName && templateName.toLowerCase().includes(searchKey || '');
                   return matchDescription || matchName;
                 })
                 .map((template: Template, idx: number) =>

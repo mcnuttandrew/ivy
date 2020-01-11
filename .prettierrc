@@ -5,5 +5,5 @@
   "jsxBracketSameLine": false,
   "semi": true,
   "parser": "typescript",
-  "printWidth": 100
+  "printWidth": 110
 }

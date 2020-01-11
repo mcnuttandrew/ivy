@@ -42,9 +42,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
             <h3>{template.templateName}</h3>
           </div>
         )}
-        {editMode && (
-          <TemplateColumnAddNewWidgetPopover widgets={template.widgets} addWidget={addWidget} />
-        )}
+        {editMode && <TemplateColumnAddNewWidgetPopover widgets={template.widgets} addWidget={addWidget} />}
         <div
           className={classnames({
             column: true,

@@ -58,9 +58,7 @@ export const setEncodingMode: ActionResponse = (state, payload) => {
       .set('currentTemplateInstance', null);
   }
   // figure out what the currently in use columns are and iteratively try to add them to the new one
-  const columnMap = state
-    .get('columns')
-    .reduce((acc: any, x: ColumnHeader) => acc.set(x.field, x), Map());
+  const columnMap = state.get('columns').reduce((acc: any, x: ColumnHeader) => acc.set(x.field, x), Map());
   return activeColumns(state).reduce((acc: AppState, columnKey: string) => {
     return addToNextOpenSlot(acc, columnMap.get(columnKey));
   }, updatedState);

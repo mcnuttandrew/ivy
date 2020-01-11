@@ -44,10 +44,7 @@ export default function ConfigurationOption(props: ConfigurationOptionProps): JS
       )}
 
       {optionType !== 'Switch' && (
-        <div
-          className="clear-option"
-          onClick={(): any => setNewSpec(optionSetter(iMspec, optionDefault))}
-        >
+        <div className="clear-option" onClick={(): any => setNewSpec(optionSetter(iMspec, optionDefault))}>
           <TiDeleteOutline />
         </div>
       )}

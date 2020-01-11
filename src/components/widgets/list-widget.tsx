@@ -41,9 +41,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
                   <div
                     className="delete-option-button"
                     onClick={(): void => {
-                      const updated = [...widget.widget.allowedValues].filter(
-                        (_, jdx) => jdx !== idx,
-                      );
+                      const updated = [...widget.widget.allowedValues].filter((_, jdx) => jdx !== idx);
                       setWidgetValue('allowedValues', updated, idx);
                     }}
                   >
@@ -80,9 +78,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
   );
 }
 
-export default function ListWidgetComponent(
-  props: GeneralWidget<TemplateWidget<ListWidget>>,
-): JSX.Element {
+export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
   return (
     <div className="list-widget">

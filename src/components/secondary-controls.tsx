@@ -48,8 +48,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps): JSX.Elemen
                 className={classnames({
                   'mode-option': true,
                   'selected-mode':
-                    (mode === 'HIDE' && !showProgrammaticMode) ||
-                    (mode === 'SHOW' && showProgrammaticMode),
+                    (mode === 'HIDE' && !showProgrammaticMode) || (mode === 'SHOW' && showProgrammaticMode),
                 })}
               >
                 {mode}
@@ -67,8 +66,7 @@ export default function SecondaryHeader(props: SecondaryHeaderProps): JSX.Elemen
                 className={classnames({
                   'mode-option': true,
                   'selected-mode':
-                    (mode === 'GOG' && !showSimpleDisplay) ||
-                    (mode === 'SIMPLE' && showSimpleDisplay),
+                    (mode === 'GOG' && !showSimpleDisplay) || (mode === 'SIMPLE' && showSimpleDisplay),
                 })}
               >
                 {mode}
