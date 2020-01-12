@@ -71,7 +71,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       );
     };
     return (
-      <div className="flex-down column full-height background-2 column-border">
+      <div className="flex-down column full-height background-2">
         <h1 className="section-title">Data</h1>
         <div className="flex space-between data-selection">
           <div className="flex center">

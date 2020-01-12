@@ -9,20 +9,20 @@ import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
 
 interface Props {
-  editMode: boolean;
-  encodingMode: string;
-  template?: Template;
-  templateSaveState: string;
-  templates?: Template[];
-
   chainActions: GenericAction;
   clearEncoding: GenericAction;
   deleteTemplate: GenericAction;
+  editMode: boolean;
+  encodingMode: string;
   modifyValueOnTemplate: GenericAction;
   saveCurrentTemplate: GenericAction;
   setBlankTemplate: GenericAction;
   setEditMode: GenericAction;
   setEncodingMode: GenericAction;
+  showSimpleDisplay: boolean;
+  template?: Template;
+  templateSaveState: string;
+  templates?: Template[];
 }
 
 const UPDATE_TEMPLATE: {[x: string]: boolean} = {
@@ -111,6 +111,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     modifyValueOnTemplate,
     setEditMode,
     setEncodingMode,
+    showSimpleDisplay,
     template,
     templates,
   } = props;
@@ -121,7 +122,7 @@ export default function EncodingControls(props: Props): JSX.Element {
         <div className="flex">
           <img src="logo.png" />
           <div className="flex-down">
-            {!editMode && <h1 className="section-title">{`MODE: ${encodingMode}`}</h1>}
+            {!editMode && <h1 className="section-title">{encodingMode}</h1>}
             {editMode && template && (
               <React.Fragment>
                 <h1 className="section-title">MODE:</h1>
@@ -154,16 +155,19 @@ export default function EncodingControls(props: Props): JSX.Element {
             )}
           </div>
         </div>
-        <EncodingModeSelector
-          setEditMode={setEditMode}
-          chainActions={chainActions}
-          deleteTemplate={deleteTemplate}
-          templates={templates}
-          setEncodingMode={setEncodingMode}
-          clickTarget={<TiExport />}
-        />
+        {!showSimpleDisplay && (
+          <EncodingModeSelector
+            setEditMode={setEditMode}
+            chainActions={chainActions}
+            deleteTemplate={deleteTemplate}
+            templates={templates}
+            setEncodingMode={setEncodingMode}
+            clickTarget={<TiExport />}
+          />
+        )}
       </div>
-      {Buttons(props)}
+      {!showSimpleDisplay && Buttons(props)}
+      {showSimpleDisplay && <div className="flex space-between full-width flex-wrap">CHART</div>}
     </div>
   );
 }

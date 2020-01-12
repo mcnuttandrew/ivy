@@ -3,30 +3,32 @@ import MonacoEditor from 'react-monaco-editor';
 import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
 import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
+import {MdSettings} from 'react-icons/md';
 
-import {Template, TemplateMap} from '../templates/types';
-import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
-import {GenericAction} from '../actions';
-import {EDITOR_OPTIONS} from '../constants/index';
-import {classnames, serializeTemplate} from '../utils';
+import Popover from './popover';
 import Selector from './selector';
+import {EDITOR_OPTIONS} from '../constants/index';
+import {GenericAction} from '../actions';
+import {Template, TemplateMap} from '../templates/types';
+import {classnames, serializeTemplate} from '../utils';
+import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
+  addWidget?: GenericAction;
   codeMode: string;
   editorError: null | string;
-  specCode: string;
-  spec: any;
-  templateMap?: TemplateMap;
-  template?: Template;
-  addWidget?: GenericAction;
-  setNewSpecCode: GenericAction;
   setCodeMode: GenericAction;
+  setNewSpecCode: GenericAction;
+  spec: any;
+  specCode: string;
+  template?: Template;
+  templateMap?: TemplateMap;
 }
 type updateMode = 'automatic' | 'manual';
 interface State {
   error?: string;
-  updateMode: updateMode;
   suggestionBox: boolean;
+  updateMode: updateMode;
 }
 
 const SHORTCUTS = [
@@ -58,14 +60,14 @@ export default class CodeEditor extends React.Component<Props, State> {
     this.state = {
       error: null,
       updateMode: 'automatic',
-      suggestionBox: true,
+      suggestionBox: false,
     };
   }
   editorDidMount(editor: any): void {
     editor.focus();
     /* eslint-disable */
     // @ts-ignore
-    import('monaco-themes/themes/Cobalt.json').then(data => {
+    import('monaco-themes/themes/Chrome DevTools.json').then(data => {
       // @ts-ignore
       monaco.editor.defineTheme('cobalt', data);
       // @ts-ignore
@@ -88,6 +90,17 @@ export default class CodeEditor extends React.Component<Props, State> {
     if (codeMode === 'VAR-TAB') {
       return JSON.stringify(templateMap, null, 2);
     }
+  }
+
+  editorSettings(): JSX.Element {
+    return (
+      <Popover
+        clickTarget={<MdSettings />}
+        body={(toggle: any): JSX.Element => {
+          return this.editorControls();
+        }}
+      />
+    );
   }
 
   editorControls(): JSX.Element {
@@ -163,14 +176,47 @@ export default class CodeEditor extends React.Component<Props, State> {
     }
   }
 
+  editor(): JSX.Element {
+    const {codeMode} = this.props;
+    const {updateMode} = this.state;
+    const currentCode = this.getCurrentCode();
+    return (
+      /*eslint-disable react/no-string-refs*/
+      <div>
+        <MonacoEditor
+          ref="monaco"
+          language="json"
+          theme="monokai"
+          value={currentCode}
+          options={EDITOR_OPTIONS}
+          onChange={(code: string): void => {
+            if (codeMode === 'OUTPUT') {
+              return;
+            }
+
+            if (updateMode === 'automatic') {
+              this.handleCodeUpdate(code);
+            }
+          }}
+          editorDidMount={this.editorDidMount}
+        />
+      </div>
+      /*eslint-enable react/no-string-refs*/
+    );
+  }
+
   render(): JSX.Element {
     const {editorError, setCodeMode, codeMode, template, addWidget} = this.props;
     const {updateMode, suggestionBox} = this.state;
     const currentCode = this.getCurrentCode();
 
+    // todo this should move out of the render path
+    const suggestions =
+      (template && codeMode === 'CODE' && synthesizeSuggestions(currentCode, template.widgets || [])) || [];
+    console.log(suggestions);
     return (
       <div className="full-height full-width">
-        {this.editorControls()}
+        {/* {this.editorControls()} */}
         <div className="full-height full-width inline-block code-container">
           <div
             className={classnames({
@@ -195,34 +241,15 @@ export default class CodeEditor extends React.Component<Props, State> {
                 </div>
               );
             })}
-            <div> GEAR</div>
+            {this.editorSettings()}
           </div>
-          {
-            /*eslint-disable react/no-string-refs*/
-            <MonacoEditor
-              ref="monaco"
-              language="json"
-              theme="monokai"
-              height={suggestionBox ? 'calc(100% - 200px)' : 'calc(100% - 110px)'}
-              value={currentCode}
-              options={EDITOR_OPTIONS}
-              onChange={(code: string): void => {
-                if (codeMode === 'OUTPUT') {
-                  return;
-                }
-
-                if (updateMode === 'automatic') {
-                  this.handleCodeUpdate(code);
-                }
-              }}
-              editorDidMount={this.editorDidMount}
-            />
-            /*eslint-enable react/no-string-refs*/
-          }
-
-          <div className="suggestion-box" style={{height: '55px'}}>
+          {this.editor()}
+          <div className="suggestion-box">
             <div className="suggestion-box-header flex space-between">
-              <h5>Suggestions</h5>
+              <h5>
+                <span>Suggestions</span>
+                {suggestions.length ? <span>(!)</span> : ''}
+              </h5>
               <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
                 {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
               </div>
@@ -230,25 +257,22 @@ export default class CodeEditor extends React.Component<Props, State> {
             {suggestionBox && (
               <div className="suggestion-box-body">
                 {template &&
-                  codeMode === 'CODE' &&
-                  synthesizeSuggestions(currentCode, template.widgets).map(
-                    (suggestion: Suggestion, idx: number) => {
-                      const {from, to, comment = '', sideEffect} = suggestion;
-                      return (
-                        <button
-                          onClick={(): void => {
-                            this.handleCodeUpdate(takeSuggestion(currentCode, suggestion));
-                            if (sideEffect) {
-                              addWidget(sideEffect());
-                            }
-                          }}
-                          key={`${from} -> ${to}-${idx}`}
-                        >
-                          {comment}
-                        </button>
-                      );
-                    },
-                  )}
+                  suggestions.map((suggestion: Suggestion, idx: number) => {
+                    const {from, to, comment = '', sideEffect} = suggestion;
+                    return (
+                      <button
+                        onClick={(): void => {
+                          this.handleCodeUpdate(takeSuggestion(currentCode, suggestion));
+                          if (sideEffect) {
+                            addWidget(sideEffect());
+                          }
+                        }}
+                        key={`${from} -> ${to}-${idx}`}
+                      >
+                        {comment}
+                      </button>
+                    );
+                  })}
               </div>
             )}
           </div>

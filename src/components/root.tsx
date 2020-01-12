@@ -3,6 +3,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import SplitPane from 'react-split-pane';
+
 import {getMissingFields} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
@@ -133,129 +135,129 @@ class RootComponent extends React.Component<RootProps> {
   //   );
   // }
 
-  grammarMenu(): JSX.Element {
-    const {
-      addToNextOpenSlot,
-      addWidget,
-      chainActions,
-      changeMarkType,
-      clearEncoding,
-      coerceType,
-      columns,
-      createFilter,
-      currentlySelectedFile,
-      deleteFilter,
-      deleteTemplate,
-      editMode,
-      encodingMode,
-      iMspec,
-      metaColumns,
-      modifyValueOnTemplate,
-      moveWidget,
-      removeWidget,
-      saveCurrentTemplate,
-      setBlankTemplate,
-      setEditMode,
-      setEncodingMode,
-      setEncodingParameter,
-      setNewSpec,
-      setRepeats,
-      setTemplateValue,
-      setWidgetValue,
-      showSimpleDisplay,
-      spec,
-      swapXAndYChannels,
-      template,
-      templateMap,
-      templateSaveState,
-      templates,
-      toggleDataModal,
-      updateFilter,
-    } = this.props;
+  // grammarMenu(): JSX.Element {
+  //   const {
+  //     addToNextOpenSlot,
+  //     addWidget,
+  //     chainActions,
+  //     changeMarkType,
+  //     clearEncoding,
+  //     coerceType,
+  //     columns,
+  //     createFilter,
+  //     currentlySelectedFile,
+  //     deleteFilter,
+  //     deleteTemplate,
+  //     editMode,
+  //     encodingMode,
+  //     iMspec,
+  //     metaColumns,
+  //     modifyValueOnTemplate,
+  //     moveWidget,
+  //     removeWidget,
+  //     saveCurrentTemplate,
+  //     setBlankTemplate,
+  //     setEditMode,
+  //     setEncodingMode,
+  //     setEncodingParameter,
+  //     setNewSpec,
+  //     setRepeats,
+  //     setTemplateValue,
+  //     setWidgetValue,
+  //     showSimpleDisplay,
+  //     spec,
+  //     swapXAndYChannels,
+  //     template,
+  //     templateMap,
+  //     templateSaveState,
+  //     templates,
+  //     toggleDataModal,
+  //     updateFilter,
+  //   } = this.props;
 
-    return (
-      <div className="flex full-height column-border">
-        {showSimpleDisplay && (
-          <TemplatePreviewColumn
-            encodingMode={encodingMode}
-            setEncodingMode={setEncodingMode}
-            templates={templates}
-          />
-        )}
-        {!showSimpleDisplay && (
-          <DataColumn
-            addToNextOpenSlot={addToNextOpenSlot}
-            coerceType={coerceType}
-            columns={columns}
-            createFilter={createFilter}
-            currentlySelectedFile={currentlySelectedFile}
-            deleteFilter={deleteFilter}
-            iMspec={iMspec}
-            metaColumns={metaColumns}
-            onDropFilter={(item: any): any => createFilter({field: item.text})}
-            setRepeats={setRepeats}
-            spec={spec}
-            template={template}
-            toggleDataModal={toggleDataModal}
-            updateFilter={updateFilter}
-          />
-        )}
-        <div className="flex-down full-height background-3 encoding-column-container">
-          {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
-            <EncodingControls
-              chainActions={chainActions}
-              clearEncoding={clearEncoding}
-              deleteTemplate={deleteTemplate}
-              editMode={editMode}
-              encodingMode={encodingMode}
-              modifyValueOnTemplate={modifyValueOnTemplate}
-              saveCurrentTemplate={saveCurrentTemplate}
-              setBlankTemplate={setBlankTemplate}
-              setEditMode={setEditMode}
-              setEncodingMode={setEncodingMode}
-              template={template}
-              templateSaveState={templateSaveState}
-              templates={templates}
-            />
-          )}
-          {encodingMode === 'grammer' && (
-            <EncodingColumn
-              changeMarkType={changeMarkType}
-              columns={columns}
-              iMspec={iMspec}
-              metaColumns={metaColumns}
-              onDrop={(item: any): void => {
-                if (item.disable) {
-                  return;
-                }
-                setEncodingParameter(item);
-              }}
-              onDropFilter={(item: any): any => createFilter({field: item.text})}
-              setEncodingParameter={setEncodingParameter}
-              setNewSpec={setNewSpec}
-              showSimpleDisplay={showSimpleDisplay}
-              spec={spec}
-              swapXAndYChannels={swapXAndYChannels}
-            />
-          )}
-          {encodingMode !== 'grammer' && template && (
-            <TemplateColumn
-              addWidget={addWidget}
-              columns={columns}
-              editMode={editMode}
-              moveWidget={moveWidget}
-              removeWidget={removeWidget}
-              setTemplateValue={setTemplateValue}
-              setWidgetValue={setWidgetValue}
-              showSimpleDisplay={showSimpleDisplay}
-              template={template}
-              templateMap={templateMap}
-            />
-          )}
-        </div>
-      </div>
-    );
-  }
+  //   return (
+  //     <div className="flex full-height column-border">
+  //       {showSimpleDisplay && (
+  //         <TemplatePreviewColumn
+  //           encodingMode={encodingMode}
+  //           setEncodingMode={setEncodingMode}
+  //           templates={templates}
+  //         />
+  //       )}
+  //       {!showSimpleDisplay && (
+  //         <DataColumn
+  //           addToNextOpenSlot={addToNextOpenSlot}
+  //           coerceType={coerceType}
+  //           columns={columns}
+  //           createFilter={createFilter}
+  //           currentlySelectedFile={currentlySelectedFile}
+  //           deleteFilter={deleteFilter}
+  //           iMspec={iMspec}
+  //           metaColumns={metaColumns}
+  //           onDropFilter={(item: any): any => createFilter({field: item.text})}
+  //           setRepeats={setRepeats}
+  //           spec={spec}
+  //           template={template}
+  //           toggleDataModal={toggleDataModal}
+  //           updateFilter={updateFilter}
+  //         />
+  //       )}
+  //       <div className="flex-down full-height background-3 encoding-column-container">
+  //         {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
+  //           <EncodingControls
+  //             chainActions={chainActions}
+  //             clearEncoding={clearEncoding}
+  //             deleteTemplate={deleteTemplate}
+  //             editMode={editMode}
+  //             encodingMode={encodingMode}
+  //             modifyValueOnTemplate={modifyValueOnTemplate}
+  //             saveCurrentTemplate={saveCurrentTemplate}
+  //             setBlankTemplate={setBlankTemplate}
+  //             setEditMode={setEditMode}
+  //             setEncodingMode={setEncodingMode}
+  //             template={template}
+  //             templateSaveState={templateSaveState}
+  //             templates={templates}
+  //           />
+  //         )}
+  //         {encodingMode === 'grammer' && (
+  //           <EncodingColumn
+  //             changeMarkType={changeMarkType}
+  //             columns={columns}
+  //             iMspec={iMspec}
+  //             metaColumns={metaColumns}
+  //             onDrop={(item: any): void => {
+  //               if (item.disable) {
+  //                 return;
+  //               }
+  //               setEncodingParameter(item);
+  //             }}
+  //             onDropFilter={(item: any): any => createFilter({field: item.text})}
+  //             setEncodingParameter={setEncodingParameter}
+  //             setNewSpec={setNewSpec}
+  //             showSimpleDisplay={showSimpleDisplay}
+  //             spec={spec}
+  //             swapXAndYChannels={swapXAndYChannels}
+  //           />
+  //         )}
+  //         {encodingMode !== 'grammer' && template && (
+  //           <TemplateColumn
+  //             addWidget={addWidget}
+  //             columns={columns}
+  //             editMode={editMode}
+  //             moveWidget={moveWidget}
+  //             removeWidget={removeWidget}
+  //             setTemplateValue={setTemplateValue}
+  //             setWidgetValue={setWidgetValue}
+  //             showSimpleDisplay={showSimpleDisplay}
+  //             template={template}
+  //             templateMap={templateMap}
+  //           />
+  //         )}
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   programmaticMenu(): JSX.Element {
     const {
@@ -428,62 +430,139 @@ class RootComponent extends React.Component<RootProps> {
       showProgrammaticMode,
     } = this.props;
 
+    // wrap the split pane functionality into a HOC
+    const Wrapper: React.FC = showProgrammaticMode
+      ? (props: any): JSX.Element => (
+          <SplitPane
+            split="horizontal"
+            minSize={60}
+            style={{overflow: 'unset'}}
+            defaultSize={parseInt(localStorage.getItem('splitPos'), 10)}
+            onChange={(size: any): any => localStorage.setItem('splitPos', size)}
+          >
+            {props.children}
+          </SplitPane>
+        )
+      : (props: any): JSX.Element => <div>{props.children}</div>;
     return (
-      <div className="flex-down full-height center-column">
-        {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
-          <EncodingControls
-            chainActions={chainActions}
-            clearEncoding={clearEncoding}
-            deleteTemplate={deleteTemplate}
-            editMode={editMode}
-            encodingMode={encodingMode}
-            modifyValueOnTemplate={modifyValueOnTemplate}
-            saveCurrentTemplate={saveCurrentTemplate}
-            setBlankTemplate={setBlankTemplate}
-            setEditMode={setEditMode}
-            setEncodingMode={setEncodingMode}
-            template={template}
-            templateSaveState={templateSaveState}
-            templates={templates}
-          />
-        )}
-        {encodingMode === 'grammer' && (
-          <EncodingColumn
-            changeMarkType={changeMarkType}
-            columns={columns}
-            iMspec={iMspec}
-            metaColumns={metaColumns}
-            onDrop={(item: any): void => {
-              if (item.disable) {
-                return;
-              }
-              setEncodingParameter(item);
-            }}
-            onDropFilter={(item: any): any => createFilter({field: item.text})}
-            setEncodingParameter={setEncodingParameter}
-            setNewSpec={setNewSpec}
-            showSimpleDisplay={showSimpleDisplay}
-            spec={spec}
-            swapXAndYChannels={swapXAndYChannels}
-          />
-        )}
-        {encodingMode !== 'grammer' && template && (
-          <TemplateColumn
-            addWidget={addWidget}
-            columns={columns}
-            editMode={editMode}
-            moveWidget={moveWidget}
-            removeWidget={removeWidget}
-            setTemplateValue={setTemplateValue}
-            setWidgetValue={setWidgetValue}
-            showSimpleDisplay={showSimpleDisplay}
-            template={template}
-            templateMap={templateMap}
-          />
-        )}
-        {showProgrammaticMode && this.programmaticMenu()}
+      <div className="full-height center-column">
+        <Wrapper>
+          <div className="full-width flex-down">
+            {SHOW_TEMPLATE_CONTROLS && (
+              <EncodingControls
+                chainActions={chainActions}
+                clearEncoding={clearEncoding}
+                deleteTemplate={deleteTemplate}
+                editMode={editMode}
+                encodingMode={encodingMode}
+                modifyValueOnTemplate={modifyValueOnTemplate}
+                saveCurrentTemplate={saveCurrentTemplate}
+                setBlankTemplate={setBlankTemplate}
+                setEditMode={setEditMode}
+                setEncodingMode={setEncodingMode}
+                showSimpleDisplay={showSimpleDisplay}
+                template={template}
+                templateSaveState={templateSaveState}
+                templates={templates}
+              />
+            )}
+            {encodingMode === 'grammer' && (
+              <EncodingColumn
+                changeMarkType={changeMarkType}
+                columns={columns}
+                iMspec={iMspec}
+                metaColumns={metaColumns}
+                onDrop={(item: any): void => {
+                  if (item.disable) {
+                    return;
+                  }
+                  setEncodingParameter(item);
+                }}
+                onDropFilter={(item: any): any => createFilter({field: item.text})}
+                setEncodingParameter={setEncodingParameter}
+                setNewSpec={setNewSpec}
+                showSimpleDisplay={showSimpleDisplay}
+                spec={spec}
+                swapXAndYChannels={swapXAndYChannels}
+              />
+            )}
+            {encodingMode !== 'grammer' && template && (
+              <TemplateColumn
+                addWidget={addWidget}
+                columns={columns}
+                editMode={editMode}
+                moveWidget={moveWidget}
+                removeWidget={removeWidget}
+                setTemplateValue={setTemplateValue}
+                setWidgetValue={setWidgetValue}
+                showSimpleDisplay={showSimpleDisplay}
+                template={template}
+                templateMap={templateMap}
+              />
+            )}
+          </div>
+          <div className="full-height full-width flex-down">
+            {showProgrammaticMode && this.programmaticMenu()}
+          </div>
+        </Wrapper>
       </div>
     );
+    // return (
+    //   <div className="flex-down full-height center-column">
+    //     {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
+    //       <EncodingControls
+    //         chainActions={chainActions}
+    //         clearEncoding={clearEncoding}
+    //         deleteTemplate={deleteTemplate}
+    //         editMode={editMode}
+    //         encodingMode={encodingMode}
+    //         modifyValueOnTemplate={modifyValueOnTemplate}
+    //         saveCurrentTemplate={saveCurrentTemplate}
+    //         setBlankTemplate={setBlankTemplate}
+    //         setEditMode={setEditMode}
+    //         setEncodingMode={setEncodingMode}
+    //         template={template}
+    //         templateSaveState={templateSaveState}
+    //         templates={templates}
+    //       />
+    //     )}
+    //     {encodingMode === 'grammer' && (
+    //       <EncodingColumn
+    //         changeMarkType={changeMarkType}
+    //         columns={columns}
+    //         iMspec={iMspec}
+    //         metaColumns={metaColumns}
+    //         onDrop={(item: any): void => {
+    //           if (item.disable) {
+    //             return;
+    //           }
+    //           setEncodingParameter(item);
+    //         }}
+    //         onDropFilter={(item: any): any => createFilter({field: item.text})}
+    //         setEncodingParameter={setEncodingParameter}
+    //         setNewSpec={setNewSpec}
+    //         showSimpleDisplay={showSimpleDisplay}
+    //         spec={spec}
+    //         swapXAndYChannels={swapXAndYChannels}
+    //       />
+    //     )}
+    //     {encodingMode !== 'grammer' && template && (
+    //       <TemplateColumn
+    //         addWidget={addWidget}
+    //         columns={columns}
+    //         editMode={editMode}
+    //         moveWidget={moveWidget}
+    //         removeWidget={removeWidget}
+    //         setTemplateValue={setTemplateValue}
+    //         setWidgetValue={setWidgetValue}
+    //         showSimpleDisplay={showSimpleDisplay}
+    //         template={template}
+    //         templateMap={templateMap}
+    //       />
+    //     )}
+    //     {showProgrammaticMode && this.programmaticMenu()}
+    //   </div>
+    // );
   }
 
   render(): JSX.Element {
