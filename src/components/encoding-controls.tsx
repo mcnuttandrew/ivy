@@ -38,66 +38,69 @@ function Buttons(props: Props): JSX.Element {
     saveCurrentTemplate,
     setBlankTemplate,
     setEditMode,
+    showSimpleDisplay,
     template,
     templateSaveState,
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const isGrammar = !template;
+  const PARTIAL_BUTTONS = [
+    {
+      disabled: false,
+      onClick: clearEncoding,
+      icon: <FaEraser />,
+      label: 'RESET',
+    },
+  ];
+  const FULL_BUTTONS = [
+    {
+      disabled: false,
+      onClick: (): any => chainActions([(): any => setBlankTemplate(false), (): any => setEditMode(true)]),
+      icon: <IoIosCreate />,
+      label: 'NEW',
+    },
+    {
+      disabled: false,
+      onClick: (): any => chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]),
+      icon: <GoRepoForked />,
+      label: 'FORK',
+    },
+    {
+      disabled: !canSave || isGrammar,
+      onClick: (): void => {
+        if (!canSave || isGrammar) {
+          return;
+        }
+        chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
+      },
+      icon: <FaSave />,
+      label: 'SAVE',
+    },
+    {
+      disabled: isGrammar,
+      onClick: isGrammar ? NULL : (): any => setEditMode(!editMode),
+      icon: <IoIosSettings />,
+      label: editMode ? 'STOP EDIT' : 'START EDIT',
+    },
+  ].concat(PARTIAL_BUTTONS);
+  console.log('show simple', showSimpleDisplay);
   return (
     <div className="flex space-between full-width flex-wrap">
-      <div
-        className={classnames({
-          'template-modification-control': true,
-        })}
-        onClick={(): void => {
-          chainActions([(): any => setBlankTemplate(false), (): any => setEditMode(true)]);
-        }}
-      >
-        <IoIosCreate /> <span className="template-modification-control-label">NEW</span>
-      </div>
-      <div
-        className={classnames({
-          'template-modification-control': true,
-        })}
-        onClick={(): void => {
-          chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]);
-        }}
-      >
-        <GoRepoForked /> <span className="template-modification-control-label">FORK</span>
-      </div>
-      <div
-        className={classnames({
-          'template-modification-control': true,
-          'template-modification-control--disabled': !canSave || isGrammar,
-        })}
-        onClick={(): void => {
-          if (!canSave || isGrammar) {
-            return;
-          }
-          chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
-        }}
-      >
-        <FaSave />
-        <span className="template-modification-control-label">SAVE</span>
-      </div>
-
-      <div
-        className={classnames({
-          'template-modification-control': true,
-          'template-modification-control--disabled': isGrammar,
-        })}
-        onClick={isGrammar ? NULL : (): any => setEditMode(!editMode)}
-      >
-        <IoIosSettings />
-        <span className="template-modification-control-label">{editMode ? 'STOP EDIT' : 'START EDIT'}</span>
-      </div>
-
-      <div className="template-modification-control" onClick={clearEncoding}>
-        <FaEraser />
-
-        <span className="template-modification-control-label">RESET</span>
-      </div>
+      {(showSimpleDisplay ? PARTIAL_BUTTONS : FULL_BUTTONS).map(button => {
+        return (
+          <div
+            key={button.label}
+            className={classnames({
+              'template-modification-control': true,
+              'template-modification-control--disabled': button.disabled,
+            })}
+            onClick={button.onClick}
+          >
+            {button.icon} <span className="template-modification-control-label">{button.label}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -124,8 +127,8 @@ export default function EncodingControls(props: Props): JSX.Element {
           <div className="flex-down">
             {!editMode && <h1 className="section-title">{encodingMode}</h1>}
             {editMode && template && (
-              <React.Fragment>
-                <h1 className="section-title">MODE:</h1>
+              <div className="flex">
+                <h1 className="section-title">NAME:</h1>
                 <input
                   type="text"
                   value={template.templateName}
@@ -136,22 +139,25 @@ export default function EncodingControls(props: Props): JSX.Element {
                     })
                   }
                 />
-              </React.Fragment>
+              </div>
             )}
             {!editMode && (
               <h3>{template ? template.templateDescription : 'Tableau-style grammar of graphics'}</h3>
             )}
             {editMode && template && (
-              <input
-                type="text"
-                value={template.templateDescription}
-                onChange={(event): any =>
-                  modifyValueOnTemplate({
-                    value: event.target.value,
-                    key: 'templateDescription',
-                  })
-                }
-              />
+              <div className="flex">
+                <h1 className="section-title">Description:</h1>
+                <input
+                  type="text"
+                  value={template.templateDescription}
+                  onChange={(event): any =>
+                    modifyValueOnTemplate({
+                      value: event.target.value,
+                      key: 'templateDescription',
+                    })
+                  }
+                />
+              </div>
             )}
           </div>
         </div>
@@ -166,8 +172,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           />
         )}
       </div>
-      {!showSimpleDisplay && Buttons(props)}
-      {showSimpleDisplay && <div className="flex space-between full-width flex-wrap">CHART</div>}
+      {Buttons(props)}
     </div>
   );
 }

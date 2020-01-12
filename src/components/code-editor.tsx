@@ -45,10 +45,12 @@ const SHORTCUTS = [
       }
       return code;
     },
+    description: 'Insert height and width values in to the current template',
   },
   {
     name: 'Clean Up',
     action: (code: any): any => code,
+    description: 'Clean up the formatting of the current code',
   },
 ];
 
@@ -92,70 +94,32 @@ export default class CodeEditor extends React.Component<Props, State> {
     }
   }
 
-  editorSettings(): JSX.Element {
-    return (
-      <Popover
-        clickTarget={<MdSettings />}
-        body={(toggle: any): JSX.Element => {
-          return this.editorControls();
-        }}
-      />
-    );
-  }
-
   editorControls(): JSX.Element {
     const {setNewSpecCode, codeMode} = this.props;
-    const {updateMode} = this.state;
     return (
-      <div className="flex code-editor-controls">
-        <div className="execute-code-control">
-          <div
-            className="execute-code-control-button"
-            onClick={(): void => {
-              /* eslint-disable */
-              // @ts-ignore
-              const model = this.refs.monaco.editor.getModel();
-              /* eslint-enable */
-
-              const value = model.getValue();
-              this.handleCodeUpdate(value);
-            }}
-          >
-            <MdPlayCircleOutline />
-          </div>
-          <Selector
-            onChange={(newMode): void => {
-              this.setState({updateMode: newMode});
-            }}
-            selectedValue={updateMode}
-            options={[
-              {display: 'Auto', value: 'automatic'},
-              {display: 'Manual', value: 'manual'},
-            ]}
-          />
-        </div>
-        <div>
-          <h5>Macros</h5>
-          {SHORTCUTS.map((shortcut: any) => {
-            const {action, name} = shortcut;
-            return (
-              <button
-                key={name}
-                onClick={(): void => {
-                  if (codeMode !== 'CODE') {
-                    return;
-                  }
-                  setNewSpecCode({
-                    code: stringify(action(JSON.parse(this.getCurrentCode()))),
-                    inError: false,
-                  });
-                }}
-              >
-                {name}
-              </button>
-            );
-          })}
-        </div>
+      <div className="flex-down code-editor-controls">
+        <h1>Macros</h1>
+        {SHORTCUTS.map((shortcut: any) => {
+          const {action, name, description} = shortcut;
+          return (
+            <div
+              className="flex-down"
+              key={name}
+              onClick={(): void => {
+                if (codeMode !== 'CODE') {
+                  return;
+                }
+                setNewSpecCode({
+                  code: stringify(action(JSON.parse(this.getCurrentCode()))),
+                  inError: false,
+                });
+              }}
+            >
+              <button>{name}</button>
+              <div>{description}</div>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -182,11 +146,12 @@ export default class CodeEditor extends React.Component<Props, State> {
     const currentCode = this.getCurrentCode();
     return (
       /*eslint-disable react/no-string-refs*/
-      <div>
+      <div className="flex full-height">
         <MonacoEditor
           ref="monaco"
           language="json"
           theme="monokai"
+          height={'calc(100% - 99px)'}
           value={currentCode}
           options={EDITOR_OPTIONS}
           onChange={(code: string): void => {
@@ -207,7 +172,7 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   render(): JSX.Element {
     const {editorError, setCodeMode, codeMode, template, addWidget} = this.props;
-    const {updateMode, suggestionBox} = this.state;
+    const {suggestionBox, updateMode} = this.state;
     const currentCode = this.getCurrentCode();
 
     // todo this should move out of the render path
@@ -215,68 +180,91 @@ export default class CodeEditor extends React.Component<Props, State> {
       (template && codeMode === 'CODE' && synthesizeSuggestions(currentCode, template.widgets || [])) || [];
     console.log(suggestions);
     return (
-      <div className="full-height full-width">
-        {/* {this.editorControls()} */}
-        <div className="full-height full-width inline-block code-container">
-          <div
-            className={classnames({
-              'error-bar': true,
-              'has-error': Boolean(editorError),
-            })}
-          >
-            ERROR
-          </div>
-          <div className="code-option-tabs">
-            {['CODE', 'TEMPLATE', 'OUTPUT', 'VAR-TAB'].map(key => {
-              return (
-                <div
-                  className={classnames({
-                    'code-option-tab': true,
-                    'selected-tab': key === codeMode,
-                  })}
-                  key={key}
-                  onClick={(): any => setCodeMode(key)}
-                >
-                  {key}
-                </div>
-              );
-            })}
-            {this.editorSettings()}
-          </div>
-          {this.editor()}
-          <div className="suggestion-box">
-            <div className="suggestion-box-header flex space-between">
-              <h5>
-                <span>Suggestions</span>
-                {suggestions.length ? <span>(!)</span> : ''}
-              </h5>
-              <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
-                {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
-              </div>
-            </div>
-            {suggestionBox && (
-              <div className="suggestion-box-body">
-                {template &&
-                  suggestions.map((suggestion: Suggestion, idx: number) => {
-                    const {from, to, comment = '', sideEffect} = suggestion;
-                    return (
-                      <button
-                        onClick={(): void => {
-                          this.handleCodeUpdate(takeSuggestion(currentCode, suggestion));
-                          if (sideEffect) {
-                            addWidget(sideEffect());
-                          }
-                        }}
-                        key={`${from} -> ${to}-${idx}`}
-                      >
-                        {comment}
-                      </button>
-                    );
-                  })}
-              </div>
-            )}
-          </div>
+      <div className="full-height full-width inline-block code-container">
+        <div
+          className={classnames({
+            'error-bar': true,
+            'has-error': Boolean(editorError),
+          })}
+        >
+          ERROR
         </div>
+        <div className="code-option-tabs">
+          <div className="execute-code-control">
+            <div
+              className="execute-code-control-button"
+              onClick={(): void => {
+                /* eslint-disable */
+                // @ts-ignore
+                const model = this.refs.monaco.editor.getModel();
+                /* eslint-enable */
+
+                const value = model.getValue();
+                this.handleCodeUpdate(value);
+              }}
+            >
+              <MdPlayCircleOutline />
+            </div>
+            <Selector
+              onChange={(newMode): void => {
+                this.setState({updateMode: newMode});
+              }}
+              selectedValue={updateMode}
+              options={[
+                {display: 'Auto', value: 'automatic'},
+                {display: 'Manual', value: 'manual'},
+              ]}
+            />
+          </div>
+          {['CODE', 'TEMPLATE', 'OUTPUT', 'VAR-TAB'].map(key => {
+            return (
+              <div
+                className={classnames({
+                  'code-option-tab': true,
+                  'selected-tab': key === codeMode,
+                })}
+                key={key}
+                onClick={(): any => setCodeMode(key)}
+              >
+                {key}
+              </div>
+            );
+          })}
+          <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
+        </div>
+        <div className="suggestion-box">
+          <div className="suggestion-box-header flex space-between">
+            <h5>
+              <span>Suggestions</span>
+              {suggestions.length ? <span>(!)</span> : ''}
+            </h5>
+            <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
+              {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
+            </div>
+          </div>
+          {suggestionBox && (
+            <div className="suggestion-box-body">
+              {template &&
+                suggestions.map((suggestion: Suggestion, idx: number) => {
+                  const {from, to, comment = '', sideEffect} = suggestion;
+                  return (
+                    <button
+                      onClick={(): void => {
+                        this.handleCodeUpdate(takeSuggestion(currentCode, suggestion));
+                        if (sideEffect) {
+                          addWidget(sideEffect());
+                        }
+                      }}
+                      key={`${from} -> ${to}-${idx}`}
+                    >
+                      {comment}
+                    </button>
+                  );
+                })}
+            </div>
+          )}
+        </div>
+        {this.editor()}
       </div>
     );
   }

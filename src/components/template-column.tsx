@@ -45,7 +45,6 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         {editMode && <TemplateColumnAddNewWidgetPopover widgets={template.widgets} addWidget={addWidget} />}
         <div
           className={classnames({
-            column: true,
             'template-column': true,
             'edit-mode': editMode,
           })}

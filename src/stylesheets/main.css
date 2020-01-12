@@ -229,10 +229,6 @@ input[type=number]::-webkit-outer-spin-button {
   margin-bottom: 200px;
 }
 
-.editor-column {
-  width: 400px;
-}
-
 .control-container {
   z-index: 1;
 }
@@ -635,7 +631,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .code-container {
+  height: 100%;
   position: relative;
+  width: 400px;
 }
 
 
@@ -867,7 +865,7 @@ input[type=number]::-webkit-outer-spin-button {
   background: rgba(255, 255, 255, 0);
   bottom: 0;
   left: 0;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
   z-index: 1000;
@@ -928,27 +926,27 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 .code-editor-controls {
-  /* background-color: whitesmoke; */
-  color: white;
+  color: black;
   padding: 2px;
   z-index: 10;
 }
 .code-editor-controls button,
 .code-editor-controls .hydra-selector {
-  color: white;
+  color: black;
 }
 
 
-.code-editor-controls .execute-code-control {
+.execute-code-control {
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
-.code-editor-controls .execute-code-control .execute-code-control-button {
+.execute-code-control .execute-code-control-button {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 30px;
+  position: absolute;
 }
 
 .slide-widget {
@@ -1030,17 +1028,22 @@ input[type=number]::-webkit-outer-spin-button {
   color: #ce9178;
   display: flex;
   font-size: 12px;
-  height: 30px;
+  height: 45px;
+  justify-content: space-around;
 }
 .code-option-tab {
   align-items: center;
   display: flex;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .code-option-tab.selected-tab {
   background: #002340;
+}
+.code-option-tabs .tooltip-container {
+  align-items: center;
+  justify-content: center;
 }
 
 /* split pane stuff */

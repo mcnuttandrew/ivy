@@ -259,34 +259,32 @@ class RootComponent extends React.Component<RootProps> {
   //   );
   // }
 
-  programmaticMenu(): JSX.Element {
-    const {
-      addWidget,
-      setNewSpecCode,
-      specCode,
-      editorError,
-      template,
-      codeMode,
-      setCodeMode,
-      templateMap,
-      spec,
-    } = this.props;
-    return (
-      <div className="flex full-height editor-column background-1">
-        <CodeEditor
-          addWidget={addWidget}
-          setCodeMode={setCodeMode}
-          codeMode={codeMode}
-          setNewSpecCode={setNewSpecCode}
-          template={template}
-          specCode={specCode}
-          spec={spec}
-          templateMap={templateMap}
-          editorError={editorError}
-        />
-      </div>
-    );
-  }
+  // programmaticMenu(): JSX.Element {
+  //   const {
+  //     addWidget,
+  //     setNewSpecCode,
+  //     specCode,
+  //     editorError,
+  //     template,
+  //     codeMode,
+  //     setCodeMode,
+  //     templateMap,
+  //     spec,
+  //   } = this.props;
+  //   return (
+  //       <CodeEditor
+  //         addWidget={addWidget}
+  //         setCodeMode={setCodeMode}
+  //         codeMode={codeMode}
+  //         setNewSpecCode={setNewSpecCode}
+  //         template={template}
+  //         specCode={specCode}
+  //         spec={spec}
+  //         templateMap={templateMap}
+  //         editorError={editorError}
+  //       />
+  //   );
+  // }
 
   chartArea(): JSX.Element {
     const {
@@ -402,10 +400,12 @@ class RootComponent extends React.Component<RootProps> {
       chainActions,
       changeMarkType,
       clearEncoding,
+      codeMode,
       columns,
       createFilter,
       deleteTemplate,
       editMode,
+      editorError,
       encodingMode,
       iMspec,
       metaColumns,
@@ -414,20 +414,23 @@ class RootComponent extends React.Component<RootProps> {
       removeWidget,
       saveCurrentTemplate,
       setBlankTemplate,
+      setCodeMode,
       setEditMode,
       setEncodingMode,
       setEncodingParameter,
       setNewSpec,
+      setNewSpecCode,
       setTemplateValue,
       setWidgetValue,
+      showProgrammaticMode,
       showSimpleDisplay,
       spec,
+      specCode,
       swapXAndYChannels,
       template,
       templateMap,
       templateSaveState,
       templates,
-      showProgrammaticMode,
     } = this.props;
 
     // wrap the split pane functionality into a HOC
@@ -502,7 +505,19 @@ class RootComponent extends React.Component<RootProps> {
             )}
           </div>
           <div className="full-height full-width flex-down">
-            {showProgrammaticMode && this.programmaticMenu()}
+            {showProgrammaticMode && (
+              <CodeEditor
+                addWidget={addWidget}
+                setCodeMode={setCodeMode}
+                codeMode={codeMode}
+                setNewSpecCode={setNewSpecCode}
+                template={template}
+                specCode={specCode}
+                spec={spec}
+                templateMap={templateMap}
+                editorError={editorError}
+              />
+            )}
           </div>
         </Wrapper>
       </div>
@@ -571,14 +586,8 @@ class RootComponent extends React.Component<RootProps> {
       canUndo,
       chainActions,
       changeSelectedFile,
-      changeTheme,
-      currentTheme,
       dataModalOpen,
       loadCustomDataset,
-      setProgrammaticView,
-      setSimpleDisplay,
-      showProgrammaticMode,
-      showSimpleDisplay,
       toggleDataModal,
       triggerRedo,
       triggerUndo,
