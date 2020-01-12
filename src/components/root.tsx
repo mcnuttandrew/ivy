@@ -22,6 +22,7 @@ import CodeEditor from './code-editor';
 
 import Header from './header';
 import DataColumn from './data-column';
+import ImportDataColumn from './import-data-column';
 import ChartArea from './chart-area';
 import EncodingColumn from './encoding-column';
 import DataModal from './data-modal';
@@ -114,178 +115,6 @@ class RootComponent extends React.Component<RootProps> {
     console.error('ERRPR', error, errorInfo);
   }
 
-  // secondaryControls(): JSX.Element {
-  //   const {
-  //     currentTheme,
-  //     changeTheme,
-  //     showProgrammaticMode,
-  //     setProgrammaticView,
-  //     setSimpleDisplay,
-  //     showSimpleDisplay,
-  //   } = this.props;
-  //   return (
-  //     <SecondaryControls
-  //       changeTheme={changeTheme}
-  //       currentTheme={currentTheme}
-  //       setProgrammaticView={setProgrammaticView}
-  //       setSimpleDisplay={setSimpleDisplay}
-  //       showProgrammaticMode={showProgrammaticMode}
-  //       showSimpleDisplay={showSimpleDisplay}
-  //     />
-  //   );
-  // }
-
-  // grammarMenu(): JSX.Element {
-  //   const {
-  //     addToNextOpenSlot,
-  //     addWidget,
-  //     chainActions,
-  //     changeMarkType,
-  //     clearEncoding,
-  //     coerceType,
-  //     columns,
-  //     createFilter,
-  //     currentlySelectedFile,
-  //     deleteFilter,
-  //     deleteTemplate,
-  //     editMode,
-  //     encodingMode,
-  //     iMspec,
-  //     metaColumns,
-  //     modifyValueOnTemplate,
-  //     moveWidget,
-  //     removeWidget,
-  //     saveCurrentTemplate,
-  //     setBlankTemplate,
-  //     setEditMode,
-  //     setEncodingMode,
-  //     setEncodingParameter,
-  //     setNewSpec,
-  //     setRepeats,
-  //     setTemplateValue,
-  //     setWidgetValue,
-  //     showSimpleDisplay,
-  //     spec,
-  //     swapXAndYChannels,
-  //     template,
-  //     templateMap,
-  //     templateSaveState,
-  //     templates,
-  //     toggleDataModal,
-  //     updateFilter,
-  //   } = this.props;
-
-  //   return (
-  //     <div className="flex full-height column-border">
-  //       {showSimpleDisplay && (
-  //         <TemplatePreviewColumn
-  //           encodingMode={encodingMode}
-  //           setEncodingMode={setEncodingMode}
-  //           templates={templates}
-  //         />
-  //       )}
-  //       {!showSimpleDisplay && (
-  //         <DataColumn
-  //           addToNextOpenSlot={addToNextOpenSlot}
-  //           coerceType={coerceType}
-  //           columns={columns}
-  //           createFilter={createFilter}
-  //           currentlySelectedFile={currentlySelectedFile}
-  //           deleteFilter={deleteFilter}
-  //           iMspec={iMspec}
-  //           metaColumns={metaColumns}
-  //           onDropFilter={(item: any): any => createFilter({field: item.text})}
-  //           setRepeats={setRepeats}
-  //           spec={spec}
-  //           template={template}
-  //           toggleDataModal={toggleDataModal}
-  //           updateFilter={updateFilter}
-  //         />
-  //       )}
-  //       <div className="flex-down full-height background-3 encoding-column-container">
-  //         {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
-  //           <EncodingControls
-  //             chainActions={chainActions}
-  //             clearEncoding={clearEncoding}
-  //             deleteTemplate={deleteTemplate}
-  //             editMode={editMode}
-  //             encodingMode={encodingMode}
-  //             modifyValueOnTemplate={modifyValueOnTemplate}
-  //             saveCurrentTemplate={saveCurrentTemplate}
-  //             setBlankTemplate={setBlankTemplate}
-  //             setEditMode={setEditMode}
-  //             setEncodingMode={setEncodingMode}
-  //             template={template}
-  //             templateSaveState={templateSaveState}
-  //             templates={templates}
-  //           />
-  //         )}
-  //         {encodingMode === 'grammer' && (
-  //           <EncodingColumn
-  //             changeMarkType={changeMarkType}
-  //             columns={columns}
-  //             iMspec={iMspec}
-  //             metaColumns={metaColumns}
-  //             onDrop={(item: any): void => {
-  //               if (item.disable) {
-  //                 return;
-  //               }
-  //               setEncodingParameter(item);
-  //             }}
-  //             onDropFilter={(item: any): any => createFilter({field: item.text})}
-  //             setEncodingParameter={setEncodingParameter}
-  //             setNewSpec={setNewSpec}
-  //             showSimpleDisplay={showSimpleDisplay}
-  //             spec={spec}
-  //             swapXAndYChannels={swapXAndYChannels}
-  //           />
-  //         )}
-  //         {encodingMode !== 'grammer' && template && (
-  //           <TemplateColumn
-  //             addWidget={addWidget}
-  //             columns={columns}
-  //             editMode={editMode}
-  //             moveWidget={moveWidget}
-  //             removeWidget={removeWidget}
-  //             setTemplateValue={setTemplateValue}
-  //             setWidgetValue={setWidgetValue}
-  //             showSimpleDisplay={showSimpleDisplay}
-  //             template={template}
-  //             templateMap={templateMap}
-  //           />
-  //         )}
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // programmaticMenu(): JSX.Element {
-  //   const {
-  //     addWidget,
-  //     setNewSpecCode,
-  //     specCode,
-  //     editorError,
-  //     template,
-  //     codeMode,
-  //     setCodeMode,
-  //     templateMap,
-  //     spec,
-  //   } = this.props;
-  //   return (
-  //       <CodeEditor
-  //         addWidget={addWidget}
-  //         setCodeMode={setCodeMode}
-  //         codeMode={codeMode}
-  //         setNewSpecCode={setNewSpecCode}
-  //         template={template}
-  //         specCode={specCode}
-  //         spec={spec}
-  //         templateMap={templateMap}
-  //         editorError={editorError}
-  //       />
-  //   );
-  // }
-
   chartArea(): JSX.Element {
     const {
       cloneView,
@@ -349,13 +178,10 @@ class RootComponent extends React.Component<RootProps> {
       setSimpleDisplay,
     } = this.props;
     return (
-      <div className="flex-down full-height column-border">
-        <div className="flex-down background-2 about-box">
+      <div className="flex-down full-height column background-2">
+        <div className="flex-down about-box">
           <h5>About</h5>
-          <p>
-            Description text about hydra, a simple description of what hydra is, perhaps with a button to
-            click to indicate more about what to do with it
-          </p>
+          <p>Description text about hydra, a simple description of what hydra is</p>
         </div>
         <SecondaryControls
           changeTheme={changeTheme}
@@ -365,6 +191,7 @@ class RootComponent extends React.Component<RootProps> {
           showProgrammaticMode={showProgrammaticMode}
           showSimpleDisplay={showSimpleDisplay}
         />
+        <ImportDataColumn currentlySelectedFile={currentlySelectedFile} toggleDataModal={toggleDataModal} />
         {showSimpleDisplay && (
           <TemplatePreviewColumn
             encodingMode={encodingMode}
@@ -372,13 +199,13 @@ class RootComponent extends React.Component<RootProps> {
             templates={templates}
           />
         )}
+
         {!showSimpleDisplay && (
           <DataColumn
             addToNextOpenSlot={addToNextOpenSlot}
             coerceType={coerceType}
             columns={columns}
             createFilter={createFilter}
-            currentlySelectedFile={currentlySelectedFile}
             deleteFilter={deleteFilter}
             iMspec={iMspec}
             metaColumns={metaColumns}
@@ -386,7 +213,6 @@ class RootComponent extends React.Component<RootProps> {
             setRepeats={setRepeats}
             spec={spec}
             template={template}
-            toggleDataModal={toggleDataModal}
             updateFilter={updateFilter}
           />
         )}
@@ -522,62 +348,6 @@ class RootComponent extends React.Component<RootProps> {
         </Wrapper>
       </div>
     );
-    // return (
-    //   <div className="flex-down full-height center-column">
-    //     {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
-    //       <EncodingControls
-    //         chainActions={chainActions}
-    //         clearEncoding={clearEncoding}
-    //         deleteTemplate={deleteTemplate}
-    //         editMode={editMode}
-    //         encodingMode={encodingMode}
-    //         modifyValueOnTemplate={modifyValueOnTemplate}
-    //         saveCurrentTemplate={saveCurrentTemplate}
-    //         setBlankTemplate={setBlankTemplate}
-    //         setEditMode={setEditMode}
-    //         setEncodingMode={setEncodingMode}
-    //         template={template}
-    //         templateSaveState={templateSaveState}
-    //         templates={templates}
-    //       />
-    //     )}
-    //     {encodingMode === 'grammer' && (
-    //       <EncodingColumn
-    //         changeMarkType={changeMarkType}
-    //         columns={columns}
-    //         iMspec={iMspec}
-    //         metaColumns={metaColumns}
-    //         onDrop={(item: any): void => {
-    //           if (item.disable) {
-    //             return;
-    //           }
-    //           setEncodingParameter(item);
-    //         }}
-    //         onDropFilter={(item: any): any => createFilter({field: item.text})}
-    //         setEncodingParameter={setEncodingParameter}
-    //         setNewSpec={setNewSpec}
-    //         showSimpleDisplay={showSimpleDisplay}
-    //         spec={spec}
-    //         swapXAndYChannels={swapXAndYChannels}
-    //       />
-    //     )}
-    //     {encodingMode !== 'grammer' && template && (
-    //       <TemplateColumn
-    //         addWidget={addWidget}
-    //         columns={columns}
-    //         editMode={editMode}
-    //         moveWidget={moveWidget}
-    //         removeWidget={removeWidget}
-    //         setTemplateValue={setTemplateValue}
-    //         setWidgetValue={setWidgetValue}
-    //         showSimpleDisplay={showSimpleDisplay}
-    //         template={template}
-    //         templateMap={templateMap}
-    //       />
-    //     )}
-    //     {showProgrammaticMode && this.programmaticMenu()}
-    //   </div>
-    // );
   }
 
   render(): JSX.Element {
@@ -608,13 +378,6 @@ class RootComponent extends React.Component<RootProps> {
           <DndProvider backend={HTML5Backend}>
             {this.leftColumn()}
             {this.centerColumn()}
-            {/* <div className="flex full-height control-container">
-              {showProgrammaticMode && this.programmaticMenu()}
-              <div className="flex-down">
-                {SHOW_SECONDARY_CONTROLS && this.secondaryControls()}
-                {this.grammarMenu()}
-              </div>
-            </div> */}
             {this.chartArea()}
           </DndProvider>
         </div>

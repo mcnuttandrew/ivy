@@ -42,14 +42,14 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
     const {templates, setEncodingMode, encodingMode} = this.props;
 
     return (
-      <div className="full-height background-2">
-        <div
-          className={classnames({
-            column: true,
-            'template-preview-column': true,
-          })}
-        >
-          <div>Available Charts</div>
+      <div
+        className={classnames({
+          'template-preview-column': true,
+          'full-height': true,
+        })}
+      >
+        <div>Available Charts</div>
+        <div className="template-preview-column-charts">
           {renderEncodingModeOption(
             'grammer',
             'Tableau-style grammar of graphics',

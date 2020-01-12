@@ -84,7 +84,6 @@ function Buttons(props: Props): JSX.Element {
       label: editMode ? 'STOP EDIT' : 'START EDIT',
     },
   ].concat(PARTIAL_BUTTONS);
-  console.log('show simple', showSimpleDisplay);
   return (
     <div className="flex space-between full-width flex-wrap">
       {(showSimpleDisplay ? PARTIAL_BUTTONS : FULL_BUTTONS).map(button => {

@@ -161,9 +161,7 @@ input[type=number]::-webkit-outer-spin-button {
 .secondary-controls,
 .about-box {
   font-size: 12px;
-  padding: 0 15px;
   padding-top: 10px;
-  width: 200px;
 }
 
 .about-box h5,
@@ -207,9 +205,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .column {
   max-height: 100%;
+  min-width: 220px;
   overflow-y: scroll;
   padding: 15px;
-  width: 200px;
+  width: 440px;
 }
 
 .encoding-column {
@@ -429,7 +428,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .background-2 {
-  background: #DBDBDB;
+  background: whitesmoke;
 }
 
 .background-3 {
@@ -824,7 +823,9 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 10px;
 }
 
-.template-preview-column {
+
+.template-preview-column-charts {
+  height: 100%;
   overflow: scroll;
 }
 

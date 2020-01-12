@@ -175,10 +175,9 @@ export default class CodeEditor extends React.Component<Props, State> {
     const {suggestionBox, updateMode} = this.state;
     const currentCode = this.getCurrentCode();
 
-    // todo this should move out of the render path
+    // TODO this should move out of the render path
     const suggestions =
       (template && codeMode === 'CODE' && synthesizeSuggestions(currentCode, template.widgets || [])) || [];
-    console.log(suggestions);
     return (
       <div className="full-height full-width inline-block code-container">
         <div

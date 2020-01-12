@@ -1,50 +1,43 @@
 import React from 'react';
-import {DiDatabase} from 'react-icons/di';
-import {Template} from '../templates/types';
-import {GenericAction} from '../actions/index';
-import {ColumnHeader} from '../types';
-import {getAllInUseFields, get} from '../utils';
-import Pill from './pill';
 import Filter from './filter';
 import FilterTarget from './filter-target';
 import MetaColumnPicker from './meta-column-picker';
+import Pill from './pill';
+import {ColumnHeader} from '../types';
+import {GenericAction} from '../actions/index';
+import {Template} from '../templates/types';
+import {getAllInUseFields, get} from '../utils';
 
 interface DataColumnProps {
-  columns: ColumnHeader[];
-  currentlySelectedFile: string;
-  iMspec: any;
-  spec: any;
-  metaColumns: ColumnHeader[];
-  template?: Template;
-
   addToNextOpenSlot: GenericAction;
   coerceType: GenericAction;
+  columns: ColumnHeader[];
   createFilter: GenericAction;
-  toggleDataModal: GenericAction;
-  setRepeats: GenericAction;
-  onDropFilter: GenericAction;
   deleteFilter: GenericAction;
+  iMspec: any;
+  metaColumns: ColumnHeader[];
+  onDropFilter: GenericAction;
+  setRepeats: GenericAction;
+  spec: any;
+  template?: Template;
   updateFilter: GenericAction;
 }
 
 export default class DataColumn extends React.Component<DataColumnProps> {
   render(): JSX.Element {
     const {
-      columns,
-      coerceType,
-      currentlySelectedFile,
       addToNextOpenSlot,
+      coerceType,
+      columns,
       createFilter,
-      toggleDataModal,
-      metaColumns,
-      iMspec,
-      spec,
-      setRepeats,
-      template,
-
       deleteFilter,
-      updateFilter,
+      iMspec,
+      metaColumns,
       onDropFilter,
+      setRepeats,
+      spec,
+      template,
+      updateFilter,
     } = this.props;
     const inUseFields = getAllInUseFields(iMspec);
     const makePill = (checkOptions: boolean) => (column: ColumnHeader): JSX.Element => {
@@ -71,15 +64,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       );
     };
     return (
-      <div className="flex-down column full-height background-2">
-        <h1 className="section-title">Data</h1>
-        <div className="flex space-between data-selection">
-          <div className="flex center">
-            <DiDatabase />
-            <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
-          </div>
-          <button onClick={toggleDataModal}>CHANGE</button>
-        </div>
+      <div className="flex-down full-height">
         <h5>Data Columns</h5>
         <div className="flex-down">{columns.map(makePill(false))}</div>
         {!template && <h5>Meta Columns</h5>}
@@ -109,7 +94,6 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         <div>
           <FilterTarget onDrop={onDropFilter} />
         </div>
-
         <div className="bottom-fill" />
       </div>
     );
