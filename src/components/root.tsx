@@ -32,6 +32,25 @@ import TemplatePreviewColumn from './template-preview-column';
 
 import EncodingControls from './encoding-controls';
 
+// wrap the split pane functionality into a HOC
+const Wrapper = (props: any): JSX.Element => {
+  if (props.showProgrammaticMode) {
+    return (
+      <SplitPane
+        split="horizontal"
+        minSize={60}
+        style={{overflow: 'unset'}}
+        defaultSize={parseInt(localStorage.getItem('splitPos'), 10)}
+        onChange={(size: any): any => localStorage.setItem('splitPos', size)}
+      >
+        {props.children}
+      </SplitPane>
+    );
+  }
+
+  return <div className="full-height">{props.children}</div>;
+};
+
 // TODO root props shouldn't all be optional, fix
 interface RootProps {
   GOOSE_MODE?: boolean;
@@ -259,23 +278,9 @@ class RootComponent extends React.Component<RootProps> {
       templates,
     } = this.props;
 
-    // wrap the split pane functionality into a HOC
-    const Wrapper: React.FC = showProgrammaticMode
-      ? (props: any): JSX.Element => (
-          <SplitPane
-            split="horizontal"
-            minSize={60}
-            style={{overflow: 'unset'}}
-            defaultSize={parseInt(localStorage.getItem('splitPos'), 10)}
-            onChange={(size: any): any => localStorage.setItem('splitPos', size)}
-          >
-            {props.children}
-          </SplitPane>
-        )
-      : (props: any): JSX.Element => <div>{props.children}</div>;
     return (
       <div className="full-height center-column">
-        <Wrapper>
+        <Wrapper showProgrammaticMode={showProgrammaticMode}>
           <div className="full-width flex-down">
             {SHOW_TEMPLATE_CONTROLS && (
               <EncodingControls
@@ -330,8 +335,8 @@ class RootComponent extends React.Component<RootProps> {
               />
             )}
           </div>
-          <div className="full-height full-width flex-down">
-            {showProgrammaticMode && (
+          {showProgrammaticMode && (
+            <div className="full-height full-width flex-down">
               <CodeEditor
                 addWidget={addWidget}
                 setCodeMode={setCodeMode}
@@ -343,12 +348,29 @@ class RootComponent extends React.Component<RootProps> {
                 templateMap={templateMap}
                 editorError={editorError}
               />
-            )}
-          </div>
+            </div>
+          )}
         </Wrapper>
       </div>
     );
   }
+
+  // programmaticMenu(): JSX.Element {
+  //   const {
+  //     addWidget,
+  //     setNewSpecCode,
+  //     specCode,
+  //     editorError,
+  //     template,
+  //     codeMode,
+  //     setCodeMode,
+  //     templateMap,
+  //     spec,
+  //   } = this.props;
+  //   return (
+
+  //   );
+  // }
 
   render(): JSX.Element {
     const {

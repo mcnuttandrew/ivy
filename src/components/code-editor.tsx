@@ -140,44 +140,53 @@ export default class CodeEditor extends React.Component<Props, State> {
     }
   }
 
-  editor(): JSX.Element {
-    const {codeMode} = this.props;
-    const {updateMode} = this.state;
+  suggestionBox() {
+    const {codeMode, template, addWidget} = this.props;
+    const {suggestionBox} = this.state;
     const currentCode = this.getCurrentCode();
+    // TODO this should move out of the render path
+    const suggestions =
+      (template && codeMode === 'CODE' && synthesizeSuggestions(currentCode, template.widgets || [])) || [];
     return (
-      /*eslint-disable react/no-string-refs*/
-      <div className="flex full-height">
-        <MonacoEditor
-          ref="monaco"
-          language="json"
-          theme="monokai"
-          height={'calc(100% - 99px)'}
-          value={currentCode}
-          options={EDITOR_OPTIONS}
-          onChange={(code: string): void => {
-            if (codeMode === 'OUTPUT') {
-              return;
-            }
-
-            if (updateMode === 'automatic') {
-              this.handleCodeUpdate(code);
-            }
-          }}
-          editorDidMount={this.editorDidMount}
-        />
+      <div className="suggestion-box">
+        <div className="suggestion-box-header flex space-between">
+          <h5>
+            <span>Suggestions</span>
+            {suggestions.length ? <span>(!)</span> : ''}
+          </h5>
+          <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
+            {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
+          </div>
+        </div>
+        {suggestionBox && (
+          <div className="suggestion-box-body">
+            {template &&
+              suggestions.map((suggestion: Suggestion, idx: number) => {
+                const {from, to, comment = '', sideEffect} = suggestion;
+                return (
+                  <button
+                    onClick={(): void => {
+                      this.handleCodeUpdate(takeSuggestion(currentCode, suggestion));
+                      if (sideEffect) {
+                        addWidget(sideEffect());
+                      }
+                    }}
+                    key={`${from} -> ${to}-${idx}`}
+                  >
+                    {comment}
+                  </button>
+                );
+              })}
+          </div>
+        )}
       </div>
-      /*eslint-enable react/no-string-refs*/
     );
   }
 
   render(): JSX.Element {
-    const {editorError, setCodeMode, codeMode, template, addWidget} = this.props;
-    const {suggestionBox, updateMode} = this.state;
+    const {editorError, setCodeMode, codeMode} = this.props;
+    const {updateMode} = this.state;
     const currentCode = this.getCurrentCode();
-
-    // TODO this should move out of the render path
-    const suggestions =
-      (template && codeMode === 'CODE' && synthesizeSuggestions(currentCode, template.widgets || [])) || [];
     return (
       <div className="full-height full-width inline-block code-container">
         <div
@@ -231,39 +240,31 @@ export default class CodeEditor extends React.Component<Props, State> {
           })}
           <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
         </div>
-        <div className="suggestion-box">
-          <div className="suggestion-box-header flex space-between">
-            <h5>
-              <span>Suggestions</span>
-              {suggestions.length ? <span>(!)</span> : ''}
-            </h5>
-            <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
-              {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
-            </div>
-          </div>
-          {suggestionBox && (
-            <div className="suggestion-box-body">
-              {template &&
-                suggestions.map((suggestion: Suggestion, idx: number) => {
-                  const {from, to, comment = '', sideEffect} = suggestion;
-                  return (
-                    <button
-                      onClick={(): void => {
-                        this.handleCodeUpdate(takeSuggestion(currentCode, suggestion));
-                        if (sideEffect) {
-                          addWidget(sideEffect());
-                        }
-                      }}
-                      key={`${from} -> ${to}-${idx}`}
-                    >
-                      {comment}
-                    </button>
-                  );
-                })}
-            </div>
-          )}
+        {this.suggestionBox()}
+        <div className="flex full-height">
+          {
+            /*eslint-disable react/no-string-refs*/
+            <MonacoEditor
+              ref="monaco"
+              language="json"
+              theme="monokai"
+              height={'calc(100% - 99px)'}
+              value={currentCode}
+              options={EDITOR_OPTIONS}
+              onChange={(code: string): void => {
+                if (codeMode === 'OUTPUT') {
+                  return;
+                }
+
+                if (updateMode === 'automatic') {
+                  this.handleCodeUpdate(code);
+                }
+              }}
+              editorDidMount={this.editorDidMount}
+            />
+            /*eslint-en able react/no-string-refs*/
+          }
         </div>
-        {this.editor()}
       </div>
     );
   }
