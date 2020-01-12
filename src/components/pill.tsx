@@ -16,6 +16,7 @@ export interface PillProps {
   containingField?: string;
   containingShelf?: string;
   createFilter?: GenericAction;
+  hideGUI?: boolean;
   inEncoding: boolean;
   setEncodingParameter?: any;
 }
@@ -28,6 +29,7 @@ export default function Pill(props: PillProps): JSX.Element {
     containingField,
     containingShelf,
     createFilter,
+    hideGUI,
     inEncoding,
     setEncodingParameter,
   } = props;
@@ -87,7 +89,7 @@ export default function Pill(props: PillProps): JSX.Element {
         <DataSymbol type={isMeta ? 'METACOLUMN' : column.type} />
       </div>
       <div className="pill-label">{column.field}</div>
-      {!isMeta && !inEncoding && createFilter && (
+      {!isMeta && !inEncoding && !hideGUI && createFilter && (
         <div
           className="fixed-symbol-width"
           onClick={(): any => {
@@ -100,7 +102,7 @@ export default function Pill(props: PillProps): JSX.Element {
           <TiFilter />
         </div>
       )}
-      {!isMeta && !inEncoding && addToNextOpenSlot && (
+      {!isMeta && !inEncoding && !hideGUI && addToNextOpenSlot && (
         <div className="fixed-symbol-width" onClick={(): any => addToNextOpenSlot(column)}>
           <GoPlus />
         </div>

@@ -137,9 +137,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .center-column {
-  min-width: 400px;
+  min-width: 500px;
   position: relative;
-  width: 400px;
+  width: 500px;
 }
 
 .header {
@@ -215,7 +215,7 @@ input[type=number]::-webkit-outer-spin-button {
   max-height: 100%;
   overflow-y: scroll;
   padding: 15px;
-  width: calc(400px - 15px);
+  width: calc(500px - 15px);
 }
 
 .template-column.column.edit-mode {
@@ -632,7 +632,7 @@ input[type=number]::-webkit-outer-spin-button {
 .code-container {
   height: 100%;
   position: relative;
-  width: 400px;
+  width: 500px;
 }
 
 

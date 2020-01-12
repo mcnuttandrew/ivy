@@ -18,23 +18,21 @@ import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
 import {AppState} from '../reducers/default-state';
 
-import CodeEditor from './code-editor';
-
-import Header from './header';
-import DataColumn from './data-column';
-import ImportDataColumn from './import-data-column';
 import ChartArea from './chart-area';
-import EncodingColumn from './encoding-column';
+import CodeEditor from './code-editor';
+import DataColumn from './data-column';
 import DataModal from './data-modal';
+import EncodingColumn from './encoding-column';
+import EncodingControls from './encoding-controls';
+import Header from './header';
+import ImportDataColumn from './import-data-column';
 import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
 import TemplatePreviewColumn from './template-preview-column';
 
-import EncodingControls from './encoding-controls';
-
 // wrap the split pane functionality into a HOC
 const Wrapper = (props: any): JSX.Element => {
-  if (props.showProgrammaticMode) {
+  if (props.showProgrammaticMode && props.showGUIView) {
     return (
       <SplitPane
         split="horizontal"
@@ -51,74 +49,75 @@ const Wrapper = (props: any): JSX.Element => {
   return <div className="full-height">{props.children}</div>;
 };
 
-// TODO root props shouldn't all be optional, fix
 interface RootProps {
-  GOOSE_MODE?: boolean;
-  canRedo?: boolean;
-  canUndo?: boolean;
-  codeMode?: string;
-  columns?: ColumnHeader[];
-  currentTheme?: VegaTheme;
-  currentView?: string;
-  currentlySelectedFile?: string;
-  data?: any; //TODO: define the data type
-  dataModalOpen?: boolean;
-  editMode?: boolean;
-  editorError?: null | string;
-  encodingMode?: string;
-  iMspec?: any;
-  metaColumns?: ColumnHeader[];
-  missingFields?: string[];
-  showProgrammaticMode?: boolean;
-  showSimpleDisplay?: boolean;
-  spec?: Spec;
-  specCode?: string;
-  template?: Template;
-  templateComplete?: boolean;
-  templateMap?: TemplateMap;
-  templateSaveState?: string;
-  templates?: Template[];
-  views?: List<string>;
+  GOOSE_MODE: boolean;
+  canRedo: boolean;
+  canUndo: boolean;
+  codeMode: string;
+  columns: ColumnHeader[];
+  currentTheme: VegaTheme;
+  currentView: string;
+  currentlySelectedFile: string;
+  data: any; //TODO: define the data type
+  dataModalOpen: boolean;
+  editMode: boolean;
+  editorError: null | string;
+  encodingMode: string;
+  iMspec: any;
+  metaColumns: ColumnHeader[];
+  missingFields: string[];
+  showGUIView: boolean;
+  showProgrammaticMode: boolean;
+  showSimpleDisplay: boolean;
+  spec: Spec;
+  specCode: string;
+  template: Template;
+  templateComplete: boolean;
+  templateMap: TemplateMap;
+  templateSaveState: string;
+  templates: Template[];
+  views: List<string>;
 
-  addToNextOpenSlot?: GenericAction;
-  addWidget?: GenericAction;
-  chainActions?: GenericAction;
-  changeMarkType?: GenericAction;
-  changeSelectedFile?: GenericAction;
-  changeTheme?: GenericAction;
-  clearEncoding?: GenericAction;
-  cloneView?: GenericAction;
-  coerceType?: GenericAction;
-  createFilter?: GenericAction;
-  createNewView?: GenericAction;
-  deleteFilter?: GenericAction;
-  deleteTemplate?: GenericAction;
-  deleteView?: GenericAction;
-  loadCustomDataset?: GenericAction;
-  loadDataFromPredefinedDatasets?: GenericAction;
-  loadTemplates?: GenericAction;
-  modifyValueOnTemplate?: GenericAction;
-  moveWidget?: GenericAction;
-  removeWidget?: GenericAction;
-  saveCurrentTemplate?: GenericAction;
-  setBlankTemplate?: GenericAction;
-  setCodeMode?: GenericAction;
-  setEditMode?: GenericAction;
-  setEncodingMode?: GenericAction;
-  setEncodingParameter?: GenericAction;
-  setNewSpec?: GenericAction;
-  setNewSpecCode?: GenericAction;
-  setProgrammaticView?: GenericAction;
-  setRepeats?: GenericAction;
-  setSimpleDisplay?: GenericAction;
-  setTemplateValue?: GenericAction;
-  setWidgetValue?: GenericAction;
-  swapXAndYChannels?: GenericAction;
-  switchView?: GenericAction;
-  toggleDataModal?: GenericAction;
-  triggerRedo?: GenericAction;
-  triggerUndo?: GenericAction;
-  updateFilter?: GenericAction;
+  addToNextOpenSlot: GenericAction;
+  addWidget: GenericAction;
+  chainActions: GenericAction;
+  changeMarkType: GenericAction;
+  changeSelectedFile: GenericAction;
+  changeTheme: GenericAction;
+  clearEncoding: GenericAction;
+  cloneView: GenericAction;
+  coerceType: GenericAction;
+  createFilter: GenericAction;
+  createNewView: GenericAction;
+  deleteFilter: GenericAction;
+  deleteTemplate: GenericAction;
+  deleteView: GenericAction;
+  loadCustomDataset: GenericAction;
+  loadDataFromPredefinedDatasets: GenericAction;
+  loadTemplates: GenericAction;
+  modifyValueOnTemplate: GenericAction;
+  moveWidget: GenericAction;
+  removeWidget: GenericAction;
+  saveCurrentTemplate: GenericAction;
+  setBlankTemplate: GenericAction;
+  setCodeMode: GenericAction;
+  setEditMode: GenericAction;
+  setEncodingMode: GenericAction;
+  setEncodingParameter: GenericAction;
+  setGuiView: GenericAction;
+  setNewSpec: GenericAction;
+  setNewSpecCode: GenericAction;
+  setProgrammaticView: GenericAction;
+  setRepeats: GenericAction;
+  setSimpleDisplay: GenericAction;
+  setTemplateValue: GenericAction;
+  setWidgetValue: GenericAction;
+  swapXAndYChannels: GenericAction;
+  switchView: GenericAction;
+  toggleDataModal: GenericAction;
+  triggerRedo: GenericAction;
+  triggerUndo: GenericAction;
+  updateFilter: GenericAction;
 }
 
 class RootComponent extends React.Component<RootProps> {
@@ -172,29 +171,29 @@ class RootComponent extends React.Component<RootProps> {
   leftColumn(): JSX.Element {
     const {
       addToNextOpenSlot,
+      changeTheme,
       coerceType,
       columns,
       createFilter,
+      currentTheme,
       currentlySelectedFile,
       deleteFilter,
       encodingMode,
       iMspec,
       metaColumns,
       setEncodingMode,
+      setGuiView,
+      setProgrammaticView,
       setRepeats,
+      setSimpleDisplay,
+      showGUIView,
+      showProgrammaticMode,
       showSimpleDisplay,
       spec,
       template,
       templates,
       toggleDataModal,
       updateFilter,
-    } = this.props;
-    const {
-      currentTheme,
-      changeTheme,
-      showProgrammaticMode,
-      setProgrammaticView,
-      setSimpleDisplay,
     } = this.props;
     return (
       <div className="flex-down full-height column background-2">
@@ -206,7 +205,9 @@ class RootComponent extends React.Component<RootProps> {
           changeTheme={changeTheme}
           currentTheme={currentTheme}
           setProgrammaticView={setProgrammaticView}
+          setGuiView={setGuiView}
           setSimpleDisplay={setSimpleDisplay}
+          showGUIView={showGUIView}
           showProgrammaticMode={showProgrammaticMode}
           showSimpleDisplay={showSimpleDisplay}
         />
@@ -230,6 +231,7 @@ class RootComponent extends React.Component<RootProps> {
             metaColumns={metaColumns}
             onDropFilter={(item: any): any => createFilter({field: item.text})}
             setRepeats={setRepeats}
+            showGUIView={showGUIView}
             spec={spec}
             template={template}
             updateFilter={updateFilter}
@@ -267,6 +269,7 @@ class RootComponent extends React.Component<RootProps> {
       setNewSpecCode,
       setTemplateValue,
       setWidgetValue,
+      showGUIView,
       showProgrammaticMode,
       showSimpleDisplay,
       spec,
@@ -280,9 +283,9 @@ class RootComponent extends React.Component<RootProps> {
 
     return (
       <div className="full-height center-column">
-        <Wrapper showProgrammaticMode={showProgrammaticMode}>
+        <Wrapper showProgrammaticMode={showProgrammaticMode} showGUIView={showGUIView}>
           <div className="full-width flex-down">
-            {SHOW_TEMPLATE_CONTROLS && (
+            {SHOW_TEMPLATE_CONTROLS && showGUIView && (
               <EncodingControls
                 chainActions={chainActions}
                 clearEncoding={clearEncoding}
@@ -300,7 +303,7 @@ class RootComponent extends React.Component<RootProps> {
                 templates={templates}
               />
             )}
-            {encodingMode === 'grammer' && (
+            {encodingMode === 'grammer' && showGUIView && (
               <EncodingColumn
                 changeMarkType={changeMarkType}
                 columns={columns}
@@ -320,7 +323,7 @@ class RootComponent extends React.Component<RootProps> {
                 swapXAndYChannels={swapXAndYChannels}
               />
             )}
-            {encodingMode !== 'grammer' && template && (
+            {encodingMode !== 'grammer' && template && showGUIView && (
               <TemplateColumn
                 addWidget={addWidget}
                 columns={columns}
@@ -354,23 +357,6 @@ class RootComponent extends React.Component<RootProps> {
       </div>
     );
   }
-
-  // programmaticMenu(): JSX.Element {
-  //   const {
-  //     addWidget,
-  //     setNewSpecCode,
-  //     specCode,
-  //     editorError,
-  //     template,
-  //     codeMode,
-  //     setCodeMode,
-  //     templateMap,
-  //     spec,
-  //   } = this.props;
-  //   return (
-
-  //   );
-  // }
 
   render(): JSX.Element {
     const {
@@ -408,7 +394,7 @@ class RootComponent extends React.Component<RootProps> {
   }
 }
 
-function mapStateToProps({base}: {base: AppState}): any {
+export function mapStateToProps({base}: {base: AppState}): any {
   const template = base.get('currentTemplateInstance');
   const templateMap = base.get('templateMap').toJS();
   const missingFields = (template && getMissingFields(template.toJS(), templateMap)) || [];
@@ -432,6 +418,7 @@ function mapStateToProps({base}: {base: AppState}): any {
     missingFields,
     showProgrammaticMode: base.get('showProgrammaticMode'),
     showSimpleDisplay: base.get('showSimpleDisplay'),
+    showGUIView: base.get('showGUIView'),
     spec: base.get('spec').toJS(),
     specCode: base.get('specCode'),
     template: template && template.toJS(),

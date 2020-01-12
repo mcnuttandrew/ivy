@@ -18,6 +18,7 @@ interface DataColumnProps {
   metaColumns: ColumnHeader[];
   onDropFilter: GenericAction;
   setRepeats: GenericAction;
+  showGUIView: boolean;
   spec: any;
   template?: Template;
   updateFilter: GenericAction;
@@ -35,6 +36,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       metaColumns,
       onDropFilter,
       setRepeats,
+      showGUIView,
       spec,
       template,
       updateFilter,
@@ -49,6 +51,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
             inEncoding={false}
             addToNextOpenSlot={addToNextOpenSlot}
             createFilter={createFilter}
+            hideGUI={!showGUIView}
           />
           {checkOptions && inUseFields.has(column.field) && (
             <div>
@@ -67,33 +70,37 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       <div className="flex-down full-height">
         <h5>Data Columns</h5>
         <div className="flex-down">{columns.map(makePill(false))}</div>
-        {!template && <h5>Meta Columns</h5>}
-        {!template && <div className="flex-down">{metaColumns.map(makePill(true))}</div>}
+        {!template && showGUIView && <h5>Meta Columns</h5>}
+        {!template && showGUIView && <div className="flex-down">{metaColumns.map(makePill(true))}</div>}
 
-        <h5> Filter </h5>
-        <div className="flex-down">
-          {(spec.transform || get(spec, ['spec', 'transform']) || [])
-            .filter((filter: any) => {
-              // dont try to render filters that we dont know how to render
-              return filter.filter && !filter.filter.and;
-            })
-            .map((filter: any, idx: number) => {
-              return (
-                <Filter
-                  column={columns.find(({field}) => field === filter.filter.field)}
-                  filter={filter}
-                  key={`${idx}-filter`}
-                  updateFilter={(newFilterValue: any): void => {
-                    updateFilter({newFilterValue, idx});
-                  }}
-                  deleteFilter={(): any => deleteFilter(idx)}
-                />
-              );
-            })}
-        </div>
-        <div>
-          <FilterTarget onDrop={onDropFilter} />
-        </div>
+        {showGUIView && <h5> Filter </h5>}
+        {showGUIView && (
+          <div className="flex-down">
+            {(spec.transform || get(spec, ['spec', 'transform']) || [])
+              .filter((filter: any) => {
+                // dont try to render filters that we dont know how to render
+                return filter.filter && !filter.filter.and;
+              })
+              .map((filter: any, idx: number) => {
+                return (
+                  <Filter
+                    column={columns.find(({field}) => field === filter.filter.field)}
+                    filter={filter}
+                    key={`${idx}-filter`}
+                    updateFilter={(newFilterValue: any): void => {
+                      updateFilter({newFilterValue, idx});
+                    }}
+                    deleteFilter={(): any => deleteFilter(idx)}
+                  />
+                );
+              })}
+          </div>
+        )}
+        {showGUIView && (
+          <div>
+            <FilterTarget onDrop={onDropFilter} />
+          </div>
+        )}
         <div className="bottom-fill" />
       </div>
     );

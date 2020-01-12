@@ -12,7 +12,7 @@ export default class ImportDataColumn extends React.Component<Props> {
     const {currentlySelectedFile, toggleDataModal} = this.props;
 
     return (
-      <div className="flex-down full-height">
+      <div className="flex-down full-height" style={{maxHeight: 'fit-content'}}>
         <h1 className="section-title">Data</h1>
         <div className="flex space-between data-selection">
           <div className="flex center">
