@@ -58,7 +58,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
     );
 
     return (
-      <div className="column">
+      <div className="encoding-column">
         {/* ENCODING STUFF */}
         <h1 className="section-title flex"> Encoding </h1>
         <div className="flex-down section-body">

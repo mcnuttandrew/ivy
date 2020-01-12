@@ -42,7 +42,7 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
     const {templates, setEncodingMode, encodingMode} = this.props;
 
     return (
-      <div className="full-height">
+      <div className="full-height background-2">
         <div
           className={classnames({
             column: true,

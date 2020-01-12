@@ -170,9 +170,7 @@ export default class CodeEditor extends React.Component<Props, State> {
 
     return (
       <div className="full-height full-width">
-        {
-          // this.editorControls()
-        }
+        {this.editorControls()}
         <div className="full-height full-width inline-block code-container">
           <div
             className={classnames({
@@ -197,6 +195,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                 </div>
               );
             })}
+            <div> GEAR</div>
           </div>
           {
             /*eslint-disable react/no-string-refs*/
@@ -204,7 +203,7 @@ export default class CodeEditor extends React.Component<Props, State> {
               ref="monaco"
               language="json"
               theme="monokai"
-              height={suggestionBox ? 'calc(100% - 300px)' : 'calc(100% - 110px)'}
+              height={suggestionBox ? 'calc(100% - 200px)' : 'calc(100% - 110px)'}
               value={currentCode}
               options={EDITOR_OPTIONS}
               onChange={(code: string): void => {
@@ -221,7 +220,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             /*eslint-enable react/no-string-refs*/
           }
 
-          {/* <div className="suggestion-box" style={{height: '185px'}}>
+          <div className="suggestion-box" style={{height: '55px'}}>
             <div className="suggestion-box-header flex space-between">
               <h5>Suggestions</h5>
               <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
@@ -252,7 +251,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                   )}
               </div>
             )}
-          </div> */}
+          </div>
         </div>
       </div>
     );

@@ -430,7 +430,6 @@ class RootComponent extends React.Component<RootProps> {
 
     return (
       <div className="flex-down full-height center-column">
-        {showProgrammaticMode && this.programmaticMenu()}
         {SHOW_TEMPLATE_CONTROLS && !showSimpleDisplay && (
           <EncodingControls
             chainActions={chainActions}
@@ -482,6 +481,7 @@ class RootComponent extends React.Component<RootProps> {
             templateMap={templateMap}
           />
         )}
+        {showProgrammaticMode && this.programmaticMenu()}
       </div>
     );
   }
