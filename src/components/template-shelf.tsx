@@ -38,7 +38,6 @@ function SimpleShelf(props: TemplateShelf): JSX.Element {
           options={options}
           selectedValue={channelEncoding || ' '}
           onChange={(text: string): void => {
-            // drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field}),
             console.log('ondrop', text, field);
             onDrop({
               field,
