@@ -40,6 +40,7 @@ export const setCodeMode = buildEasyAction('set-code-mode');
 export const setEditMode = buildEasyAction('set-edit-mode');
 export const setEncodingMode = buildEasyAction('set-encoding-mode');
 export const setEncodingParameter = buildEasyAction('set-encoding-param');
+export const setGuiView = buildEasyAction('set-gui-view');
 export const setNewSpec = buildEasyAction('set-new-encoding');
 export const setNewSpecCode = buildEasyAction('set-new-encoding-code');
 export const setProgrammaticView = buildEasyAction('toggle-programmatic-view');

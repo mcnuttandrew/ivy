@@ -1,7 +1,7 @@
 import React from 'react';
 import {ListWidget, TemplateWidget} from '../../templates/types';
-import {MdSettings} from 'react-icons/md';
 import Selector from '../selector';
+import {MdSettings} from 'react-icons/md';
 import {TiDeleteOutline} from 'react-icons/ti';
 import Popover from '../popover';
 

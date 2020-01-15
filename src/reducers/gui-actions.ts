@@ -1,8 +1,7 @@
 import Immutable, {Map} from 'immutable';
 
-import {ActionResponse, AppState} from './default-state';
+import {ActionResponse, AppState, EMPTY_SPEC, toggle, blindSet} from './default-state';
 import {getTemplate} from '../utils';
-import {EMPTY_SPEC, toggle, blindSet} from './default-state';
 import {ColumnHeader} from '../types';
 
 import {addToNextOpenSlot} from './apt-actions';
@@ -12,10 +11,11 @@ import {getAllInUseFields} from '../utils';
 export const setProgrammaticView = toggle('showProgrammaticMode');
 export const toggleDataModal = toggle('dataModalOpen');
 
-export const setSimpleDisplay = blindSet('showSimpleDisplay');
 export const changeTheme = blindSet('currentTheme');
-export const setEditMode = blindSet('editMode');
 export const setCodeMode = blindSet('codeMode');
+export const setEditMode = blindSet('editMode');
+export const setGuiView = blindSet('showGUIView');
+export const setSimpleDisplay = blindSet('showSimpleDisplay');
 
 const quoteTrim = (x: string): string => x.replace(/["']/g, '');
 
