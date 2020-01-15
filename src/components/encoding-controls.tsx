@@ -167,7 +167,12 @@ export default function EncodingControls(props: Props): JSX.Element {
             deleteTemplate={deleteTemplate}
             templates={templates}
             setEncodingMode={setEncodingMode}
-            clickTarget={<TiExport />}
+            clickTarget={
+              <span style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <span style={{fontSize: 10}}>CHANGE TEMPLATE</span>
+                <TiExport />
+              </span>
+            }
           />
         )}
       </div>

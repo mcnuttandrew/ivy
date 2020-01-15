@@ -285,7 +285,7 @@ class RootComponent extends React.Component<RootProps> {
       <div className="full-height center-column">
         <Wrapper showProgrammaticMode={showProgrammaticMode} showGUIView={showGUIView}>
           <div className="full-width flex-down">
-            {SHOW_TEMPLATE_CONTROLS && showGUIView && (
+            {SHOW_TEMPLATE_CONTROLS && (
               <EncodingControls
                 chainActions={chainActions}
                 clearEncoding={clearEncoding}
