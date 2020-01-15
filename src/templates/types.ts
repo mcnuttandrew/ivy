@@ -88,6 +88,15 @@ export interface Template {
   // TODO MAYBE ADD A PREVIEW PIC?
 }
 
+/**
+ * the query object. Multiple key in an object is interpreted as an AND
+ * * -> any val, used for setting things
+ * null -> no val, used for checking empty
+ * string -> equal to specific value, if this then that
+ * string[] -> one of vals
+ */
+export type WidgetValidationQuery = {[key: string]: '*' | null | string | string[]};
+
 export interface WidgetValidation {
   /**
    * What to do in response to the result of the query
@@ -106,7 +115,7 @@ export interface WidgetValidation {
    * string -> equal to specific value, if this then that
    * string[] -> one of vals
    */
-  query: {[key: string]: '*' | null | string | string[]};
+  query: WidgetValidationQuery;
   // TODO this doesn't actually handle data type checks,
   // e.g. do this if field is measure, do that if it's dimension
 }

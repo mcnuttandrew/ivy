@@ -15,9 +15,7 @@ interface GenericActionCreator {
   (type: string): GenericAction;
 }
 
-const buildEasyAction: GenericActionCreator = type => payload => (dispatch): void => {
-  dispatch({type, payload});
-};
+const buildEasyAction: GenericActionCreator = type => payload => (dispatch): any => dispatch({type, payload});
 
 export const addToNextOpenSlot = buildEasyAction('add-to-next-open-slot');
 export const addWidget = buildEasyAction('add-widget-to-template');
@@ -33,6 +31,7 @@ export const deleteTemplate = buildEasyAction('delete-template');
 export const deleteView = buildEasyAction('delete-view');
 export const modifyValueOnTemplate = buildEasyAction('modify-value-on-template');
 export const moveWidget = buildEasyAction('move-widget-in-template');
+export const readInTemplate = buildEasyAction('read-in-template');
 export const removeWidget = buildEasyAction('remove-widget-from-template');
 export const saveCurrentTemplate = buildEasyAction('save-template');
 export const setBlankTemplate = buildEasyAction('set-blank-template');

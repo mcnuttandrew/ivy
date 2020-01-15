@@ -2,10 +2,11 @@ import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  mark: {type: 'point', tooltip: true},
+  mark: {type: 'point', tooltip: true, color: '[Color]'},
   encoding: {
     x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
     y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
+    // color: {field: '[ColorDim', type: 'colorType', }
   },
 };
 
@@ -75,8 +76,31 @@ const SCATTERPLOT: Template = {
         defaultValue: 5,
       },
     },
+    {
+      widgetName: 'Color',
+      widgetType: 'List',
+      widget: {
+        allowedValues: [
+          {display: '"steelblue"', value: '"steelblue"'},
+          {display: '"blue"', value: '"blue"'},
+          {display: '"red"', value: '"red"'},
+        ],
+        defaultValue: '"steelblue"',
+      },
+    },
   ],
-  widgetValidations: [],
+  widgetValidations: [
+    {
+      queryResult: 'hide',
+      queryTarget: 'xType',
+      query: {xDim: null},
+    },
+    {
+      queryResult: 'hide',
+      queryTarget: 'yType',
+      query: {yDim: null},
+    },
+  ],
   templateName: 'Scatterplot',
   templateDescription: 'A full ish scatterplot',
   templateLanguage: 'vega-lite',

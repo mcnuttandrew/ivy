@@ -13,7 +13,7 @@ import {
   WidgetSubType,
 } from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
-import {trim} from '../utils';
+import {trim, deserializeTemplate} from '../utils';
 
 export const setTemplateValues = (code: string, templateMap: TemplateMap): string => {
   const filledInSpec = Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
@@ -108,7 +108,6 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   }
   const template = state.get('currentTemplateInstance').toJS();
   newState = newState.setIn(['templateMap', payload.field], Immutable.fromJS(payload.text));
-
   const updatedTemplate = JSON.parse(setTemplateValues(template.code, newState.get('templateMap').toJS()));
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
 };
@@ -151,11 +150,26 @@ export const saveCurrentTemplate: ActionResponse = state => {
 
 export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   const {value, key} = payload;
+  console.log(value, key);
   let newState = state.setIn(['currentTemplateInstance', key], value);
   if (key === 'templateName') {
     newState = newState.set('encodingMode', value);
   }
+  if (key === 'code') {
+    newState = newState.set('editorError', payload.editorError);
+  }
   return newState;
+};
+
+export const readInTemplate: ActionResponse = (state, payload) => {
+  if (payload.error) {
+    return state.set('editorError', payload.error);
+  }
+  const updatedTemplate = deserializeTemplate(payload.code);
+  updatedTemplate.code = state.getIn(['currentTemplateInstance', 'code']);
+  return state
+    .set('currentTemplateInstance', Immutable.fromJS(updatedTemplate))
+    .set('editorError', payload.error);
 };
 
 export const setBlankTemplate: ActionResponse = (state, fork) => {

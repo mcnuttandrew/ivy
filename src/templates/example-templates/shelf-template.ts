@@ -1,13 +1,13 @@
 // import stringify from 'json-stringify-pretty-compact';
 // import {Template} from '../types';
 // import {toList} from '../../utils';
-// const withConditional = (trueCondition: any, conditional: any) => {
-//   return {
-//     condition: conditional,
-//     trueCondition: trueCondition,
-//     // falseCondition implicitly here
-//   };
-// };
+// // const withConditional = (trueCondition: any, conditional: any) => {
+// //   return {
+// //     condition: conditional,
+// //     trueCondition: trueCondition,
+// //     // falseCondition implicitly here
+// //   };
+// // };
 
 // const SHELF_TEMPLATE_CODE: any = {
 //   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
@@ -16,35 +16,32 @@
 //     encoding: {
 //       x: {
 //         field: '[X]',
-//         type: 'quantitative',
+//         type: '[xType]',
 //       },
 //       y: {
 //         field: '[Y]',
 //         type: 'quantitative',
 //       },
 //       size: {
-//         field: ['SIZE'],
+//         field: '[SIZE]',
 //         type: 'quantitative',
 //       },
 //       color: {
-//         field: ['COLOR'],
+//         field: '[COLOR]',
 //         type: 'quantitative',
 //       },
 //       shape: {
-//         field: ['SHAPE'],
+//         field: '[SHAPE]',
 //         type: 'quantitative',
 //       },
 //       detail: {
-//         field: ['DETAIL'],
+//         field: '[DETAIL]',
 //         type: 'quantitative',
 //       },
-//       text: withConditional(
-//         {
-//           field: ['TEXT'],
-//           type: ['TEXT_TYPE'],
-//         },
-//         {TEXT: '*'},
-//       ),
+//       text: {
+//         field: '[TEXT]',
+//         type: '[TEXT_TYPE]',
+//       },
 //     },
 //     mark: {
 //       type: 'point',

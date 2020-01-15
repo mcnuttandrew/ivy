@@ -97,6 +97,7 @@ interface RootProps {
   loadTemplates: GenericAction;
   modifyValueOnTemplate: GenericAction;
   moveWidget: GenericAction;
+  readInTemplate: GenericAction;
   removeWidget: GenericAction;
   saveCurrentTemplate: GenericAction;
   setBlankTemplate: GenericAction;
@@ -259,6 +260,7 @@ class RootComponent extends React.Component<RootProps> {
       modifyValueOnTemplate,
       moveWidget,
       removeWidget,
+      readInTemplate,
       saveCurrentTemplate,
       setBlankTemplate,
       setCodeMode,
@@ -342,14 +344,16 @@ class RootComponent extends React.Component<RootProps> {
             <div className="full-height full-width flex-down">
               <CodeEditor
                 addWidget={addWidget}
-                setCodeMode={setCodeMode}
                 codeMode={codeMode}
-                setNewSpecCode={setNewSpecCode}
-                template={template}
-                specCode={specCode}
-                spec={spec}
-                templateMap={templateMap}
                 editorError={editorError}
+                modifyValueOnTemplate={modifyValueOnTemplate}
+                readInTemplate={readInTemplate}
+                setCodeMode={setCodeMode}
+                setNewSpecCode={setNewSpecCode}
+                spec={spec}
+                specCode={specCode}
+                template={template}
+                templateMap={templateMap}
               />
             </div>
           )}
