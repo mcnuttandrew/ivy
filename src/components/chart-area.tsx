@@ -83,7 +83,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           {noneTemplate && (
             <div className="chart-unfullfilled">
               <h2> Select a chart to begin </h2>
-              <h5>{`HINT HINT HINT HINT`}</h5>
+              <h5>{`HINT HINT HINT HINT HINT`}</h5>
             </div>
           )}
           {!showChart && !noneTemplate && (
