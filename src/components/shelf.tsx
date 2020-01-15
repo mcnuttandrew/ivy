@@ -110,7 +110,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
         </div>
       </div>
       {configurationOpen && (
-        <div className="shelf-configuration flex-down">
+        <div className="shelf-configuration flex">
           {optionsToRender.map((option: EncodingOption, idx: number) => {
             return (
               <ConfigurationOption

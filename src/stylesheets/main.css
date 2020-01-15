@@ -322,15 +322,16 @@ input[type=number]::-webkit-outer-spin-button {
   position: relative;
   align-items: center;
   border-radius: 5px;
+  flex-wrap: wrap;
   z-index: 0;
 }
 
 .shelf-configuration .option-row {
   display: flex;
   font-size: 10px;
+  margin-right: 20px;
   padding: 0 5px;
   justify-content: space-between;
-  width: 100%;
 }
 
 .shelf-configuration .option-row .option-row-label {
