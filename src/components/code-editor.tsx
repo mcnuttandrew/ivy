@@ -140,7 +140,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     }
   }
 
-  suggestionBox() {
+  suggestionBox(): JSX.Element {
     const {codeMode, template, addWidget} = this.props;
     const {suggestionBox} = this.state;
     const currentCode = this.getCurrentCode();
