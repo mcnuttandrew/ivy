@@ -348,7 +348,6 @@ class RootComponent extends React.Component<RootProps> {
                 addWidget={addWidget}
                 codeMode={codeMode}
                 editorError={editorError}
-                modifyValueOnTemplate={modifyValueOnTemplate}
                 readInTemplate={readInTemplate}
                 setCodeMode={setCodeMode}
                 setNewSpecCode={setNewSpecCode}

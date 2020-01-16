@@ -11,7 +11,6 @@ const SCATTERPLOT_EXAMPLE: any = {
   encoding: {
     x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
     y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
-    // color: {field: '[Color]', type: {CONDITIONAL: {true: '[colorType]', false: null, query: {Color: null}}}},
     color: {CONDITIONAL: {query: {Color: '*'}, true: {field: '[Color]', type: '[colorType]'}, false: null}},
   },
 };

@@ -17,7 +17,6 @@ interface Props {
   addWidget?: GenericAction;
   codeMode: string;
   editorError: null | string;
-  modifyValueOnTemplate: GenericAction;
   readInTemplate: GenericAction;
   setCodeMode: GenericAction;
   setNewSpecCode: GenericAction;
@@ -139,18 +138,12 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   handleCodeUpdate(code: string): void {
-    const {setNewSpecCode, modifyValueOnTemplate, readInTemplate, codeMode} = this.props;
+    const {setNewSpecCode, readInTemplate, codeMode} = this.props;
     if (codeMode === 'TEMPLATE') {
       Promise.resolve()
         .then(() => JSON.parse(code))
         .then(() => readInTemplate({code, inError: false}))
         .catch(() => readInTemplate({code, inError: true}));
-      // TODO allow text editing on template
-      // i think code editing on template might not work right now, this would be the solution maybe
-      // Promise.resolve()
-      //   .then(() => JSON.parse(code))
-      //   .then(() => modifyValueOnTemplate({key: 'code', value: code, inError: false}))
-      //   .catch(() => modifyValueOnTemplate({key: 'code', value: code, inError: true}));
     } else {
       Promise.resolve()
         .then(() => JSON.parse(code))

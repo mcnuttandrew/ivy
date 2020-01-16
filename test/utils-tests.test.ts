@@ -1,8 +1,5 @@
-import {
-  setTemplateValues,
-  fillTemplateMapWithDefaults,
-  recieveTemplates,
-} from '../src/reducers/template-actions';
+import {fillTemplateMapWithDefaults, recieveTemplates} from '../src/reducers/template-actions';
+import {setTemplateValues} from '../src/hydra-lang';
 import {DEFAULT_TEMPLATES} from '../src/templates';
 import SCATTERPLOT_TEMPLATE from '../src/templates/example-templates/scatterplot';
 import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
