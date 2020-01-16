@@ -14,6 +14,9 @@ export default function Filter({column, filter, updateFilter, deleteFilter}: Fil
   const {
     filter: {range, field, oneOf},
   } = filter;
+  if (!column) {
+    return <div />;
+  }
   const {domain} = column;
   type selType = {[x: string]: boolean};
   const selectedVals: selType = (oneOf || []).reduce((acc: selType, key: string) => {

@@ -10,7 +10,7 @@ import Selector from './selector';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {GenericAction} from '../actions';
 import {Template, TemplateMap} from '../templates/types';
-import {classnames, serializeTemplate} from '../utils';
+import {classnames, serializeTemplate, get} from '../utils';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
@@ -53,6 +53,18 @@ const SHORTCUTS = [
     name: 'Clean Up',
     action: (code: any): any => code,
     description: 'Clean up the formatting of the current code',
+  },
+  {
+    name: 'Swap x and y',
+    action: (code: any): any => {
+      if (get(code, ['encoding', 'x', 'field']) && get(code, ['encoding', 'y', 'field'])) {
+        const xTemp = code.encoding.x.field;
+        code.encoding.x.field = code.encoding.y.field;
+        code.encoding.y.field = xTemp;
+      }
+      return code;
+    },
+    description: 'Swap the x and y dimensions of encoding if they exist',
   },
 ];
 
