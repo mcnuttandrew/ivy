@@ -13,6 +13,7 @@ import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
 import {getTemplateSaveState} from '../utils';
+import {applyConditionals} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
@@ -148,22 +149,23 @@ class RootComponent extends React.Component<RootProps> {
       switchView,
       template,
       templateComplete,
+      templateMap,
       views,
     } = this.props;
     return (
       <ChartArea
         cloneView={cloneView}
         createNewView={createNewView}
-        deleteView={deleteView}
-        switchView={switchView}
+        currentTheme={currentTheme}
         currentView={currentView}
         data={data}
-        spec={spec}
+        deleteView={deleteView}
         iMspec={iMspec}
         missingFields={missingFields}
+        spec={spec}
+        switchView={switchView}
         template={template}
         templateComplete={templateComplete}
-        currentTheme={currentTheme}
         views={views}
       />
     );
@@ -423,7 +425,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     showProgrammaticMode: base.get('showProgrammaticMode'),
     showSimpleDisplay: base.get('showSimpleDisplay'),
     showGUIView: base.get('showGUIView'),
-    spec: base.get('spec').toJS(),
+    spec: applyConditionals(base.get('spec').toJS(), templateMap),
     specCode: base.get('specCode'),
     template: template && template.toJS(),
     templateComplete: !missingFields.length,

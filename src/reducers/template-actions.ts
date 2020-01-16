@@ -13,23 +13,8 @@ import {
   WidgetSubType,
 } from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
-import {trim, deserializeTemplate} from '../utils';
-
-export const setTemplateValues = (code: string, templateMap: TemplateMap): string => {
-  const filledInSpec = Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
-    const [key, value] = keyValue;
-    if (trim(value) !== value) {
-      // this supports the weird HACK required to make the interpolateion system
-      // not make everything a string
-      return acc
-        .replace(new RegExp(`"\\[${key}\\]"`, 'g'), value || 'null')
-        .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
-    }
-    const reg = new RegExp(`"\\[${key}\\]"`, 'g');
-    return acc.replace(reg, (Array.isArray(value) && JSON.stringify(value)) || value || 'null');
-  }, code);
-  return filledInSpec;
-};
+import {setTemplateValues} from '../hydra-lang';
+import {deserializeTemplate} from '../utils';
 
 export function templateEval(state: AppState): AppState {
   const filledInSpec = setTemplateValues(
@@ -44,7 +29,7 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
   const template = state.get('currentTemplateInstance').toJS();
   // const widgets =
   const filledInTemplateMap = template.widgets
-    .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'DataTarget')
+    // .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'DataTarget')
     .reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
       let value = null;
       if (w.widgetType === 'MultiDataTarget') {

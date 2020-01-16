@@ -61,11 +61,13 @@ export default function Shelf(props: ShelfProps): JSX.Element {
     definedField = metaColumns.find(({field}: {field: string}) => repeatKey === field);
   }
   const options = [{display: 'Select a value', value: null}].concat(
-    columns.map(({field, type}) => ({
-      display: `${field} (${TEXT_TYPE[type]})`,
-      value: field,
-      group: type,
-    })),
+    columns
+      .map(({field, type}) => ({
+        display: `${field} (${TEXT_TYPE[type]})`,
+        value: field,
+        group: type,
+      }))
+      .sort((a, b) => a.display.localeCompare(b.display)),
   );
 
   return (
