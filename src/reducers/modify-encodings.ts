@@ -4,7 +4,8 @@ import stringify from 'json-stringify-pretty-compact';
 import {findField, getAllInUseFields, extractFieldStringsForType} from '../utils';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
-import {respondToTemplateInstanceCodeChanges, fillTemplateMapWithDefaults} from './template-actions';
+import {fillTemplateMapWithDefaults} from './template-actions';
+import {setTemplateValues} from '../hydra-lang';
 
 const usingNestedSpec = (state: AppState): boolean => Boolean(state.getIn(['spec', 'spec']));
 
@@ -39,7 +40,12 @@ export const setNewSpec: ActionResponse = (state, payload) => state.set('spec', 
 export const setNewSpecCode: ActionResponse = (state, payload) => {
   const {code, inError} = payload;
   if (state.get('currentTemplateInstance')) {
-    return respondToTemplateInstanceCodeChanges(state, payload);
+    // TODO i think eval should get checked here
+    const filledInSpec = setTemplateValues(code, state.get('templateMap').toJS());
+    return state
+      .setIn(['currentTemplateInstance', 'code'], code)
+      .set('editorError', inError)
+      .set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
   }
   if (inError) {
     return state.set('specCode', code).set('editorError', inError);

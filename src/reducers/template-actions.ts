@@ -1,15 +1,12 @@
 import {get, set} from 'idb-keyval';
-import Immutable, {Map} from 'immutable';
+import Immutable from 'immutable';
 import {ActionResponse, AppState} from './default-state';
-// import {setEncodingMode} from './gui-actions';
 import {
-  Template,
-  TemplateMap,
-  TemplateWidget,
   ListWidget,
-  SwitchWidget,
   SliderWidget,
-  DataTargetWidget,
+  SwitchWidget,
+  Template,
+  TemplateWidget,
   WidgetSubType,
 } from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
@@ -54,33 +51,6 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
   return templateEval(state.set('templateMap', filledInTemplateMap));
 }
 
-export function respondToTemplateInstanceCodeChanges(state: AppState, payload: any): AppState {
-  const {code, inError} = payload;
-
-  const filledInSpec = setTemplateValues(code, state.get('templateMap').toJS());
-  return state
-    .setIn(['currentTemplateInstance', 'code'], code)
-    .set('editorError', inError)
-    .set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
-}
-
-export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
-  const requiredFields = template.widgets
-    .filter(d => d.widgetType === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).widget.required)
-    .map(d => d.widgetName);
-  const missingFileds = requiredFields
-    .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
-    .filter((d: any) => d.value)
-    .map(d => d.fieldName);
-
-  return missingFileds;
-}
-
-export function checkIfMapComplete(template: Template, templateMap: TemplateMap): boolean {
-  const missing = getMissingFields(template, templateMap);
-  return missing.length === 0;
-}
-
 export const recieveTemplates: ActionResponse = (state, payload) => {
   return state.set('templates', payload);
   // return setEncodingMode(state.set('templates', payload), '_____none_____');
@@ -97,16 +67,17 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
 };
 
-export const setTemplateMapValue = (
-  templateMap: Map<string, any>,
-  payload: {field: string; text: string; containingShelf?: string},
-): Map<string, any> => {
-  const newMap = templateMap;
-  if (payload.containingShelf) {
-    templateMap = templateMap.delete(payload.containingShelf);
-  }
-  return newMap.set(payload.field, payload.text);
-};
+// unused?????
+// export const setTemplateMapValue = (
+//   templateMap: Map<string, any>,
+//   payload: {field: string; text: string; containingShelf?: string},
+// ): Map<string, any> => {
+//   const newMap = templateMap;
+//   if (payload.containingShelf) {
+//     templateMap = templateMap.delete(payload.containingShelf);
+//   }
+//   return newMap.set(payload.field, payload.text);
+// };
 
 function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
   return state.get('templates').filter((template: Template) => template.templateName !== templateName);

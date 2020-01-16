@@ -5,7 +5,6 @@ import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 
-import {getMissingFields} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
@@ -13,7 +12,7 @@ import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
 import {getTemplateSaveState} from '../utils';
-import {applyConditionals} from '../hydra-lang';
+import {applyConditionals, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
@@ -149,7 +148,6 @@ class RootComponent extends React.Component<RootProps> {
       switchView,
       template,
       templateComplete,
-      templateMap,
       views,
     } = this.props;
     return (

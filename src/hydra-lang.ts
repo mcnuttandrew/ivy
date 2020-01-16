@@ -1,4 +1,10 @@
-import {Template, TemplateMap, TemplateWidget, WidgetValidationQuery} from './templates/types';
+import {
+  Template,
+  TemplateMap,
+  TemplateWidget,
+  WidgetValidationQuery,
+  DataTargetWidget,
+} from './templates/types';
 import {trim} from './utils';
 
 // TODO: this system doesn't support data type checking?
@@ -82,3 +88,20 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap): strin
   }, code);
   return filledInSpec;
 };
+
+export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
+  const requiredFields = template.widgets
+    .filter(d => d.widgetType === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).widget.required)
+    .map(d => d.widgetName);
+  const missingFileds = requiredFields
+    .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
+    .filter((d: any) => d.value)
+    .map(d => d.fieldName);
+
+  return missingFileds;
+}
+
+export function checkIfMapComplete(template: Template, templateMap: TemplateMap): boolean {
+  const missing = getMissingFields(template, templateMap);
+  return missing.length === 0;
+}
