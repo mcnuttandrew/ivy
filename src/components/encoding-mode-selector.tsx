@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {GenericAction} from '../actions/index';
 import {Template} from '../templates/types';
 import Popover from './popover';
+import {thumbnailLocation} from '../thumbnail';
 
 interface Props {
   clickTarget: any;
@@ -41,8 +42,8 @@ function encodingRow(
   const buttonResponses = buttonActions(templateName);
   return (
     <div className="encoding-selection-option flex" key={`${templateName}-${idx}`}>
-      <div>
-        <img src="./assets/example-chart.png" />
+      <div className="encoding-selection-option-img-container">
+        <img src={thumbnailLocation(templateName)} />
       </div>
       <div className="flex-down">
         <h3>{templateName}</h3>
