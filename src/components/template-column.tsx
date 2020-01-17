@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {ColumnHeader} from '../types';
 import {GenericAction} from '../actions';
 import {Template, TemplateMap} from '../templates/types';
@@ -6,6 +7,7 @@ import {classnames} from '../utils';
 import TemplateColumnAddNewWidgetPopover from './template-column-add-new-widget-popover';
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
+import {updateThumbnail} from '../thumbnail';
 
 interface TemplateColumnProps {
   columns: ColumnHeader[];
@@ -45,6 +47,17 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
           </div>
         )}
         {editMode && <TemplateColumnAddNewWidgetPopover widgets={template.widgets} addWidget={addWidget} />}
+        {editMode && (
+          <button
+            onClick={(): any =>
+              updateThumbnail(template.templateName).then(() =>
+                console.log('image update, todo trigger something'),
+              )
+            }
+          >
+            Update Thumbnail
+          </button>
+        )}
         <div
           className={classnames({
             'template-column': true,

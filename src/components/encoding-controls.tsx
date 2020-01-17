@@ -7,6 +7,7 @@ import {GenericAction} from '../actions/index';
 import EncodingModeSelector from './encoding-mode-selector';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
+import {thumbnailLocation} from '../thumbnail';
 
 interface Props {
   chainActions: GenericAction;
@@ -122,7 +123,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     <div className="encoding-mode-selector flex-down">
       <div className="flex full-width  space-between">
         <div className="flex">
-          <img src="logo.png" />
+          <img src={thumbnailLocation(template && template.templateName)} />
           <div className="flex-down">
             {!editMode && <h1 className="section-title">{encodingMode}</h1>}
             {editMode && template && (

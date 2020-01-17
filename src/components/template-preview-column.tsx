@@ -2,6 +2,7 @@ import React from 'react';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import {GenericAction} from '../actions/index';
+import {thumbnailLocation} from '../thumbnail';
 
 interface Props {
   templates: Template[];
@@ -26,8 +27,8 @@ function renderEncodingModeOption(
       key={`${templateName}-${idx}`}
       onClick={(): any => setEncodingMode(templateName)}
     >
-      <div>
-        <img src="./assets/example-chart.png" />
+      <div className="encoding-selection-option-img-container">
+        <img src={thumbnailLocation(templateName)} />
       </div>
       <div className="flex-down">
         <h3>{templateName}</h3>
