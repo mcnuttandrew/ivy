@@ -1,10 +1,11 @@
 import React from 'react';
 import {ColumnHeader} from '../types';
 import {GenericAction} from '../actions';
-import {Template} from '../templates/types';
+import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import TemplateColumnAddNewWidgetPopover from './template-column-add-new-widget-popover';
 import GeneralWidget from './widgets/general-widget';
+import {applyQueries} from '../hydra-lang';
 
 interface TemplateColumnProps {
   columns: ColumnHeader[];
@@ -12,7 +13,7 @@ interface TemplateColumnProps {
   setTemplateValue?: any;
   showSimpleDisplay: boolean;
   template: Template;
-  templateMap: any;
+  templateMap: TemplateMap;
 
   addWidget: GenericAction;
   removeWidget: GenericAction;
@@ -34,7 +35,8 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       removeWidget,
       moveWidget,
     } = this.props;
-
+    const widgets = applyQueries(template, templateMap);
+    console.log(widgets, template.widgetValidations);
     return (
       <div className="full-height encoding-column">
         {showSimpleDisplay && (
@@ -50,7 +52,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
           })}
         >
           <div>
-            {template.widgets.map((widget, idx) => {
+            {widgets.map((widget, idx) => {
               return (
                 <GeneralWidget
                   templateMap={templateMap}

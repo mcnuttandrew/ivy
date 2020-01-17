@@ -2,10 +2,16 @@ import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  mark: {type: 'point', tooltip: true},
+  mark: {
+    type: 'point',
+    tooltip: true,
+    size: '[Radius]',
+    color: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}},
+  },
   encoding: {
     x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
     y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
+    color: {CONDITIONAL: {query: {Color: '*'}, true: {field: '[Color]', type: '[colorType]'}, false: null}},
   },
 };
 
@@ -50,6 +56,37 @@ const SCATTERPLOT: Template = {
       },
     },
     {
+      widgetName: 'Color',
+      widgetType: 'DataTarget',
+      widget: {
+        allowedTypes: ['MEASURE', 'DIMENSION'],
+        required: false,
+      },
+    },
+    {
+      widgetName: 'colorType',
+      widgetType: 'List',
+      widget: {
+        allowedValues: [
+          {display: '"quantitative"', value: '"quantitative"'},
+          {display: '"ordinal"', value: '"ordinal"'},
+        ],
+        defaultValue: '"ordinal"',
+      },
+    },
+    {
+      widgetName: 'Single Color',
+      widgetType: 'List',
+      widget: {
+        allowedValues: [
+          {display: '"steelblue"', value: '"steelblue"'},
+          {display: '"blue"', value: '"blue"'},
+          {display: '"red"', value: '"red"'},
+        ],
+        defaultValue: '"steelblue"',
+      },
+    },
+    {
       widgetName: 'Zeroes',
       widgetType: 'Switch',
       widget: {
@@ -66,17 +103,38 @@ const SCATTERPLOT: Template = {
       },
     },
     {
-      widgetName: `SliderX`,
+      widgetName: `Radius`,
       widgetType: 'Slider',
       widget: {
-        minVal: 0,
-        maxVal: 10,
+        minVal: 10,
+        maxVal: 60,
         step: 1,
-        defaultValue: 5,
+        defaultValue: 15,
       },
     },
   ],
-  widgetValidations: [],
+  widgetValidations: [
+    {
+      queryResult: 'hide',
+      queryTarget: 'xType',
+      query: {xDim: null},
+    },
+    {
+      queryResult: 'hide',
+      queryTarget: 'yType',
+      query: {yDim: null},
+    },
+    {
+      queryResult: 'hide',
+      queryTarget: 'colorType',
+      query: {Color: null},
+    },
+    {
+      queryResult: 'hide',
+      queryTarget: 'Single Color',
+      query: {Color: '*'},
+    },
+  ],
   templateName: 'Scatterplot',
   templateDescription: 'A full ish scatterplot',
   templateLanguage: 'vega-lite',

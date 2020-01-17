@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#applyConditionals 1`] = `
+Object {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "encoding": Object {
+    "color": null,
+    "x": Object {
+      "field": "[xDim]",
+      "scale": Object {
+        "zero": "[Zeroes]",
+      },
+      "type": "[xType]",
+    },
+    "y": Object {
+      "field": "[yDim]",
+      "scale": Object {
+        "zero": "[Zeroes]",
+      },
+      "type": "[yType]",
+    },
+  },
+  "mark": Object {
+    "color": "[Single Color]",
+    "size": "[Radius]",
+    "tooltip": true,
+    "type": "point",
+  },
+}
+`;
+
+exports[`#applyConditionals 2`] = `
+Object {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "encoding": Object {
+    "color": Object {
+      "field": "[Color]",
+      "type": "[colorType]",
+    },
+    "x": Object {
+      "field": "[xDim]",
+      "scale": Object {
+        "zero": "[Zeroes]",
+      },
+      "type": "[xType]",
+    },
+    "y": Object {
+      "field": "[yDim]",
+      "scale": Object {
+        "zero": "[Zeroes]",
+      },
+      "type": "[yType]",
+    },
+  },
+  "mark": Object {
+    "color": null,
+    "size": "[Radius]",
+    "tooltip": true,
+    "type": "point",
+  },
+}
+`;

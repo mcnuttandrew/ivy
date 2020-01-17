@@ -1,35 +1,17 @@
 import {get, set} from 'idb-keyval';
-import Immutable, {Map} from 'immutable';
+import Immutable from 'immutable';
 import {ActionResponse, AppState} from './default-state';
-// import {setEncodingMode} from './gui-actions';
 import {
-  Template,
-  TemplateMap,
-  TemplateWidget,
   ListWidget,
-  SwitchWidget,
   SliderWidget,
-  DataTargetWidget,
+  SwitchWidget,
+  Template,
+  TemplateWidget,
   WidgetSubType,
 } from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
-import {trim} from '../utils';
-
-export const setTemplateValues = (code: string, templateMap: TemplateMap): string => {
-  const filledInSpec = Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
-    const [key, value] = keyValue;
-    if (trim(value) !== value) {
-      // this supports the weird HACK required to make the interpolateion system
-      // not make everything a string
-      return acc
-        .replace(new RegExp(`"\\[${key}\\]"`, 'g'), value || 'null')
-        .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
-    }
-    const reg = new RegExp(`"\\[${key}\\]"`, 'g');
-    return acc.replace(reg, (Array.isArray(value) && JSON.stringify(value)) || value || 'null');
-  }, code);
-  return filledInSpec;
-};
+import {setTemplateValues} from '../hydra-lang';
+import {deserializeTemplate} from '../utils';
 
 export function templateEval(state: AppState): AppState {
   const filledInSpec = setTemplateValues(
@@ -44,7 +26,7 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
   const template = state.get('currentTemplateInstance').toJS();
   // const widgets =
   const filledInTemplateMap = template.widgets
-    .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'DataTarget')
+    // .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'DataTarget')
     .reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
       let value = null;
       if (w.widgetType === 'MultiDataTarget') {
@@ -69,33 +51,6 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
   return templateEval(state.set('templateMap', filledInTemplateMap));
 }
 
-export function respondToTemplateInstanceCodeChanges(state: AppState, payload: any): AppState {
-  const {code, inError} = payload;
-
-  const filledInSpec = setTemplateValues(code, state.get('templateMap').toJS());
-  return state
-    .setIn(['currentTemplateInstance', 'code'], code)
-    .set('editorError', inError)
-    .set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
-}
-
-export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
-  const requiredFields = template.widgets
-    .filter(d => d.widgetType === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).widget.required)
-    .map(d => d.widgetName);
-  const missingFileds = requiredFields
-    .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
-    .filter((d: any) => d.value)
-    .map(d => d.fieldName);
-
-  return missingFileds;
-}
-
-export function checkIfMapComplete(template: Template, templateMap: TemplateMap): boolean {
-  const missing = getMissingFields(template, templateMap);
-  return missing.length === 0;
-}
-
 export const recieveTemplates: ActionResponse = (state, payload) => {
   return state.set('templates', payload);
   // return setEncodingMode(state.set('templates', payload), '_____none_____');
@@ -108,21 +63,21 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   }
   const template = state.get('currentTemplateInstance').toJS();
   newState = newState.setIn(['templateMap', payload.field], Immutable.fromJS(payload.text));
-
   const updatedTemplate = JSON.parse(setTemplateValues(template.code, newState.get('templateMap').toJS()));
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
 };
 
-export const setTemplateMapValue = (
-  templateMap: Map<string, any>,
-  payload: {field: string; text: string; containingShelf?: string},
-): Map<string, any> => {
-  const newMap = templateMap;
-  if (payload.containingShelf) {
-    templateMap = templateMap.delete(payload.containingShelf);
-  }
-  return newMap.set(payload.field, payload.text);
-};
+// unused?????
+// export const setTemplateMapValue = (
+//   templateMap: Map<string, any>,
+//   payload: {field: string; text: string; containingShelf?: string},
+// ): Map<string, any> => {
+//   const newMap = templateMap;
+//   if (payload.containingShelf) {
+//     templateMap = templateMap.delete(payload.containingShelf);
+//   }
+//   return newMap.set(payload.field, payload.text);
+// };
 
 function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
   return state.get('templates').filter((template: Template) => template.templateName !== templateName);
@@ -151,11 +106,26 @@ export const saveCurrentTemplate: ActionResponse = state => {
 
 export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   const {value, key} = payload;
+  console.log(value, key);
   let newState = state.setIn(['currentTemplateInstance', key], value);
   if (key === 'templateName') {
     newState = newState.set('encodingMode', value);
   }
+  if (key === 'code') {
+    newState = newState.set('editorError', payload.editorError);
+  }
   return newState;
+};
+
+export const readInTemplate: ActionResponse = (state, payload) => {
+  if (payload.error) {
+    return state.set('editorError', payload.error);
+  }
+  const updatedTemplate = deserializeTemplate(payload.code);
+  updatedTemplate.code = state.getIn(['currentTemplateInstance', 'code']);
+  return state
+    .set('currentTemplateInstance', Immutable.fromJS(updatedTemplate))
+    .set('editorError', payload.error);
 };
 
 export const setBlankTemplate: ActionResponse = (state, fork) => {

@@ -10,13 +10,14 @@ import Selector from './selector';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {GenericAction} from '../actions';
 import {Template, TemplateMap} from '../templates/types';
-import {classnames, serializeTemplate} from '../utils';
+import {classnames, serializeTemplate, get} from '../utils';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
   addWidget?: GenericAction;
   codeMode: string;
   editorError: null | string;
+  readInTemplate: GenericAction;
   setCodeMode: GenericAction;
   setNewSpecCode: GenericAction;
   spec: any;
@@ -51,6 +52,18 @@ const SHORTCUTS = [
     name: 'Clean Up',
     action: (code: any): any => code,
     description: 'Clean up the formatting of the current code',
+  },
+  {
+    name: 'Swap x and y',
+    action: (code: any): any => {
+      if (get(code, ['encoding', 'x', 'field']) && get(code, ['encoding', 'y', 'field'])) {
+        const xTemp = code.encoding.x.field;
+        code.encoding.x.field = code.encoding.y.field;
+        code.encoding.y.field = xTemp;
+      }
+      return code;
+    },
+    description: 'Swap the x and y dimensions of encoding if they exist',
   },
 ];
 
@@ -125,13 +138,12 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   handleCodeUpdate(code: string): void {
-    const {setNewSpecCode, codeMode} = this.props;
+    const {setNewSpecCode, readInTemplate, codeMode} = this.props;
     if (codeMode === 'TEMPLATE') {
-      // TODO allow text editing on template
-      // Promise.resolve()
-      // .then(() => JSON.parse(code))
-      // .then(() => setNewTemplate({code, inError: false}))
-      // .catch(() => setNewTemplate({code, inError: true}));
+      Promise.resolve()
+        .then(() => JSON.parse(code))
+        .then(() => readInTemplate({code, inError: false}))
+        .catch(() => readInTemplate({code, inError: true}));
     } else {
       Promise.resolve()
         .then(() => JSON.parse(code))

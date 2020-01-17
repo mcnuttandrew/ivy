@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {setTemplateValues} from '../reducers/template-actions';
+import {setTemplateValues} from '../hydra-lang';
 import {TemplateWidget, ListWidget, SwitchWidget, SliderWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory} from '../templates';
 

@@ -8,37 +8,36 @@ import {MdContentCopy, MdNoteAdd} from 'react-icons/md';
 import {GenericAction} from '../actions';
 
 interface ChartAreaProps {
-  spec: any;
-  data: any;
-  currentView: string;
+  cloneView: GenericAction;
+  createNewView: GenericAction;
   currentTheme: VegaTheme;
+  currentView: string;
+  data: any;
+  deleteView: GenericAction;
   iMspec: any;
   missingFields: string[];
-  views: List<string>;
+  spec: any;
+  switchView: GenericAction;
   template?: Template;
   templateComplete: boolean;
-
-  createNewView: GenericAction;
-  deleteView: GenericAction;
-  switchView: GenericAction;
-  cloneView: GenericAction;
+  views: List<string>;
 }
 
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render(): JSX.Element {
     const {
-      spec,
-      data,
+      cloneView,
+      createNewView,
       currentTheme,
       currentView,
+      data,
       iMspec,
-      views,
       missingFields,
-      createNewView,
+      spec,
       switchView,
-      cloneView,
       template,
       templateComplete,
+      views,
     } = this.props;
     const noneTemplate = template && template.templateLanguage === 'none';
     const showChart = !noneTemplate && (!template || templateComplete);

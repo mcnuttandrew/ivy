@@ -7,6 +7,7 @@ import Selector from './selector';
 import {ColumnHeader} from '../types';
 import {classnames, get} from '../utils';
 import {configurationOptions, EncodingOption} from '../constants';
+import {TEXT_TYPE} from '../constants/index';
 import ConfigurationOption from './configuration-option';
 
 interface ShelfProps {
@@ -60,7 +61,13 @@ export default function Shelf(props: ShelfProps): JSX.Element {
     definedField = metaColumns.find(({field}: {field: string}) => repeatKey === field);
   }
   const options = [{display: 'Select a value', value: null}].concat(
-    columns.map(({field}) => ({display: field, value: field})),
+    columns
+      .map(({field, type}) => ({
+        display: `${field} (${TEXT_TYPE[type]})`,
+        value: field,
+        group: type,
+      }))
+      .sort((a, b) => a.display.localeCompare(b.display)),
   );
 
   return (
@@ -100,6 +107,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
             <div className="shelf-dropdown">
               <Selector
                 options={options}
+                useGroups={true}
                 selectedValue={(definedField && definedField.field) || 'SELECT A VALUE'}
                 onChange={(text: string): void => {
                   onDrop({field, type: 'CARD', text, disable: false});

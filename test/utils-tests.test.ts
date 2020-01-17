@@ -1,8 +1,5 @@
-import {
-  setTemplateValues,
-  fillTemplateMapWithDefaults,
-  recieveTemplates,
-} from '../src/reducers/template-actions';
+import {fillTemplateMapWithDefaults, recieveTemplates} from '../src/reducers/template-actions';
+import {setTemplateValues} from '../src/hydra-lang';
 import {DEFAULT_TEMPLATES} from '../src/templates';
 import SCATTERPLOT_TEMPLATE from '../src/templates/example-templates/scatterplot';
 import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
@@ -19,13 +16,10 @@ test('#setTemplateValues', () => {
   });
   expect(filledOutPieTemplate).toMatchSnapshot();
 
-  const filledOutScatterTemplate = setTemplateValues(
-    SCATTERPLOT_TEMPLATE.code,
-    {
-      xDim: '"xDim_TEST"',
-      yDim: '"yDim_TEST"',
-    },
-  );
+  const filledOutScatterTemplate = setTemplateValues(SCATTERPLOT_TEMPLATE.code, {
+    xDim: '"xDim_TEST"',
+    yDim: '"yDim_TEST"',
+  });
   expect(filledOutScatterTemplate).toMatchSnapshot();
 
   const filledOutTableTemplate = setTemplateValues(TABLE.code, {
@@ -35,23 +29,16 @@ test('#setTemplateValues', () => {
 });
 
 test('#fillTemplateMapWithDefaults', () => {
-  const preparedState = setEncodingMode(
-    recieveTemplates(DEFAULT_STATE, DEFAULT_TEMPLATES),
-    'Scatterplot',
-  );
+  const preparedState = setEncodingMode(recieveTemplates(DEFAULT_STATE, DEFAULT_TEMPLATES), 'Scatterplot');
   const newState = fillTemplateMapWithDefaults(preparedState);
   expect(newState.get('spec').toJS()).toMatchSnapshot();
   expect(newState.get('templateMap').toJS()).toMatchSnapshot();
 
-  const nextState = fillTemplateMapWithDefaults(
-    setEncodingMode(newState, 'pie chart'),
-  );
+  const nextState = fillTemplateMapWithDefaults(setEncodingMode(newState, 'pie chart'));
   expect(nextState.get('spec').toJS()).toMatchSnapshot();
   expect(nextState.get('templateMap').toJS()).toMatchSnapshot();
 
-  const nextState2 = fillTemplateMapWithDefaults(
-    setEncodingMode(newState, 'Data Table'),
-  );
+  const nextState2 = fillTemplateMapWithDefaults(setEncodingMode(newState, 'Data Table'));
   expect(nextState2.get('spec').toJS()).toMatchSnapshot();
   expect(nextState2.get('templateMap').toJS()).toMatchSnapshot();
 });

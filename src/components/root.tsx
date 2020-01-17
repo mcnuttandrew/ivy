@@ -5,7 +5,6 @@ import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 
-import {getMissingFields} from '../reducers/template-actions';
 import {Template, TemplateMap} from '../templates/types';
 
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
@@ -13,6 +12,7 @@ import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
 import {getTemplateSaveState} from '../utils';
+import {applyConditionals, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
@@ -97,6 +97,7 @@ interface RootProps {
   loadTemplates: GenericAction;
   modifyValueOnTemplate: GenericAction;
   moveWidget: GenericAction;
+  readInTemplate: GenericAction;
   removeWidget: GenericAction;
   saveCurrentTemplate: GenericAction;
   setBlankTemplate: GenericAction;
@@ -153,16 +154,16 @@ class RootComponent extends React.Component<RootProps> {
       <ChartArea
         cloneView={cloneView}
         createNewView={createNewView}
-        deleteView={deleteView}
-        switchView={switchView}
+        currentTheme={currentTheme}
         currentView={currentView}
         data={data}
-        spec={spec}
+        deleteView={deleteView}
         iMspec={iMspec}
         missingFields={missingFields}
+        spec={spec}
+        switchView={switchView}
         template={template}
         templateComplete={templateComplete}
-        currentTheme={currentTheme}
         views={views}
       />
     );
@@ -259,6 +260,7 @@ class RootComponent extends React.Component<RootProps> {
       modifyValueOnTemplate,
       moveWidget,
       removeWidget,
+      readInTemplate,
       saveCurrentTemplate,
       setBlankTemplate,
       setCodeMode,
@@ -342,14 +344,15 @@ class RootComponent extends React.Component<RootProps> {
             <div className="full-height full-width flex-down">
               <CodeEditor
                 addWidget={addWidget}
-                setCodeMode={setCodeMode}
                 codeMode={codeMode}
-                setNewSpecCode={setNewSpecCode}
-                template={template}
-                specCode={specCode}
-                spec={spec}
-                templateMap={templateMap}
                 editorError={editorError}
+                readInTemplate={readInTemplate}
+                setCodeMode={setCodeMode}
+                setNewSpecCode={setNewSpecCode}
+                spec={spec}
+                specCode={specCode}
+                template={template}
+                templateMap={templateMap}
               />
             </div>
           )}
@@ -419,7 +422,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     showProgrammaticMode: base.get('showProgrammaticMode'),
     showSimpleDisplay: base.get('showSimpleDisplay'),
     showGUIView: base.get('showGUIView'),
-    spec: base.get('spec').toJS(),
+    spec: applyConditionals(base.get('spec').toJS(), templateMap),
     specCode: base.get('specCode'),
     template: template && template.toJS(),
     templateComplete: !missingFields.length,

@@ -22,11 +22,13 @@ interface TemplateShelf {
 function SimpleShelf(props: TemplateShelf): JSX.Element {
   const {channelEncoding, columns, field, onDrop, widget} = props;
   const options = [{display: 'Select a value', value: null, group: null}].concat(
-    columns.map(column => ({
-      display: `${column.field} ${TEXT_TYPE[column.type]}`,
-      value: column.field,
-      group: widget.widget.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
-    })),
+    columns
+      .map(column => ({
+        display: `${column.field} ${TEXT_TYPE[column.type]}`,
+        value: column.field,
+        group: widget.widget.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
+      }))
+      .sort((a, b) => a.display.localeCompare(b.display)),
   );
 
   return (

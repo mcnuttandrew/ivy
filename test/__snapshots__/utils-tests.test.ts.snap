@@ -4,15 +4,27 @@ exports[`#fillTemplateMapWithDefaults 1`] = `
 Object {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
+    "color": Object {
+      "CONDITIONAL": Object {
+        "false": null,
+        "query": Object {
+          "Color": "*",
+        },
+        "true": Object {
+          "field": null,
+          "type": "ordinal",
+        },
+      },
+    },
     "x": Object {
-      "field": "[xDim]",
+      "field": null,
       "scale": Object {
         "zero": true,
       },
       "type": "quantitative",
     },
     "y": Object {
-      "field": "[yDim]",
+      "field": null,
       "scale": Object {
         "zero": true,
       },
@@ -20,6 +32,16 @@ Object {
     },
   },
   "mark": Object {
+    "color": Object {
+      "CONDITIONAL": Object {
+        "false": null,
+        "query": Object {
+          "Color": null,
+        },
+        "true": "steelblue",
+      },
+    },
+    "size": 15,
     "tooltip": true,
     "type": "point",
   },
@@ -28,9 +50,14 @@ Object {
 
 exports[`#fillTemplateMapWithDefaults 2`] = `
 Object {
-  "SliderX": 5,
+  "Color": null,
+  "Radius": 15,
+  "Single Color": "\\"steelblue\\"",
   "Zeroes": "true",
+  "colorType": "\\"ordinal\\"",
+  "xDim": null,
   "xType": "\\"quantitative\\"",
+  "yDim": null,
   "yType": "\\"quantitative\\"",
 }
 `;
@@ -48,10 +75,10 @@ Object {
             "pieAg",
           ],
           "fields": Array [
-            "[value]",
+            null,
           ],
           "groupby": Array [
-            "[category]",
+            null,
           ],
           "ops": Array [
             "mean",
@@ -86,7 +113,7 @@ Object {
             "field": "endAngle",
           },
           "fill": Object {
-            "field": "[category]",
+            "field": null,
             "scale": "color",
           },
           "innerRadius": Object {
@@ -131,7 +158,7 @@ Object {
             "value": 1.3,
           },
           "text": Object {
-            "field": "[category]",
+            "field": null,
           },
           "theta": Object {
             "signal": "(datum.startAngle + datum.endAngle)/2",
@@ -161,7 +188,7 @@ Object {
     Object {
       "domain": Object {
         "data": "table",
-        "field": "[category]",
+        "field": null,
       },
       "name": "color",
       "range": Object {
@@ -192,7 +219,9 @@ Object {
   "DonutChart": "60",
   "Sort": "true",
   "aggregate": "\\"mean\\"",
+  "category": null,
   "colorScheme": "\\"category20\\"",
+  "value": null,
 }
 `;
 
@@ -300,10 +329,28 @@ exports[`#setTemplateValues 1`] = `
 exports[`#setTemplateValues 2`] = `
 "{
   \\"$schema\\": \\"https://vega.github.io/schema/vega-lite/v4.json\\",
-  \\"mark\\": {\\"type\\": \\"point\\", \\"tooltip\\": true},
+  \\"mark\\": {
+    \\"type\\": \\"point\\",
+    \\"tooltip\\": true,
+    \\"size\\": \\"[Radius]\\",
+    \\"color\\": {
+      \\"CONDITIONAL\\": {
+        \\"true\\": \\"[Single Color]\\",
+        \\"false\\": null,
+        \\"query\\": {\\"Color\\": null}
+      }
+    }
+  },
   \\"encoding\\": {
     \\"x\\": {\\"field\\": \\"xDim_TEST\\", \\"type\\": \\"[xType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
-    \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"[yType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}}
+    \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"[yType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
+    \\"color\\": {
+      \\"CONDITIONAL\\": {
+        \\"query\\": {\\"Color\\": \\"*\\"},
+        \\"true\\": {\\"field\\": \\"[Color]\\", \\"type\\": \\"[colorType]\\"},
+        \\"false\\": null
+      }
+    }
   }
 }"
 `;
