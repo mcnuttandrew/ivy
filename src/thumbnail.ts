@@ -2,6 +2,8 @@ import DomToImage from 'dom-to-image';
 import {set, get} from 'idb-keyval';
 
 // well this is the hackiest file ever
+// The thumbnails store lives outside of the redux application in order to prevent the
+// redux (also react) application from see that data as much as possible
 
 export function updateThumbnail(templateName: string): Promise<void> {
   const node = document.querySelector('.chart-container div');
