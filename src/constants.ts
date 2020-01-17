@@ -155,14 +155,6 @@ const generateXorY = (dim: string): EncodingOption[] => [
   injectNofieldPred(dim, buildSpatialOptions(dim, justCountAgg)),
 ];
 
-// const ALL_MARKS = ['area', 'bar', 'circle', 'line', 'point', 'rect', 'square', 'text', 'tick', 'trail'];
-// const allBut = (markToKeep: string): string[] => ALL_MARKS.filter(key => key !== markToKeep);
-// const MARK_INVALIDATION = {
-//   size: ['area', 'line', 'rect'],
-//   shape: allBut('point'),
-//   text: allBut('text'),
-// };
-
 // the configuration options consumed by the encoding panel
 export const configurationOptions: any = {
   x: generateXorY('x'),
@@ -202,5 +194,3 @@ export const configurationOptions: any = {
     injectNofieldPred('text', buildSpatialOptions('text', justCountAgg)),
   ],
 };
-
-console.log(configurationOptions);

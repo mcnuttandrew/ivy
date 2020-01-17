@@ -4,10 +4,7 @@ exports[`#applyConditionals 1`] = `
 Object {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
-    "color": Object {
-      "field": "[Color]",
-      "type": "[colorType]",
-    },
+    "color": null,
     "x": Object {
       "field": "[xDim]",
       "scale": Object {
@@ -25,6 +22,7 @@ Object {
   },
   "mark": Object {
     "color": "[Single Color]",
+    "size": "[Radius]",
     "tooltip": true,
     "type": "point",
   },
@@ -56,6 +54,7 @@ Object {
   },
   "mark": Object {
     "color": null,
+    "size": "[Radius]",
     "tooltip": true,
     "type": "point",
   },
