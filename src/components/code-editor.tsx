@@ -20,6 +20,8 @@ interface Props {
   readInTemplate: GenericAction;
   setCodeMode: GenericAction;
   setNewSpecCode: GenericAction;
+  setProgrammaticView: GenericAction;
+  showProgrammaticMode: boolean;
   spec: any;
   specCode: string;
   template?: Template;
@@ -93,16 +95,16 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   getCurrentCode(): string {
     const {template, codeMode, specCode, spec, templateMap} = this.props;
-    if (codeMode === 'CODE') {
+    if (codeMode === 'TEMPLATE') {
       return template ? template.code : specCode;
     }
-    if (codeMode === 'TEMPLATE') {
+    if (codeMode === 'PARAMETERS') {
       return template ? serializeTemplate(template) : 'TEMPLATE NOT AVAILABLE';
     }
-    if (codeMode === 'OUTPUT') {
+    if (codeMode === 'EXPORT TO JSON') {
       return stringify(spec);
     }
-    if (codeMode === 'VAR-TAB') {
+    if (codeMode === 'SPECIFICATION') {
       return JSON.stringify(templateMap, null, 2);
     }
   }
@@ -119,7 +121,7 @@ export default class CodeEditor extends React.Component<Props, State> {
               className="flex-down"
               key={name}
               onClick={(): void => {
-                if (codeMode !== 'CODE') {
+                if (codeMode !== 'TEMPLATE') {
                   return;
                 }
                 setNewSpecCode({
@@ -158,7 +160,8 @@ export default class CodeEditor extends React.Component<Props, State> {
     const currentCode = this.getCurrentCode();
     // TODO this should move out of the render path
     const suggestions =
-      (template && codeMode === 'CODE' && synthesizeSuggestions(currentCode, template.widgets || [])) || [];
+      (template && codeMode === 'TEMPLATE' && synthesizeSuggestions(currentCode, template.widgets || [])) ||
+      [];
     return (
       <div className="suggestion-box">
         <div className="suggestion-box-header flex space-between">
@@ -195,88 +198,108 @@ export default class CodeEditor extends React.Component<Props, State> {
     );
   }
 
+  controls(): JSX.Element {
+    const {setCodeMode, codeMode} = this.props;
+    const {updateMode} = this.state;
+    return (
+      <div className="code-option-tabs flex-down full-height background-2">
+        <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
+
+        {['TEMPLATE', 'PARAMETERS', 'EXPORT TO JSON', 'SPECIFICATION'].map(key => {
+          return (
+            <div
+              className={classnames({
+                'code-option-tab': true,
+                'selected-tab': key === codeMode,
+              })}
+              key={key}
+              onClick={(): any => setCodeMode(key)}
+            >
+              {key}
+            </div>
+          );
+        })}
+        <div className="execute-code-control">
+          <div
+            className="execute-code-control-button"
+            onClick={(): void => {
+              /* eslint-disable */
+              // @ts-ignore
+              const model = this.refs.monaco.editor.getModel();
+              /* eslint-enable */
+
+              const value = model.getValue();
+              this.handleCodeUpdate(value);
+            }}
+          >
+            <MdPlayCircleOutline />
+          </div>
+          <Selector
+            onChange={(newMode): void => {
+              this.setState({updateMode: newMode});
+            }}
+            selectedValue={updateMode}
+            options={[
+              {display: 'Auto', value: 'automatic'},
+              {display: 'Manual', value: 'manual'},
+            ]}
+          />
+        </div>
+      </div>
+    );
+  }
+
   render(): JSX.Element {
-    const {editorError, setCodeMode, codeMode} = this.props;
+    const {editorError, setCodeMode, codeMode, setProgrammaticView, showProgrammaticMode} = this.props;
     const {updateMode} = this.state;
     const currentCode = this.getCurrentCode();
     return (
-      <div className="full-height full-width inline-block code-container">
+      <div className="full-height full-width code-container flex-down">
         <div
+          className="full-width background-2 cursor-pointer flex code-collapse"
+          onClick={(): any => setProgrammaticView(!showProgrammaticMode)}
+        >
+          <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
+          {showProgrammaticMode ? <FaAngleDown /> : <FaAngleUp />}
+        </div>
+        {showProgrammaticMode && (
+          <div className="full-height full-width flex">
+            {/* <div
           className={classnames({
             'error-bar': true,
             'has-error': Boolean(editorError),
           })}
         >
           ERROR
-        </div>
-        <div className="code-option-tabs">
-          <div className="execute-code-control">
-            <div
-              className="execute-code-control-button"
-              onClick={(): void => {
-                /* eslint-disable */
-                // @ts-ignore
-                const model = this.refs.monaco.editor.getModel();
-                /* eslint-enable */
+        </div> */}
+            {this.controls()}
+            {/* {this.suggestionBox()} */}
+            <div className="flex full-height full-width">
+              {
+                /*eslint-disable react/no-string-refs*/
+                <MonacoEditor
+                  ref="monaco"
+                  language="json"
+                  theme="monokai"
+                  height={'calc(100%)'}
+                  value={currentCode}
+                  options={EDITOR_OPTIONS}
+                  onChange={(code: string): void => {
+                    if (codeMode === 'EXPORT TO JSON') {
+                      return;
+                    }
 
-                const value = model.getValue();
-                this.handleCodeUpdate(value);
-              }}
-            >
-              <MdPlayCircleOutline />
+                    if (updateMode === 'automatic') {
+                      this.handleCodeUpdate(code);
+                    }
+                  }}
+                  editorDidMount={this.editorDidMount}
+                />
+                /*eslint-en able react/no-string-refs*/
+              }
             </div>
-            <Selector
-              onChange={(newMode): void => {
-                this.setState({updateMode: newMode});
-              }}
-              selectedValue={updateMode}
-              options={[
-                {display: 'Auto', value: 'automatic'},
-                {display: 'Manual', value: 'manual'},
-              ]}
-            />
           </div>
-          {['CODE', 'TEMPLATE', 'OUTPUT', 'VAR-TAB'].map(key => {
-            return (
-              <div
-                className={classnames({
-                  'code-option-tab': true,
-                  'selected-tab': key === codeMode,
-                })}
-                key={key}
-                onClick={(): any => setCodeMode(key)}
-              >
-                {key}
-              </div>
-            );
-          })}
-          <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
-        </div>
-        {this.suggestionBox()}
-        <div className="flex full-height">
-          {
-            /*eslint-disable react/no-string-refs*/
-            <MonacoEditor
-              ref="monaco"
-              language="json"
-              theme="monokai"
-              height={'calc(100% - 99px)'}
-              value={currentCode}
-              options={EDITOR_OPTIONS}
-              onChange={(code: string): void => {
-                if (codeMode === 'OUTPUT') {
-                  return;
-                }
-
-                if (updateMode === 'automatic') {
-                  this.handleCodeUpdate(code);
-                }
-              }}
-              editorDidMount={this.editorDidMount}
-            />
-            /*eslint-en able react/no-string-refs*/
-          }
-        </div>
+        )}
       </div>
     );
   }

@@ -120,8 +120,8 @@ export default function EncodingControls(props: Props): JSX.Element {
   } = props;
 
   return (
-    <div className="encoding-mode-selector flex-down">
-      <div className="flex full-width  space-between">
+    <div className="encoding-mode-selector">
+      {/* <div className="flex full-width  space-between">
         <div className="flex">
           <img src={thumbnailLocation(template && template.templateName)} />
           <div className="flex-down">
@@ -176,7 +176,7 @@ export default function EncodingControls(props: Props): JSX.Element {
             }
           />
         )}
-      </div>
+      </div> */}
       {Buttons(props)}
     </div>
   );

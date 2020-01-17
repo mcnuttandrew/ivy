@@ -21,7 +21,7 @@ function renderEncodingModeOption(
     <div
       className={classnames({
         'encoding-selection-option': true,
-        flex: true,
+        'flex-down': true,
         'selected-encoding-option': encodingMode === templateName,
       })}
       key={`${templateName}-${idx}`}
@@ -31,8 +31,8 @@ function renderEncodingModeOption(
         <img src={thumbnailLocation(templateName)} />
       </div>
       <div className="flex-down">
-        <h3>{templateName}</h3>
-        {templateDescription && <h5>{`${templateDescription}`}</h5>}
+        <h5>{templateName}</h5>
+        {/* {templateDescription && <h5>{`${templateDescription}`}</h5>} */}
       </div>
     </div>
   );
@@ -43,14 +43,8 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
     const {templates, setEncodingMode, encodingMode} = this.props;
 
     return (
-      <div
-        className={classnames({
-          'template-preview-column': true,
-          'full-height': true,
-        })}
-      >
-        <div>Available Charts</div>
-        <div className="template-preview-column-charts">
+      <div className="template-preview-column background-2">
+        <div className="scroll-container">
           {renderEncodingModeOption(
             'grammer',
             'Tableau-style grammar of graphics',

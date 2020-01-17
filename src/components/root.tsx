@@ -11,7 +11,7 @@ import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
-import {getTemplateSaveState} from '../utils';
+import {getTemplateSaveState, classnames} from '../utils';
 import {applyConditionals, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
@@ -37,7 +37,7 @@ const Wrapper = (props: any): JSX.Element => {
       <SplitPane
         split="horizontal"
         minSize={60}
-        style={{overflow: 'unset'}}
+        style={{overflow: 'unset', position: 'relative'}}
         defaultSize={parseInt(localStorage.getItem('splitPos'), 10)}
         onChange={(size: any): any => localStorage.setItem('splitPos', size)}
       >
@@ -46,7 +46,7 @@ const Wrapper = (props: any): JSX.Element => {
     );
   }
 
-  return <div className="full-height">{props.children}</div>;
+  return <div className="flex-down full-height">{props.children}</div>;
 };
 
 interface RootProps {
@@ -172,72 +172,38 @@ class RootComponent extends React.Component<RootProps> {
   leftColumn(): JSX.Element {
     const {
       addToNextOpenSlot,
-      changeTheme,
       coerceType,
       columns,
       createFilter,
-      currentTheme,
       currentlySelectedFile,
       deleteFilter,
-      encodingMode,
       iMspec,
       metaColumns,
-      setEncodingMode,
-      setGuiView,
-      setProgrammaticView,
       setRepeats,
-      setSimpleDisplay,
       showGUIView,
-      showProgrammaticMode,
-      showSimpleDisplay,
       spec,
       template,
-      templates,
       toggleDataModal,
       updateFilter,
     } = this.props;
     return (
       <div className="flex-down full-height column background-2">
-        <div className="flex-down about-box">
-          <h5>About</h5>
-          <p>Description text about hydra, a simple description of what hydra is</p>
-        </div>
-        <SecondaryControls
-          changeTheme={changeTheme}
-          currentTheme={currentTheme}
-          setProgrammaticView={setProgrammaticView}
-          setGuiView={setGuiView}
-          setSimpleDisplay={setSimpleDisplay}
-          showGUIView={showGUIView}
-          showProgrammaticMode={showProgrammaticMode}
-          showSimpleDisplay={showSimpleDisplay}
-        />
         <ImportDataColumn currentlySelectedFile={currentlySelectedFile} toggleDataModal={toggleDataModal} />
-        {showSimpleDisplay && (
-          <TemplatePreviewColumn
-            encodingMode={encodingMode}
-            setEncodingMode={setEncodingMode}
-            templates={templates}
-          />
-        )}
-
-        {!showSimpleDisplay && (
-          <DataColumn
-            addToNextOpenSlot={addToNextOpenSlot}
-            coerceType={coerceType}
-            columns={columns}
-            createFilter={createFilter}
-            deleteFilter={deleteFilter}
-            iMspec={iMspec}
-            metaColumns={metaColumns}
-            onDropFilter={(item: any): any => createFilter({field: item.text})}
-            setRepeats={setRepeats}
-            showGUIView={showGUIView}
-            spec={spec}
-            template={template}
-            updateFilter={updateFilter}
-          />
-        )}
+        <DataColumn
+          addToNextOpenSlot={addToNextOpenSlot}
+          coerceType={coerceType}
+          columns={columns}
+          createFilter={createFilter}
+          deleteFilter={deleteFilter}
+          iMspec={iMspec}
+          metaColumns={metaColumns}
+          onDropFilter={(item: any): any => createFilter({field: item.text})}
+          setRepeats={setRepeats}
+          showGUIView={showGUIView}
+          spec={spec}
+          template={template}
+          updateFilter={updateFilter}
+        />
       </div>
     );
   }
@@ -248,34 +214,28 @@ class RootComponent extends React.Component<RootProps> {
       chainActions,
       changeMarkType,
       clearEncoding,
-      codeMode,
       columns,
       createFilter,
       deleteTemplate,
       editMode,
-      editorError,
       encodingMode,
       iMspec,
       metaColumns,
       modifyValueOnTemplate,
       moveWidget,
       removeWidget,
-      readInTemplate,
       saveCurrentTemplate,
       setBlankTemplate,
-      setCodeMode,
       setEditMode,
       setEncodingMode,
       setEncodingParameter,
       setNewSpec,
-      setNewSpecCode,
       setTemplateValue,
+      setSimpleDisplay,
       setWidgetValue,
       showGUIView,
-      showProgrammaticMode,
       showSimpleDisplay,
       spec,
-      specCode,
       swapXAndYChannels,
       template,
       templateMap,
@@ -284,79 +244,117 @@ class RootComponent extends React.Component<RootProps> {
     } = this.props;
 
     return (
-      <div className="full-height center-column">
-        <Wrapper showProgrammaticMode={showProgrammaticMode} showGUIView={showGUIView}>
-          <div className="full-width flex-down">
-            {SHOW_TEMPLATE_CONTROLS && (
-              <EncodingControls
-                chainActions={chainActions}
-                clearEncoding={clearEncoding}
-                deleteTemplate={deleteTemplate}
-                editMode={editMode}
-                encodingMode={encodingMode}
-                modifyValueOnTemplate={modifyValueOnTemplate}
-                saveCurrentTemplate={saveCurrentTemplate}
-                setBlankTemplate={setBlankTemplate}
-                setEditMode={setEditMode}
-                setEncodingMode={setEncodingMode}
-                showSimpleDisplay={showSimpleDisplay}
-                template={template}
-                templateSaveState={templateSaveState}
-                templates={templates}
-              />
-            )}
-            {encodingMode === 'grammer' && showGUIView && (
-              <EncodingColumn
-                changeMarkType={changeMarkType}
-                columns={columns}
-                iMspec={iMspec}
-                metaColumns={metaColumns}
-                onDrop={(item: any): void => {
-                  if (item.disable) {
-                    return;
-                  }
-                  setEncodingParameter(item);
-                }}
-                onDropFilter={(item: any): any => createFilter({field: item.text})}
-                setEncodingParameter={setEncodingParameter}
-                setNewSpec={setNewSpec}
-                showSimpleDisplay={showSimpleDisplay}
-                spec={spec}
-                swapXAndYChannels={swapXAndYChannels}
-              />
-            )}
-            {encodingMode !== 'grammer' && template && showGUIView && (
-              <TemplateColumn
-                addWidget={addWidget}
-                columns={columns}
-                editMode={editMode}
-                moveWidget={moveWidget}
-                removeWidget={removeWidget}
-                setTemplateValue={setTemplateValue}
-                setWidgetValue={setWidgetValue}
-                showSimpleDisplay={showSimpleDisplay}
-                template={template}
-                templateMap={templateMap}
-              />
-            )}
-          </div>
-          {showProgrammaticMode && (
-            <div className="full-height full-width flex-down">
-              <CodeEditor
-                addWidget={addWidget}
-                codeMode={codeMode}
-                editorError={editorError}
-                readInTemplate={readInTemplate}
-                setCodeMode={setCodeMode}
-                setNewSpecCode={setNewSpecCode}
-                spec={spec}
-                specCode={specCode}
-                template={template}
-                templateMap={templateMap}
-              />
-            </div>
-          )}
-        </Wrapper>
+      <div className=" full-height full-width flex-down">
+        {SHOW_TEMPLATE_CONTROLS && (
+          <EncodingControls
+            chainActions={chainActions}
+            clearEncoding={clearEncoding}
+            deleteTemplate={deleteTemplate}
+            editMode={editMode}
+            encodingMode={encodingMode}
+            modifyValueOnTemplate={modifyValueOnTemplate}
+            saveCurrentTemplate={saveCurrentTemplate}
+            setBlankTemplate={setBlankTemplate}
+            setEditMode={setEditMode}
+            setEncodingMode={setEncodingMode}
+            showSimpleDisplay={showSimpleDisplay}
+            template={template}
+            templateSaveState={templateSaveState}
+            templates={templates}
+          />
+        )}
+        <div className="input-mode-selector">
+          {['CHOOSER', 'SHELVES'].map(mode => {
+            return (
+              <div
+                key={mode}
+                onClick={(): any => setSimpleDisplay(mode === 'CHOOSER')}
+                className={classnames({
+                  'mode-option': true,
+                  'selected-mode':
+                    (mode === 'SHELVES' && !showSimpleDisplay) || (mode === 'CHOOSER' && showSimpleDisplay),
+                })}
+              >
+                {mode}
+              </div>
+            );
+          })}
+        </div>{' '}
+        {encodingMode === 'grammer' && showGUIView && (
+          <EncodingColumn
+            changeMarkType={changeMarkType}
+            columns={columns}
+            iMspec={iMspec}
+            metaColumns={metaColumns}
+            onDrop={(item: any): void => {
+              if (item.disable) {
+                return;
+              }
+              setEncodingParameter(item);
+            }}
+            onDropFilter={(item: any): any => createFilter({field: item.text})}
+            setEncodingParameter={setEncodingParameter}
+            setNewSpec={setNewSpec}
+            showSimpleDisplay={showSimpleDisplay}
+            spec={spec}
+            swapXAndYChannels={swapXAndYChannels}
+          />
+        )}
+        {encodingMode !== 'grammer' && template && showGUIView && (
+          <TemplateColumn
+            addWidget={addWidget}
+            columns={columns}
+            editMode={editMode}
+            moveWidget={moveWidget}
+            removeWidget={removeWidget}
+            setTemplateValue={setTemplateValue}
+            setWidgetValue={setWidgetValue}
+            showSimpleDisplay={showSimpleDisplay}
+            template={template}
+            templateMap={templateMap}
+          />
+        )}
+      </div>
+    );
+  }
+
+  codeEditor(): JSX.Element {
+    const {
+      addWidget,
+      codeMode,
+      editorError,
+      readInTemplate,
+      setCodeMode,
+      setNewSpecCode,
+      setProgrammaticView,
+      showProgrammaticMode,
+      spec,
+      specCode,
+      template,
+      templateMap,
+    } = this.props;
+    return (
+      <div
+        className={classnames({
+          'full-width': true,
+          'flex-down': true,
+          'full-height': showProgrammaticMode,
+        })}
+      >
+        <CodeEditor
+          addWidget={addWidget}
+          codeMode={codeMode}
+          editorError={editorError}
+          readInTemplate={readInTemplate}
+          setCodeMode={setCodeMode}
+          setNewSpecCode={setNewSpecCode}
+          setProgrammaticView={setProgrammaticView}
+          showProgrammaticMode={showProgrammaticMode}
+          spec={spec}
+          specCode={specCode}
+          template={template}
+          templateMap={templateMap}
+        />
       </div>
     );
   }
@@ -368,10 +366,14 @@ class RootComponent extends React.Component<RootProps> {
       chainActions,
       changeSelectedFile,
       dataModalOpen,
+      encodingMode,
       loadCustomDataset,
       toggleDataModal,
       triggerRedo,
       triggerUndo,
+      showProgrammaticMode,
+      setEncodingMode,
+      templates,
     } = this.props;
 
     return (
@@ -385,10 +387,22 @@ class RootComponent extends React.Component<RootProps> {
           />
         )}
         <Header canRedo={canRedo} canUndo={canUndo} triggerRedo={triggerRedo} triggerUndo={triggerUndo} />
-        <div className="flex full-height">
+        <div className="flex full-height relative">
           <DndProvider backend={HTML5Backend}>
-            {this.leftColumn()}
-            {this.centerColumn()}
+            <Wrapper showProgrammaticMode={showProgrammaticMode} showGUIView={true}>
+              <div className="flex-down full-height">
+                <TemplatePreviewColumn
+                  encodingMode={encodingMode}
+                  setEncodingMode={setEncodingMode}
+                  templates={templates}
+                />
+                <div className="flex" style={{height: 'calc(100% - 77px)'}}>
+                  {this.leftColumn()}
+                  {this.centerColumn()}
+                </div>
+              </div>
+              {this.codeEditor()}
+            </Wrapper>
             {this.chartArea()}
           </DndProvider>
         </div>
