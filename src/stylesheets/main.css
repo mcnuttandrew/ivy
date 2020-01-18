@@ -238,8 +238,6 @@ input[type=number]::-webkit-outer-spin-button {
   min-width: 220px;
   overflow-y: scroll;
   padding: 0 15px;
-
-  /* width: 440px; */
 }
 
 .encoding-column {
@@ -247,10 +245,6 @@ input[type=number]::-webkit-outer-spin-button {
   max-height: 100%;
   overflow-y: scroll;
   padding: 15px;
-
-  /* width: 100%; */
-
-  /* width: calc(300px - 15px); */
 }
 
 .template-column.column.edit-mode {
@@ -447,6 +441,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 
+/* IF WE RENEG ON THE COLORS OF PILLS THIS COMES BACK */
 /* .shelf .pill {
   background: #e4e6e8;
 } */
@@ -723,8 +718,6 @@ input[type=number]::-webkit-outer-spin-button {
 .code-container {
   height: 100%;
   position: relative;
-
-  /* width: 600px; */
 }
 
 .code-collapse {
@@ -1163,11 +1156,7 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   margin-top: 3px;
   margin-bottom: 3px;
-
-  /* max-height: 100%; */
   width: 100%;
-
-  /* padding: 20px 10px; */
 }
 
 .code-option-tab.selected-tab {
