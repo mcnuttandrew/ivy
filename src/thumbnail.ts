@@ -8,7 +8,7 @@ import {set, get} from 'idb-keyval';
 export function updateThumbnail(templateName: string): Promise<void> {
   const node = document.querySelector('.chart-container div');
   return new Promise(resolve => {
-    DomToImage.toJpeg(node, {quality: 0.3}).then(dataurl => {
+    DomToImage.toJpeg(node, {quality: 0.1}).then(dataurl => {
       /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       if (!document.imageStore) {

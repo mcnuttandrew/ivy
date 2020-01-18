@@ -50,6 +50,7 @@ export default function Pill(props: PillProps): JSX.Element {
         pill: true,
         flex: true,
         'in-encoding-panel': inEncoding,
+        [`${isMeta ? 'metacolumn' : column.type.toLowerCase()}-pill`]: true,
       })}
       ref={dragRef}
       style={{opacity}}

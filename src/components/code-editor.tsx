@@ -4,6 +4,7 @@ import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
 import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
 import {MdSettings} from 'react-icons/md';
+import {IoIosCreate} from 'react-icons/io';
 
 import Popover from './popover';
 import Selector from './selector';
@@ -17,9 +18,15 @@ interface Props {
   addWidget?: GenericAction;
   codeMode: string;
   editorError: null | string;
+  editMode: boolean;
+  editorFontSize: number;
   readInTemplate: GenericAction;
   setCodeMode: GenericAction;
+  setEditorFontSize: GenericAction;
+  setEditMode: GenericAction;
   setNewSpecCode: GenericAction;
+  setProgrammaticView: GenericAction;
+  showProgrammaticMode: boolean;
   spec: any;
   specCode: string;
   template?: Template;
@@ -93,25 +100,45 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   getCurrentCode(): string {
     const {template, codeMode, specCode, spec, templateMap} = this.props;
-    if (codeMode === 'CODE') {
+    if (codeMode === 'TEMPLATE') {
       return template ? template.code : specCode;
     }
-    if (codeMode === 'TEMPLATE') {
-      return template ? serializeTemplate(template) : 'TEMPLATE NOT AVAILABLE';
+    if (codeMode === 'PARAMETERS') {
+      return template ? serializeTemplate(template) : 'PARAMETERIZATION NOT AVAILABLE';
     }
-    if (codeMode === 'OUTPUT') {
+    if (codeMode === 'EXPORT TO JSON') {
       return stringify(spec);
     }
-    if (codeMode === 'VAR-TAB') {
+    if (codeMode === 'SPECIFICATION') {
       return JSON.stringify(templateMap, null, 2);
     }
   }
 
   editorControls(): JSX.Element {
-    const {setNewSpecCode, codeMode} = this.props;
+    const {setNewSpecCode, codeMode, editorFontSize, setEditorFontSize} = this.props;
+    const fontSizes = [
+      {name: 'small', size: 10},
+      {name: 'medium', size: 15},
+      {name: 'large', size: 20},
+    ];
     return (
       <div className="flex-down code-editor-controls">
-        <h1>Macros</h1>
+        <h3>Controls</h3>
+        <div className="flex">
+          <span>{`Font Size `}</span>
+          {fontSizes.map(row => {
+            return (
+              <button
+                className={classnames({selected: row.size === editorFontSize})}
+                key={row.name}
+                onClick={(): any => setEditorFontSize(row.size)}
+              >
+                {row.name}
+              </button>
+            );
+          })}
+        </div>
+        <h3>Text Manipulation Shortcuts</h3>
         {SHORTCUTS.map((shortcut: any) => {
           const {action, name, description} = shortcut;
           return (
@@ -119,7 +146,7 @@ export default class CodeEditor extends React.Component<Props, State> {
               className="flex-down"
               key={name}
               onClick={(): void => {
-                if (codeMode !== 'CODE') {
+                if (codeMode !== 'TEMPLATE') {
                   return;
                 }
                 setNewSpecCode({
@@ -139,7 +166,7 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   handleCodeUpdate(code: string): void {
     const {setNewSpecCode, readInTemplate, codeMode} = this.props;
-    if (codeMode === 'TEMPLATE') {
+    if (codeMode === 'PARAMETERS') {
       Promise.resolve()
         .then(() => JSON.parse(code))
         .then(() => readInTemplate({code, inError: false}))
@@ -158,17 +185,19 @@ export default class CodeEditor extends React.Component<Props, State> {
     const currentCode = this.getCurrentCode();
     // TODO this should move out of the render path
     const suggestions =
-      (template && codeMode === 'CODE' && synthesizeSuggestions(currentCode, template.widgets || [])) || [];
+      (template && codeMode === 'TEMPLATE' && synthesizeSuggestions(currentCode, template.widgets || [])) ||
+      [];
     return (
       <div className="suggestion-box">
-        <div className="suggestion-box-header flex space-between">
+        <div
+          className="suggestion-box-header flex space-between"
+          onClick={(): any => this.setState({suggestionBox: !suggestionBox})}
+        >
           <h5>
             <span>Suggestions</span>
             {suggestions.length ? <span>(!)</span> : ''}
           </h5>
-          <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
-            {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
-          </div>
+          <div>{suggestionBox ? <FaAngleDown /> : <FaAngleUp />}</div>
         </div>
         {suggestionBox && (
           <div className="suggestion-box-body">
@@ -195,48 +224,20 @@ export default class CodeEditor extends React.Component<Props, State> {
     );
   }
 
-  render(): JSX.Element {
-    const {editorError, setCodeMode, codeMode} = this.props;
+  controls(): JSX.Element {
+    const {setCodeMode, codeMode, editMode, setEditMode} = this.props;
     const {updateMode} = this.state;
-    const currentCode = this.getCurrentCode();
     return (
-      <div className="full-height full-width inline-block code-container">
-        <div
-          className={classnames({
-            'error-bar': true,
-            'has-error': Boolean(editorError),
-          })}
-        >
-          ERROR
+      <div className="code-option-tabs flex-down full-height background-2">
+        <div className="flex save-edit-button" onClick={(): any => setEditMode(!editMode)}>
+          <div>{editMode ? 'SAVE' : 'EDIT'}</div>
+          <IoIosCreate />
         </div>
-        <div className="code-option-tabs">
-          <div className="execute-code-control">
-            <div
-              className="execute-code-control-button"
-              onClick={(): void => {
-                /* eslint-disable */
-                // @ts-ignore
-                const model = this.refs.monaco.editor.getModel();
-                /* eslint-enable */
+        <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
 
-                const value = model.getValue();
-                this.handleCodeUpdate(value);
-              }}
-            >
-              <MdPlayCircleOutline />
-            </div>
-            <Selector
-              onChange={(newMode): void => {
-                this.setState({updateMode: newMode});
-              }}
-              selectedValue={updateMode}
-              options={[
-                {display: 'Auto', value: 'automatic'},
-                {display: 'Manual', value: 'manual'},
-              ]}
-            />
-          </div>
-          {['CODE', 'TEMPLATE', 'OUTPUT', 'VAR-TAB'].map(key => {
+        {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'SPECIFICATION', 'EXPORT TO JSON']
+          .filter(d => d)
+          .map(key => {
             return (
               <div
                 className={classnames({
@@ -250,33 +251,87 @@ export default class CodeEditor extends React.Component<Props, State> {
               </div>
             );
           })}
-          <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
-        </div>
-        {this.suggestionBox()}
-        <div className="flex full-height">
-          {
-            /*eslint-disable react/no-string-refs*/
-            <MonacoEditor
-              ref="monaco"
-              language="json"
-              theme="monokai"
-              height={'calc(100% - 99px)'}
-              value={currentCode}
-              options={EDITOR_OPTIONS}
-              onChange={(code: string): void => {
-                if (codeMode === 'OUTPUT') {
-                  return;
-                }
+        <div className="execute-code-control">
+          <div
+            className="execute-code-control-button"
+            onClick={(): void => {
+              /* eslint-disable */
+              // @ts-ignore
+              const model = this.refs.monaco.editor.getModel();
+              /* eslint-enable */
 
-                if (updateMode === 'automatic') {
-                  this.handleCodeUpdate(code);
-                }
-              }}
-              editorDidMount={this.editorDidMount}
-            />
-            /*eslint-en able react/no-string-refs*/
-          }
+              const value = model.getValue();
+              this.handleCodeUpdate(value);
+            }}
+          >
+            <MdPlayCircleOutline />
+          </div>
+          <Selector
+            onChange={(newMode): void => {
+              this.setState({updateMode: newMode});
+            }}
+            selectedValue={updateMode}
+            options={[
+              {display: 'Auto', value: 'automatic'},
+              {display: 'Manual', value: 'manual'},
+            ]}
+          />
         </div>
+      </div>
+    );
+  }
+
+  render(): JSX.Element {
+    const {editMode, editorFontSize, codeMode, setProgrammaticView, showProgrammaticMode} = this.props;
+    const {updateMode} = this.state;
+    const currentCode = this.getCurrentCode();
+    return (
+      <div className="full-height full-width code-container flex-down">
+        <div
+          className="full-width background-2 cursor-pointer flex code-collapse"
+          onClick={(): any => setProgrammaticView(!showProgrammaticMode)}
+        >
+          <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
+          {showProgrammaticMode ? <FaAngleDown /> : <FaAngleUp />}
+        </div>
+        {showProgrammaticMode && (
+          <div className="full-height full-width flex">
+            {/* <div
+          className={classnames({
+            'error-bar': true,
+            'has-error': Boolean(editorError),
+          })}
+        >
+          ERROR
+        </div> */}
+            {this.controls()}
+            <div className="flex-down full-height full-width">
+              {editMode && this.suggestionBox()}
+              {
+                /*eslint-disable react/no-string-refs*/
+                <MonacoEditor
+                  ref="monaco"
+                  language="json"
+                  theme="monokai"
+                  height={'calc(100%)'}
+                  value={currentCode}
+                  options={{...EDITOR_OPTIONS, fontSize: editorFontSize}}
+                  onChange={(code: string): void => {
+                    if (codeMode === 'EXPORT TO JSON') {
+                      return;
+                    }
+
+                    if (updateMode === 'automatic') {
+                      this.handleCodeUpdate(code);
+                    }
+                  }}
+                  editorDidMount={this.editorDidMount}
+                />
+                /*eslint-en able react/no-string-refs*/
+              }
+            </div>
+          </div>
+        )}
       </div>
     );
   }

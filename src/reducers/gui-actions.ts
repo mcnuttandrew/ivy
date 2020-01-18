@@ -10,10 +10,12 @@ import {getAllInUseFields} from '../utils';
 
 export const setProgrammaticView = toggle('showProgrammaticMode');
 export const toggleDataModal = toggle('dataModalOpen');
+export const toggleProgramModal = toggle('programModalOpen');
 
 export const changeTheme = blindSet('currentTheme');
 export const setCodeMode = blindSet('codeMode');
 export const setEditMode = blindSet('editMode');
+export const setEditorFontSize = blindSet('editorFontSize');
 export const setGuiView = blindSet('showGUIView');
 export const setSimpleDisplay = blindSet('showSimpleDisplay');
 

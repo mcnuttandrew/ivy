@@ -2,12 +2,14 @@ import React from 'react';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import {GenericAction} from '../actions/index';
+import {AiOutlinePlusCircle} from 'react-icons/ai';
 import {thumbnailLocation} from '../thumbnail';
 
 interface Props {
-  templates: Template[];
-  setEncodingMode: GenericAction;
   encodingMode: string;
+  setEncodingMode: GenericAction;
+  templates: Template[];
+  toggleProgramModal: GenericAction;
 }
 
 function renderEncodingModeOption(
@@ -21,7 +23,7 @@ function renderEncodingModeOption(
     <div
       className={classnames({
         'encoding-selection-option': true,
-        flex: true,
+        'flex-down': true,
         'selected-encoding-option': encodingMode === templateName,
       })}
       key={`${templateName}-${idx}`}
@@ -31,8 +33,7 @@ function renderEncodingModeOption(
         <img src={thumbnailLocation(templateName)} />
       </div>
       <div className="flex-down">
-        <h3>{templateName}</h3>
-        {templateDescription && <h5>{`${templateDescription}`}</h5>}
+        <h5>{templateName}</h5>
       </div>
     </div>
   );
@@ -40,17 +41,11 @@ function renderEncodingModeOption(
 
 export default class TemplatePreviewColumn extends React.Component<Props> {
   render(): JSX.Element {
-    const {templates, setEncodingMode, encodingMode} = this.props;
+    const {templates, setEncodingMode, encodingMode, toggleProgramModal} = this.props;
 
     return (
-      <div
-        className={classnames({
-          'template-preview-column': true,
-          'full-height': true,
-        })}
-      >
-        <div>Available Charts</div>
-        <div className="template-preview-column-charts">
+      <div className="template-preview-column background-2">
+        <div className="scroll-container">
           {renderEncodingModeOption(
             'grammer',
             'Tableau-style grammar of graphics',
@@ -69,6 +64,10 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
                 encodingMode,
               ),
             )}
+          <div className="flex-down encoding-selection-modal-button" onClick={toggleProgramModal}>
+            <AiOutlinePlusCircle />
+            <h3>Add more</h3>
+          </div>
         </div>
       </div>
     );

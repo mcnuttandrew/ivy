@@ -24,6 +24,7 @@ import {changeSelectedFile, recieveData, recieveTypeInferences} from './data-act
 import {
   addWidget,
   deleteTemplate,
+  loadExternalTemplate,
   modifyValueOnTemplate,
   moveWidget,
   readInTemplate,
@@ -39,11 +40,13 @@ import {
   changeTheme,
   setCodeMode,
   setEditMode,
+  setEditorFontSize,
   setEncodingMode,
   setGuiView,
   setProgrammaticView,
   setSimpleDisplay,
   toggleDataModal,
+  toggleProgramModal,
 } from './gui-actions';
 
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
@@ -84,15 +87,18 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'change-theme': changeTheme,
   'set-code-mode': setCodeMode,
   'set-edit-mode': setEditMode,
+  'set-editor-font-size': setEditorFontSize,
   'set-encoding-mode': setEncodingMode,
   'set-gui-view': setGuiView,
   'set-simple-display': setSimpleDisplay,
   'toggle-data-modal': toggleDataModal,
+  'toggle-program-modal': toggleProgramModal,
   'toggle-programmatic-view': setProgrammaticView,
 
   // template
   'add-widget-to-template': addWidget,
   'delete-template': deleteTemplate,
+  'load-external-template': loadExternalTemplate,
   'modify-value-on-template': addUpdateCode(modifyValueOnTemplate),
   'move-widget-in-template': moveWidget,
   'read-in-template': addUpdateCode(readInTemplate),

@@ -11,7 +11,7 @@ export const blindSet = (key: string): ActionResponse => (state, payload): AppSt
   state.set(key, payload);
 export const toggle = (key: string): ActionResponse => (state): AppState => state.set(key, !state.get(key));
 
-// TODO undo this embarrasment
+// TODO undo this embarrasment (specifically the type messes)
 const defaultEmpty = Immutable.fromJS({
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   transform: [],
@@ -19,25 +19,9 @@ const defaultEmpty = Immutable.fromJS({
   encoding: {},
 });
 export const EMPTY_SPEC = defaultEmpty;
-
-// if the goose mode should be on, then we shouldnt use defaults
-const GOOSE_MODE = false;
-const fileSpecificationDefaults = GOOSE_MODE
-  ? {
-      currentlySelectedFile: null,
-      dataModalOpen: true,
-      GOOSE_MODE,
-    }
-  : {
-      currentlySelectedFile: 'cars.json',
-      dataModalOpen: false,
-      GOOSE_MODE,
-    };
-
 export const DEFAULT_STATE: AppState = Immutable.fromJS({
-  ...fileSpecificationDefaults,
-
   // meta-data
+  currentlySelectedFile: 'cars.json',
   columns: [],
   metaColumns: [],
 
@@ -52,11 +36,15 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   // currentTemplateInstance: SCATTERPLOT,
   // encodingMode: 'Scatterplot',
   currentTemplateInstance: null,
+
+  dataModalOpen: false,
   encodingMode: 'grammer',
   showProgrammaticMode: true,
   showSimpleDisplay: false,
   showGUIView: true,
-  codeMode: 'CODE',
+  codeMode: 'EXPORT TO JSON',
+  editorFontSize: 10,
+  programModalOpen: false,
 
   // undo redo
   undoStack: Immutable.fromJS([]),

@@ -36,6 +36,11 @@ button:disabled {
   cursor: not-allowed;
 }
 
+button.selected {
+  background: black;
+  color: white !important;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   opacity: 1;
@@ -74,6 +79,12 @@ input[type=number]::-webkit-outer-spin-button {
   height: 100%;
 }
 
+.full-height-with-hide {
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
 .space-between {
   justify-content: space-between;
 }
@@ -96,6 +107,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.relative {
+  position: relative;
 }
 
 .chart-container {
@@ -160,15 +175,15 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .center-column {
-  min-width: 500px;
+  min-width: 300px;
   position: relative;
-  width: 500px;
+  width: 300px;
 }
 
 .header {
   align-items: center;
   color: white;
-  height: 50px;
+  height: 30px;
   padding: 0 15px;
 }
 
@@ -177,30 +192,26 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .header img {
-  height: 40px;
+  height: 25px;
 }
 
 .bottom-fill {
   margin-bottom: 100px;
 }
 
-.secondary-controls,
-.about-box {
-  font-size: 12px;
-  padding-top: 10px;
+.input-mode-selector {
+  display: flex;
+  font-size: 10px;
+  flex-direction: row-reverse;
+  padding: 0 15px;
 }
 
-.about-box h5,
-.secondary-controls h5 {
-  font-size: 15px;
-}
-
-.mode-selector .mode-option {
+.input-mode-selector .mode-option {
   cursor: pointer;
   margin: 0 5px;
 }
 
-.mode-selector .mode-option.selected-mode {
+.input-mode-selector .mode-option.selected-mode {
   text-decoration: underline;
 }
 
@@ -218,11 +229,6 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 12px;
 }
 
-.encoding-column-container {
-  min-width: 230px;
-  max-width: 230px;
-}
-
 .column-border {
   border-right: thin solid #b5b5b5;
 }
@@ -231,15 +237,14 @@ input[type=number]::-webkit-outer-spin-button {
   max-height: 100%;
   min-width: 220px;
   overflow-y: scroll;
-  padding: 15px;
-  width: 440px;
+  padding: 0 15px;
 }
 
 .encoding-column {
+  height: 100%;
   max-height: 100%;
   overflow-y: scroll;
   padding: 15px;
-  width: calc(500px - 15px);
 }
 
 .template-column.column.edit-mode {
@@ -308,6 +313,22 @@ input[type=number]::-webkit-outer-spin-button {
   max-width: 100%;
   padding: 0 5px;
   width: 100%;
+}
+
+.measure-pill {
+  background: lightseagreen;
+}
+
+.dimension-pill {
+  background: mediumseagreen;
+}
+
+.time-pill {
+  background: pink;
+}
+
+.metacolumn-pill {
+  background: goldenrod;
 }
 
 .shelf-container {
@@ -420,9 +441,11 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 
-.shelf .pill {
+/* IF WE RENEG ON THE COLORS OF PILLS THIS COMES BACK */
+
+/* .shelf .pill {
   background: #e4e6e8;
-}
+} */
 
 .shelf.filter-target {
   border: 0;
@@ -463,10 +486,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 .background-3 {
   background: #fafafa;
-}
-
-.font-white {
-  color: white;
 }
 
 .filter-container {
@@ -527,13 +546,43 @@ input[type=number]::-webkit-outer-spin-button {
   z-index: 5001;
 }
 
-.modal-container .data-modal {
-  background: #dbdbdb;
+.modal-container .data-modal,
+.modal-container .program-modal {
+  background: #363636;
   border-radius: 10px;
-  height: 400px;
   padding: 10px;
-  width: 700px;
   z-index: 5002;
+}
+
+.modal-container .data-modal {
+  height: 400px;
+  width: 700px;
+}
+
+.modal-container .program-modal {
+  height: 90%;
+  width: 90%;
+}
+
+.program-containers {
+  height: 100%;
+  overflow-y: scroll;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.program-option {
+  font-size: 15px;
+}
+
+.program-containers .program-option:last-child {
+  margin-bottom: 200px;
+}
+
+.program-option-img-container img {
+  height: 75px;
+  width: 75px;
 }
 
 .widget {
@@ -603,6 +652,10 @@ input[type=number]::-webkit-outer-spin-button {
   flex-direction: row-reverse;
 }
 
+.modal-header {
+  color: white;
+}
+
 .modal-container .modal-header p {
   font-size: 12px;
 }
@@ -615,6 +668,8 @@ input[type=number]::-webkit-outer-spin-button {
   background: white;
   padding: 10px;
   height: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .modal-container .custom-data {
@@ -664,7 +719,11 @@ input[type=number]::-webkit-outer-spin-button {
 .code-container {
   height: 100%;
   position: relative;
-  width: 500px;
+}
+
+.code-collapse {
+  font-size: 12px;
+  text-transform: uppercase;
 }
 
 .error-bar {
@@ -776,7 +835,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .state-action-button {
   cursor: pointer;
-  font-size: 15px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   margin: 0 5px;
@@ -796,6 +855,9 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 5px 10px;
   justify-content: space-between;
   white-space: nowrap;
+
+  /* sync with the padding */
+  width: calc(100% - 20px);
 }
 
 .encoding-mode-selector img {
@@ -844,7 +906,7 @@ input[type=number]::-webkit-outer-spin-button {
   left: 14px;
   padding: 20px;
   position: absolute;
-  width: 500px;
+  width: 300px;
   top: -6px;
   z-index: 1000;
 }
@@ -865,15 +927,27 @@ input[type=number]::-webkit-outer-spin-button {
   overflow-y: auto;
 }
 
-.flex-and-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+.encoding-selection-option {
+  align-items: center;
+  border: thin solid rgba(0, 0, 0, 0);
+  cursor: pointer;
+  font-size: 12px;
+  height: 75px;
+  justify-content: center;
+  margin-right: 20px;
+  min-width: 75px;
+  padding: 5px;
+  text-transform: uppercase;
+  text-align: center;
+  width: 75px;
 }
 
-.modal-tooltip .encoding-selection-option {
-  margin-bottom: 15px;
-  width: 230px;
+.encoding-selection-option.selected-encoding-option {
+  border: thin solid rgba(125, 125, 125, 1);
+}
+
+.encoding-selection-option:hover {
+  border: thin dashed rgba(125, 125, 125, 1);
 }
 
 .encoding-selection-option-img-container {
@@ -887,35 +961,31 @@ input[type=number]::-webkit-outer-spin-button {
   max-width: 50px;
 }
 
-.modal-tooltip .encoding-selection-option h5 {
-  font-size: 10px;
-}
-
-.template-preview-column-charts {
-  height: 100%;
-  overflow: scroll;
-}
-
-.template-preview-column .encoding-selection-option {
-  border: thin solid rgba(0, 0, 0, 0);
+.encoding-selection-modal-button {
+  align-items: center;
   cursor: pointer;
-  margin-bottom: 20px;
+  font-size: 30px;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
 }
 
-.template-preview-column .encoding-selection-option.selected-encoding-option {
-  border: thin solid rgba(125, 125, 125, 1);
+.encoding-selection-modal-button h3 {
+  font-size: 12px;
+  text-transform: uppercase;
 }
 
-.template-preview-column .encoding-selection-option:hover {
-  border: thin solid rgba(0, 0, 0, 1);
+.template-preview-column {
+  display: flex;
+  height: 100px;
+  max-width: 570px;
+  padding: 0 20px;
 }
 
-.template-preview-column .encoding-selection-option:last-of-type {
-  margin-bottom: 300px;
-}
-
-.template-preview-column .encoding-selection-option h3 {
-  font-size: 10px;
+.template-preview-column .scroll-container {
+  display: flex;
+  overflow-x: scroll;
+  width: 100%;
 }
 
 .shelf-dropdown {
@@ -981,7 +1051,10 @@ input[type=number]::-webkit-outer-spin-button {
 .execute-code-control .execute-code-control-button {
   cursor: pointer;
   font-size: 30px;
-  position: absolute;
+}
+
+.execute-code-control .hydra-selector {
+  text-align-last: center;
 }
 
 .slide-widget {
@@ -1059,6 +1132,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .suggestion-box-header {
+  background-color: rgba(245, 245, 245, 0.3);
+  cursor: pointer;
   padding: 0 15px;
 }
 
@@ -1073,24 +1148,39 @@ input[type=number]::-webkit-outer-spin-button {
   color: #ce9178;
   display: flex;
   font-size: 12px;
-  height: 45px;
-  justify-content: space-around;
+  text-align: center;
 }
 
 .code-option-tab {
   align-items: center;
   display: flex;
   justify-content: center;
-  padding: 0 10px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  width: 100%;
 }
 
 .code-option-tab.selected-tab {
   background: #002340;
 }
 
+.code-option-tabs .tooltip-click-target {
+  font-size: 20px;
+}
+
 .code-option-tabs .tooltip-container {
   align-items: center;
   justify-content: center;
+}
+
+.about-bar {
+  font-size: 15px;
+}
+
+.save-edit-button {
+  align-self: center;
+  justify-content: space-around;
+  font-size: 15px;
 }
 
 /* split pane stuff */

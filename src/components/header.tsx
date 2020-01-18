@@ -1,5 +1,6 @@
 import React from 'react';
 import {MdUndo, MdRedo} from 'react-icons/md';
+import Popover from './popover';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
 
@@ -38,6 +39,15 @@ export default class Header extends React.Component<HeaderProps> {
             <span>REDO</span>
           </div>
         </div>
+        <Popover
+          clickTarget={<div className="about-bar">Template + Settings = Visualization (Learn More)</div>}
+          body={(): JSX.Element => (
+            <div>
+              <h1>About this application</h1>
+              <div>Terminology, etc</div>
+            </div>
+          )}
+        />
       </div>
     );
   }
