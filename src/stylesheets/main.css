@@ -36,6 +36,11 @@ button:disabled {
   cursor: not-allowed;
 }
 
+button.selected {
+  background: black;
+  color: white !important;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   opacity: 1;
@@ -72,6 +77,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 .full-height {
   height: 100%;
+}
+
+.full-height-with-hide {
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .space-between {
@@ -547,13 +558,44 @@ input[type=number]::-webkit-outer-spin-button {
   z-index: 5001;
 }
 
-.modal-container .data-modal {
-  background: #dbdbdb;
+.modal-container .data-modal,
+.modal-container .program-modal {
+  background: #363636;
   border-radius: 10px;
-  height: 400px;
   padding: 10px;
-  width: 700px;
   z-index: 5002;
+}
+
+.modal-container .data-modal {
+  height: 400px;
+  width: 700px;
+}
+
+.modal-container .program-modal {
+  height: 90%;
+  width: 90%;
+}
+
+
+.program-containers {
+  height: 100%;
+  overflow-y: scroll;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.program-option {
+  font-size: 15px;
+}
+
+.program-containers .program-option:last-child {
+  margin-bottom: 200px;
+}
+
+.program-option-img-container img {
+  height: 75px;
+  width: 75px;
 }
 
 .widget {
@@ -623,6 +665,10 @@ input[type=number]::-webkit-outer-spin-button {
   flex-direction: row-reverse;
 }
 
+.modal-header {
+  color: white;
+}
+
 .modal-container .modal-header p {
   font-size: 12px;
 }
@@ -635,6 +681,8 @@ input[type=number]::-webkit-outer-spin-button {
   background: white;
   padding: 10px;
   height: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .modal-container .custom-data {
@@ -892,16 +940,6 @@ input[type=number]::-webkit-outer-spin-button {
   overflow-y: auto;
 }
 
-.flex-and-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-}
-
-/* .modal-tooltip .encoding-selection-option {
-  margin-bottom: 15px;
-  width: 230px;
-} */
 .encoding-selection-option {
   align-items: center;
   border: thin solid rgba(0, 0, 0, 0);
@@ -934,11 +972,22 @@ input[type=number]::-webkit-outer-spin-button {
 .encoding-selection-option img {
   max-height: 50px;
   max-width: 50px;
+
+}
+.encoding-selection-modal-button {
+  align-items: center;
+  cursor: pointer;
+  font-size: 30px;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
 }
 
-/* .modal-tooltip .encoding-selection-option h5 {
-  font-size: 10px;
-} */
+.encoding-selection-modal-button h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
 
 .template-preview-column {
   display: flex;
@@ -952,27 +1001,6 @@ input[type=number]::-webkit-outer-spin-button {
   overflow-x: scroll;
   width: 100%;
 }
-
-
-/* .template-preview-column .encoding-selection-option {
-  border: thin solid rgba(0, 0, 0, 0);
-  cursor: pointer;
-  margin-bottom: 20px;
-
-}
-
-
-.template-preview-column .encoding-selection-option:hover {
-  border: thin solid rgba(0, 0, 0, 1);
-}
-
-.template-preview-column .encoding-selection-option:last-of-type {
-  margin-bottom: 300px;
-}
-
-.template-preview-column .encoding-selection-option h3 {
-  font-size: 10px;
-} */
 
 .shelf-dropdown {
   top: 3px;

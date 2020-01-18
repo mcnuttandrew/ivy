@@ -67,24 +67,12 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   return newState.set('spec', Immutable.fromJS(updatedTemplate));
 };
 
-// unused?????
-// export const setTemplateMapValue = (
-//   templateMap: Map<string, any>,
-//   payload: {field: string; text: string; containingShelf?: string},
-// ): Map<string, any> => {
-//   const newMap = templateMap;
-//   if (payload.containingShelf) {
-//     templateMap = templateMap.delete(payload.containingShelf);
-//   }
-//   return newMap.set(payload.field, payload.text);
-// };
-
+// This function is poorly named, i don't know what it does
 function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
   return state.get('templates').filter((template: Template) => template.templateName !== templateName);
 }
 
-export const saveCurrentTemplate: ActionResponse = state => {
-  const template = state.get('currentTemplateInstance').toJS();
+const insertTemplateIntoTemplates: ActionResponse = (state, template) => {
   // this set and get on the db breaks encapsulation a little bit
   // update the template catalog / create it
   get('templates').then((templates: string[]) => {
@@ -103,6 +91,12 @@ export const saveCurrentTemplate: ActionResponse = state => {
   // set current template to the newly created one
   return updatedState;
 };
+
+export const saveCurrentTemplate: ActionResponse = state =>
+  insertTemplateIntoTemplates(state, state.get('currentTemplateInstance').toJS());
+
+export const loadExternalTemplate: ActionResponse = (state, payload) =>
+  insertTemplateIntoTemplates(state, payload);
 
 export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   const {value, key} = payload;

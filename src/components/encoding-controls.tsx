@@ -1,14 +1,10 @@
 import React from 'react';
 import {FaEraser, FaSave} from 'react-icons/fa';
 import {GoRepoForked} from 'react-icons/go';
-import {TiExport} from 'react-icons/ti';
-import {IoIosCreate, IoIosSettings, IoMdCreate} from 'react-icons/io';
-import {} from 'react-icons/io';
+import {IoIosCreate, IoMdCreate} from 'react-icons/io';
 import {GenericAction} from '../actions/index';
-import EncodingModeSelector from './encoding-mode-selector';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
-import {thumbnailLocation} from '../thumbnail';
 
 interface Props {
   chainActions: GenericAction;
@@ -31,7 +27,7 @@ const UPDATE_TEMPLATE: {[x: string]: boolean} = {
   DIFFERENT: true,
 };
 
-function Buttons(props: Props): JSX.Element {
+export default function EncodingControls(props: Props): JSX.Element {
   const {
     chainActions,
     clearEncoding,
@@ -83,85 +79,23 @@ function Buttons(props: Props): JSX.Element {
     },
   ];
   return (
-    <div className="flex space-between full-width flex-wrap">
-      {FULL_BUTTONS.map(button => {
-        return (
-          <div
-            key={button.label}
-            className={classnames({
-              'template-modification-control': true,
-              'template-modification-control--disabled': button.disabled,
-            })}
-            onClick={button.onClick}
-          >
-            {button.icon} <span className="template-modification-control-label">{button.label}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export default function EncodingControls(props: Props): JSX.Element {
-  return (
     <div className="encoding-mode-selector">
-      {/* <div className="flex full-width  space-between">
-        <div className="flex">
-          <img src={thumbnailLocation(template && template.templateName)} />
-          <div className="flex-down">
-            {!editMode && <h1 className="section-title">{encodingMode}</h1>}
-            {editMode && template && (
-              <div className="flex">
-                <h1 className="section-title">NAME:</h1>
-                <input
-                  type="text"
-                  value={template.templateName}
-                  onChange={(event): any =>
-                    modifyValueOnTemplate({
-                      value: event.target.value,
-                      key: 'templateName',
-                    })
-                  }
-                />
-              </div>
-            )}
-            {!editMode && (
-              <h3>{template ? template.templateDescription : 'Tableau-style grammar of graphics'}</h3>
-            )}
-            {editMode && template && (
-              <div className="flex">
-                <h1 className="section-title">Description:</h1>
-                <input
-                  type="text"
-                  value={template.templateDescription}
-                  onChange={(event): any =>
-                    modifyValueOnTemplate({
-                      value: event.target.value,
-                      key: 'templateDescription',
-                    })
-                  }
-                />
-              </div>
-            )}
-          </div>
-        </div>
-        {!showSimpleDisplay && (
-          <EncodingModeSelector
-            setEditMode={setEditMode}
-            chainActions={chainActions}
-            deleteTemplate={deleteTemplate}
-            templates={templates}
-            setEncodingMode={setEncodingMode}
-            clickTarget={
-              <span style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <span style={{fontSize: 10}}>CHANGE TEMPLATE</span>
-                <TiExport />
-              </span>
-            }
-          />
-        )}
-      </div> */}
-      {Buttons(props)}
+      <div className="flex space-between full-width flex-wrap">
+        {FULL_BUTTONS.map(button => {
+          return (
+            <div
+              key={button.label}
+              className={classnames({
+                'template-modification-control': true,
+                'template-modification-control--disabled': button.disabled,
+              })}
+              onClick={button.onClick}
+            >
+              {button.icon} <span className="template-modification-control-label">{button.label}</span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

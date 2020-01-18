@@ -22,6 +22,7 @@ import ChartArea from './chart-area';
 import CodeEditor from './code-editor';
 import DataColumn from './data-column';
 import DataModal from './data-modal';
+import ProgramModal from './program-search/program-modal';
 import EncodingColumn from './encoding-column';
 import EncodingControls from './encoding-controls';
 import Header from './header';
@@ -50,7 +51,6 @@ const Wrapper = (props: any): JSX.Element => {
 };
 
 interface RootProps {
-  GOOSE_MODE: boolean;
   canRedo: boolean;
   canUndo: boolean;
   codeMode: string;
@@ -67,6 +67,7 @@ interface RootProps {
   iMspec: any;
   metaColumns: ColumnHeader[];
   missingFields: string[];
+  programModalOpen: boolean;
   showGUIView: boolean;
   showProgrammaticMode: boolean;
   showSimpleDisplay: boolean;
@@ -95,6 +96,7 @@ interface RootProps {
   deleteView: GenericAction;
   loadCustomDataset: GenericAction;
   loadDataFromPredefinedDatasets: GenericAction;
+  loadExternalTemplate: GenericAction;
   loadTemplates: GenericAction;
   modifyValueOnTemplate: GenericAction;
   moveWidget: GenericAction;
@@ -118,6 +120,7 @@ interface RootProps {
   swapXAndYChannels: GenericAction;
   switchView: GenericAction;
   toggleDataModal: GenericAction;
+  toggleProgramModal: GenericAction;
   triggerRedo: GenericAction;
   triggerUndo: GenericAction;
   updateFilter: GenericAction;
@@ -125,10 +128,7 @@ interface RootProps {
 
 class RootComponent extends React.Component<RootProps> {
   componentDidMount(): void {
-    // on start load the default selected file
-    if (!this.props.GOOSE_MODE) {
-      this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
-    }
+    this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     this.props.loadTemplates();
   }
 
@@ -376,9 +376,13 @@ class RootComponent extends React.Component<RootProps> {
       chainActions,
       changeSelectedFile,
       dataModalOpen,
+      deleteTemplate,
       encodingMode,
       loadCustomDataset,
+      loadExternalTemplate,
+      programModalOpen,
       toggleDataModal,
+      toggleProgramModal,
       triggerRedo,
       triggerUndo,
       showProgrammaticMode,
@@ -396,6 +400,16 @@ class RootComponent extends React.Component<RootProps> {
             toggleDataModal={toggleDataModal}
           />
         )}
+        {programModalOpen && (
+          <ProgramModal
+            chainActions={chainActions}
+            deleteTemplate={deleteTemplate}
+            loadExternalTemplate={loadExternalTemplate}
+            setEncodingMode={setEncodingMode}
+            templates={templates}
+            toggleProgramModal={toggleProgramModal}
+          />
+        )}
         <Header canRedo={canRedo} canUndo={canUndo} triggerRedo={triggerRedo} triggerUndo={triggerUndo} />
         <div className="flex full-height relative">
           <DndProvider backend={HTML5Backend}>
@@ -405,6 +419,7 @@ class RootComponent extends React.Component<RootProps> {
                   encodingMode={encodingMode}
                   setEncodingMode={setEncodingMode}
                   templates={templates}
+                  toggleProgramModal={toggleProgramModal}
                 />
                 <div className="flex" style={{height: 'calc(100% - 77px)'}}>
                   {this.leftColumn()}
@@ -427,7 +442,6 @@ export function mapStateToProps({base}: {base: AppState}): any {
   const missingFields = (template && getMissingFields(template.toJS(), templateMap)) || [];
 
   return {
-    GOOSE_MODE: base.get('GOOSE_MODE'),
     canRedo: base.get('redoStack').size >= 1,
     canUndo: base.get('undoStack').size >= 1,
     codeMode: base.get('codeMode'),
@@ -444,6 +458,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
     missingFields,
+    programModalOpen: base.get('programModalOpen'),
     showProgrammaticMode: base.get('showProgrammaticMode'),
     showSimpleDisplay: base.get('showSimpleDisplay'),
     showGUIView: base.get('showGUIView'),

@@ -125,11 +125,11 @@ export default class CodeEditor extends React.Component<Props, State> {
       <div className="flex-down code-editor-controls">
         <h3>Controls</h3>
         <div className="flex">
-          <span>{`Font Size (${fontSizes.find(row => row.size === editorFontSize).name} currently)`}</span>
+          <span>{`Font Size `}</span>
           {fontSizes.map(row => {
             return (
               <button
-                className={classnames({})}
+                className={classnames({selected: row.size === editorFontSize})}
                 key={row.name}
                 onClick={(): any => setEditorFontSize(row.size)}
               >
@@ -235,7 +235,7 @@ export default class CodeEditor extends React.Component<Props, State> {
         </div>
         <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
 
-        {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'EXPORT TO JSON', 'SPECIFICATION']
+        {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'SPECIFICATION', 'EXPORT TO JSON']
           .filter(d => d)
           .map(key => {
             return (
@@ -282,15 +282,7 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render(): JSX.Element {
-    const {
-      editorError,
-      setCodeMode,
-      editMode,
-      editorFontSize,
-      codeMode,
-      setProgrammaticView,
-      showProgrammaticMode,
-    } = this.props;
+    const {editMode, editorFontSize, codeMode, setProgrammaticView, showProgrammaticMode} = this.props;
     const {updateMode} = this.state;
     const currentCode = this.getCurrentCode();
     return (
