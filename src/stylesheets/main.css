@@ -199,17 +199,6 @@ input[type=number]::-webkit-outer-spin-button {
   margin-bottom: 100px;
 }
 
-.secondary-controls,
-.about-box {
-  font-size: 12px;
-  padding-top: 10px;
-}
-
-.about-box h5,
-.secondary-controls h5 {
-  font-size: 15px;
-}
-
 .input-mode-selector {
   display: flex;
   font-size: 10px;
@@ -249,6 +238,7 @@ input[type=number]::-webkit-outer-spin-button {
   min-width: 220px;
   overflow-y: scroll;
   padding: 0 15px;
+
   /* width: 440px; */
 }
 
@@ -257,7 +247,9 @@ input[type=number]::-webkit-outer-spin-button {
   max-height: 100%;
   overflow-y: scroll;
   padding: 15px;
+
   /* width: 100%; */
+
   /* width: calc(300px - 15px); */
 }
 
@@ -334,7 +326,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .dimension-pill {
-  background: mediumseagreen  ;
+  background: mediumseagreen;
 }
 
 .time-pill {
@@ -576,7 +568,6 @@ input[type=number]::-webkit-outer-spin-button {
   width: 90%;
 }
 
-
 .program-containers {
   height: 100%;
   overflow-y: scroll;
@@ -732,6 +723,7 @@ input[type=number]::-webkit-outer-spin-button {
 .code-container {
   height: 100%;
   position: relative;
+
   /* width: 600px; */
 }
 
@@ -869,6 +861,7 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 5px 10px;
   justify-content: space-between;
   white-space: nowrap;
+
   /* sync with the padding */
   width: calc(100% - 20px);
 }
@@ -972,8 +965,8 @@ input[type=number]::-webkit-outer-spin-button {
 .encoding-selection-option img {
   max-height: 50px;
   max-width: 50px;
-
 }
+
 .encoding-selection-modal-button {
   align-items: center;
   cursor: pointer;
@@ -987,7 +980,6 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 12px;
   text-transform: uppercase;
 }
-
 
 .template-preview-column {
   display: flex;
@@ -1163,7 +1155,6 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   font-size: 12px;
   text-align: center;
-
 }
 
 .code-option-tab {
@@ -1172,8 +1163,10 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   margin-top: 3px;
   margin-bottom: 3px;
+
   /* max-height: 100%; */
   width: 100%;
+
   /* padding: 20px 10px; */
 }
 
@@ -1253,4 +1246,3 @@ input[type=number]::-webkit-outer-spin-button {
 .Resizer.disabled:hover {
   border-color: transparent;
 }
-

@@ -1,17 +1,27 @@
 import React, {useState, useEffect} from 'react';
 import {GenericAction} from '../../actions/index';
 import {Template} from '../../templates/types';
+import ProgramPreview from './program-preview';
 
 interface Props {
   loadExternalTemplate: GenericAction;
 }
 
 export default function CommunityPrograms(props: Props): JSX.Element {
+  const {loadExternalTemplate} = props;
   const [mode, setMode] = useState('Recent');
   const loadedTemplates: Template[] = [];
   useEffect(() => {
     console.log('mode', mode);
   }, [mode]);
+
+  const makeButtonObject = (template: Template) => (key: string): {onClick: any; name: string} => {
+    let onClick;
+    if (key === 'save') {
+      onClick = (): any => loadExternalTemplate(template);
+    }
+    return {onClick, name: key};
+  };
   return (
     <div>
       COMMUNTIY PROGRAMS
@@ -29,8 +39,15 @@ export default function CommunityPrograms(props: Props): JSX.Element {
         })}
       </div>
       <div>
-        {loadedTemplates.map(x => {
-          return <div key={x.templateName}>PROGRAM</div>;
+        {loadedTemplates.map(template => {
+          return (
+            <ProgramPreview
+              buttons={['save'].map(makeButtonObject(template))}
+              key={`${template.templateName}-preview`}
+              templateName={template.templateName}
+              templateDescription={template.templateDescription}
+            />
+          );
         })}
       </div>
     </div>

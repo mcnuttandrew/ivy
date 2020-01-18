@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {GenericAction} from '../../actions/index';
 import {Template} from '../../templates/types';
-import {thumbnailLocation} from '../../thumbnail';
 import ProgramPreview from './program-preview';
 
 interface Props {
@@ -12,24 +11,28 @@ interface Props {
   toggleProgramModal: GenericAction;
 }
 
-type buttonFactory = {[action: string]: () => void};
-function generateButtonActions(props: any): (x: string) => buttonFactory {
-  const {setEncodingMode, toggle, deleteTemplate, chainActions} = props;
-  return (templateName: string): buttonFactory => ({
-    use: (): any => chainActions([(): void => setEncodingMode(templateName), toggle]),
-    delete: (): any => deleteTemplate(templateName),
-  });
+// used for filtering out unsearched templates
+function searchPredicate(searchKey: string, templateName: string, templateDescription: string): boolean {
+  const matchDescription = templateDescription && templateDescription.toLowerCase().includes(searchKey || '');
+  const matchName = templateName && templateName.toLowerCase().includes(searchKey || '');
+  return matchDescription || matchName;
 }
 
+const GRAMMAR_NAME = 'grammer';
+const GRAMMAR_DESC = 'Tableau-style grammar of graphics';
 export default function LocalPrograms(props: Props): JSX.Element {
   const {chainActions, deleteTemplate, setEncodingMode, templates, toggleProgramModal} = props;
   const [searchKey, setSearch] = useState('');
-  const buttonActions = generateButtonActions({
-    chainActions,
-    deleteTemplate,
-    setEncodingMode,
-    toggle: toggleProgramModal,
-  });
+  const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
+    let onClick;
+    if (key === 'Use') {
+      onClick = (): any => chainActions([(): any => setEncodingMode(templateName), toggleProgramModal]);
+    }
+    if (key === 'Delete') {
+      onClick = (): any => deleteTemplate(templateName);
+    }
+    return {onClick, name: key};
+  };
   return (
     <React.Fragment>
       <div>
@@ -41,27 +44,21 @@ export default function LocalPrograms(props: Props): JSX.Element {
         />
       </div>
       <div className="program-containers">
-        <ProgramPreview
-          templateName={'grammer'}
-          templateDescription={'Tableau-style grammar of graphics'}
-          buttons={['Use']}
-          buttonActions={buttonActions}
-        />
+        {searchPredicate(searchKey, GRAMMAR_DESC, GRAMMAR_DESC) && (
+          <ProgramPreview
+            templateName={GRAMMAR_NAME}
+            templateDescription={GRAMMAR_DESC}
+            buttons={['Use'].map(makeButtonObject(GRAMMAR_NAME))}
+          />
+        )}
         {templates
           .filter(template => template.templateName !== '_____none_____')
-          .filter((template: Template) => {
-            const {templateName, templateDescription} = template;
-            const matchDescription =
-              templateDescription && templateDescription.toLowerCase().includes(searchKey || '');
-            const matchName = templateName && templateName.toLowerCase().includes(searchKey || '');
-            return matchDescription || matchName;
-          })
+          .filter(x => searchPredicate(searchKey, x.templateName, x.templateDescription))
           .map((template: Template, idx: number) => (
             <ProgramPreview
               templateName={template.templateName}
               templateDescription={template.templateDescription}
-              buttons={['Publish', 'Use', 'Delete']}
-              buttonActions={buttonActions}
+              buttons={['Publish', 'Use', 'Delete'].map(makeButtonObject(template.templateName))}
               key={`${template.templateName}-${idx}`}
             />
           ))}

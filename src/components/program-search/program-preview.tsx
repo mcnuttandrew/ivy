@@ -4,13 +4,11 @@ import {thumbnailLocation} from '../../thumbnail';
 interface Props {
   templateName: string;
   templateDescription: string;
-  buttons: string[];
-  buttonActions: any;
+  buttons: {name: string; onClick: any}[];
 }
 
 export default function ProgramPreview(props: Props): JSX.Element {
-  const {templateName, templateDescription, buttons, buttonActions} = props;
-  const buttonResponses = buttonActions(templateName);
+  const {templateName, templateDescription, buttons} = props;
   return (
     <div className="program-option flex">
       <div className="program-option-img-container">
@@ -20,13 +18,11 @@ export default function ProgramPreview(props: Props): JSX.Element {
         <h3>{templateName}</h3>
         {templateDescription && <h5>{`${templateDescription}`}</h5>}
         <div className="flex">
-          {buttons.map((button: string) => {
-            return (
-              <button onClick={buttonResponses[button.toLowerCase()]} key={`${templateName}-${button}`}>
-                {button}
-              </button>
-            );
-          })}
+          {buttons.map(button => (
+            <button onClick={button.onClick} key={`${templateName}-${button.name}`}>
+              {button.name}
+            </button>
+          ))}
         </div>
       </div>
     </div>

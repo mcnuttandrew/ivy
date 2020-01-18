@@ -27,7 +27,6 @@ import EncodingColumn from './encoding-column';
 import EncodingControls from './encoding-controls';
 import Header from './header';
 import ImportDataColumn from './import-data-column';
-import SecondaryControls from './secondary-controls';
 import TemplateColumn from './template-column';
 import TemplatePreviewColumn from './template-preview-column';
 
