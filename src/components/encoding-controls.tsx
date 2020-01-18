@@ -2,7 +2,8 @@ import React from 'react';
 import {FaEraser, FaSave} from 'react-icons/fa';
 import {GoRepoForked} from 'react-icons/go';
 import {TiExport} from 'react-icons/ti';
-import {IoIosCreate, IoIosSettings} from 'react-icons/io';
+import {IoIosCreate, IoIosSettings, IoMdCreate} from 'react-icons/io';
+import {} from 'react-icons/io';
 import {GenericAction} from '../actions/index';
 import EncodingModeSelector from './encoding-mode-selector';
 import {Template} from '../templates/types';
@@ -20,7 +21,6 @@ interface Props {
   setBlankTemplate: GenericAction;
   setEditMode: GenericAction;
   setEncodingMode: GenericAction;
-  showSimpleDisplay: boolean;
   template?: Template;
   templateSaveState: string;
   templates?: Template[];
@@ -39,26 +39,17 @@ function Buttons(props: Props): JSX.Element {
     saveCurrentTemplate,
     setBlankTemplate,
     setEditMode,
-    showSimpleDisplay,
     template,
     templateSaveState,
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const isGrammar = !template;
-  const PARTIAL_BUTTONS = [
-    {
-      disabled: false,
-      onClick: clearEncoding,
-      icon: <FaEraser />,
-      label: 'RESET',
-    },
-  ];
   const FULL_BUTTONS = [
     {
       disabled: false,
       onClick: (): any => chainActions([(): any => setBlankTemplate(false), (): any => setEditMode(true)]),
-      icon: <IoIosCreate />,
+      icon: <IoMdCreate />,
       label: 'NEW',
     },
     {
@@ -81,13 +72,19 @@ function Buttons(props: Props): JSX.Element {
     {
       disabled: isGrammar,
       onClick: isGrammar ? NULL : (): any => setEditMode(!editMode),
-      icon: <IoIosSettings />,
+      icon: <IoIosCreate />,
       label: editMode ? 'STOP EDIT' : 'START EDIT',
     },
-  ].concat(PARTIAL_BUTTONS);
+    {
+      disabled: false,
+      onClick: clearEncoding,
+      icon: <FaEraser />,
+      label: 'RESET',
+    },
+  ];
   return (
     <div className="flex space-between full-width flex-wrap">
-      {(showSimpleDisplay ? PARTIAL_BUTTONS : FULL_BUTTONS).map(button => {
+      {FULL_BUTTONS.map(button => {
         return (
           <div
             key={button.label}
@@ -106,19 +103,6 @@ function Buttons(props: Props): JSX.Element {
 }
 
 export default function EncodingControls(props: Props): JSX.Element {
-  const {
-    chainActions,
-    deleteTemplate,
-    editMode,
-    encodingMode,
-    modifyValueOnTemplate,
-    setEditMode,
-    setEncodingMode,
-    showSimpleDisplay,
-    template,
-    templates,
-  } = props;
-
   return (
     <div className="encoding-mode-selector">
       {/* <div className="flex full-width  space-between">

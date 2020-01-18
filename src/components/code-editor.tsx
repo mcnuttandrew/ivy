@@ -4,6 +4,7 @@ import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
 import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
 import {MdSettings} from 'react-icons/md';
+import {IoIosCreate} from 'react-icons/io';
 
 import Popover from './popover';
 import Selector from './selector';
@@ -17,8 +18,12 @@ interface Props {
   addWidget?: GenericAction;
   codeMode: string;
   editorError: null | string;
+  editMode: boolean;
+  editorFontSize: number;
   readInTemplate: GenericAction;
   setCodeMode: GenericAction;
+  setEditorFontSize: GenericAction;
+  setEditMode: GenericAction;
   setNewSpecCode: GenericAction;
   setProgrammaticView: GenericAction;
   showProgrammaticMode: boolean;
@@ -99,7 +104,7 @@ export default class CodeEditor extends React.Component<Props, State> {
       return template ? template.code : specCode;
     }
     if (codeMode === 'PARAMETERS') {
-      return template ? serializeTemplate(template) : 'TEMPLATE NOT AVAILABLE';
+      return template ? serializeTemplate(template) : 'PARAMETERIZATION NOT AVAILABLE';
     }
     if (codeMode === 'EXPORT TO JSON') {
       return stringify(spec);
@@ -110,10 +115,30 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   editorControls(): JSX.Element {
-    const {setNewSpecCode, codeMode} = this.props;
+    const {setNewSpecCode, codeMode, editorFontSize, setEditorFontSize} = this.props;
+    const fontSizes = [
+      {name: 'small', size: 10},
+      {name: 'medium', size: 15},
+      {name: 'large', size: 20},
+    ];
     return (
       <div className="flex-down code-editor-controls">
-        <h1>Macros</h1>
+        <h3>Controls</h3>
+        <div className="flex">
+          <span>{`Font Size (${fontSizes.find(row => row.size === editorFontSize).name} currently)`}</span>
+          {fontSizes.map(row => {
+            return (
+              <button
+                className={classnames({})}
+                key={row.name}
+                onClick={(): any => setEditorFontSize(row.size)}
+              >
+                {row.name}
+              </button>
+            );
+          })}
+        </div>
+        <h3>Text Manipulation Shortcuts</h3>
         {SHORTCUTS.map((shortcut: any) => {
           const {action, name, description} = shortcut;
           return (
@@ -141,7 +166,7 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   handleCodeUpdate(code: string): void {
     const {setNewSpecCode, readInTemplate, codeMode} = this.props;
-    if (codeMode === 'TEMPLATE') {
+    if (codeMode === 'PARAMETERS') {
       Promise.resolve()
         .then(() => JSON.parse(code))
         .then(() => readInTemplate({code, inError: false}))
@@ -164,14 +189,15 @@ export default class CodeEditor extends React.Component<Props, State> {
       [];
     return (
       <div className="suggestion-box">
-        <div className="suggestion-box-header flex space-between">
+        <div
+          className="suggestion-box-header flex space-between"
+          onClick={(): any => this.setState({suggestionBox: !suggestionBox})}
+        >
           <h5>
             <span>Suggestions</span>
             {suggestions.length ? <span>(!)</span> : ''}
           </h5>
-          <div onClick={(): any => this.setState({suggestionBox: !suggestionBox})}>
-            {suggestionBox ? <FaAngleDown /> : <FaAngleUp />}
-          </div>
+          <div>{suggestionBox ? <FaAngleDown /> : <FaAngleUp />}</div>
         </div>
         {suggestionBox && (
           <div className="suggestion-box-body">
@@ -199,26 +225,32 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   controls(): JSX.Element {
-    const {setCodeMode, codeMode} = this.props;
+    const {setCodeMode, codeMode, editMode, setEditMode} = this.props;
     const {updateMode} = this.state;
     return (
       <div className="code-option-tabs flex-down full-height background-2">
+        <div className="flex save-edit-button" onClick={(): any => setEditMode(!editMode)}>
+          <div>{editMode ? 'SAVE' : 'EDIT'}</div>
+          <IoIosCreate />
+        </div>
         <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
 
-        {['TEMPLATE', 'PARAMETERS', 'EXPORT TO JSON', 'SPECIFICATION'].map(key => {
-          return (
-            <div
-              className={classnames({
-                'code-option-tab': true,
-                'selected-tab': key === codeMode,
-              })}
-              key={key}
-              onClick={(): any => setCodeMode(key)}
-            >
-              {key}
-            </div>
-          );
-        })}
+        {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'EXPORT TO JSON', 'SPECIFICATION']
+          .filter(d => d)
+          .map(key => {
+            return (
+              <div
+                className={classnames({
+                  'code-option-tab': true,
+                  'selected-tab': key === codeMode,
+                })}
+                key={key}
+                onClick={(): any => setCodeMode(key)}
+              >
+                {key}
+              </div>
+            );
+          })}
         <div className="execute-code-control">
           <div
             className="execute-code-control-button"
@@ -250,7 +282,15 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render(): JSX.Element {
-    const {editorError, setCodeMode, codeMode, setProgrammaticView, showProgrammaticMode} = this.props;
+    const {
+      editorError,
+      setCodeMode,
+      editMode,
+      editorFontSize,
+      codeMode,
+      setProgrammaticView,
+      showProgrammaticMode,
+    } = this.props;
     const {updateMode} = this.state;
     const currentCode = this.getCurrentCode();
     return (
@@ -273,8 +313,8 @@ export default class CodeEditor extends React.Component<Props, State> {
           ERROR
         </div> */}
             {this.controls()}
-            {/* {this.suggestionBox()} */}
-            <div className="flex full-height full-width">
+            <div className="flex-down full-height full-width">
+              {editMode && this.suggestionBox()}
               {
                 /*eslint-disable react/no-string-refs*/
                 <MonacoEditor
@@ -283,7 +323,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                   theme="monokai"
                   height={'calc(100%)'}
                   value={currentCode}
-                  options={EDITOR_OPTIONS}
+                  options={{...EDITOR_OPTIONS, fontSize: editorFontSize}}
                   onChange={(code: string): void => {
                     if (codeMode === 'EXPORT TO JSON') {
                       return;

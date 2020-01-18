@@ -17,9 +17,9 @@ export default function TemplateColumnAddNewWidgetPopover(props: Props): JSX.Ele
     <Popover
       className="new-widget-menu"
       clickTarget={
-        <Fragment>
+        <button>
           Add Widget <AiOutlinePlusCircle />
-        </Fragment>
+        </button>
       }
       body={(toggle: any): JSX.Element => {
         return (

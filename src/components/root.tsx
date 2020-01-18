@@ -62,6 +62,7 @@ interface RootProps {
   dataModalOpen: boolean;
   editMode: boolean;
   editorError: null | string;
+  editorFontSize: number;
   encodingMode: string;
   iMspec: any;
   metaColumns: ColumnHeader[];
@@ -103,6 +104,7 @@ interface RootProps {
   setBlankTemplate: GenericAction;
   setCodeMode: GenericAction;
   setEditMode: GenericAction;
+  setEditorFontSize: GenericAction;
   setEncodingMode: GenericAction;
   setEncodingParameter: GenericAction;
   setGuiView: GenericAction;
@@ -244,7 +246,7 @@ class RootComponent extends React.Component<RootProps> {
     } = this.props;
 
     return (
-      <div className=" full-height full-width flex-down">
+      <div className=" full-height full-width flex-down" style={{minWidth: '360px'}}>
         {SHOW_TEMPLATE_CONTROLS && (
           <EncodingControls
             chainActions={chainActions}
@@ -257,7 +259,6 @@ class RootComponent extends React.Component<RootProps> {
             setBlankTemplate={setBlankTemplate}
             setEditMode={setEditMode}
             setEncodingMode={setEncodingMode}
-            showSimpleDisplay={showSimpleDisplay}
             template={template}
             templateSaveState={templateSaveState}
             templates={templates}
@@ -306,6 +307,7 @@ class RootComponent extends React.Component<RootProps> {
             columns={columns}
             editMode={editMode}
             moveWidget={moveWidget}
+            modifyValueOnTemplate={modifyValueOnTemplate}
             removeWidget={removeWidget}
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
@@ -322,9 +324,13 @@ class RootComponent extends React.Component<RootProps> {
     const {
       addWidget,
       codeMode,
+      editMode,
       editorError,
+      editorFontSize,
       readInTemplate,
       setCodeMode,
+      setEditMode,
+      setEditorFontSize,
       setNewSpecCode,
       setProgrammaticView,
       showProgrammaticMode,
@@ -344,9 +350,13 @@ class RootComponent extends React.Component<RootProps> {
         <CodeEditor
           addWidget={addWidget}
           codeMode={codeMode}
+          editMode={editMode}
           editorError={editorError}
+          editorFontSize={editorFontSize}
           readInTemplate={readInTemplate}
           setCodeMode={setCodeMode}
+          setEditMode={setEditMode}
+          setEditorFontSize={setEditorFontSize}
           setNewSpecCode={setNewSpecCode}
           setProgrammaticView={setProgrammaticView}
           showProgrammaticMode={showProgrammaticMode}
@@ -429,6 +439,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     dataModalOpen: base.get('dataModalOpen'),
     editMode: base.get('editMode'),
     editorError: base.get('editorError'),
+    editorFontSize: base.get('editorFontSize'),
     encodingMode: base.get('encodingMode'),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),

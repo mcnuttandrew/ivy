@@ -56,7 +56,8 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   showProgrammaticMode: true,
   showSimpleDisplay: false,
   showGUIView: true,
-  codeMode: 'TEMPLATE',
+  codeMode: 'EXPORT TO JSON',
+  editorFontSize: 10,
 
   // undo redo
   undoStack: Immutable.fromJS([]),

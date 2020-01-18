@@ -32,7 +32,6 @@ function renderEncodingModeOption(
       </div>
       <div className="flex-down">
         <h5>{templateName}</h5>
-        {/* {templateDescription && <h5>{`${templateDescription}`}</h5>} */}
       </div>
     </div>
   );

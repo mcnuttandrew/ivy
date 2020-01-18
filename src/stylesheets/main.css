@@ -911,6 +911,7 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   margin-right: 20px;
   min-width: 75px;
+  padding: 5px;
   text-transform: uppercase;
   text-align: center;
   width: 75px;
@@ -931,8 +932,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .encoding-selection-option img {
-  max-height: 65px;
-  max-width: 65px;
+  max-height: 50px;
+  max-width: 50px;
 }
 
 /* .modal-tooltip .encoding-selection-option h5 {
@@ -1117,6 +1118,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .suggestion-box-header {
+  background-color: rgba(245, 245, 245, 0.3);
+  cursor: pointer;
   padding: 0 15px;
 }
 
@@ -1157,6 +1160,16 @@ input[type=number]::-webkit-outer-spin-button {
 .code-option-tabs .tooltip-container {
   align-items: center;
   justify-content: center;
+}
+
+.about-bar {
+  font-size: 15px;
+}
+
+.save-edit-button {
+  align-self: center;
+  justify-content: space-around;
+  font-size: 15px;
 }
 
 /* split pane stuff */

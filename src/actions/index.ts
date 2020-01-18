@@ -37,6 +37,7 @@ export const saveCurrentTemplate = buildEasyAction('save-template');
 export const setBlankTemplate = buildEasyAction('set-blank-template');
 export const setCodeMode = buildEasyAction('set-code-mode');
 export const setEditMode = buildEasyAction('set-edit-mode');
+export const setEditorFontSize = buildEasyAction('set-editor-font-size');
 export const setEncodingMode = buildEasyAction('set-encoding-mode');
 export const setEncodingParameter = buildEasyAction('set-encoding-param');
 export const setGuiView = buildEasyAction('set-gui-view');
