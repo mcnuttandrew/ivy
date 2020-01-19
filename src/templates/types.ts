@@ -71,6 +71,11 @@ export interface Template {
   templateDescription?: string;
 
   /**
+   * The creator of the template
+   */
+  templateAuthor?: string;
+
+  /**
    * The code to be interpreted by the renderer
    */
   code: string;
