@@ -96,7 +96,7 @@ function toQueryParams(obj: {[x: string]: any}): string {
   const query = Object.entries(obj)
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
-  return query.length ? `?${query}` : ';';
+  return query.length ? `?${query}` : '';
 }
 
 export default function CommunityPrograms(props: Props): JSX.Element {

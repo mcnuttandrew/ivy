@@ -225,5 +225,5 @@ export function getTemplateSaveState(base: AppState): SaveState {
 
 const USE_LOCAL = false;
 export function serverPrefix(): string {
-  return USE_LOCAL ? 'http://localhost:5000' : 'http://hydra-template-server.herokuapp.com';
+  return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
 }
