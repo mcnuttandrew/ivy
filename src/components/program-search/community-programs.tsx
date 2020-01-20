@@ -9,6 +9,15 @@ interface Props {
   loadExternalTemplate: GenericAction;
 }
 
+type QueryBuild = (
+  loadedTemplates: Template[],
+  loadTemplates: any,
+  makeButtonObject: any,
+  setSearchObject: any,
+  searchObject: any,
+  triggerQuery: any,
+) => JSX.Element;
+
 const URL_CACHE: any = {};
 function fetchWithCache(url: string): Promise<any> {
   return new Promise(resolve => {
@@ -25,6 +34,13 @@ function fetchWithCache(url: string): Promise<any> {
   });
 }
 
+function runQuery(url: string, loadTemplates: any): void {
+  fetchWithCache(url).then(result => {
+    loadTemplates(result.map((x: any) => x.template));
+    result.forEach((x: any) => receiveThumbnail(x.template.templateName, x.templateImg));
+  });
+}
+
 const BY_TIME = 'Recent';
 const BY_STRING = 'Search by name and description';
 const BY_DATA = 'Search by data field';
@@ -34,29 +50,66 @@ const nameToUrl: {[x: string]: string} = {
   [BY_DATA]: 'data-field',
 };
 
+function DisplayLoadedPrograms(loadedTemplates: Template[], makeButtonObject: any): JSX.Element {
+  return (
+    <div className="program-containers">
+      {loadedTemplates.map(template => (
+        <ProgramPreview
+          buttons={['save'].map(makeButtonObject(template))}
+          key={`${template.templateName}-preview`}
+          templateName={template.templateName}
+          templateDescription={template.templateDescription}
+        />
+      ))}
+    </div>
+  );
+}
+
+const RecentPrograms: QueryBuild = (loadedTemplates, loadTemplates, makeButtonObject) => {
+  return <div className="flex-down">{DisplayLoadedPrograms(loadedTemplates, makeButtonObject)}</div>;
+};
+
+const SearchForPrograms: QueryBuild = (
+  loadedTemplates,
+  loadTemplates,
+  makeButtonObject,
+  setSearchObject,
+  searchObject,
+  triggerQuery,
+) => {
+  return (
+    <div className="flex-down">
+      <div className="flex-down">
+        Enter Search term here (matches against template name, template description, and creator name)
+        <input
+          onChange={(e): any => setSearchObject({search: e.target.value})}
+          placeholder="type here for search"
+        />
+        <button onClick={(): void => triggerQuery()}>Run Search</button>
+      </div>
+      {DisplayLoadedPrograms(loadedTemplates, makeButtonObject)}
+    </div>
+  );
+};
+
+function toQueryParams(obj: {[x: string]: any}): string {
+  const query = Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+  return query.length ? `?${query}` : ';';
+}
+
 export default function CommunityPrograms(props: Props): JSX.Element {
   const {loadExternalTemplate} = props;
   const [mode, setMode] = useState(BY_TIME);
-  const [loadedTemplates, loadTemplates] = useState([]);
-  const [searchConstructionComplete, changeSearchConstruction] = useState(false);
-  const searchObj = {};
-  useEffect(() => {
-    // only recent should actuall trigger search completions
-    changeSearchConstruction(mode === BY_TIME);
-  }, [mode]);
+  const [queryIdx, queryIdxUpdate] = useState(1);
+  const triggerQuery = (): any => queryIdxUpdate(queryIdx + 1);
 
+  const [loadedTemplates, loadTemplates] = useState([]);
+  const [searchObject, setSearchObject] = useState({});
   useEffect(() => {
-    if (searchConstructionComplete) {
-      console.log('skipped query');
-      return;
-    }
-    console.log('ran query');
-    const URL = `${serverPrefix()}/${nameToUrl[mode]}?${JSON.stringify(searchObj)}`;
-    fetchWithCache(URL).then(result => {
-      loadTemplates(result.map((x: any) => x.template));
-      result.forEach((x: any) => receiveThumbnail(x.template.templateName, x.templateImg));
-    });
-  }, [searchConstructionComplete]);
+    runQuery(`${serverPrefix()}/${nameToUrl[mode]}${toQueryParams(searchObject)}`, loadTemplates);
+  }, [queryIdx, mode]);
 
   const makeButtonObject = (template: Template) => (key: string): {onClick: any; name: string} => {
     let onClick;
@@ -65,6 +118,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
     }
     return {onClick, name: key};
   };
+
   return (
     <div>
       COMMUNTIY PROGRAMS
@@ -74,7 +128,11 @@ export default function CommunityPrograms(props: Props): JSX.Element {
             <button
               key={row}
               className={classnames({selected: row === mode})}
-              onClick={(): any => setMode(row)}
+              onClick={(): any => {
+                setMode(row);
+                setSearchObject({});
+                loadTemplates([]);
+              }}
             >
               {row}
             </button>
@@ -82,31 +140,25 @@ export default function CommunityPrograms(props: Props): JSX.Element {
         })}
       </div>
       <div className="query-configuration-block">
-        {mode === BY_STRING && (
-          <React.Fragment>
-            Enter Search term here (matches against template name, template description, and creator name)
-            <input />
-          </React.Fragment>
-        )}
-        {mode === BY_DATA && (
-          <React.Fragment>
-            Enter Search term here (matches against template name, template description, and creator name)
-            <input />
-          </React.Fragment>
-        )}
-      </div>
-      <div className="program-containers">
-        {loadedTemplates.map(template => {
-          console.log(loadedTemplates);
-          return (
-            <ProgramPreview
-              buttons={['save'].map(makeButtonObject(template))}
-              key={`${template.templateName}-preview`}
-              templateName={template.templateName}
-              templateDescription={template.templateDescription}
-            />
-          );
-        })}
+        {mode === BY_TIME &&
+          RecentPrograms(
+            loadedTemplates,
+            loadTemplates,
+            makeButtonObject,
+            setSearchObject,
+            searchObject,
+            triggerQuery,
+          )}
+        {mode === BY_STRING &&
+          SearchForPrograms(
+            loadedTemplates,
+            loadTemplates,
+            makeButtonObject,
+            setSearchObject,
+            searchObject,
+            triggerQuery,
+          )}
+        {mode === BY_DATA && <div>WIP</div>}
       </div>
     </div>
   );
