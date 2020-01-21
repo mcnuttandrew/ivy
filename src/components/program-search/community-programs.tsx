@@ -24,7 +24,18 @@ function fetchWithCache(url: string): Promise<any> {
     if (URL_CACHE[url]) {
       resolve(URL_CACHE[url]);
     } else {
-      fetch(url)
+      fetch(url, {
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *client
+      })
         .then(x => x.json())
         .then(x => {
           URL_CACHE[url] = x;
