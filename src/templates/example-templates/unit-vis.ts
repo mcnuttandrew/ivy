@@ -39,6 +39,7 @@ const UNITVIS: Template = {
   templateName: 'UnitVis Test',
   templateDescription: 'a test for the unit vis language',
   templateLanguage: 'unit-vis',
+  templateAuthor: 'BUILT_IN',
   code: stringify(TABLE_EXAMPLE),
   widgets: [
     {

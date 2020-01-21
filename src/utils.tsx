@@ -222,3 +222,8 @@ export function getTemplateSaveState(base: AppState): SaveState {
   }
   return Immutable.fromJS(associatedUpstreamTemplate).equals(template) ? 'EQUAL' : 'DIFFERENT';
 }
+
+const USE_LOCAL = false;
+export function serverPrefix(): string {
+  return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
+}

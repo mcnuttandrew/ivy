@@ -46,6 +46,10 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
     return (
       <div className="template-preview-column background-2">
         <div className="scroll-container">
+          <div className="flex-down encoding-selection-modal-button" onClick={toggleProgramModal}>
+            <AiOutlinePlusCircle />
+            <h3>Add more</h3>
+          </div>
           {renderEncodingModeOption(
             'grammer',
             'Tableau-style grammar of graphics',
@@ -64,10 +68,6 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
                 encodingMode,
               ),
             )}
-          <div className="flex-down encoding-selection-modal-button" onClick={toggleProgramModal}>
-            <AiOutlinePlusCircle />
-            <h3>Add more</h3>
-          </div>
         </div>
       </div>
     );
