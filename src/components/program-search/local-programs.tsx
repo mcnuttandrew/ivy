@@ -79,6 +79,7 @@ export default function LocalPrograms(props: Props): JSX.Element {
           <ProgramPreview
             templateName={GRAMMAR_NAME}
             templateDescription={GRAMMAR_DESC}
+            templateAuthor={'BUILT_IN'}
             buttons={['Use'].map(makeButtonObject(GRAMMAR_NAME))}
           />
         )}
@@ -89,6 +90,7 @@ export default function LocalPrograms(props: Props): JSX.Element {
             <ProgramPreview
               templateName={template.templateName}
               templateDescription={template.templateDescription}
+              templateAuthor={template.templateAuthor}
               buttons={['Publish', 'Use', 'Delete'].map(makeButtonObject(template.templateName))}
               key={`${template.templateName}-${idx}`}
             />

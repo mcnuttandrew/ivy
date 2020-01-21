@@ -3,6 +3,7 @@ import {Template} from '../types';
 const NoneTemplate: Template = {
   templateName: '_____none_____',
   templateDescription: 'blank filler template',
+  templateAuthor: 'BUILT_IN',
   templateLanguage: 'none',
   widgets: [
     {

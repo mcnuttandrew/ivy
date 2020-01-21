@@ -10,6 +10,7 @@ const DATATABLE: Template = {
   templateName: 'Data Table',
   templateDescription: 'A good old fashioned data table',
   templateLanguage: 'hydra-data-table',
+  templateAuthor: 'BUILT_IN',
   code: stringify(TABLE_EXAMPLE),
   widgets: [
     {

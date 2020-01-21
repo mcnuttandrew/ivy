@@ -95,6 +95,7 @@ const BeeSwarm: Template = {
   templateName: 'BeeSwarm chart',
   templateDescription: 'A unit approach to showing the sizes of groups',
   templateLanguage: 'vega',
+  templateAuthor: 'BUILT_IN',
   widgets: [
     {
       widgetName: 'category',

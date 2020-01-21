@@ -59,6 +59,7 @@ function DisplayLoadedPrograms(loadedTemplates: Template[], makeButtonObject: an
           key={`${template.templateName}-preview`}
           templateName={template.templateName}
           templateDescription={template.templateDescription}
+          templateAuthor={template.templateAuthor}
         />
       ))}
     </div>

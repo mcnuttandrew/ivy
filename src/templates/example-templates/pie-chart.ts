@@ -95,6 +95,7 @@ const PIECHART_EXAMPLE: any = {
 const PieChart: Template = {
   templateName: 'pie chart',
   templateDescription: 'A popular way to show part-to-whole relationships',
+  templateAuthor: 'BUILT_IN',
   templateLanguage: 'vega',
   widgets: [
     {
