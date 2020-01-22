@@ -71,27 +71,36 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
 
 export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
+  const config = widget.widget;
   return (
     <div className="list-widget">
-      <div className="flex">
-        {editMode && <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
-        {editMode && <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
-        {!editMode && <div>{widget.displayName || widget.widgetName}</div>}
-        {!editMode && (
+      {!editMode && (
+        <div className="flex">
+          <div className="widget-title">{widget.displayName || widget.widgetName}</div>
           <Selector
             options={widget.widget.allowedValues}
             selectedValue={templateMap[widget.widgetName]}
-            onChange={(value: any): any => {
-              setTemplateValue({field: widget.widgetName, text: value});
-            }}
+            onChange={(value: any): any => setTemplateValue({field: widget.widgetName, text: value})}
           />
-        )}
-      </div>
+          <div
+            className="clear-option cursor-pointer"
+            onClick={(): any => setTemplateValue({field: widget.widgetName, text: config.defaultValue})}
+          >
+            <TiDeleteOutline />
+          </div>
+        </div>
+      )}
+      {editMode && (
+        <div className="flex">
+          <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+          <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+        </div>
+      )}
       {editMode && (
         <div className="flex space-between">
           <AddLabelToWidget label={'Current Value'}>
             <Selector
-              options={widget.widget.allowedValues}
+              options={config.allowedValues}
               selectedValue={templateMap[widget.widgetName]}
               onChange={(value: any): any => {
                 setTemplateValue({field: widget.widgetName, text: value});
@@ -100,8 +109,8 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
           </AddLabelToWidget>
           <AddLabelToWidget label={'Default value'}>
             <Selector
-              options={widget.widget.allowedValues}
-              selectedValue={widget.widget.defaultValue}
+              options={config.allowedValues}
+              selectedValue={config.defaultValue}
               onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
             />
           </AddLabelToWidget>

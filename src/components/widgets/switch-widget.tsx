@@ -17,45 +17,31 @@ export default function SwitchWidgetComponent(
     width: 50,
   };
   const config = widget.widget;
+  const currentSwitch = (
+    <Switch
+      {...switchCommon}
+      checked={isActive}
+      onChange={(): void => {
+        setTemplateValue({
+          field: widget.widgetName,
+          text: isActive ? config.inactiveValue : config.activeValue,
+        });
+      }}
+    />
+  );
   return (
     <div className="flex-down switch-widget">
       <div className="flex-down">
         <div className="flex space-between">
           {editMode && <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
           {editMode && <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
-          {!editMode && <div>{widget.displayName || widget.widgetName}</div>}
-          {!editMode && (
-            <Switch
-              checked={isActive}
-              offColor="#E1E9F2"
-              onColor="#36425C"
-              height={15}
-              checkedIcon={false}
-              width={50}
-              onChange={(): void => {
-                setTemplateValue({
-                  field: widget.widgetName,
-                  text: isActive ? config.inactiveValue : config.activeValue,
-                });
-              }}
-            />
-          )}
+          {!editMode && <div className="widget-title">{widget.displayName || widget.widgetName}</div>}
+          {!editMode && currentSwitch}
         </div>
       </div>
       {editMode && (
         <div className="flex">
-          <AddLabelToWidget label={'Current'}>
-            <Switch
-              {...switchCommon}
-              checked={isActive}
-              onChange={(): void => {
-                setTemplateValue({
-                  field: widget.widgetName,
-                  text: isActive ? config.inactiveValue : config.activeValue,
-                });
-              }}
-            />
-          </AddLabelToWidget>
+          <AddLabelToWidget label={'Current'}>{currentSwitch}</AddLabelToWidget>
           <AddLabelToWidget label={'Default'}>
             <Switch
               {...switchCommon}

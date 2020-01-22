@@ -272,6 +272,14 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 0 5px;
 }
 
+.widget-section .widget-title {
+  color: black;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .control-container {
   z-index: 1;
 }
