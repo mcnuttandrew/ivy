@@ -1,6 +1,7 @@
 import React from 'react';
 import {SliderWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
+import {EditParameterName, EditDisplayName} from './widget-common';
 
 export default function SliderWidgetComponent(
   props: GeneralWidget<TemplateWidget<SliderWidget>>,
@@ -10,13 +11,12 @@ export default function SliderWidgetComponent(
   const setVal = (text: any): any => setTemplateValue({field: widget.widgetName, text: clamp(text)});
   return (
     <div className="slide-widget">
-      {!editMode && <div>{widget.widgetName}</div>}
+      {!editMode && <div className="widget-title">{widget.displayName || widget.widgetName}</div>}
       {editMode && (
-        <input
-          value={widget.widgetName}
-          type="text"
-          onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
-        />
+        <div className="flex">
+          <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+          <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+        </div>
       )}
       <div className="flex">
         <input

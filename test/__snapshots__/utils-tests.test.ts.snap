@@ -51,6 +51,7 @@ Object {
 exports[`#fillTemplateMapWithDefaults 2`] = `
 Object {
   "Color": null,
+  "OtherSettingsSection": null,
   "Radius": 15,
   "Single Color": "\\"steelblue\\"",
   "Zeroes": "true",

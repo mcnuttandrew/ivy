@@ -1,11 +1,15 @@
 export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN';
 
-export type WidgetType = 'DataTarget' | 'MultiDataTarget' | 'List' | 'Switch' | 'Text' | 'Slider';
+export type WidgetType = 'DataTarget' | 'MultiDataTarget' | 'List' | 'Switch' | 'Text' | 'Slider' | 'Section';
 export interface TemplateWidget<T> {
   /**
-   *   The name of widget to be used, this name will be swapped into the code string
+   *   The name of widget to be used, this name will be swapped into the code string, must be unqiue
    */
   widgetName: string;
+  /**
+   * The name to be shown in the GUI, does not have to be unique.
+   */
+  displayName?: string;
   /**
    * The type of the widget to be used, this defined the specific gui item that the user interacts with
    */
@@ -34,6 +38,9 @@ export interface SwitchWidget {
 export interface TextWidget {
   text: string;
 }
+export interface SectionWidget {
+  text: string;
+}
 export interface SliderWidget {
   minVal: number;
   maxVal: number;
@@ -46,7 +53,8 @@ export type WidgetSubType =
   | ListWidget
   | SwitchWidget
   | TextWidget
-  | SliderWidget;
+  | SliderWidget
+  | SectionWidget;
 
 /**
  * The main configuration object for templates

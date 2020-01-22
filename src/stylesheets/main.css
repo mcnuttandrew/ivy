@@ -257,6 +257,29 @@ input[type=number]::-webkit-outer-spin-button {
   margin-bottom: 200px;
 }
 
+.widget-section {
+  background: lightgray;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding-bottom: 2px;
+}
+
+.widget-section.blank-section {
+  background: none;
+}
+
+.widget-section .pad-widget {
+  padding: 0 5px;
+}
+
+.widget-section .widget-title {
+  color: black;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .control-container {
   z-index: 1;
 }
@@ -902,12 +925,8 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 2px;
   background: lightgray;
   display: flex;
-  height: 300px;
-  left: 14px;
   padding: 20px;
   position: absolute;
-  width: 300px;
-  top: -6px;
   z-index: 1000;
 }
 
@@ -1005,18 +1024,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 .tooltip-click-target {
   cursor: pointer;
-}
-
-.new-widget-menu.modal-tooltip-container .modal-tooltip {
-  width: 200px;
-}
-
-.list-options-popover.modal-tooltip-container .modal-tooltip {
-  height: 200px;
-  left: -75px;
-  overflow-y: scroll;
-  top: 18px;
-  width: 165px;
 }
 
 .list-options-popover .delete-option-button {

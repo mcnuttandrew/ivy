@@ -6,20 +6,7 @@ import {TiDeleteOutline} from 'react-icons/ti';
 import Popover from '../popover';
 
 import {GeneralWidget} from './general-widget';
-
-function DefaultValue(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
-  const {widget, idx, setWidgetValue} = props;
-  return (
-    <div className="flex">
-      <span className="tool-description full-width"> Default value </span>
-      <Selector
-        options={widget.widget.allowedValues}
-        selectedValue={widget.widget.defaultValue}
-        onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
-      />
-    </div>
-  );
-}
+import {EditParameterName, EditDisplayName, AddLabelToWidget} from './widget-common';
 
 function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -31,6 +18,10 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
           <MdSettings /> Options{' '}
         </span>
       }
+      style={{
+        width: '130px',
+        left: '-240px',
+      }}
       body={(): JSX.Element => {
         return (
           <div>
@@ -80,29 +71,50 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
 
 export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
+  const config = widget.widget;
   return (
     <div className="list-widget">
-      <div className="flex">
-        {editMode && (
-          <input
-            value={widget.widgetName}
-            type="text"
-            onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
+      {!editMode && (
+        <div className="flex">
+          <div className="widget-title">{widget.displayName || widget.widgetName}</div>
+          <Selector
+            options={widget.widget.allowedValues}
+            selectedValue={templateMap[widget.widgetName]}
+            onChange={(value: any): any => setTemplateValue({field: widget.widgetName, text: value})}
           />
-        )}
-        {!editMode && <div>{widget.widgetName}</div>}
-        <Selector
-          options={widget.widget.allowedValues}
-          selectedValue={templateMap[widget.widgetName]}
-          onChange={(value: any): any => {
-            setTemplateValue({field: widget.widgetName, text: value});
-          }}
-        />
-      </div>
+          <div
+            className="clear-option cursor-pointer"
+            onClick={(): any => setTemplateValue({field: widget.widgetName, text: config.defaultValue})}
+          >
+            <TiDeleteOutline />
+          </div>
+        </div>
+      )}
       {editMode && (
-        <div className="flex-down">
+        <div className="flex">
+          <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+          <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+        </div>
+      )}
+      {editMode && (
+        <div className="flex space-between">
+          <AddLabelToWidget label={'Current Value'}>
+            <Selector
+              options={config.allowedValues}
+              selectedValue={templateMap[widget.widgetName]}
+              onChange={(value: any): any => {
+                setTemplateValue({field: widget.widgetName, text: value});
+              }}
+            />
+          </AddLabelToWidget>
+          <AddLabelToWidget label={'Default value'}>
+            <Selector
+              options={config.allowedValues}
+              selectedValue={config.defaultValue}
+              onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
+            />
+          </AddLabelToWidget>
           <OptionController {...props} />
-          <DefaultValue {...props} />
         </div>
       )}
     </div>

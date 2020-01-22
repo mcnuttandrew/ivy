@@ -49,7 +49,7 @@ export default function DataTargetWidgetComponent(
       />
       <div className="flex space-evenly">
         <div className="flex-down">
-          <span className="tool-description">Data Types</span>
+          <span className="tool-description">Data Types:</span>
           <div className="flex">
             {DATA_TYPES.map(type => {
               const checked = allowedTypesSet.has(type);

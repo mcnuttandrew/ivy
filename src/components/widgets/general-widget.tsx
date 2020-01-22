@@ -13,16 +13,18 @@ import ListWidgetComponent from './list-widget';
 import SwitchWidgetComponent from './switch-widget';
 import TextWidgetComponent from './text-widget';
 import SliderWidgetComponent from './slider-widget';
+import SectionWidgetComponent from './section-widget';
 
 import {
-  TemplateWidget,
-  SwitchWidget,
-  ListWidget,
   DataTargetWidget,
-  TextWidget,
-  SliderWidget,
-  TemplateMap,
+  ListWidget,
   MultiDataTargetWidget,
+  SectionWidget,
+  SliderWidget,
+  SwitchWidget,
+  TemplateMap,
+  TemplateWidget,
+  TextWidget,
   WidgetSubType,
 } from '../../templates/types';
 import {ColumnHeader} from '../../types';
@@ -105,7 +107,6 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
   };
   const widgetType = widget.widgetType;
   const ref = useRef<HTMLDivElement>(null);
-
   const [, drop] = useDrop({
     accept: 'WIDGET',
     hover(item: any, monitor: DropTargetMonitor) {
@@ -202,6 +203,9 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
         )}
         {widgetType === 'Slider' && (
           <SliderWidgetComponent widget={widget as TemplateWidget<SliderWidget>} {...common} />
+        )}
+        {widgetType === 'Section' && (
+          <SectionWidgetComponent widget={widget as TemplateWidget<SectionWidget>} {...common} />
         )}
       </div>
     </div>
