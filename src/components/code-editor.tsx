@@ -110,7 +110,17 @@ export default class CodeEditor extends React.Component<Props, State> {
       return stringify(spec);
     }
     if (codeMode === 'SPECIFICATION') {
-      return JSON.stringify(templateMap, null, 2);
+      // sorts the keys alphabetically
+      return JSON.stringify(
+        Object.entries(templateMap)
+          .sort((a, b) => a[0].localeCompare(b[0]))
+          .reduce((acc: any, [key, val]) => {
+            acc[key] = val;
+            return acc;
+          }, {}),
+        null,
+        2,
+      );
     }
   }
 

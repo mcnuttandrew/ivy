@@ -5,7 +5,7 @@ const DATATABLE: Template = {
   templateDescription: 'A good old fashioned data table',
   templateLanguage: 'hydra-data-table',
   templateAuthor: 'BUILT_IN',
-  code: require('./table.hydra.js').default,
+  code: require('./table.hydra').default,
   widgets: [
     {
       widgetName: 'columns',

@@ -40,6 +40,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
   render(): JSX.Element {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
     const lang = inferredLanguage(spec) || language;
+    console.log('lang', lang);
     if (lang === 'unit-vis') {
       return <UnitVisChart data={data} spec={spec} />;
     }
@@ -63,6 +64,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
         };
       }
     }
+    console.log(finalSpec);
     return (
       <Vega actions={false} spec={finalSpec} mode={language} theme={theme} tooltip={new Handler({}).call} />
     );

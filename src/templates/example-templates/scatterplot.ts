@@ -83,6 +83,6 @@ const SCATTERPLOT: Template = {
   templateName: 'Scatterplot',
   templateDescription: 'A full ish scatterplot',
   templateLanguage: 'vega-lite',
-  code: require('./scatterplot.hydra.js').default,
+  code: require('./scatterplot.hydra').default,
 };
 export default SCATTERPLOT;

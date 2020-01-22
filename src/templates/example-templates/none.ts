@@ -15,6 +15,6 @@ const NoneTemplate: Template = {
     },
   ],
   widgetValidations: [],
-  code: require('./none.hydra.js'),
+  code: require('./none.hydra'),
 };
 export default NoneTemplate;

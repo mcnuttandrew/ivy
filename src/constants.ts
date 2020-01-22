@@ -194,3 +194,5 @@ export const configurationOptions: any = {
     injectNofieldPred('text', buildSpatialOptions('text', justCountAgg)),
   ],
 };
+
+console.log(configurationOptions);

@@ -124,14 +124,31 @@ function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]): gene
 }
 
 export interface Suggestion {
-  from: string;
-  to: string;
+  from?: string;
+  to?: string;
   comment: string;
   sideEffect?: any;
+  codeEffect?: (code: string) => string;
   simpleReplace: boolean;
 }
 
 export function synthesizeSuggestions(code: string, widgets: TemplateWidget<WidgetSubType>[]): Suggestion[] {
+  const outputMatch = code.match(/<output>(.*)<\/output>/s);
+  const scriptMatch = code.match(/<script>(.*)<\/script>/s);
+  if (!outputMatch || !scriptMatch) {
+    return [
+      {
+        comment: 'Add output tags',
+        codeEffect: (code: string): string => `<output>\n${code}\n</output>`,
+        simpleReplace: false,
+      },
+      {
+        comment: 'Add script tags',
+        codeEffect: (code: string): string => `<script></script>\n${code}`,
+        simpleReplace: false,
+      },
+    ];
+  }
   const parsedCode = safeParse(setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))));
   if (!parsedCode) {
     return [];
@@ -189,6 +206,9 @@ export function synthesizeSuggestions(code: string, widgets: TemplateWidget<Widg
 }
 
 export function takeSuggestion(code: string, suggestion: Suggestion): string {
-  const {simpleReplace, from, to} = suggestion;
+  const {simpleReplace, from, to, codeEffect} = suggestion;
+  if (codeEffect) {
+    return codeEffect(code);
+  }
   return simpleReplace ? code.replace(from, to) : code.replace(new RegExp(from, 'g'), to);
 }

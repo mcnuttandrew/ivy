@@ -60,6 +60,6 @@ const PieChart: Template = {
     },
   ],
   widgetValidations: [],
-  code: require('./pie-chart.hydra.js').default,
+  code: require('./pie-chart.hydra').default,
 };
 export default PieChart;

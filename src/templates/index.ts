@@ -15,6 +15,7 @@ import {DataType} from '../types';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
 import DATATABLE from './example-templates/table';
+import SHELF from './example-templates/shelf';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
@@ -117,6 +118,7 @@ export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [
+  SHELF,
   DATATABLE,
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,

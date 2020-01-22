@@ -5,7 +5,7 @@ const UNITVIS: Template = {
   templateDescription: 'a test for the unit vis language',
   templateLanguage: 'unit-vis',
   templateAuthor: 'BUILT_IN',
-  code: require('./unit-vis.hydra.js').default,
+  code: require('./unit-vis.hydra').default,
   widgets: [
     {
       widgetName: 'Key1',

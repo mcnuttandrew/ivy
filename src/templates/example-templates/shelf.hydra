@@ -1,0 +1,51 @@
+<script>
+    const renderObjectIf = (object, checkKey, fieldName) => (parameters[checkKey] ? { [fieldName]: object } : {});
+</script>
+<output>
+{
+    $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
+    transform: [],
+    encoding: {
+        x: {
+            field: parameters.X,
+            type: parameters.XType,
+        },
+        y: {
+            field: parameters.Y,
+            type: parameters.YType,
+        },
+        ...renderObjectIf({
+            field: parameters.Size,
+            type: parameters.SizeType,
+        }, 'Size', 'size'),
+        ...renderObjectIf({
+            field: parameters.Color,
+            type: parameters.ColorType,
+        }, 'Color', 'color'),
+        ...renderObjectIf({
+            field: parameters.Shape,
+            type: parameters.ShapeType,
+        }, 'Shape', 'shape'),
+        ...renderObjectIf({
+            field: parameters.Text,
+            type: parameters.TextType,
+        }, 'Text', 'text'),
+        ...renderObjectIf({
+            field: parameters.Detail,
+            type: parameters.DetailType,
+        }, 'Detail', 'detail'),
+        ...['Row', 'Column'].reduce((acc, key) => {
+            const newObj = renderObjectIf({
+                field: parameters[key],
+                type: 'nominal'
+            }, key, key.toLowerCase());
+            return {...acc, ...newObj};
+        }, {})
+        
+    },
+    mark: {
+        type: parameters.markType,
+        tooltip: true,
+    }
+};
+</output>
