@@ -31,6 +31,10 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
           <MdSettings /> Options{' '}
         </span>
       }
+      style={{
+        width: '130px',
+        left: '-240px',
+      }}
       body={(): JSX.Element => {
         return (
           <div>
@@ -104,8 +108,7 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
           </div>
         )}
         {!editMode && <div>{widget.displayName || widget.widgetName}</div>}
-        <div className="flex-down">
-          {editMode && <div className="tool-description">Current Value</div>}
+        {!editMode && (
           <Selector
             options={widget.widget.allowedValues}
             selectedValue={templateMap[widget.widgetName]}
@@ -113,12 +116,22 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
               setTemplateValue({field: widget.widgetName, text: value});
             }}
           />
-        </div>
+        )}
       </div>
       {editMode && (
-        <div className="flex">
-          <OptionController {...props} />
+        <div className="flex space-between">
+          <div className="flex-down">
+            <div className="tool-description">Current Value</div>{' '}
+            <Selector
+              options={widget.widget.allowedValues}
+              selectedValue={templateMap[widget.widgetName]}
+              onChange={(value: any): any => {
+                setTemplateValue({field: widget.widgetName, text: value});
+              }}
+            />
+          </div>
           <DefaultValue {...props} />
+          <OptionController {...props} />
         </div>
       )}
     </div>

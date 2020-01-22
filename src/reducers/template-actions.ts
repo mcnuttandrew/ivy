@@ -147,7 +147,9 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
   let template = state.get('currentTemplateInstance');
   let newState = state;
   const code = template.get('code');
+  console.log(key, value);
   if (key === 'widgetName') {
+    // TODO This is broken in the other branch
     // update the old code with the new name
     const oldValue = `\\[${template.getIn(['widgets', idx, key])}\\]`;
     const re = new RegExp(oldValue, 'g');
@@ -157,9 +159,14 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
       .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
     // change the variable
     template = template.setIn(['widgets', idx, key], value);
+  } else if (key === 'displayName') {
+    console.log(key, value);
+    // display name is a property of the widget container and not the widget parameter...
+    template = template.setIn(['widgets', idx, key], value);
   } else {
     template = template.setIn(['widgets', idx, 'widget', key], Immutable.fromJS(value));
   }
+  console.log(template.toJS());
   return newState.set('currentTemplateInstance', template);
 };
 

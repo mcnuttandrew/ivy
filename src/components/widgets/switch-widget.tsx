@@ -8,7 +8,6 @@ export default function SwitchWidgetComponent(
 ): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
   const isActive = templateMap[widget.widgetName] === widget.widget.activeValue;
-
   return (
     <div className="flex-down switch-widget">
       <div className="flex-down">
@@ -34,8 +33,28 @@ export default function SwitchWidgetComponent(
             </div>
           )}
           {!editMode && <div>{widget.displayName || widget.widgetName}</div>}
+          {!editMode && (
+            <Switch
+              checked={isActive}
+              offColor="#E1E9F2"
+              onColor="#36425C"
+              height={15}
+              checkedIcon={false}
+              width={50}
+              onChange={(): void => {
+                setTemplateValue({
+                  field: widget.widgetName,
+                  text: isActive ? widget.widget.inactiveValue : widget.widget.activeValue,
+                });
+              }}
+            />
+          )}
+        </div>
+      </div>
+      {editMode && (
+        <div className="flex">
           <div className="flex-down">
-            {editMode && <div className="tool-description">Current Value</div>}
+            <div className="tool-description">Current</div>
             <Switch
               checked={isActive}
               offColor="#E1E9F2"
@@ -51,12 +70,8 @@ export default function SwitchWidgetComponent(
               }}
             />
           </div>
-        </div>
-      </div>
-      {editMode && (
-        <div className="flex-down">
           <div className="flex-down">
-            <span className="tool-description">Defaults to </span>
+            <span className="tool-description">Default </span>
             <Switch
               checked={!!widget.widget.defaultsToActive}
               offColor="#E1E9F2"
@@ -69,27 +84,25 @@ export default function SwitchWidgetComponent(
               }}
             />
           </div>
-          <div className="flex">
-            <div className="flex-down">
-              <span className="tool-description">Active Value</span>
-              <input
-                value={widget.widget.activeValue}
-                type="text"
-                onChange={(event): void => {
-                  setWidgetValue('activeValue', event.target.value, idx);
-                }}
-              />
-            </div>
-            <div className="flex-down">
-              <span className="tool-description">Inactive Value</span>
-              <input
-                value={widget.widget.inactiveValue}
-                type="text"
-                onChange={(event): void => {
-                  setWidgetValue('inactiveValue', event.target.value, idx);
-                }}
-              />
-            </div>
+          <div className="flex-down">
+            <span className="tool-description">Active Value</span>
+            <input
+              value={widget.widget.activeValue}
+              type="text"
+              onChange={(event): void => {
+                setWidgetValue('activeValue', event.target.value, idx);
+              }}
+            />
+          </div>
+          <div className="flex-down">
+            <span className="tool-description">Inactive Value</span>
+            <input
+              value={widget.widget.inactiveValue}
+              type="text"
+              onChange={(event): void => {
+                setWidgetValue('inactiveValue', event.target.value, idx);
+              }}
+            />
           </div>
         </div>
       )}

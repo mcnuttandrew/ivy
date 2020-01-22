@@ -10,13 +10,26 @@ export default function SliderWidgetComponent(
   const setVal = (text: any): any => setTemplateValue({field: widget.widgetName, text: clamp(text)});
   return (
     <div className="slide-widget">
-      {!editMode && <div>{widget.widgetName}</div>}
+      {!editMode && <div>{widget.displayName || widget.widgetName}</div>}
       {editMode && (
-        <input
-          value={widget.widgetName}
-          type="text"
-          onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
-        />
+        <div className="flex">
+          <div className="flex-down">
+            <div className="tool-description">Parameter Name</div>
+            <input
+              value={widget.widgetName}
+              type="text"
+              onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
+            />
+          </div>
+          <div className="flex-down">
+            <div className="tool-description">Display Name</div>
+            <input
+              value={widget.displayName}
+              type="text"
+              onChange={(event): any => setWidgetValue('displayName', event.target.value, idx)}
+            />
+          </div>
+        </div>
       )}
       <div className="flex">
         <input

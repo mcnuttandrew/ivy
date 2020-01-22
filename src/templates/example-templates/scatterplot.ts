@@ -86,6 +86,14 @@ const SCATTERPLOT: Template = {
         defaultValue: '"steelblue"',
       },
     },
+
+    {
+      widgetName: 'OtherSettingsSection',
+      widgetType: 'Section',
+      widget: {
+        text: 'Section for other settings',
+      },
+    },
     {
       widgetName: 'Zeroes',
       widgetType: 'Switch',
