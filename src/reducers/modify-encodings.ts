@@ -41,7 +41,6 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
   const {code, inError} = payload;
   if (state.get('currentTemplateInstance')) {
     // TODO i think eval should get checked here
-    // const filledInSpec = setTemplateValues(code, state.get('templateMap').toJS());
     console.log(code);
     const updatedState = state.setIn(['currentTemplateInstance', 'code'], code).set('editorError', inError);
     const newSpec = evaluateHydraProgram(
@@ -49,7 +48,6 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
       updatedState.get('templateMap').toJS(),
     );
     return updatedState.set('spec', Immutable.fromJS(newSpec));
-    // .set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
   }
   if (inError) {
     return state.set('specCode', code).set('editorError', inError);

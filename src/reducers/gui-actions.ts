@@ -52,7 +52,6 @@ export const setEncodingMode: ActionResponse = (state, payload) => {
     const template = getTemplate(state, payload);
     updatedState = state
       .set('encodingMode', payload)
-      // .set('spec', Immutable.fromJS(JSON.parse(template.code)))
       .set('spec', Immutable.fromJS(evaluateHydraProgram(template, state.get('templateMap').toJS())))
       .set('currentTemplateInstance', Immutable.fromJS(template));
     updatedState = fillTemplateMapWithDefaults(updatedState);

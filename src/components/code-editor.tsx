@@ -174,7 +174,6 @@ export default class CodeEditor extends React.Component<Props, State> {
     } else if (codeMode === 'TEMPLATE') {
       setNewSpecCode({code, inError: false});
     } else {
-      // TODO this will now be broken
       Promise.resolve()
         .then(() => JSON.parse(code))
         .then(() => setNewSpecCode({code, inError: false}))

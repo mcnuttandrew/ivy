@@ -106,10 +106,6 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
   return missing.length === 0;
 }
 
-// function searchTemplates(template: Template[], selectedDimensions: any[]) {
-
-// }
-
 export function evaluateHydraProgram(template: Template, templateMap: TemplateMap): any {
   // TODO maybe use this? https://neil.fraser.name/software/JS-Interpreter/
   const code = template.code;
@@ -117,12 +113,7 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   const script = scriptMatch && scriptMatch.length ? scriptMatch[1] : '';
   const outputMatch = code.match(/<output>(.*)<\/output>/s);
   const output = outputMatch && outputMatch.length ? outputMatch[1].replace(/\n/g, '') : '{}';
-  //  /<script(?: type.*)?>.*<\/script>/;
   const generatedContent = new Function('parameters', `${script}\n\n return ${output}`);
-  // let mySandbox = new Components.utils.Sandbox('http://www.example.com/');
-  // mySandbox.parameters = 5; // insert property 'y' with value 5 into global scope.
-  // let result = Components.utils.evalInSandbox('x = y + 2; double(x) + 3', mySandbox);
-  // (templateMap);
   console.log(generatedContent(templateMap));
   return generatedContent(templateMap);
 }

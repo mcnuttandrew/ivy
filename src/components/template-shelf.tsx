@@ -39,16 +39,7 @@ function SimpleShelf(props: TemplateShelf): JSX.Element {
           useGroups={true}
           options={options}
           selectedValue={channelEncoding || ' '}
-          onChange={(text: string): void => {
-            console.log('ondrop', text, field);
-            onDrop({
-              field,
-              type: 'CARD',
-              // text: `"${text}"`,
-              text,
-              disable: false,
-            });
-          }}
+          onChange={(text: string): void => onDrop({field, type: 'CARD', text, disable: false})}
         />
       </div>
     </div>
