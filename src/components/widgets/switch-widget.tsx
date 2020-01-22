@@ -14,29 +14,43 @@ export default function SwitchWidgetComponent(
       <div className="flex-down">
         <div className="flex space-between">
           {editMode && (
-            <input
-              value={widget.widgetName}
-              type="text"
-              onChange={(event): void => {
-                setWidgetValue('widgetName', event.target.value, idx);
+            <div className="flex-down">
+              <div className="tool-description">Parameter Name</div>
+              <input
+                value={widget.widgetName}
+                type="text"
+                onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
+              />
+            </div>
+          )}
+          {editMode && (
+            <div className="flex-down">
+              <div className="tool-description">Display Name</div>
+              <input
+                value={widget.displayName}
+                type="text"
+                onChange={(event): any => setWidgetValue('displayName', event.target.value, idx)}
+              />
+            </div>
+          )}
+          {!editMode && <div>{widget.displayName || widget.widgetName}</div>}
+          <div className="flex-down">
+            {editMode && <div className="tool-description">Current Value</div>}
+            <Switch
+              checked={isActive}
+              offColor="#E1E9F2"
+              onColor="#36425C"
+              height={15}
+              checkedIcon={false}
+              width={50}
+              onChange={(): void => {
+                setTemplateValue({
+                  field: widget.widgetName,
+                  text: isActive ? widget.widget.inactiveValue : widget.widget.activeValue,
+                });
               }}
             />
-          )}
-          {!editMode && <div>{widget.widgetName}</div>}
-          <Switch
-            checked={isActive}
-            offColor="#E1E9F2"
-            onColor="#36425C"
-            height={15}
-            checkedIcon={false}
-            width={50}
-            onChange={(): void => {
-              setTemplateValue({
-                field: widget.widgetName,
-                text: isActive ? widget.widget.inactiveValue : widget.widget.activeValue,
-              });
-            }}
-          />
+          </div>
         </div>
       </div>
       {editMode && (
