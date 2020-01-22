@@ -6,20 +6,7 @@ import {TiDeleteOutline} from 'react-icons/ti';
 import Popover from '../popover';
 
 import {GeneralWidget} from './general-widget';
-
-function DefaultValue(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
-  const {widget, idx, setWidgetValue} = props;
-  return (
-    <div className="flex-down">
-      <span className="tool-description"> Default value </span>
-      <Selector
-        options={widget.widget.allowedValues}
-        selectedValue={widget.widget.defaultValue}
-        onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
-      />
-    </div>
-  );
-}
+import {EditParameterName, EditDisplayName, AddLabelToWidget} from './widget-common';
 
 function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -87,26 +74,8 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
   return (
     <div className="list-widget">
       <div className="flex">
-        {editMode && (
-          <div className="flex-down">
-            <div className="tool-description">Parameter Name</div>
-            <input
-              value={widget.widgetName}
-              type="text"
-              onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
-            />
-          </div>
-        )}
-        {editMode && (
-          <div className="flex-down">
-            <div className="tool-description">Display Name</div>
-            <input
-              value={widget.displayName}
-              type="text"
-              onChange={(event): any => setWidgetValue('displayName', event.target.value, idx)}
-            />
-          </div>
-        )}
+        {editMode && <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
+        {editMode && <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
         {!editMode && <div>{widget.displayName || widget.widgetName}</div>}
         {!editMode && (
           <Selector
@@ -120,8 +89,7 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
       </div>
       {editMode && (
         <div className="flex space-between">
-          <div className="flex-down">
-            <div className="tool-description">Current Value</div>{' '}
+          <AddLabelToWidget label={'Current Value'}>
             <Selector
               options={widget.widget.allowedValues}
               selectedValue={templateMap[widget.widgetName]}
@@ -129,8 +97,14 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
                 setTemplateValue({field: widget.widgetName, text: value});
               }}
             />
-          </div>
-          <DefaultValue {...props} />
+          </AddLabelToWidget>
+          <AddLabelToWidget label={'Default value'}>
+            <Selector
+              options={widget.widget.allowedValues}
+              selectedValue={widget.widget.defaultValue}
+              onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
+            />
+          </AddLabelToWidget>
           <OptionController {...props} />
         </div>
       )}
