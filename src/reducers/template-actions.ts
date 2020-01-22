@@ -10,15 +10,20 @@ import {
   WidgetSubType,
 } from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
-import {setTemplateValues} from '../hydra-lang';
+import {setTemplateValues, evaluateHydraProgram} from '../hydra-lang';
 import {deserializeTemplate} from '../utils';
 
 export function templateEval(state: AppState): AppState {
-  const filledInSpec = setTemplateValues(
-    state.getIn(['currentTemplateInstance', 'code']),
+  const newSpec = evaluateHydraProgram(
+    state.get('currentTemplateInstance').toJS(),
     state.get('templateMap').toJS(),
   );
-  return state.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
+  return state.set('spec', Immutable.fromJS(newSpec));
+  // const filledInSpec = setTemplateValues(
+  //   state.getIn(['currentTemplateInstance', 'code']),
+  //   state.get('templateMap').toJS(),
+  // );
+  // return state.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
 }
 
 // for template map holes that are NOT data columns, fill em as best you can
@@ -61,10 +66,14 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   if (payload.containingShelf) {
     newState = newState.deleteIn(['templateMap', payload.containingShelf]);
   }
-  const template = state.get('currentTemplateInstance').toJS();
+  // const template = state.get('currentTemplateInstance').toJS();
   newState = newState.setIn(['templateMap', payload.field], Immutable.fromJS(payload.text));
-  const updatedTemplate = JSON.parse(setTemplateValues(template.code, newState.get('templateMap').toJS()));
-  return newState.set('spec', Immutable.fromJS(updatedTemplate));
+  // const updatedTemplate = JSON.parse(setTemplateValues(template.code, newState.get('templateMap').toJS()));
+  const newSpec = evaluateHydraProgram(
+    newState.get('currentTemplateInstance').toJS(),
+    newState.get('templateMap').toJS(),
+  );
+  return newState.set('spec', Immutable.fromJS(newSpec));
 };
 
 // This function is poorly named, i don't know what it does

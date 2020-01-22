@@ -19,6 +19,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.hydra\.js$/,
+        loader: 'raw-loader',
+        exclude: [/node_modules/],
+      },
+      {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
         use: [
@@ -32,7 +37,7 @@ module.exports = {
         enforce: 'pre',
         test: /\.js$/,
         loader: 'source-map-loader',
-        exclude: [/node_modules/],
+        exclude: [/node_modules/, /\.hydra\.js$/],
       },
       {
         test: /\.css$/,
@@ -48,7 +53,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: [/node_modules/],
+        exclude: [/node_modules/, /\.hydra\.js$/],
         query: {
           presets: ['es2017'],
         },

@@ -96,7 +96,7 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
   // else is single drop target
   return setTemplateValue(state, {
     field: selectedWidget.widgetName,
-    text: `"${payload.field}"`,
+    text: payload.field,
   });
 };
 

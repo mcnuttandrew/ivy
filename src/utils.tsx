@@ -180,10 +180,7 @@ export function trim(dimName: string): string {
 }
 
 export const toList = (list: string[]): {display: string; value: string}[] =>
-  list.map(display => ({
-    display,
-    value: `"${display}"`,
-  }));
+  list.map(display => ({display, value: display}));
 
 export function serializeTemplate(template: Template): string {
   return stringify({

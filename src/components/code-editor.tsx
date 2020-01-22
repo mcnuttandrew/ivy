@@ -171,7 +171,10 @@ export default class CodeEditor extends React.Component<Props, State> {
         .then(() => JSON.parse(code))
         .then(() => readInTemplate({code, inError: false}))
         .catch(() => readInTemplate({code, inError: true}));
+    } else if (codeMode === 'TEMPLATE') {
+      setNewSpecCode({code, inError: false});
     } else {
+      // TODO this will now be broken
       Promise.resolve()
         .then(() => JSON.parse(code))
         .then(() => setNewSpecCode({code, inError: false}))
@@ -311,7 +314,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                 /*eslint-disable react/no-string-refs*/
                 <MonacoEditor
                   ref="monaco"
-                  language="json"
+                  language={codeMode ? 'javascript' : 'json'}
                   theme="monokai"
                   height={'calc(100%)'}
                   value={currentCode}

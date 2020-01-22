@@ -15,6 +15,6 @@ const NoneTemplate: Template = {
     },
   ],
   widgetValidations: [],
-  code: JSON.stringify({$schema: 'none'}),
+  code: require('./none.hydra.js'),
 };
 export default NoneTemplate;

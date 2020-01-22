@@ -27,8 +27,8 @@ export interface ListWidget {
   defaultValue: string;
 }
 export interface SwitchWidget {
-  activeValue: string;
-  inactiveValue: string;
+  activeValue: any;
+  inactiveValue: any;
   defaultsToActive: boolean;
 }
 export interface TextWidget {

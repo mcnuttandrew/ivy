@@ -16,6 +16,9 @@ interface VegaWrapperProps {
 
 // no false positives
 function inferredLanguage(spec: any): string | null {
+  if (!spec.$schema) {
+    return null;
+  }
   if (spec.$schema.startsWith('https://vega.github.io/schema/vega-lite/')) {
     return 'vega-lite';
   }

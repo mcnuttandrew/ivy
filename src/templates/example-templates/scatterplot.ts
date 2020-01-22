@@ -1,19 +1,19 @@
-import stringify from 'json-stringify-pretty-compact';
+// import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
-const SCATTERPLOT_EXAMPLE: any = {
-  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  mark: {
-    type: 'point',
-    tooltip: true,
-    size: '[Radius]',
-    color: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}},
-  },
-  encoding: {
-    x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
-    y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
-    color: {CONDITIONAL: {query: {Color: '*'}, true: {field: '[Color]', type: '[colorType]'}, false: null}},
-  },
-};
+// const SCATTERPLOT_EXAMPLE: any = {
+//   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+//   mark: {
+//     type: 'point',
+//     tooltip: true,
+//     size: '[Radius]',
+//     color: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}},
+//   },
+//   encoding: {
+//     x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
+//     y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
+//     color: {CONDITIONAL: {query: {Color: '*'}, true: {field: '[Color]', type: '[colorType]'}, false: null}},
+//   },
+// };
 
 const SCATTERPLOT: Template = {
   widgets: [
@@ -30,10 +30,10 @@ const SCATTERPLOT: Template = {
       widgetType: 'List',
       widget: {
         allowedValues: [
-          {display: '"quantitative"', value: '"quantitative"'},
-          {display: '"ordinal"', value: '"ordinal"'},
+          {display: 'quantitative', value: 'quantitative'},
+          {display: 'ordinal', value: 'ordinal'},
         ],
-        defaultValue: '"quantitative"',
+        defaultValue: 'quantitative',
       },
     },
     {
@@ -49,10 +49,10 @@ const SCATTERPLOT: Template = {
       widgetType: 'List',
       widget: {
         allowedValues: [
-          {display: '"quantitative"', value: '"quantitative"'},
-          {display: '"ordinal"', value: '"ordinal"'},
+          {display: 'quantitative', value: 'quantitative'},
+          {display: 'ordinal', value: 'ordinal'},
         ],
-        defaultValue: '"quantitative"',
+        defaultValue: 'quantitative',
       },
     },
     {
@@ -68,10 +68,10 @@ const SCATTERPLOT: Template = {
       widgetType: 'List',
       widget: {
         allowedValues: [
-          {display: '"quantitative"', value: '"quantitative"'},
-          {display: '"ordinal"', value: '"ordinal"'},
+          {display: 'quantitative', value: 'quantitative'},
+          {display: 'ordinal', value: 'ordinal'},
         ],
-        defaultValue: '"ordinal"',
+        defaultValue: 'ordinal',
       },
     },
     {
@@ -79,19 +79,19 @@ const SCATTERPLOT: Template = {
       widgetType: 'List',
       widget: {
         allowedValues: [
-          {display: '"steelblue"', value: '"steelblue"'},
-          {display: '"blue"', value: '"blue"'},
-          {display: '"red"', value: '"red"'},
+          {display: 'steelblue', value: 'steelblue'},
+          {display: 'blue', value: 'blue'},
+          {display: 'red', value: 'red'},
         ],
-        defaultValue: '"steelblue"',
+        defaultValue: 'steelblue',
       },
     },
     {
       widgetName: 'Zeroes',
       widgetType: 'Switch',
       widget: {
-        activeValue: 'true',
-        inactiveValue: 'false',
+        activeValue: true,
+        inactiveValue: false,
         defaultsToActive: true,
       },
     },
@@ -138,6 +138,7 @@ const SCATTERPLOT: Template = {
   templateName: 'Scatterplot',
   templateDescription: 'A full ish scatterplot',
   templateLanguage: 'vega-lite',
-  code: stringify(SCATTERPLOT_EXAMPLE),
+  // code: stringify(SCATTERPLOT_EXAMPLE),
+  code: require('./scatterplot.hydra.js').default,
 };
 export default SCATTERPLOT;

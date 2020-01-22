@@ -44,7 +44,8 @@ function SimpleShelf(props: TemplateShelf): JSX.Element {
             onDrop({
               field,
               type: 'CARD',
-              text: `"${text}"`,
+              // text: `"${text}"`,
+              text,
               disable: false,
             });
           }}
@@ -63,7 +64,8 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field}),
+    // drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field}),
+    drop: (item: any) => onDrop({...item, field}),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),

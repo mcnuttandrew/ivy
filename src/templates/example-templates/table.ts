@@ -1,17 +1,11 @@
-import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
-const TABLE_EXAMPLE: any = {
-  $schema: 'hydra-data-table',
-  transforms: [],
-  columns: '[columns]',
-};
 
 const DATATABLE: Template = {
   templateName: 'Data Table',
   templateDescription: 'A good old fashioned data table',
   templateLanguage: 'hydra-data-table',
   templateAuthor: 'BUILT_IN',
-  code: stringify(TABLE_EXAMPLE),
+  code: require('./table.hydra.js').default,
   widgets: [
     {
       widgetName: 'columns',
