@@ -228,15 +228,23 @@ export function serverPrefix(): string {
   return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
 }
 
-export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): string[] => {
+export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): Set<string> => {
   const dims = ['DIMENSION', 'MEASURE', 'METACOLUMN', 'TIME'];
   const dimCounter = dims.reduce((acc: any, key) => ({...acc, [key]: []}), {});
+
+  const toSet = (counter: {[x: string]: any[]}): Set<string> =>
+    new Set(
+      Object.entries(counter)
+        .filter(x => x[1].length)
+        .map(x => x[0]),
+    );
+
   if (!template) {
     dims.forEach(x => dimCounter[x].push(x));
     // don't do anything with T0 for now
-    return dimCounter;
+    return toSet(dimCounter);
   }
-  return template.widgets.reduce((acc: any, widget: any) => {
+  const result = template.widgets.reduce((acc: any, widget: any) => {
     const widgetType = widget.widgetType;
     const widgetName = widget.widgetName;
     const val = templateMap[widgetName];
@@ -254,4 +262,5 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
     }
     return acc;
   }, dimCounter);
+  return toSet(result);
 };

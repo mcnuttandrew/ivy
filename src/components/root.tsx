@@ -443,7 +443,6 @@ export function mapStateToProps({base}: {base: AppState}): any {
   const templateMap = base.get('templateMap').toJS();
   const pojoTemplate = template && template.toJS();
   const missingFields = (pojoTemplate && getMissingFields(pojoTemplate, templateMap)) || [];
-  const fillableFields = computeValidAddNexts(pojoTemplate, templateMap);
   return {
     canRedo: base.get('redoStack').size >= 1,
     canUndo: base.get('undoStack').size >= 1,
@@ -458,11 +457,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     editorError: base.get('editorError'),
     editorFontSize: base.get('editorFontSize'),
     encodingMode: base.get('encodingMode'),
-    fillableFields: new Set(
-      Object.entries(fillableFields)
-        .filter(x => x[1].length)
-        .map(x => x[0]),
-    ),
+    fillableFields: computeValidAddNexts(pojoTemplate, templateMap),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
     missingFields,
