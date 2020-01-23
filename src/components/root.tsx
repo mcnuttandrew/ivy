@@ -11,7 +11,7 @@ import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
 import * as actionCreators from '../actions/index';
 import {GenericAction} from '../actions/index';
-import {getTemplateSaveState, classnames} from '../utils';
+import {getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
 import {applyConditionals, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
@@ -63,6 +63,7 @@ interface RootProps {
   editorError: null | string;
   editorFontSize: number;
   encodingMode: string;
+  fillableFields: Set<string>;
   iMspec: any;
   metaColumns: ColumnHeader[];
   missingFields: string[];
@@ -178,6 +179,7 @@ class RootComponent extends React.Component<RootProps> {
       createFilter,
       currentlySelectedFile,
       deleteFilter,
+      fillableFields,
       iMspec,
       metaColumns,
       setRepeats,
@@ -196,6 +198,7 @@ class RootComponent extends React.Component<RootProps> {
           columns={columns}
           createFilter={createFilter}
           deleteFilter={deleteFilter}
+          fillableFields={fillableFields}
           iMspec={iMspec}
           metaColumns={metaColumns}
           onDropFilter={(item: any): any => createFilter({field: item.text})}
@@ -438,8 +441,8 @@ class RootComponent extends React.Component<RootProps> {
 export function mapStateToProps({base}: {base: AppState}): any {
   const template = base.get('currentTemplateInstance');
   const templateMap = base.get('templateMap').toJS();
-  const missingFields = (template && getMissingFields(template.toJS(), templateMap)) || [];
-
+  const pojoTemplate = template && template.toJS();
+  const missingFields = (pojoTemplate && getMissingFields(pojoTemplate, templateMap)) || [];
   return {
     canRedo: base.get('redoStack').size >= 1,
     canUndo: base.get('undoStack').size >= 1,
@@ -454,6 +457,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     editorError: base.get('editorError'),
     editorFontSize: base.get('editorFontSize'),
     encodingMode: base.get('encodingMode'),
+    fillableFields: computeValidAddNexts(pojoTemplate, templateMap),
     iMspec: base.get('spec'),
     metaColumns: base.get('metaColumns'),
     missingFields,
@@ -463,7 +467,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     showGUIView: base.get('showGUIView'),
     spec: applyConditionals(base.get('spec').toJS(), templateMap),
     specCode: base.get('specCode'),
-    template: template && template.toJS(),
+    template: pojoTemplate,
     templateComplete: !missingFields.length,
     templateMap,
     templateSaveState: getTemplateSaveState(base),

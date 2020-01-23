@@ -19,8 +19,10 @@ export const setEditorFontSize = blindSet('editorFontSize');
 export const setGuiView = blindSet('showGUIView');
 export const setSimpleDisplay = blindSet('showSimpleDisplay');
 
+// TODO there is another quote trim somewhere
 const quoteTrim = (x: string): string => x.replace(/["']/g, '');
 
+// TODO this should probably move somewhere else?
 function activeColumns(state: any): string[] {
   const template = state.get('currentTemplateInstance');
   if (!template) {

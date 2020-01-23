@@ -1,6 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import Immutable, {List} from 'immutable';
-import {TemplateWidget, Template, WidgetSubType} from './templates/types';
+import {TemplateWidget, Template, WidgetSubType, TemplateMap} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 
@@ -227,3 +227,40 @@ const USE_LOCAL = false;
 export function serverPrefix(): string {
   return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
 }
+
+export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): Set<string> => {
+  const dims = ['DIMENSION', 'MEASURE', 'METACOLUMN', 'TIME'];
+  const dimCounter = dims.reduce((acc: any, key) => ({...acc, [key]: []}), {});
+
+  const toSet = (counter: {[x: string]: any[]}): Set<string> =>
+    new Set(
+      Object.entries(counter)
+        .filter(x => x[1].length)
+        .map(x => x[0]),
+    );
+
+  if (!template) {
+    dims.forEach(x => dimCounter[x].push(x));
+    // don't do anything with T0 for now
+    return toSet(dimCounter);
+  }
+  const result = template.widgets.reduce((acc: any, widget: any) => {
+    const widgetType = widget.widgetType;
+    const widgetName = widget.widgetName;
+    const val = templateMap[widgetName];
+
+    if (widgetType === 'MultiDataTarget' && (!val || val.length < widget.widget.maxNumberOfTargets)) {
+      widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
+    }
+    // dont try figure it out if it's in use
+    if (val) {
+      return acc;
+    }
+
+    if (widgetType === 'DataTarget') {
+      widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
+    }
+    return acc;
+  }, dimCounter);
+  return toSet(result);
+};

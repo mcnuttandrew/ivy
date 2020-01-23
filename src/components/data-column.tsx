@@ -14,6 +14,7 @@ interface DataColumnProps {
   columns: ColumnHeader[];
   createFilter: GenericAction;
   deleteFilter: GenericAction;
+  fillableFields: Set<string>;
   iMspec: any;
   metaColumns: ColumnHeader[];
   onDropFilter: GenericAction;
@@ -32,6 +33,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       columns,
       createFilter,
       deleteFilter,
+      fillableFields,
       iMspec,
       metaColumns,
       onDropFilter,
@@ -52,6 +54,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
             addToNextOpenSlot={addToNextOpenSlot}
             createFilter={createFilter}
             hideGUI={!showGUIView}
+            typeNotAddable={!fillableFields.has(column.type as string)}
           />
           {checkOptions && inUseFields.has(column.field) && (
             <div>
