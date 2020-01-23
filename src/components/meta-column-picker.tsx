@@ -5,7 +5,7 @@ import {extractFieldStringsForType} from '../utils';
 
 interface MetaColumnPickerTypes {
   // TODO fix these terrible types
-  iMspec: any;
+  spec: any;
   field: string;
   columns: ColumnHeader[];
   setRepeats: GenericAction;
@@ -13,11 +13,12 @@ interface MetaColumnPickerTypes {
 
 export default function MetaColumnPicker({
   field,
-  iMspec,
+  spec,
   columns,
   setRepeats,
 }: MetaColumnPickerTypes): JSX.Element {
-  const selectedDomain = iMspec.getIn(['repeat', field]).toJS() || [];
+  // const selectedDomain = spec.getIn(['repeat', field]).toJS() || [];
+  const selectedDomain = (spec.repeat && spec.repeat[field]) || [];
   const selectedVals = new Set(selectedDomain);
   const domain = columns.map((column: ColumnHeader) => column.field);
   const set = (repeats: string[]): any => setRepeats({target: field, repeats});

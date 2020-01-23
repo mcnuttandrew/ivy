@@ -1,5 +1,5 @@
 import {get, set} from 'idb-keyval';
-import Immutable from 'immutable';
+import produce from 'immer';
 import {ActionResponse, AppState} from './default-state';
 import {
   ListWidget,
@@ -14,16 +14,20 @@ import {setTemplateValues} from '../hydra-lang';
 import {deserializeTemplate} from '../utils';
 
 export function templateEval(state: AppState): AppState {
-  const filledInSpec = setTemplateValues(
-    state.getIn(['currentTemplateInstance', 'code']),
-    state.get('templateMap').toJS(),
-  );
-  return state.set('spec', Immutable.fromJS(JSON.parse(filledInSpec)));
+  // const filledInSpec = setTemplateValues(
+  //   state.getIn(['currentTemplateInstance', 'code']),
+  //   state.get('templateMap').toJS(),
+  // );
+
+  const filledInSpec = setTemplateValues(state.currentTemplateInstance.code, state.templateMap);
+  return produce(state, draftState => {
+    draftState.spec = JSON.parse(filledInSpec);
+  });
 }
 
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
-  const template = state.get('currentTemplateInstance').toJS();
+  const template = state.currentTemplateInstance;
   // const widgets =
   const filledInTemplateMap = template.widgets
     // .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'DataTarget')
@@ -45,31 +49,57 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
       if (w.widgetType === 'Slider') {
         value = (w as TemplateWidget<SliderWidget>).widget.defaultValue;
       }
-      return acc.set(w.widgetName, value);
-    }, Immutable.fromJS({}));
+      acc[w.widgetName] = value;
+      return acc;
+    }, {});
 
-  return templateEval(state.set('templateMap', filledInTemplateMap));
+  return templateEval(
+    produce(state, draftState => {
+      draftState.templateMap = filledInTemplateMap;
+    }),
+  );
+  // return templateEval(state.set('templateMap', filledInTemplateMap));
 }
 
 export const recieveTemplates: ActionResponse = (state, payload) => {
-  return state.set('templates', payload);
+  return produce(state, draftState => {
+    draftState.templates = payload;
+  });
+  // return state.set('templates', payload);
   // return setEncodingMode(state.set('templates', payload), '_____none_____');
 };
 
 export const setTemplateValue: ActionResponse = (state, payload) => {
   let newState = state;
   if (payload.containingShelf) {
-    newState = newState.deleteIn(['templateMap', payload.containingShelf]);
+    newState = produce(state, draftState => {
+      const templateMap = state.templateMap;
+      console.log('TODO THIS IS MAYBE WRONG');
+      delete templateMap[payload.containingShelf];
+      draftState.templateMap = {...templateMap};
+    });
+    // newState = newState.deleteIn(['templateMap', payload.containingShelf]);
   }
-  const template = state.get('currentTemplateInstance').toJS();
-  newState = newState.setIn(['templateMap', payload.field], Immutable.fromJS(payload.text));
-  const updatedTemplate = JSON.parse(setTemplateValues(template.code, newState.get('templateMap').toJS()));
-  return newState.set('spec', Immutable.fromJS(updatedTemplate));
+  const template = state.currentTemplateInstance;
+  return produce(newState, draftState => {
+    draftState.templateMap[payload.field] = payload.text;
+    draftState.spec = JSON.parse(setTemplateValues(template.code, draftState.templateMap));
+  });
+  // const template = state.get('currentTemplateInstance').toJS();
+  // newState = newState.setIn(['templateMap', payload.field], payload.text);
+
+  // const updatedTemplate = JSON.parse(setTemplateValues(template.code, n
+  // return newState.set('spec', updatedTemplate);
 };
 
 // This function is poorly named, i don't know what it does
 function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
-  return state.get('templates').filter((template: Template) => template.templateName !== templateName);
+  return produce(state, draftState => {
+    draftState.templates = state.templates.filter(
+      (template: Template) => template.templateName !== templateName,
+    );
+  });
+  // return state.get('templates').filter((template: Template) => template.templateName !== templateName);
 }
 
 const insertTemplateIntoTemplates: ActionResponse = (state, template) => {
@@ -84,16 +114,19 @@ const insertTemplateIntoTemplates: ActionResponse = (state, template) => {
   });
   // blindly insert this template, allows for over-ride
   set(template.templateName, template);
-  const updatedState = state.set(
-    'templates',
-    getAndRemoveTemplate(state, template.templateName).concat(template),
-  );
-  // set current template to the newly created one
-  return updatedState;
+  return produce(state, draftState => {
+    draftState.templates = getAndRemoveTemplate(state, template.templateName).templates.concat(template);
+  });
+  // const updatedState = state.set(
+  //   'templates',
+  //   getAndRemoveTemplate(state, template.templateName).concat(template),
+  // );
+  // // set current template to the newly created one
+  // return updatedState;
 };
 
 export const saveCurrentTemplate: ActionResponse = state =>
-  insertTemplateIntoTemplates(state, state.get('currentTemplateInstance').toJS());
+  insertTemplateIntoTemplates(state, state.currentTemplateInstance);
 
 export const loadExternalTemplate: ActionResponse = (state, payload) =>
   insertTemplateIntoTemplates(state, payload);
@@ -101,34 +134,57 @@ export const loadExternalTemplate: ActionResponse = (state, payload) =>
 export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   const {value, key} = payload;
   console.log(value, key);
-  let newState = state.setIn(['currentTemplateInstance', key], value);
-  if (key === 'templateName') {
-    newState = newState.set('encodingMode', value);
-  }
-  if (key === 'code') {
-    newState = newState.set('editorError', payload.editorError);
-  }
-  return newState;
+  return produce(state, draftState => {
+    // draftState. =state.setIn(['currentTemplateInstance', key], value);
+    draftState.currentTemplateInstance[key] = value;
+    if (key === 'templateName') {
+      draftState.encodingMode = value;
+    }
+    if (key === 'code') {
+      draftState.editorError = payload.editorError;
+    }
+  });
+  // let newState = state.setIn(['currentTemplateInstance', key], value);
+  // if (key === 'templateName') {
+  //   newState = newState.set('encodingMode', value);
+  // }
+  // if (key === 'code') {
+  //   newState = newState.set('editorError', payload.editorError);
+  // }
+  // return newState;
 };
 
 export const readInTemplate: ActionResponse = (state, payload) => {
   if (payload.error) {
-    return state.set('editorError', payload.error);
+    return produce(state, draftState => {
+      draftState.editorError = payload.error;
+    });
+    // return state.set('editorError', payload.error);
   }
-  const updatedTemplate = deserializeTemplate(payload.code);
-  updatedTemplate.code = state.getIn(['currentTemplateInstance', 'code']);
-  return state
-    .set('currentTemplateInstance', Immutable.fromJS(updatedTemplate))
-    .set('editorError', payload.error);
+  return produce(state, draftState => {
+    const updatedTemplate = deserializeTemplate(payload.code);
+    updatedTemplate.code = state.getIn(['currentTemplateInstance', 'code']);
+    draftState.currentTemplateInstance = updatedTemplate;
+    draftState.editorError = payload.error;
+  });
+  // const updatedTemplate = deserializeTemplate(payload.code);
+  // updatedTemplate.code = state.getIn(['currentTemplateInstance', 'code']);
+  // return state.set('currentTemplateInstance', updatedTemplate).set('editorError', payload.error);
 };
 
 export const setBlankTemplate: ActionResponse = (state, fork) => {
-  const currentCode = state.getIn(['currentTemplateInstance', 'code']) || state.get('specCode');
-  let newTemplate = Immutable.fromJS(BLANK_TEMPLATE);
+  // const currentCode = state.getIn(['currentTemplateInstance', 'code']) || state.get('specCode');
+  const currentCode = state.currentTemplateInstance.code || state.specCode;
+  const newTemplate = BLANK_TEMPLATE;
   if (fork) {
-    newTemplate = newTemplate.set('code', currentCode);
+    // newTemplate = newTemplate.set('code', currentCode);
+    newTemplate.code = currentCode;
   }
-  return state.set('currentTemplateInstance', newTemplate).set('encodingMode', BLANK_TEMPLATE.templateName);
+  return produce(state, draftState => {
+    draftState.currentTemplateInstance = newTemplate;
+    draftState.encodingMode = BLANK_TEMPLATE.templateName;
+  });
+  // return state.set('currentTemplateInstance', newTemplate).set('encodingMode', BLANK_TEMPLATE.templateName);
 };
 
 export const deleteTemplate: ActionResponse = (state, payload) => {
@@ -139,50 +195,100 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
   });
   set(payload, null);
   // TODO check if current template is the one deleted?
-  return state.set('templates', getAndRemoveTemplate(state, payload));
+  return produce(state, draftState => {
+    draftState.templates = getAndRemoveTemplate(state, payload);
+  });
+  // return state.set('templates', getAndRemoveTemplate(state, payload));
 };
 
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
-  let template = state.get('currentTemplateInstance');
-  let newState = state;
-  const code = template.get('code');
-  if (key === 'widgetName') {
-    // TODO This is broken in the other branch
-    // update the old code with the new name
-    const oldValue = `\\[${template.getIn(['widgets', idx, key])}\\]`;
-    const re = new RegExp(oldValue, 'g');
-    template = template.set('code', code.replace(re, `[${value}]`));
-    newState = newState
-      .deleteIn(['templateMap', oldValue])
-      .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
-    // change the variable
-    template = template.setIn(['widgets', idx, key], value);
-  } else if (key === 'displayName') {
-    // display name is a property of the widget container and not the widget parameter...
-    template = template.setIn(['widgets', idx, key], value);
-  } else {
-    template = template.setIn(['widgets', idx, 'widget', key], Immutable.fromJS(value));
-  }
-  return newState.set('currentTemplateInstance', template);
+  // let template = state.get('currentTemplateInstance');
+  const template = state.currentTemplateInstance;
+  const code = template.code;
+  return produce(state, draftState => {
+    if (key === 'widgetName') {
+      // TODO This is broken in the other branch
+      // update the old code with the new name
+      const oldValue = `\\[${template.widgets[idx][key]}\\]`;
+      const re = new RegExp(oldValue, 'g');
+      template.code = code.replace(re, `[${value}]`);
+
+      console.log('THSI LOGIC MIGHT BE WRONG');
+      const templateMap = state.templateMap;
+      templateMap[value] = templateMap[oldValue];
+      delete templateMap[oldValue];
+      // template = template.setIn(['widgets', idx, key], value);
+      template.widgets[idx].widgetName = value;
+    } else if (key === 'displayName') {
+      // display name is a property of the widget container and not the widget parameter...
+      template.widgets[idx].displayName = value;
+    } else {
+      template.widgets[idx].widget[key] = value;
+    }
+    draftState.currentTemplateInstance = template;
+    // return newState.set('currentTemplateInstance', template);
+  });
+  // if (key === 'widgetName') {
+  //   // TODO This is broken in the other branch
+  //   // update the old code with the new name
+  //   const oldValue = `\\[${template.widgets[idx][key]}\\]`;
+  //   // const oldValue = `\\[${template.getIn(['widgets', idx, key])}\\]`;
+  //   const re = new RegExp(oldValue, 'g');
+  //   template = template.set('code', code.replace(re, `[${value}]`));
+  //   newState = newState
+  //     .deleteIn(['templateMap', oldValue])
+  //     .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
+
+  //   // template = template.set('code', code.replace(re, `[${value}]`));
+  //   // newState = newState
+  //   //   .deleteIn(['templateMap', oldValue])
+  //   //   .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
+  //     // change the variable
+  //   template = template.setIn(['widgets', idx, key], value);
+  // } else if (key === 'displayName') {
+  //   // display name is a property of the widget container and not the widget parameter...
+  //   template = template.setIn(['widgets', idx, key], value);
+  // } else {
+  //   template = template.setIn(['widgets', idx, 'widget', key], value);
+  // }
+  // return newState.set('currentTemplateInstance', template);
 };
 
 // hey it's a lense
 type modifyWidgetLense = (state: AppState, mod: (x: any) => any) => AppState;
 const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
-  state.setIn(
-    ['currentTemplateInstance', 'widgets'],
-    mod(state.getIn(['currentTemplateInstance', 'widgets'])),
-  );
+  produce(state, draftState => {
+    draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
+  });
 export const addWidget: ActionResponse = (state, payload) =>
-  modifyCurrentWidgets(state, d => d.push(Immutable.fromJS(payload)));
+  modifyCurrentWidgets(state, d => d.concat(payload));
 export const removeWidget: ActionResponse = (state, payload) =>
-  modifyCurrentWidgets(state, d => d.deleteIn([payload]));
+  modifyCurrentWidgets(state, d => d.filter((_: any, idx: number) => payload !== idx));
 
 export const moveWidget: ActionResponse = (state, payload) => {
-  const {fromIdx, toIdx} = payload;
-  if (fromIdx === undefined || toIdx === undefined) {
-    return state;
-  }
-  return modifyCurrentWidgets(state, d => d.delete(fromIdx).insert(toIdx, d.get(fromIdx)));
+  console.log('MOVE IS BROKEN');
+  return state;
+  // const {fromIdx, toIdx} = payload;
+  // if (fromIdx === undefined || toIdx === undefined) {
+  //   return state;
+  // }
+  // return modifyCurrentWidgets(state, d => d.delete(fromIdx).insert(toIdx, d.get(fromIdx)));
 };
+// const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
+//   state.setIn(
+//     ['currentTemplateInstance', 'widgets'],
+//     mod(state.getIn(['currentTemplateInstance', 'widgets'])),
+//   );
+// export const addWidget: ActionResponse = (state, payload) =>
+//   modifyCurrentWidgets(state, d => d.push(payload));
+// export const removeWidget: ActionResponse = (state, payload) =>
+//   modifyCurrentWidgets(state, d => d.deleteIn([payload]));
+
+// export const moveWidget: ActionResponse = (state, payload) => {
+//   const {fromIdx, toIdx} = payload;
+//   if (fromIdx === undefined || toIdx === undefined) {
+//     return state;
+//   }
+//   return modifyCurrentWidgets(state, d => d.delete(fromIdx).insert(toIdx, d.get(fromIdx)));
+// };

@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import {
   TemplateWidget,
   TemplateMap,
@@ -9,6 +8,7 @@ import {
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
 import {findField} from '../utils';
+import produce from 'immer';
 
 export const TYPE_TRANSLATE: {[s: string]: string} = {
   DIMENSION: 'nominal',
@@ -38,7 +38,8 @@ function guessType(channel: string, type: string): string {
 
 const grammarBasedGuess: ActionResponse = (state, payload) => {
   // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
-  const encoding = state.getIn(['spec', 'encoding']).toJS();
+  // const encoding = state.getIn(['spec', 'encoding']).toJS();
+  const encoding = state.spec.encoding;
   const column = findField(state, payload.field);
   const fields = column.type === 'DIMENSION' ? dimensionFieldPreferences : measureFieldPreferences;
   const channel = fields.find(field => {
@@ -52,12 +53,14 @@ const grammarBasedGuess: ActionResponse = (state, payload) => {
     field: payload.field,
     type: guessType(channel, column.type),
   };
-  return state.setIn(['spec', 'encoding'], Immutable.fromJS(encoding));
+  return produce(state, draftState => {
+    draftState.spec.encoding = encoding;
+  });
 };
 
 const templateBasedGuess: ActionResponse = (state, payload) => {
-  const template = state.get('currentTemplateInstance').toJS();
-  const templateMap: TemplateMap = state.get('templateMap').toJS();
+  const template = state.currentTemplateInstance;
+  const templateMap: TemplateMap = state.templateMap;
   const column = findField(state, payload.field);
 
   const openDropTargets = template.widgets
@@ -101,6 +104,6 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
 };
 
 export const addToNextOpenSlot: ActionResponse = (state, payload) => {
-  const encodingMode = state.get('encodingMode');
+  const encodingMode = state.encodingMode;
   return (encodingMode !== 'grammer' ? templateBasedGuess : grammarBasedGuess)(state, payload);
 };

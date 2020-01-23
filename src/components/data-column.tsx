@@ -15,7 +15,6 @@ interface DataColumnProps {
   createFilter: GenericAction;
   deleteFilter: GenericAction;
   fillableFields: Set<string>;
-  iMspec: any;
   metaColumns: ColumnHeader[];
   onDropFilter: GenericAction;
   setRepeats: GenericAction;
@@ -34,7 +33,6 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       createFilter,
       deleteFilter,
       fillableFields,
-      iMspec,
       metaColumns,
       onDropFilter,
       setRepeats,
@@ -43,7 +41,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       template,
       updateFilter,
     } = this.props;
-    const inUseFields = getAllInUseFields(iMspec);
+    const inUseFields = getAllInUseFields(spec);
     const makePill = (checkOptions: boolean) => (column: ColumnHeader): JSX.Element => {
       return (
         <div className="pill-container" key={column.field}>
@@ -58,12 +56,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
           />
           {checkOptions && inUseFields.has(column.field) && (
             <div>
-              <MetaColumnPicker
-                columns={columns}
-                field={column.field}
-                iMspec={iMspec}
-                setRepeats={setRepeats}
-              />
+              <MetaColumnPicker columns={columns} field={column.field} spec={spec} setRepeats={setRepeats} />
             </div>
           )}
         </div>

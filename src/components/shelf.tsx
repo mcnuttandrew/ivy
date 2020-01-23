@@ -15,7 +15,7 @@ interface ShelfProps {
   columns: ColumnHeader[];
   disable: boolean;
   field: string;
-  iMspec: any;
+  spec: any;
   metaColumns: ColumnHeader[];
   onDrop: any;
   showSimpleDisplay: boolean;
@@ -30,7 +30,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
     columns,
     disable,
     field,
-    iMspec,
+    spec,
     metaColumns,
     onDrop,
     setEncodingParameter,
@@ -51,7 +51,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
     }),
   });
   const optionsToRender = (configurationOptions[field] || []).filter((option: EncodingOption) =>
-    option.predicate(iMspec),
+    option.predicate(spec),
   );
 
   const configurationOpen = Boolean(optionsToRender.length);
@@ -124,7 +124,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
               <ConfigurationOption
                 key={idx}
                 option={option}
-                iMspec={iMspec}
+                spec={spec}
                 setEncodingParameter={setEncodingParameter}
                 setNewSpec={setNewSpec}
               />

@@ -10,7 +10,6 @@ interface VegaWrapperProps {
   spec: any;
   data: any;
   theme: VegaTheme;
-  iMspec: any;
   language?: any;
 }
 
@@ -28,11 +27,16 @@ function inferredLanguage(spec: any): string | null {
 // This componenent has the simple task of disallowing renders other than when the spec has changed
 // in effect it is a modest caching layer. It also allows us to obscure some of the odities of the vega interface
 export default class VegaWrapper extends React.Component<VegaWrapperProps> {
-  shouldComponentUpdate(nextProps: VegaWrapperProps): boolean {
-    const diffSpec = !this.props.iMspec.equals(nextProps.iMspec);
-    const diffTheme = this.props.theme !== nextProps.theme;
-    return diffSpec || diffTheme;
-  }
+  // shouldComponentUpdate(nextProps: VegaWrapperProps): boolean {
+  //   console.log('TODO MAKE SURE THIS ISN"T BROKE');
+  //   // const diffSpec = this.props.spec !== nextProps.spec;
+  //   // const diffTheme = this.props.theme !== nextProps.theme;
+  //   // return diffSpec || diffTheme;
+  //   // const diffSpec = this.props.spec !== nextProps.spec;
+  //   const diffTheme = this.props.theme !== nextProps.theme;
+  //   return diffTheme;
+  // return true;
+  // }
 
   render(): JSX.Element {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
@@ -60,8 +64,9 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
         };
       }
     }
+    console.log(finalSpec, language, theme);
     return (
-      <Vega actions={false} spec={finalSpec} mode={language} theme={theme} tooltip={new Handler({}).call} />
+      <Vega actions={true} spec={finalSpec} mode={language} theme={theme} tooltip={new Handler({}).call} />
     );
   }
 }

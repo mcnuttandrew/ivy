@@ -1,4 +1,3 @@
-import {List} from 'immutable';
 import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
@@ -64,7 +63,6 @@ interface RootProps {
   editorFontSize: number;
   encodingMode: string;
   fillableFields: Set<string>;
-  iMspec: any;
   metaColumns: ColumnHeader[];
   missingFields: string[];
   programModalOpen: boolean;
@@ -78,7 +76,7 @@ interface RootProps {
   templateMap: TemplateMap;
   templateSaveState: string;
   templates: Template[];
-  views: List<string>;
+  views: string[];
 
   addToNextOpenSlot: GenericAction;
   addWidget: GenericAction;
@@ -144,7 +142,6 @@ class RootComponent extends React.Component<RootProps> {
       currentView,
       data,
       deleteView,
-      iMspec,
       missingFields,
       spec,
       switchView,
@@ -160,7 +157,6 @@ class RootComponent extends React.Component<RootProps> {
         currentView={currentView}
         data={data}
         deleteView={deleteView}
-        iMspec={iMspec}
         missingFields={missingFields}
         spec={spec}
         switchView={switchView}
@@ -180,7 +176,6 @@ class RootComponent extends React.Component<RootProps> {
       currentlySelectedFile,
       deleteFilter,
       fillableFields,
-      iMspec,
       metaColumns,
       setRepeats,
       showGUIView,
@@ -199,7 +194,6 @@ class RootComponent extends React.Component<RootProps> {
           createFilter={createFilter}
           deleteFilter={deleteFilter}
           fillableFields={fillableFields}
-          iMspec={iMspec}
           metaColumns={metaColumns}
           onDropFilter={(item: any): any => createFilter({field: item.text})}
           setRepeats={setRepeats}
@@ -223,7 +217,6 @@ class RootComponent extends React.Component<RootProps> {
       deleteTemplate,
       editMode,
       encodingMode,
-      iMspec,
       metaColumns,
       modifyValueOnTemplate,
       moveWidget,
@@ -287,7 +280,6 @@ class RootComponent extends React.Component<RootProps> {
           <EncodingColumn
             changeMarkType={changeMarkType}
             columns={columns}
-            iMspec={iMspec}
             metaColumns={metaColumns}
             onDrop={(item: any): void => {
               if (item.disable) {
@@ -439,40 +431,39 @@ class RootComponent extends React.Component<RootProps> {
 }
 
 export function mapStateToProps({base}: {base: AppState}): any {
-  const template = base.get('currentTemplateInstance');
-  const templateMap = base.get('templateMap').toJS();
-  const pojoTemplate = template && template.toJS();
-  const missingFields = (pojoTemplate && getMissingFields(pojoTemplate, templateMap)) || [];
+  const template = base.currentTemplateInstance;
+  const templateMap = base.templateMap;
+  // const pojoTemplate = template && template;
+  const missingFields = (template && getMissingFields(template, templateMap)) || [];
   return {
-    canRedo: base.get('redoStack').size >= 1,
-    canUndo: base.get('undoStack').size >= 1,
-    codeMode: base.get('codeMode'),
-    columns: base.get('columns'),
-    currentTheme: base.get('currentTheme'),
-    currentView: base.get('currentView'),
-    currentlySelectedFile: base.get('currentlySelectedFile'),
-    data: base.get('data'),
-    dataModalOpen: base.get('dataModalOpen'),
-    editMode: base.get('editMode'),
-    editorError: base.get('editorError'),
-    editorFontSize: base.get('editorFontSize'),
-    encodingMode: base.get('encodingMode'),
-    fillableFields: computeValidAddNexts(pojoTemplate, templateMap),
-    iMspec: base.get('spec'),
-    metaColumns: base.get('metaColumns'),
+    canRedo: base.redoStack.size >= 1,
+    canUndo: base.undoStack.size >= 1,
+    codeMode: base.codeMode,
+    columns: base.columns,
+    currentTheme: base.currentTheme,
+    currentView: base.currentView,
+    currentlySelectedFile: base.currentlySelectedFile,
+    data: base.data,
+    dataModalOpen: base.dataModalOpen,
+    editMode: base.editMode,
+    editorError: base.editorError,
+    editorFontSize: base.editorFontSize,
+    encodingMode: base.encodingMode,
+    fillableFields: computeValidAddNexts(template, templateMap),
+    metaColumns: base.metaColumns,
     missingFields,
-    programModalOpen: base.get('programModalOpen'),
-    showProgrammaticMode: base.get('showProgrammaticMode'),
-    showSimpleDisplay: base.get('showSimpleDisplay'),
-    showGUIView: base.get('showGUIView'),
-    spec: applyConditionals(base.get('spec').toJS(), templateMap),
-    specCode: base.get('specCode'),
-    template: pojoTemplate,
+    programModalOpen: base.programModalOpen,
+    showProgrammaticMode: base.showProgrammaticMode,
+    showSimpleDisplay: base.showSimpleDisplay,
+    showGUIView: base.showGUIView,
+    spec: applyConditionals(base.spec, templateMap),
+    specCode: base.specCode,
+    template,
     templateComplete: !missingFields.length,
     templateMap,
     templateSaveState: getTemplateSaveState(base),
-    templates: base.get('templates'),
-    views: base.get('views'),
+    templates: base.templates,
+    views: base.views,
   };
 }
 

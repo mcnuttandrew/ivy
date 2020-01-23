@@ -1,25 +1,34 @@
-import Immutable from 'immutable';
+import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 // import SCATTERPLOT from '../templates/example-templates/scatterplot';
-export type AppState = Immutable.Map<any, any>;
+export type AppState = {[x: string]: any};
 
 export interface ActionResponse {
   (state: AppState, payload: any): AppState;
 }
 
 export const blindSet = (key: string): ActionResponse => (state, payload): AppState =>
-  state.set(key, payload);
-export const toggle = (key: string): ActionResponse => (state): AppState => state.set(key, !state.get(key));
+  produce(state, draftState => {
+    draftState[key] = payload;
+  });
+export const toggle = (key: string): ActionResponse => (state): AppState =>
+  produce(state, draftState => {
+    draftState[key] = !state[key];
+  });
+
+// export const blindSet = (key: string): ActionResponse => (state, payload): AppState =>
+//   state.set(key, payload);
+// export const toggle = (key: string): ActionResponse => (state): AppState => state.set(key, !state.get(key));
 
 // TODO undo this embarrasment (specifically the type messes)
-const defaultEmpty = Immutable.fromJS({
+const defaultEmpty = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  transform: [],
+  transform: [] as any[],
   mark: {type: 'point', tooltip: true},
   encoding: {},
-});
+};
 export const EMPTY_SPEC = defaultEmpty;
-export const DEFAULT_STATE: AppState = Immutable.fromJS({
+export const DEFAULT_STATE: AppState = {
   // meta-data
   currentlySelectedFile: 'cars.json',
   columns: [],
@@ -47,8 +56,8 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   programModalOpen: false,
 
   // undo redo
-  undoStack: Immutable.fromJS([]),
-  redoStack: Immutable.fromJS([]),
+  undoStack: [],
+  redoStack: [],
 
   // view stuff
   views: ['view1'],
@@ -60,6 +69,6 @@ export const DEFAULT_STATE: AppState = Immutable.fromJS({
   templates: [],
   templateMap: {},
   templateBuilderModalOpen: false,
-})
-  // need data to have a consistant type, i.e POJO, not immutable
-  .set('data', []);
+
+  data: [],
+};
