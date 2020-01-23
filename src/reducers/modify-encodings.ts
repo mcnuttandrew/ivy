@@ -1,7 +1,7 @@
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 
-import {findField, getAllInUseFields, extractFieldStringsForType} from '../utils';
+import {findField, getAllInUseFields, extractFieldStringsForType, get} from '../utils';
 import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
@@ -121,10 +121,8 @@ function addMetaEncoding(state: AppState): AppState {
     draftState.spec.spec = {};
     draftState.spec.spec.encoding = state.spec.encoding;
     draftState.spec.spec.mark = state.spec.mark;
-
-    console.log('DELETE PART BRKOEN');
-    // .deleteIn(['spec', 'encoding'])
-    // .deleteIn(['spec', 'mark']);
+    delete draftState.spec.encoding;
+    delete draftState.spec.mark;
   });
   // return state
   //   .setIn(['spec', 'spec'], {})
@@ -136,7 +134,13 @@ function addMetaEncoding(state: AppState): AppState {
 
 function removeMetaEncoding(state: AppState): AppState {
   console.log('BRKOEN BRKOEN BRKOEN');
-  return state;
+  return produce(state, draftState => {
+    draftState.spec.encoding = draftState.spec.spec.encoding;
+    draftState.spec.mark = draftState.spec.spec.mark;
+    delete draftState.spec.spec;
+    delete draftState.spec.repeat;
+  });
+  // return state;
   // return state
   //   .setIn(['spec', 'encoding'], state.getIn(['spec', 'spec', 'encoding']))
   //   .setIn(['spec', 'mark'], state.getIn(['spec', 'spec', 'mark']))
@@ -146,7 +150,52 @@ function removeMetaEncoding(state: AppState): AppState {
 
 export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   console.log('META COLUMN BROKEN');
-  return state;
+  // moving from un-nested spec to nested spec
+  if (!usingNestedSpec(state)) {
+    return produce(addMetaEncoding(state), draftState => {
+      draftState.spec.repeat = {};
+    });
+  }
+
+  // this approach only works for column / row
+  // if the repeat operator has not been initialized, initialize it
+  const repeatRoute = ['spec', 'repeat', payload.text];
+  let newState = state;
+  if (!get(state, repeatRoute)) {
+    newState = produce(newState, draftState => {
+      draftState.spec.repeat[payload.text] = extractFieldStringsForType(newState.columns, 'MEASURE');
+    });
+  }
+  // if there is already a card in place, check to see if removing it removes the repeats
+  const fieldRoute = ['spec', 'spec', 'encoding', payload.field];
+  if (get(state, fieldRoute) && get(state, [...fieldRoute, 'field', 'repeat']) !== payload.text) {
+    newState = produce(newState, draftState => {
+      // draftState.spec.repeat[payload.text] = extractFieldStringsForType(newState.columns, 'MEASURE');
+      delete draftState.spec.spec.encoding[payload.field];
+      draftState = maybeRemoveRepeats(newState, draftState, payload.field);
+    });
+  }
+
+  // if the card is being moved remove where it was before
+  if (payload.containingShelf) {
+    // const delRoute = ['spec', 'spec', 'encoding', payload.containingShelf];
+    // newState = newState.deleteIn(delRoute);
+    newState = produce(newState, draftState => {
+      // draftState.spec.repeat[payload.text] = extractFieldStringsForType(newState.columns, 'MEASURE');
+      delete draftState.spec.spec.encoding[payload.containingShelf];
+    });
+  }
+
+  // finally set the new field
+  const newFieldVal = {
+    field: {repeat: payload.text},
+    type: 'quantitative',
+  };
+  return produce(newState, draftState => {
+    draftState.spec.spec.encoding[payload.field] = newFieldVal;
+  });
+  // return newState.setIn(fieldRoute, newFieldVal);
+  // return state;
   // let newState = state;
   // // moving from un-nested spec to nested spec
   // if (!usingNestedSpec(state)) {
@@ -189,43 +238,77 @@ export const updateCodeRepresentation: ActionResponse = (_, newState: AppState) 
 
 // move a field from one channel to another (origin field might be null)
 export const setEncodingParameter: ActionResponse = (state, payload) => {
-  console.log('encoding is broken !');
-  return state;
-  // if (payload.isMeta) {
-  //   return setChannelToMetaColumn(state, payload);
-  // }
-  // const fieldHeader = findField(state, payload.text);
-  // const route = usingNestedSpec(state) ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
-  // let newState = state;
-  // if (fieldHeader) {
-  //   newState = newState.setIn([...route, payload.field], {
-  //     field: payload.text,
-  //     type: TYPE_TRANSLATE[fieldHeader.type],
-  //   });
-  // } else {
-  //   // removing field
-  //   newState = maybeRemoveRepeats(state, newState.setIn([...route, payload.field], {}), payload.field);
-  // }
-  // // if the card is being moved, remove where it was before
-  // if (payload.containingShelf) {
-  //   newState = newState.deleteIn([...route, payload.containingShelf]);
-  // }
-  // // check if the nesting spec should be removed
-  // if (usingNestedSpec(state) && noMetaUsage(newState)) {
-  //   return removeMetaEncoding(newState);
-  // }
-  // return newState;
+  // console.log('encoding is broken !');
+  // return state;
+  if (payload.isMeta) {
+    return setChannelToMetaColumn(state, payload);
+  }
+  const fieldHeader = findField(state, payload.text);
+  const usingNested = usingNestedSpec(state);
+  const route = usingNested ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
+  let newState = state;
+  if (fieldHeader) {
+    newState = produce(newState, draftState => {
+      const newField = {
+        field: payload.text,
+        type: TYPE_TRANSLATE[fieldHeader.type],
+      };
+      if (usingNested) {
+        draftState.spec.spec.encoding = newField;
+      } else {
+        draftState.spec.encoding = newField;
+      }
+    });
+    // newState = newState.setIn([...route, payload.field], {
+    //   field: payload.text,
+    //   type: TYPE_TRANSLATE[fieldHeader.type],
+    // });
+  } else {
+    // removing field
+    // newState = maybeRemoveRepeats(state, newState.setIn([...route, payload.field], {}), payload.field);
+    newState = maybeRemoveRepeats(
+      state,
+      produce(newState, draftState => {
+        if (usingNested) {
+          draftState.spec.spec.encoding[payload.field] = {};
+        } else {
+          draftState.spec.encoding[payload.field] = {};
+        }
+      }),
+      payload.field,
+    );
+  }
+  // if the card is being moved, remove where it was before
+  if (payload.containingShelf) {
+    // newState = newState.deleteIn([...route, payload.containingShelf]);
+    newState = produce(newState, draftState => {
+      if (usingNested) {
+        delete draftState.spec.spec.encoding[payload.containingShelf];
+      } else {
+        delete draftState.spec.encoding[payload.containingShelf];
+      }
+    });
+  }
+  // check if the nesting spec should be removed
+  if (usingNestedSpec(state) && noMetaUsage(newState)) {
+    return removeMetaEncoding(newState);
+  }
+  return newState;
 };
 
 // move a field from one channel to another (origin field might be null)
 export const swapXAndYChannels: ActionResponse = state => {
-  console.log('SWAP X ANDY BROKEN');
-  return state;
-  // const route = usingNestedSpec(state) ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
-  // const oldX = state.getIn([...route, 'x']);
-  // const oldY = state.getIn([...route, 'y']);
-
-  // return state.setIn([...route, 'x'], oldY).setIn([...route, 'y'], oldX);
+  return produce(state, draftState => {
+    const usingNested = usingNestedSpec(state);
+    const oldEncoding = usingNested ? state.spec.spec.encoding : state.spec.encoding;
+    if (usingNested) {
+      draftState.spec.spec.encoding.x = oldEncoding.x;
+      draftState.spec.spec.encoding.y = oldEncoding.y;
+    } else {
+      draftState.spec.encoding.x = oldEncoding.x;
+      draftState.spec.encoding.y = oldEncoding.y;
+    }
+  });
 };
 
 export const setRepeats: ActionResponse = (state, payload) => {

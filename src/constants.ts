@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 // i know this file is bad and crazy i feel bad
 export interface OptionValue {
   display: string;
@@ -32,12 +33,34 @@ export const marks: VegaMark[] = [
 
 // check if using the nested spec mode, if so, re-route into that subspec
 const maybePrefixWithSpec = (spec: any, route: string[]): string[] =>
-  spec.getIn(['spec']) ? ['spec', ...route] : route;
+  spec.spec ? ['spec', ...route] : route;
 
-const set = (spec: any, route: string[], value: any): any =>
-  spec.setIn(maybePrefixWithSpec(spec, route), value);
+const set = (spec: any, route: string[], value: any): any => {
+  // hopefully soon we can delete this?
+  return Immutable.fromJS(spec)
+    .setIn(maybePrefixWithSpec(spec, route), value)
+    .toJS();
+};
+// spec.setIn(maybePrefixWithSpec(spec, route), value);
 
-const get = (spec: any, route: string[]): any => spec.getIn(maybePrefixWithSpec(spec, route));
+// safely access elements on a nested object
+export function getIn(obj: any, route: string[]): any {
+  if (!obj) {
+    return null;
+  }
+  if (route.length === 0) {
+    return null;
+  }
+  if (route.length === 1) {
+    return obj[route[0]];
+  }
+  const next = obj[route[0]];
+  if (!next) {
+    return null;
+  }
+  return getIn(next, route.slice(1));
+}
+const get = (spec: any, route: string[]): any => getIn(spec, maybePrefixWithSpec(spec, route));
 
 const justCountAgg = [
   {display: 'none', value: undefined},
@@ -147,12 +170,12 @@ const injectNofieldPred: predicateInject = (dim, option) => ({
 });
 
 const generateXorY = (dim: string): EncodingOption[] => [
-  // injectFieldPred(dim, buildTypeCoercion(dim)),
-  // buildScaleOption(dim),
-  // scaleDomain(dim),
-  // binOption(dim),
-  // injectFieldPred(dim, buildSpatialOptions(dim, spatialAggs)),
-  // injectNofieldPred(dim, buildSpatialOptions(dim, justCountAgg)),
+  injectFieldPred(dim, buildTypeCoercion(dim)),
+  buildScaleOption(dim),
+  scaleDomain(dim),
+  binOption(dim),
+  injectFieldPred(dim, buildSpatialOptions(dim, spatialAggs)),
+  injectNofieldPred(dim, buildSpatialOptions(dim, justCountAgg)),
 ];
 
 // the configuration options consumed by the encoding panel
@@ -164,39 +187,33 @@ export const configurationOptions: any = {
   'repeat-meta': [],
 
   // repeaters
-  facet: [
-    // injectFieldPred('facet', buildTypeCoercion('facet'))
-  ],
-  row: [
-    // injectFieldPred('row', buildTypeCoercion('row'))
-  ],
-  column: [
-    // injectFieldPred('column', buildTypeCoercion('column'))
-  ],
+  facet: [injectFieldPred('facet', buildTypeCoercion('facet'))],
+  row: [injectFieldPred('row', buildTypeCoercion('row'))],
+  column: [injectFieldPred('column', buildTypeCoercion('column'))],
   // marks
   size: [
-    // injectFieldPred('size', buildTypeCoercion('size')),
-    // injectFieldPred('size', buildSpatialOptions('size', binningOptions)),
-    // injectNofieldPred('size', buildSpatialOptions('size', justCountAgg)),
-    // injectFieldPred('size', binOption('size')),
+    injectFieldPred('size', buildTypeCoercion('size')),
+    injectFieldPred('size', buildSpatialOptions('size', binningOptions)),
+    injectNofieldPred('size', buildSpatialOptions('size', justCountAgg)),
+    injectFieldPred('size', binOption('size')),
   ],
   color: [
-    // injectFieldPred('color', buildTypeCoercion('color')),
-    // injectFieldPred('color', buildSpatialOptions('color', binningOptions)),
-    // injectNofieldPred('color', buildSpatialOptions('color', justCountAgg)),
-    // injectFieldPred('color', binOption('color')),
+    injectFieldPred('color', buildTypeCoercion('color')),
+    injectFieldPred('color', buildSpatialOptions('color', binningOptions)),
+    injectNofieldPred('color', buildSpatialOptions('color', justCountAgg)),
+    injectFieldPred('color', binOption('color')),
   ],
   shape: [
-    // injectFieldPred('shape', buildTypeCoercion('shape')),
-    // injectFieldPred('shape', buildSpatialOptions('shape', binningOptions)),
+    injectFieldPred('shape', buildTypeCoercion('shape')),
+    injectFieldPred('shape', buildSpatialOptions('shape', binningOptions)),
   ],
   detail: [
-    // injectFieldPred('detail', buildTypeCoercion('detail')),
-    // injectFieldPred('detail', buildSpatialOptions('detail', binningOptions)),
+    injectFieldPred('detail', buildTypeCoercion('detail')),
+    injectFieldPred('detail', buildSpatialOptions('detail', binningOptions)),
   ],
   text: [
-    // injectFieldPred('text', buildTypeCoercion('text')),
-    // injectFieldPred('text', buildSpatialOptions('text', binningOptions)),
-    // injectNofieldPred('text', buildSpatialOptions('text', justCountAgg)),
+    injectFieldPred('text', buildTypeCoercion('text')),
+    injectFieldPred('text', buildSpatialOptions('text', binningOptions)),
+    injectNofieldPred('text', buildSpatialOptions('text', justCountAgg)),
   ],
 };
