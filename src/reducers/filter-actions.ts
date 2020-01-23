@@ -12,7 +12,7 @@ export const createFilter: ActionResponse = (state, payload) => {
     },
   };
   return produce(state, draftState => {
-    const arr: any = draftState.transform;
+    const arr: any = draftState.spec.transform;
     arr.push(newFilter);
     draftState.spec.transform = arr;
   });

@@ -136,7 +136,10 @@ export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   console.log(value, key);
   return produce(state, draftState => {
     // draftState. =state.setIn(['currentTemplateInstance', key], value);
+    /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+    // @ts-ignore
     draftState.currentTemplateInstance[key] = value;
+    /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     if (key === 'templateName') {
       draftState.encodingMode = value;
     }
@@ -163,7 +166,7 @@ export const readInTemplate: ActionResponse = (state, payload) => {
   }
   return produce(state, draftState => {
     const updatedTemplate = deserializeTemplate(payload.code);
-    updatedTemplate.code = state.getIn(['currentTemplateInstance', 'code']);
+    updatedTemplate.code = state.currentTemplateInstance.code;
     draftState.currentTemplateInstance = updatedTemplate;
     draftState.editorError = payload.error;
   });
@@ -196,7 +199,7 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
   set(payload, null);
   // TODO check if current template is the one deleted?
   return produce(state, draftState => {
-    draftState.templates = getAndRemoveTemplate(state, payload);
+    draftState.templates = getAndRemoveTemplate(state, payload).templates;
   });
   // return state.set('templates', getAndRemoveTemplate(state, payload));
 };
@@ -207,26 +210,34 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
   const template = state.currentTemplateInstance;
   const code = template.code;
   return produce(state, draftState => {
-    if (key === 'widgetName') {
-      // TODO This is broken in the other branch
-      // update the old code with the new name
-      const oldValue = `\\[${template.widgets[idx][key]}\\]`;
-      const re = new RegExp(oldValue, 'g');
-      template.code = code.replace(re, `[${value}]`);
+    draftState.currentTemplateInstance = produce(template, draftTemplate => {
+      if (key === 'widgetName') {
+        // TODO This is broken in the other branch
+        // update the old code with the new name
+        const widget = draftTemplate.widgets[idx];
+        /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+        // @ts-ignore
+        const oldValue = `\\[${widget[key]}\\]`;
+        /* eslint-enable @typescript-eslint/ban-ts-ignore*/
+        const re = new RegExp(oldValue, 'g');
+        draftTemplate.code = code.replace(re, `[${value}]`);
 
-      console.log('THSI LOGIC MIGHT BE WRONG');
-      const templateMap = state.templateMap;
-      templateMap[value] = templateMap[oldValue];
-      delete templateMap[oldValue];
-      // template = template.setIn(['widgets', idx, key], value);
-      template.widgets[idx].widgetName = value;
-    } else if (key === 'displayName') {
-      // display name is a property of the widget container and not the widget parameter...
-      template.widgets[idx].displayName = value;
-    } else {
-      template.widgets[idx].widget[key] = value;
-    }
-    draftState.currentTemplateInstance = template;
+        console.log('THSI LOGIC MIGHT BE WRONG');
+        const templateMap = state.templateMap;
+        templateMap[value] = templateMap[oldValue];
+        delete templateMap[oldValue];
+        // template = draftTemplate.setIn(['widgets', idx, key], value);
+        draftTemplate.widgets[idx].widgetName = value;
+      } else if (key === 'displayName') {
+        // display name is a property of the widget container and not the widget parameter...
+        draftTemplate.widgets[idx].displayName = value;
+      } else {
+        /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+        // @ts-ignore
+        draftTemplate.widgets[idx].widget[key] = value;
+        /* eslint-enable @typescript-eslint/ban-ts-ignore*/
+      }
+    });
     // return newState.set('currentTemplateInstance', template);
   });
   // if (key === 'widgetName') {

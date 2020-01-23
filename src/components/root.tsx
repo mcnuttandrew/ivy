@@ -433,11 +433,10 @@ class RootComponent extends React.Component<RootProps> {
 export function mapStateToProps({base}: {base: AppState}): any {
   const template = base.currentTemplateInstance;
   const templateMap = base.templateMap;
-  // const pojoTemplate = template && template;
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
   return {
-    canRedo: base.redoStack.size >= 1,
-    canUndo: base.undoStack.size >= 1,
+    canRedo: base.redoStack.length >= 1,
+    canUndo: base.undoStack.length >= 1,
     codeMode: base.codeMode,
     columns: base.columns,
     currentTheme: base.currentTheme,

@@ -21,7 +21,7 @@ function updateCatalogView(state: AppState, view: string): AppState {
 
 export const switchView: ActionResponse = (state, payload) => {
   const newCatalog = state.viewCatalog[payload];
-  return produce(updateCatalogView(state, state.get('currentView')), draftState => {
+  return produce(updateCatalogView(state, state.currentView), draftState => {
     draftState.currentView = payload;
     draftState.spec = newCatalog.spec;
     draftState.specCode = stringify(newCatalog.spec);
@@ -38,7 +38,7 @@ export const switchView: ActionResponse = (state, payload) => {
 };
 
 export const createNewView: ActionResponse = state => {
-  const newViewName = `view${state.get('views').size + 1}`;
+  const newViewName = `view${state.views.length + 1}`;
   // const newState = state
   //   .set('views', state.get('views').push(newViewName))
   //   .setIn(['viewCatalog', newViewName], BLANK_CATALOG_ENTRY);

@@ -53,17 +53,21 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     if (lang === 'vega') {
       (finalSpec.data || []).forEach((row: any, idx: number) => {
         if (row.values === 'myData') {
-          finalSpec.data[idx].values = data;
+          finalSpec.data[idx].values = JSON.parse(JSON.stringify(data));
         }
       });
     }
     if (lang === 'vega-lite' || !language) {
       if (!get(finalSpec, ['data', 'values'])) {
         finalSpec.data = {
-          values: data,
+          // values: data,
+          // TERRIBLE HACK BECAUSE VEGA IS BAD
+          // TODO use frozen copy to guard updates of the unfrozen copy
+          values: JSON.parse(JSON.stringify(data)),
         };
       }
     }
+
     console.log(finalSpec, language, theme);
     return (
       <Vega actions={true} spec={finalSpec} mode={language} theme={theme} tooltip={new Handler({}).call} />

@@ -2,7 +2,7 @@ import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 
 import {findField, getAllInUseFields, extractFieldStringsForType} from '../utils';
-import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
+import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {setTemplateValues} from '../hydra-lang';
@@ -180,7 +180,7 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   // return newState.setIn(fieldRoute, newFieldVal);
 };
 
-export const updateCodeRepresentation: ActionResponse = (_, newState) => {
+export const updateCodeRepresentation: ActionResponse = (_, newState: AppState) => {
   return produce(newState, (draftState: any) => {
     draftState.specCode = stringify(newState.spec);
   });
@@ -236,12 +236,12 @@ export const setRepeats: ActionResponse = (state, payload) => {
   });
 };
 
-const createStackItem = (state: AppState): AppState => {
+const createStackItem = (state: AppState): UndoRedoStackItem => {
   return {
-    spec: state.get('spec'),
-    currentView: state.get('currentView'),
-    templateMap: state.get('templateMap'),
-    views: state.get('views'),
+    spec: state.spec,
+    currentView: state.currentView,
+    templateMap: state.templateMap,
+    views: state.views,
   };
 };
 

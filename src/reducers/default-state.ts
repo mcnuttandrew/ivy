@@ -1,7 +1,60 @@
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
+import {ColumnHeader} from '../types';
+import {Template, TemplateMap} from '../templates/types';
 // import SCATTERPLOT from '../templates/example-templates/scatterplot';
-export type AppState = {[x: string]: any};
+export interface UndoRedoStackItem {
+  spec: any;
+  currentView: string;
+  templateMap: TemplateMap;
+  views: string[];
+}
+export interface AppState {
+  // meta-data
+  currentlySelectedFile: string;
+  columns: ColumnHeader[];
+  metaColumns: ColumnHeader[];
+
+  // spec configs
+  spec: any;
+  specCode: string;
+  currentTheme: string;
+  editorError: boolean;
+  editMode: boolean;
+
+  // GUI
+  // currentTemplateInstance: SCATTERPLOT;
+  // encodingMode: 'Scatterplot';
+  currentTemplateInstance: Template | null;
+
+  dataModalOpen: boolean;
+  encodingMode: string;
+  showProgrammaticMode: boolean;
+  showSimpleDisplay: boolean;
+  showGUIView: boolean;
+  codeMode: string;
+  editorFontSize: number;
+  programModalOpen: boolean;
+
+  // undo redo
+  undoStack: UndoRedoStackItem[];
+  redoStack: UndoRedoStackItem[];
+
+  // view stuff
+  views: string[];
+  viewCatalog: {[x: string]: any};
+  currentView: string;
+
+  // template stuff
+
+  templates: Template[];
+  templateMap: TemplateMap;
+  templateBuilderModalOpen: boolean;
+
+  data: {[x: string]: any}[];
+  originalData: {[x: string]: any}[];
+  dataModification: string;
+}
 
 export interface ActionResponse {
   (state: AppState, payload: any): AppState;
@@ -9,11 +62,17 @@ export interface ActionResponse {
 
 export const blindSet = (key: string): ActionResponse => (state, payload): AppState =>
   produce(state, draftState => {
+    /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+    // @ts-ignore
     draftState[key] = payload;
+    /* eslint-enable @typescript-eslint/ban-ts-ignore*/
   });
 export const toggle = (key: string): ActionResponse => (state): AppState =>
   produce(state, draftState => {
+    /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+    // @ts-ignore
     draftState[key] = !state[key];
+    /* eslint-enable @typescript-eslint/ban-ts-ignore*/
   });
 
 // export const blindSet = (key: string): ActionResponse => (state, payload): AppState =>
@@ -71,4 +130,6 @@ export const DEFAULT_STATE: AppState = {
   templateBuilderModalOpen: false,
 
   data: [],
+  originalData: [],
+  dataModification: null,
 };

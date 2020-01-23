@@ -42,7 +42,10 @@ export function executePromisesInSeries(tasks: any): any {
 }
 
 export function findField(state: AppState, targetField: string, columnKey = 'columns'): ColumnHeader {
-  return state[columnKey].find(({field}: {field: string}) => field === targetField);
+  if (columnKey === 'metaColumns') {
+    return state.metaColumns.find(({field}: {field: string}) => field === targetField);
+  }
+  return state.columns.find(({field}: {field: string}) => field === targetField);
 }
 
 export function compareObjects(a: any, b: any): boolean {
@@ -115,24 +118,22 @@ export function get(obj: any, route: string[]): any {
 export function getAllInUseFields(spec: any): Set<string> {
   // this only works for vega-lite
   const inUse = new Set([]);
-  console.log('IN USE BROKE');
+  const encoding = (spec.spec && spec.spec.encoding) || spec.encoding || {};
+  Object.values(encoding).forEach((x: any) => {
+    if (!x || !x.length) {
+      return;
+    }
+    const channel = x;
+    if (typeof channel.field === 'string') {
+      inUse.add(channel.field);
+      return;
+    }
+    if (channel.field && channel.field.repeat) {
+      inUse.add(channel.field.repeat);
+      return;
+    }
+  });
   return inUse;
-  // const encoding = (spec.spec && spec.spec.encoding) || spec.encoding || [];
-  // encoding.forEach((x: any) => {
-  //   if (!x || !x.length) {
-  //     return;
-  //   }
-  //   const channel = x;
-  //   if (typeof channel.field === 'string') {
-  //     inUse.add(channel.field);
-  //     return;
-  //   }
-  //   if (channel.field && channel.field.repeat) {
-  //     inUse.add(channel.field.repeat);
-  //     return;
-  //   }
-  // });
-  // return inUse;
 }
 
 export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
