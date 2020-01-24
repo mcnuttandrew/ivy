@@ -31,16 +31,16 @@ test('#setTemplateValues', () => {
 test('#fillTemplateMapWithDefaults', () => {
   const preparedState = setEncodingMode(recieveTemplates(DEFAULT_STATE, DEFAULT_TEMPLATES), 'Scatterplot');
   const newState = fillTemplateMapWithDefaults(preparedState);
-  expect(newState.get('spec').toJS()).toMatchSnapshot();
-  expect(newState.get('templateMap').toJS()).toMatchSnapshot();
+  expect(newState.spec).toMatchSnapshot();
+  expect(newState.templateMap).toMatchSnapshot();
 
   const nextState = fillTemplateMapWithDefaults(setEncodingMode(newState, 'pie chart'));
-  expect(nextState.get('spec').toJS()).toMatchSnapshot();
-  expect(nextState.get('templateMap').toJS()).toMatchSnapshot();
+  expect(nextState.spec).toMatchSnapshot();
+  expect(nextState.templateMap).toMatchSnapshot();
 
   const nextState2 = fillTemplateMapWithDefaults(setEncodingMode(newState, 'Data Table'));
-  expect(nextState2.get('spec').toJS()).toMatchSnapshot();
-  expect(nextState2.get('templateMap').toJS()).toMatchSnapshot();
+  expect(nextState2.spec).toMatchSnapshot();
+  expect(nextState2.templateMap).toMatchSnapshot();
 });
 
 // // UGH come back to this later
