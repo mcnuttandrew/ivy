@@ -2,7 +2,7 @@ import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 
 import {findField, getAllInUseFields, extractFieldStringsForType, get} from '../utils';
-import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem, blindSet} from './default-state';
+import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {setTemplateValues} from '../hydra-lang';
