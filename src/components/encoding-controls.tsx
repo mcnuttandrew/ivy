@@ -15,6 +15,7 @@ interface Props {
   modifyValueOnTemplate: GenericAction;
   saveCurrentTemplate: GenericAction;
   setBlankTemplate: GenericAction;
+  setCodeMode: GenericAction;
   setEditMode: GenericAction;
   setEncodingMode: GenericAction;
   template?: Template;
@@ -34,6 +35,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     editMode,
     saveCurrentTemplate,
     setBlankTemplate,
+    setCodeMode,
     setEditMode,
     template,
     templateSaveState,
@@ -44,7 +46,12 @@ export default function EncodingControls(props: Props): JSX.Element {
   const FULL_BUTTONS = [
     {
       disabled: false,
-      onClick: (): any => chainActions([(): any => setBlankTemplate(false), (): any => setEditMode(true)]),
+      onClick: (): any =>
+        chainActions([
+          (): any => setBlankTemplate(false),
+          (): any => setEditMode(true),
+          (): any => setCodeMode('TEMPLATE'),
+        ]),
       icon: <IoMdCreate />,
       label: 'NEW',
     },

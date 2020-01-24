@@ -33,6 +33,7 @@ export const loadExternalTemplate = buildEasyAction('load-external-template');
 export const modifyValueOnTemplate = buildEasyAction('modify-value-on-template');
 export const moveWidget = buildEasyAction('move-widget-in-template');
 export const readInTemplate = buildEasyAction('read-in-template');
+export const readInTemplateMap = buildEasyAction('read-in-template-map');
 export const removeWidget = buildEasyAction('remove-widget-from-template');
 export const saveCurrentTemplate = buildEasyAction('save-template');
 export const setBlankTemplate = buildEasyAction('set-blank-template');

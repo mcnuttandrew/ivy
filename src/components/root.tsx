@@ -99,6 +99,7 @@ interface RootProps {
   modifyValueOnTemplate: GenericAction;
   moveWidget: GenericAction;
   readInTemplate: GenericAction;
+  readInTemplateMap: GenericAction;
   removeWidget: GenericAction;
   saveCurrentTemplate: GenericAction;
   setBlankTemplate: GenericAction;
@@ -223,6 +224,7 @@ class RootComponent extends React.Component<RootProps> {
       removeWidget,
       saveCurrentTemplate,
       setBlankTemplate,
+      setCodeMode,
       setEditMode,
       setEncodingMode,
       setEncodingParameter,
@@ -252,6 +254,7 @@ class RootComponent extends React.Component<RootProps> {
             modifyValueOnTemplate={modifyValueOnTemplate}
             saveCurrentTemplate={saveCurrentTemplate}
             setBlankTemplate={setBlankTemplate}
+            setCodeMode={setCodeMode}
             setEditMode={setEditMode}
             setEncodingMode={setEncodingMode}
             template={template}
@@ -318,10 +321,12 @@ class RootComponent extends React.Component<RootProps> {
     const {
       addWidget,
       codeMode,
+      chainActions,
       editMode,
       editorError,
       editorFontSize,
       readInTemplate,
+      readInTemplateMap,
       setCodeMode,
       setEditMode,
       setEditorFontSize,
@@ -344,10 +349,12 @@ class RootComponent extends React.Component<RootProps> {
         <CodeEditor
           addWidget={addWidget}
           codeMode={codeMode}
+          chainActions={chainActions}
           editMode={editMode}
           editorError={editorError}
           editorFontSize={editorFontSize}
           readInTemplate={readInTemplate}
+          readInTemplateMap={readInTemplateMap}
           setCodeMode={setCodeMode}
           setEditMode={setEditMode}
           setEditorFontSize={setEditorFontSize}

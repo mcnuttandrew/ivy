@@ -136,6 +136,18 @@ export const readInTemplate: ActionResponse = (state, payload) => {
   });
 };
 
+export const readInTemplateMap: ActionResponse = (state, payload) => {
+  if (payload.error) {
+    return produce(state, draftState => {
+      draftState.editorError = payload.error;
+    });
+  }
+  return produce(state, draftState => {
+    draftState.templateMap = JSON.parse(payload.code);
+    draftState.editorError = payload.error;
+  });
+};
+
 export const setBlankTemplate: ActionResponse = (state, fork) => {
   const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
@@ -163,32 +175,34 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
 
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
-  const template = state.currentTemplateInstance;
-  const code = template.code;
+  // const template = state.currentTemplateInstance;
+  const code = state.currentTemplateInstance.code;
   return produce(state, draftState => {
-    draftState.currentTemplateInstance = produce(template, draftTemplate => {
-      if (key === 'widgetName') {
-        // update the old code with the new name
-        const widget = draftTemplate.widgets[idx];
-        /* eslint-disable @typescript-eslint/ban-ts-ignore*/
-        // @ts-ignore
-        const oldValue = `\\[${widget[key]}\\]`;
-        /* eslint-enable @typescript-eslint/ban-ts-ignore*/
-        const re = new RegExp(oldValue, 'g');
-        draftTemplate.code = code.replace(re, `[${value}]`);
-        draftState.templateMap[value] = state.templateMap[oldValue];
-        delete draftState.templateMap[oldValue];
-        draftTemplate.widgets[idx].widgetName = value;
-      } else if (key === 'displayName') {
-        // display name is a property of the widget container and not the widget parameter...
-        draftTemplate.widgets[idx].displayName = value;
-      } else {
-        /* eslint-disable @typescript-eslint/ban-ts-ignore*/
-        // @ts-ignore
-        draftTemplate.widgets[idx].widget[key] = value;
-        /* eslint-enable @typescript-eslint/ban-ts-ignore*/
-      }
-    });
+    if (key === 'widgetName') {
+      // update the old code with the new name
+
+      const widget = draftState.currentTemplateInstance.widgets[idx];
+      const oldName = widget.widgetName;
+      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+      // @ts-ignore
+      const oldValue = `\\[${widget[key]}\\]`;
+      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
+      const re = new RegExp(oldValue, 'g');
+      draftState.currentTemplateInstance.code = code.replace(re, `[${value}]`);
+      draftState.currentTemplateInstance.widgets[idx].widgetName = value;
+
+      // update the template map with the new name
+      draftState.templateMap[value] = state.templateMap[oldName];
+      delete draftState.templateMap[oldName];
+    } else if (key === 'displayName') {
+      // display name is a property of the widget container and not the widget parameter...
+      draftState.currentTemplateInstance.widgets[idx].displayName = value;
+    } else {
+      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+      // @ts-ignore
+      draftState.currentTemplateInstance.widgets[idx].widget[key] = value;
+      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
+    }
   });
 };
 

@@ -17,10 +17,12 @@ import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/intros
 interface Props {
   addWidget?: GenericAction;
   codeMode: string;
+  chainActions: GenericAction;
   editorError: null | string;
   editMode: boolean;
   editorFontSize: number;
   readInTemplate: GenericAction;
+  readInTemplateMap: GenericAction;
   setCodeMode: GenericAction;
   setEditorFontSize: GenericAction;
   setEditMode: GenericAction;
@@ -165,18 +167,17 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   handleCodeUpdate(code: string): void {
-    const {setNewSpecCode, readInTemplate, codeMode} = this.props;
-    if (codeMode === 'PARAMETERS') {
-      Promise.resolve()
-        .then(() => JSON.parse(code))
-        .then(() => readInTemplate({code, inError: false}))
-        .catch(() => readInTemplate({code, inError: true}));
-    } else {
-      Promise.resolve()
-        .then(() => JSON.parse(code))
-        .then(() => setNewSpecCode({code, inError: false}))
-        .catch(() => setNewSpecCode({code, inError: true}));
-    }
+    const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
+    const responseFunctionMap: {[x: string]: GenericAction} = {
+      PARAMETERS: readInTemplate,
+      SPECIFICATION: readInTemplateMap,
+      TEMPLATE: setNewSpecCode,
+    };
+    const response = responseFunctionMap[codeMode];
+    Promise.resolve()
+      .then(() => JSON.parse(code))
+      .then(() => response && response({code, inError: false}))
+      .catch(() => response && response({code, inError: true}));
   }
 
   suggestionBox(): JSX.Element {
@@ -225,11 +226,19 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   controls(): JSX.Element {
-    const {setCodeMode, codeMode, editMode, setEditMode} = this.props;
+    const {setCodeMode, codeMode, editMode, setEditMode, chainActions} = this.props;
     const {updateMode} = this.state;
     return (
       <div className="code-option-tabs flex-down full-height background-2">
-        <div className="flex save-edit-button" onClick={(): any => setEditMode(!editMode)}>
+        <div
+          className="flex save-edit-button"
+          onClick={(): any =>
+            chainActions([
+              (): any => setEditMode(!editMode),
+              (): any => setCodeMode(editMode ? 'EXPORT TO JSON' : 'TEMPLATE'),
+            ])
+          }
+        >
           <div>{editMode ? 'SAVE' : 'EDIT'}</div>
           <IoIosCreate />
         </div>
