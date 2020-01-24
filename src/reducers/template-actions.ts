@@ -73,10 +73,7 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
   let newState = state;
   if (payload.containingShelf) {
     newState = produce(state, draftState => {
-      const templateMap = state.templateMap;
-      console.log('TODO THIS IS MAYBE WRONG');
-      delete templateMap[payload.containingShelf];
-      draftState.templateMap = {...templateMap};
+      delete draftState.templateMap[payload.containingShelf];
     });
     // newState = newState.deleteIn(['templateMap', payload.containingShelf]);
   }
@@ -177,8 +174,8 @@ export const readInTemplate: ActionResponse = (state, payload) => {
 
 export const setBlankTemplate: ActionResponse = (state, fork) => {
   // const currentCode = state.getIn(['currentTemplateInstance', 'code']) || state.get('specCode');
-  const currentCode = state.currentTemplateInstance.code || state.specCode;
-  const newTemplate = BLANK_TEMPLATE;
+  const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
+  const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
   if (fork) {
     // newTemplate = newTemplate.set('code', currentCode);
     newTemplate.code = currentCode;
@@ -212,7 +209,6 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
   return produce(state, draftState => {
     draftState.currentTemplateInstance = produce(template, draftTemplate => {
       if (key === 'widgetName') {
-        // TODO This is broken in the other branch
         // update the old code with the new name
         const widget = draftTemplate.widgets[idx];
         /* eslint-disable @typescript-eslint/ban-ts-ignore*/
@@ -221,12 +217,8 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
         /* eslint-enable @typescript-eslint/ban-ts-ignore*/
         const re = new RegExp(oldValue, 'g');
         draftTemplate.code = code.replace(re, `[${value}]`);
-
-        console.log('THSI LOGIC MIGHT BE WRONG');
-        const templateMap = state.templateMap;
-        templateMap[value] = templateMap[oldValue];
-        delete templateMap[oldValue];
-        // template = draftTemplate.setIn(['widgets', idx, key], value);
+        draftState.templateMap[value] = state.templateMap[oldValue];
+        delete draftState.templateMap[oldValue];
         draftTemplate.widgets[idx].widgetName = value;
       } else if (key === 'displayName') {
         // display name is a property of the widget container and not the widget parameter...
@@ -238,7 +230,6 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
         /* eslint-enable @typescript-eslint/ban-ts-ignore*/
       }
     });
-    // return newState.set('currentTemplateInstance', template);
   });
   // if (key === 'widgetName') {
   //   // TODO This is broken in the other branch
@@ -267,7 +258,10 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
 };
 
 // hey it's a lense
-type modifyWidgetLense = (state: AppState, mod: (x: any) => any) => AppState;
+type modifyWidgetLense = (
+  state: AppState,
+  mod: (x: TemplateWidget<WidgetSubType>[]) => TemplateWidget<WidgetSubType>[],
+) => AppState;
 const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
   produce(state, draftState => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
@@ -278,13 +272,15 @@ export const removeWidget: ActionResponse = (state, payload) =>
   modifyCurrentWidgets(state, d => d.filter((_: any, idx: number) => payload !== idx));
 
 export const moveWidget: ActionResponse = (state, payload) => {
-  console.log('MOVE IS BROKEN');
-  return state;
-  // const {fromIdx, toIdx} = payload;
-  // if (fromIdx === undefined || toIdx === undefined) {
-  //   return state;
-  // }
-  // return modifyCurrentWidgets(state, d => d.delete(fromIdx).insert(toIdx, d.get(fromIdx)));
+  const {fromIdx, toIdx} = payload;
+  if (fromIdx === undefined || toIdx === undefined) {
+    return state;
+  }
+  return modifyCurrentWidgets(state, d => {
+    const withoutIdx = d.filter((_, idx) => idx !== fromIdx);
+    withoutIdx.splice(toIdx, 0, d[fromIdx]);
+    return withoutIdx;
+  });
 };
 // const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
 //   state.setIn(

@@ -1,4 +1,4 @@
-import {getUniques, getDomain, findField} from '../utils';
+import {getUniques, getDomain, findField, get} from '../utils';
 import {ActionResponse} from './default-state';
 import produce from 'immer';
 
@@ -16,22 +16,25 @@ export const createFilter: ActionResponse = (state, payload) => {
     arr.push(newFilter);
     draftState.spec.transform = arr;
   });
-  // return state.updateIn(['spec', 'transform'], (arr: any) => (arr || []).push(newFilter));
 };
 
 export const updateFilter: ActionResponse = (state, payload) => {
-  console.log('TODO: BROKEN, TOO HARD TO DO BLIND');
-  return state;
-  // const {newFilterValue, idx} = payload;
-  // const oneOf = ['spec', 'transform', idx, 'filter', 'oneOf'];
-  // if (get(state, oneOf)) {
-  //   return state.setIn(oneOf, newFilterValue);
-  // }
-  // return state.setIn(['spec', 'transform', idx, 'filter', 'range'], newFilterValue);
+  const {newFilterValue, idx} = payload;
+  const oneOf = ['spec', 'transform', idx, 'filter', 'oneOf'];
+  if (get(state, oneOf)) {
+    return produce(state, draftState => {
+      draftState.spec.transform[idx].filter.oneOf = newFilterValue;
+    });
+  }
+  return produce(state, draftState => {
+    draftState.spec.transform[idx].filter.range = newFilterValue;
+  });
 };
 
 export const deleteFilter: ActionResponse = (state, deleteIndex) => {
-  console.log('TODO: BROKEN, TOO HARD TO DO BLIND');
-  return state;
-  // return state.deleteIn(['spec', 'transform', deleteIndex]);
+  return produce(state, draftState => {
+    draftState.spec.transform = draftState.spec.transform.filter(
+      (_: any, idx: number) => idx !== deleteIndex,
+    );
+  });
 };

@@ -27,16 +27,15 @@ function inferredLanguage(spec: any): string | null {
 // This componenent has the simple task of disallowing renders other than when the spec has changed
 // in effect it is a modest caching layer. It also allows us to obscure some of the odities of the vega interface
 export default class VegaWrapper extends React.Component<VegaWrapperProps> {
-  // shouldComponentUpdate(nextProps: VegaWrapperProps): boolean {
-  //   console.log('TODO MAKE SURE THIS ISN"T BROKE');
-  //   // const diffSpec = this.props.spec !== nextProps.spec;
-  //   // const diffTheme = this.props.theme !== nextProps.theme;
-  //   // return diffSpec || diffTheme;
-  //   // const diffSpec = this.props.spec !== nextProps.spec;
-  //   const diffTheme = this.props.theme !== nextProps.theme;
-  //   return diffTheme;
-  // return true;
-  // }
+  shouldComponentUpdate(nextProps: VegaWrapperProps): boolean {
+    const diffSpec = JSON.stringify(this.props.spec) !== JSON.stringify(nextProps.spec);
+    const diffTheme = this.props.theme !== nextProps.theme;
+    return diffSpec || diffTheme;
+    // // const diffSpec = this.props.spec !== nextProps.spec;
+    // const diffTheme = this.props.theme !== nextProps.theme;
+    // return diffTheme;
+    // return true;
+  }
 
   render(): JSX.Element {
     const {spec, data, theme, language = 'vega-lite'} = this.props;

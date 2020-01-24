@@ -15,7 +15,8 @@
   },
   "rules": {
     "prettier/prettier": ["error", { "singleQuote": true }],
-    "@typescript-eslint/no-explicit-any": 0
+    "@typescript-eslint/no-explicit-any": 0,
+    "no-console": "warn"
   },
   "settings": {
     "react": {

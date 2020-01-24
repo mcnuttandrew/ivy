@@ -139,20 +139,6 @@ export function getAllInUseFields(spec: any): Set<string> {
 export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
   columns.filter((column: ColumnHeader) => column.type === type).map((column: ColumnHeader) => column.field);
 
-// currently unused
-export function checkEncodingForValidity(spec: any): boolean {
-  const usingNested = !!spec.spec;
-  if (usingNested ? spec.spec.layer : spec.layer) {
-    console.log('layer');
-    return false;
-  }
-  if (usingNested ? !spec.spec.encoding : !spec.encoding) {
-    console.log('encoding');
-    return false;
-  }
-  return true;
-}
-
 export const getTemplate = (state: AppState, template: string): Template | null => {
   return state.templates.find((d: any) => d.templateName === template);
 };

@@ -90,23 +90,13 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
 
 export const coerceType: ActionResponse = (state, payload) => {
   const {field, type} = payload;
-  console.log('this may be wrong!!!');
-  const columnIdx = state.columns.findIndex((d: any) => d.field === field);
   return produce(state, draftState => {
+    const columnIdx = state.columns.findIndex((d: any) => d.field === field);
     draftState.columns[columnIdx].type = type;
   });
-  // return state.set(
-  //   'columns',
-  //   state
-  //     .get('columns')
-  //     .setIn([columnIdx, 'type'], type)
-  //     .toJS(),
-  // );
 };
 
 function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChannel: string): AppState {
-  console.log('TODO BROKEN');
-  // return newState;
   const route = usingNestedSpec(newState) ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
   // // figure out if target removing field is a metacolumn
   const oldField = get(oldState, [...route, targetChannel]);
@@ -140,7 +130,6 @@ function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChanne
 
 function noMetaUsage(state: AppState): boolean {
   const inUse = getAllInUseFields(state.spec);
-  console.log(inUse);
   return !(inUse.has('row') || inUse.has('column') || inUse.has('repeat'));
 }
 
@@ -161,7 +150,6 @@ function addMetaEncoding(state: AppState): AppState {
 }
 
 function removeMetaEncoding(state: AppState): AppState {
-  console.log('BRKOEN BRKOEN BRKOEN');
   return produce(state, draftState => {
     draftState.spec.encoding = draftState.spec.spec.encoding;
     draftState.spec.mark = draftState.spec.spec.mark;
@@ -177,11 +165,9 @@ function removeMetaEncoding(state: AppState): AppState {
 }
 
 export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
-  console.log('META COLUMN BROKEN');
   // moving from un-nested spec to nested spec
   let newState = state;
   if (!usingNestedSpec(state)) {
-    console.log('TEST');
     newState = produce(addMetaEncoding(state), draftState => {
       draftState.spec.repeat = {};
     });
@@ -267,7 +253,6 @@ export const updateCodeRepresentation: ActionResponse = (_, newState: AppState) 
 
 // move a field from one channel to another (origin field might be null)
 export const setEncodingParameter: ActionResponse = (state, payload) => {
-  // console.log('encoding is broken !');
   // return state;
   if (payload.isMeta) {
     return setChannelToMetaColumn(state, payload);
@@ -277,7 +262,6 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   // const route = usingNested ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
   let newState = state;
   if (fieldHeader) {
-    console.log('here');
     newState = produce(newState, draftState => {
       const newField = {
         field: payload.text,
@@ -321,7 +305,6 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   }
   // check if the nesting spec should be removed
   if (usingNestedSpec(state) && noMetaUsage(newState)) {
-    console.log('should remove meta');
     return removeMetaEncoding(newState);
   }
   return newState;

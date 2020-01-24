@@ -84,6 +84,9 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
 
     let idx = -1;
     const sectionedWidgets = buildSections(template).map((section, jdx) => {
+      if (!section.length) {
+        return null;
+      }
       const inBlankSection = section[0].widgetType === 'Section';
       return (
         <div
