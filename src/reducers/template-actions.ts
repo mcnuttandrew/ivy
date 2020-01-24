@@ -159,7 +159,6 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
   return produce(state, draftState => {
     draftState.templates = getAndRemoveTemplate(state, payload).templates;
   });
-  // return state.set('templates', getAndRemoveTemplate(state, payload));
 };
 
 export const setWidgetValue: ActionResponse = (state, payload) => {

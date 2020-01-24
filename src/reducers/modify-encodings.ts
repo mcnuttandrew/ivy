@@ -39,11 +39,10 @@ export const changeMarkType: ActionResponse = (state, payload) => {
 
 // blindly set a new spec
 // TODO this could be a blind set
-// export const setNewSpec: ActionResponse = (state, payload) =>
-//   produce(state, draftState => {
-//     draftState.spec = payload;
-//   });
-export const setNewSpec = blindSet('spec');
+export const setNewSpec: ActionResponse = (state, payload) =>
+  produce(state, draftState => {
+    draftState.spec = payload;
+  });
 
 // set the spec code
 export const setNewSpecCode: ActionResponse = (state, payload) => {
@@ -81,7 +80,7 @@ export const coerceType: ActionResponse = (state, payload) => {
 
 function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChannel: string): AppState {
   const route = usingNestedSpec(newState) ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
-  // // figure out if target removing field is a metacolumn
+  // figure out if target removing field is a metacolumn
   const oldField = get(oldState, [...route, targetChannel]);
   const repeaterField = get(oldField, ['field', 'repeat']);
   if (!repeaterField) {
@@ -169,18 +168,15 @@ export const updateCodeRepresentation: ActionResponse = (_, newState: AppState) 
   return produce(newState, (draftState: any) => {
     draftState.specCode = stringify(newState.spec);
   });
-  // return newState.set('specCode', stringify(newState.get('spec')));
 };
 
 // move a field from one channel to another (origin field might be null)
 export const setEncodingParameter: ActionResponse = (state, payload) => {
-  // return state;
   if (payload.isMeta) {
     return setChannelToMetaColumn(state, payload);
   }
   const fieldHeader = findField(state, payload.text);
   const usingNested = usingNestedSpec(state);
-  // const route = usingNested ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
   let newState = state;
   if (fieldHeader) {
     newState = produce(newState, draftState => {
