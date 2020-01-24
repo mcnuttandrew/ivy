@@ -15,37 +15,45 @@ export interface TemplateWidget<T> {
    */
   widgetType: WidgetType;
   widget: T;
+  [x: string]: any;
 }
 export interface DataTargetWidget {
   allowedTypes: DataType[];
   required: boolean;
+  [x: string]: any;
 }
 export interface MultiDataTargetWidget {
   allowedTypes: DataType[];
   minNumberOfTargets?: number;
   maxNumberOfTargets?: number;
   required: boolean;
+  [x: string]: any;
 }
 export interface ListWidget {
   allowedValues: {display: string; value: string}[];
   defaultValue: string;
+  [x: string]: any;
 }
 export interface SwitchWidget {
   activeValue: string;
   inactiveValue: string;
   defaultsToActive: boolean;
+  [x: string]: any;
 }
 export interface TextWidget {
   text: string;
+  [x: string]: any;
 }
 export interface SectionWidget {
   text: string;
+  [x: string]: any;
 }
 export interface SliderWidget {
   minVal: number;
   maxVal: number;
   step?: number;
   defaultValue: number;
+  [x: string]: any;
 }
 export type WidgetSubType =
   | DataTargetWidget

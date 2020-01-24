@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 // i know this file is bad and crazy i feel bad
 export interface OptionValue {
   display: string;
@@ -32,12 +33,33 @@ export const marks: VegaMark[] = [
 
 // check if using the nested spec mode, if so, re-route into that subspec
 const maybePrefixWithSpec = (spec: any, route: string[]): string[] =>
-  spec.getIn(['spec']) ? ['spec', ...route] : route;
+  spec.spec ? ['spec', ...route] : route;
 
-const set = (spec: any, route: string[], value: any): any =>
-  spec.setIn(maybePrefixWithSpec(spec, route), value);
+const set = (spec: any, route: string[], value: any): any => {
+  // hopefully soon we can delete this?
+  return Immutable.fromJS(spec)
+    .setIn(maybePrefixWithSpec(spec, route), value)
+    .toJS();
+};
 
-const get = (spec: any, route: string[]): any => spec.getIn(maybePrefixWithSpec(spec, route));
+// safely access elements on a nested object
+export function getIn(obj: any, route: string[]): any {
+  if (!obj) {
+    return null;
+  }
+  if (route.length === 0) {
+    return null;
+  }
+  if (route.length === 1) {
+    return obj[route[0]];
+  }
+  const next = obj[route[0]];
+  if (!next) {
+    return null;
+  }
+  return getIn(next, route.slice(1));
+}
+const get = (spec: any, route: string[]): any => getIn(spec, maybePrefixWithSpec(spec, route));
 
 const justCountAgg = [
   {display: 'none', value: undefined},

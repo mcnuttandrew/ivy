@@ -16,7 +16,6 @@ const MARK_TYPES = PRIMITIVE_MARKS.sort().map((x: string) => ({
 interface EncodingColumnProps {
   changeMarkType: GenericAction;
   columns: ColumnHeader[];
-  iMspec: any;
   metaColumns: ColumnHeader[];
   onDrop: any;
   onDropFilter: any;
@@ -31,7 +30,6 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
     const {
       changeMarkType,
       columns,
-      iMspec,
       metaColumns,
       onDrop,
       setEncodingParameter,
@@ -50,7 +48,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         columns={columns}
         metaColumns={metaColumns}
         onDrop={onDrop}
-        iMspec={iMspec}
+        spec={spec}
         setNewSpec={setNewSpec}
         showSimpleDisplay={showSimpleDisplay}
         disable={disable}

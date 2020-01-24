@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import {setTemplateValues} from '../hydra-lang';
 import {TemplateWidget, ListWidget, SwitchWidget, SliderWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory} from '../templates';
@@ -132,7 +131,7 @@ export interface Suggestion {
 }
 
 export function synthesizeSuggestions(code: string, widgets: TemplateWidget<WidgetSubType>[]): Suggestion[] {
-  const parsedCode = safeParse(setTemplateValues(code, Immutable.fromJS(generateFullTemplateMap(widgets))));
+  const parsedCode = safeParse(setTemplateValues(code, generateFullTemplateMap(widgets)));
   if (!parsedCode) {
     return [];
   }

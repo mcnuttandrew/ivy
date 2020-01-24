@@ -8,7 +8,7 @@ import {EncodingOption} from '../constants';
 
 interface ConfigurationOptionProps {
   option: EncodingOption;
-  iMspec: any;
+  spec: any;
 
   setEncodingParameter: GenericAction;
   setNewSpec: GenericAction;
@@ -18,9 +18,9 @@ export default function ConfigurationOption(props: ConfigurationOptionProps): JS
   const {
     option: {optionType, optionName, options, optionSetter, optionGetter, optionDefault},
     setNewSpec,
-    iMspec,
+    spec,
   } = props;
-  const selected = optionGetter(iMspec);
+  const selected = optionGetter(spec);
   return (
     <div key={optionName} className="option-row flex">
       <div className="option-row-label">{optionName}</div>
@@ -28,7 +28,7 @@ export default function ConfigurationOption(props: ConfigurationOptionProps): JS
         <Selector
           options={options}
           selectedValue={selected || ''}
-          onChange={(value: any): any => setNewSpec(optionSetter(iMspec, value))}
+          onChange={(value: any): any => setNewSpec(optionSetter(spec, value))}
         />
       )}
       {optionType === 'Switch' && (
@@ -39,12 +39,12 @@ export default function ConfigurationOption(props: ConfigurationOptionProps): JS
           height={15}
           checkedIcon={false}
           width={50}
-          onChange={(): any => setNewSpec(optionSetter(iMspec, !selected))}
+          onChange={(): any => setNewSpec(optionSetter(spec, !selected))}
         />
       )}
 
       {optionType !== 'Switch' && (
-        <div className="clear-option" onClick={(): any => setNewSpec(optionSetter(iMspec, optionDefault))}>
+        <div className="clear-option" onClick={(): any => setNewSpec(optionSetter(spec, optionDefault))}>
           <TiDeleteOutline />
         </div>
       )}

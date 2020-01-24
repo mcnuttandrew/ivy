@@ -1,20 +1,21 @@
-import {List, Map} from 'immutable';
 import {EMPTY_SPEC, ActionResponse} from './default-state';
 import {ColumnHeader, DataType} from '../types';
 import {selectDataModification, executeDataModifcation} from '../operations/data-ops';
+import produce from 'immer';
 
 export const recieveData: ActionResponse = (state, payload) => {
   // this might be the wrong way to do this? it sort of depends on the internals of that vega component
   const dataModification = selectDataModification(payload);
-  return state
-    .set('data', executeDataModifcation(payload, dataModification))
-    .set('originalData', payload)
-    .set('dataModification', dataModification)
-    .set('spec', EMPTY_SPEC)
-    .set('views', List(['view1']))
-    .set('viewCatalog', Map())
-    .set('undoStack', List())
-    .set('redoStack', List());
+  return produce(state, draftState => {
+    draftState.data = executeDataModifcation(payload, dataModification);
+    draftState.originalData = payload;
+    draftState.dataModification = dataModification;
+    draftState.spec = EMPTY_SPEC;
+    draftState.views = ['view1'];
+    draftState.viewCatalog = {};
+    draftState.undoStack = [];
+    draftState.redoStack = [];
+  });
 };
 
 export const recieveTypeInferences: ActionResponse = (state, payload) => {
@@ -66,11 +67,15 @@ export const recieveTypeInferences: ActionResponse = (state, payload) => {
       metaColumn: true,
     };
   });
-
-  return state.set('columns', orderedColumns).set('metaColumns', metaColumns);
+  return produce(state, draftState => {
+    draftState.columns = orderedColumns;
+    draftState.metaColumns = metaColumns;
+  });
 };
 
 // TODO this can be a blind set
 export const changeSelectedFile: ActionResponse = (state, payload) => {
-  return state.set('currentlySelectedFile', payload);
+  return produce(state, draftState => {
+    draftState.currentlySelectedFile = payload;
+  });
 };

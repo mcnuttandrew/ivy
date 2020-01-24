@@ -1,5 +1,4 @@
 import stringify from 'json-stringify-pretty-compact';
-import Immutable, {List} from 'immutable';
 import {TemplateWidget, Template, WidgetSubType, TemplateMap} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
@@ -43,7 +42,10 @@ export function executePromisesInSeries(tasks: any): any {
 }
 
 export function findField(state: AppState, targetField: string, columnKey = 'columns'): ColumnHeader {
-  return state.get(columnKey).find(({field}: {field: string}) => field === targetField);
+  if (columnKey === 'metaColumns') {
+    return state.metaColumns.find(({field}: {field: string}) => field === targetField);
+  }
+  return state.columns.find(({field}: {field: string}) => field === targetField);
 }
 
 export function compareObjects(a: any, b: any): boolean {
@@ -116,12 +118,12 @@ export function get(obj: any, route: string[]): any {
 export function getAllInUseFields(spec: any): Set<string> {
   // this only works for vega-lite
   const inUse = new Set([]);
-  const encoding = spec.getIn(['spec', 'encoding']) || spec.getIn(['encoding']) || [];
-  encoding.forEach((x: any) => {
-    if (!x || !x.size) {
+  const encoding = (spec.spec && spec.spec.encoding) || spec.encoding || {};
+  Object.values(encoding).forEach((x: any) => {
+    if (!x) {
       return;
     }
-    const channel = x.toJS();
+    const channel = x;
     if (typeof channel.field === 'string') {
       inUse.add(channel.field);
       return;
@@ -137,28 +139,14 @@ export function getAllInUseFields(spec: any): Set<string> {
 export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
   columns.filter((column: ColumnHeader) => column.type === type).map((column: ColumnHeader) => column.field);
 
-// currently unused
-export function checkEncodingForValidity(spec: any): boolean {
-  const usingNested = !!spec.spec;
-  if (usingNested ? spec.spec.layer : spec.layer) {
-    console.log('layer');
-    return false;
-  }
-  if (usingNested ? !spec.spec.encoding : !spec.encoding) {
-    console.log('encoding');
-    return false;
-  }
-  return true;
-}
-
 export const getTemplate = (state: AppState, template: string): Template | null => {
-  return state.get('templates').find((d: any) => d.templateName === template);
+  return state.templates.find((d: any) => d.templateName === template);
 };
 
 export function widgetInUse(code: string, widgetName: string): boolean {
   return Boolean(code.match(new RegExp(`\\[${widgetName}\\]`, 'g')));
 }
-export function allWidgetsInUse(code: string, widgets: List<TemplateWidget<WidgetSubType>>): boolean {
+export function allWidgetsInUse(code: string, widgets: TemplateWidget<WidgetSubType>[]): boolean {
   return widgets
     .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'Text')
     .every((widget: TemplateWidget<WidgetSubType>) => !!widgetInUse(code, widget.widgetName));
@@ -211,16 +199,16 @@ export function deserializeTemplate(templateString: string): Template {
 
 type SaveState = 'NA' | 'NOT FOUND' | 'EQUAL' | 'DIFFERENT';
 export function getTemplateSaveState(base: AppState): SaveState {
-  const template = base.get('currentTemplateInstance');
+  const template = base.currentTemplateInstance;
   // using the grammar mode
   if (!template) {
     return 'NA';
   }
-  const associatedUpstreamTemplate = getTemplate(base, template.get('templateName'));
+  const associatedUpstreamTemplate = getTemplate(base, template.templateName);
   if (!associatedUpstreamTemplate) {
     return 'NOT FOUND';
   }
-  return Immutable.fromJS(associatedUpstreamTemplate).equals(template) ? 'EQUAL' : 'DIFFERENT';
+  return associatedUpstreamTemplate === template ? 'EQUAL' : 'DIFFERENT';
 }
 
 const USE_LOCAL = false;

@@ -10,7 +10,6 @@ interface VegaWrapperProps {
   spec: any;
   data: any;
   theme: VegaTheme;
-  iMspec: any;
   language?: any;
 }
 
@@ -29,7 +28,7 @@ function inferredLanguage(spec: any): string | null {
 // in effect it is a modest caching layer. It also allows us to obscure some of the odities of the vega interface
 export default class VegaWrapper extends React.Component<VegaWrapperProps> {
   shouldComponentUpdate(nextProps: VegaWrapperProps): boolean {
-    const diffSpec = !this.props.iMspec.equals(nextProps.iMspec);
+    const diffSpec = JSON.stringify(this.props.spec) !== JSON.stringify(nextProps.spec);
     const diffTheme = this.props.theme !== nextProps.theme;
     return diffSpec || diffTheme;
   }
@@ -49,17 +48,21 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     if (lang === 'vega') {
       (finalSpec.data || []).forEach((row: any, idx: number) => {
         if (row.values === 'myData') {
-          finalSpec.data[idx].values = data;
+          finalSpec.data[idx].values = JSON.parse(JSON.stringify(data));
         }
       });
     }
     if (lang === 'vega-lite' || !language) {
       if (!get(finalSpec, ['data', 'values'])) {
         finalSpec.data = {
-          values: data,
+          // values: data,
+          // TERRIBLE HACK BECAUSE VEGA IS BAD
+          // TODO use frozen copy to guard updates of the unfrozen copy
+          values: JSON.parse(JSON.stringify(data)),
         };
       }
     }
+
     return (
       <Vega actions={false} spec={finalSpec} mode={language} theme={theme} tooltip={new Handler({}).call} />
     );

@@ -1,4 +1,3 @@
-import {List} from 'immutable';
 import React from 'react';
 import VegaWrapper from './vega-wrap';
 import {VegaTheme} from '../types';
@@ -14,13 +13,12 @@ interface ChartAreaProps {
   currentView: string;
   data: any;
   deleteView: GenericAction;
-  iMspec: any;
   missingFields: string[];
   spec: any;
   switchView: GenericAction;
   template?: Template;
   templateComplete: boolean;
-  views: List<string>;
+  views: string[];
 }
 
 export default class ChartArea extends React.Component<ChartAreaProps> {
@@ -31,7 +29,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       currentTheme,
       currentView,
       data,
-      iMspec,
       missingFields,
       spec,
       switchView,
@@ -72,7 +69,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         <div className="chart-container center full-width full-height">
           {showChart && (
             <VegaWrapper
-              iMspec={iMspec}
               spec={spec}
               data={data}
               theme={currentTheme}

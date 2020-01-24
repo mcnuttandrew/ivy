@@ -1,4 +1,4 @@
-import Immutable, {Map} from 'immutable';
+import produce from 'immer';
 
 import {ActionResponse, AppState, EMPTY_SPEC, toggle, blindSet} from './default-state';
 import {getTemplate} from '../utils';
@@ -24,14 +24,14 @@ const quoteTrim = (x: string): string => x.replace(/["']/g, '');
 
 // TODO this should probably move somewhere else?
 function activeColumns(state: any): string[] {
-  const template = state.get('currentTemplateInstance');
+  const template = state.currentTemplateInstance;
   if (!template) {
-    return Array.from(getAllInUseFields(state.get('spec')));
+    return Array.from(getAllInUseFields(state.spec));
   }
-  const templateMap = state.get('templateMap');
-  const templateInUse = template.get('widgets').reduce((acc: Set<string>, widget: any) => {
-    const widgetType = widget.get('widgetType');
-    const val = templateMap.get(widget.get('widgetName'));
+  const templateMap = state.templateMap;
+  const templateInUse = template.widgets.reduce((acc: Set<string>, widget: any) => {
+    const widgetType = widget.widgetType;
+    const val = templateMap[widget.widgetName];
     // we only care about the data containing columns
     if (widgetType === 'MultiDataTarget') {
       return val.reduce((mem: Set<string>, key: string) => mem.add(key), acc);
@@ -50,20 +50,26 @@ export const setEncodingMode: ActionResponse = (state, payload) => {
   if (payload !== 'grammer') {
     // INSTANTIATE TEMPLATE AS A LOCAL COPY
     const template = getTemplate(state, payload);
-    updatedState = state
-      .set('encodingMode', payload)
-      .set('spec', Immutable.fromJS(JSON.parse(template.code)))
-      .set('currentTemplateInstance', Immutable.fromJS(template));
-    updatedState = fillTemplateMapWithDefaults(updatedState);
+    updatedState = fillTemplateMapWithDefaults(
+      produce(state, draftState => {
+        draftState.encodingMode = payload;
+        draftState.spec = JSON.parse(template.code);
+        draftState.currentTemplateInstance = template;
+      }),
+    );
   } else {
-    updatedState = state
-      .set('encodingMode', payload)
-      .set('spec', EMPTY_SPEC)
-      .set('currentTemplateInstance', null);
+    updatedState = produce(state, draftState => {
+      draftState.encodingMode = payload;
+      draftState.spec = EMPTY_SPEC;
+      draftState.currentTemplateInstance = null;
+    });
   }
   // figure out what the currently in use columns are and iteratively try to add them to the new one
-  const columnMap = state.get('columns').reduce((acc: any, x: ColumnHeader) => acc.set(x.field, x), Map());
+  const columnMap = state.columns.reduce((acc: {[d: string]: ColumnHeader}, x: ColumnHeader) => {
+    acc[x.field] = x;
+    return acc;
+  }, {});
   return activeColumns(state).reduce((acc: AppState, columnKey: string) => {
-    return addToNextOpenSlot(acc, columnMap.get(columnKey));
+    return addToNextOpenSlot(acc, columnMap[columnKey]);
   }, updatedState);
 };
