@@ -106,6 +106,13 @@ const BeeSwarm: Template = {
       },
     },
     {
+      widgetName: 'OtherSettingsSection',
+      widgetType: 'Section',
+      widget: {
+        text: 'Section for other settings',
+      },
+    },
+    {
       widgetName: 'radius',
       widgetType: 'Slider',
       widget: {

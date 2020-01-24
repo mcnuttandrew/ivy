@@ -37,7 +37,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
     const lang = inferredLanguage(spec) || language;
     if (lang === 'unit-vis') {
-      return <UnitVisChart data={data} spec={spec} />;
+      return <UnitVisChart data={JSON.parse(JSON.stringify(data))} spec={spec} />;
     }
     if (lang === 'hydra-data-table') {
       return <Table data={data} spec={spec} />;

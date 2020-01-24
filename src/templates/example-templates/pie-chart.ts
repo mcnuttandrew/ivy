@@ -107,6 +107,15 @@ const PieChart: Template = {
       },
     },
     {
+      widgetName: 'Sort',
+      widgetType: 'Switch',
+      widget: {
+        activeValue: 'true',
+        inactiveValue: 'false',
+        defaultsToActive: true,
+      },
+    },
+    {
       widgetName: 'value',
       widgetType: 'DataTarget',
       widget: {
@@ -123,6 +132,13 @@ const PieChart: Template = {
       },
     },
     {
+      widgetName: 'OtherSettingsSection',
+      widgetType: 'Section',
+      widget: {
+        text: 'Section for other settings',
+      },
+    },
+    {
       widgetName: 'colorScheme',
       widgetType: 'List',
       widget: {
@@ -136,15 +152,6 @@ const PieChart: Template = {
       widget: {
         activeValue: '60',
         inactiveValue: '0',
-        defaultsToActive: true,
-      },
-    },
-    {
-      widgetName: 'Sort',
-      widgetType: 'Switch',
-      widget: {
-        activeValue: 'true',
-        inactiveValue: 'false',
         defaultsToActive: true,
       },
     },
