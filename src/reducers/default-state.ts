@@ -75,10 +75,6 @@ export const toggle = (key: string): ActionResponse => (state): AppState =>
     /* eslint-enable @typescript-eslint/ban-ts-ignore*/
   });
 
-// export const blindSet = (key: string): ActionResponse => (state, payload): AppState =>
-//   state.set(key, payload);
-// export const toggle = (key: string): ActionResponse => (state): AppState => state.set(key, !state.get(key));
-
 // TODO undo this embarrasment (specifically the type messes)
 const defaultEmpty = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',

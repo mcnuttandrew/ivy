@@ -17,7 +17,6 @@ export default function MetaColumnPicker({
   columns,
   setRepeats,
 }: MetaColumnPickerTypes): JSX.Element {
-  // const selectedDomain = spec.getIn(['repeat', field]).toJS() || [];
   const selectedDomain = (spec.repeat && spec.repeat[field]) || [];
   const selectedVals = new Set(selectedDomain);
   const domain = columns.map((column: ColumnHeader) => column.field);

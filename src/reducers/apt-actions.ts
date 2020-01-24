@@ -38,7 +38,6 @@ function guessType(channel: string, type: string): string {
 
 const grammarBasedGuess: ActionResponse = (state, payload) => {
   // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
-  // const encoding = state.getIn(['spec', 'encoding']).toJS();
   const encoding = state.spec.encoding;
   const column = findField(state, payload.field);
   const fields = column.type === 'DIMENSION' ? dimensionFieldPreferences : measureFieldPreferences;
@@ -49,12 +48,7 @@ const grammarBasedGuess: ActionResponse = (state, payload) => {
   if (!channel) {
     return state;
   }
-  // encoding[channel] = {
-  //   field: payload.field,
-  //   type: guessType(channel, column.type),
-  // };
   return produce(state, draftState => {
-    // draftState.spec.encoding = encoding;
     draftState.spec.encoding[channel] = {
       field: payload.field,
       type: guessType(channel, column.type),

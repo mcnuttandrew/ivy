@@ -41,7 +41,6 @@ const set = (spec: any, route: string[], value: any): any => {
     .setIn(maybePrefixWithSpec(spec, route), value)
     .toJS();
 };
-// spec.setIn(maybePrefixWithSpec(spec, route), value);
 
 // safely access elements on a nested object
 export function getIn(obj: any, route: string[]): any {

@@ -31,10 +31,6 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     const diffSpec = JSON.stringify(this.props.spec) !== JSON.stringify(nextProps.spec);
     const diffTheme = this.props.theme !== nextProps.theme;
     return diffSpec || diffTheme;
-    // // const diffSpec = this.props.spec !== nextProps.spec;
-    // const diffTheme = this.props.theme !== nextProps.theme;
-    // return diffTheme;
-    // return true;
   }
 
   render(): JSX.Element {

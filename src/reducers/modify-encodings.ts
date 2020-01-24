@@ -2,7 +2,7 @@ import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 
 import {findField, getAllInUseFields, extractFieldStringsForType, get} from '../utils';
-import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem} from './default-state';
+import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem, blindSet} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {setTemplateValues} from '../hydra-lang';
@@ -17,7 +17,6 @@ export const clearEncoding: ActionResponse = state => {
     return produce(state, draftState => {
       draftState.spec = EMPTY_SPEC;
     });
-    // return state.set('spec', EMPTY_SPEC);
   }
 };
 
@@ -36,22 +35,15 @@ export const changeMarkType: ActionResponse = (state, payload) => {
       draftState.spec.mark.type = payload;
     }
   });
-  // return state;
-  // if (!state.getIn(route)) {
-  //   return state.setIn(['spec', 'mark'], {
-  //     ...state.getIn(['spec', 'mark']).toJS(),
-  //     type: payload,
-  //   });
-  // }
-  // return state.setIn(route, payload);
 };
 
 // blindly set a new spec
 // TODO this could be a blind set
-export const setNewSpec: ActionResponse = (state, payload) =>
-  produce(state, draftState => {
-    draftState.spec = payload;
-  });
+// export const setNewSpec: ActionResponse = (state, payload) =>
+//   produce(state, draftState => {
+//     draftState.spec = payload;
+//   });
+export const setNewSpec = blindSet('spec');
 
 // set the spec code
 export const setNewSpecCode: ActionResponse = (state, payload) => {
@@ -59,10 +51,6 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
   if (state.currentTemplateInstance) {
     // TODO i think eval should get checked here
     const filledInSpec = setTemplateValues(code, state.templateMap);
-    // return state
-    //   .setIn(['currentTemplateInstance', 'code'], code)
-    //   .set('editorError', inError)
-    //   .set('spec', JSON.parse(filledInSpec));
     return produce(state, draftState => {
       draftState.currentTemplateInstance.code = code;
       draftState.editorError = inError;
@@ -70,7 +58,6 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
     });
   }
   if (inError) {
-    // return state.set('specCode', code).set('editorError', inError);
     return produce(state, draftState => {
       draftState.specCode = code;
       draftState.editorError = inError;
@@ -82,10 +69,6 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
     draftState.editorError = null;
     draftState.spec = JSON.parse(code);
   });
-  // return state
-  //   .set('specCode', code)
-  //   .set('editorError', null)
-  //   .set('spec', JSON.parse(code));
 };
 
 export const coerceType: ActionResponse = (state, payload) => {
@@ -112,20 +95,6 @@ function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChanne
   return produce(newState, draftState => {
     delete draftState.spec.repeat[repeaterField];
   });
-  // return newState.deleteIn(['spec', 'repeat', repeaterField]);
-
-  // // figure out if target removing field is a metacolumn
-  // const oldField = oldState.getIn([...route, targetChannel]);
-  // const repeaterField = oldField.getIn(['field', 'repeat']);
-  // if (!repeaterField) {
-  //   return newState;
-  // }
-  // // check to see if that column is still in use after the removal
-  // const inUse = getAllInUseFields(newState.getIn(['spec']));
-  // if (inUse.has(repeaterField)) {
-  //   return newState;
-  // }
-  // return newState.deleteIn(['spec', 'repeat', repeaterField]);
 }
 
 function noMetaUsage(state: AppState): boolean {
@@ -141,12 +110,6 @@ function addMetaEncoding(state: AppState): AppState {
     delete draftState.spec.encoding;
     delete draftState.spec.mark;
   });
-  // return state
-  //   .setIn(['spec', 'spec'], {})
-  //   .setIn(['spec', 'spec', 'encoding'], state.getIn(['spec', 'encoding']))
-  //   .setIn(['spec', 'spec', 'mark'], state.getIn(['spec', 'mark']))
-  //   .deleteIn(['spec', 'encoding'])
-  //   .deleteIn(['spec', 'mark']);
 }
 
 function removeMetaEncoding(state: AppState): AppState {
@@ -156,12 +119,6 @@ function removeMetaEncoding(state: AppState): AppState {
     delete draftState.spec.spec;
     delete draftState.spec.repeat;
   });
-  // return state;
-  // return state
-  //   .setIn(['spec', 'encoding'], state.getIn(['spec', 'spec', 'encoding']))
-  //   .setIn(['spec', 'mark'], state.getIn(['spec', 'spec', 'mark']))
-  //   .deleteIn(['spec', 'spec'])
-  //   .deleteIn(['spec', 'repeat']);
 }
 
 export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
@@ -194,10 +151,7 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
 
   // if the card is being moved remove where it was before
   if (payload.containingShelf) {
-    // const delRoute = ['spec', 'spec', 'encoding', payload.containingShelf];
-    // newState = newState.deleteIn(delRoute);
     newState = produce(newState, draftState => {
-      // draftState.spec.repeat[payload.text] = extractFieldStringsForType(newState.columns, 'MEASURE');
       delete draftState.spec.spec.encoding[payload.containingShelf];
     });
   }
@@ -209,39 +163,6 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
       type: 'quantitative',
     };
   });
-  // return newState.setIn(fieldRoute, newFieldVal);
-  // return state;
-  // let newState = state;
-  // // moving from un-nested spec to nested spec
-  // if (!usingNestedSpec(state)) {
-  //   newState = addMetaEncoding(newState).setIn(['spec', 'repeat'], {});
-  // }
-
-  // //
-  // // this approach only works for column / row
-  // // if the repeat operator has not been initialized, initialize it
-  // const repeatRoute = ['spec', 'repeat', payload.text];
-  // if (!newState.getIn(repeatRoute)) {
-  //   newState = newState.setIn(repeatRoute, extractFieldStringsForType(state.get('columns'), 'MEASURE'));
-  // }
-  // // if there is already a card in place, check to see if removing it removes the repeats
-  // const fieldRoute = ['spec', 'spec', 'encoding', payload.field];
-  // if (state.getIn(fieldRoute) && state.getIn([...fieldRoute, 'field', 'repeat']) !== payload.text) {
-  //   newState = maybeRemoveRepeats(newState, newState.deleteIn(fieldRoute), payload.field);
-  // }
-
-  // // if the card is being moved remove where it was before
-  // if (payload.containingShelf) {
-  //   const delRoute = ['spec', 'spec', 'encoding', payload.containingShelf];
-  //   newState = newState.deleteIn(delRoute);
-  // }
-
-  // // finally set the new field
-  // const newFieldVal = {
-  //   field: {repeat: payload.text},
-  //   type: 'quantitative',
-  // };
-  // return newState.setIn(fieldRoute, newFieldVal);
 };
 
 export const updateCodeRepresentation: ActionResponse = (_, newState: AppState) => {
@@ -273,13 +194,8 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
         draftState.spec.encoding[payload.field] = newField;
       }
     });
-    // newState = newState.setIn([...route, payload.field], {
-    //   field: payload.text,
-    //   type: TYPE_TRANSLATE[fieldHeader.type],
-    // });
   } else {
     // removing field
-    // newState = maybeRemoveRepeats(state, newState.setIn([...route, payload.field], {}), payload.field);
     newState = maybeRemoveRepeats(
       state,
       produce(newState, draftState => {
@@ -294,7 +210,6 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   }
   // if the card is being moved, remove where it was before
   if (payload.containingShelf) {
-    // newState = newState.deleteIn([...route, payload.containingShelf]);
     newState = produce(newState, draftState => {
       if (usingNested) {
         delete draftState.spec.spec.encoding[payload.containingShelf];
@@ -327,7 +242,6 @@ export const swapXAndYChannels: ActionResponse = state => {
 
 export const setRepeats: ActionResponse = (state, payload) => {
   const {repeats, target} = payload;
-  // return state.setIn(['spec', 'repeat', target], repeats);
   return produce(state, draftState => {
     draftState.spec.repeat[target] = repeats;
   });
@@ -349,12 +263,6 @@ const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
     draftState.templateMap = stackItem.templateMap;
     draftState.views = stackItem.views;
   });
-  // return state;
-  // return state
-  //   .set('spec', stackItem.get('spec'))
-  //   .set('currentView', stackItem.get('currentView'))
-  //   .set('templateMap', stackItem.get('templateMap'))
-  //   .set('views', stackItem.get('views'));
 };
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
@@ -363,10 +271,6 @@ export function pushToUndoStack(oldState: AppState, newState: AppState): AppStat
     draftState.undoStack.push(createStackItem(oldState));
     draftState.redoStack = [];
   });
-  // return newState;
-  // return newState
-  //   .set('undoStack', newState.get('undoStack').push(createStackItem(oldState)))
-  //   .set('redoStack', []);
 }
 // TODO these are probably constructable as a single more elegant function
 export const triggerRedo: ActionResponse = state => {
@@ -375,11 +279,6 @@ export const triggerRedo: ActionResponse = state => {
     draftState.redoStack.pop();
     draftState.undoStack.push(createStackItem(state));
   });
-  // const undoStack = state.get('undoStack');
-  // const redoStack = state.get('redoStack');
-  // return applyStackItemToState(state, redoStack.last())
-  //   .set('redoStack', redoStack.pop())
-  //   .set('undoStack', undoStack.push(createStackItem(state)));
 };
 
 export const triggerUndo: ActionResponse = state => {
@@ -388,9 +287,4 @@ export const triggerUndo: ActionResponse = state => {
     draftState.undoStack.pop();
     draftState.redoStack.push(createStackItem(state));
   });
-  // const undoStack = state.get('undoStack');
-  // const redoStack = state.get('redoStack');
-  // return applyStackItemToState(state, undoStack.last())
-  //   .set('undoStack', undoStack.pop())
-  //   .set('redoStack', redoStack.push(createStackItem(state)));
 };

@@ -14,14 +14,8 @@ import {setTemplateValues} from '../hydra-lang';
 import {deserializeTemplate} from '../utils';
 
 export function templateEval(state: AppState): AppState {
-  // const filledInSpec = setTemplateValues(
-  //   state.getIn(['currentTemplateInstance', 'code']),
-  //   state.get('templateMap').toJS(),
-  // );
-
-  const filledInSpec = setTemplateValues(state.currentTemplateInstance.code, state.templateMap);
   return produce(state, draftState => {
-    draftState.spec = JSON.parse(filledInSpec);
+    draftState.spec = JSON.parse(setTemplateValues(state.currentTemplateInstance.code, state.templateMap));
   });
 }
 
@@ -58,15 +52,12 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
       draftState.templateMap = filledInTemplateMap;
     }),
   );
-  // return templateEval(state.set('templateMap', filledInTemplateMap));
 }
 
 export const recieveTemplates: ActionResponse = (state, payload) => {
   return produce(state, draftState => {
     draftState.templates = payload;
   });
-  // return state.set('templates', payload);
-  // return setEncodingMode(state.set('templates', payload), '_____none_____');
 };
 
 export const setTemplateValue: ActionResponse = (state, payload) => {
@@ -75,18 +66,12 @@ export const setTemplateValue: ActionResponse = (state, payload) => {
     newState = produce(state, draftState => {
       delete draftState.templateMap[payload.containingShelf];
     });
-    // newState = newState.deleteIn(['templateMap', payload.containingShelf]);
   }
   const template = state.currentTemplateInstance;
   return produce(newState, draftState => {
     draftState.templateMap[payload.field] = payload.text;
     draftState.spec = JSON.parse(setTemplateValues(template.code, draftState.templateMap));
   });
-  // const template = state.get('currentTemplateInstance').toJS();
-  // newState = newState.setIn(['templateMap', payload.field], payload.text);
-
-  // const updatedTemplate = JSON.parse(setTemplateValues(template.code, n
-  // return newState.set('spec', updatedTemplate);
 };
 
 // This function is poorly named, i don't know what it does
@@ -96,7 +81,6 @@ function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
       (template: Template) => template.templateName !== templateName,
     );
   });
-  // return state.get('templates').filter((template: Template) => template.templateName !== templateName);
 }
 
 const insertTemplateIntoTemplates: ActionResponse = (state, template) => {
@@ -114,12 +98,6 @@ const insertTemplateIntoTemplates: ActionResponse = (state, template) => {
   return produce(state, draftState => {
     draftState.templates = getAndRemoveTemplate(state, template.templateName).templates.concat(template);
   });
-  // const updatedState = state.set(
-  //   'templates',
-  //   getAndRemoveTemplate(state, template.templateName).concat(template),
-  // );
-  // // set current template to the newly created one
-  // return updatedState;
 };
 
 export const saveCurrentTemplate: ActionResponse = state =>
@@ -130,9 +108,7 @@ export const loadExternalTemplate: ActionResponse = (state, payload) =>
 
 export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   const {value, key} = payload;
-  console.log(value, key);
   return produce(state, draftState => {
-    // draftState. =state.setIn(['currentTemplateInstance', key], value);
     /* eslint-disable @typescript-eslint/ban-ts-ignore*/
     // @ts-ignore
     draftState.currentTemplateInstance[key] = value;
@@ -144,14 +120,6 @@ export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
       draftState.editorError = payload.editorError;
     }
   });
-  // let newState = state.setIn(['currentTemplateInstance', key], value);
-  // if (key === 'templateName') {
-  //   newState = newState.set('encodingMode', value);
-  // }
-  // if (key === 'code') {
-  //   newState = newState.set('editorError', payload.editorError);
-  // }
-  // return newState;
 };
 
 export const readInTemplate: ActionResponse = (state, payload) => {
@@ -159,7 +127,6 @@ export const readInTemplate: ActionResponse = (state, payload) => {
     return produce(state, draftState => {
       draftState.editorError = payload.error;
     });
-    // return state.set('editorError', payload.error);
   }
   return produce(state, draftState => {
     const updatedTemplate = deserializeTemplate(payload.code);
@@ -167,24 +134,18 @@ export const readInTemplate: ActionResponse = (state, payload) => {
     draftState.currentTemplateInstance = updatedTemplate;
     draftState.editorError = payload.error;
   });
-  // const updatedTemplate = deserializeTemplate(payload.code);
-  // updatedTemplate.code = state.getIn(['currentTemplateInstance', 'code']);
-  // return state.set('currentTemplateInstance', updatedTemplate).set('editorError', payload.error);
 };
 
 export const setBlankTemplate: ActionResponse = (state, fork) => {
-  // const currentCode = state.getIn(['currentTemplateInstance', 'code']) || state.get('specCode');
   const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
   if (fork) {
-    // newTemplate = newTemplate.set('code', currentCode);
     newTemplate.code = currentCode;
   }
   return produce(state, draftState => {
     draftState.currentTemplateInstance = newTemplate;
     draftState.encodingMode = BLANK_TEMPLATE.templateName;
   });
-  // return state.set('currentTemplateInstance', newTemplate).set('encodingMode', BLANK_TEMPLATE.templateName);
 };
 
 export const deleteTemplate: ActionResponse = (state, payload) => {
@@ -203,7 +164,6 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
 
 export const setWidgetValue: ActionResponse = (state, payload) => {
   const {key, value, idx} = payload;
-  // let template = state.get('currentTemplateInstance');
   const template = state.currentTemplateInstance;
   const code = template.code;
   return produce(state, draftState => {
@@ -231,30 +191,6 @@ export const setWidgetValue: ActionResponse = (state, payload) => {
       }
     });
   });
-  // if (key === 'widgetName') {
-  //   // TODO This is broken in the other branch
-  //   // update the old code with the new name
-  //   const oldValue = `\\[${template.widgets[idx][key]}\\]`;
-  //   // const oldValue = `\\[${template.getIn(['widgets', idx, key])}\\]`;
-  //   const re = new RegExp(oldValue, 'g');
-  //   template = template.set('code', code.replace(re, `[${value}]`));
-  //   newState = newState
-  //     .deleteIn(['templateMap', oldValue])
-  //     .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
-
-  //   // template = template.set('code', code.replace(re, `[${value}]`));
-  //   // newState = newState
-  //   //   .deleteIn(['templateMap', oldValue])
-  //   //   .setIn(['templateMap', value], state.getIn(['templateMap', oldValue]));
-  //     // change the variable
-  //   template = template.setIn(['widgets', idx, key], value);
-  // } else if (key === 'displayName') {
-  //   // display name is a property of the widget container and not the widget parameter...
-  //   template = template.setIn(['widgets', idx, key], value);
-  // } else {
-  //   template = template.setIn(['widgets', idx, 'widget', key], value);
-  // }
-  // return newState.set('currentTemplateInstance', template);
 };
 
 // hey it's a lense
@@ -282,20 +218,3 @@ export const moveWidget: ActionResponse = (state, payload) => {
     return withoutIdx;
   });
 };
-// const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
-//   state.setIn(
-//     ['currentTemplateInstance', 'widgets'],
-//     mod(state.getIn(['currentTemplateInstance', 'widgets'])),
-//   );
-// export const addWidget: ActionResponse = (state, payload) =>
-//   modifyCurrentWidgets(state, d => d.push(payload));
-// export const removeWidget: ActionResponse = (state, payload) =>
-//   modifyCurrentWidgets(state, d => d.deleteIn([payload]));
-
-// export const moveWidget: ActionResponse = (state, payload) => {
-//   const {fromIdx, toIdx} = payload;
-//   if (fromIdx === undefined || toIdx === undefined) {
-//     return state;
-//   }
-//   return modifyCurrentWidgets(state, d => d.delete(fromIdx).insert(toIdx, d.get(fromIdx)));
-// };

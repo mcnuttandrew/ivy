@@ -16,15 +16,6 @@ export const recieveData: ActionResponse = (state, payload) => {
     draftState.undoStack = [];
     draftState.redoStack = [];
   });
-  // return state
-  //   .set('data', executeDataModifcation(payload, dataModification))
-  //   .set('originalData', payload)
-  //   .set('dataModification', dataModification)
-  //   .set('spec', EMPTY_SPEC)
-  //   .set('views', ['view1'])
-  //   .set('viewCatalog', {})
-  //   .set('undoStack', [])
-  //   .set('redoStack', []);
 };
 
 export const recieveTypeInferences: ActionResponse = (state, payload) => {
@@ -80,7 +71,6 @@ export const recieveTypeInferences: ActionResponse = (state, payload) => {
     draftState.columns = orderedColumns;
     draftState.metaColumns = metaColumns;
   });
-  // return state.set('columns', orderedColumns).set('metaColumns', metaColumns);
 };
 
 // TODO this can be a blind set
@@ -88,5 +78,4 @@ export const changeSelectedFile: ActionResponse = (state, payload) => {
   return produce(state, draftState => {
     draftState.currentlySelectedFile = payload;
   });
-  // return state.set('currentlySelectedFile', payload);
 };
