@@ -120,7 +120,7 @@ export function getAllInUseFields(spec: any): Set<string> {
   const inUse = new Set([]);
   const encoding = (spec.spec && spec.spec.encoding) || spec.encoding || {};
   Object.values(encoding).forEach((x: any) => {
-    if (!x || !x.length) {
+    if (!x) {
       return;
     }
     const channel = x;
@@ -222,7 +222,6 @@ export function getTemplateSaveState(base: AppState): SaveState {
   if (!associatedUpstreamTemplate) {
     return 'NOT FOUND';
   }
-  console.log(' FUCK I HOPE THIS IMMUTABLE UPDATE WORKS ');
   return associatedUpstreamTemplate === template ? 'EQUAL' : 'DIFFERENT';
 }
 

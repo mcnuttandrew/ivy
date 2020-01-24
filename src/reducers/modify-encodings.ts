@@ -23,9 +23,20 @@ export const clearEncoding: ActionResponse = state => {
 
 // change the mark type
 export const changeMarkType: ActionResponse = (state, payload) => {
-  console.log('BROKEN, TOO HARD BLIND');
-  return state;
-  // const route = usingNestedSpec ? ['spec', 'spec', 'mark', 'type'] : ['spec', 'mark', 'type'];
+  const usingNested = usingNestedSpec(state);
+  const route = usingNested ? ['spec', 'spec', 'mark', 'type'] : ['spec', 'mark', 'type'];
+  return produce(state, draftState => {
+    if (!get(state, route)) {
+      draftState.spec.mark = {...draftState.spec.mark, type: payload};
+      return;
+    }
+    if (usingNested) {
+      draftState.spec.spec.mark.type = payload;
+    } else {
+      draftState.spec.mark.type = payload;
+    }
+  });
+  // return state;
   // if (!state.getIn(route)) {
   //   return state.setIn(['spec', 'mark'], {
   //     ...state.getIn(['spec', 'mark']).toJS(),
@@ -95,8 +106,24 @@ export const coerceType: ActionResponse = (state, payload) => {
 
 function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChannel: string): AppState {
   console.log('TODO BROKEN');
-  return newState;
-  // const route = usingNestedSpec(newState) ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
+  // return newState;
+  const route = usingNestedSpec(newState) ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
+  // // figure out if target removing field is a metacolumn
+  const oldField = get(oldState, [...route, targetChannel]);
+  const repeaterField = get(oldField, ['field', 'repeat']);
+  if (!repeaterField) {
+    return newState;
+  }
+  // check to see if that column is still in use after the removal
+  const inUse = getAllInUseFields(newState.spec);
+  if (inUse.has(repeaterField)) {
+    return newState;
+  }
+  return produce(newState, draftState => {
+    delete draftState.spec.repeat[repeaterField];
+  });
+  // return newState.deleteIn(['spec', 'repeat', repeaterField]);
+
   // // figure out if target removing field is a metacolumn
   // const oldField = oldState.getIn([...route, targetChannel]);
   // const repeaterField = oldField.getIn(['field', 'repeat']);
@@ -113,6 +140,7 @@ function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChanne
 
 function noMetaUsage(state: AppState): boolean {
   const inUse = getAllInUseFields(state.spec);
+  console.log(inUse);
   return !(inUse.has('row') || inUse.has('column') || inUse.has('repeat'));
 }
 
@@ -151,8 +179,10 @@ function removeMetaEncoding(state: AppState): AppState {
 export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   console.log('META COLUMN BROKEN');
   // moving from un-nested spec to nested spec
+  let newState = state;
   if (!usingNestedSpec(state)) {
-    return produce(addMetaEncoding(state), draftState => {
+    console.log('TEST');
+    newState = produce(addMetaEncoding(state), draftState => {
       draftState.spec.repeat = {};
     });
   }
@@ -160,7 +190,7 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   // this approach only works for column / row
   // if the repeat operator has not been initialized, initialize it
   const repeatRoute = ['spec', 'repeat', payload.text];
-  let newState = state;
+
   if (!get(state, repeatRoute)) {
     newState = produce(newState, draftState => {
       draftState.spec.repeat[payload.text] = extractFieldStringsForType(newState.columns, 'MEASURE');
@@ -187,12 +217,11 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   }
 
   // finally set the new field
-  const newFieldVal = {
-    field: {repeat: payload.text},
-    type: 'quantitative',
-  };
   return produce(newState, draftState => {
-    draftState.spec.spec.encoding[payload.field] = newFieldVal;
+    draftState.spec.spec.encoding[payload.field] = {
+      field: {repeat: payload.text},
+      type: 'quantitative',
+    };
   });
   // return newState.setIn(fieldRoute, newFieldVal);
   // return state;
@@ -245,18 +274,19 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   }
   const fieldHeader = findField(state, payload.text);
   const usingNested = usingNestedSpec(state);
-  const route = usingNested ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
+  // const route = usingNested ? ['spec', 'spec', 'encoding'] : ['spec', 'encoding'];
   let newState = state;
   if (fieldHeader) {
+    console.log('here');
     newState = produce(newState, draftState => {
       const newField = {
         field: payload.text,
         type: TYPE_TRANSLATE[fieldHeader.type],
       };
       if (usingNested) {
-        draftState.spec.spec.encoding = newField;
+        draftState.spec.spec.encoding[payload.field] = newField;
       } else {
-        draftState.spec.encoding = newField;
+        draftState.spec.encoding[payload.field] = newField;
       }
     });
     // newState = newState.setIn([...route, payload.field], {
@@ -291,6 +321,7 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
   }
   // check if the nesting spec should be removed
   if (usingNestedSpec(state) && noMetaUsage(newState)) {
+    console.log('should remove meta');
     return removeMetaEncoding(newState);
   }
   return newState;
@@ -329,7 +360,13 @@ const createStackItem = (state: AppState): UndoRedoStackItem => {
 };
 
 const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
-  return state;
+  return produce(state, draftState => {
+    draftState.spec = stackItem.spec;
+    draftState.currentView = stackItem.currentView;
+    draftState.templateMap = stackItem.templateMap;
+    draftState.views = stackItem.views;
+  });
+  // return state;
   // return state
   //   .set('spec', stackItem.get('spec'))
   //   .set('currentView', stackItem.get('currentView'))
@@ -339,16 +376,22 @@ const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
 export function pushToUndoStack(oldState: AppState, newState: AppState): AppState {
-  console.log('undo log  broken');
-  return newState;
+  return produce(newState, draftState => {
+    draftState.undoStack.push(createStackItem(oldState));
+    draftState.redoStack = [];
+  });
+  // return newState;
   // return newState
   //   .set('undoStack', newState.get('undoStack').push(createStackItem(oldState)))
   //   .set('redoStack', []);
 }
 // TODO these are probably constructable as a single more elegant function
 export const triggerRedo: ActionResponse = state => {
-  console.log('redo broken');
-  return state;
+  const redoStack = state.redoStack;
+  return produce(applyStackItemToState(state, redoStack[redoStack.length - 1]), draftState => {
+    draftState.redoStack.pop();
+    draftState.undoStack.push(createStackItem(state));
+  });
   // const undoStack = state.get('undoStack');
   // const redoStack = state.get('redoStack');
   // return applyStackItemToState(state, redoStack.last())
@@ -357,8 +400,11 @@ export const triggerRedo: ActionResponse = state => {
 };
 
 export const triggerUndo: ActionResponse = state => {
-  console.log('undo broken');
-  return state;
+  const undoStack = state.undoStack;
+  return produce(applyStackItemToState(state, undoStack[undoStack.length - 1]), draftState => {
+    draftState.undoStack.pop();
+    draftState.redoStack.push(createStackItem(state));
+  });
   // const undoStack = state.get('undoStack');
   // const redoStack = state.get('redoStack');
   // return applyStackItemToState(state, undoStack.last())

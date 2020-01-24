@@ -42,7 +42,6 @@ export default function Shelf(props: ShelfProps): JSX.Element {
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
     drop: item => {
-      console.log({...item, field, disable});
       return onDrop({...item, field, disable});
     },
     collect: monitor => ({

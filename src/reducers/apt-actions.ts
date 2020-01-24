@@ -49,12 +49,16 @@ const grammarBasedGuess: ActionResponse = (state, payload) => {
   if (!channel) {
     return state;
   }
-  encoding[channel] = {
-    field: payload.field,
-    type: guessType(channel, column.type),
-  };
+  // encoding[channel] = {
+  //   field: payload.field,
+  //   type: guessType(channel, column.type),
+  // };
   return produce(state, draftState => {
-    draftState.spec.encoding = encoding;
+    // draftState.spec.encoding = encoding;
+    draftState.spec.encoding[channel] = {
+      field: payload.field,
+      type: guessType(channel, column.type),
+    };
   });
 };
 
