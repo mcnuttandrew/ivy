@@ -7,12 +7,12 @@ import CommunityPrograms from './community-programs';
 import {classnames} from '../../utils';
 
 interface Props {
-  chainActions: GenericAction;
-  deleteTemplate: GenericAction;
-  loadExternalTemplate: GenericAction;
-  setEncodingMode: GenericAction;
+  chainActions: GenericAction<any>;
+  deleteTemplate: GenericAction<string>;
+  loadExternalTemplate: GenericAction<Template>;
+  setEncodingMode: GenericAction<string>;
   templates: Template[];
-  toggleProgramModal: GenericAction;
+  toggleProgramModal: GenericAction<void>;
 }
 
 export default function ProgramModal(props: Props): JSX.Element {

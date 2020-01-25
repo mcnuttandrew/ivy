@@ -4,24 +4,24 @@ import FilterTarget from './filter-target';
 import MetaColumnPicker from './meta-column-picker';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
-import {GenericAction} from '../actions/index';
+import {GenericAction, CoerceTypePayload, SetRepeatsPayload, UpdateFilterPayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {getAllInUseFields, get} from '../utils';
 
 interface DataColumnProps {
-  addToNextOpenSlot: GenericAction;
-  coerceType: GenericAction;
+  addToNextOpenSlot: GenericAction<ColumnHeader>;
+  coerceType: GenericAction<CoerceTypePayload>;
   columns: ColumnHeader[];
-  createFilter: GenericAction;
-  deleteFilter: GenericAction;
+  createFilter: GenericAction<ColumnHeader>;
+  deleteFilter: GenericAction<number>;
   fillableFields: Set<string>;
   metaColumns: ColumnHeader[];
-  onDropFilter: GenericAction;
-  setRepeats: GenericAction;
+  onDropFilter: any;
+  setRepeats: GenericAction<SetRepeatsPayload>;
   showGUIView: boolean;
   spec: any;
   template?: Template;
-  updateFilter: GenericAction;
+  updateFilter: GenericAction<UpdateFilterPayload>;
 }
 
 export default class DataColumn extends React.Component<DataColumnProps> {

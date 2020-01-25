@@ -28,7 +28,7 @@ import {
   WidgetSubType,
 } from '../../templates/types';
 import {ColumnHeader} from '../../types';
-import {GenericAction} from '../../actions';
+import {GenericAction, SetTemplateValuePayload} from '../../actions';
 import {widgetInUse} from '../../utils';
 
 export interface GeneralWidget<T> {
@@ -36,7 +36,7 @@ export interface GeneralWidget<T> {
   editMode: boolean;
   idx: number;
   moveWidget: (...args: any[]) => void;
-  setTemplateValue: GenericAction;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
   showSimpleDisplay: boolean;
   templateMap: TemplateMap;
@@ -50,7 +50,7 @@ interface Props {
   idx: number;
   moveWidget: (...args: any[]) => void;
   removeWidget: any;
-  setTemplateValue: GenericAction;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
   showSimpleDisplay: boolean;
   templateMap: TemplateMap;

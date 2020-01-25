@@ -4,7 +4,7 @@ import {GenericAction} from '../actions/index';
 
 interface Props {
   currentlySelectedFile: string;
-  toggleDataModal: GenericAction;
+  toggleDataModal: GenericAction<void>;
 }
 
 export default class ImportDataColumn extends React.Component<Props> {
@@ -19,7 +19,13 @@ export default class ImportDataColumn extends React.Component<Props> {
             <DiDatabase />
             <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
           </div>
-          <button onClick={toggleDataModal}>CHANGE</button>
+          <button
+            onClick={(): void => {
+              toggleDataModal();
+            }}
+          >
+            CHANGE
+          </button>
         </div>
       </div>
     );

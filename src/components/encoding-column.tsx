@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {GenericAction} from '../actions/index';
+import {GenericAction, SetTemplateValuePayload} from '../actions/index';
 import Shelf from './shelf';
 import {ColumnHeader} from '../types';
 import Selector from './selector';
@@ -14,16 +14,16 @@ const MARK_TYPES = PRIMITIVE_MARKS.sort().map((x: string) => ({
 }));
 
 interface EncodingColumnProps {
-  changeMarkType: GenericAction;
+  changeMarkType: GenericAction<string>;
   columns: ColumnHeader[];
   metaColumns: ColumnHeader[];
   onDrop: any;
   onDropFilter: any;
-  setEncodingParameter: GenericAction;
-  setNewSpec: GenericAction;
+  setEncodingParameter: GenericAction<SetTemplateValuePayload>;
+  setNewSpec: GenericAction<any>;
   showSimpleDisplay: boolean;
   spec: any;
-  swapXAndYChannels: GenericAction;
+  swapXAndYChannels: GenericAction<void>;
 }
 export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render(): JSX.Element {
@@ -61,7 +61,13 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         <h1 className="section-title flex"> Encoding </h1>
         <div className="flex-down section-body">
           {['x', 'y'].map(makeShelf(false))}
-          <button onClick={swapXAndYChannels}>Swap X/Y</button>
+          <button
+            onClick={(): void => {
+              swapXAndYChannels();
+            }}
+          >
+            Swap X/Y
+          </button>
         </div>
 
         {/* MARK STUFF */}

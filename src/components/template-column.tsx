@@ -1,13 +1,20 @@
 import React from 'react';
 
 import {ColumnHeader} from '../types';
-import {GenericAction} from '../actions';
+import {
+  GenericAction,
+  ModifyValueOnTemplatePayload,
+  SetWidgetValuePayload,
+  MoveWidgetPayload,
+} from '../actions';
 import {Template, TemplateWidget, WidgetSubType, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import TemplateColumnAddNewWidgetPopover from './template-column-add-new-widget-popover';
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
 import {updateThumbnail} from '../thumbnail';
+import {AddLabelToWidget} from './widgets/widget-common';
+import Selector from './selector';
 
 interface TemplateColumnProps {
   columns: ColumnHeader[];
@@ -17,11 +24,11 @@ interface TemplateColumnProps {
   template: Template;
   templateMap: TemplateMap;
 
-  addWidget: GenericAction;
-  modifyValueOnTemplate: GenericAction;
-  removeWidget: GenericAction;
-  setWidgetValue: GenericAction;
-  moveWidget: GenericAction;
+  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
+  modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
+  removeWidget: GenericAction<number>;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
+  moveWidget: GenericAction<MoveWidgetPayload>;
 }
 
 function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {
@@ -125,9 +132,8 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         )}
         {editMode && template && (
           <div className="flex">
-            <div className="flex-down">
-              <div className="flex">
-                <h1 className="section-title">NAME:</h1>
+            <div className="flex">
+              <AddLabelToWidget label={'Name'}>
                 <input
                   type="text"
                   value={template.templateName}
@@ -138,9 +144,8 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
                     })
                   }
                 />
-              </div>
-              <div className="flex">
-                <h1 className="section-title">Description:</h1>
+              </AddLabelToWidget>
+              <AddLabelToWidget label={'Description'}>
                 <input
                   type="text"
                   value={template.templateDescription}
@@ -151,7 +156,22 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
                     })
                   }
                 />
-              </div>
+              </AddLabelToWidget>
+              <AddLabelToWidget label={'Description'}>
+                <Selector
+                  options={['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(key => ({
+                    display: key,
+                    value: key,
+                  }))}
+                  selectedValue={template.templateLanguage}
+                  onChange={(value: any): any =>
+                    modifyValueOnTemplate({
+                      value,
+                      key: 'templateLanguage',
+                    })
+                  }
+                />
+              </AddLabelToWidget>
             </div>
           </div>
         )}

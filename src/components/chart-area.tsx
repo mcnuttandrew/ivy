@@ -7,15 +7,15 @@ import {MdContentCopy, MdNoteAdd} from 'react-icons/md';
 import {GenericAction} from '../actions';
 
 interface ChartAreaProps {
-  cloneView: GenericAction;
-  createNewView: GenericAction;
+  cloneView: GenericAction<void>;
+  createNewView: GenericAction<void>;
   currentTheme: VegaTheme;
   currentView: string;
   data: any;
-  deleteView: GenericAction;
+  deleteView: GenericAction<string>;
   missingFields: string[];
   spec: any;
-  switchView: GenericAction;
+  switchView: GenericAction<string>;
   template?: Template;
   templateComplete: boolean;
   views: string[];
@@ -41,11 +41,21 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
     return (
       <div className="flex-down full-width full-height">
         <div className="chart-controls full-width flex">
-          <div className="view-control" onClick={createNewView}>
+          <div
+            className="view-control"
+            onClick={(): void => {
+              createNewView();
+            }}
+          >
             <span className="margin-right">New</span>
             <MdNoteAdd />
           </div>
-          <div className="view-control" onClick={cloneView}>
+          <div
+            className="view-control"
+            onClick={(): void => {
+              cloneView();
+            }}
+          >
             <span className="margin-right">Clone</span>
             <MdContentCopy />
           </div>

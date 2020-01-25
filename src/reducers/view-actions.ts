@@ -18,7 +18,7 @@ function updateCatalogView(state: AppState, view: string): AppState {
   });
 }
 
-export const switchView: ActionResponse = (state, payload) => {
+export const switchView: ActionResponse<string> = (state, payload) => {
   const newCatalog = state.viewCatalog[payload];
   return produce(updateCatalogView(state, state.currentView), draftState => {
     draftState.currentView = payload;
@@ -29,7 +29,7 @@ export const switchView: ActionResponse = (state, payload) => {
   });
 };
 
-export const createNewView: ActionResponse = state => {
+export const createNewView: ActionResponse<void> = state => {
   const newViewName = `view${state.views.length + 1}`;
   const newState = produce(state, draftState => {
     draftState.views = state.views.concat(newViewName);
@@ -37,12 +37,12 @@ export const createNewView: ActionResponse = state => {
   });
   return switchView(newState, newViewName);
 };
-export const deleteView: ActionResponse = (state, payload) => {
+export const deleteView: ActionResponse<string> = (state, payload) => {
   console.log('TODO', payload);
   return state;
 };
 
-export const cloneView: ActionResponse = state => {
+export const cloneView: ActionResponse<void> = state => {
   const newViewName = `view${state.views.length + 1}`;
   const updatedState = updateCatalogView(state, state.currentView);
   const newState = produce(state, draftState => {

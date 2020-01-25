@@ -9,23 +9,25 @@ import {IoIosCreate} from 'react-icons/io';
 import Popover from './popover';
 import Selector from './selector';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {GenericAction} from '../actions';
-import {Template, TemplateMap} from '../templates/types';
+import {GenericAction, HandleCodePayload} from '../actions';
+import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 import {classnames, serializeTemplate, get} from '../utils';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
-  addWidget?: GenericAction;
+  addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
   codeMode: string;
+  chainActions: GenericAction<any>;
   editorError: null | string;
   editMode: boolean;
   editorFontSize: number;
-  readInTemplate: GenericAction;
-  setCodeMode: GenericAction;
-  setEditorFontSize: GenericAction;
-  setEditMode: GenericAction;
-  setNewSpecCode: GenericAction;
-  setProgrammaticView: GenericAction;
+  readInTemplate: GenericAction<HandleCodePayload>;
+  readInTemplateMap: GenericAction<HandleCodePayload>;
+  setCodeMode: GenericAction<string>;
+  setEditorFontSize: GenericAction<number>;
+  setEditMode: GenericAction<boolean>;
+  setNewSpecCode: GenericAction<HandleCodePayload>;
+  setProgrammaticView: GenericAction<void>;
   showProgrammaticMode: boolean;
   spec: any;
   specCode: string;
@@ -165,18 +167,17 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   handleCodeUpdate(code: string): void {
-    const {setNewSpecCode, readInTemplate, codeMode} = this.props;
-    if (codeMode === 'PARAMETERS') {
-      Promise.resolve()
-        .then(() => JSON.parse(code))
-        .then(() => readInTemplate({code, inError: false}))
-        .catch(() => readInTemplate({code, inError: true}));
-    } else {
-      Promise.resolve()
-        .then(() => JSON.parse(code))
-        .then(() => setNewSpecCode({code, inError: false}))
-        .catch(() => setNewSpecCode({code, inError: true}));
-    }
+    const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
+    const responseFunctionMap: {[x: string]: GenericAction<HandleCodePayload>} = {
+      PARAMETERS: readInTemplate,
+      SPECIFICATION: readInTemplateMap,
+      TEMPLATE: setNewSpecCode,
+    };
+    const response = responseFunctionMap[codeMode];
+    Promise.resolve()
+      .then(() => JSON.parse(code))
+      .then(() => response && response({code, inError: false}))
+      .catch(() => response && response({code, inError: true}));
   }
 
   suggestionBox(): JSX.Element {
@@ -225,11 +226,19 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   controls(): JSX.Element {
-    const {setCodeMode, codeMode, editMode, setEditMode} = this.props;
+    const {setCodeMode, codeMode, editMode, setEditMode, chainActions} = this.props;
     const {updateMode} = this.state;
     return (
       <div className="code-option-tabs flex-down full-height background-2">
-        <div className="flex save-edit-button" onClick={(): any => setEditMode(!editMode)}>
+        <div
+          className="flex save-edit-button"
+          onClick={(): any =>
+            chainActions([
+              (): any => setEditMode(!editMode),
+              (): any => setCodeMode(editMode ? 'EXPORT TO JSON' : 'TEMPLATE'),
+            ])
+          }
+        >
           <div>{editMode ? 'SAVE' : 'EDIT'}</div>
           <IoIosCreate />
         </div>
@@ -289,7 +298,7 @@ export default class CodeEditor extends React.Component<Props, State> {
       <div className="full-height full-width code-container flex-down">
         <div
           className="full-width background-2 cursor-pointer flex code-collapse"
-          onClick={(): any => setProgrammaticView(!showProgrammaticMode)}
+          onClick={(): any => setProgrammaticView()}
         >
           <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
           {showProgrammaticMode ? <FaAngleDown /> : <FaAngleUp />}

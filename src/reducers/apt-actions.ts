@@ -36,7 +36,10 @@ function guessType(channel: string, type: string): string {
   return TYPE_TRANSLATE[type];
 }
 
-const grammarBasedGuess: ActionResponse = (state, payload) => {
+interface GuessPayload {
+  field: string;
+}
+const grammarBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
   const encoding = state.spec.encoding;
   const column = findField(state, payload.field);
@@ -56,7 +59,7 @@ const grammarBasedGuess: ActionResponse = (state, payload) => {
   });
 };
 
-const templateBasedGuess: ActionResponse = (state, payload) => {
+const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
   const templateMap: TemplateMap = state.templateMap;
   const column = findField(state, payload.field);
@@ -101,7 +104,7 @@ const templateBasedGuess: ActionResponse = (state, payload) => {
   });
 };
 
-export const addToNextOpenSlot: ActionResponse = (state, payload) => {
+export const addToNextOpenSlot: ActionResponse<GuessPayload> = (state, payload) => {
   const encodingMode = state.encodingMode;
   return (encodingMode !== 'grammer' ? templateBasedGuess : grammarBasedGuess)(state, payload);
 };

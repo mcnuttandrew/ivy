@@ -45,7 +45,7 @@ function activeColumns(state: any): string[] {
   return Array.from(templateInUse).map((key: string) => quoteTrim(key));
 }
 
-export const setEncodingMode: ActionResponse = (state, payload) => {
+export const setEncodingMode: ActionResponse<string> = (state, payload) => {
   let updatedState = state;
   if (payload !== 'grammer') {
     // INSTANTIATE TEMPLATE AS A LOCAL COPY

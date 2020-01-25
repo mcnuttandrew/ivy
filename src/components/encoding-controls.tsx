@@ -2,21 +2,22 @@ import React from 'react';
 import {FaEraser, FaSave} from 'react-icons/fa';
 import {GoRepoForked} from 'react-icons/go';
 import {IoIosCreate, IoMdCreate} from 'react-icons/io';
-import {GenericAction} from '../actions/index';
+import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
 
 interface Props {
-  chainActions: GenericAction;
-  clearEncoding: GenericAction;
-  deleteTemplate: GenericAction;
+  chainActions: GenericAction<any>;
+  clearEncoding: GenericAction<void>;
+  deleteTemplate: GenericAction<string>;
   editMode: boolean;
   encodingMode: string;
-  modifyValueOnTemplate: GenericAction;
-  saveCurrentTemplate: GenericAction;
-  setBlankTemplate: GenericAction;
-  setEditMode: GenericAction;
-  setEncodingMode: GenericAction;
+  modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
+  saveCurrentTemplate: GenericAction<void>;
+  setBlankTemplate: GenericAction<boolean>;
+  setCodeMode: GenericAction<string>;
+  setEditMode: GenericAction<boolean>;
+  setEncodingMode: GenericAction<string>;
   template?: Template;
   templateSaveState: string;
   templates?: Template[];
@@ -34,6 +35,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     editMode,
     saveCurrentTemplate,
     setBlankTemplate,
+    setCodeMode,
     setEditMode,
     template,
     templateSaveState,
@@ -44,7 +46,12 @@ export default function EncodingControls(props: Props): JSX.Element {
   const FULL_BUTTONS = [
     {
       disabled: false,
-      onClick: (): any => chainActions([(): any => setBlankTemplate(false), (): any => setEditMode(true)]),
+      onClick: (): any =>
+        chainActions([
+          (): any => setBlankTemplate(false),
+          (): any => setEditMode(true),
+          (): any => setCodeMode('TEMPLATE'),
+        ]),
       icon: <IoMdCreate />,
       label: 'NEW',
     },
@@ -89,7 +96,9 @@ export default function EncodingControls(props: Props): JSX.Element {
                 'template-modification-control': true,
                 'template-modification-control--disabled': button.disabled,
               })}
-              onClick={button.onClick}
+              onClick={(): void => {
+                button.onClick();
+              }}
             >
               {button.icon} <span className="template-modification-control-label">{button.label}</span>
             </div>

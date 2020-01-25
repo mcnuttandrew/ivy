@@ -56,18 +56,21 @@ export interface AppState {
   dataModification: string;
 }
 
-export interface ActionResponse {
-  (state: AppState, payload: any): AppState;
+/**
+ * @param T the type of payload argument
+ */
+export interface ActionResponse<T> {
+  (state: AppState, payload: T): AppState;
 }
 
-export const blindSet = (key: string): ActionResponse => (state, payload): AppState =>
+export const blindSet = (key: string): ActionResponse<any> => (state, payload): AppState =>
   produce(state, draftState => {
     /* eslint-disable @typescript-eslint/ban-ts-ignore*/
     // @ts-ignore
     draftState[key] = payload;
     /* eslint-enable @typescript-eslint/ban-ts-ignore*/
   });
-export const toggle = (key: string): ActionResponse => (state): AppState =>
+export const toggle = (key: string): ActionResponse<null> => (state): AppState =>
   produce(state, draftState => {
     /* eslint-disable @typescript-eslint/ban-ts-ignore*/
     // @ts-ignore

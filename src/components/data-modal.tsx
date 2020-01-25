@@ -1,5 +1,5 @@
 import React from 'react';
-import {GenericAction} from '../actions/index';
+import {GenericAction, LoadDataPayload} from '../actions/index';
 // import VegaDataPreAlias from 'vega-datasets';
 // const VegaData: {[key: string]: any} = VegaDataPreAlias;
 import VegaDatasetMeta from '../constants/vega-datasets-counts';
@@ -8,10 +8,10 @@ import {DataType} from '../types';
 import Modal from './modal';
 
 interface Props {
-  changeSelectedFile: GenericAction;
-  chainActions: GenericAction;
-  loadCustomDataset: GenericAction;
-  toggleDataModal: GenericAction;
+  changeSelectedFile: GenericAction<string>;
+  chainActions: GenericAction<any>;
+  loadCustomDataset: GenericAction<LoadDataPayload>;
+  toggleDataModal: GenericAction<void>;
 }
 
 interface State {

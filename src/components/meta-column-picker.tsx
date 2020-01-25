@@ -1,6 +1,6 @@
 import React from 'react';
 import {ColumnHeader} from '../types';
-import {GenericAction} from '../actions/index';
+import {GenericAction, SetRepeatsPayload} from '../actions/index';
 import {extractFieldStringsForType} from '../utils';
 
 interface MetaColumnPickerTypes {
@@ -8,7 +8,7 @@ interface MetaColumnPickerTypes {
   spec: any;
   field: string;
   columns: ColumnHeader[];
-  setRepeats: GenericAction;
+  setRepeats: GenericAction<SetRepeatsPayload>;
 }
 
 export default function MetaColumnPicker({
@@ -72,7 +72,7 @@ export default function MetaColumnPicker({
                       }
                       setRepeats({
                         target: field,
-                        repeats: Array.from(selectedVals),
+                        repeats: Array.from(selectedVals) as string[],
                       });
                     }}
                   />

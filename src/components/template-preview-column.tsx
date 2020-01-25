@@ -7,16 +7,16 @@ import {thumbnailLocation} from '../thumbnail';
 
 interface Props {
   encodingMode: string;
-  setEncodingMode: GenericAction;
+  setEncodingMode: GenericAction<string>;
   templates: Template[];
-  toggleProgramModal: GenericAction;
+  toggleProgramModal: GenericAction<void>;
 }
 
 function renderEncodingModeOption(
   templateName: string,
   templateDescription: string,
   idx: number,
-  setEncodingMode: GenericAction,
+  setEncodingMode: GenericAction<string>,
   encodingMode: string,
 ): JSX.Element {
   return (
@@ -46,7 +46,12 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
     return (
       <div className="template-preview-column background-2">
         <div className="scroll-container">
-          <div className="flex-down encoding-selection-modal-button" onClick={toggleProgramModal}>
+          <div
+            className="flex-down encoding-selection-modal-button"
+            onClick={(): void => {
+              toggleProgramModal();
+            }}
+          >
             <AiOutlinePlusCircle />
             <h3>Add more</h3>
           </div>

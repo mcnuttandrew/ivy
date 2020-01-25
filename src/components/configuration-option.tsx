@@ -2,7 +2,7 @@ import React from 'react';
 import {TiDeleteOutline} from 'react-icons/ti';
 import Switch from 'react-switch';
 
-import {GenericAction} from '../actions/index';
+import {GenericAction, SetTemplateValuePayload} from '../actions/index';
 import Selector from './selector';
 import {EncodingOption} from '../constants';
 
@@ -10,8 +10,8 @@ interface ConfigurationOptionProps {
   option: EncodingOption;
   spec: any;
 
-  setEncodingParameter: GenericAction;
-  setNewSpec: GenericAction;
+  setEncodingParameter: GenericAction<SetTemplateValuePayload>;
+  setNewSpec: GenericAction<any>;
 }
 
 export default function ConfigurationOption(props: ConfigurationOptionProps): JSX.Element {

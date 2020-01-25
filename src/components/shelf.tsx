@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
 
-import {GenericAction} from '../actions/index';
+import {GenericAction, SetTemplateValuePayload} from '../actions/index';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
@@ -20,8 +20,8 @@ interface ShelfProps {
   onDrop: any;
   showSimpleDisplay: boolean;
 
-  setEncodingParameter: GenericAction;
-  setNewSpec: GenericAction;
+  setEncodingParameter: GenericAction<SetTemplateValuePayload>;
+  setNewSpec: GenericAction<any>;
 }
 
 export default function Shelf(props: ShelfProps): JSX.Element {
