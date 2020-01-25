@@ -36,31 +36,35 @@ const spatialAggs = [
   ...toList(['min', 'max', 'sum', 'mean', 'median', 'mode'].map(toQuote)),
 ];
 
-const renderObjectIf = (object: any, checkKey: string, fieldName: string): any =>
-  `[${checkKey}]` ? {[fieldName]: object} : {};
+// const renderObjectIf = (object: any, checkKey: string, fieldName: string): any =>
+//   `[${checkKey}]` ? {[fieldName]: object} : {};
+const renderObjectIf = (object: any, checkKey: string, fieldName: string): any => ({
+  CONDITIONAL: {query: {[checkKey]: '*'}, true: {[fieldName]: object}, false: null},
+});
+// `[${checkKey}]` ? {[fieldName]: object} : {};
 // const usingMetaColumn = ['X', 'Y', 'Size', 'Color', 'Shape', 'Detail'].some(key => {
 //     return typeof parameters[key] === 'object';
 // })
 
-const encoding = {
-  x: {field: '[X]', type: '[XType]', scale: {zero: '[XIncludeZero]'}},
-  y: {field: '[Y]', type: '[YType]', scale: {zero: '[YIncludeZero]'}},
-  ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, 'Size', 'size'),
-  ...renderObjectIf({field: '[Color]', type: '[ColorType]'}, 'Color', 'color'),
-  ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, 'Shape', 'shape'),
-  ...renderObjectIf({field: '[Text]', type: '[TextType]'}, 'Text', 'text'),
-  ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, 'Detail', 'detail'),
-  ...['Row', 'Column'].reduce((acc, key) => {
-    const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, key, key.toLowerCase());
-    return {...acc, ...newObj};
-  }, {}),
-};
 const shelfProgram = {
   $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
   transform: [] as any[],
-  encoding,
+  encoding: {
+    x: {field: '[X]', type: '[XType]', scale: {zero: '[XIncludeZero]'}},
+    y: {field: '[Y]', type: '[YType]', scale: {zero: '[YIncludeZero]'}},
+    ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, 'Size', 'size'),
+    ...renderObjectIf({field: '[Color]', type: '[ColorType]'}, 'Color', 'color'),
+    ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, 'Shape', 'shape'),
+    ...renderObjectIf({field: '[Text]', type: '[TextType]'}, 'Text', 'text'),
+    ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, 'Detail', 'detail'),
+    ...['Row', 'Column'].reduce((acc, key) => {
+      const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, key, key.toLowerCase());
+      return {...acc, ...newObj};
+    }, {}),
+  },
   mark: {type: '', tooltip: true},
 };
+console.log(shelfProgram);
 
 const makeDataTarget = (dim: string): TemplateWidget<DataTargetWidget> => ({
   widgetName: dim,
@@ -102,7 +106,7 @@ const simpleSwitch = (widgetName: string): TemplateWidget<SwitchWidget> => ({
 const markTypeWidget: TemplateWidget<ListWidget> = {
   widgetName: `markType`,
   widgetType: 'List',
-  widget: {allowedValues: toList(MARK_TYPES), defaultValue: 'circle'},
+  widget: {allowedValues: toList(MARK_TYPES), defaultValue: toQuote('circle')},
 };
 
 const SHELF: Template = {
@@ -128,7 +132,11 @@ const SHELF: Template = {
         simpleList({widgetName: `${key}AggSimple`, list: justCountAgg, displayName: `${key}Agg`}),
       ]);
     }, []),
-
+    {
+      widgetName: 'MarkDivider',
+      widgetType: 'Section',
+      widget: {text: 'New text'},
+    },
     markTypeWidget,
 
     // size & color dimensions

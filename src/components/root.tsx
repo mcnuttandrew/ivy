@@ -22,7 +22,7 @@ import {
   UpdateFilterPayload,
 } from '../actions/index';
 import {getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
-import {applyConditionals, getMissingFields} from '../hydra-lang';
+import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
@@ -473,7 +473,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     showProgrammaticMode: base.showProgrammaticMode,
     showSimpleDisplay: base.showSimpleDisplay,
     showGUIView: base.showGUIView,
-    spec: applyConditionals(base.spec, templateMap),
+    spec: template ? evaluateHydraProgram(template, templateMap) : base.spec,
     specCode: base.specCode,
     template,
     templateComplete: !missingFields.length,

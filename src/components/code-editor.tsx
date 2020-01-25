@@ -76,6 +76,15 @@ const SHORTCUTS = [
   },
 ];
 
+function sortObjectAlphabetically(obj: any): any {
+  return Object.entries(obj)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .reduce((acc: any, [key, val]) => {
+      acc[key] = val;
+      return acc;
+    }, {});
+}
+
 export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
@@ -112,7 +121,8 @@ export default class CodeEditor extends React.Component<Props, State> {
       return stringify(spec);
     }
     if (codeMode === 'SPECIFICATION') {
-      return JSON.stringify(templateMap, null, 2);
+      return JSON.stringify(sortObjectAlphabetically(templateMap), null, 2);
+      // return JSON.stringify(templateMap, null, 2);
     }
   }
 

@@ -3,6 +3,7 @@ import {
   DataTargetWidget,
   ListWidget,
   MultiDataTargetWidget,
+  SectionWidget,
   SliderWidget,
   SwitchWidget,
   Template,
@@ -94,6 +95,12 @@ export const widgetFactory: {[widgetType: string]: WidgetFactoryFunc} = {
         defaultValue: 5,
       },
     } as TemplateWidget<SliderWidget>),
+  Section: idx =>
+    ({
+      widgetName: `Section${idx}`,
+      widgetType: 'Section',
+      widget: {text: 'New text'},
+    } as TemplateWidget<SectionWidget>),
 };
 
 export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {

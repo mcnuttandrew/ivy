@@ -51,7 +51,8 @@ function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): 
 //   color: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}},
 // }}
 /**
- * Walk across the tree and apply conditionals are appropriate
+ * Walk across the tree and apply conditionals are appropriate,
+ * example conditional syntax: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}}
  * @param spec - any valid json hydra spec
  * @param templateMap - the specification/variable values defined by the gui
  */
@@ -154,10 +155,12 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
 export function evaluateHydraProgram(template: Template, templateMap: TemplateMap): any {
   // 1. apply variables to string representation of code
   const interpolatedVals = setTemplateValues(template.code, templateMap);
+  console.log(interpolatedVals);
   // 2. parse to json
   const parsedJson = JSON.parse(interpolatedVals);
   // 3. evaluate inline conditionals
   const evaluatableSpec = applyConditionals(parsedJson, templateMap);
+  console.log(evaluatableSpec);
   // 4. return
   return evaluatableSpec;
 }
