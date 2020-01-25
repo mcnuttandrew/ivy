@@ -218,6 +218,7 @@ Object {
 exports[`#fillTemplateMapWithDefaults 4`] = `
 Object {
   "DonutChart": "60",
+  "OtherSettingsSection": null,
   "Sort": "true",
   "aggregate": "\\"mean\\"",
   "category": null,

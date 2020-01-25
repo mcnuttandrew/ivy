@@ -133,7 +133,6 @@ export function synthesizeSuggestions(code: string, widgets: TemplateWidget<Widg
   const addSugesstion = (suggestion: Suggestion): any => suggestions.push(suggestion);
   inferFieldTransformationSuggestions(code, parsedCode, widgets).forEach(addSugesstion);
   inferRemoveDataSuggestions(code, parsedCode).forEach(addSugesstion);
-  console.log(suggestions);
   const dedup: Suggestion[] = Object.values(
     suggestions.reduce((acc, row) => ({...acc, [row.comment]: row}), {}),
   );
