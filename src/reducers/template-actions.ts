@@ -19,10 +19,11 @@ import {
 import {BLANK_TEMPLATE} from '../templates';
 import {setTemplateValues} from '../hydra-lang';
 import {deserializeTemplate} from '../utils';
+import {evaluateHydraProgram} from '../hydra-lang';
 
 export function templateEval(state: AppState): AppState {
   return produce(state, draftState => {
-    draftState.spec = JSON.parse(setTemplateValues(state.currentTemplateInstance.code, state.templateMap));
+    draftState.spec = evaluateHydraProgram(state.currentTemplateInstance, state.templateMap);
   });
 }
 
@@ -68,16 +69,18 @@ export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => 
 };
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
-  let newState = state;
-  if (payload.containingShelf) {
-    newState = produce(state, draftState => {
+  // let newState = state;
+  // if (payload.containingShelf) {
+  //   newState = produce(state, draftState => {
+  //     delete draftState.templateMap[payload.containingShelf];
+  //   });
+  // }
+  return produce(state, draftState => {
+    if (payload.containingShelf) {
       delete draftState.templateMap[payload.containingShelf];
-    });
-  }
-  const template = state.currentTemplateInstance;
-  return produce(newState, draftState => {
+    }
     draftState.templateMap[payload.field] = payload.text;
-    draftState.spec = JSON.parse(setTemplateValues(template.code, draftState.templateMap));
+    draftState.spec = evaluateHydraProgram(state.currentTemplateInstance, draftState.templateMap);
   });
 };
 

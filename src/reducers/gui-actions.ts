@@ -4,6 +4,7 @@ import {ActionResponse, AppState, EMPTY_SPEC, toggle, blindSet} from './default-
 import {getTemplate} from '../utils';
 import {ColumnHeader} from '../types';
 
+import {evaluateHydraProgram} from '../hydra-lang';
 import {addToNextOpenSlot} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {getAllInUseFields} from '../utils';
@@ -53,7 +54,8 @@ export const setEncodingMode: ActionResponse<string> = (state, payload) => {
     updatedState = fillTemplateMapWithDefaults(
       produce(state, draftState => {
         draftState.encodingMode = payload;
-        draftState.spec = JSON.parse(template.code);
+        // draftState.spec = JSON.parse(template.code);
+        draftState.spec = evaluateHydraProgram(template, state.templateMap);
         draftState.currentTemplateInstance = template;
       }),
     );

@@ -6,7 +6,7 @@ import {findField, getAllInUseFields, extractFieldStringsForType, get} from '../
 import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem, blindSet} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
-import {setTemplateValues} from '../hydra-lang';
+import {evaluateHydraProgram} from '../hydra-lang';
 
 const usingNestedSpec = (state: AppState): boolean => Boolean(state.spec.spec);
 
@@ -46,11 +46,12 @@ export const setNewSpecCode: ActionResponse<HandleCodePayload> = (state, payload
   const {code, inError} = payload;
   if (state.currentTemplateInstance) {
     // TODO i think eval should get checked here
-    const filledInSpec = setTemplateValues(code, state.templateMap);
+    // const filledInSpec = setTemplateValues(code, state.templateMap);
     return produce(state, draftState => {
       draftState.currentTemplateInstance.code = code;
       draftState.editorError = inError;
-      draftState.spec = JSON.parse(filledInSpec);
+      // draftState.spec = JSON.parse(filledInSpec);
+      draftState.spec = evaluateHydraProgram(draftState.currentTemplateInstance, draftState.templateMap);
     });
   }
   if (inError) {
@@ -63,6 +64,7 @@ export const setNewSpecCode: ActionResponse<HandleCodePayload> = (state, payload
   return produce(state, draftState => {
     draftState.specCode = code;
     draftState.editorError = null;
+    // this one is based on the t0 and doesn't require a full parse & execute
     draftState.spec = JSON.parse(code);
   });
 };

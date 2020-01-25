@@ -7,8 +7,21 @@ import {
 } from './templates/types';
 import {trim} from './utils';
 
-// TODO: this system doesn't support data type checking?
+/**
+ * Evaluate a hydra query, used for the widget validations and conditional checks
+ * // TODO: this system doesn't support data type checking?
+ * @param query - for now uses the special widget validation langugage
+ * @param templateMap - the specification/variable values defined by the gui
+ */
 function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): boolean {
+  // const code = template.code;
+  // const scriptMatch = code.match(/<script>(.*)<\/script>/s);
+  // const script = scriptMatch && scriptMatch.length ? scriptMatch[1] : '';
+  // const outputMatch = code.match(/<output>(.*)<\/output>/s);
+  // const output = outputMatch && outputMatch.length ? outputMatch[1].replace(/\n/g, '') : '{}';
+  // const generatedContent = new Function('parameters', `${script}\n\n return ${output}`);
+  // console.log(generatedContent(templateMap));
+  // return generatedContent(templateMap);
   return Object.entries(query).every(([key, result]) => {
     if (result === null) {
       return typeof templateMap[key] !== 'number' && !templateMap[key];
@@ -37,6 +50,11 @@ function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): 
 //   tooltip: true,
 //   color: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}},
 // }}
+/**
+ * Walk across the tree and apply conditionals are appropriate
+ * @param spec - any valid json hydra spec
+ * @param templateMap - the specification/variable values defined by the gui
+ */
 export function applyConditionals(spec: any, templateMap: TemplateMap): any {
   // if it's array interate across it
   if (Array.isArray(spec)) {
@@ -59,6 +77,11 @@ export function applyConditionals(spec: any, templateMap: TemplateMap): any {
   return spec;
 }
 
+/**
+ *
+ * @param template
+ * @param templateMap - the specification/variable values defined by the gui
+ */
 export function applyQueries(template: Template, templateMap: TemplateMap): TemplateWidget<any>[] {
   const widgetMap = template.widgets.reduce((acc: any, widget) => {
     acc[widget.widgetName] = true;
@@ -73,6 +96,13 @@ export function applyQueries(template: Template, templateMap: TemplateMap): Temp
   return template.widgets.filter(widget => validWidgetNames[widget.widgetName]);
 }
 
+/**
+ * Apply values from templatemap (specification) to template
+ * Important to do it this way and not via json parse because values might be parts of strings
+ * Example {"field": "datum.[VARIABLENAME]"}
+ * @param code
+ * @param templateMap - the specification/variable values defined by the gui
+ */
 export const setTemplateValues = (code: string, templateMap: TemplateMap): string => {
   const filledInSpec = Object.entries(templateMap).reduce((acc: string, keyValue: any) => {
     const [key, value] = keyValue;
@@ -89,6 +119,11 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap): strin
   return filledInSpec;
 };
 
+/**
+ * Generate a list of the missing fields on a template
+ * @param template
+ * @param templateMap - the specification/variable values defined by the gui
+ */
 export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
   const requiredFields = template.widgets
     .filter(d => d.widgetType === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).widget.required)
@@ -101,7 +136,28 @@ export function getMissingFields(template: Template, templateMap: TemplateMap): 
   return missingFileds;
 }
 
+/**
+ * Figure out if the all of the required fields have been filled in
+ * @param template
+ * @param templateMap - the specification/variable values defined by the gui
+ */
 export function checkIfMapComplete(template: Template, templateMap: TemplateMap): boolean {
   const missing = getMissingFields(template, templateMap);
   return missing.length === 0;
+}
+
+/**
+ *
+ * @param template
+ * @param templateMap - the specification/variable values defined by the gui
+ */
+export function evaluateHydraProgram(template: Template, templateMap: TemplateMap): any {
+  // 1. apply variables to string representation of code
+  const interpolatedVals = setTemplateValues(template.code, templateMap);
+  // 2. parse to json
+  const parsedJson = JSON.parse(interpolatedVals);
+  // 3. evaluate inline conditionals
+  const evaluatableSpec = applyConditionals(parsedJson, templateMap);
+  // 4. return
+  return evaluatableSpec;
 }
