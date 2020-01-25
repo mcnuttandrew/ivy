@@ -1,8 +1,9 @@
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 
+import {CoerceTypePayload, HandleCodePayload, SetTemplateValuePayload} from '../actions/index';
 import {findField, getAllInUseFields, extractFieldStringsForType, get} from '../utils';
-import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem} from './default-state';
+import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem, blindSet} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {setTemplateValues} from '../hydra-lang';
@@ -10,7 +11,7 @@ import {setTemplateValues} from '../hydra-lang';
 const usingNestedSpec = (state: AppState): boolean => Boolean(state.spec.spec);
 
 // remove the current encoding
-export const clearEncoding: ActionResponse = state => {
+export const clearEncoding: ActionResponse<void> = state => {
   if (state.currentTemplateInstance) {
     return fillTemplateMapWithDefaults(state);
   } else {
@@ -21,7 +22,7 @@ export const clearEncoding: ActionResponse = state => {
 };
 
 // change the mark type
-export const changeMarkType: ActionResponse = (state, payload) => {
+export const changeMarkType: ActionResponse<string> = (state, payload) => {
   const usingNested = usingNestedSpec(state);
   const route = usingNested ? ['spec', 'spec', 'mark', 'type'] : ['spec', 'mark', 'type'];
   return produce(state, draftState => {
@@ -38,14 +39,10 @@ export const changeMarkType: ActionResponse = (state, payload) => {
 };
 
 // blindly set a new spec
-// TODO this could be a blind set
-export const setNewSpec: ActionResponse = (state, payload) =>
-  produce(state, draftState => {
-    draftState.spec = payload;
-  });
+export const setNewSpec = blindSet('spec');
 
 // set the spec code
-export const setNewSpecCode: ActionResponse = (state, payload) => {
+export const setNewSpecCode: ActionResponse<HandleCodePayload> = (state, payload) => {
   const {code, inError} = payload;
   if (state.currentTemplateInstance) {
     // TODO i think eval should get checked here
@@ -70,7 +67,7 @@ export const setNewSpecCode: ActionResponse = (state, payload) => {
   });
 };
 
-export const coerceType: ActionResponse = (state, payload) => {
+export const coerceType: ActionResponse<CoerceTypePayload> = (state, payload) => {
   const {field, type} = payload;
   return produce(state, draftState => {
     const columnIdx = state.columns.findIndex((d: any) => d.field === field);
@@ -120,7 +117,7 @@ function removeMetaEncoding(state: AppState): AppState {
   });
 }
 
-export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
+export const setChannelToMetaColumn: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   // moving from un-nested spec to nested spec
   let newState = state;
   if (!usingNestedSpec(state)) {
@@ -131,11 +128,14 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
 
   // this approach only works for column / row
   // if the repeat operator has not been initialized, initialize it
-  const repeatRoute = ['spec', 'repeat', payload.text];
+  const repeatRoute = ['spec', 'repeat', payload.text as string];
 
   if (!get(state, repeatRoute)) {
     newState = produce(newState, draftState => {
-      draftState.spec.repeat[payload.text] = extractFieldStringsForType(newState.columns, 'MEASURE');
+      draftState.spec.repeat[payload.text as string] = extractFieldStringsForType(
+        newState.columns,
+        'MEASURE',
+      );
     });
   }
   // if there is already a card in place, check to see if removing it removes the repeats
@@ -164,18 +164,18 @@ export const setChannelToMetaColumn: ActionResponse = (state, payload) => {
   });
 };
 
-export const updateCodeRepresentation: ActionResponse = (_, newState: AppState) => {
+export const updateCodeRepresentation: ActionResponse<AppState> = (_: AppState, newState: AppState) => {
   return produce(newState, (draftState: any) => {
     draftState.specCode = stringify(newState.spec);
   });
 };
 
 // move a field from one channel to another (origin field might be null)
-export const setEncodingParameter: ActionResponse = (state, payload) => {
+export const setEncodingParameter: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   if (payload.isMeta) {
     return setChannelToMetaColumn(state, payload);
   }
-  const fieldHeader = findField(state, payload.text);
+  const fieldHeader = findField(state, payload.text as string);
   const usingNested = usingNestedSpec(state);
   let newState = state;
   if (fieldHeader) {
@@ -222,7 +222,7 @@ export const setEncodingParameter: ActionResponse = (state, payload) => {
 };
 
 // move a field from one channel to another (origin field might be null)
-export const swapXAndYChannels: ActionResponse = state => {
+export const swapXAndYChannels: ActionResponse<void> = state => {
   return produce(state, draftState => {
     const usingNested = usingNestedSpec(state);
     const oldEncoding = usingNested ? state.spec.spec.encoding : state.spec.encoding;
@@ -236,7 +236,7 @@ export const swapXAndYChannels: ActionResponse = state => {
   });
 };
 
-export const setRepeats: ActionResponse = (state, payload) => {
+export const setRepeats: ActionResponse<{repeats: string[]; target: string}> = (state, payload) => {
   const {repeats, target} = payload;
   return produce(state, draftState => {
     draftState.spec.repeat[target] = repeats;
@@ -269,7 +269,7 @@ export function pushToUndoStack(oldState: AppState, newState: AppState): AppStat
   });
 }
 // TODO these are probably constructable as a single more elegant function
-export const triggerRedo: ActionResponse = state => {
+export const triggerRedo: ActionResponse<void> = state => {
   const redoStack = state.redoStack;
   return produce(applyStackItemToState(state, redoStack[redoStack.length - 1]), draftState => {
     draftState.redoStack.pop();
@@ -277,7 +277,7 @@ export const triggerRedo: ActionResponse = state => {
   });
 };
 
-export const triggerUndo: ActionResponse = state => {
+export const triggerUndo: ActionResponse<void> = state => {
   const undoStack = state.undoStack;
   return produce(applyStackItemToState(state, undoStack[undoStack.length - 1]), draftState => {
     draftState.undoStack.pop();

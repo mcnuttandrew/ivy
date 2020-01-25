@@ -9,25 +9,25 @@ import {IoIosCreate} from 'react-icons/io';
 import Popover from './popover';
 import Selector from './selector';
 import {EDITOR_OPTIONS} from '../constants/index';
-import {GenericAction} from '../actions';
-import {Template, TemplateMap} from '../templates/types';
+import {GenericAction, HandleCodePayload} from '../actions';
+import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 import {classnames, serializeTemplate, get} from '../utils';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
-  addWidget?: GenericAction;
+  addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
   codeMode: string;
-  chainActions: GenericAction;
+  chainActions: GenericAction<any>;
   editorError: null | string;
   editMode: boolean;
   editorFontSize: number;
-  readInTemplate: GenericAction;
-  readInTemplateMap: GenericAction;
-  setCodeMode: GenericAction;
-  setEditorFontSize: GenericAction;
-  setEditMode: GenericAction;
-  setNewSpecCode: GenericAction;
-  setProgrammaticView: GenericAction;
+  readInTemplate: GenericAction<HandleCodePayload>;
+  readInTemplateMap: GenericAction<HandleCodePayload>;
+  setCodeMode: GenericAction<string>;
+  setEditorFontSize: GenericAction<number>;
+  setEditMode: GenericAction<boolean>;
+  setNewSpecCode: GenericAction<HandleCodePayload>;
+  setProgrammaticView: GenericAction<void>;
   showProgrammaticMode: boolean;
   spec: any;
   specCode: string;
@@ -168,7 +168,7 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   handleCodeUpdate(code: string): void {
     const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
-    const responseFunctionMap: {[x: string]: GenericAction} = {
+    const responseFunctionMap: {[x: string]: GenericAction<HandleCodePayload>} = {
       PARAMETERS: readInTemplate,
       SPECIFICATION: readInTemplateMap,
       TEMPLATE: setNewSpecCode,
@@ -298,7 +298,7 @@ export default class CodeEditor extends React.Component<Props, State> {
       <div className="full-height full-width code-container flex-down">
         <div
           className="full-width background-2 cursor-pointer flex code-collapse"
-          onClick={(): any => setProgrammaticView(!showProgrammaticMode)}
+          onClick={(): any => setProgrammaticView()}
         >
           <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
           {showProgrammaticMode ? <FaAngleDown /> : <FaAngleUp />}

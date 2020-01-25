@@ -98,7 +98,7 @@ export function cleanSpec(spec: any): any {
 }
 
 // safely access elements on a nested object
-export function get(obj: any, route: string[]): any {
+export function get(obj: any, route: (string | number)[]): any {
   if (!obj) {
     return null;
   }

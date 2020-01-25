@@ -3,19 +3,20 @@ import React, {useState} from 'react';
 import {GoPlus, GoTriangleDown} from 'react-icons/go';
 import {TiFilter, TiDeleteOutline} from 'react-icons/ti';
 
-import {GenericAction} from '../actions/index';
+import {GenericAction, CoerceTypePayload} from '../actions/index';
+import {DataType} from '../types';
 import {useDrag} from 'react-dnd';
 import {ColumnHeader} from '../types';
 import DataSymbol from './data-symbol';
 import {classnames} from '../utils';
 
 export interface PillProps {
-  addToNextOpenSlot?: GenericAction;
-  coerceType?: GenericAction;
+  addToNextOpenSlot?: GenericAction<ColumnHeader>;
+  coerceType?: GenericAction<CoerceTypePayload>;
   column: ColumnHeader;
   containingField?: string;
   containingShelf?: string;
-  createFilter?: GenericAction;
+  createFilter?: GenericAction<ColumnHeader>;
   hideGUI?: boolean;
   inEncoding: boolean;
   setEncodingParameter?: any;
@@ -63,7 +64,7 @@ export default function Pill(props: PillProps): JSX.Element {
           <div className="coercion-tooltip-container">
             <div className="coercion-tooltip">
               <h5>Change Base Type</h5>
-              {['DIMENSION', 'MEASURE', 'TIME'].map((type: string) => {
+              {['DIMENSION', 'MEASURE', 'TIME'].map((type: DataType) => {
                 return (
                   <button
                     className={classnames({

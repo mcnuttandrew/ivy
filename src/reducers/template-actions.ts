@@ -2,6 +2,13 @@ import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import {ActionResponse, AppState} from './default-state';
 import {
+  ModifyValueOnTemplatePayload,
+  MoveWidgetPayload,
+  HandleCodePayload,
+  SetTemplateValuePayload,
+  SetWidgetValuePayload,
+} from '../actions/index';
+import {
   ListWidget,
   SliderWidget,
   SwitchWidget,
@@ -54,13 +61,13 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
   );
 }
 
-export const recieveTemplates: ActionResponse = (state, payload) => {
+export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => {
   return produce(state, draftState => {
     draftState.templates = payload;
   });
 };
 
-export const setTemplateValue: ActionResponse = (state, payload) => {
+export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   let newState = state;
   if (payload.containingShelf) {
     newState = produce(state, draftState => {
@@ -83,7 +90,7 @@ function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
   });
 }
 
-const insertTemplateIntoTemplates: ActionResponse = (state, template) => {
+const insertTemplateIntoTemplates: ActionResponse<Template> = (state, template) => {
   // this set and get on the db breaks encapsulation a little bit
   // update the template catalog / create it
   get('templates').then((templates: string[]) => {
@@ -100,13 +107,13 @@ const insertTemplateIntoTemplates: ActionResponse = (state, template) => {
   });
 };
 
-export const saveCurrentTemplate: ActionResponse = state =>
+export const saveCurrentTemplate: ActionResponse<void> = state =>
   insertTemplateIntoTemplates(state, state.currentTemplateInstance);
 
-export const loadExternalTemplate: ActionResponse = (state, payload) =>
+export const loadExternalTemplate: ActionResponse<Template> = (state, payload) =>
   insertTemplateIntoTemplates(state, payload);
 
-export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
+export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload> = (state, payload) => {
   const {value, key} = payload;
   return produce(state, draftState => {
     /* eslint-disable @typescript-eslint/ban-ts-ignore*/
@@ -122,33 +129,33 @@ export const modifyValueOnTemplate: ActionResponse = (state, payload) => {
   });
 };
 
-export const readInTemplate: ActionResponse = (state, payload) => {
-  if (payload.error) {
+export const readInTemplate: ActionResponse<HandleCodePayload> = (state, payload) => {
+  if (payload.inError) {
     return produce(state, draftState => {
-      draftState.editorError = payload.error;
+      draftState.editorError = payload.inError;
     });
   }
   return produce(state, draftState => {
     const updatedTemplate = deserializeTemplate(payload.code);
     updatedTemplate.code = state.currentTemplateInstance.code;
     draftState.currentTemplateInstance = updatedTemplate;
-    draftState.editorError = payload.error;
+    draftState.editorError = payload.inError;
   });
 };
 
-export const readInTemplateMap: ActionResponse = (state, payload) => {
-  if (payload.error) {
+export const readInTemplateMap: ActionResponse<HandleCodePayload> = (state, payload) => {
+  if (payload.inError) {
     return produce(state, draftState => {
-      draftState.editorError = payload.error;
+      draftState.editorError = payload.inError;
     });
   }
   return produce(state, draftState => {
     draftState.templateMap = JSON.parse(payload.code);
-    draftState.editorError = payload.error;
+    draftState.editorError = payload.inError;
   });
 };
 
-export const setBlankTemplate: ActionResponse = (state, fork) => {
+export const setBlankTemplate: ActionResponse<boolean> = (state, fork) => {
   const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
   if (fork) {
@@ -160,7 +167,7 @@ export const setBlankTemplate: ActionResponse = (state, fork) => {
   });
 };
 
-export const deleteTemplate: ActionResponse = (state, payload) => {
+export const deleteTemplate: ActionResponse<string> = (state, payload) => {
   // update the template catalog / create it
   get('templates').then((templates: string[]) => {
     const updatedTemplates = (templates || []).filter((x: string) => x !== payload);
@@ -173,7 +180,7 @@ export const deleteTemplate: ActionResponse = (state, payload) => {
   });
 };
 
-export const setWidgetValue: ActionResponse = (state, payload) => {
+export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, payload) => {
   const {key, value, idx} = payload;
   // const template = state.currentTemplateInstance;
   const code = state.currentTemplateInstance.code;
@@ -215,12 +222,12 @@ const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
   produce(state, draftState => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
   });
-export const addWidget: ActionResponse = (state, payload) =>
+export const addWidget: ActionResponse<TemplateWidget<any>> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.concat(payload));
-export const removeWidget: ActionResponse = (state, payload) =>
+export const removeWidget: ActionResponse<number> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.filter((_: any, idx: number) => payload !== idx));
 
-export const moveWidget: ActionResponse = (state, payload) => {
+export const moveWidget: ActionResponse<MoveWidgetPayload> = (state, payload) => {
   const {fromIdx, toIdx} = payload;
   if (fromIdx === undefined || toIdx === undefined) {
     return state;

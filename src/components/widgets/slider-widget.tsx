@@ -8,7 +8,7 @@ export default function SliderWidgetComponent(
 ): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
   const clamp = (v: any): number => Math.max(widget.widget.minVal, Math.min(widget.widget.maxVal, Number(v)));
-  const setVal = (text: any): any => setTemplateValue({field: widget.widgetName, text: clamp(text)});
+  const setVal = (text: any): any => setTemplateValue({field: widget.widgetName, text: `${clamp(text)}`});
   return (
     <div className="slide-widget">
       {!editMode && <div className="widget-title">{widget.displayName || widget.widgetName}</div>}

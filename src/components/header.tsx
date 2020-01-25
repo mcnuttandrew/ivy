@@ -5,8 +5,8 @@ import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
 
 interface HeaderProps {
-  triggerUndo: GenericAction;
-  triggerRedo: GenericAction;
+  triggerUndo: GenericAction<void>;
+  triggerRedo: GenericAction<void>;
   canRedo: boolean;
   canUndo: boolean;
 }
@@ -24,7 +24,9 @@ export default class Header extends React.Component<HeaderProps> {
               'action-deactivated': !canUndo,
               'state-action-button': true,
             })}
-            onClick={canUndo ? triggerUndo : NULL}
+            onClick={(): void => {
+              (canUndo ? triggerUndo : NULL)();
+            }}
           >
             <MdUndo /> <span>UNDO</span>
           </div>
@@ -33,7 +35,9 @@ export default class Header extends React.Component<HeaderProps> {
               'action-deactivated': !canRedo,
               'state-action-button': true,
             })}
-            onClick={canRedo ? triggerRedo : NULL}
+            onClick={(): void => {
+              (canRedo ? triggerRedo : NULL)();
+            }}
           >
             <MdRedo />
             <span>REDO</span>

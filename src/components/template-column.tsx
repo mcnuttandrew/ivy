@@ -1,7 +1,12 @@
 import React from 'react';
 
 import {ColumnHeader} from '../types';
-import {GenericAction} from '../actions';
+import {
+  GenericAction,
+  ModifyValueOnTemplatePayload,
+  SetWidgetValuePayload,
+  MoveWidgetPayload,
+} from '../actions';
 import {Template, TemplateWidget, WidgetSubType, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import TemplateColumnAddNewWidgetPopover from './template-column-add-new-widget-popover';
@@ -19,11 +24,11 @@ interface TemplateColumnProps {
   template: Template;
   templateMap: TemplateMap;
 
-  addWidget: GenericAction;
-  modifyValueOnTemplate: GenericAction;
-  removeWidget: GenericAction;
-  setWidgetValue: GenericAction;
-  moveWidget: GenericAction;
+  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
+  modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
+  removeWidget: GenericAction<number>;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
+  moveWidget: GenericAction<MoveWidgetPayload>;
 }
 
 function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {

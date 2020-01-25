@@ -6,11 +6,11 @@ import {thumbnailLocation} from '../../thumbnail';
 import {serverPrefix} from '../../utils';
 
 interface Props {
-  chainActions: GenericAction;
-  deleteTemplate: GenericAction;
-  setEncodingMode: GenericAction;
+  chainActions: GenericAction<any>;
+  deleteTemplate: GenericAction<string>;
+  setEncodingMode: GenericAction<string>;
   templates: Template[];
-  toggleProgramModal: GenericAction;
+  toggleProgramModal: GenericAction<void>;
 }
 
 // used for filtering out unsearched templates

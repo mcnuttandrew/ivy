@@ -1,6 +1,8 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 
+import {CHANGE_SELECTED_FILE, RECIEVE_DATA, RECIEVE_TYPE_INFERENCES} from '../actions/action-types';
+
 import {
   changeMarkType,
   clearEncoding,
@@ -53,16 +55,17 @@ import {
 import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
 
 // second order effects
-const wrap = (func: ActionResponse, wrapper: any): ActionResponse => (state, payload): AppState =>
+const wrap = (func: ActionResponse<any>, wrapper: any): ActionResponse<any> => (state, payload): AppState =>
   wrapper(state, func(state, payload));
-const addUndo = (func: ActionResponse): ActionResponse => wrap(func, pushToUndoStack);
-const addUpdateCode = (func: ActionResponse): ActionResponse => wrap(func, updateCodeRepresentation);
+const addUndo = (func: ActionResponse<any>): ActionResponse<any> => wrap(func, pushToUndoStack);
+const addUpdateCode = (func: ActionResponse<any>): ActionResponse<any> =>
+  wrap(func, updateCodeRepresentation);
 
-const actionFuncMap: {[val: string]: ActionResponse} = {
+const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   // data modifications
-  'change-selected-file': changeSelectedFile,
-  'recieve-data': recieveData,
-  'recieve-type-inferences': recieveTypeInferences,
+  [CHANGE_SELECTED_FILE]: changeSelectedFile,
+  [RECIEVE_DATA]: recieveData,
+  [RECIEVE_TYPE_INFERENCES]: recieveTypeInferences,
 
   // encoding modifications
   'add-to-next-open-slot': addUndo(addUpdateCode(addToNextOpenSlot)),
@@ -117,7 +120,7 @@ const actionFuncMap: {[val: string]: ActionResponse} = {
   'delete-view': addUndo(deleteView),
   'switch-view': addUndo(switchView),
 };
-const NULL_ACTION: ActionResponse = state => state;
+const NULL_ACTION: ActionResponse<void> = state => state;
 const reducers = {
   base: (state: AppState = DEFAULT_STATE, {type, payload}: {type: string; payload: any}): AppState => {
     console.log(type);

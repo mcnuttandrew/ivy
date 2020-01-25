@@ -1,9 +1,10 @@
-import {EMPTY_SPEC, ActionResponse} from './default-state';
+import {AppState, EMPTY_SPEC, ActionResponse} from './default-state';
 import {ColumnHeader, DataType} from '../types';
 import {selectDataModification, executeDataModifcation} from '../operations/data-ops';
 import produce from 'immer';
+import {TypeInference, DataRow} from '../actions/index';
 
-export const recieveData: ActionResponse = (state, payload) => {
+export const recieveData = (state: AppState, payload: DataRow[]): AppState => {
   // this might be the wrong way to do this? it sort of depends on the internals of that vega component
   const dataModification = selectDataModification(payload);
   return produce(state, draftState => {
@@ -18,18 +19,12 @@ export const recieveData: ActionResponse = (state, payload) => {
   });
 };
 
-export const recieveTypeInferences: ActionResponse = (state, payload) => {
-  type DestructType = {
-    key: string;
-    type: string;
-    category: DataType;
-    domain: number[] | string[];
-  };
-  const modifiedColumns = payload.map(({key, type, category, domain}: DestructType) => {
+export const recieveTypeInferences = (state: AppState, payload: TypeInference[]): AppState => {
+  const modifiedColumns = payload.map(({key, type, category, domain}) => {
     const newHeader: ColumnHeader = {
       field: key,
-      type: category,
-      originalType: category,
+      type: category as DataType,
+      originalType: category as DataType,
       secondaryType: type,
       domain,
     };
@@ -74,7 +69,7 @@ export const recieveTypeInferences: ActionResponse = (state, payload) => {
 };
 
 // TODO this can be a blind set
-export const changeSelectedFile: ActionResponse = (state, payload) => {
+export const changeSelectedFile: ActionResponse<string> = (state, payload) => {
   return produce(state, draftState => {
     draftState.currentlySelectedFile = payload;
   });

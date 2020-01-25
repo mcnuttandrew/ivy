@@ -1,8 +1,10 @@
+import {UpdateFilterPayload} from '../actions/index';
 import {getUniques, getDomain, findField, get} from '../utils';
+import {ColumnHeader} from '../types';
 import {ActionResponse} from './default-state';
 import produce from 'immer';
 
-export const createFilter: ActionResponse = (state, payload) => {
+export const createFilter: ActionResponse<ColumnHeader> = (state, payload) => {
   const isDim = findField(state, payload.field).type === 'DIMENSION';
   const newFilter: any = {
     filter: {
@@ -18,7 +20,7 @@ export const createFilter: ActionResponse = (state, payload) => {
   });
 };
 
-export const updateFilter: ActionResponse = (state, payload) => {
+export const updateFilter: ActionResponse<UpdateFilterPayload> = (state, payload) => {
   const {newFilterValue, idx} = payload;
   const oneOf = ['spec', 'transform', idx, 'filter', 'oneOf'];
   if (get(state, oneOf)) {
@@ -31,7 +33,7 @@ export const updateFilter: ActionResponse = (state, payload) => {
   });
 };
 
-export const deleteFilter: ActionResponse = (state, deleteIndex) => {
+export const deleteFilter: ActionResponse<number> = (state, deleteIndex) => {
   return produce(state, draftState => {
     draftState.spec.transform = draftState.spec.transform.filter(
       (_: any, idx: number) => idx !== deleteIndex,

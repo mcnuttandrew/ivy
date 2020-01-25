@@ -4,12 +4,23 @@ import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 
-import {Template, TemplateMap} from '../templates/types';
+import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
 import * as actionCreators from '../actions/index';
-import {GenericAction} from '../actions/index';
+import {
+  CoerceTypePayload,
+  GenericAction,
+  HandleCodePayload,
+  LoadDataPayload,
+  ModifyValueOnTemplatePayload,
+  MoveWidgetPayload,
+  SetRepeatsPayload,
+  SetTemplateValuePayload,
+  SetWidgetValuePayload,
+  UpdateFilterPayload,
+} from '../actions/index';
 import {getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
 import {applyConditionals, getMissingFields} from '../hydra-lang';
 
@@ -78,51 +89,51 @@ interface RootProps {
   templates: Template[];
   views: string[];
 
-  addToNextOpenSlot: GenericAction;
-  addWidget: GenericAction;
-  chainActions: GenericAction;
-  changeMarkType: GenericAction;
-  changeSelectedFile: GenericAction;
-  changeTheme: GenericAction;
-  clearEncoding: GenericAction;
-  cloneView: GenericAction;
-  coerceType: GenericAction;
-  createFilter: GenericAction;
-  createNewView: GenericAction;
-  deleteFilter: GenericAction;
-  deleteTemplate: GenericAction;
-  deleteView: GenericAction;
-  loadCustomDataset: GenericAction;
-  loadDataFromPredefinedDatasets: GenericAction;
-  loadExternalTemplate: GenericAction;
-  loadTemplates: GenericAction;
-  modifyValueOnTemplate: GenericAction;
-  moveWidget: GenericAction;
-  readInTemplate: GenericAction;
-  readInTemplateMap: GenericAction;
-  removeWidget: GenericAction;
-  saveCurrentTemplate: GenericAction;
-  setBlankTemplate: GenericAction;
-  setCodeMode: GenericAction;
-  setEditMode: GenericAction;
-  setEditorFontSize: GenericAction;
-  setEncodingMode: GenericAction;
-  setEncodingParameter: GenericAction;
-  setGuiView: GenericAction;
-  setNewSpec: GenericAction;
-  setNewSpecCode: GenericAction;
-  setProgrammaticView: GenericAction;
-  setRepeats: GenericAction;
-  setSimpleDisplay: GenericAction;
-  setTemplateValue: GenericAction;
-  setWidgetValue: GenericAction;
-  swapXAndYChannels: GenericAction;
-  switchView: GenericAction;
-  toggleDataModal: GenericAction;
-  toggleProgramModal: GenericAction;
-  triggerRedo: GenericAction;
-  triggerUndo: GenericAction;
-  updateFilter: GenericAction;
+  addToNextOpenSlot: GenericAction<ColumnHeader>;
+  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
+  chainActions: GenericAction<any>;
+  changeMarkType: GenericAction<string>;
+  changeSelectedFile: GenericAction<string>;
+  changeTheme: GenericAction<string>;
+  clearEncoding: GenericAction<void>;
+  cloneView: GenericAction<void>;
+  coerceType: GenericAction<CoerceTypePayload>;
+  createFilter: GenericAction<ColumnHeader>;
+  createNewView: GenericAction<void>;
+  deleteFilter: GenericAction<number>;
+  deleteTemplate: GenericAction<string>;
+  deleteView: GenericAction<string>;
+  loadCustomDataset: GenericAction<LoadDataPayload>;
+  loadDataFromPredefinedDatasets: GenericAction<string>;
+  loadExternalTemplate: GenericAction<Template>;
+  loadTemplates: GenericAction<void>;
+  modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
+  moveWidget: GenericAction<MoveWidgetPayload>;
+  readInTemplate: GenericAction<HandleCodePayload>;
+  readInTemplateMap: GenericAction<HandleCodePayload>;
+  removeWidget: GenericAction<number>;
+  saveCurrentTemplate: GenericAction<void>;
+  setBlankTemplate: GenericAction<boolean>;
+  setCodeMode: GenericAction<string>;
+  setEditMode: GenericAction<boolean>;
+  setEditorFontSize: GenericAction<number>;
+  setEncodingMode: GenericAction<string>;
+  setEncodingParameter: GenericAction<SetTemplateValuePayload>;
+  setGuiView: GenericAction<boolean>;
+  setNewSpec: GenericAction<any>;
+  setNewSpecCode: GenericAction<HandleCodePayload>;
+  setProgrammaticView: GenericAction<void>;
+  setRepeats: GenericAction<SetRepeatsPayload>;
+  setSimpleDisplay: GenericAction<boolean>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
+  swapXAndYChannels: GenericAction<void>;
+  switchView: GenericAction<string>;
+  toggleDataModal: GenericAction<void>;
+  toggleProgramModal: GenericAction<void>;
+  triggerRedo: GenericAction<void>;
+  triggerUndo: GenericAction<void>;
+  updateFilter: GenericAction<UpdateFilterPayload>;
 }
 
 class RootComponent extends React.Component<RootProps> {
@@ -196,7 +207,7 @@ class RootComponent extends React.Component<RootProps> {
           deleteFilter={deleteFilter}
           fillableFields={fillableFields}
           metaColumns={metaColumns}
-          onDropFilter={(item: any): any => createFilter({field: item.text})}
+          onDropFilter={(item: any): any => createFilter({field: item.text} as ColumnHeader)}
           setRepeats={setRepeats}
           showGUIView={showGUIView}
           spec={spec}
@@ -290,7 +301,7 @@ class RootComponent extends React.Component<RootProps> {
               }
               setEncodingParameter(item);
             }}
-            onDropFilter={(item: any): any => createFilter({field: item.text})}
+            onDropFilter={(item: any): any => createFilter({field: item.text} as ColumnHeader)}
             setEncodingParameter={setEncodingParameter}
             setNewSpec={setNewSpec}
             showSimpleDisplay={showSimpleDisplay}

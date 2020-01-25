@@ -6,7 +6,7 @@ import {receiveThumbnail} from '../../thumbnail';
 import {serverPrefix, classnames} from '../../utils';
 
 interface Props {
-  loadExternalTemplate: GenericAction;
+  loadExternalTemplate: GenericAction<Template>;
 }
 
 type QueryBuild = (

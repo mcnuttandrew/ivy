@@ -6,7 +6,7 @@ import {TemplateWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory, preconfiguredWidgets} from '../templates';
 
 interface Props {
-  addWidget: GenericAction;
+  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
   widgets: TemplateWidget<WidgetSubType>[];
 }
 
