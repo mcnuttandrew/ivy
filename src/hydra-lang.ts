@@ -4,6 +4,10 @@ import {
   TemplateWidget,
   WidgetValidationQuery,
   DataTargetWidget,
+  WidgetSubType,
+  ListWidget,
+  SwitchWidget,
+  SliderWidget,
 } from './templates/types';
 import {trim} from './utils';
 
@@ -53,29 +57,36 @@ function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): 
 /**
  * Walk across the tree and apply conditionals are appropriate,
  * example conditional syntax: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}}
- * @param spec - any valid json hydra spec
+ *
  * @param templateMap - the specification/variable values defined by the gui
  */
-export function applyConditionals(spec: any, templateMap: TemplateMap): any {
-  // if it's array interate across it
-  if (Array.isArray(spec)) {
-    return spec.map(child => applyConditionals(child, templateMap));
-  }
-  // if it's an object check
-  if (typeof spec === 'object' && spec !== null) {
-    // if it's a conditional, if so execute the conditional
-    if (spec.CONDITIONAL) {
-      const queryResult = evaluateQuery(spec.CONDITIONAL.query, templateMap) ? 'true' : 'false';
-      return applyConditionals(spec.CONDITIONAL[queryResult], templateMap);
+export function applyConditionals(templateMap: TemplateMap): any {
+  return function walker(spec: any): any {
+    // if it's array interate across it
+    if (Array.isArray(spec)) {
+      return spec.map(child => walker(child));
     }
-    // if not just treat it like a normal object
-    return Object.entries(spec).reduce((acc: any, [key, value]: any) => {
-      acc[key] = applyConditionals(value, templateMap);
-      return acc;
-    }, {});
-  }
-  // else just return
-  return spec;
+    // check if it's an object
+    if (typeof spec === 'object' && spec !== null) {
+      return Object.entries(spec).reduce((acc: any, [key, value]: any) => {
+        // if it's a conditional, if so execute the conditional
+        if (value && typeof value === 'object' && value.CONDITIONAL) {
+          const queryResult = evaluateQuery(value.CONDITIONAL.query, templateMap) ? 'true' : 'false';
+          // this logic feels a little bit wonky, but i'd argue it's clear to list this explicitly
+          if (queryResult === 'false' && value.CONDITIONAL.deleteKeyOnFalse) {
+            // take no action in this case
+          } else {
+            acc[key] = walker(value.CONDITIONAL[queryResult]);
+          }
+        } else {
+          acc[key] = walker(value);
+        }
+        return acc;
+      }, {});
+    }
+    // else just return
+    return spec;
+  };
 }
 
 /**
@@ -148,6 +159,34 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
 }
 
 /**
+ * for template map holes that are NOT data columns, fill em as best you can
+ * @param template
+ */
+export function constructDefaultTemplateMap(template: Template): TemplateMap {
+  return template.widgets.reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
+    let value = null;
+    if (w.widgetType === 'MultiDataTarget') {
+      value = [];
+    }
+    if (w.widgetType === 'Text') {
+      return acc;
+    }
+    if (w.widgetType === 'List') {
+      value = (w as TemplateWidget<ListWidget>).widget.defaultValue;
+    }
+    if (w.widgetType === 'Switch') {
+      const localW = w as TemplateWidget<SwitchWidget>;
+      value = localW.widget.defaultsToActive ? localW.widget.activeValue : localW.widget.inactiveValue;
+    }
+    if (w.widgetType === 'Slider') {
+      value = (w as TemplateWidget<SliderWidget>).widget.defaultValue;
+    }
+    acc[w.widgetName] = value;
+    return acc;
+  }, {});
+}
+
+/**
  *
  * @param template
  * @param templateMap - the specification/variable values defined by the gui
@@ -155,12 +194,10 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
 export function evaluateHydraProgram(template: Template, templateMap: TemplateMap): any {
   // 1. apply variables to string representation of code
   const interpolatedVals = setTemplateValues(template.code, templateMap);
-  console.log(interpolatedVals);
   // 2. parse to json
   const parsedJson = JSON.parse(interpolatedVals);
   // 3. evaluate inline conditionals
-  const evaluatableSpec = applyConditionals(parsedJson, templateMap);
-  console.log(evaluatableSpec);
+  const evaluatableSpec = applyConditionals(templateMap)(parsedJson);
   // 4. return
   return evaluatableSpec;
 }
