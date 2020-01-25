@@ -1,21 +1,21 @@
 import stringify from 'json-stringify-pretty-compact';
-import {
-  Template,
-  DataTargetWidget,
-  MultiDataTargetWidget,
-  ListWidget,
-  SwitchWidget,
-  TextWidget,
-  SliderWidget,
-  TemplateWidget,
-  DataType,
-  WidgetSubType,
-  SectionWidget,
-  WidgetValidationQuery,
-  WidgetValidation,
-} from '../types';
+import {Template, TemplateWidget, WidgetSubType, WidgetValidation} from '../types';
 import {toList} from '../../utils';
-const toQuote = (x: string): string => `"${x}"`;
+import {
+  makeDataTarget,
+  makeText,
+  makeSection,
+  simpleList,
+  simpleSwitch,
+  addValidation,
+  used,
+  unused,
+  toQuote,
+  makeFullAgg,
+  makeSimpleAgg,
+  makeTypeSelect,
+} from './polestar-template-utils';
+
 const MARK_TYPES = [
   'AREA',
   'BAR',
@@ -28,18 +28,7 @@ const MARK_TYPES = [
   'TICK',
   'TRAIL',
 ].map(x => x.toLowerCase());
-const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'METACOLUMN', 'TIME'];
-const VegaLiteDataTypes = ['nominal', 'ordinal', 'quantitative', 'temporal']; //.map(toQuote);
-// TODO bin is handled incorrectly
 
-const justCountAgg = toList(['none', 'count'].map(toQuote));
-justCountAgg[0].value = undefined;
-const spatialAggs = [
-  ...justCountAgg,
-  ...toList(['min', 'max', 'sum', 'mean', 'median', 'mode'].map(toQuote)),
-];
-const used = (x: string): WidgetValidationQuery => ({[x]: '*'});
-const unused = (x: string): WidgetValidationQuery => ({[x]: null});
 const renderObjectIf = (object: any, checkKey: string, fieldName: string): any => ({
   [fieldName]: {CONDITIONAL: {query: used(checkKey), true: object, deleteKeyOnFalse: true}},
 });
@@ -66,7 +55,36 @@ const shelfProgram: any = {
     }, {}),
     // y: {field: '[Y]', type: '[YType]', scale: {zero: '[YIncludeZero]'}},
     ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, 'Size', 'size'),
-    ...renderObjectIf({field: '[Color]', type: '[ColorType]'}, 'Color', 'color'),
+    ...renderObjectIf(
+      {
+        field: '[Color]',
+        type: '[ColorType]',
+        // aggregate: '[ColorAggregate]'
+        aggregate: {
+          CONDITIONAL: {
+            query: used('Color'),
+            true: {
+              CONDITIONAL: {
+                query: {[`ColorAggFull`]: 'none'},
+                deleteKeyOnTrue: true,
+                false: '[ColorAggFull]',
+              },
+            },
+            false: {
+              aggregate: {
+                CONDITIONAL: {
+                  query: {[`ColorAggSimple`]: 'none'},
+                  deleteKeyOnTrue: true,
+                  false: '[ColorAggSimple]',
+                },
+              },
+            },
+          },
+        },
+      },
+      'Color',
+      'color',
+    ),
     ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, 'Shape', 'shape'),
     ...renderObjectIf({field: '[Text]', type: '[TextType]'}, 'Text', 'text'),
     ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, 'Detail', 'detail'),
@@ -77,65 +95,6 @@ const shelfProgram: any = {
   },
   mark: {type: '[markType]', tooltip: true},
 };
-
-const makeDataTarget = (dim: string): TemplateWidget<DataTargetWidget> => ({
-  widgetName: dim,
-  widgetType: 'DataTarget',
-  widget: {allowedTypes: ALLDATA_TYPES, required: false},
-});
-
-const makeText = (textLabel: string): TemplateWidget<TextWidget> => ({
-  widgetName: textLabel,
-  widgetType: 'Text',
-  widget: {text: textLabel},
-});
-const makeSection = (sectionLabel: string): TemplateWidget<SectionWidget> => ({
-  widgetName: sectionLabel,
-  widgetType: 'Section',
-  widget: {text: sectionLabel},
-});
-
-type displayType = {display: any; value: any};
-interface SimpleListType {
-  widgetName: string;
-  list: string[] | displayType[];
-  defaultVal?: string;
-  displayName?: string;
-}
-const simpleList = ({
-  widgetName,
-  list,
-  defaultVal,
-  displayName,
-}: SimpleListType): TemplateWidget<ListWidget> => {
-  const firstDisplayValue = (list[0] as displayType).display;
-  return {
-    widgetName,
-    widgetType: 'List',
-    displayName: displayName || null,
-    widget: {
-      allowedValues: firstDisplayValue ? (list as displayType[]) : toList(list as string[]),
-      defaultValue: defaultVal ? defaultVal : firstDisplayValue ? firstDisplayValue : (list as string[])[0],
-    },
-  };
-};
-
-interface SimpleSwitchType {
-  widgetName: string;
-  displayName?: string;
-}
-const simpleSwitch = ({widgetName, displayName}: SimpleSwitchType): TemplateWidget<SwitchWidget> => ({
-  widgetName,
-  widgetType: 'Switch',
-  displayName: displayName || null,
-  widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
-});
-
-function addValidation(acc: WidgetValidation[], key: string) {
-  return function adder(queryTarget: string): void {
-    acc.push({queryTarget, queryResult: 'hide', query: unused(key)});
-  };
-}
 
 const SHELF: Template = {
   templateName: 'Polestar',
@@ -150,12 +109,7 @@ const SHELF: Template = {
     ...['X', 'Y'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {
       return acc.concat([
         makeDataTarget(key),
-        simpleList({
-          widgetName: `${key}Type`,
-          list: VegaLiteDataTypes,
-          defaultVal: toQuote('quantitative'),
-          displayName: 'Data type',
-        }),
+        makeTypeSelect(key, 'quantitative'),
         simpleList({
           widgetName: `${key}ScaleType`,
           list: ['linear', 'log'],
@@ -164,8 +118,8 @@ const SHELF: Template = {
         }),
         simpleSwitch({widgetName: `${key}IncludeZero`, displayName: 'Include Zero'}),
         simpleSwitch({widgetName: `${key}bin`, displayName: 'Bin'}),
-        simpleList({widgetName: `${key}AggFull`, list: spatialAggs, displayName: `Aggregate`}),
-        simpleList({widgetName: `${key}AggSimple`, list: justCountAgg, displayName: `Aggregate`}),
+        makeFullAgg(key),
+        makeSimpleAgg(key),
       ]);
     }, []),
 
@@ -177,25 +131,22 @@ const SHELF: Template = {
     ...['Color', 'Size'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {
       return acc.concat([
         makeDataTarget(key),
-        simpleList({widgetName: `${key}Type`, list: VegaLiteDataTypes, defaultVal: toQuote('ordinal')}),
+        makeTypeSelect(key, 'ordinal'),
         simpleSwitch({widgetName: `${key}bin`}),
-        simpleList({widgetName: `${key}AggFull`, list: spatialAggs, displayName: 'Aggregate'}),
-        simpleList({widgetName: `${key}AggSimple`, list: justCountAgg, displayName: 'Aggregate'}),
+        makeFullAgg(key),
+        makeSimpleAgg(key),
       ]);
     }, []),
 
     // size & color dimensions
     ...['Shape', 'Detail'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {
-      return acc.concat([
-        makeDataTarget(key),
-        simpleList({widgetName: `${key}Type`, list: VegaLiteDataTypes, defaultVal: toQuote('nominal')}),
-      ]);
+      return acc.concat([makeDataTarget(key), makeTypeSelect(key, 'nominal')]);
     }, []),
     // text
     makeDataTarget('Text'),
-    simpleList({widgetName: 'TextType', list: VegaLiteDataTypes, defaultVal: toQuote('nominal')}),
-    simpleList({widgetName: 'TextAggFull', list: spatialAggs, displayName: 'TextAgg'}),
-    simpleList({widgetName: 'TextAggSimple', list: justCountAgg, displayName: 'TextAgg'}),
+    makeTypeSelect('Text', 'nominal'),
+    makeFullAgg('Text'),
+    makeSimpleAgg('Text'),
 
     // row / column
     makeSection('Facet Divider'),

@@ -75,6 +75,8 @@ export function applyConditionals(templateMap: TemplateMap): any {
           // this logic feels a little bit wonky, but i'd argue it's clear to list this explicitly
           if (queryResult === 'false' && value.CONDITIONAL.deleteKeyOnFalse) {
             // take no action in this case
+          } else if (queryResult === 'true' && value.CONDITIONAL.deleteKeyOnTrue) {
+            // take no action in this case
           } else {
             acc[key] = walker(value.CONDITIONAL[queryResult]);
           }

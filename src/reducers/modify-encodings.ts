@@ -45,12 +45,9 @@ export const setNewSpec = blindSet('spec');
 export const setNewSpecCode: ActionResponse<HandleCodePayload> = (state, payload) => {
   const {code, inError} = payload;
   if (state.currentTemplateInstance) {
-    // TODO i think eval should get checked here
-    // const filledInSpec = setTemplateValues(code, state.templateMap);
     return produce(state, draftState => {
       draftState.currentTemplateInstance.code = code;
       draftState.editorError = inError;
-      // draftState.spec = JSON.parse(filledInSpec);
       draftState.spec = evaluateHydraProgram(draftState.currentTemplateInstance, draftState.templateMap);
     });
   }
