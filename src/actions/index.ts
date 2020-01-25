@@ -6,7 +6,52 @@ import {DEFAULT_TEMPLATES} from '../templates';
 import {Template, TemplateWidget, WidgetSubType} from '../templates/types';
 import {ColumnHeader, DataType} from '../types';
 
-import {CHANGE_SELECTED_FILE, RECIEVE_DATA, RECIEVE_TYPE_INFERENCES} from './action-types';
+import {
+  ADD_TO_NEXT_OPEN_SLOT,
+  ADD_TO_WIDGET_TEMPLATE,
+  CHANGE_MARK_TYPE,
+  CHANGE_SELECTED_FILE,
+  CHANGE_THEME,
+  CLEAR_ENCODING,
+  CLONE_VIEW,
+  COERCE_TYPE,
+  CREATE_FILTER,
+  CREATE_NEW_VIEW,
+  DELETE_FILTER,
+  DELETE_TEMPLATE,
+  DELETE_VIEW,
+  LOAD_EXTERNAL_TEMPLATE,
+  MODIFY_VALUE_ON_TEMPLATE,
+  MOVE_WIDGET_IN_TEMPLATE,
+  READ_IN_TEMPLATE,
+  READ_IN_TEMPLATE_MAP,
+  RECIEVE_DATA,
+  RECIEVE_TEMPLATE,
+  RECIEVE_TYPE_INFERENCES,
+  REMOVE_WIDGET_FROM_TEMPLATE,
+  SAVE_TEMPLATE,
+  SET_BLANK_TEMPLATE,
+  SET_CODE_MODE,
+  SET_EDITOR_FONT_SIZE,
+  SET_EDIT_MODE,
+  SET_ENCODING_MODE,
+  SET_ENCODING_PARAM,
+  SET_GUI_VIEW,
+  SET_NEW_ENCODING,
+  SET_NEW_ENCODING_CODE,
+  SET_REPEATS,
+  SET_SIMPLE_DISPLAY,
+  SET_TEMPLATE_VALUE,
+  SET_WIDGET_VALUE,
+  SWAP_X_AND_Y_CHANNELS,
+  SWITCH_VIEW,
+  TOGGLE_DATA_MODAL,
+  TOGGLE_PROGRAMMATIC_VIEW,
+  TOGGLE_PROGRAM_MODAL,
+  TRIGGER_REDO,
+  TRIGGER_UNDO,
+  UPDATE_FILTER,
+} from './action-types';
 
 import {Action} from 'redux';
 import {ThunkAction} from 'redux-thunk';
@@ -52,47 +97,46 @@ function createAction<T>(type: string): GenericAction<T> {
   return payload => (dispatch): any => dispatch({type, payload});
 }
 
-export const addToNextOpenSlot = createAction<ColumnHeader>('add-to-next-open-slot');
-export const addWidget = createAction<TemplateWidget<WidgetSubType>>('add-widget-to-template');
-export const changeMarkType = createAction<string>('change-mark-type');
-export const changeTheme = createAction<string>('change-theme');
-export const clearEncoding = createAction<void>('clear-encoding');
-export const cloneView = createAction<void>('clone-view');
-
-export const coerceType = createAction<CoerceTypePayload>('coerce-type');
-export const createFilter = createAction<ColumnHeader>('create-filter');
-export const createNewView = createAction<void>('create-new-view');
-export const deleteFilter = createAction<number>('delete-filter');
-export const deleteTemplate = createAction<string>('delete-template');
-export const deleteView = createAction<string>('delete-view');
-export const loadExternalTemplate = createAction<Template>('load-external-template');
-export const modifyValueOnTemplate = createAction<ModifyValueOnTemplatePayload>('modify-value-on-template');
-export const moveWidget = createAction<MoveWidgetPayload>('move-widget-in-template');
-export const readInTemplate = createAction<HandleCodePayload>('read-in-template');
-export const readInTemplateMap = createAction<HandleCodePayload>('read-in-template-map');
-export const removeWidget = createAction<number>('remove-widget-from-template');
-export const saveCurrentTemplate = createAction<void>('save-template');
-export const setBlankTemplate = createAction<boolean>('set-blank-template');
-export const setCodeMode = createAction<string>('set-code-mode');
-export const setEditMode = createAction<boolean>('set-edit-mode');
-export const setEditorFontSize = createAction<number>('set-editor-font-size');
-export const setEncodingMode = createAction<string>('set-encoding-mode');
-export const setEncodingParameter = createAction<SetTemplateValuePayload>('set-encoding-param');
-export const setGuiView = createAction<boolean>('set-gui-view');
-export const setNewSpec = createAction<any>('set-new-encoding');
-export const setNewSpecCode = createAction<HandleCodePayload>('set-new-encoding-code');
-export const setProgrammaticView = createAction<void>('toggle-programmatic-view');
-export const setRepeats = createAction<SetRepeatsPayload>('set-repeats');
-export const setSimpleDisplay = createAction<boolean>('set-simple-display');
-export const setTemplateValue = createAction<SetTemplateValuePayload>('set-template-value');
-export const setWidgetValue = createAction<SetWidgetValuePayload>('set-widget-value');
-export const swapXAndYChannels = createAction<void>('swap-x-and-y-channels');
-export const switchView = createAction<string>('switch-view');
-export const toggleDataModal = createAction<void>('toggle-data-modal');
-export const toggleProgramModal = createAction<void>('toggle-program-modal');
-export const triggerRedo = createAction<void>('trigger-redo');
-export const triggerUndo = createAction<void>('trigger-undo');
-export const updateFilter = createAction<UpdateFilterPayload>('update-filter');
+export const addToNextOpenSlot = createAction<ColumnHeader>(ADD_TO_NEXT_OPEN_SLOT);
+export const addWidget = createAction<TemplateWidget<WidgetSubType>>(ADD_TO_WIDGET_TEMPLATE);
+export const changeMarkType = createAction<string>(CHANGE_MARK_TYPE);
+export const changeTheme = createAction<string>(CHANGE_THEME);
+export const clearEncoding = createAction<void>(CLEAR_ENCODING);
+export const cloneView = createAction<void>(CLONE_VIEW);
+export const coerceType = createAction<CoerceTypePayload>(COERCE_TYPE);
+export const createFilter = createAction<ColumnHeader>(CREATE_FILTER);
+export const createNewView = createAction<void>(CREATE_NEW_VIEW);
+export const deleteFilter = createAction<number>(DELETE_FILTER);
+export const deleteTemplate = createAction<string>(DELETE_TEMPLATE);
+export const deleteView = createAction<string>(DELETE_VIEW);
+export const loadExternalTemplate = createAction<Template>(LOAD_EXTERNAL_TEMPLATE);
+export const modifyValueOnTemplate = createAction<ModifyValueOnTemplatePayload>(MODIFY_VALUE_ON_TEMPLATE);
+export const moveWidget = createAction<MoveWidgetPayload>(MOVE_WIDGET_IN_TEMPLATE);
+export const readInTemplate = createAction<HandleCodePayload>(READ_IN_TEMPLATE);
+export const readInTemplateMap = createAction<HandleCodePayload>(READ_IN_TEMPLATE_MAP);
+export const removeWidget = createAction<number>(REMOVE_WIDGET_FROM_TEMPLATE);
+export const saveCurrentTemplate = createAction<void>(SAVE_TEMPLATE);
+export const setBlankTemplate = createAction<boolean>(SET_BLANK_TEMPLATE);
+export const setCodeMode = createAction<string>(SET_CODE_MODE);
+export const setEditMode = createAction<boolean>(SET_EDIT_MODE);
+export const setEditorFontSize = createAction<number>(SET_EDITOR_FONT_SIZE);
+export const setEncodingMode = createAction<string>(SET_ENCODING_MODE);
+export const setEncodingParameter = createAction<SetTemplateValuePayload>(SET_ENCODING_PARAM);
+export const setGuiView = createAction<boolean>(SET_GUI_VIEW);
+export const setNewSpec = createAction<any>(SET_NEW_ENCODING);
+export const setNewSpecCode = createAction<HandleCodePayload>(SET_NEW_ENCODING_CODE);
+export const setProgrammaticView = createAction<void>(TOGGLE_PROGRAMMATIC_VIEW);
+export const setRepeats = createAction<SetRepeatsPayload>(SET_REPEATS);
+export const setSimpleDisplay = createAction<boolean>(SET_SIMPLE_DISPLAY);
+export const setTemplateValue = createAction<SetTemplateValuePayload>(SET_TEMPLATE_VALUE);
+export const setWidgetValue = createAction<SetWidgetValuePayload>(SET_WIDGET_VALUE);
+export const swapXAndYChannels = createAction<void>(SWAP_X_AND_Y_CHANNELS);
+export const switchView = createAction<string>(SWITCH_VIEW);
+export const toggleDataModal = createAction<void>(TOGGLE_DATA_MODAL);
+export const toggleProgramModal = createAction<void>(TOGGLE_PROGRAM_MODAL);
+export const triggerRedo = createAction<void>(TRIGGER_REDO);
+export const triggerUndo = createAction<void>(TRIGGER_UNDO);
+export const updateFilter = createAction<UpdateFilterPayload>(UPDATE_FILTER);
 
 export const chainActions = (actions: GenericAction<any>[]) => (dispatch: Dispatch): void => {
   executePromisesInSeries(
@@ -185,13 +229,13 @@ export const loadTemplates: GenericAction<void> = () => (dispatch): void => {
         seen[d.templateName] = true;
         return true;
       });
-      dispatch({type: 'recieve-templates', payload});
+      dispatch({type: RECIEVE_TEMPLATE, payload});
     });
 };
 
 export const changeSelectedFile: GenericAction<string> = fileName => (dispatch, arg2, arg3): void => {
   dispatch({
-    type: 'change-selected-file',
+    type: CHANGE_SELECTED_FILE,
     payload: fileName,
   });
   loadDataFromPredefinedDatasets(fileName)(dispatch, arg2, arg3);
