@@ -117,7 +117,8 @@ function removeMetaEncoding(state: AppState): AppState {
   });
 }
 
-export const setChannelToMetaColumn: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
+// only used from within this file
+const setChannelToMetaColumn: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   // moving from un-nested spec to nested spec
   let newState = state;
   if (!usingNestedSpec(state)) {
@@ -227,11 +228,11 @@ export const swapXAndYChannels: ActionResponse<void> = state => {
     const usingNested = usingNestedSpec(state);
     const oldEncoding = usingNested ? state.spec.spec.encoding : state.spec.encoding;
     if (usingNested) {
-      draftState.spec.spec.encoding.x = oldEncoding.x;
-      draftState.spec.spec.encoding.y = oldEncoding.y;
+      draftState.spec.spec.encoding.x = oldEncoding.y;
+      draftState.spec.spec.encoding.y = oldEncoding.x;
     } else {
-      draftState.spec.encoding.x = oldEncoding.x;
-      draftState.spec.encoding.y = oldEncoding.y;
+      draftState.spec.encoding.x = oldEncoding.y;
+      draftState.spec.encoding.y = oldEncoding.x;
     }
   });
 };

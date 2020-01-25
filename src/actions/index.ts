@@ -56,7 +56,6 @@ import {
 import {Action} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {AppState} from '../reducers/default-state';
-export type AppThunk<T> = ThunkAction<void, AppState, null, Action<T>>;
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
@@ -84,6 +83,7 @@ export interface TypeInference {
 export type DataRow = {[x: string]: any};
 export type LoadDataPayload = {fileName: string; data: string};
 
+export type AppThunk<T> = ThunkAction<void, AppState, null, Action<T>>;
 // TODO this is the correc typing, fix it
 // export interface GenericAction<T> {
 //   (payload: T): AppThunk<T>;
@@ -93,7 +93,7 @@ export interface GenericAction<T> {
   (payload: T): (dispatch: Dispatch, arg2?: any, arg3?: any) => void;
 }
 
-function createAction<T>(type: string): GenericAction<T> {
+function createAction<T>(type: any): GenericAction<T> {
   return payload => (dispatch): any => dispatch({type, payload});
 }
 
