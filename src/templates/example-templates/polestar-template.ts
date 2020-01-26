@@ -49,12 +49,10 @@ function aggregateConditional(key: string): any {
 const renderObjectIf = (object: any, query: string, fieldName: string): any => ({
   [fieldName]: {CONDITIONAL: {query, true: object, deleteKeyOnFalse: true}},
 });
-// : used(checkKey)
 const shelfProgram: any = {
   $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
   transform: [] as any[],
   encoding: {
-    // TODO: delete field if not present
     ...['X', 'Y'].reduce((acc: any, key) => {
       return {
         ...acc,
@@ -71,7 +69,7 @@ const shelfProgram: any = {
         },
       };
     }, {}),
-    // y: {field: '[Y]', type: '[YType]', scale: {zero: '[YIncludeZero]'}},
+
     ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
     ...renderObjectIf(
       {
