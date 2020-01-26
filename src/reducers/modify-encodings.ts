@@ -79,7 +79,7 @@ function maybeRemoveRepeats(oldState: AppState, newState: AppState, targetChanne
   // figure out if target removing field is a metacolumn
   const oldField = get(oldState, [...route, targetChannel]);
   const repeaterField = get(oldField, ['field', 'repeat']);
-  if (!repeaterField) {
+  if (!repeaterField || !(typeof repeaterField === 'string')) {
     return newState;
   }
   // check to see if that column is still in use after the removal

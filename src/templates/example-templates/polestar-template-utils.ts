@@ -93,8 +93,8 @@ export const simpleSwitch = ({widgetName, displayName}: SimpleSwitchType): Templ
   widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
 });
 
-export const used = (x: string): WidgetValidationQuery => ({[x]: '*'});
-export const unused = (x: string): WidgetValidationQuery => ({[x]: null});
+export const used = (x: string): WidgetValidationQuery => `parameters.${x}`;
+export const unused = (x: string): WidgetValidationQuery => `!parameters.${x}`;
 export function addValidation(acc: WidgetValidation[], key: string) {
   return function adder(queryTarget: string): void {
     acc.push({queryTarget, queryResult: 'hide', query: unused(key)});

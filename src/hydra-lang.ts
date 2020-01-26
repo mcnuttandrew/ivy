@@ -18,33 +18,9 @@ import {trim} from './utils';
  * @param templateMap - the specification/variable values defined by the gui
  */
 function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): boolean {
-  // const code = template.code;
-  // const scriptMatch = code.match(/<script>(.*)<\/script>/s);
-  // const script = scriptMatch && scriptMatch.length ? scriptMatch[1] : '';
-  // const outputMatch = code.match(/<output>(.*)<\/output>/s);
-  // const output = outputMatch && outputMatch.length ? outputMatch[1].replace(/\n/g, '') : '{}';
-  // const generatedContent = new Function('parameters', `${script}\n\n return ${output}`);
-  // console.log(generatedContent(templateMap));
-  // return generatedContent(templateMap);
-  return Object.entries(query).every(([key, result]) => {
-    if (result === null) {
-      return typeof templateMap[key] !== 'number' && !templateMap[key];
-    }
-    if (result === '*') {
-      return Boolean(templateMap[key]);
-    }
-    if (typeof result === 'string') {
-      return templateMap[key] === result;
-    }
-
-    if (Array.isArray(result) && !Array.isArray(templateMap[key])) {
-      return result.includes(templateMap[key] as string);
-    }
-    if (Array.isArray(result) && Array.isArray(templateMap[key])) {
-      return JSON.stringify(result.sort()) === JSON.stringify((templateMap[key] as string[]).sort());
-    }
-    return false;
-  });
+  // TODO add a type check function to this
+  const generatedContent = new Function('parameters', `return ${query}`);
+  return Boolean(generatedContent(templateMap));
 }
 
 // syntax example
@@ -56,7 +32,7 @@ function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): 
 // }}
 /**
  * Walk across the tree and apply conditionals are appropriate,
- * example conditional syntax: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}}
+ * example conditional syntax: {CONDITIONAL: {true: '[Single Color]', false: null, query: '!parameters.Color}}
  *
  * @param templateMap - the specification/variable values defined by the gui
  */
