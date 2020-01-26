@@ -22,4 +22,11 @@ test('evaluateHydraProgram polestar template', () => {
     draftState.XIncludeZero = 'false';
   });
   expect(evaluateHydraProgram(PolestarTemplate, templateMap2)).toMatchSnapshot();
+
+  const templateMap3 = produce(templateMap, draftState => {
+    draftState.X = '"Origin"';
+    draftState.XType = '"nominal"';
+    draftState.ColorAggSimple = '"count"';
+  });
+  expect(evaluateHydraProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
 });

@@ -106,3 +106,32 @@ Object {
   "transform": Array [],
 }
 `;
+
+exports[`evaluateHydraProgram polestar template 3`] = `
+Object {
+  "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
+  "encoding": Object {
+    "color": Object {
+      "aggregate": "count",
+      "type": "ordinal",
+    },
+    "x": Object {
+      "field": "Origin",
+      "scale": Object {
+        "type": "linear",
+        "zero": true,
+      },
+      "type": "nominal",
+    },
+    "y": Object {
+      "scale": Object {},
+      "type": "quantitative",
+    },
+  },
+  "mark": Object {
+    "tooltip": true,
+    "type": "circle",
+  },
+  "transform": Array [],
+}
+`;

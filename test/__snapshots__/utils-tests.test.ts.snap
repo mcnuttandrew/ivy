@@ -320,7 +320,7 @@ exports[`#setTemplateValues 2`] = `
       \\"CONDITIONAL\\": {
         \\"true\\": \\"[Single Color]\\",
         \\"false\\": null,
-        \\"query\\": {\\"Color\\": null}
+        \\"query\\": \\"!parameters.Color\\"
       }
     }
   },
@@ -329,7 +329,7 @@ exports[`#setTemplateValues 2`] = `
     \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"[yType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
     \\"color\\": {
       \\"CONDITIONAL\\": {
-        \\"query\\": {\\"Color\\": \\"*\\"},
+        \\"query\\": \\"parameters.Color\\",
         \\"true\\": {\\"field\\": \\"[Color]\\", \\"type\\": \\"[colorType]\\"},
         \\"false\\": null
       }

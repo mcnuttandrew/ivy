@@ -6,12 +6,14 @@ const SCATTERPLOT_EXAMPLE: any = {
     type: 'point',
     tooltip: true,
     size: '[Radius]',
-    color: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}},
+    color: {CONDITIONAL: {true: '[Single Color]', false: null, query: '!parameters.Color'}},
   },
   encoding: {
     x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
     y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
-    color: {CONDITIONAL: {query: {Color: '*'}, true: {field: '[Color]', type: '[colorType]'}, false: null}},
+    color: {
+      CONDITIONAL: {query: 'parameters.Color', true: {field: '[Color]', type: '[colorType]'}, false: null},
+    },
   },
 };
 
@@ -99,25 +101,21 @@ const SCATTERPLOT: Template = {
     {
       queryResult: 'hide',
       queryTarget: 'xType',
-      // query: {xDim: null},
       query: '!parameters.xType',
     },
     {
       queryResult: 'hide',
       queryTarget: 'yType',
-      // query: {yDim: null},
       query: '!parameters.yDim',
     },
     {
       queryResult: 'hide',
       queryTarget: 'colorType',
-      // query: {Color: null},
       query: '!parameters.Color',
     },
     {
       queryResult: 'hide',
       queryTarget: 'Single Color',
-      // query: {Color: '*'},
       query: 'parameters.Color',
     },
   ],

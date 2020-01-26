@@ -22,6 +22,23 @@ function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): 
   const generatedContent = new Function('parameters', `return ${query}`);
   return Boolean(generatedContent(templateMap));
 }
+interface ConditionalArgs {
+  query: string;
+  true: any;
+  false: any;
+  deleteKeyOnFalse?: boolean;
+  deleteKeyOnTrue?: boolean;
+}
+function shouldUpdateContainerWithValue(
+  queryResult: 'true' | 'false',
+  conditional: ConditionalArgs,
+): boolean {
+  // if a conditional doesn't want that value to get added to the traversing object then ingnore it
+  return (
+    (queryResult === 'false' && conditional.deleteKeyOnFalse) ||
+    (queryResult === 'true' && conditional.deleteKeyOnTrue)
+  );
+}
 
 // syntax example
 // {...example,
@@ -42,28 +59,32 @@ export function applyConditionals(templateMap: TemplateMap): any {
     if (Array.isArray(spec)) {
       return spec.map(child => walker(child));
     }
-    // check if it's an object
-    if (typeof spec === 'object' && spec !== null) {
-      return Object.entries(spec).reduce((acc: any, [key, value]: any) => {
-        // if it's a conditional, if so execute the conditional
-        if (value && typeof value === 'object' && value.CONDITIONAL) {
-          const queryResult = evaluateQuery(value.CONDITIONAL.query, templateMap) ? 'true' : 'false';
-          // this logic feels a little bit wonky, but i'd argue it's clear to list this explicitly
-          if (queryResult === 'false' && value.CONDITIONAL.deleteKeyOnFalse) {
-            // take no action in this case
-          } else if (queryResult === 'true' && value.CONDITIONAL.deleteKeyOnTrue) {
-            // take no action in this case
-          } else {
-            acc[key] = walker(value.CONDITIONAL[queryResult]);
-          }
-        } else {
-          acc[key] = walker(value);
-        }
-        return acc;
-      }, {});
+    // check if it's null or not an object return
+    if (!(typeof spec === 'object' && spec !== null)) {
+      return spec;
     }
-    // else just return
-    return spec;
+    // if the object being consider is itself a conditional evaluate it
+    if (typeof spec === 'object' && spec.CONDITIONAL) {
+      const queryResult = evaluateQuery(spec.CONDITIONAL.query, templateMap) ? 'true' : 'false';
+      if (!shouldUpdateContainerWithValue(queryResult, spec.CONDITIONAL)) {
+        return walker(spec.CONDITIONAL[queryResult]);
+      } else {
+        return null;
+      }
+    }
+    // otherwise looks through its children
+    return Object.entries(spec).reduce((acc: any, [key, value]: any) => {
+      // if it's a conditional, if so execute the conditional
+      if (value && typeof value === 'object' && value.CONDITIONAL) {
+        const queryResult = evaluateQuery(value.CONDITIONAL.query, templateMap) ? 'true' : 'false';
+        if (!shouldUpdateContainerWithValue(queryResult, value.CONDITIONAL)) {
+          acc[key] = walker(value.CONDITIONAL[queryResult]);
+        }
+      } else {
+        acc[key] = walker(value);
+      }
+      return acc;
+    }, {});
   };
 }
 
@@ -173,7 +194,14 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   // 1. apply variables to string representation of code
   const interpolatedVals = setTemplateValues(template.code, templateMap);
   // 2. parse to json
-  const parsedJson = JSON.parse(interpolatedVals);
+  // const parsedJson = JSON.parse(interpolatedVals);
+  let parsedJson = null;
+  try {
+    parsedJson = JSON.parse(interpolatedVals);
+  } catch (e) {
+    console.log(e, 'crash');
+    parsedJson = {};
+  }
   // 3. evaluate inline conditionals
   const evaluatableSpec = applyConditionals(templateMap)(parsedJson);
   // 4. return

@@ -29,10 +29,10 @@ const MARK_TYPES = [
   'TRAIL',
 ].map(x => x.toLowerCase());
 
-const renderObjectIf = (object: any, checkKey: string, fieldName: string): any => ({
-  [fieldName]: {CONDITIONAL: {query: used(checkKey), true: object, deleteKeyOnFalse: true}},
+const renderObjectIf = (object: any, query: string, fieldName: string): any => ({
+  [fieldName]: {CONDITIONAL: {query, true: object, deleteKeyOnFalse: true}},
 });
-
+// : used(checkKey)
 const shelfProgram: any = {
   $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
   transform: [] as any[],
@@ -54,42 +54,37 @@ const shelfProgram: any = {
       };
     }, {}),
     // y: {field: '[Y]', type: '[YType]', scale: {zero: '[YIncludeZero]'}},
-    ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, 'Size', 'size'),
+    ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
     ...renderObjectIf(
       {
-        field: '[Color]',
+        field: {
+          CONDITIONAL: {
+            query: 'parameters.Color',
+            true: '[Color]',
+            deleteKeyOnFalse: true,
+          },
+        },
         type: '[ColorType]',
         // aggregate: '[ColorAggregate]'
         aggregate: {
           CONDITIONAL: {
-            query: used('Color'),
+            query:
+              '(parameters.Color && parameters.ColorAggFull !== "none") || (!parameters.Color && parameters.ColorAggSimple !== "none")',
             true: {
-              CONDITIONAL: {
-                query: {[`ColorAggFull`]: 'none'},
-                deleteKeyOnTrue: true,
-                false: '[ColorAggFull]',
-              },
+              CONDITIONAL: {query: 'parameters.Color', true: '[ColorAggFull]', false: '[ColorAggSimple]'},
             },
-            false: {
-              aggregate: {
-                CONDITIONAL: {
-                  query: {[`ColorAggSimple`]: 'none'},
-                  deleteKeyOnTrue: true,
-                  false: '[ColorAggSimple]',
-                },
-              },
-            },
+            deleteKeyOnFalse: true,
           },
         },
       },
-      'Color',
+      'parameters.Color || (parameters.ColorAggSimple !== "\\"none\\"")',
       'color',
     ),
-    ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, 'Shape', 'shape'),
-    ...renderObjectIf({field: '[Text]', type: '[TextType]'}, 'Text', 'text'),
-    ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, 'Detail', 'detail'),
+    ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, used('Shape'), 'shape'),
+    ...renderObjectIf({field: '[Text]', type: '[TextType]'}, used('Text'), 'text'),
+    ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, used('Detail'), 'detail'),
     ...['Row', 'Column'].reduce((acc, key) => {
-      const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, key, key.toLowerCase());
+      const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, used(key), key.toLowerCase());
       return {...acc, ...newObj};
     }, {}),
   },
