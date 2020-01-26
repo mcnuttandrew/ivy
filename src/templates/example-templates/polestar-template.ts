@@ -29,6 +29,23 @@ const MARK_TYPES = [
   'TRAIL',
 ].map(x => x.toLowerCase());
 
+// associated channel must have simple and full aggregates for this to work
+function aggregateConditional(key: string): any {
+  return {
+    CONDITIONAL: {
+      query: `(parameters.${key} && parameters.${key}AggFull !== "\\"none\\"") || (!parameters.${key} && parameters.${key}AggSimple !== "\\"none\\"")`,
+      true: {
+        CONDITIONAL: {
+          query: `parameters.${key}`,
+          true: `[${key}AggFull]`,
+          false: `[${key}AggSimple]`,
+        },
+      },
+      deleteKeyOnFalse: true,
+    },
+  };
+}
+
 const renderObjectIf = (object: any, query: string, fieldName: string): any => ({
   [fieldName]: {CONDITIONAL: {query, true: object, deleteKeyOnFalse: true}},
 });
@@ -42,8 +59,9 @@ const shelfProgram: any = {
       return {
         ...acc,
         [key.toLowerCase()]: {
-          field: {CONDITIONAL: {true: `[${key}]`, deleteKeyOnFalse: true, query: used(key)}},
+          field: {CONDITIONAL: {query: used(key), true: `[${key}]`, deleteKeyOnFalse: true}},
           type: `[${key}Type]`,
+          aggregate: aggregateConditional(key),
           scale: {
             // zero: `[${key}IncludeZero]`,
             zero: {CONDITIONAL: {query: used(key), true: `[${key}IncludeZero]`, deleteKeyOnFalse: true}},
@@ -57,25 +75,9 @@ const shelfProgram: any = {
     ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
     ...renderObjectIf(
       {
-        field: {
-          CONDITIONAL: {
-            query: 'parameters.Color',
-            true: '[Color]',
-            deleteKeyOnFalse: true,
-          },
-        },
+        field: {CONDITIONAL: {query: 'parameters.Color', true: '[Color]', deleteKeyOnFalse: true}},
         type: '[ColorType]',
-        // aggregate: '[ColorAggregate]'
-        aggregate: {
-          CONDITIONAL: {
-            query:
-              '(parameters.Color && parameters.ColorAggFull !== "none") || (!parameters.Color && parameters.ColorAggSimple !== "none")',
-            true: {
-              CONDITIONAL: {query: 'parameters.Color', true: '[ColorAggFull]', false: '[ColorAggSimple]'},
-            },
-            deleteKeyOnFalse: true,
-          },
-        },
+        aggregate: aggregateConditional('Color'),
       },
       'parameters.Color || (parameters.ColorAggSimple !== "\\"none\\"")',
       'color',
@@ -153,6 +155,12 @@ const SHELF: Template = {
   widgetValidations: [
     ...['X', 'Y'].reduce((acc: WidgetValidation[], key: string) => {
       [`${key}Type`, `${key}ScaleType`, `${key}IncludeZero`, `${key}bin`].forEach(addValidation(acc, key));
+      // remove the scale type options for order/nominal/temporal as it doesn't make sense
+      acc.push({
+        queryTarget: `${key}ScaleType`,
+        queryResult: 'show',
+        query: `Boolean(parameters.${key}) && parameters.${key}Type === "\\"quantitative\\""`,
+      });
       return acc;
     }, []),
 
