@@ -16,12 +16,11 @@ interface Props {
   field: string;
   onDrop: any;
   widget: TemplateWidget<MultiDataTargetWidget>;
-  showSimpleDisplay: boolean;
   setName?: any;
 }
 
 export default function TemplateMultiShelf(props: Props): JSX.Element {
-  const {channelEncodings, columns, field, onDrop, setName, showSimpleDisplay, widget} = props;
+  const {channelEncodings, columns, field, onDrop, setName, widget} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -75,31 +74,31 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
         </div>
         <div className="pill-dropzone">
           {columnHeaders.map((columnHeader, idx: number) => {
-            if (showSimpleDisplay) {
-              return (
-                <div className="shelf-dropdown flex" key={`${columnHeader.field}-${idx}`}>
-                  <Selector
-                    useGroups={true}
-                    options={options}
-                    selectedValue={columnHeader.field || ' '}
-                    onChange={(text: string): void => {
-                      const newColumns = [...channelEncodings];
-                      newColumns[idx] = `${text}`;
-                      onDrop({text: newColumns, ...dropCommon});
-                    }}
-                  />
-                  <div
-                    className="cursor-pointer"
-                    onClick={(): void => {
-                      const newColumns = channelEncodings.filter(d => d !== columnHeader.field);
-                      onDrop({text: newColumns, ...dropCommon});
-                    }}
-                  >
-                    <TiDeleteOutline />
-                  </div>
-                </div>
-              );
-            }
+            // if (showSimpleDisplay) {
+            //   return (
+            //     <div className="shelf-dropdown flex" key={`${columnHeader.field}-${idx}`}>
+            //       <Selector
+            //         useGroups={true}
+            //         options={options}
+            //         selectedValue={columnHeader.field || ' '}
+            //         onChange={(text: string): void => {
+            //           const newColumns = [...channelEncodings];
+            //           newColumns[idx] = `${text}`;
+            //           onDrop({text: newColumns, ...dropCommon});
+            //         }}
+            //       />
+            //       <div
+            //         className="cursor-pointer"
+            //         onClick={(): void => {
+            //           const newColumns = channelEncodings.filter(d => d !== columnHeader.field);
+            //           onDrop({text: newColumns, ...dropCommon});
+            //         }}
+            //       >
+            //         <TiDeleteOutline />
+            //       </div>
+            //     </div>
+            //   );
+            // }
             return (
               <Pill
                 key={`${columnHeader.field}-${idx}`}
@@ -116,7 +115,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
               />
             );
           })}
-          {!maxValsHit && !showSimpleDisplay && (
+          {!maxValsHit && (
             <div
               className={classnames({
                 'blank-pill': true,
@@ -126,7 +125,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
               {'drop a field here'}
             </div>
           )}
-          {!maxValsHit && showSimpleDisplay && (
+          {!maxValsHit && (
             <div className={classnames({flex: true})}>
               <div>Add a new field</div>
               <Selector

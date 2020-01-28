@@ -21,7 +21,6 @@ interface EncodingColumnProps {
   onDropFilter: any;
   setEncodingParameter: GenericAction<SetTemplateValuePayload>;
   setNewSpec: GenericAction<any>;
-  showSimpleDisplay: boolean;
   spec: any;
   swapXAndYChannels: GenericAction<void>;
 }
@@ -34,7 +33,6 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       onDrop,
       setEncodingParameter,
       setNewSpec,
-      showSimpleDisplay,
       spec,
       swapXAndYChannels,
     } = this.props;
@@ -50,7 +48,6 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
         onDrop={onDrop}
         spec={spec}
         setNewSpec={setNewSpec}
-        showSimpleDisplay={showSimpleDisplay}
         disable={disable}
       />
     );

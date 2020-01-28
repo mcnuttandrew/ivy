@@ -11,16 +11,7 @@ const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 export default function MultiDataTargetComponent(
   props: GeneralWidget<TemplateWidget<MultiDataTargetWidget>>,
 ): JSX.Element {
-  const {
-    widget,
-    idx,
-    setWidgetValue,
-    editMode,
-    templateMap,
-    columns,
-    setTemplateValue,
-    showSimpleDisplay,
-  } = props;
+  const {widget, idx, setWidgetValue, editMode, templateMap, columns, setTemplateValue} = props;
   const fieldValue = templateMap[widget.widgetName];
   const allowedTypesSet = new Set(widget.widget.allowedTypes);
   return (
@@ -31,7 +22,6 @@ export default function MultiDataTargetComponent(
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
-        showSimpleDisplay={showSimpleDisplay}
         setName={editMode ? (value: string): any => setWidgetValue('widgetName', value, idx) : null}
       />
       {editMode && (

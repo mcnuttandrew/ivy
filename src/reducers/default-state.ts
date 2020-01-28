@@ -30,7 +30,6 @@ export interface AppState {
   dataModalOpen: boolean;
   encodingMode: string;
   showProgrammaticMode: boolean;
-  showSimpleDisplay: boolean;
   showGUIView: boolean;
   codeMode: string;
   editorFontSize: number;
@@ -107,7 +106,6 @@ export const DEFAULT_STATE: AppState = {
   dataModalOpen: false,
   encodingMode: 'grammer',
   showProgrammaticMode: true,
-  showSimpleDisplay: false,
   showGUIView: true,
   codeMode: 'EXPORT TO JSON',
   editorFontSize: 10,

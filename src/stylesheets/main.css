@@ -448,14 +448,20 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 
-.shelf-container .shelf .hydra-selector {
+.shelf .hydra-selector {
   opacity: 0.5;
   position: absolute;
   top: 4px;
 }
 
+/* just for the t0 */
+.section-body .hydra-selector {
+  top: -22px;
+}
+
 .shelf-container .shelf .pill .hydra-selector {
   position: relative;
+  top: 0;
   width: 10px;
 }
 

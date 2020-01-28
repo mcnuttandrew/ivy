@@ -15,51 +15,11 @@ interface TemplateShelf {
   field: string;
   onDrop: any;
   setName?: any;
-  showSimpleDisplay: boolean;
   widget: TemplateWidget<DataTargetWidget>;
 }
 
-function SimpleShelf(props: TemplateShelf): JSX.Element {
-  const {channelEncoding, columns, field, onDrop, widget} = props;
-  const options = [{display: 'Select a value', value: null, group: null}].concat(
-    columns
-      .map(column => ({
-        display: `${column.field} ${TEXT_TYPE[column.type]}`,
-        value: column.field,
-        group: widget.widget.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
-      }))
-      .sort((a, b) => a.display.localeCompare(b.display)),
-  );
-
-  return (
-    <div className="flex">
-      <div>{field}</div>
-      <div className="shelf-dropdown">
-        <Selector
-          useGroups={true}
-          options={options}
-          selectedValue={channelEncoding || ' '}
-          onChange={(text: string): void => {
-            console.log('ondrop', text, field);
-            onDrop({
-              field,
-              type: 'CARD',
-              text: `"${text}"`,
-              disable: false,
-            });
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export default function TemplateShelf(props: TemplateShelf): JSX.Element {
-  const {channelEncoding, columns, field, onDrop, setName, showSimpleDisplay, widget} = props;
-  // if (showSimpleDisplay) {
-  //   return SimpleShelf(props);
-  // }
-
+  const {channelEncoding, columns, field, onDrop, setName, widget} = props;
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',

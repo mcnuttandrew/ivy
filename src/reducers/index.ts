@@ -34,7 +34,6 @@ import {
   SET_NEW_ENCODING,
   SET_NEW_ENCODING_CODE,
   SET_REPEATS,
-  SET_SIMPLE_DISPLAY,
   SET_TEMPLATE_VALUE,
   SET_WIDGET_VALUE,
   SWAP_X_AND_Y_CHANNELS,
@@ -90,7 +89,6 @@ import {
   setEncodingMode,
   setGuiView,
   setProgrammaticView,
-  setSimpleDisplay,
   toggleDataModal,
   toggleProgramModal,
 } from './gui-actions';
@@ -136,7 +134,6 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [SET_EDITOR_FONT_SIZE]: setEditorFontSize,
   [SET_ENCODING_MODE]: setEncodingMode,
   [SET_GUI_VIEW]: setGuiView,
-  [SET_SIMPLE_DISPLAY]: setSimpleDisplay,
   [TOGGLE_DATA_MODAL]: toggleDataModal,
   [TOGGLE_PROGRAM_MODAL]: toggleProgramModal,
   [TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,

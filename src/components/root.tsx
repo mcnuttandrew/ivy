@@ -79,7 +79,6 @@ interface RootProps {
   programModalOpen: boolean;
   showGUIView: boolean;
   showProgrammaticMode: boolean;
-  showSimpleDisplay: boolean;
   spec: Spec;
   specCode: string;
   template: Template;
@@ -124,7 +123,6 @@ interface RootProps {
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<void>;
   setRepeats: GenericAction<SetRepeatsPayload>;
-  setSimpleDisplay: GenericAction<boolean>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
   swapXAndYChannels: GenericAction<void>;
@@ -241,10 +239,8 @@ class RootComponent extends React.Component<RootProps> {
       setEncodingParameter,
       setNewSpec,
       setTemplateValue,
-      setSimpleDisplay,
       setWidgetValue,
       showGUIView,
-      showSimpleDisplay,
       spec,
       swapXAndYChannels,
       template,
@@ -273,23 +269,6 @@ class RootComponent extends React.Component<RootProps> {
             templates={templates}
           />
         )}
-        <div className="input-mode-selector">
-          {['CHOOSER', 'SHELVES'].map(mode => {
-            return (
-              <div
-                key={mode}
-                onClick={(): any => setSimpleDisplay(mode === 'CHOOSER')}
-                className={classnames({
-                  'mode-option': true,
-                  'selected-mode':
-                    (mode === 'SHELVES' && !showSimpleDisplay) || (mode === 'CHOOSER' && showSimpleDisplay),
-                })}
-              >
-                {mode}
-              </div>
-            );
-          })}
-        </div>{' '}
         {encodingMode === 'grammer' && showGUIView && (
           <EncodingColumn
             changeMarkType={changeMarkType}
@@ -304,7 +283,6 @@ class RootComponent extends React.Component<RootProps> {
             onDropFilter={(item: any): any => createFilter({field: item.text} as ColumnHeader)}
             setEncodingParameter={setEncodingParameter}
             setNewSpec={setNewSpec}
-            showSimpleDisplay={showSimpleDisplay}
             spec={spec}
             swapXAndYChannels={swapXAndYChannels}
           />
@@ -319,7 +297,6 @@ class RootComponent extends React.Component<RootProps> {
             removeWidget={removeWidget}
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
-            showSimpleDisplay={showSimpleDisplay}
             template={template}
             templateMap={templateMap}
           />
@@ -471,7 +448,6 @@ export function mapStateToProps({base}: {base: AppState}): any {
     missingFields,
     programModalOpen: base.programModalOpen,
     showProgrammaticMode: base.showProgrammaticMode,
-    showSimpleDisplay: base.showSimpleDisplay,
     showGUIView: base.showGUIView,
     spec: template ? evaluateHydraProgram(template, templateMap) : base.spec,
     specCode: base.specCode,
