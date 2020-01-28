@@ -4,18 +4,7 @@ exports[`#fillTemplateMapWithDefaults 1`] = `
 Object {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
-    "color": Object {
-      "CONDITIONAL": Object {
-        "false": null,
-        "query": Object {
-          "Color": "*",
-        },
-        "true": Object {
-          "field": null,
-          "type": "ordinal",
-        },
-      },
-    },
+    "color": null,
     "x": Object {
       "field": null,
       "scale": Object {
@@ -32,15 +21,7 @@ Object {
     },
   },
   "mark": Object {
-    "color": Object {
-      "CONDITIONAL": Object {
-        "false": null,
-        "query": Object {
-          "Color": null,
-        },
-        "true": "steelblue",
-      },
-    },
+    "color": "steelblue",
     "size": 15,
     "tooltip": true,
     "type": "point",
@@ -339,7 +320,7 @@ exports[`#setTemplateValues 2`] = `
       \\"CONDITIONAL\\": {
         \\"true\\": \\"[Single Color]\\",
         \\"false\\": null,
-        \\"query\\": {\\"Color\\": null}
+        \\"query\\": \\"!parameters.Color\\"
       }
     }
   },
@@ -348,7 +329,7 @@ exports[`#setTemplateValues 2`] = `
     \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"[yType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
     \\"color\\": {
       \\"CONDITIONAL\\": {
-        \\"query\\": {\\"Color\\": \\"*\\"},
+        \\"query\\": \\"parameters.Color\\",
         \\"true\\": {\\"field\\": \\"[Color]\\", \\"type\\": \\"[colorType]\\"},
         \\"false\\": null
       }

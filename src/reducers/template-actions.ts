@@ -1,6 +1,6 @@
 import {get, set} from 'idb-keyval';
 import produce from 'immer';
-import {ActionResponse, AppState} from './default-state';
+import {ActionResponse, AppState, blindSet} from './default-state';
 import {
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
@@ -8,76 +8,27 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {
-  ListWidget,
-  SliderWidget,
-  SwitchWidget,
-  Template,
-  TemplateWidget,
-  WidgetSubType,
-} from '../templates/types';
+import {Template, TemplateWidget, WidgetSubType} from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
-import {setTemplateValues} from '../hydra-lang';
 import {deserializeTemplate} from '../utils';
-
-export function templateEval(state: AppState): AppState {
-  return produce(state, draftState => {
-    draftState.spec = JSON.parse(setTemplateValues(state.currentTemplateInstance.code, state.templateMap));
-  });
-}
+import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
 
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
-  const template = state.currentTemplateInstance;
-  // const widgets =
-  const filledInTemplateMap = template.widgets
-    // .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'DataTarget')
-    .reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
-      let value = null;
-      if (w.widgetType === 'MultiDataTarget') {
-        value = [];
-      }
-      if (w.widgetType === 'Text') {
-        return acc;
-      }
-      if (w.widgetType === 'List') {
-        value = (w as TemplateWidget<ListWidget>).widget.defaultValue;
-      }
-      if (w.widgetType === 'Switch') {
-        const localW = w as TemplateWidget<SwitchWidget>;
-        value = localW.widget.defaultsToActive ? localW.widget.activeValue : localW.widget.inactiveValue;
-      }
-      if (w.widgetType === 'Slider') {
-        value = (w as TemplateWidget<SliderWidget>).widget.defaultValue;
-      }
-      acc[w.widgetName] = value;
-      return acc;
-    }, {});
-
-  return templateEval(
-    produce(state, draftState => {
-      draftState.templateMap = filledInTemplateMap;
-    }),
-  );
-}
-
-export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => {
   return produce(state, draftState => {
-    draftState.templates = payload;
+    draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
+    draftState.spec = evaluateHydraProgram(draftState.currentTemplateInstance, draftState.templateMap);
   });
-};
+}
+export const recieveTemplates = blindSet('templates');
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
-  let newState = state;
-  if (payload.containingShelf) {
-    newState = produce(state, draftState => {
+  return produce(state, draftState => {
+    if (payload.containingShelf) {
       delete draftState.templateMap[payload.containingShelf];
-    });
-  }
-  const template = state.currentTemplateInstance;
-  return produce(newState, draftState => {
+    }
     draftState.templateMap[payload.field] = payload.text;
-    draftState.spec = JSON.parse(setTemplateValues(template.code, draftState.templateMap));
+    draftState.spec = evaluateHydraProgram(state.currentTemplateInstance, draftState.templateMap);
   });
 };
 
@@ -214,11 +165,8 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
 };
 
 // hey it's a lense
-type modifyWidgetLense = (
-  state: AppState,
-  mod: (x: TemplateWidget<WidgetSubType>[]) => TemplateWidget<WidgetSubType>[],
-) => AppState;
-const modifyCurrentWidgets: modifyWidgetLense = (state, mod) =>
+type WidgetMod = (x: TemplateWidget<WidgetSubType>[]) => TemplateWidget<WidgetSubType>[];
+const modifyCurrentWidgets = (state: AppState, mod: WidgetMod): AppState =>
   produce(state, draftState => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
   });

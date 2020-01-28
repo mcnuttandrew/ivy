@@ -116,7 +116,8 @@ export interface Template {
  * string -> equal to specific value, if this then that
  * string[] -> one of vals
  */
-export type WidgetValidationQuery = {[key: string]: '*' | null | string | string[]};
+// export type WidgetValidationQuery = {[key: string]: '*' | null | string | string[]};
+export type WidgetValidationQuery = string;
 
 export interface WidgetValidation {
   /**

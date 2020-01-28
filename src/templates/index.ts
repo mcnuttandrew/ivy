@@ -1,25 +1,27 @@
 import stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
-  MultiDataTargetWidget,
   ListWidget,
-  SwitchWidget,
-  TextWidget,
+  MultiDataTargetWidget,
+  SectionWidget,
   SliderWidget,
-  TemplateWidget,
+  SwitchWidget,
   Template,
+  TemplateWidget,
+  TextWidget,
   WidgetSubType,
 } from './types';
 import {EMPTY_SPEC} from '../reducers/default-state';
 import {DataType} from '../types';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
-import DATATABLE from './example-templates/table';
-import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
-import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
-import UNITVIS from './example-templates/unit-vis';
+import DATATABLE from './example-templates/table';
 import NONE_TEMPLATE from './example-templates/none';
+import PIECHART_TEMPLATE from './example-templates/pie-chart';
+import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
+import SHELF from './example-templates/polestar-template';
+import UNITVIS from './example-templates/unit-vis';
 
 export const BLANK_TEMPLATE: Template = {
   templateLanguage: 'vega-lite',
@@ -93,6 +95,12 @@ export const widgetFactory: {[widgetType: string]: WidgetFactoryFunc} = {
         defaultValue: 5,
       },
     } as TemplateWidget<SliderWidget>),
+  Section: idx =>
+    ({
+      widgetName: `Section${idx}`,
+      widgetType: 'Section',
+      widget: {text: 'New text'},
+    } as TemplateWidget<SectionWidget>),
 };
 
 export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
@@ -117,6 +125,7 @@ export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [
+  SHELF,
   DATATABLE,
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,
