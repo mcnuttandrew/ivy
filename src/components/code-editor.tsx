@@ -109,6 +109,16 @@ export default class CodeEditor extends React.Component<Props, State> {
     /* eslint-enable */
   }
 
+  componentDidUpdate(props: any): void {
+    // on change code mode scroll to top
+    if (props.codeMode !== this.props.codeMode) {
+      /* eslint-disable */
+      // @ts-ignore
+      this.refs.monaco.editor.setScrollPosition({scrollTop: 0});
+       /* eslint-enable */
+    }
+  }
+
   getCurrentCode(): string {
     const {template, codeMode, specCode, spec, templateMap} = this.props;
     if (codeMode === 'TEMPLATE') {
