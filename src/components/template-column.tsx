@@ -110,6 +110,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
               <div
                 className={classnames({
                   'pad-widget': kdx && !inBlankSection,
+                  [`${widget.widgetType}-widget-type`]: true,
                 })}
                 key={`widget-${idx}`}
               >

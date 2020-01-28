@@ -1079,6 +1079,17 @@ input[type=number]::-webkit-outer-spin-button {
   text-align-last: center;
 }
 
+.DataTarget-widget-type .hydra-selector {
+  position: absolute;
+  top: 4px;
+}
+
+.fixed-symbol-width .hydra-selector {
+  position: relative;
+  top: 0;
+  width: 10px;
+}
+
 .slide-widget {
   font-size: 10px;
 }
