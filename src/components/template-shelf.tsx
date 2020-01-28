@@ -3,7 +3,6 @@ import {useDrop} from 'react-dnd';
 
 import Pill from './pill';
 import Selector from './selector';
-import DataSymbol from './data-symbol';
 import {ColumnHeader} from '../types';
 import {DataTargetWidget, TemplateWidget} from '../templates/types';
 import {classnames} from '../utils';

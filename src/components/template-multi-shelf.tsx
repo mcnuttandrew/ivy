@@ -1,6 +1,5 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
-import {TiDeleteOutline} from 'react-icons/ti';
 
 import DataSymbol from './data-symbol';
 import Pill from './pill';
@@ -48,6 +47,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
     .filter(d => d);
   const maxValsHit = (widget.widget.maxNumberOfTargets || Infinity) < columnHeaders.length;
   const dropCommon = {field, multiTarget: true};
+
   return (
     <div
       ref={drop}
@@ -74,31 +74,6 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
         </div>
         <div className="pill-dropzone">
           {columnHeaders.map((columnHeader, idx: number) => {
-            // if (showSimpleDisplay) {
-            //   return (
-            //     <div className="shelf-dropdown flex" key={`${columnHeader.field}-${idx}`}>
-            //       <Selector
-            //         useGroups={true}
-            //         options={options}
-            //         selectedValue={columnHeader.field || ' '}
-            //         onChange={(text: string): void => {
-            //           const newColumns = [...channelEncodings];
-            //           newColumns[idx] = `${text}`;
-            //           onDrop({text: newColumns, ...dropCommon});
-            //         }}
-            //       />
-            //       <div
-            //         className="cursor-pointer"
-            //         onClick={(): void => {
-            //           const newColumns = channelEncodings.filter(d => d !== columnHeader.field);
-            //           onDrop({text: newColumns, ...dropCommon});
-            //         }}
-            //       >
-            //         <TiDeleteOutline />
-            //       </div>
-            //     </div>
-            //   );
-            // }
             return (
               <Pill
                 key={`${columnHeader.field}-${idx}`}
@@ -112,6 +87,18 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
                     ...dropCommon,
                   });
                 }}
+                fieldSelector={
+                  <Selector
+                    useGroups={true}
+                    options={options}
+                    selectedValue={columnHeader.field || ' '}
+                    onChange={(text: string): void => {
+                      const newColumns = [...channelEncodings];
+                      newColumns[idx] = `${text}`;
+                      onDrop({text: newColumns, ...dropCommon});
+                    }}
+                  />
+                }
               />
             );
           })}
@@ -126,8 +113,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
             </div>
           )}
           {!maxValsHit && (
-            <div className={classnames({flex: true})}>
-              <div>Add a new field</div>
+            <div className="flex">
               <Selector
                 useGroups={true}
                 options={options.filter(d => !channelEncodings.includes(d.value))}
