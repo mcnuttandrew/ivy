@@ -11,7 +11,7 @@ export function EditParameterName(props: EditParameterNameProps): JSX.Element {
   return (
     <AddLabelToWidget label={'Parameter Name'}>
       <input
-        value={widget.widgetName}
+        value={widget.widgetName || ''}
         type="text"
         onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
       />
@@ -29,7 +29,7 @@ export function EditDisplayName(props: EditDisplayNameProps): JSX.Element {
   return (
     <AddLabelToWidget label={'Display Name'}>
       <input
-        value={widget.displayName}
+        value={widget.displayName || ''}
         type="text"
         onChange={(event): any => setWidgetValue('displayName', event.target.value, idx)}
       />

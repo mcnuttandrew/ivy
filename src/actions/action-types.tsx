@@ -31,7 +31,6 @@ export const SET_GUI_VIEW = 'set-gui-view';
 export const SET_NEW_ENCODING = 'set-new-encoding';
 export const SET_NEW_ENCODING_CODE = 'set-new-encoding-code';
 export const SET_REPEATS = 'set-repeats';
-export const SET_SIMPLE_DISPLAY = 'set-simple-display';
 export const SET_TEMPLATE_VALUE = 'set-template-value';
 export const SET_WIDGET_VALUE = 'set-widget-value';
 export const SWAP_X_AND_Y_CHANNELS = 'swap-x-and-y-channels';

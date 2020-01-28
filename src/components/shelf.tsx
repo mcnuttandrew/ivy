@@ -18,7 +18,6 @@ interface ShelfProps {
   spec: any;
   metaColumns: ColumnHeader[];
   onDrop: any;
-  showSimpleDisplay: boolean;
 
   setEncodingParameter: GenericAction<SetTemplateValuePayload>;
   setNewSpec: GenericAction<any>;
@@ -35,7 +34,6 @@ export default function Shelf(props: ShelfProps): JSX.Element {
     onDrop,
     setEncodingParameter,
     setNewSpec,
-    showSimpleDisplay,
   } = props;
 
   // copy/pasta for drag and drop
@@ -69,6 +67,17 @@ export default function Shelf(props: ShelfProps): JSX.Element {
       .sort((a, b) => a.display.localeCompare(b.display)),
   );
 
+  const fieldSelector = (
+    <Selector
+      options={options}
+      useGroups={true}
+      selectedValue={(definedField && definedField.field) || 'SELECT A VALUE'}
+      onChange={(text: string): void => {
+        onDrop({field, type: 'CARD', text, disable: false});
+      }}
+    />
+  );
+
   return (
     <div
       ref={drop}
@@ -83,7 +92,7 @@ export default function Shelf(props: ShelfProps): JSX.Element {
           <div>{field}</div>
         </div>
         <div className="pill-dropzone">
-          {!definedField && !showSimpleDisplay && (
+          {!definedField && (
             <div
               className={classnames({
                 'blank-pill': true,
@@ -93,27 +102,17 @@ export default function Shelf(props: ShelfProps): JSX.Element {
               {'drop a field here'}
             </div>
           )}
-          {column && definedField && !showSimpleDisplay && (
+          {column && definedField && (
             <Pill
               inEncoding={true}
               containingShelf={field}
               setEncodingParameter={setEncodingParameter}
               containingField={field}
               column={definedField}
+              fieldSelector={fieldSelector}
             />
           )}
-          {showSimpleDisplay && (
-            <div className="shelf-dropdown">
-              <Selector
-                options={options}
-                useGroups={true}
-                selectedValue={(definedField && definedField.field) || 'SELECT A VALUE'}
-                onChange={(text: string): void => {
-                  onDrop({field, type: 'CARD', text, disable: false});
-                }}
-              />
-            </div>
-          )}
+          {!definedField && <div className="shelf-dropdown">{fieldSelector}</div>}
         </div>
       </div>
       {configurationOpen && (

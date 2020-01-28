@@ -1,6 +1,5 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
-import {TiDeleteOutline} from 'react-icons/ti';
 
 import DataSymbol from './data-symbol';
 import Pill from './pill';
@@ -16,12 +15,11 @@ interface Props {
   field: string;
   onDrop: any;
   widget: TemplateWidget<MultiDataTargetWidget>;
-  showSimpleDisplay: boolean;
   setName?: any;
 }
 
 export default function TemplateMultiShelf(props: Props): JSX.Element {
-  const {channelEncodings, columns, field, onDrop, setName, showSimpleDisplay, widget} = props;
+  const {channelEncodings, columns, field, onDrop, setName, widget} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -49,6 +47,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
     .filter(d => d);
   const maxValsHit = (widget.widget.maxNumberOfTargets || Infinity) < columnHeaders.length;
   const dropCommon = {field, multiTarget: true};
+
   return (
     <div
       ref={drop}
@@ -57,8 +56,8 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
         'multi-shelf-container': true,
       })}
     >
-      <div className="multi-shelf flex-down">
-        <div className="field-label flex space-around">
+      <div className="multi-shelf flex">
+        <div className="field-label flex-down space-around">
           {!setName && <div>{field}</div>}
           {setName && (
             <input
@@ -75,31 +74,6 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
         </div>
         <div className="pill-dropzone">
           {columnHeaders.map((columnHeader, idx: number) => {
-            if (showSimpleDisplay) {
-              return (
-                <div className="shelf-dropdown flex" key={`${columnHeader.field}-${idx}`}>
-                  <Selector
-                    useGroups={true}
-                    options={options}
-                    selectedValue={columnHeader.field || ' '}
-                    onChange={(text: string): void => {
-                      const newColumns = [...channelEncodings];
-                      newColumns[idx] = `${text}`;
-                      onDrop({text: newColumns, ...dropCommon});
-                    }}
-                  />
-                  <div
-                    className="cursor-pointer"
-                    onClick={(): void => {
-                      const newColumns = channelEncodings.filter(d => d !== columnHeader.field);
-                      onDrop({text: newColumns, ...dropCommon});
-                    }}
-                  >
-                    <TiDeleteOutline />
-                  </div>
-                </div>
-              );
-            }
             return (
               <Pill
                 key={`${columnHeader.field}-${idx}`}
@@ -113,10 +87,22 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
                     ...dropCommon,
                   });
                 }}
+                fieldSelector={
+                  <Selector
+                    useGroups={true}
+                    options={options}
+                    selectedValue={columnHeader.field || ' '}
+                    onChange={(text: string): void => {
+                      const newColumns = [...channelEncodings];
+                      newColumns[idx] = `${text}`;
+                      onDrop({text: newColumns, ...dropCommon});
+                    }}
+                  />
+                }
               />
             );
           })}
-          {!maxValsHit && !showSimpleDisplay && (
+          {!maxValsHit && (
             <div
               className={classnames({
                 'blank-pill': true,
@@ -126,9 +112,8 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
               {'drop a field here'}
             </div>
           )}
-          {!maxValsHit && showSimpleDisplay && (
-            <div className={classnames({flex: true})}>
-              <div>Add a new field</div>
+          {!maxValsHit && (
+            <div className="flex">
               <Selector
                 useGroups={true}
                 options={options.filter(d => !channelEncodings.includes(d.value))}

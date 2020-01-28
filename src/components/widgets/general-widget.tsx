@@ -38,7 +38,6 @@ export interface GeneralWidget<T> {
   moveWidget: (...args: any[]) => void;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
-  showSimpleDisplay: boolean;
   templateMap: TemplateMap;
   widget: T;
 }
@@ -52,7 +51,6 @@ interface Props {
   removeWidget: any;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
-  showSimpleDisplay: boolean;
   templateMap: TemplateMap;
   widget: TemplateWidget<WidgetSubType>;
 }
@@ -83,17 +81,7 @@ function PlacementControls(props: Props): JSX.Element {
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
 export default function GeneralWidgetComponent(props: Props): JSX.Element {
-  const {
-    columns,
-    editMode,
-    widget,
-    idx,
-    setWidgetValue,
-    templateMap,
-    setTemplateValue,
-    moveWidget,
-    showSimpleDisplay,
-  } = props;
+  const {columns, editMode, widget, idx, setWidgetValue, templateMap, setTemplateValue, moveWidget} = props;
 
   const common = {
     idx,
@@ -103,7 +91,6 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     setTemplateValue,
     columns,
     moveWidget,
-    showSimpleDisplay,
   };
   const widgetType = widget.widgetType;
   const ref = useRef<HTMLDivElement>(null);

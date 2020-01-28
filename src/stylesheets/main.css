@@ -276,7 +276,6 @@ input[type=number]::-webkit-outer-spin-button {
   color: black;
   font-size: 10px;
   font-weight: 700;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -340,6 +339,12 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 9px;
   max-width: 100%;
   padding: 0 5px;
+  width: 100%;
+}
+
+.symbol-box {
+  border-right: 1px solid gray;
+  height: 5px;
   width: 100%;
 }
 
@@ -427,12 +432,20 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .shelf .field-label {
+  align-items: center;
   font-weight: 900;
   font-size: 12px;
   min-width: 50px;
+  position: relative;
   text-align: left;
   text-transform: uppercase;
   width: 50px;
+}
+
+.shelf .field-label .data-type-container {
+  position: absolute;
+  top: -3px;
+  width: 100%;
 }
 
 .shelf .label-control {
@@ -453,6 +466,7 @@ input[type=number]::-webkit-outer-spin-button {
   height: 100%;
   padding-left: 5px;
   transition: background-color 1s;
+  min-height: 20px;
 }
 
 .shelf .highlight-drop {
@@ -611,10 +625,6 @@ input[type=number]::-webkit-outer-spin-button {
 .program-option-img-container img {
   height: 75px;
   width: 75px;
-}
-
-.widget {
-  margin-bottom: 5px;
 }
 
 .widget-body {
@@ -1080,6 +1090,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .edit-mode .slide-widget {
   width: 90%;
+}
+
+.edit-mode .widget {
+  margin-bottom: 5px;
 }
 
 .slide-widget input[type=number] {

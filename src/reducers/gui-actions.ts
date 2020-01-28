@@ -18,7 +18,6 @@ export const setCodeMode = blindSet('codeMode');
 export const setEditMode = blindSet('editMode');
 export const setEditorFontSize = blindSet('editorFontSize');
 export const setGuiView = blindSet('showGUIView');
-export const setSimpleDisplay = blindSet('showSimpleDisplay');
 
 // TODO there is another quote trim somewhere
 const quoteTrim = (x: string): string => x.replace(/["']/g, '');

@@ -40,7 +40,6 @@ import {
   SET_NEW_ENCODING,
   SET_NEW_ENCODING_CODE,
   SET_REPEATS,
-  SET_SIMPLE_DISPLAY,
   SET_TEMPLATE_VALUE,
   SET_WIDGET_VALUE,
   SWAP_X_AND_Y_CHANNELS,
@@ -127,7 +126,6 @@ export const setNewSpec = createAction<any>(SET_NEW_ENCODING);
 export const setNewSpecCode = createAction<HandleCodePayload>(SET_NEW_ENCODING_CODE);
 export const setProgrammaticView = createAction<void>(TOGGLE_PROGRAMMATIC_VIEW);
 export const setRepeats = createAction<SetRepeatsPayload>(SET_REPEATS);
-export const setSimpleDisplay = createAction<boolean>(SET_SIMPLE_DISPLAY);
 export const setTemplateValue = createAction<SetTemplateValuePayload>(SET_TEMPLATE_VALUE);
 export const setWidgetValue = createAction<SetWidgetValuePayload>(SET_WIDGET_VALUE);
 export const swapXAndYChannels = createAction<void>(SWAP_X_AND_Y_CHANNELS);

@@ -20,7 +20,6 @@ interface TemplateColumnProps {
   columns: ColumnHeader[];
   editMode: boolean;
   setTemplateValue?: any;
-  showSimpleDisplay: boolean;
   template: Template;
   templateMap: TemplateMap;
 
@@ -65,7 +64,6 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       modifyValueOnTemplate,
       setTemplateValue,
       setWidgetValue,
-      showSimpleDisplay,
       template,
       templateMap,
       removeWidget,
@@ -83,7 +81,6 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         removeWidget={(): any => removeWidget(idx)}
         setTemplateValue={setTemplateValue}
         setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
-        showSimpleDisplay={showSimpleDisplay}
         templateMap={templateMap}
         widget={widget}
       />
@@ -125,11 +122,6 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
     });
     return (
       <div className="full-height encoding-column">
-        {showSimpleDisplay && (
-          <div>
-            <h3>{template.templateName}</h3>
-          </div>
-        )}
         {editMode && template && (
           <div className="flex">
             <div className="flex">
