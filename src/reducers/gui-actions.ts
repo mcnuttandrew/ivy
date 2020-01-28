@@ -47,31 +47,33 @@ function activeColumns(state: any): string[] {
 }
 
 export const setEncodingMode: ActionResponse<string> = (state, payload) => {
-  let updatedState = state;
+  let updatedState = produce(state, draftState => {
+    draftState.editMode = false;
+    draftState.codeMode = 'EXPORT TO JSON';
+  });
   if (payload !== 'grammer') {
     // INSTANTIATE TEMPLATE AS A LOCAL COPY
     const template = getTemplate(state, payload);
     updatedState = fillTemplateMapWithDefaults(
-      produce(state, draftState => {
+      produce(updatedState, draftState => {
         draftState.encodingMode = payload;
-        // draftState.spec = JSON.parse(template.code);
         draftState.spec = evaluateHydraProgram(template, state.templateMap);
         draftState.currentTemplateInstance = template;
       }),
     );
   } else {
-    updatedState = produce(state, draftState => {
+    updatedState = produce(updatedState, draftState => {
       draftState.encodingMode = payload;
       draftState.spec = EMPTY_SPEC;
       draftState.currentTemplateInstance = null;
     });
   }
   // figure out what the currently in use columns are and iteratively try to add them to the new one
-  const columnMap = state.columns.reduce((acc: {[d: string]: ColumnHeader}, x: ColumnHeader) => {
+  const columnMap = updatedState.columns.reduce((acc: {[d: string]: ColumnHeader}, x: ColumnHeader) => {
     acc[x.field] = x;
     return acc;
   }, {});
-  return activeColumns(state).reduce((acc: AppState, columnKey: string) => {
+  return activeColumns(updatedState).reduce((acc: AppState, columnKey: string) => {
     return addToNextOpenSlot(acc, columnMap[columnKey]);
   }, updatedState);
 };
