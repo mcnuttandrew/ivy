@@ -207,3 +207,82 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   // 4. return
   return evaluatableSpec;
 }
+
+const CONDITIONAL_DEF = {
+  additionalProperties: false,
+  properties: {
+    CONDITIONAL: {
+      $ref: '#/definitions/HydraConditionalProps',
+    },
+  },
+};
+const CONDITIONAL_PROPS_DEF = {
+  additionalProperties: false,
+  properties: {
+    query: {
+      type: 'string',
+      description:
+        'javascript predicate to be evaluated to determine result of predicate. must return a boolean',
+    },
+    true: {
+      // TODO this is wrong
+      type: 'string',
+      description: 'the result is swapped in',
+    },
+    false: {
+      type: 'string',
+      description: 'the result is swapped in',
+    },
+    deleteKeyOnFalse: {
+      type: 'boolean',
+      description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
+    },
+    deleteKeyOnTrue: {
+      type: 'boolean',
+      description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
+    },
+  },
+  required: ['query', 'true', 'false'],
+};
+export function modifyJSONSchema(jsonSchema: any): any {
+  // add [string] to all enums?
+  // https://json-schema.org/understanding-json-schema/reference/string.html#regular-expressions
+
+  // add CONDITIONAL to all anyOf
+  const conditionalItem = {
+    $ref: '#/definitions/HydraConditional',
+  };
+  const interpolantType = {
+    type: 'string',
+    pattern: `"\\[.*\\]"`,
+  };
+  function schemaWalk(spec: any): any {
+    // console.log(spec);
+    // if it's array interate across void
+    if (Array.isArray(spec)) {
+      return spec.map(child => schemaWalk(child));
+    }
+    // check if it's null or not an object return
+    if (!(typeof spec === 'object' && spec !== null)) {
+      return spec;
+    }
+    // otherwise looks through its children
+    return Object.entries(spec).reduce((acc: any, [key, value]: any) => {
+      if (key === 'anyOf') {
+        acc[key] = [conditionalItem].concat(value);
+        return acc;
+      }
+      if (key === 'type') {
+        acc.anyOf = [conditionalItem, {type: value}, interpolantType];
+        return acc;
+      }
+      acc[key] = schemaWalk(value);
+      return acc;
+    }, {});
+  }
+
+  const newSchema = schemaWalk(jsonSchema);
+  newSchema.definitions.HydraConditional = CONDITIONAL_DEF;
+  newSchema.definitions.HydraConditionalProps = CONDITIONAL_PROPS_DEF;
+  return newSchema;
+}
