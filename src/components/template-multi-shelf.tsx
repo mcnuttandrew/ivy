@@ -57,8 +57,8 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
         'multi-shelf-container': true,
       })}
     >
-      <div className="multi-shelf flex-down">
-        <div className="field-label flex space-around">
+      <div className="multi-shelf flex">
+        <div className="field-label flex-down space-around">
           {!setName && <div>{field}</div>}
           {setName && (
             <input

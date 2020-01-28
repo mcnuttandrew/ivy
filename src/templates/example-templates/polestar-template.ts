@@ -172,7 +172,7 @@ const SHELF: Template = {
       return acc;
     }, []),
     // simple and full aggregate are paired
-    ...['X', 'Y', 'Size', 'Color'].reduce((acc, key) => {
+    ...['X', 'Y', 'Size', 'Color', 'Text'].reduce((acc, key) => {
       return acc.concat([
         {queryTarget: `${key}AggFull`, query: unused(key), queryResult: 'hide'},
         {queryTarget: `${key}AggSimple`, query: used(key), queryResult: 'hide'},

@@ -17,6 +17,7 @@ export interface PillProps {
   containingField?: string;
   containingShelf?: string;
   createFilter?: GenericAction<ColumnHeader>;
+  fieldSelector?: JSX.Element;
   hideGUI?: boolean;
   inEncoding: boolean;
   setEncodingParameter?: any;
@@ -31,6 +32,7 @@ export default function Pill(props: PillProps): JSX.Element {
     containingField,
     containingShelf,
     createFilter,
+    fieldSelector,
     hideGUI,
     inEncoding,
     setEncodingParameter,
@@ -119,7 +121,8 @@ export default function Pill(props: PillProps): JSX.Element {
           <GoPlus />
         </div>
       )}
-
+      {/* Change current selection */}
+      {fieldSelector && <div className="fixed-symbol-width">{fieldSelector}</div>}
       {/* Remove from shelf */}
       {inEncoding && (
         <div
