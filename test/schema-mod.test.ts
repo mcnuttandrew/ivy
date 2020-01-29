@@ -84,13 +84,6 @@ const UNIT_VIS_EXAMPLE = {
 };
 
 test('#modifyJSONSchema', async function() {
-  //   const uvSchema = modifyJSONSchema(unitVisSchema);
-  //   console.log(JSNuvSchema);
-  // catches unused invalid top level key
-  //   const validity1 = ajv.validate(unitVisSchema, UNIT_VIS_EXAMPLE);
-  //   expect(validity1).toBe(true);
-  //   expect(ajv.errors).toMatchSnapshot();
-
   const vlSchema = modifyJSONSchema(vegaLiteSchema);
   console.log(JSON.stringify(vlSchema, null, 2));
   // catches unused invalid top level key

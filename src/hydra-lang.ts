@@ -208,11 +208,14 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   return evaluatableSpec;
 }
 
-const buildConditionalValidation = (type: string): any => ({
-  description: 'HYDRA CONDITINOAL',
+const buildConditionalValidation = (type: any, desc?: string): any => ({
+  description: desc ? desc : 'HYDRA CONDITIONAL',
   type: 'object',
+  additionalProperties: false,
   properties: {
     CONDITIONAL: {
+      description:
+        'In conditional arguments, requires a query ( which is a js predicate), a true branch, and a false branch',
       type: 'object',
       properties: {
         query: {
@@ -220,17 +223,23 @@ const buildConditionalValidation = (type: string): any => ({
           description:
             'javascript predicate to be evaluated to determine result of predicate. must return a boolean',
         },
-        true: {
-          // TODO this is wrong
-          // type: 'string',
-          $ref: `#/definitions/${type}`,
-          description: 'the result is swapped in',
-        },
-        false: {
-          // type: 'string',
-          $ref: `#/definitions/${type}`,
-          description: 'the result is swapped in',
-        },
+        true: type
+          ? {
+              $ref: `#/definitions/${type}`,
+              description: 'the result is swapped in',
+            }
+          : {type: 'string', description: 'unsure what type was supposed to be, assuming string'},
+        false: type
+          ? {
+              $ref: `#/definitions/${type}`,
+              description: 'the result is swapped in',
+            }
+          : {type: 'string', description: 'unsure what type was supposed to be, assuming string'},
+        //   false: {
+        //   // type: 'string',
+        //   $ref: `#/definitions/${type}`,
+        //   description: 'the result is swapped in',
+        // },
         deleteKeyOnFalse: {
           type: 'boolean',
           description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
@@ -242,6 +251,7 @@ const buildConditionalValidation = (type: string): any => ({
       },
       required: ['query', 'true', 'false'],
     },
+    // required: ['CONDITIONAL'],
   },
 });
 const buildInterpolantType = (old: any): any => ({
@@ -256,7 +266,7 @@ export function modifyJSONSchema(jsonSchema: any): any {
   // https://json-schema.org/understanding-json-schema/reference/string.html#regular-expressions
 
   // // add CONDITIONAL to all anyOf
-  // const conditionalItem = {$ref: '#/definitions/HydraConditional'};
+  const conditionalItem = {$ref: '#/definitions/HydraConditional'};
 
   function schemaWalk(spec: any): any {
     if (!spec) {
@@ -284,16 +294,24 @@ export function modifyJSONSchema(jsonSchema: any): any {
       }
       nodeClone.anyOf = [
         buildInterpolantType(spec),
+        conditionalItem,
         typeCopy,
-        // conditionalItem
+        //
       ];
+      return nodeClone;
+    }
+    if (spec.type && typeof spec.type === 'object' && !Array.isArray(spec.type)) {
+      const nodeClone = JSON.parse(JSON.stringify(spec));
+      nodeClone.type = {...spec.type, anyOf: [buildInterpolantType(spec.type), {$ref: spec.type.$ref}]};
+      delete nodeClone.type.$ref;
       return nodeClone;
     }
     if (spec.anyOf) {
       const nodeClone = JSON.parse(JSON.stringify(spec));
       nodeClone.anyOf = [
         buildInterpolantType(spec),
-        // conditionalItem
+        //
+        conditionalItem,
       ].concat(nodeClone.anyOf);
       return nodeClone;
     }
@@ -311,16 +329,19 @@ export function modifyJSONSchema(jsonSchema: any): any {
     }, {});
   }
   const newSchema = schemaWalk(jsonSchema);
-  // newSchema.definitions = Object.entries(newSchema.definitions).reduce((acc: any, [key, value]: any) => {
-  //   acc[`${key}-core-props`] = value;
-  //   acc[key] = {
-  //     anyOf: [buildConditionalValidation(`${key}-core-props`), {$ref: `#/definitions/${key}-core-props`}],
-  //   };
-  //   return acc;
-  // }, {});
+  newSchema.definitions = Object.entries(newSchema.definitions).reduce((acc: any, [key, value]: any) => {
+    acc[`${key}-core-props`] = value;
+    acc[key] = {
+      anyOf: [
+        {$ref: `#/definitions/${key}-core-props`},
+        buildConditionalValidation(`${key}-core-props`, value.description),
+      ],
+    };
+    return acc;
+  }, {});
   newSchema[jsonSchema.$ref] = jsonSchema[jsonSchema.$ref];
 
-  // newSchema.definitions.HydraConditional = CONDITIONAL_DEF;
+  newSchema.definitions.HydraConditional = buildConditionalValidation(false);
   // newSchema.definitions.HydraConditionalProps = CONDITIONAL_PROPS_DEF;
   return newSchema;
 }
