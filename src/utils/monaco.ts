@@ -25,29 +25,14 @@ function addMarkdownProps(value: any): any {
 }
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
+const vegaLiteSchema = modifyJSONSchema(require('vega-lite/build/vega-lite-schema.json'));
 const vegaSchema = require('vega/build/vega-schema.json');
 const hydraSchema = require('../../assets/hydra-template.json');
 const unitVisSchema = require('unit-vis/unit-vis-schema.json');
 /* eslint-enable @typescript-eslint/no-var-requires */
 addMarkdownProps(vegaSchema);
-// addMarkdownProps(vegaLiteSchema);
-const vlSchemaUpdated = modifyJSONSchema(vegaLiteSchema);
-addMarkdownProps(vlSchemaUpdated);
-console.log(vlSchemaUpdated);
+addMarkdownProps(vegaLiteSchema);
 addMarkdownProps(hydraSchema);
-
-import Ajv from 'ajv';
-const ajv = new Ajv({
-  allErrors: true,
-  verbose: true,
-  format: 'full',
-  extendRefs: 'fail',
-}); // options can be passed, e.g. {allErrors: true}
-ajv.addFormat('color-hex', () => true);
-import polestarTemplate from '../templates/example-templates/polestar-template';
-const valid = ajv.validate(vegaLiteSchema, polestarTemplate.code);
-console.log(valid);
 
 const schemas = [
   {
@@ -55,7 +40,7 @@ const schemas = [
     uri: 'https://vega.github.io/schema/vega/v5.json',
   },
   {
-    schema: vlSchemaUpdated,
+    schema: vegaLiteSchema,
     uri: 'https://vega.github.io/schema/vega-lite/v4.json',
   },
   {
@@ -67,7 +52,7 @@ const schemas = [
     uri: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
   },
   {
-    schema: mergeDeep({}, vlSchemaUpdated, {
+    schema: mergeDeep({}, vegaLiteSchema, {
       $ref: '#/definitions/Config',
       definitions: {
         Config: {

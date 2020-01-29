@@ -208,81 +208,119 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   return evaluatableSpec;
 }
 
-const CONDITIONAL_DEF = {
-  additionalProperties: false,
+const buildConditionalValidation = (type: string): any => ({
+  description: 'HYDRA CONDITINOAL',
+  type: 'object',
   properties: {
     CONDITIONAL: {
-      $ref: '#/definitions/HydraConditionalProps',
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description:
+            'javascript predicate to be evaluated to determine result of predicate. must return a boolean',
+        },
+        true: {
+          // TODO this is wrong
+          // type: 'string',
+          $ref: `#/definitions/${type}`,
+          description: 'the result is swapped in',
+        },
+        false: {
+          // type: 'string',
+          $ref: `#/definitions/${type}`,
+          description: 'the result is swapped in',
+        },
+        deleteKeyOnFalse: {
+          type: 'boolean',
+          description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
+        },
+        deleteKeyOnTrue: {
+          type: 'boolean',
+          description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
+        },
+      },
+      required: ['query', 'true', 'false'],
     },
   },
-};
-const CONDITIONAL_PROPS_DEF = {
-  additionalProperties: false,
-  properties: {
-    query: {
-      type: 'string',
-      description:
-        'javascript predicate to be evaluated to determine result of predicate. must return a boolean',
-    },
-    true: {
-      // TODO this is wrong
-      type: 'string',
-      description: 'the result is swapped in',
-    },
-    false: {
-      type: 'string',
-      description: 'the result is swapped in',
-    },
-    deleteKeyOnFalse: {
-      type: 'boolean',
-      description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
-    },
-    deleteKeyOnTrue: {
-      type: 'boolean',
-      description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
-    },
-  },
-  required: ['query', 'true', 'false'],
-};
+});
+const buildInterpolantType = (old: any): any => ({
+  description: old.description
+    ? `Hydra reinterpolation for value. Normal type is: ${old.description}`
+    : 'interpolate a new value wowzee',
+  type: 'string',
+  pattern: '\\[.*\\]',
+});
 export function modifyJSONSchema(jsonSchema: any): any {
   // add [string] to all enums?
   // https://json-schema.org/understanding-json-schema/reference/string.html#regular-expressions
 
-  // add CONDITIONAL to all anyOf
-  const conditionalItem = {
-    $ref: '#/definitions/HydraConditional',
-  };
-  const interpolantType = {
-    type: 'string',
-    pattern: `"\\[.*\\]"`,
-  };
+  // // add CONDITIONAL to all anyOf
+  // const conditionalItem = {$ref: '#/definitions/HydraConditional'};
+
   function schemaWalk(spec: any): any {
+    if (!spec) {
+      return spec;
+    }
     // console.log(spec);
     // if it's array interate across void
     if (Array.isArray(spec)) {
       return spec.map(child => schemaWalk(child));
     }
     // check if it's null or not an object return
-    if (!(typeof spec === 'object' && spec !== null)) {
+    if (typeof spec !== 'object') {
       return spec;
     }
+    // if (!(typeof spec === 'object' && spec !== null)) {
+    //   return spec;
+    // }
+    if (spec.type && spec.type !== 'object' && typeof spec.type !== 'object') {
+      const nodeClone = JSON.parse(JSON.stringify(spec));
+      delete nodeClone.type;
+      delete nodeClone.enum;
+      const typeCopy: any = {type: spec.type};
+      if (spec.enum) {
+        typeCopy.enum = spec.enum;
+      }
+      nodeClone.anyOf = [
+        buildInterpolantType(spec),
+        typeCopy,
+        // conditionalItem
+      ];
+      return nodeClone;
+    }
+    if (spec.anyOf) {
+      const nodeClone = JSON.parse(JSON.stringify(spec));
+      nodeClone.anyOf = [
+        buildInterpolantType(spec),
+        // conditionalItem
+      ].concat(nodeClone.anyOf);
+      return nodeClone;
+    }
+
     // otherwise looks through its children
     return Object.entries(spec).reduce((acc: any, [key, value]: any) => {
-      if (key === 'anyOf') {
-        acc[key] = [conditionalItem].concat(value);
-        return acc;
-      }
-      if (key === 'type') {
-        acc.anyOf = [conditionalItem, {type: value}, interpolantType];
-        return acc;
-      }
+      // actually i don't think this is necessary if the validation is recursive
+      // if (key === '$ref' && !value.includes('-core-props')) {
+      //   console.log(key, value);
+      //   acc[key] = `${value}-core-props`;
+      //   return acc;
+      // }
       acc[key] = schemaWalk(value);
       return acc;
     }, {});
   }
-
   const newSchema = schemaWalk(jsonSchema);
-  newSchema.definitions.HydraConditional = CONDITIONAL_DEF;
-  newSchema.definitions.HydraConditionalProps = CONDITIONAL_PROPS_DEF;
+  // newSchema.definitions = Object.entries(newSchema.definitions).reduce((acc: any, [key, value]: any) => {
+  //   acc[`${key}-core-props`] = value;
+  //   acc[key] = {
+  //     anyOf: [buildConditionalValidation(`${key}-core-props`), {$ref: `#/definitions/${key}-core-props`}],
+  //   };
+  //   return acc;
+  // }, {});
+  newSchema[jsonSchema.$ref] = jsonSchema[jsonSchema.$ref];
+
+  // newSchema.definitions.HydraConditional = CONDITIONAL_DEF;
+  // newSchema.definitions.HydraConditionalProps = CONDITIONAL_PROPS_DEF;
   return newSchema;
 }

@@ -1,0 +1,251 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#modifyJSONSchema 1`] = `
+Array [
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "fuck",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "fuck",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "mark",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "encoding",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'facet'",
+    "params": Object {
+      "missingProperty": "facet",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'spec'",
+    "params": Object {
+      "missingProperty": "spec",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "fuck",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "mark",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'layer'",
+    "params": Object {
+      "missingProperty": "layer",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "fuck",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "mark",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "encoding",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'repeat'",
+    "params": Object {
+      "missingProperty": "repeat",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'spec'",
+    "params": Object {
+      "missingProperty": "spec",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "fuck",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "mark",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "encoding",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'concat'",
+    "params": Object {
+      "missingProperty": "concat",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "fuck",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "mark",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "encoding",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'vconcat'",
+    "params": Object {
+      "missingProperty": "vconcat",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "fuck",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "mark",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "encoding",
+    },
+    "schemaPath": "#/additionalProperties",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "required",
+    "message": "should have required property 'hconcat'",
+    "params": Object {
+      "missingProperty": "hconcat",
+    },
+    "schemaPath": "#/required",
+  },
+  Object {
+    "dataPath": "",
+    "keyword": "anyOf",
+    "message": "should match some schema in anyOf",
+    "params": Object {},
+    "schemaPath": "#/anyOf",
+  },
+]
+`;
+
+exports[`#modifyJSONSchema 2`] = `null`;
+
+exports[`#modifyJSONSchema 3`] = `null`;

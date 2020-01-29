@@ -77,6 +77,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         columns={columns}
         editMode={editMode}
         idx={idx}
+        key={idx}
         moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
         removeWidget={(): any => removeWidget(idx)}
         setTemplateValue={setTemplateValue}
