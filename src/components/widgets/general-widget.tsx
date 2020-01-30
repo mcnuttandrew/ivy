@@ -5,8 +5,6 @@ import {XYCoord} from 'dnd-core';
 
 import {classnames} from '../../utils';
 
-import {FaGripVertical} from 'react-icons/fa';
-
 import MultiDataTargetComponent from './multi-data-target-widget';
 import DataTargetWidgetComponent from './data-target-widget';
 import ListWidgetComponent from './list-widget';
@@ -71,9 +69,6 @@ function PlacementControls(props: Props): JSX.Element {
       <div className="cursor-pointer" onClick={removeWidget}>
         <TiDelete />
       </div>
-      {/* <div className="widget-handle-grip">
-        <FaGripVertical />
-      </div> */}
     </div>
   );
 }
