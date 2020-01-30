@@ -21,6 +21,7 @@ export const RECIEVE_TEMPLATE = 'recieve-templates';
 export const RECIEVE_TYPE_INFERENCES = 'recieve-type-inferences';
 export const REMOVE_WIDGET_FROM_TEMPLATE = 'remove-widget-from-template';
 export const SAVE_TEMPLATE = 'save-template';
+export const SET_ALL_TEMPLATE_VALUES = 'set-all-template-values';
 export const SET_BLANK_TEMPLATE = 'set-blank-template';
 export const SET_CODE_MODE = 'set-code-mode';
 export const SET_EDITOR_FONT_SIZE = 'set-editor-font-size';

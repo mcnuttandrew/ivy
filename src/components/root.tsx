@@ -113,6 +113,7 @@ interface RootProps {
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
   setBlankTemplate: GenericAction<boolean>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEditorFontSize: GenericAction<number>;
@@ -232,6 +233,7 @@ class RootComponent extends React.Component<RootProps> {
       moveWidget,
       removeWidget,
       saveCurrentTemplate,
+      setAllTemplateValues,
       setBlankTemplate,
       setCodeMode,
       setEditMode,
@@ -297,6 +299,7 @@ class RootComponent extends React.Component<RootProps> {
             removeWidget={removeWidget}
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
+            setAllTemplateValues={setAllTemplateValues}
             template={template}
             templateMap={templateMap}
           />

@@ -121,6 +121,19 @@ const SHELF: Template = {
     // Mark type
     makeSection('MarkDivider'),
     simpleList({widgetName: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('circle')}),
+    {
+      widgetType: 'Shortcut',
+      widgetName: 'main-shortcuts',
+      widget: {
+        shortcuts: [
+          {
+            label: 'SWAP X & Y',
+            shortcutFunction:
+              "Object.keys(parameters).reduce((acc, d) => ({...acc, [d[0] === 'X' ? `Y${d.slice(1)}` : d[0] === 'Y' ? `X${d.slice(1)}` : d]: parameters[d]}), {})",
+          },
+        ],
+      },
+    },
 
     // size & color dimensions
     ...['Color', 'Size'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {

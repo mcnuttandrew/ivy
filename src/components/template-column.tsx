@@ -27,6 +27,7 @@ interface TemplateColumnProps {
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   removeWidget: GenericAction<number>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   moveWidget: GenericAction<MoveWidgetPayload>;
 }
 
@@ -62,6 +63,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       columns,
       editMode,
       modifyValueOnTemplate,
+      setAllTemplateValues,
       setTemplateValue,
       setWidgetValue,
       template,
@@ -80,6 +82,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         key={idx}
         moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
         removeWidget={(): any => removeWidget(idx)}
+        setAllTemplateValues={setAllTemplateValues}
         setTemplateValue={setTemplateValue}
         setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
         templateMap={templateMap}

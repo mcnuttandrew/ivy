@@ -6,6 +6,7 @@ import {
   DataTargetWidget,
   WidgetSubType,
   ListWidget,
+  Shortcut,
   SwitchWidget,
   SliderWidget,
 } from './templates/types';
@@ -22,6 +23,13 @@ function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): 
   const generatedContent = new Function('parameters', `return ${query}`);
   return Boolean(generatedContent(templateMap));
 }
+
+export function evaluateShortcut(shortcut: Shortcut, templateMap: TemplateMap): TemplateMap {
+  const generatedContent = new Function('parameters', `return ${shortcut.shortcutFunction}`);
+  const newMap = generatedContent(templateMap);
+  return newMap;
+}
+
 interface ConditionalArgs {
   query: string;
   true: any;

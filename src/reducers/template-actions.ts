@@ -8,7 +8,7 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {Template, TemplateWidget, WidgetSubType} from '../templates/types';
+import {Template, TemplateWidget, WidgetSubType, TemplateMap} from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
 import {deserializeTemplate} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
@@ -29,6 +29,12 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
     }
     draftState.templateMap[payload.field] = payload.text;
     draftState.spec = evaluateHydraProgram(state.currentTemplateInstance, draftState.templateMap);
+  });
+};
+
+export const setAllTemplateValues: ActionResponse<TemplateMap> = (state, payload) => {
+  return produce(state, draftState => {
+    draftState.templateMap = {...draftState.templateMap, ...payload};
   });
 };
 
