@@ -687,12 +687,7 @@ input[type=number]::-webkit-outer-spin-button {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 7px;
-  /* transform: rotate(-90deg); */
   white-space: nowrap;
-  /* height: 5px;
-  width: 5px; */
-  /* display: flex; */
-  /* flex-direction: row-reverse; */
 }
 
 .modal-header {
