@@ -5,8 +5,6 @@ import {XYCoord} from 'dnd-core';
 
 import {classnames} from '../../utils';
 
-import {FaGripVertical} from 'react-icons/fa';
-
 import MultiDataTargetComponent from './multi-data-target-widget';
 import DataTargetWidgetComponent from './data-target-widget';
 import ListWidgetComponent from './list-widget';
@@ -62,17 +60,14 @@ function PlacementControls(props: Props): JSX.Element {
     return <div />;
   }
   return (
-    <div className="widget-handle flex-down">
-      <div className="flex-down">
-        <div className="cursor-pointer" onClick={removeWidget}>
-          <TiDelete />
-        </div>
-      </div>
+    <div className="widget-handle flex">
+      <div>{widget.widgetType}</div>
+
       <div className="in-use-status">
         {showInUse ? (widgetInUse(code, widget.widgetName) ? 'in use' : 'not used') : ''}
       </div>
-      <div className="widget-handle-grip">
-        <FaGripVertical />
+      <div className="cursor-pointer" onClick={removeWidget}>
+        <TiDelete />
       </div>
     </div>
   );
@@ -167,7 +162,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
       style={{opacity}}
       className={classnames({
         widget: true,
-        flex: true,
+        'flex-down': true,
         'widget-drag': isDragging,
       })}
     >

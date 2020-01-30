@@ -21,6 +21,12 @@ export default function TemplateColumnAddNewWidgetPopover(props: Props): JSX.Ele
           Add Widget <AiOutlinePlusCircle />
         </button>
       }
+      style={{
+        height: '300px',
+        width: '200px',
+        left: '-90px',
+        top: '19px',
+      }}
       body={(toggle: any): JSX.Element => {
         return (
           <Fragment>
