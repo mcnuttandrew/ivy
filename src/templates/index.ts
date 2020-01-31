@@ -11,7 +11,6 @@ import {
   TextWidget,
   WidgetSubType,
   ShortcutsWidget,
-  Shortcut,
 } from './types';
 import {EMPTY_SPEC} from '../reducers/default-state';
 import {DataType} from '../types';
