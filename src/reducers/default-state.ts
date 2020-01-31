@@ -2,13 +2,9 @@ import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 import {ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
-// import SCATTERPLOT from '../templates/example-templates/scatterplot';
-export interface UndoRedoStackItem {
-  spec: any;
-  currentView: string;
-  templateMap: TemplateMap;
-  views: string[];
-}
+import {UndoRedoStackItem} from './undo-actions';
+import {ViewCatalog} from './view-actions';
+
 export interface DataReducerState {
   data: {[x: string]: any}[];
 }
@@ -44,7 +40,7 @@ export interface AppState {
 
   // view stuff
   views: string[];
-  viewCatalog: {[x: string]: any};
+  viewCatalog: ViewCatalog;
   currentView: string;
 
   // template stuff

@@ -3,7 +3,7 @@ import stringify from 'json-stringify-pretty-compact';
 
 import {CoerceTypePayload, HandleCodePayload, SetTemplateValuePayload} from '../actions/index';
 import {findField, getAllInUseFields, extractFieldStringsForType, get} from '../utils';
-import {ActionResponse, EMPTY_SPEC, AppState, UndoRedoStackItem, blindSet} from './default-state';
+import {ActionResponse, EMPTY_SPEC, AppState, blindSet} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {evaluateHydraProgram} from '../hydra-lang';
@@ -240,47 +240,5 @@ export const setRepeats: ActionResponse<{repeats: string[]; target: string}> = (
   const {repeats, target} = payload;
   return produce(state, draftState => {
     draftState.spec.repeat[target] = repeats;
-  });
-};
-
-const createStackItem = (state: AppState): UndoRedoStackItem => {
-  return {
-    spec: state.spec,
-    currentView: state.currentView,
-    templateMap: state.templateMap,
-    views: state.views,
-  };
-};
-
-const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
-  return produce(state, draftState => {
-    draftState.spec = stackItem.spec;
-    draftState.currentView = stackItem.currentView;
-    draftState.templateMap = stackItem.templateMap;
-    draftState.views = stackItem.views;
-  });
-};
-// takes in an old state (via a wrapping function) and an updated state and push the contents
-// of the old state into the undo stack
-export function pushToUndoStack(oldState: AppState, newState: AppState): AppState {
-  return produce(newState, draftState => {
-    draftState.undoStack.push(createStackItem(oldState));
-    draftState.redoStack = [];
-  });
-}
-// TODO these are probably constructable as a single more elegant function
-export const triggerRedo: ActionResponse<void> = state => {
-  const redoStack = state.redoStack;
-  return produce(applyStackItemToState(state, redoStack[redoStack.length - 1]), draftState => {
-    draftState.redoStack.pop();
-    draftState.undoStack.push(createStackItem(state));
-  });
-};
-
-export const triggerUndo: ActionResponse<void> = state => {
-  const undoStack = state.undoStack;
-  return produce(applyStackItemToState(state, undoStack[undoStack.length - 1]), draftState => {
-    draftState.undoStack.pop();
-    draftState.redoStack.push(createStackItem(state));
   });
 };

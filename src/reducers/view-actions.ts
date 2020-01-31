@@ -1,17 +1,28 @@
 import stringify from 'json-stringify-pretty-compact';
 import produce from 'immer';
+import {TemplateMap, Template} from '../templates/types';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 
-const BLANK_CATALOG_ENTRY = {
+export interface ViewCatalog {
+  [x: string]: ViewCatalogEntry;
+}
+export interface ViewCatalogEntry {
+  spec: any;
+  encodingMode: string;
+  templateMap: TemplateMap;
+  currentTemplateInstance?: Template;
+}
+const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
   spec: EMPTY_SPEC,
   encodingMode: 'grammer',
   templateMap: {},
 };
 function updateCatalogView(state: AppState, view: string): AppState {
-  const catalogEntry = {
+  const catalogEntry: ViewCatalogEntry = {
     spec: state.spec,
     encodingMode: state.encodingMode,
     templateMap: state.templateMap,
+    currentTemplateInstance: state.currentTemplateInstance,
   };
   return produce(state, draftState => {
     draftState.viewCatalog[view] = catalogEntry;
@@ -19,13 +30,14 @@ function updateCatalogView(state: AppState, view: string): AppState {
 }
 
 export const switchView: ActionResponse<string> = (state, payload) => {
-  const newCatalog = state.viewCatalog[payload];
+  const catalogEntry = state.viewCatalog[payload];
   return produce(updateCatalogView(state, state.currentView), draftState => {
     draftState.currentView = payload;
-    draftState.spec = newCatalog.spec;
-    draftState.specCode = stringify(newCatalog.spec);
-    draftState.encodingMode = newCatalog.encodingMode;
-    draftState.templateMap = newCatalog.templateMap;
+    draftState.spec = catalogEntry.spec;
+    draftState.specCode = stringify(catalogEntry.spec);
+    draftState.encodingMode = catalogEntry.encodingMode;
+    draftState.currentTemplateInstance = catalogEntry.currentTemplateInstance;
+    draftState.templateMap = catalogEntry.templateMap;
   });
 };
 
@@ -38,8 +50,23 @@ export const createNewView: ActionResponse<void> = state => {
   return switchView(newState, newViewName);
 };
 export const deleteView: ActionResponse<string> = (state, payload) => {
-  console.log('TODO', payload);
-  return state;
+  // todo maybe need to update view catalog here?
+  return produce(state, draftState => {
+    draftState.views = state.views.filter(view => view !== payload);
+    delete draftState.viewCatalog[payload];
+  });
+};
+
+export const changeViewName: ActionResponse<{idx: number; value: string}> = (state, {idx, value}) => {
+  return produce(state, draftState => {
+    const oldViewName = draftState.views[idx];
+    draftState.viewCatalog[value] = draftState.viewCatalog[oldViewName];
+    delete draftState.viewCatalog[draftState.views[idx]];
+    draftState.views[idx] = value;
+    if (draftState.currentView === oldViewName) {
+      draftState.currentView = value;
+    }
+  });
 };
 
 export const cloneView: ActionResponse<void> = state => {
@@ -47,7 +74,7 @@ export const cloneView: ActionResponse<void> = state => {
   const updatedState = updateCatalogView(state, state.currentView);
   const newState = produce(state, draftState => {
     draftState.views = updatedState.views.concat(newViewName);
-    draftState.viewCatalog.newViewName = updatedState.viewCatalog[state.currentView];
+    draftState.viewCatalog[newViewName] = updatedState.viewCatalog[state.currentView];
   });
 
   return switchView(newState, newViewName);

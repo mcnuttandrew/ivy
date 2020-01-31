@@ -3,12 +3,14 @@ import VegaWrapper from './vega-wrap';
 import {VegaTheme} from '../types';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
-import {MdContentCopy, MdNoteAdd} from 'react-icons/md';
+import {MdSettings, MdContentCopy, MdNoteAdd} from 'react-icons/md';
 import {GenericAction} from '../actions';
+import Popover from './popover';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
   createNewView: GenericAction<void>;
+  changeViewName: GenericAction<{idx: number; value: string}>;
   currentTheme: VegaTheme;
   currentView: string;
   data: any;
@@ -25,10 +27,12 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
   render(): JSX.Element {
     const {
       cloneView,
+      changeViewName,
       createNewView,
       currentTheme,
       currentView,
       data,
+      deleteView,
       missingFields,
       spec,
       switchView,
@@ -60,17 +64,43 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             <MdContentCopy />
           </div>
           <div className="view-container">
-            {views.map((view: string) => {
+            {views.map((view, idx) => {
               return (
                 <div
-                  key={view}
-                  onClick={(): any => switchView(view)}
+                  key={idx}
                   className={classnames({
                     'view-control': true,
                     selected: view === currentView,
                   })}
                 >
-                  {view}
+                  <button onClick={(): any => switchView(view)}>{view}</button>
+                  <Popover
+                    className="list-options-popover"
+                    clickTarget={
+                      <span className="tool-description">
+                        <MdSettings />
+                      </span>
+                    }
+                    style={{
+                      width: '250px',
+                      height: '200px',
+                      left: '120px',
+                      top: '50px',
+                    }}
+                    body={(): JSX.Element => {
+                      return (
+                        <div>
+                          <div>View Controls</div>
+                          <input
+                            value={view}
+                            type="text"
+                            onChange={(e): any => changeViewName({idx, value: e.target.value})}
+                          />
+                          <button onClick={(): any => deleteView(view)}>delete view</button>
+                        </div>
+                      );
+                    }}
+                  />
                 </div>
               );
             })}

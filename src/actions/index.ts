@@ -12,6 +12,7 @@ import {
   CHANGE_MARK_TYPE,
   CHANGE_SELECTED_FILE,
   CHANGE_THEME,
+  CHANGE_VIEW_NAME,
   CLEAR_ENCODING,
   CLONE_VIEW,
   COERCE_TYPE,
@@ -107,6 +108,7 @@ export const addToNextOpenSlot = createAction<ColumnHeader>(ADD_TO_NEXT_OPEN_SLO
 export const addWidget = createAction<TemplateWidget<WidgetSubType>>(ADD_TO_WIDGET_TEMPLATE);
 export const changeMarkType = createAction<string>(CHANGE_MARK_TYPE);
 export const changeTheme = createAction<string>(CHANGE_THEME);
+export const changeViewName = createAction<{idx: number; value: string}>(CHANGE_VIEW_NAME);
 export const clearEncoding = createAction<void>(CLEAR_ENCODING);
 export const cloneView = createAction<void>(CLONE_VIEW);
 export const coerceType = createAction<CoerceTypePayload>(COERCE_TYPE);

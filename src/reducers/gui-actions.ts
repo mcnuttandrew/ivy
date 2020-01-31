@@ -45,28 +45,36 @@ function activeColumns(state: any): string[] {
   return Array.from(templateInUse).map((key: string) => quoteTrim(key));
 }
 
-export const setEncodingMode: ActionResponse<string> = (state, payload) => {
-  let updatedState = produce(state, draftState => {
-    draftState.editMode = false;
-    draftState.codeMode = 'EXPORT TO JSON';
-  });
-  if (payload !== 'grammer') {
+export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDefault: boolean}> = (
+  state,
+  {mode, fillWithDefault},
+) => {
+  if (mode !== 'grammer') {
     // INSTANTIATE TEMPLATE AS A LOCAL COPY
-    const template = getTemplate(state, payload);
-    updatedState = fillTemplateMapWithDefaults(
-      produce(updatedState, draftState => {
-        draftState.encodingMode = payload;
-        draftState.spec = evaluateHydraProgram(template, state.templateMap);
-        draftState.currentTemplateInstance = template;
-      }),
-    );
-  } else {
-    updatedState = produce(updatedState, draftState => {
-      draftState.encodingMode = payload;
-      draftState.spec = EMPTY_SPEC;
-      draftState.currentTemplateInstance = null;
+    const template = getTemplate(state, mode);
+    const updatedState = produce(state, draftState => {
+      draftState.encodingMode = mode;
+      draftState.spec = evaluateHydraProgram(template, state.templateMap);
+      draftState.currentTemplateInstance = template;
     });
+    return fillWithDefault ? fillTemplateMapWithDefaults(updatedState) : updatedState;
   }
+  return produce(state, draftState => {
+    draftState.encodingMode = mode;
+    draftState.spec = EMPTY_SPEC;
+    draftState.currentTemplateInstance = null;
+  });
+};
+
+export const setEncodingMode: ActionResponse<string> = (state, payload) => {
+  const updatedState = applyEncodingModeToState(
+    produce(state, draftState => {
+      draftState.editMode = false;
+      draftState.codeMode = 'EXPORT TO JSON';
+    }),
+    {mode: payload, fillWithDefault: true},
+  );
+
   // figure out what the currently in use columns are and iteratively try to add them to the new one
   const columnMap = updatedState.columns.reduce((acc: {[d: string]: ColumnHeader}, x: ColumnHeader) => {
     acc[x.field] = x;
