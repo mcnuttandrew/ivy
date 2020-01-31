@@ -243,7 +243,6 @@ class RootComponent extends React.Component<RootProps> {
       changeMarkType,
       clearEncoding,
       columns,
-      createFilter,
       deleteTemplate,
       editMode,
       encodingMode,
