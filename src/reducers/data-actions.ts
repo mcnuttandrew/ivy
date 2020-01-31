@@ -1,22 +1,20 @@
-import {AppState, EMPTY_SPEC, ActionResponse} from './default-state';
+import {AppState, EMPTY_SPEC, ActionResponse, DataReducerState} from './default-state';
 import {ColumnHeader, DataType} from '../types';
-import {selectDataModification, executeDataModifcation} from '../operations/data-ops';
 import produce from 'immer';
 import {TypeInference, DataRow} from '../actions/index';
 
-export const recieveData = (state: AppState, payload: DataRow[]): AppState => {
-  // this might be the wrong way to do this? it sort of depends on the internals of that vega component
-  const dataModification = selectDataModification(payload);
+export const recieveData = (state: AppState): AppState => {
   return produce(state, draftState => {
-    draftState.data = executeDataModifcation(payload, dataModification);
-    draftState.originalData = payload;
-    draftState.dataModification = dataModification;
     draftState.spec = EMPTY_SPEC;
     draftState.views = ['view1'];
     draftState.viewCatalog = {};
     draftState.undoStack = [];
     draftState.redoStack = [];
   });
+};
+
+export const recieveDataForDataReducer = (state: DataReducerState, payload: DataRow[]): DataReducerState => {
+  return {data: payload};
 };
 
 export const recieveTypeInferences = (state: AppState, payload: TypeInference[]): AppState => {

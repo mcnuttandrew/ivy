@@ -9,6 +9,7 @@ import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
 import * as actionCreators from '../actions/index';
+import {Filter} from '../actions/index';
 import {
   CoerceTypePayload,
   GenericAction,
@@ -21,12 +22,12 @@ import {
   SetWidgetValuePayload,
   UpdateFilterPayload,
 } from '../actions/index';
-import {getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
+import {getUniques, getDomain, getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
 import {ColumnHeader, VegaTheme} from '../types';
-import {AppState} from '../reducers/default-state';
+import {AppState, DataReducerState} from '../reducers/default-state';
 
 import ChartArea from './chart-area';
 import CodeEditor from './code-editor';
@@ -98,7 +99,7 @@ interface RootProps {
   clearEncoding: GenericAction<void>;
   cloneView: GenericAction<void>;
   coerceType: GenericAction<CoerceTypePayload>;
-  createFilter: GenericAction<ColumnHeader>;
+  createFilter: GenericAction<Filter>;
   createNewView: GenericAction<void>;
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
@@ -137,6 +138,10 @@ interface RootProps {
 }
 
 class RootComponent extends React.Component<RootProps> {
+  constructor(props: RootProps) {
+    super(props);
+    this.createFilter = this.createFilter.bind(this);
+  }
   componentDidMount(): void {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     this.props.loadTemplates();
@@ -144,6 +149,20 @@ class RootComponent extends React.Component<RootProps> {
 
   componentDidCatch(error: any, errorInfo: any): void {
     console.error('ERRPR', error, errorInfo);
+  }
+
+  createFilter(field: string): void {
+    const {columns, createFilter, data} = this.props;
+    // const isDim = findField(state, payload.field).type === 'DIMENSION';
+    const isDim = columns.find(x => x.field === field).type === 'DIMENSION';
+    const newFilter: Filter = {
+      filter: {
+        field: field,
+        // todo this is really slick, but we should probably be caching these values on load
+        [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(data, field),
+      },
+    };
+    createFilter(newFilter);
   }
 
   chartArea(): JSX.Element {
@@ -184,7 +203,6 @@ class RootComponent extends React.Component<RootProps> {
       addToNextOpenSlot,
       coerceType,
       columns,
-      createFilter,
       currentlySelectedFile,
       deleteFilter,
       fillableFields,
@@ -203,11 +221,11 @@ class RootComponent extends React.Component<RootProps> {
           addToNextOpenSlot={addToNextOpenSlot}
           coerceType={coerceType}
           columns={columns}
-          createFilter={createFilter}
+          createFilter={this.createFilter}
           deleteFilter={deleteFilter}
           fillableFields={fillableFields}
           metaColumns={metaColumns}
-          onDropFilter={(item: any): any => createFilter({field: item.text} as ColumnHeader)}
+          onDropFilter={(item: any): any => this.createFilter(item.text)}
           setRepeats={setRepeats}
           showGUIView={showGUIView}
           spec={spec}
@@ -284,7 +302,7 @@ class RootComponent extends React.Component<RootProps> {
               }
               setEncodingParameter(item);
             }}
-            onDropFilter={(item: any): any => createFilter({field: item.text} as ColumnHeader)}
+            onDropFilter={(item: any): any => this.createFilter(item.text)}
             setEncodingParameter={setEncodingParameter}
             setNewSpec={setNewSpec}
             spec={spec}
@@ -431,7 +449,7 @@ class RootComponent extends React.Component<RootProps> {
   }
 }
 
-export function mapStateToProps({base}: {base: AppState}): any {
+export function mapStateToProps({base, data}: {base: AppState; data: DataReducerState}): any {
   const template = base.currentTemplateInstance;
   const templateMap = base.templateMap;
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
@@ -443,7 +461,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
     currentTheme: base.currentTheme,
     currentView: base.currentView,
     currentlySelectedFile: base.currentlySelectedFile,
-    data: base.data,
+    data: data.data,
     dataModalOpen: base.dataModalOpen,
     editMode: base.editMode,
     editorError: base.editorError,

@@ -9,6 +9,9 @@ export interface UndoRedoStackItem {
   templateMap: TemplateMap;
   views: string[];
 }
+export interface DataReducerState {
+  data: {[x: string]: any}[];
+}
 export interface AppState {
   // meta-data
   currentlySelectedFile: string;
@@ -49,10 +52,6 @@ export interface AppState {
   templates: Template[];
   templateMap: TemplateMap;
   templateBuilderModalOpen: boolean;
-
-  data: {[x: string]: any}[];
-  originalData: {[x: string]: any}[];
-  dataModification: string;
 }
 
 /**
@@ -125,8 +124,4 @@ export const DEFAULT_STATE: AppState = {
   templates: [],
   templateMap: {},
   templateBuilderModalOpen: false,
-
-  data: [],
-  originalData: [],
-  dataModification: null,
 };

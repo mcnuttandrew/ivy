@@ -65,7 +65,12 @@ import {
 import {addToNextOpenSlot} from './apt-actions';
 
 import {createFilter, updateFilter, deleteFilter} from './filter-actions';
-import {changeSelectedFile, recieveData, recieveTypeInferences} from './data-actions';
+import {
+  changeSelectedFile,
+  recieveData,
+  recieveDataForDataReducer,
+  recieveTypeInferences,
+} from './data-actions';
 import {
   addWidget,
   deleteTemplate,
@@ -95,7 +100,7 @@ import {
   toggleProgramModal,
 } from './gui-actions';
 
-import {AppState, DEFAULT_STATE, ActionResponse} from './default-state';
+import {AppState, DEFAULT_STATE, ActionResponse, DataReducerState} from './default-state';
 
 // second order effects
 const wrap = (func: ActionResponse<any>, wrapper: any): ActionResponse<any> => (state, payload): AppState =>
@@ -167,6 +172,15 @@ const reducers = {
   base: (state: AppState = DEFAULT_STATE, {type, payload}: {type: string; payload: any}): AppState => {
     console.log(type);
     return (actionFuncMap[type] || NULL_ACTION)(state, payload);
+  },
+  data: (
+    state: DataReducerState = {data: []},
+    {type, payload}: {type: string; payload: any},
+  ): DataReducerState => {
+    if (type === RECIEVE_DATA) {
+      return recieveDataForDataReducer(state, payload);
+    }
+    return state;
   },
 };
 export default function setUpState(): any {
