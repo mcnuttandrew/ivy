@@ -139,27 +139,27 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [SET_CODE_MODE]: setCodeMode,
   [SET_EDIT_MODE]: setEditMode,
   [SET_EDITOR_FONT_SIZE]: setEditorFontSize,
-  [SET_ENCODING_MODE]: setEncodingMode,
+  [SET_ENCODING_MODE]: addUndo(setEncodingMode),
   [SET_GUI_VIEW]: setGuiView,
   [TOGGLE_DATA_MODAL]: toggleDataModal,
   [TOGGLE_PROGRAM_MODAL]: toggleProgramModal,
   [TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
 
   // template
-  [ADD_TO_WIDGET_TEMPLATE]: addWidget,
+  [ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
   [DELETE_TEMPLATE]: deleteTemplate,
   [LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
   [MODIFY_VALUE_ON_TEMPLATE]: addUpdateCode(modifyValueOnTemplate),
-  [MOVE_WIDGET_IN_TEMPLATE]: moveWidget,
+  [MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
   [READ_IN_TEMPLATE]: addUpdateCode(readInTemplate),
   [READ_IN_TEMPLATE_MAP]: addUpdateCode(readInTemplateMap),
   [RECIEVE_TEMPLATE]: recieveTemplates,
-  [REMOVE_WIDGET_FROM_TEMPLATE]: removeWidget,
+  [REMOVE_WIDGET_FROM_TEMPLATE]: addUndo(removeWidget),
   [SAVE_TEMPLATE]: saveCurrentTemplate,
   [SET_ALL_TEMPLATE_VALUES]: setAllTemplateValues,
   [SET_BLANK_TEMPLATE]: addUpdateCode(setBlankTemplate),
   [SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
-  [SET_WIDGET_VALUE]: setWidgetValue,
+  [SET_WIDGET_VALUE]: addUndo(setWidgetValue),
 
   // views
   [CLONE_VIEW]: addUndo(cloneView),
@@ -177,6 +177,7 @@ const reducers = {
     state: DataReducerState = {data: []},
     {type, payload}: {type: string; payload: any},
   ): DataReducerState => {
+    // not that this reducer is NOT immutable.
     if (type === RECIEVE_DATA) {
       return recieveDataForDataReducer(state, payload);
     }

@@ -6,6 +6,8 @@ import {Template, TemplateMap} from '../templates/types';
 export interface UndoRedoStackItem {
   spec: any;
   currentView: string;
+  currentTemplateInstance: Template;
+  encodingMode: string;
   templateMap: TemplateMap;
   views: string[];
 }

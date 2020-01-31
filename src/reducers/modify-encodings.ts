@@ -248,6 +248,8 @@ const createStackItem = (state: AppState): UndoRedoStackItem => {
     spec: state.spec,
     currentView: state.currentView,
     templateMap: state.templateMap,
+    encodingMode: state.encodingMode,
+    currentTemplateInstance: state.currentTemplateInstance,
     views: state.views,
   };
 };
@@ -258,6 +260,8 @@ const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
     draftState.currentView = stackItem.currentView;
     draftState.templateMap = stackItem.templateMap;
     draftState.views = stackItem.views;
+    draftState.encodingMode = stackItem.encodingMode;
+    draftState.currentTemplateInstance = stackItem.currentTemplateInstance;
   });
 };
 // takes in an old state (via a wrapping function) and an updated state and push the contents
