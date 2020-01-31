@@ -41,6 +41,7 @@ import TemplateColumn from './template-column';
 import TemplatePreviewColumn from './template-preview-column';
 
 // wrap the split pane functionality into a HOC
+const getHeight = (): number => Number(localStorage.getItem('splitPos'));
 const Wrapper = (props: any): JSX.Element => {
   if (props.showProgrammaticMode && props.showGUIView) {
     return (
@@ -48,7 +49,7 @@ const Wrapper = (props: any): JSX.Element => {
         split="horizontal"
         minSize={60}
         style={{overflow: 'unset', position: 'relative'}}
-        defaultSize={parseInt(localStorage.getItem('splitPos'), 10)}
+        defaultSize={getHeight()}
         onChange={(size: any): any => localStorage.setItem('splitPos', size)}
       >
         {props.children}
@@ -240,6 +241,7 @@ class RootComponent extends React.Component<RootProps> {
       setEncodingMode,
       setEncodingParameter,
       setNewSpec,
+      showProgrammaticMode,
       setTemplateValue,
       setWidgetValue,
       showGUIView,
@@ -294,6 +296,7 @@ class RootComponent extends React.Component<RootProps> {
             addWidget={addWidget}
             columns={columns}
             editMode={editMode}
+            height={showProgrammaticMode && showGUIView && getHeight()}
             moveWidget={moveWidget}
             modifyValueOnTemplate={modifyValueOnTemplate}
             removeWidget={removeWidget}

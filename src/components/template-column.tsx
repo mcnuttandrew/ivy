@@ -20,6 +20,7 @@ interface TemplateColumnProps {
   columns: ColumnHeader[];
   editMode: boolean;
   setTemplateValue?: any;
+  height?: number;
   template: Template;
   templateMap: TemplateMap;
 
@@ -62,6 +63,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       addWidget,
       columns,
       editMode,
+      height,
       modifyValueOnTemplate,
       setAllTemplateValues,
       setTemplateValue,
@@ -126,7 +128,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       );
     });
     return (
-      <div className="full-height encoding-column">
+      <div className="full-height encoding-column" style={height && {maxHeight: height}}>
         {editMode && template && (
           <div className="flex">
             <div className="flex">

@@ -162,6 +162,7 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       // display name is a property of the widget container and not the widget parameter...
       draftState.currentTemplateInstance.widgets[idx].displayName = value;
     } else {
+      console.log(key, value, idx);
       /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx].widget[key] = value;

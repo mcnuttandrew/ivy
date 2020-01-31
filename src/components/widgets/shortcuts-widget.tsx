@@ -21,7 +21,7 @@ export default function ShortcutsWidgetComponent(
   const shortcuts = widget.widget.shortcuts;
   if (editMode) {
     return (
-      <div className="flex shortcuts-widget">
+      <div className="flex-down shortcuts-widget">
         <div>Shortcuts</div>
         <div className="flex-down">
           {shortcuts.map((shortcut, jdx) => {
@@ -49,21 +49,21 @@ export default function ShortcutsWidgetComponent(
             );
           })}
         </div>
-        <div
+        <button
           onClick={(): void => {
-            setWidgetValue({
-              idx,
-              value: 'shortcuts',
-              key: shortcuts.concat({
+            setWidgetValue(
+              'shortcuts',
+              shortcuts.concat({
                 label: 'BLANK_SHORTCUT',
                 shortcutFunction: 'return parameters',
               }),
-            });
+              idx,
+            );
           }}
         >
           {' '}
           Add another shortcut
-        </div>
+        </button>
       </div>
     );
   }

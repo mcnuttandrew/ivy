@@ -10,6 +10,8 @@ import {
   TemplateWidget,
   TextWidget,
   WidgetSubType,
+  ShortcutsWidget,
+  Shortcut,
 } from './types';
 import {EMPTY_SPEC} from '../reducers/default-state';
 import {DataType} from '../types';
@@ -101,6 +103,12 @@ export const widgetFactory: {[widgetType: string]: WidgetFactoryFunc} = {
       widgetType: 'Section',
       widget: {text: 'New text'},
     } as TemplateWidget<SectionWidget>),
+  Shortcuts: idx =>
+    ({
+      widgetName: `Shortcut${idx}`,
+      widgetType: 'Shortcut',
+      widget: {shortcuts: []},
+    } as TemplateWidget<ShortcutsWidget>),
 };
 
 export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {

@@ -1103,6 +1103,10 @@ input[type=number]::-webkit-outer-spin-button {
   width: 90%;
 }
 
+.shortcuts-widget {
+  font-size: 12px;
+}
+
 .edit-mode .widget {
   margin-bottom: 5px;
 }
