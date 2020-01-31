@@ -95,6 +95,7 @@ interface RootProps {
   chainActions: GenericAction<any>;
   changeMarkType: GenericAction<string>;
   changeSelectedFile: GenericAction<string>;
+  changeViewName: GenericAction<{idx: number; value: string}>;
   changeTheme: GenericAction<string>;
   clearEncoding: GenericAction<void>;
   cloneView: GenericAction<void>;
@@ -168,6 +169,7 @@ class RootComponent extends React.Component<RootProps> {
   chartArea(): JSX.Element {
     const {
       cloneView,
+      changeViewName,
       createNewView,
       currentTheme,
       currentView,
@@ -182,6 +184,7 @@ class RootComponent extends React.Component<RootProps> {
     } = this.props;
     return (
       <ChartArea
+        changeViewName={changeViewName}
         cloneView={cloneView}
         createNewView={createNewView}
         currentTheme={currentTheme}

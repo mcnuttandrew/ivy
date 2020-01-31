@@ -1,66 +1,20 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import {
-  ADD_TO_NEXT_OPEN_SLOT,
-  ADD_TO_WIDGET_TEMPLATE,
-  CHANGE_MARK_TYPE,
-  CHANGE_SELECTED_FILE,
-  CHANGE_THEME,
-  CLEAR_ENCODING,
-  CLONE_VIEW,
-  COERCE_TYPE,
-  CREATE_FILTER,
-  CREATE_NEW_VIEW,
-  DELETE_FILTER,
-  DELETE_TEMPLATE,
-  DELETE_VIEW,
-  LOAD_EXTERNAL_TEMPLATE,
-  MODIFY_VALUE_ON_TEMPLATE,
-  MOVE_WIDGET_IN_TEMPLATE,
-  READ_IN_TEMPLATE,
-  READ_IN_TEMPLATE_MAP,
-  RECIEVE_DATA,
-  RECIEVE_TEMPLATE,
-  RECIEVE_TYPE_INFERENCES,
-  REMOVE_WIDGET_FROM_TEMPLATE,
-  SAVE_TEMPLATE,
-  SET_ALL_TEMPLATE_VALUES,
-  SET_BLANK_TEMPLATE,
-  SET_CODE_MODE,
-  SET_EDITOR_FONT_SIZE,
-  SET_EDIT_MODE,
-  SET_ENCODING_MODE,
-  SET_ENCODING_PARAM,
-  SET_GUI_VIEW,
-  SET_NEW_ENCODING,
-  SET_NEW_ENCODING_CODE,
-  SET_REPEATS,
-  SET_TEMPLATE_VALUE,
-  SET_WIDGET_VALUE,
-  SWAP_X_AND_Y_CHANNELS,
-  SWITCH_VIEW,
-  TOGGLE_DATA_MODAL,
-  TOGGLE_PROGRAMMATIC_VIEW,
-  TOGGLE_PROGRAM_MODAL,
-  TRIGGER_REDO,
-  TRIGGER_UNDO,
-  UPDATE_FILTER,
-} from '../actions/action-types';
+import * as actionTypes from '../actions/action-types';
 
 import {
   changeMarkType,
   clearEncoding,
   coerceType,
-  pushToUndoStack,
   setEncodingParameter,
   setNewSpec,
   setNewSpecCode,
   setRepeats,
   swapXAndYChannels,
-  triggerRedo,
-  triggerUndo,
   updateCodeRepresentation,
 } from './modify-encodings';
+
+import {pushToUndoStack, triggerRedo, triggerUndo} from './undo-actions';
 
 import {addToNextOpenSlot} from './apt-actions';
 
@@ -87,7 +41,7 @@ import {
   setTemplateValue,
   setWidgetValue,
 } from './template-actions';
-import {createNewView, deleteView, switchView, cloneView} from './view-actions';
+import {createNewView, deleteView, switchView, cloneView, changeViewName} from './view-actions';
 import {
   changeTheme,
   setCodeMode,
@@ -111,61 +65,62 @@ const addUpdateCode = (func: ActionResponse<any>): ActionResponse<any> =>
 
 const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   // data modifications
-  [CHANGE_SELECTED_FILE]: changeSelectedFile,
-  [RECIEVE_DATA]: recieveData,
-  [RECIEVE_TYPE_INFERENCES]: recieveTypeInferences,
+  [actionTypes.CHANGE_SELECTED_FILE]: changeSelectedFile,
+  [actionTypes.RECIEVE_DATA]: recieveData,
+  [actionTypes.RECIEVE_TYPE_INFERENCES]: recieveTypeInferences,
 
   // encoding modifications
-  [ADD_TO_NEXT_OPEN_SLOT]: addUndo(addUpdateCode(addToNextOpenSlot)),
-  [CHANGE_MARK_TYPE]: addUndo(addUpdateCode(changeMarkType)),
-  [CLEAR_ENCODING]: addUndo(addUpdateCode(clearEncoding)),
-  [COERCE_TYPE]: addUndo(addUpdateCode(coerceType)),
-  [SET_ENCODING_PARAM]: addUndo(addUpdateCode(setEncodingParameter)),
-  [SET_NEW_ENCODING]: addUndo(addUpdateCode(setNewSpec)),
-  [SET_NEW_ENCODING_CODE]: addUndo(setNewSpecCode),
-  [SET_REPEATS]: addUndo(addUpdateCode(setRepeats)),
-  [SWAP_X_AND_Y_CHANNELS]: addUndo(addUpdateCode(swapXAndYChannels)),
+  [actionTypes.ADD_TO_NEXT_OPEN_SLOT]: addUndo(addUpdateCode(addToNextOpenSlot)),
+  [actionTypes.CHANGE_MARK_TYPE]: addUndo(addUpdateCode(changeMarkType)),
+  [actionTypes.CLEAR_ENCODING]: addUndo(addUpdateCode(clearEncoding)),
+  [actionTypes.COERCE_TYPE]: addUndo(addUpdateCode(coerceType)),
+  [actionTypes.SET_ENCODING_PARAM]: addUndo(addUpdateCode(setEncodingParameter)),
+  [actionTypes.SET_NEW_ENCODING]: addUndo(addUpdateCode(setNewSpec)),
+  [actionTypes.SET_NEW_ENCODING_CODE]: addUndo(setNewSpecCode),
+  [actionTypes.SET_REPEATS]: addUndo(addUpdateCode(setRepeats)),
+  [actionTypes.SWAP_X_AND_Y_CHANNELS]: addUndo(addUpdateCode(swapXAndYChannels)),
 
-  [TRIGGER_REDO]: addUpdateCode(triggerRedo),
-  [TRIGGER_UNDO]: addUpdateCode(triggerUndo),
+  [actionTypes.TRIGGER_REDO]: addUpdateCode(triggerRedo),
+  [actionTypes.TRIGGER_UNDO]: addUpdateCode(triggerUndo),
 
   // filter modifications
-  [CREATE_FILTER]: addUndo(addUpdateCode(createFilter)),
-  [DELETE_FILTER]: addUndo(addUpdateCode(deleteFilter)),
-  [UPDATE_FILTER]: addUndo(addUpdateCode(updateFilter)),
+  [actionTypes.CREATE_FILTER]: addUndo(addUpdateCode(createFilter)),
+  [actionTypes.DELETE_FILTER]: addUndo(addUpdateCode(deleteFilter)),
+  [actionTypes.UPDATE_FILTER]: addUndo(addUpdateCode(updateFilter)),
 
   // gui modifications
-  [CHANGE_THEME]: changeTheme,
-  [SET_CODE_MODE]: setCodeMode,
-  [SET_EDIT_MODE]: setEditMode,
-  [SET_EDITOR_FONT_SIZE]: setEditorFontSize,
-  [SET_ENCODING_MODE]: addUndo(setEncodingMode),
-  [SET_GUI_VIEW]: setGuiView,
-  [TOGGLE_DATA_MODAL]: toggleDataModal,
-  [TOGGLE_PROGRAM_MODAL]: toggleProgramModal,
-  [TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
+  [actionTypes.CHANGE_THEME]: changeTheme,
+  [actionTypes.SET_CODE_MODE]: setCodeMode,
+  [actionTypes.SET_EDIT_MODE]: setEditMode,
+  [actionTypes.SET_EDITOR_FONT_SIZE]: setEditorFontSize,
+  [actionTypes.SET_ENCODING_MODE]: addUndo(setEncodingMode),
+  [actionTypes.SET_GUI_VIEW]: setGuiView,
+  [actionTypes.TOGGLE_DATA_MODAL]: toggleDataModal,
+  [actionTypes.TOGGLE_PROGRAM_MODAL]: toggleProgramModal,
+  [actionTypes.TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
 
   // template
-  [ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
-  [DELETE_TEMPLATE]: deleteTemplate,
-  [LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
-  [MODIFY_VALUE_ON_TEMPLATE]: addUpdateCode(modifyValueOnTemplate),
-  [MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
-  [READ_IN_TEMPLATE]: addUpdateCode(readInTemplate),
-  [READ_IN_TEMPLATE_MAP]: addUpdateCode(readInTemplateMap),
-  [RECIEVE_TEMPLATE]: recieveTemplates,
-  [REMOVE_WIDGET_FROM_TEMPLATE]: addUndo(removeWidget),
-  [SAVE_TEMPLATE]: saveCurrentTemplate,
-  [SET_ALL_TEMPLATE_VALUES]: setAllTemplateValues,
-  [SET_BLANK_TEMPLATE]: addUpdateCode(setBlankTemplate),
-  [SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
-  [SET_WIDGET_VALUE]: addUndo(setWidgetValue),
+  [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
+  [actionTypes.DELETE_TEMPLATE]: deleteTemplate,
+  [actionTypes.LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
+  [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: addUpdateCode(modifyValueOnTemplate),
+  [actionTypes.MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
+  [actionTypes.READ_IN_TEMPLATE]: addUpdateCode(readInTemplate),
+  [actionTypes.READ_IN_TEMPLATE_MAP]: addUpdateCode(readInTemplateMap),
+  [actionTypes.RECIEVE_TEMPLATE]: recieveTemplates,
+  [actionTypes.REMOVE_WIDGET_FROM_TEMPLATE]: addUndo(removeWidget),
+  [actionTypes.SAVE_TEMPLATE]: saveCurrentTemplate,
+  [actionTypes.SET_ALL_TEMPLATE_VALUES]: setAllTemplateValues,
+  [actionTypes.SET_BLANK_TEMPLATE]: addUpdateCode(setBlankTemplate),
+  [actionTypes.SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
+  [actionTypes.SET_WIDGET_VALUE]: addUndo(setWidgetValue),
 
   // views
-  [CLONE_VIEW]: addUndo(cloneView),
-  [CREATE_NEW_VIEW]: addUndo(createNewView),
-  [DELETE_VIEW]: addUndo(deleteView),
-  [SWITCH_VIEW]: addUndo(switchView),
+  [actionTypes.CLONE_VIEW]: addUndo(cloneView),
+  [actionTypes.CREATE_NEW_VIEW]: addUndo(createNewView),
+  [actionTypes.CHANGE_VIEW_NAME]: addUndo(changeViewName),
+  [actionTypes.DELETE_VIEW]: addUndo(deleteView),
+  [actionTypes.SWITCH_VIEW]: addUndo(switchView),
 };
 const NULL_ACTION: ActionResponse<void> = state => state;
 const reducers = {
@@ -178,7 +133,7 @@ const reducers = {
     {type, payload}: {type: string; payload: any},
   ): DataReducerState => {
     // not that this reducer is NOT immutable.
-    if (type === RECIEVE_DATA) {
+    if (type === actionTypes.RECIEVE_DATA) {
       return recieveDataForDataReducer(state, payload);
     }
     return state;

@@ -23,7 +23,7 @@ export default function DataTable(props: Props): JSX.Element {
   const prevPageExists = page > 0;
   // TODO sorting, pagination
   const reducedData = data.map(row =>
-    columns.reduce((acc: any, column) => ({...acc, [column]: row[column]}), {}),
+    (columns || []).reduce((acc: any, column) => ({...acc, [column]: row[column]}), {}),
   );
   return (
     <div className="hydra-data-table">

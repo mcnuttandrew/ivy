@@ -144,13 +144,17 @@ input[type=number]::-webkit-outer-spin-button {
   background: whitesmoke;
   height: 48px;
   padding: 5px 0;
+  position: relative;
+}
+
+.chart-controls .modal-tooltip-container {
+  position: unset;
 }
 
 .chart-controls .view-control {
   align-items: center;
   border-left: thin solid lightgray;
   border-right: thin solid lightgray;
-  cursor: pointer;
   display: flex;
   font-size: 15px;
   height: 100%;
@@ -159,7 +163,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .chart-controls .view-control.selected {
-  background: ghostwhite;
+  background: lightsalmon;
   font-weight: bolder;
   text-decoration: underline;
 }
