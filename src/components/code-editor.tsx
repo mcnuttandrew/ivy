@@ -193,11 +193,10 @@ export default class CodeEditor extends React.Component<Props, State> {
       SPECIFICATION: readInTemplateMap,
       TEMPLATE: setNewSpecCode,
     };
-    const response = responseFunctionMap[codeMode];
     Promise.resolve()
       .then(() => JSON.parse(code))
-      .then(() => response && response({code, inError: false}))
-      .catch(() => response && response({code, inError: true}));
+      .then(() => responseFunctionMap[codeMode]({code, inError: false}))
+      .catch(() => responseFunctionMap[codeMode]({code, inError: true}));
   }
 
   suggestionBox(): JSX.Element {
@@ -311,7 +310,16 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render(): JSX.Element {
-    const {editMode, editorFontSize, codeMode, setProgrammaticView, showProgrammaticMode} = this.props;
+    const {
+      editMode,
+      editorFontSize,
+      codeMode,
+      setProgrammaticView,
+      showProgrammaticMode,
+      chainActions,
+      setCodeMode,
+      setEditMode,
+    } = this.props;
     const {updateMode} = this.state;
     const currentCode = this.getCurrentCode();
     return (
@@ -347,6 +355,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                   options={{...EDITOR_OPTIONS, fontSize: editorFontSize}}
                   onChange={(code: string): void => {
                     if (codeMode === 'EXPORT TO JSON') {
+                      chainActions([(): any => setEditMode(true), (): any => setCodeMode('TEMPLATE')]);
                       return;
                     }
 
