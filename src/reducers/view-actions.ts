@@ -1,6 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import produce from 'immer';
-import {TemplateMap} from '../templates/types';
+import {TemplateMap, Template} from '../templates/types';
 import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
 
 export interface ViewCatalog {
@@ -10,6 +10,7 @@ export interface ViewCatalogEntry {
   spec: any;
   encodingMode: string;
   templateMap: TemplateMap;
+  currentTemplateInstance?: Template;
 }
 const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
   spec: EMPTY_SPEC,
@@ -17,10 +18,11 @@ const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
   templateMap: {},
 };
 function updateCatalogView(state: AppState, view: string): AppState {
-  const catalogEntry = {
+  const catalogEntry: ViewCatalogEntry = {
     spec: state.spec,
     encodingMode: state.encodingMode,
     templateMap: state.templateMap,
+    currentTemplateInstance: state.currentTemplateInstance,
   };
   return produce(state, draftState => {
     draftState.viewCatalog[view] = catalogEntry;
@@ -28,13 +30,14 @@ function updateCatalogView(state: AppState, view: string): AppState {
 }
 
 export const switchView: ActionResponse<string> = (state, payload) => {
-  const newCatalog = state.viewCatalog[payload];
+  const catalogEntry = state.viewCatalog[payload];
   return produce(updateCatalogView(state, state.currentView), draftState => {
     draftState.currentView = payload;
-    draftState.spec = newCatalog.spec;
-    draftState.specCode = stringify(newCatalog.spec);
-    draftState.encodingMode = newCatalog.encodingMode;
-    draftState.templateMap = newCatalog.templateMap;
+    draftState.spec = catalogEntry.spec;
+    draftState.specCode = stringify(catalogEntry.spec);
+    draftState.encodingMode = catalogEntry.encodingMode;
+    draftState.currentTemplateInstance = catalogEntry.currentTemplateInstance;
+    draftState.templateMap = catalogEntry.templateMap;
   });
 };
 
@@ -47,6 +50,7 @@ export const createNewView: ActionResponse<void> = state => {
   return switchView(newState, newViewName);
 };
 export const deleteView: ActionResponse<string> = (state, payload) => {
+  // todo maybe need to update view catalog here?
   return produce(state, draftState => {
     draftState.views = state.views.filter(view => view !== payload);
     delete draftState.viewCatalog[payload];

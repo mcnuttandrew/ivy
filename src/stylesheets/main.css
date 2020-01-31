@@ -147,10 +147,6 @@ input[type=number]::-webkit-outer-spin-button {
   position: relative;
 }
 
-.chart-controls .modal-tooltip-container {
-  position: unset;
-}
-
 .chart-controls .view-control {
   align-items: center;
   border-left: thin solid lightgray;
@@ -937,6 +933,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 .modal-tooltip-container {
   position: relative;
+}
+
+/* special position to allow the tooltip to breakout */
+.chart-controls .modal-tooltip-container {
+  position: unset;
 }
 
 .modal-tooltip {
