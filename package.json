@@ -86,7 +86,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.2.0",
     "type-analyzer": "^0.2.3",
-    "unit-vis": "^0.0.3",
+    "unit-vis": "^0.0.4",
     "vega": "^5.9.0",
     "vega-datasets": "^1.26.0",
     "vega-lite": "^4.0.2",
