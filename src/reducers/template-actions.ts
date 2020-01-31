@@ -8,10 +8,11 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {Template, TemplateWidget, WidgetSubType, TemplateMap} from '../templates/types';
+import {Template, TemplateWidget, WidgetSubType, TemplateMap, ListWidget} from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
-import {deserializeTemplate} from '../utils';
+import {deserializeTemplate, trim} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
+import {ColumnHeader} from '../types';
 
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
@@ -22,13 +23,54 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
 }
 export const recieveTemplates = blindSet('templates');
 
+/**
+ * Templates that use vega-lite often follow a specific pattern which we can usually guess some pieces of
+ * This function checks the type a column thats being inserted and trys to intelligently set the type
+ * of the associated channel as best it can
+ * @param template
+ * @param payload
+ * @param templateMap
+ * @param columns
+ */
+function tryToGuessTheTypeForVegaLite(
+  template: Template,
+  payload: SetTemplateValuePayload,
+  templateMap: TemplateMap,
+  columns: ColumnHeader[],
+): void {
+  const typeWidget = template.widgets.find(widget => widget.widgetName === `${payload.field}Type`);
+  if (typeWidget && payload.widgetType === 'DataTarget' && template.templateLanguage === 'vega-lite') {
+    const column = columns.find(col => col.field === trim(payload.text as string));
+    const dims = (typeWidget.widget as ListWidget).allowedValues;
+
+    if (column && column.type === 'DIMENSION' && dims.find(d => d.display === 'nominal')) {
+      templateMap[`${payload.field}Type`] = '"nominal"';
+    }
+
+    if (column && column.type === 'MEASURE' && dims.find(d => d.display === 'quantitative')) {
+      templateMap[`${payload.field}Type`] = '"quantitative"';
+    }
+
+    if (column && column.type === 'TIME' && dims.find(d => d.display === 'temporal')) {
+      templateMap[`${payload.field}Type`] = '"temporal"';
+    }
+  }
+}
+
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
+  const template = state.currentTemplateInstance;
   return produce(state, draftState => {
     if (payload.containingShelf) {
       delete draftState.templateMap[payload.containingShelf];
     }
     draftState.templateMap[payload.field] = payload.text;
-    draftState.spec = evaluateHydraProgram(state.currentTemplateInstance, draftState.templateMap);
+    tryToGuessTheTypeForVegaLite(
+      draftState.currentTemplateInstance,
+      payload,
+      draftState.templateMap,
+      state.columns,
+    );
+    draftState.spec = evaluateHydraProgram(template, draftState.templateMap);
   });
 };
 

@@ -95,12 +95,14 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
     return setTemplateValue(state, {
       field: selectedWidget.widgetName,
       text: (oldVal as string[]).filter((key: any) => key !== payload.field).concat([payload.field]),
+      widgetType: 'MultiDataTarget',
     });
   }
   // else is single drop target
   return setTemplateValue(state, {
     field: selectedWidget.widgetName,
     text: `"${payload.field}"`,
+    widgetType: 'DataTarget',
   });
 };
 
