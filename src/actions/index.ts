@@ -30,6 +30,7 @@ import {
   RECIEVE_TYPE_INFERENCES,
   REMOVE_WIDGET_FROM_TEMPLATE,
   SAVE_TEMPLATE,
+  SET_ALL_TEMPLATE_VALUES,
   SET_BLANK_TEMPLATE,
   SET_CODE_MODE,
   SET_EDITOR_FONT_SIZE,
@@ -115,6 +116,7 @@ export const readInTemplate = createAction<HandleCodePayload>(READ_IN_TEMPLATE);
 export const readInTemplateMap = createAction<HandleCodePayload>(READ_IN_TEMPLATE_MAP);
 export const removeWidget = createAction<number>(REMOVE_WIDGET_FROM_TEMPLATE);
 export const saveCurrentTemplate = createAction<void>(SAVE_TEMPLATE);
+export const setAllTemplateValues = createAction<boolean>(SET_ALL_TEMPLATE_VALUES);
 export const setBlankTemplate = createAction<boolean>(SET_BLANK_TEMPLATE);
 export const setCodeMode = createAction<string>(SET_CODE_MODE);
 export const setEditMode = createAction<boolean>(SET_EDIT_MODE);

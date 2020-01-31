@@ -1,6 +1,14 @@
 export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN';
 
-export type WidgetType = 'DataTarget' | 'MultiDataTarget' | 'List' | 'Switch' | 'Text' | 'Slider' | 'Section';
+export type WidgetType =
+  | 'DataTarget'
+  | 'MultiDataTarget'
+  | 'List'
+  | 'Switch'
+  | 'Text'
+  | 'Slider'
+  | 'Section'
+  | 'Shortcut';
 export interface TemplateWidget<T> {
   /**
    *   The name of widget to be used, this name will be swapped into the code string, must be unqiue
@@ -55,6 +63,14 @@ export interface SliderWidget {
   defaultValue: number;
   [x: string]: any;
 }
+
+export interface Shortcut {
+  label: string;
+  shortcutFunction: string;
+}
+export interface ShortcutsWidget {
+  shortcuts: Shortcut[];
+}
 export type WidgetSubType =
   | DataTargetWidget
   | MultiDataTargetWidget
@@ -62,7 +78,8 @@ export type WidgetSubType =
   | SwitchWidget
   | TextWidget
   | SliderWidget
-  | SectionWidget;
+  | SectionWidget
+  | ShortcutsWidget;
 
 /**
  * The main configuration object for templates
@@ -110,13 +127,10 @@ export interface Template {
 }
 
 /**
- * the query object. Multiple key in an object is interpreted as an AND
- * * -> any val, used for setting things
- * null -> no val, used for checking empty
- * string -> equal to specific value, if this then that
- * string[] -> one of vals
+ * A widget validation query, executed raw javascript. Parameter values (the value of the current ui)
+ * is accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if
+ * there wasn't a current value for the x dimension called xDim you could do "!parameters.xDim"
  */
-// export type WidgetValidationQuery = {[key: string]: '*' | null | string | string[]};
 export type WidgetValidationQuery = string;
 
 export interface WidgetValidation {
@@ -131,15 +145,11 @@ export interface WidgetValidation {
   queryTarget: string;
 
   /**
-   * the query object. Multiple key in an object is interpreted as an AND
-   * * -> any val, used for setting things
-   * null -> no val, used for checking empty
-   * string -> equal to specific value, if this then that
-   * string[] -> one of vals
+   * A widget validation query, executed raw javascript. Parameter values (the value of the current ui)
+   * is accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if
+   * there wasn't a current value for the x dimension called xDim you could do "!parameters.xDim"
    */
-  query: WidgetValidationQuery;
-  // TODO this doesn't actually handle data type checks,
-  // e.g. do this if field is measure, do that if it's dimension
+  query: string;
 }
 
 export interface TemplateMap {

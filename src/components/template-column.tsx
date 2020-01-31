@@ -20,6 +20,7 @@ interface TemplateColumnProps {
   columns: ColumnHeader[];
   editMode: boolean;
   setTemplateValue?: any;
+  height?: number;
   template: Template;
   templateMap: TemplateMap;
 
@@ -27,6 +28,7 @@ interface TemplateColumnProps {
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   removeWidget: GenericAction<number>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   moveWidget: GenericAction<MoveWidgetPayload>;
 }
 
@@ -61,7 +63,9 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       addWidget,
       columns,
       editMode,
+      height,
       modifyValueOnTemplate,
+      setAllTemplateValues,
       setTemplateValue,
       setWidgetValue,
       template,
@@ -80,6 +84,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         key={idx}
         moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
         removeWidget={(): any => removeWidget(idx)}
+        setAllTemplateValues={setAllTemplateValues}
         setTemplateValue={setTemplateValue}
         setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
         templateMap={templateMap}
@@ -123,7 +128,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       );
     });
     return (
-      <div className="full-height encoding-column">
+      <div className="full-height encoding-column" style={height && {maxHeight: height}}>
         {editMode && template && (
           <div className="flex">
             <div className="flex">

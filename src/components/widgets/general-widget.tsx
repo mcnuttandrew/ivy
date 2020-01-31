@@ -12,11 +12,13 @@ import SwitchWidgetComponent from './switch-widget';
 import TextWidgetComponent from './text-widget';
 import SliderWidgetComponent from './slider-widget';
 import SectionWidgetComponent from './section-widget';
+import ShortcutsWidgetComponent from './shortcuts-widget';
 
 import {
   DataTargetWidget,
   ListWidget,
   MultiDataTargetWidget,
+  ShortcutsWidget,
   SectionWidget,
   SliderWidget,
   SwitchWidget,
@@ -35,6 +37,7 @@ export interface GeneralWidget<T> {
   idx: number;
   moveWidget: (...args: any[]) => void;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   setWidgetValue: any;
   templateMap: TemplateMap;
   widget: T;
@@ -48,6 +51,7 @@ interface Props {
   moveWidget: (...args: any[]) => void;
   removeWidget: any;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   setWidgetValue: any;
   templateMap: TemplateMap;
   widget: TemplateWidget<WidgetSubType>;
@@ -76,7 +80,17 @@ function PlacementControls(props: Props): JSX.Element {
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
 export default function GeneralWidgetComponent(props: Props): JSX.Element {
-  const {columns, editMode, widget, idx, setWidgetValue, templateMap, setTemplateValue, moveWidget} = props;
+  const {
+    columns,
+    editMode,
+    widget,
+    idx,
+    setWidgetValue,
+    templateMap,
+    setTemplateValue,
+    setAllTemplateValues,
+    moveWidget,
+  } = props;
 
   const common = {
     idx,
@@ -84,6 +98,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     editMode,
     templateMap,
     setTemplateValue,
+    setAllTemplateValues,
     columns,
     moveWidget,
   };
@@ -188,6 +203,9 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
         )}
         {widgetType === 'Section' && (
           <SectionWidgetComponent widget={widget as TemplateWidget<SectionWidget>} {...common} />
+        )}
+        {widgetType === 'Shortcut' && (
+          <ShortcutsWidgetComponent widget={widget as TemplateWidget<ShortcutsWidget>} {...common} />
         )}
       </div>
     </div>

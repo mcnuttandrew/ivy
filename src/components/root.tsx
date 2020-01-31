@@ -41,6 +41,7 @@ import TemplateColumn from './template-column';
 import TemplatePreviewColumn from './template-preview-column';
 
 // wrap the split pane functionality into a HOC
+const getHeight = (): number => Number(localStorage.getItem('splitPos'));
 const Wrapper = (props: any): JSX.Element => {
   if (props.showProgrammaticMode && props.showGUIView) {
     return (
@@ -48,7 +49,7 @@ const Wrapper = (props: any): JSX.Element => {
         split="horizontal"
         minSize={60}
         style={{overflow: 'unset', position: 'relative'}}
-        defaultSize={parseInt(localStorage.getItem('splitPos'), 10)}
+        defaultSize={getHeight()}
         onChange={(size: any): any => localStorage.setItem('splitPos', size)}
       >
         {props.children}
@@ -113,6 +114,7 @@ interface RootProps {
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
   setBlankTemplate: GenericAction<boolean>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEditorFontSize: GenericAction<number>;
@@ -232,12 +234,14 @@ class RootComponent extends React.Component<RootProps> {
       moveWidget,
       removeWidget,
       saveCurrentTemplate,
+      setAllTemplateValues,
       setBlankTemplate,
       setCodeMode,
       setEditMode,
       setEncodingMode,
       setEncodingParameter,
       setNewSpec,
+      showProgrammaticMode,
       setTemplateValue,
       setWidgetValue,
       showGUIView,
@@ -292,11 +296,13 @@ class RootComponent extends React.Component<RootProps> {
             addWidget={addWidget}
             columns={columns}
             editMode={editMode}
+            height={showProgrammaticMode && showGUIView && getHeight()}
             moveWidget={moveWidget}
             modifyValueOnTemplate={modifyValueOnTemplate}
             removeWidget={removeWidget}
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
+            setAllTemplateValues={setAllTemplateValues}
             template={template}
             templateMap={templateMap}
           />
