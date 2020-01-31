@@ -19,7 +19,7 @@ export default function DataTargetWidgetComponent(
         channelEncoding={trim(fieldValue as string)}
         field={widget.widgetName}
         columns={columns}
-        onDrop={setTemplateValue}
+        onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
         widget={widget}
       />
     );
@@ -32,7 +32,7 @@ export default function DataTargetWidgetComponent(
         channelEncoding={trim(fieldValue as string)}
         field={widget.widgetName}
         columns={columns}
-        onDrop={setTemplateValue}
+        onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
         widget={widget}
         setName={(value: string): any => setWidgetValue('widgetName', value, idx)}
       />

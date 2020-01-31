@@ -3,7 +3,7 @@ import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {Template, TemplateWidget, WidgetSubType} from '../templates/types';
+import {Template, TemplateWidget, WidgetSubType, WidgetType} from '../templates/types';
 import {ColumnHeader, DataType} from '../types';
 
 import {
@@ -68,6 +68,7 @@ export type SetTemplateValuePayload = {
   containingShelf?: string;
   text: string | string[];
   field: string;
+  widgetType?: WidgetType;
   isMeta?: boolean;
 };
 export type SetRepeatsPayload = {repeats: string[]; target: string};
