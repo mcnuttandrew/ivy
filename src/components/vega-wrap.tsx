@@ -40,7 +40,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     const {spec, data, theme, language = 'vega-lite'} = this.props;
     const lang = inferredLanguage(spec) || language;
     if (lang === 'unit-vis') {
-      return <UnitVisChart data={JSON.parse(JSON.stringify(data))} spec={spec} />;
+      return <UnitVisChart data={data} spec={spec} />;
     }
     if (lang === 'hydra-data-table') {
       return <Table data={data} spec={spec} />;
@@ -51,18 +51,13 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     if (lang === 'vega') {
       (finalSpec.data || []).forEach((row: any, idx: number) => {
         if (row.values === 'myData') {
-          finalSpec.data[idx].values = JSON.parse(JSON.stringify(data));
+          finalSpec.data[idx].values = data;
         }
       });
     }
     if (lang === 'vega-lite' || !language) {
       if (!get(finalSpec, ['data', 'values'])) {
-        finalSpec.data = {
-          // values: data,
-          // TERRIBLE HACK BECAUSE VEGA IS BAD
-          // TODO use frozen copy to guard updates of the unfrozen copy
-          values: JSON.parse(JSON.stringify(data)),
-        };
+        finalSpec.data = {values: data};
       }
     }
 

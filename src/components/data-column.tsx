@@ -12,7 +12,7 @@ interface DataColumnProps {
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   coerceType: GenericAction<CoerceTypePayload>;
   columns: ColumnHeader[];
-  createFilter: GenericAction<ColumnHeader>;
+  createFilter: (field: string) => void;
   deleteFilter: GenericAction<number>;
   fillableFields: Set<string>;
   metaColumns: ColumnHeader[];

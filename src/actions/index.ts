@@ -82,7 +82,13 @@ export interface TypeInference {
 }
 export type DataRow = {[x: string]: any};
 export type LoadDataPayload = {fileName: string; data: string};
-
+export interface Filter {
+  filter: {
+    field: string;
+    oneOf?: string[];
+    range?: number[];
+  };
+}
 export type AppThunk<T> = ThunkAction<void, AppState, null, Action<T>>;
 // TODO this is the correc typing, fix it
 // export interface GenericAction<T> {

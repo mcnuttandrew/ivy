@@ -16,7 +16,7 @@ export interface PillProps {
   column: ColumnHeader;
   containingField?: string;
   containingShelf?: string;
-  createFilter?: GenericAction<ColumnHeader>;
+  createFilter?: (field: string) => void;
   fieldSelector?: JSX.Element;
   hideGUI?: boolean;
   inEncoding: boolean;
@@ -103,7 +103,7 @@ export default function Pill(props: PillProps): JSX.Element {
             if (inEncoding) {
               return;
             }
-            createFilter(column);
+            createFilter(column.field);
           }}
         >
           <TiFilter />
