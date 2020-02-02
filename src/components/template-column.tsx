@@ -98,6 +98,27 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         return null;
       }
       const inBlankSection = section[0].widgetType === 'Section';
+      const sectionContents = section.map((widget: TemplateWidget<WidgetSubType>, kdx) => {
+        // the index is essential to maintain in order to make sure the updates happen correctly
+        idx += 1;
+        if (!allowedWidgets.has(widget.widgetName)) {
+          return null;
+        }
+        return (
+          <div
+            className={classnames({
+              'pad-widget': kdx && !inBlankSection,
+              [`${widget.widgetType}-widget-type`]: true,
+            })}
+            key={`widget-${idx}`}
+          >
+            {makeWidget(widget, idx)}
+          </div>
+        );
+      });
+      if (!sectionContents.filter(d => d).length) {
+        return null;
+      }
       return (
         <div
           className={classnames({
@@ -106,24 +127,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
           })}
           key={`section-${jdx}`}
         >
-          {section.map((widget: TemplateWidget<WidgetSubType>, kdx) => {
-            // the index is essential to maintain in order to make sure the updates happen correctly
-            idx += 1;
-            if (!allowedWidgets.has(widget.widgetName)) {
-              return null;
-            }
-            return (
-              <div
-                className={classnames({
-                  'pad-widget': kdx && !inBlankSection,
-                  [`${widget.widgetType}-widget-type`]: true,
-                })}
-                key={`widget-${idx}`}
-              >
-                {makeWidget(widget, idx)}
-              </div>
-            );
-          })}
+          {sectionContents}
         </div>
       );
     });

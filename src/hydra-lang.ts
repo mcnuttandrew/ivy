@@ -65,7 +65,17 @@ export function applyConditionals(templateMap: TemplateMap): any {
   return function walker(spec: any): any {
     // if it's array interate across it
     if (Array.isArray(spec)) {
-      return spec.map(child => walker(child));
+      return spec.reduce((acc, child) => {
+        if (typeof child === 'object' && child.CONDITIONAL) {
+          const queryResult = evaluateQuery(child.CONDITIONAL.query, templateMap) ? 'true' : 'false';
+          if (!shouldUpdateContainerWithValue(queryResult, child.CONDITIONAL)) {
+            return acc.concat(walker(child.CONDITIONAL[queryResult]));
+          } else {
+            return acc;
+          }
+        }
+        return acc.concat(walker(child));
+      }, []);
     }
     // check if it's null or not an object return
     if (!(typeof spec === 'object' && spec !== null)) {

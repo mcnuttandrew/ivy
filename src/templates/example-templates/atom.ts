@@ -1,20 +1,9 @@
 import stringify from 'json-stringify-pretty-compact';
-import {
-  DataTargetWidget,
-  ListWidget,
-  SwitchWidget,
-  TextWidget,
-  TemplateWidget,
-  DataType,
-  SectionWidget,
-  WidgetValidationQuery,
-  WidgetValidation,
-  Template,
-  WidgetSubType,
-} from '../types';
-import {toList} from '../../utils';
+import {TemplateWidget, WidgetValidation, Template, WidgetSubType, SliderWidget} from '../types';
 import {simpleList} from './polestar-template-utils';
 
+const TYPES = ['groupby', 'bin', 'passthrough', 'gridxy', 'flatten'];
+const ASPECT_RATIOS = ['square', 'parents', 'fillX', 'fillY', 'maxfill', 'custom'];
 function generateLevel(
   idx: number,
 ): {widgets: TemplateWidget<WidgetSubType>[]; widgetValidations: WidgetValidation[]; layout: any} {
@@ -29,35 +18,64 @@ function generateLevel(
     },
     simpleList({
       widgetName: `Key${idx}Type`,
-      defaultVal: null,
+      defaultVal: '"groupby"',
       displayName: `Key${idx}Type`,
-      list: ['flatten', 'groupby', 'bin', 'passthrough', 'gridxy'],
+      list: [...TYPES.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
     }),
     simpleList({
       widgetName: `Key${idx}AspectRatio`,
-      defaultVal: null,
+      defaultVal: idx % 2 ? '"fillX"' : '"fillY"',
       displayName: `Key${idx}AspectRatio`,
-      list: ['square', 'parents', 'fillX', 'fillY', 'maxfill', 'custom'],
+      list: [...ASPECT_RATIOS.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
     }),
+    {
+      widgetName: `Key${idx}numBins`,
+      displayName: 'NumBins',
+      widgetType: 'Slider',
+      widget: {
+        minVal: 1,
+        maxVal: 15,
+        step: 1,
+        defaultValue: 10,
+      },
+    } as TemplateWidget<SliderWidget>,
   ];
+  const NEVER_HIDE = idx === 1;
   const widgetValidations: any[] = [
-    idx > 1 && {
+    !NEVER_HIDE && {
       queryResult: 'hide',
       queryTarget: `Key${idx}`,
       query: `!parameters.Key${idx - 1}`,
     },
-    {
+    !NEVER_HIDE && {
       queryResult: 'hide',
       queryTarget: `Key${idx}Type`,
-      query: `!parameters.Key${idx}`,
+      query: `!parameters.Key${idx - 1}`,
+    },
+    !NEVER_HIDE && {
+      queryResult: 'hide',
+      queryTarget: `Key${idx}AspectRatio`,
+      query: `!parameters.Key${idx - 1}`,
     },
     {
       queryResult: 'hide',
-      queryTarget: `Key${idx}AspectRatio`,
-      query: `!parameters.Key${idx}`,
+      queryTarget: `Key${idx}numBins`,
+      query: `parameters.Key${idx - 1}Type !== '"bin"'`,
     },
   ].filter(d => d);
-  return {widgets, widgetValidations, layout: {}};
+  const cond = (query: string, tv: any): any => ({CONDITIONAL: {query, true: tv, deleteKeyOnFalse: true}});
+  return {
+    widgets,
+    widgetValidations,
+    layout: cond(!NEVER_HIDE ? `parameters.Key${idx - 1}` : 'true', {
+      subgroup: {
+        type: cond(`parameters.Key${idx}Type`, `[Key${idx}Type]`),
+        key: cond(`parameters.Key${idx}`, `[Key${idx}]`),
+        numBin: cond(`parameters.Key${idx}Type === '"bin"'`, `[Key${idx}numBins]`),
+      },
+      aspect_ratio: cond(`parameters.Key${idx}AspectRatio`, `[Key${idx}AspectRatio]`),
+    }),
+  };
 }
 
 const configurations = [1, 2, 3, 4, 5, 6].map(generateLevel);
@@ -69,7 +87,7 @@ const ATOM_TEMPLATE: any = {
     color: {
       key: '[colorBy]',
       type: 'categorical',
-      scheme: '',
+      scheme: '[colorScheme]',
     },
   },
   $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
@@ -93,7 +111,7 @@ const ATOM: Template = {
     },
     simpleList({
       widgetName: 'colorScheme',
-      defaultVal: 'schemeCategory10',
+      defaultVal: '"schemeCategory10"',
       displayName: 'colorScheme',
       list: [
         'schemeCategory10',
