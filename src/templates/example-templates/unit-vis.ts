@@ -1,7 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 /* eslint-disable @typescript-eslint/camelcase */
-const TABLE_EXAMPLE: any = {
+const UNIT_VIS_EXAMPLE: any = {
   layouts: [
     {
       subgroup: {
@@ -40,7 +40,7 @@ const UNITVIS: Template = {
   templateDescription: 'a test for the unit vis language',
   templateLanguage: 'unit-vis',
   templateAuthor: 'BUILT_IN',
-  code: stringify(TABLE_EXAMPLE),
+  code: stringify(UNIT_VIS_EXAMPLE),
   widgets: [
     {
       widgetName: 'Key1',

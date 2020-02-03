@@ -16,6 +16,7 @@ import {EMPTY_SPEC} from '../reducers/default-state';
 import {DataType} from '../types';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
+import ATOM from './example-templates/atom';
 import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
 import DATATABLE from './example-templates/table';
 import NONE_TEMPLATE from './example-templates/none';
@@ -133,6 +134,7 @@ export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
 
 export const DEFAULT_TEMPLATES: Template[] = [
   SHELF,
+  ATOM,
   DATATABLE,
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,
