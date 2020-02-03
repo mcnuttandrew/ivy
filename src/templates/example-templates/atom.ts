@@ -60,7 +60,7 @@ function generateLevel(
     {
       queryResult: 'hide',
       queryTarget: `Key${idx}numBins`,
-      query: `parameters.Key${idx - 1}Type !== '"bin"'`,
+      query: `parameters.Key${idx}Type !== '"bin"'`,
     },
   ].filter(d => d);
   const cond = (query: string, tv: any): any => ({CONDITIONAL: {query, true: tv, deleteKeyOnFalse: true}});
@@ -69,8 +69,8 @@ function generateLevel(
     widgetValidations,
     layout: cond(!NEVER_HIDE ? `parameters.Key${idx - 1}` : 'true', {
       subgroup: {
-        type: cond(`parameters.Key${idx}Type`, `[Key${idx}Type]`),
         key: cond(`parameters.Key${idx}`, `[Key${idx}]`),
+        type: cond(`parameters.Key${idx}Type`, `[Key${idx}Type]`),
         numBin: cond(`parameters.Key${idx}Type === '"bin"'`, `[Key${idx}numBins]`),
       },
       aspect_ratio: cond(`parameters.Key${idx}AspectRatio`, `[Key${idx}AspectRatio]`),
@@ -89,6 +89,7 @@ const ATOM_TEMPLATE: any = {
       type: 'categorical',
       scheme: '[colorScheme]',
     },
+    shape: '[Shape]',
   },
   $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
 };
@@ -125,6 +126,11 @@ const ATOM: Template = {
         'schemeSet3',
         'schemeTableau10',
       ],
+    }),
+    simpleList({
+      widgetName: `Shape`,
+      defaultVal: '"circle"',
+      list: ['circle', 'rect'].map(d => ({display: d, value: `"${d}"`})),
     }),
     ...configurations.reduce((acc, d) => acc.concat(d.widgets), []),
   ],
