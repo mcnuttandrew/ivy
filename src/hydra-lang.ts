@@ -66,7 +66,7 @@ export function applyConditionals(templateMap: TemplateMap): any {
     // if it's array interate across it
     if (Array.isArray(spec)) {
       return spec.reduce((acc, child) => {
-        if (typeof child === 'object' && child.CONDITIONAL) {
+        if (child && typeof child === 'object' && child.CONDITIONAL) {
           const queryResult = evaluateQuery(child.CONDITIONAL.query, templateMap) ? 'true' : 'false';
           if (!shouldUpdateContainerWithValue(queryResult, child.CONDITIONAL)) {
             return acc.concat(walker(child.CONDITIONAL[queryResult]));
