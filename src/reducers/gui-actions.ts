@@ -66,8 +66,14 @@ export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDef
   });
 };
 
+const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHeader} =>
+  columns.reduce((acc: {[d: string]: ColumnHeader}, colKey: ColumnHeader) => {
+    acc[colKey.field] = colKey;
+    return acc;
+  }, {});
+
 export const setEncodingMode: ActionResponse<string> = (state, payload) => {
-  const updatedState = applyEncodingModeToState(
+  const newState = applyEncodingModeToState(
     produce(state, draftState => {
       draftState.editMode = false;
       draftState.codeMode = 'EXPORT TO JSON';
@@ -76,11 +82,6 @@ export const setEncodingMode: ActionResponse<string> = (state, payload) => {
   );
 
   // figure out what the currently in use columns are and iteratively try to add them to the new one
-  const columnMap = updatedState.columns.reduce((acc: {[d: string]: ColumnHeader}, x: ColumnHeader) => {
-    acc[x.field] = x;
-    return acc;
-  }, {});
-  return activeColumns(updatedState).reduce((acc: AppState, columnKey: string) => {
-    return addToNextOpenSlot(acc, columnMap[columnKey]);
-  }, updatedState);
+  const columnMap = makeColNameMap(newState.columns);
+  return activeColumns(state).reduce((acc: AppState, k) => addToNextOpenSlot(acc, columnMap[k]), newState);
 };
