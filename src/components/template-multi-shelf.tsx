@@ -5,7 +5,7 @@ import DataSymbol from './data-symbol';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {MultiDataTargetWidget, TemplateWidget} from '../templates/types';
+import {MultiDataTargetWidget, TemplateWidget, DataType} from '../templates/types';
 import {classnames} from '../utils';
 import {TEXT_TYPE} from '../constants/index';
 
@@ -35,11 +35,18 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       canDrop: monitor.canDrop(),
     }),
   });
+  const allowed = widget.widget.allowedTypes;
+  // if everything is allowed then recomendations dont matter much here
+  const useGroupsAsTypes = ['DIMENSION', 'MEASURE', 'TIME'].every((key: DataType) => allowed.includes(key));
   const options = [{display: 'Select a value', value: null, group: null}].concat(
     columns.map(column => ({
       display: `${column.field} ${TEXT_TYPE[column.type]}`,
       value: column.field,
-      group: widget.widget.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
+      group: useGroupsAsTypes
+        ? column.type
+        : widget.widget.allowedTypes.includes(column.type)
+        ? 'RECOMENDED'
+        : 'OUT OF TYPE',
     })),
   );
   const columnHeaders = channelEncodings

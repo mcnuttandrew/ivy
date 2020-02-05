@@ -2,12 +2,11 @@ import produce from 'immer';
 
 import {ActionResponse, AppState, EMPTY_SPEC, toggle, blindSet} from './default-state';
 import {getTemplate} from '../utils';
-import {ColumnHeader} from '../types';
 
 import {evaluateHydraProgram} from '../hydra-lang';
 import {addToNextOpenSlot} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
-import {getAllInUseFields} from '../utils';
+import {getAllInUseFields, makeColNameMap} from '../utils';
 
 export const setProgrammaticView = toggle('showProgrammaticMode');
 export const toggleDataModal = toggle('dataModalOpen');
@@ -72,12 +71,6 @@ export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDef
     draftState.currentTemplateInstance = null;
   });
 };
-
-const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHeader} =>
-  columns.reduce((acc: {[d: string]: ColumnHeader}, colKey: ColumnHeader) => {
-    acc[colKey.field] = colKey;
-    return acc;
-  }, {});
 
 export const setEncodingMode: ActionResponse<string> = (state, payload) => {
   const newState = applyEncodingModeToState(

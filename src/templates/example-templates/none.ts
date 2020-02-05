@@ -27,7 +27,8 @@ const NoneTemplate: Template = {
       },
     },
     {
-      widgetName: 'Data target search',
+      widgetName: 'dataTargetSearch',
+      displayName: 'Data target search',
       widgetType: 'MultiDataTarget',
       widget: {
         allowedTypes: ['MEASURE', 'DIMENSION', 'TIME'],

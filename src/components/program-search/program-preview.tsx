@@ -50,7 +50,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
         )}
         {typeCounts && (
           <div className="flex">
-            {['DIMENSION', 'MEASURE', 'TIME'].map((key: string) => {
+            {['DIMENSION', 'MEASURE', 'TIME', 'SUM'].map((key: string) => {
               return (
                 <div key={key} className="flex">
                   <div className="program-option-type-symbol">

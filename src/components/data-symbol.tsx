@@ -1,8 +1,7 @@
 import React from 'react';
 import {TiSortNumerically, TiSortAlphabetically, TiCalendar} from 'react-icons/ti';
-import {DataType} from '../types';
 interface Props {
-  type: DataType;
+  type: string;
 }
 export default function DataSymbol(props: Props): JSX.Element {
   const {type} = props;
@@ -13,6 +12,8 @@ export default function DataSymbol(props: Props): JSX.Element {
       return <TiCalendar />;
     case 'METACOLUMN':
       return <span>?</span>;
+    case 'SUM':
+      return <span>Σ</span>;
     default:
     case 'DIMENSION':
       return <TiSortAlphabetically />;

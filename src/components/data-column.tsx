@@ -42,6 +42,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
       updateFilter,
     } = this.props;
     const inUseFields = getAllInUseFields(spec);
+    const canFilter = !template || template.templateLanguage === 'vega-lite';
     const makePill = (checkOptions: boolean) => (column: ColumnHeader): JSX.Element => {
       return (
         <div className="pill-container" key={column.field}>
@@ -69,8 +70,8 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         {!template && showGUIView && <h5>Meta Columns</h5>}
         {!template && showGUIView && <div className="flex-down">{metaColumns.map(makePill(true))}</div>}
 
-        {showGUIView && <h5> Filter </h5>}
-        {showGUIView && (
+        {showGUIView && canFilter && <h5> Filter </h5>}
+        {showGUIView && canFilter && (
           <div className="flex-down">
             {(spec.transform || get(spec, ['spec', 'transform']) || [])
               .filter((filter: any) => {
@@ -92,7 +93,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
               })}
           </div>
         )}
-        {showGUIView && (
+        {showGUIView && canFilter && (
           <div>
             <FilterTarget onDrop={onDropFilter} />
           </div>

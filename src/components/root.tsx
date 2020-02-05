@@ -175,6 +175,7 @@ class RootComponent extends React.Component<RootProps> {
       cloneView,
       changeViewName,
       createNewView,
+      columns,
       currentTheme,
       currentView,
       data,
@@ -194,6 +195,7 @@ class RootComponent extends React.Component<RootProps> {
       <ChartArea
         changeViewName={changeViewName}
         cloneView={cloneView}
+        columns={columns}
         createNewView={createNewView}
         currentTheme={currentTheme}
         currentView={currentView}
@@ -205,9 +207,9 @@ class RootComponent extends React.Component<RootProps> {
         spec={spec}
         switchView={switchView}
         template={template}
+        templateComplete={templateComplete}
         templateMap={templateMap}
         templates={templates}
-        templateComplete={templateComplete}
         views={views}
       />
     );

@@ -252,3 +252,9 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
   }, dimCounter);
   return toSet(result);
 };
+
+export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHeader} =>
+  columns.reduce((acc: {[d: string]: ColumnHeader}, colKey: ColumnHeader) => {
+    acc[colKey.field] = colKey;
+    return acc;
+  }, {});

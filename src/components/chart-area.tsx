@@ -1,6 +1,6 @@
 import React from 'react';
 import VegaWrapper from './vega-wrap';
-import {VegaTheme} from '../types';
+import {VegaTheme, ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import {MdSettings, MdContentCopy, MdNoteAdd} from 'react-icons/md';
@@ -13,6 +13,7 @@ interface ChartAreaProps {
   cloneView: GenericAction<void>;
   createNewView: GenericAction<void>;
   changeViewName: GenericAction<{idx: number; value: string}>;
+  columns: ColumnHeader[];
   currentTheme: VegaTheme;
   currentView: string;
   data: DataRow[];
@@ -32,8 +33,9 @@ interface ChartAreaProps {
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render(): JSX.Element {
     const {
-      cloneView,
       changeViewName,
+      cloneView,
+      columns,
       createNewView,
       currentTheme,
       currentView,
@@ -41,13 +43,13 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       deleteView,
       encodingMode,
       missingFields,
+      setEncodingMode,
       spec,
       switchView,
       template,
-      templates,
-      templateMap,
       templateComplete,
-      setEncodingMode,
+      templateMap,
+      templates,
       views,
     } = this.props;
     const noneTemplate = template && template.templateLanguage === 'none';
@@ -120,6 +122,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         >
           {noneTemplate && (
             <DataSearchMode
+              columns={columns}
               setEncodingMode={setEncodingMode}
               templates={templates}
               templateMap={templateMap}
