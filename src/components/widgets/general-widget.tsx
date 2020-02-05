@@ -5,21 +5,23 @@ import {XYCoord} from 'dnd-core';
 
 import {classnames} from '../../utils';
 
-import MultiDataTargetComponent from './multi-data-target-widget';
 import DataTargetWidgetComponent from './data-target-widget';
+import FreeTextWidgetComponent from './free-text-widget';
 import ListWidgetComponent from './list-widget';
-import SwitchWidgetComponent from './switch-widget';
-import TextWidgetComponent from './text-widget';
-import SliderWidgetComponent from './slider-widget';
+import MultiDataTargetComponent from './multi-data-target-widget';
 import SectionWidgetComponent from './section-widget';
 import ShortcutsWidgetComponent from './shortcuts-widget';
+import SliderWidgetComponent from './slider-widget';
+import SwitchWidgetComponent from './switch-widget';
+import TextWidgetComponent from './text-widget';
 
 import {
   DataTargetWidget,
+  FreeTextWidget,
   ListWidget,
   MultiDataTargetWidget,
-  ShortcutsWidget,
   SectionWidget,
+  ShortcutsWidget,
   SliderWidget,
   SwitchWidget,
   TemplateMap,
@@ -206,6 +208,9 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
         )}
         {widgetType === 'Shortcut' && (
           <ShortcutsWidgetComponent widget={widget as TemplateWidget<ShortcutsWidget>} {...common} />
+        )}
+        {widgetType === 'FreeText' && (
+          <FreeTextWidgetComponent widget={widget as TemplateWidget<FreeTextWidget>} {...common} />
         )}
       </div>
     </div>

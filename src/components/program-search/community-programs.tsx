@@ -64,10 +64,10 @@ const nameToUrl: {[x: string]: string} = {
 function DisplayLoadedPrograms(loadedTemplates: Template[], makeButtonObject: any): JSX.Element {
   return (
     <div className="program-containers">
-      {loadedTemplates.map(template => (
+      {loadedTemplates.map((template, idx) => (
         <ProgramPreview
           buttons={['save'].map(makeButtonObject(template))}
-          key={`${template.templateName}-preview`}
+          key={`${template.templateName}-preview-${idx}`}
           templateName={template.templateName}
           templateDescription={template.templateDescription}
           templateAuthor={template.templateAuthor}

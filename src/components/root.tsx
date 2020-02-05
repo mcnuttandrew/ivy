@@ -5,6 +5,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
+import NONE from '../templates/example-templates/none';
 
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
@@ -21,6 +22,7 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
   UpdateFilterPayload,
+  DataRow,
 } from '../actions/index';
 import {getUniques, getDomain, getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
@@ -69,7 +71,7 @@ interface RootProps {
   currentTheme: VegaTheme;
   currentView: string;
   currentlySelectedFile: string;
-  data: any; //TODO: define the data type
+  data: DataRow[];
   dataModalOpen: boolean;
   editMode: boolean;
   editorError: null | string;
@@ -111,6 +113,7 @@ interface RootProps {
   loadTemplates: GenericAction<void>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
+  prepareTemplate: GenericAction<void>;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
   removeWidget: GenericAction<number>;
@@ -146,6 +149,7 @@ class RootComponent extends React.Component<RootProps> {
   componentDidMount(): void {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     this.props.loadTemplates();
+    this.props.prepareTemplate();
   }
 
   componentDidCatch(error: any, errorInfo: any): void {
@@ -175,10 +179,14 @@ class RootComponent extends React.Component<RootProps> {
       currentView,
       data,
       deleteView,
+      encodingMode,
       missingFields,
+      setEncodingMode,
       spec,
       switchView,
+      templates,
       template,
+      templateMap,
       templateComplete,
       views,
     } = this.props;
@@ -191,10 +199,14 @@ class RootComponent extends React.Component<RootProps> {
         currentView={currentView}
         data={data}
         deleteView={deleteView}
+        encodingMode={encodingMode}
         missingFields={missingFields}
+        setEncodingMode={setEncodingMode}
         spec={spec}
         switchView={switchView}
         template={template}
+        templateMap={templateMap}
+        templates={templates}
         templateComplete={templateComplete}
         views={views}
       />
@@ -311,7 +323,7 @@ class RootComponent extends React.Component<RootProps> {
             swapXAndYChannels={swapXAndYChannels}
           />
         )}
-        {encodingMode !== 'grammer' && template && showGUIView && (
+        {encodingMode !== 'grammer' && (template || !encodingMode) && showGUIView && (
           <TemplateColumn
             addWidget={addWidget}
             columns={columns}
@@ -323,7 +335,7 @@ class RootComponent extends React.Component<RootProps> {
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
             setAllTemplateValues={setAllTemplateValues}
-            template={template}
+            template={!encodingMode ? NONE : template}
             templateMap={templateMap}
           />
         )}

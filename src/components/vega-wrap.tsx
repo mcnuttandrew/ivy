@@ -5,12 +5,13 @@ import {Handler} from 'vega-tooltip';
 import {get} from '../utils';
 import Table from './data-table';
 import UnitVisChart from './unit-vis-renderer';
+import {DataRow} from '../actions/index';
 
 interface VegaWrapperProps {
   spec: any;
-  data: any;
+  data: DataRow[];
   theme: VegaTheme;
-  language?: any;
+  language?: string;
 }
 
 // no false positives
@@ -62,7 +63,13 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     }
 
     return (
-      <Vega actions={false} spec={finalSpec} mode={language} theme={theme} tooltip={new Handler({}).call} />
+      <Vega
+        actions={false}
+        spec={finalSpec}
+        mode={language as any}
+        theme={theme}
+        tooltip={new Handler({}).call}
+      />
     );
   }
 }

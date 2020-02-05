@@ -49,6 +49,13 @@ export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDef
   state,
   {mode, fillWithDefault},
 ) => {
+  if (!mode) {
+    return produce(state, draftState => {
+      draftState.encodingMode = mode;
+      draftState.spec = {};
+      draftState.currentTemplateInstance = null;
+    });
+  }
   if (mode !== 'grammer') {
     // INSTANTIATE TEMPLATE AS A LOCAL COPY
     const template = getTemplate(state, mode);

@@ -17,6 +17,9 @@ import {ColumnHeader} from '../types';
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
   return produce(state, draftState => {
+    if (!state.currentTemplateInstance) {
+      return;
+    }
     draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
     draftState.spec = evaluateHydraProgram(draftState.currentTemplateInstance, draftState.templateMap);
   });

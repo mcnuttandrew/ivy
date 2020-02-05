@@ -28,6 +28,7 @@ import {
 import {
   addWidget,
   deleteTemplate,
+  fillTemplateMapWithDefaults,
   loadExternalTemplate,
   modifyValueOnTemplate,
   moveWidget,
@@ -105,6 +106,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
   [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: addUpdateCode(modifyValueOnTemplate),
   [actionTypes.MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
+  [actionTypes.PREPARE_TEMPLATE]: fillTemplateMapWithDefaults,
   [actionTypes.READ_IN_TEMPLATE]: addUpdateCode(readInTemplate),
   [actionTypes.READ_IN_TEMPLATE_MAP]: addUpdateCode(readInTemplateMap),
   [actionTypes.RECIEVE_TEMPLATE]: recieveTemplates,

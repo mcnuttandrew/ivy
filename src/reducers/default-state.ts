@@ -2,6 +2,7 @@ import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 import {ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
+import NONE from '../templates/example-templates/none';
 import {UndoRedoStackItem} from './undo-actions';
 import {ViewCatalog} from './view-actions';
 
@@ -25,7 +26,6 @@ export interface AppState {
   // currentTemplateInstance: SCATTERPLOT;
   // encodingMode: 'Scatterplot';
   currentTemplateInstance: Template | null;
-
   dataModalOpen: boolean;
   encodingMode: string;
   showProgrammaticMode: boolean;
@@ -87,7 +87,8 @@ export const DEFAULT_STATE: AppState = {
   metaColumns: [],
 
   // spec configs
-  spec: EMPTY_SPEC,
+  //  spec: EMPTY_SPEC,
+  spec: {},
   specCode: stringify(EMPTY_SPEC),
   currentTheme: 'default',
   editorError: null,
@@ -96,11 +97,10 @@ export const DEFAULT_STATE: AppState = {
   // GUI
   // currentTemplateInstance: SCATTERPLOT,
   // encodingMode: 'Scatterplot',
-  currentTemplateInstance: null,
-
+  currentTemplateInstance: NONE,
   dataModalOpen: false,
-  encodingMode: 'grammer',
-  showProgrammaticMode: true,
+  encodingMode: '_____none_____',
+  showProgrammaticMode: false,
   showGUIView: true,
   codeMode: 'EXPORT TO JSON',
   editorFontSize: 10,

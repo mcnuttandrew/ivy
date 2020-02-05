@@ -109,6 +109,12 @@ export const widgetFactory: {[widgetType: string]: WidgetFactoryFunc} = {
       widgetType: 'Shortcut',
       widget: {shortcuts: []},
     } as TemplateWidget<ShortcutsWidget>),
+  FreeText: idx =>
+    ({
+      widgetName: `FreeText${idx}`,
+      widgetType: 'FreeText',
+      widget: {},
+    } as TemplateWidget<ShortcutsWidget>),
 };
 
 export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
