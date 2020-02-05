@@ -30,7 +30,7 @@ export const makeText = (textLabel: string): TemplateWidget<TextWidget> => ({
 export const makeSection = (sectionLabel: string): TemplateWidget<SectionWidget> => ({
   widgetName: sectionLabel,
   widgetType: 'Section',
-  widget: {text: sectionLabel},
+  widget: null,
 });
 
 type displayType = {display: any; value: any};

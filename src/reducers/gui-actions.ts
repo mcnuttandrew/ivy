@@ -2,12 +2,11 @@ import produce from 'immer';
 
 import {ActionResponse, AppState, EMPTY_SPEC, toggle, blindSet} from './default-state';
 import {getTemplate} from '../utils';
-import {ColumnHeader} from '../types';
 
 import {evaluateHydraProgram} from '../hydra-lang';
 import {addToNextOpenSlot} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
-import {getAllInUseFields} from '../utils';
+import {getAllInUseFields, makeColNameMap} from '../utils';
 
 export const setProgrammaticView = toggle('showProgrammaticMode');
 export const toggleDataModal = toggle('dataModalOpen');
@@ -34,7 +33,7 @@ function activeColumns(state: any): string[] {
     const val = templateMap[widget.widgetName];
     // we only care about the data containing columns
     if (widgetType === 'MultiDataTarget') {
-      return val.reduce((mem: Set<string>, key: string) => mem.add(key), acc);
+      return (val || []).reduce((mem: Set<string>, key: string) => mem.add(key), acc);
     }
     if (widgetType === 'DataTarget' && val) {
       return acc.add(val);
@@ -49,6 +48,13 @@ export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDef
   state,
   {mode, fillWithDefault},
 ) => {
+  if (!mode) {
+    return produce(state, draftState => {
+      draftState.encodingMode = mode;
+      draftState.spec = {};
+      draftState.currentTemplateInstance = null;
+    });
+  }
   if (mode !== 'grammer') {
     // INSTANTIATE TEMPLATE AS A LOCAL COPY
     const template = getTemplate(state, mode);
@@ -65,12 +71,6 @@ export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDef
     draftState.currentTemplateInstance = null;
   });
 };
-
-const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHeader} =>
-  columns.reduce((acc: {[d: string]: ColumnHeader}, colKey: ColumnHeader) => {
-    acc[colKey.field] = colKey;
-    return acc;
-  }, {});
 
 export const setEncodingMode: ActionResponse<string> = (state, payload) => {
   const newState = applyEncodingModeToState(

@@ -94,66 +94,41 @@ const PIECHART_EXAMPLE: any = {
 
 const PieChart: Template = {
   templateName: 'pie chart',
-  templateDescription: 'A popular way to show part-to-whole relationships',
+  templateDescription:
+    'A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.',
   templateAuthor: 'BUILT_IN',
   templateLanguage: 'vega',
   widgets: [
     {
       widgetName: 'category',
       widgetType: 'DataTarget',
-      widget: {
-        allowedTypes: ['DIMENSION'],
-        required: true,
-      },
+      widget: {allowedTypes: ['DIMENSION'], required: true},
     },
     {
       widgetName: 'Sort',
       widgetType: 'Switch',
-      widget: {
-        activeValue: 'true',
-        inactiveValue: 'false',
-        defaultsToActive: true,
-      },
+      widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
     },
     {
       widgetName: 'value',
       widgetType: 'DataTarget',
-      widget: {
-        allowedTypes: ['MEASURE'],
-        required: true,
-      },
+      widget: {allowedTypes: ['MEASURE'], required: true},
     },
     {
       widgetName: 'aggregate',
       widgetType: 'List',
-      widget: {
-        allowedValues: toList(AGGREGATES),
-        defaultValue: '"mean"',
-      },
+      widget: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'},
     },
-    {
-      widgetName: 'OtherSettingsSection',
-      widgetType: 'Section',
-      widget: {
-        text: 'Section for other settings',
-      },
-    },
+    {widgetName: 'OtherSettingsSection', widgetType: 'Section', widget: null},
     {
       widgetName: 'colorScheme',
       widgetType: 'List',
-      widget: {
-        allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
-        defaultValue: '"category20"',
-      },
+      widget: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: '"category20"'},
     },
     {
       widgetName: 'DonutChart',
       widgetType: 'Switch',
-      widget: {
-        activeValue: '60',
-        inactiveValue: '0',
-        defaultsToActive: true,
-      },
+      widget: {activeValue: '60', inactiveValue: '0', defaultsToActive: true},
     },
   ],
   widgetValidations: [],

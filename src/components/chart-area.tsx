@@ -1,24 +1,34 @@
 import React from 'react';
 import VegaWrapper from './vega-wrap';
-import {VegaTheme} from '../types';
-import {Template} from '../templates/types';
+import {VegaTheme, ColumnHeader} from '../types';
+import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import {MdSettings, MdContentCopy, MdNoteAdd} from 'react-icons/md';
-import {GenericAction} from '../actions';
+import {GiBinoculars} from 'react-icons/gi';
+import {GenericAction, DataRow} from '../actions';
 import Popover from './popover';
+import DataSearchMode from './program-search/data-search-mode';
+import {NONE_TEMPLATE} from '../constants/index';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
   createNewView: GenericAction<void>;
+  chainActions: GenericAction<any>;
   changeViewName: GenericAction<{idx: number; value: string}>;
+  clearEncoding: GenericAction<void>;
+  columns: ColumnHeader[];
   currentTheme: VegaTheme;
   currentView: string;
-  data: any;
+  data: DataRow[];
   deleteView: GenericAction<string>;
+  encodingMode: string;
   missingFields: string[];
+  setEncodingMode: GenericAction<string>;
   spec: any;
   switchView: GenericAction<string>;
   template?: Template;
+  templates: Template[];
+  templateMap: TemplateMap;
   templateComplete: boolean;
   views: string[];
 }
@@ -26,42 +36,48 @@ interface ChartAreaProps {
 export default class ChartArea extends React.Component<ChartAreaProps> {
   render(): JSX.Element {
     const {
-      cloneView,
       changeViewName,
+      chainActions,
+      clearEncoding,
+      cloneView,
+      columns,
       createNewView,
       currentTheme,
       currentView,
       data,
       deleteView,
+      encodingMode,
       missingFields,
+      setEncodingMode,
       spec,
       switchView,
       template,
       templateComplete,
+      templateMap,
+      templates,
       views,
     } = this.props;
     const noneTemplate = template && template.templateLanguage === 'none';
     const showChart = !noneTemplate && (!template || templateComplete);
     return (
-      <div className="flex-down full-width full-height">
+      <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
-          <div
-            className="view-control"
-            onClick={(): void => {
-              createNewView();
-            }}
-          >
+          <div className="view-control" onClick={(): any => createNewView()}>
             <span className="margin-right">New</span>
             <MdNoteAdd />
           </div>
-          <div
-            className="view-control"
-            onClick={(): void => {
-              cloneView();
-            }}
-          >
+          <div className="view-control" onClick={(): any => cloneView()}>
             <span className="margin-right">Clone</span>
             <MdContentCopy />
+          </div>
+          <div
+            className="view-control"
+            onClick={(): any =>
+              chainActions([(): any => setEncodingMode(NONE_TEMPLATE), (): any => clearEncoding()])
+            }
+          >
+            <span className="margin-right">Templates</span>
+            <GiBinoculars />
           </div>
           <div className="view-container">
             {views.map((view, idx) => {
@@ -106,7 +122,22 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             })}
           </div>
         </div>
-        <div className="chart-container center full-width full-height">
+        <div
+          className={classnames({
+            'chart-container': true,
+            center: true,
+            'full-width': encodingMode !== NONE_TEMPLATE,
+            'full-height': true,
+          })}
+        >
+          {noneTemplate && (
+            <DataSearchMode
+              columns={columns}
+              setEncodingMode={setEncodingMode}
+              templates={templates}
+              templateMap={templateMap}
+            />
+          )}
           {showChart && (
             <VegaWrapper
               spec={spec}
@@ -115,13 +146,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               language={template && template.templateLanguage}
             />
           )}
-          {noneTemplate && (
-            <div className="chart-unfullfilled">
-              <h2> Select a chart to begin </h2>
-              <h5>{`HINT HINT HINT HINT`}</h5>
-            </div>
-          )}
-          {!showChart && !noneTemplate && (
+          {!noneTemplate && !showChart && (
             <div className="chart-unfullfilled">
               <h2> Chart is not yet filled out </h2>
               <h5>{`Select values for the following fields: ${missingFields.join(', ')}`}</h5>

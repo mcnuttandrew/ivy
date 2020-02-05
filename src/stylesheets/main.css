@@ -247,6 +247,10 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 15px;
 }
 
+.template-column {
+  max-width: 360px;
+}
+
 .template-column.column.edit-mode {
   height: 100%;
   padding: 0;
@@ -614,8 +618,23 @@ input[type=number]::-webkit-outer-spin-button {
   grid-gap: 10px;
 }
 
+.data-search-mode .program-containers {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .program-option {
+  border: thin solid rgba(0, 0, 0, 0);
   font-size: 15px;
+  height: fit-content;
+  transition: border 0.1s;
+}
+
+.program-option.program-option-as-button {
+  cursor: pointer;
+}
+
+.program-option.program-option-as-button:hover {
+  border: thin solid gray;
 }
 
 .program-containers .program-option:last-child {
@@ -623,8 +642,21 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .program-option-img-container img {
-  height: 75px;
-  width: 75px;
+  height: 65px;
+  width: 65px;
+  margin-right: 5px;
+}
+
+.program-option-type-symbol {
+  font-size: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.program-option-search-match {
+  font-size: 12px;
+  font-weight: bolder;
+  color: forestgreen;
 }
 
 .widget-body {
@@ -676,6 +708,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .text-widget {
   font-size: 12px;
+  white-space: pre-line;
 }
 
 .text-widget textarea {
@@ -972,7 +1005,7 @@ input[type=number]::-webkit-outer-spin-button {
   cursor: pointer;
   font-size: 12px;
   height: 75px;
-  justify-content: center;
+  justify-content: flex-end;
   margin-right: 20px;
   min-width: 75px;
   padding: 5px;

@@ -132,7 +132,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       );
     });
     return (
-      <div className="full-height encoding-column" style={height && {maxHeight: height}}>
+      <div className="full-height encoding-column" style={(height && {maxHeight: height}) || {}}>
         {editMode && template && (
           <div className="flex">
             <div className="flex">

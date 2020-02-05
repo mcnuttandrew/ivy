@@ -17,3 +17,8 @@ export const TEXT_TYPE: {[x: string]: string} = {
   DIMENSION: 'ABC',
   TIME: '🕑',
 };
+
+export const GRAMMAR_NAME = 'grammer';
+export const GRAMMAR_DESC = 'Tableau-style grammar of graphics';
+
+export const NONE_TEMPLATE = '_____none_____';

@@ -8,7 +8,8 @@ const TABLE_EXAMPLE: any = {
 
 const DATATABLE: Template = {
   templateName: 'Data Table',
-  templateDescription: 'A good old fashioned data table',
+  templateDescription:
+    'A good old fashioned data table, show any type of data in a tabular format. A great way to double check your data.',
   templateLanguage: 'hydra-data-table',
   templateAuthor: 'BUILT_IN',
   code: stringify(TABLE_EXAMPLE),

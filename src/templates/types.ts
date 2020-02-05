@@ -8,7 +8,8 @@ export type WidgetType =
   | 'Text'
   | 'Slider'
   | 'Section'
-  | 'Shortcut';
+  | 'Shortcut'
+  | 'FreeText';
 export interface TemplateWidget<T> {
   /**
    *   The name of widget to be used, this name will be swapped into the code string, must be unqiue
@@ -52,10 +53,7 @@ export interface TextWidget {
   text: string;
   [x: string]: any;
 }
-export interface SectionWidget {
-  text: string;
-  [x: string]: any;
-}
+export type SectionWidget = null;
 export interface SliderWidget {
   minVal: number;
   maxVal: number;
@@ -71,6 +69,7 @@ export interface Shortcut {
 export interface ShortcutsWidget {
   shortcuts: Shortcut[];
 }
+export type FreeTextWidget = {};
 export type WidgetSubType =
   | DataTargetWidget
   | MultiDataTargetWidget
@@ -79,7 +78,8 @@ export type WidgetSubType =
   | TextWidget
   | SliderWidget
   | SectionWidget
-  | ShortcutsWidget;
+  | ShortcutsWidget
+  | FreeTextWidget;
 
 /**
  * The main configuration object for templates

@@ -21,6 +21,7 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
   UpdateFilterPayload,
+  DataRow,
 } from '../actions/index';
 import {getUniques, getDomain, getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
@@ -69,7 +70,7 @@ interface RootProps {
   currentTheme: VegaTheme;
   currentView: string;
   currentlySelectedFile: string;
-  data: any; //TODO: define the data type
+  data: DataRow[];
   dataModalOpen: boolean;
   editMode: boolean;
   editorError: null | string;
@@ -111,6 +112,7 @@ interface RootProps {
   loadTemplates: GenericAction<void>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
+  prepareTemplate: GenericAction<void>;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
   removeWidget: GenericAction<number>;
@@ -146,6 +148,7 @@ class RootComponent extends React.Component<RootProps> {
   componentDidMount(): void {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     this.props.loadTemplates();
+    this.props.prepareTemplate();
   }
 
   componentDidCatch(error: any, errorInfo: any): void {
@@ -167,36 +170,28 @@ class RootComponent extends React.Component<RootProps> {
   }
 
   chartArea(): JSX.Element {
-    const {
-      cloneView,
-      changeViewName,
-      createNewView,
-      currentTheme,
-      currentView,
-      data,
-      deleteView,
-      missingFields,
-      spec,
-      switchView,
-      template,
-      templateComplete,
-      views,
-    } = this.props;
     return (
       <ChartArea
-        changeViewName={changeViewName}
-        cloneView={cloneView}
-        createNewView={createNewView}
-        currentTheme={currentTheme}
-        currentView={currentView}
-        data={data}
-        deleteView={deleteView}
-        missingFields={missingFields}
-        spec={spec}
-        switchView={switchView}
-        template={template}
-        templateComplete={templateComplete}
-        views={views}
+        chainActions={this.props.chainActions}
+        changeViewName={this.props.changeViewName}
+        clearEncoding={this.props.clearEncoding}
+        cloneView={this.props.cloneView}
+        columns={this.props.columns}
+        createNewView={this.props.createNewView}
+        currentTheme={this.props.currentTheme}
+        currentView={this.props.currentView}
+        data={this.props.data}
+        deleteView={this.props.deleteView}
+        encodingMode={this.props.encodingMode}
+        missingFields={this.props.missingFields}
+        setEncodingMode={this.props.setEncodingMode}
+        spec={this.props.spec}
+        switchView={this.props.switchView}
+        template={this.props.template}
+        templateComplete={this.props.templateComplete}
+        templateMap={this.props.templateMap}
+        templates={this.props.templates}
+        views={this.props.views}
       />
     );
   }

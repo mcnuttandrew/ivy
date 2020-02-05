@@ -3,7 +3,8 @@ import {GenericAction} from '../../actions/index';
 import {Template} from '../../templates/types';
 import ProgramPreview from './program-preview';
 import {thumbnailLocation} from '../../thumbnail';
-import {serverPrefix} from '../../utils';
+import {serverPrefix, searchPredicate} from '../../utils';
+import {GRAMMAR_NAME, GRAMMAR_DESC, NONE_TEMPLATE} from '../../constants/index';
 
 interface Props {
   chainActions: GenericAction<any>;
@@ -13,15 +14,6 @@ interface Props {
   toggleProgramModal: GenericAction<void>;
 }
 
-// used for filtering out unsearched templates
-function searchPredicate(searchKey: string, templateName: string, templateDescription: string): boolean {
-  const matchDescription = templateDescription && templateDescription.toLowerCase().includes(searchKey || '');
-  const matchName = templateName && templateName.toLowerCase().includes(searchKey || '');
-  return matchDescription || matchName;
-}
-
-const GRAMMAR_NAME = 'grammer';
-const GRAMMAR_DESC = 'Tableau-style grammar of graphics';
 export default function LocalPrograms(props: Props): JSX.Element {
   const {chainActions, deleteTemplate, setEncodingMode, templates, toggleProgramModal} = props;
   const [searchKey, setSearch] = useState('');
@@ -84,8 +76,11 @@ export default function LocalPrograms(props: Props): JSX.Element {
           />
         )}
         {templates
-          .filter(template => template.templateName !== '_____none_____')
-          .filter(x => searchPredicate(searchKey, x.templateName, x.templateDescription))
+          .filter(
+            x =>
+              x.templateName !== NONE_TEMPLATE &&
+              searchPredicate(searchKey, x.templateName, x.templateDescription),
+          )
           .map((template: Template, idx: number) => (
             <ProgramPreview
               templateName={template.templateName}

@@ -1,5 +1,12 @@
 import stringify from 'json-stringify-pretty-compact';
-import {TemplateWidget, Template, WidgetSubType, TemplateMap} from './templates/types';
+import {
+  TemplateWidget,
+  Template,
+  WidgetSubType,
+  TemplateMap,
+  DataTargetWidget,
+  MultiDataTargetWidget,
+} from './templates/types';
 import {AppState} from './reducers/default-state';
 import {DataType, ColumnHeader} from './types';
 
@@ -46,55 +53,6 @@ export function findField(state: AppState, targetField: string, columnKey = 'col
     return state.metaColumns.find(({field}: {field: string}) => field === targetField);
   }
   return state.columns.find(({field}: {field: string}) => field === targetField);
-}
-
-export function compareObjects(a: any, b: any): boolean {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
-
-const DEFAULT_CONFIG = {
-  facet: {width: 150, height: 150},
-  overlay: {line: true},
-  scale: {useRawDomain: false},
-};
-
-export function cleanSpec(spec: any): any {
-  if (spec.spec) {
-    return {
-      padding: 100,
-      ...spec,
-      spec: {
-        config: DEFAULT_CONFIG,
-        height: 300,
-        width: 300,
-        ...spec.spec,
-      },
-      data: {
-        name: 'myData',
-      },
-    };
-  }
-  return {
-    config: DEFAULT_CONFIG,
-    padding: 50,
-    ...spec,
-    data: {
-      name: 'myData',
-    },
-  };
-  // return {
-  //   config: DEFAULT_CONFIG,
-  //   padding: 50,
-  //   ...spec,
-  //   encoding: {
-  //     ...Object.entries(spec.encoding).reduce((acc: any, [key, val]: any) => {
-  //       if (!compareObjects(val, {})) {
-  //         acc[key] = val;
-  //       }
-  //       return acc;
-  //     }, {}),
-  //   },
-  // };
 }
 
 // safely access elements on a nested object
@@ -232,23 +190,113 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
     // don't do anything with T0 for now
     return toSet(dimCounter);
   }
-  const result = template.widgets.reduce((acc: any, widget: any) => {
-    const widgetType = widget.widgetType;
-    const widgetName = widget.widgetName;
-    const val = templateMap[widgetName];
+  const result = template.widgets
+    .filter(d => ['MultiDataTarget', 'DataTarget'].includes(d.widgetType))
+    .reduce((acc: any, widget: any) => {
+      const widgetType = widget.widgetType;
+      const widgetName = widget.widgetName;
+      const val = templateMap[widgetName];
 
-    if (widgetType === 'MultiDataTarget' && (!val || val.length < widget.widget.maxNumberOfTargets)) {
-      widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
-    }
-    // dont try figure it out if it's in use
-    if (val) {
+      if (
+        widgetType === 'MultiDataTarget' &&
+        (!val || val.length < widget.widget.maxNumberOfTargets || !widget.widget.maxNumberOfTargets)
+      ) {
+        widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
+      }
+      // dont try figure it out if it's in use, needs to be before multidatatarget which has a truthy null, []
+      if (val) {
+        return acc;
+      }
+
+      if (widgetType === 'DataTarget') {
+        widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
+      }
       return acc;
-    }
-
-    if (widgetType === 'DataTarget') {
-      widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
-    }
-    return acc;
-  }, dimCounter);
+    }, dimCounter);
   return toSet(result);
 };
+
+export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHeader} =>
+  columns.reduce((acc: {[d: string]: ColumnHeader}, colKey: ColumnHeader) => {
+    acc[colKey.field] = colKey;
+    return acc;
+  }, {});
+
+export function buildCounts(template: Template): any {
+  let targetCount = 0;
+  const counts = template.widgets.reduce(
+    (acc: any, row: TemplateWidget<WidgetSubType>) => {
+      if (row.widgetType === 'DataTarget') {
+        targetCount += 1;
+        const {allowedTypes} = row.widget as DataTargetWidget;
+        allowedTypes.forEach((type: string) => {
+          acc[type] += 1;
+          if (allowedTypes.length > 1) {
+            acc.mixingOn = acc.mixingOn.add(type);
+          }
+        });
+      }
+      if (row.widgetType === 'MultiDataTarget') {
+        const {allowedTypes, maxNumberOfTargets} = row.widget as MultiDataTargetWidget;
+        targetCount += maxNumberOfTargets || Infinity;
+        allowedTypes.forEach((type: string) => {
+          acc[type] += maxNumberOfTargets || Infinity;
+          if (allowedTypes.length > 1) {
+            acc.mixingOn = acc.mixingOn.add(type);
+          }
+        });
+      }
+      return acc;
+    },
+    {DIMENSION: 0, MEASURE: 0, TIME: 0, mixingOn: new Set()},
+  );
+  return {
+    DIMENSION: `${counts.mixingOn.has('DIMENSION') ? '≤' : ''}${counts.DIMENSION}`,
+    MEASURE: `${counts.mixingOn.has('MEASURE') ? '≤' : ''}${counts.MEASURE}`,
+    TIME: `${counts.mixingOn.has('TIME') ? '≤' : ''}${counts.TIME}`,
+    SUM: `${targetCount}`,
+  };
+}
+
+export function searchDimensionsCanMatch(
+  template: Template,
+  templateMap: TemplateMap,
+  columns: ColumnHeader[],
+): {canBeUsed: boolean; isComplete: boolean} {
+  const colMap = makeColNameMap(columns);
+  const desiredColumns = (templateMap.dataTargetSearch as string[]).map(key => colMap[key]);
+  const config = template.widgets;
+  const targets = config.filter(d => d.widgetType === 'DataTarget') as TemplateWidget<DataTargetWidget>[];
+  const multiTargets = config.filter(d => d.widgetType === 'MultiDataTarget') as TemplateWidget<
+    MultiDataTargetWidget
+  >[];
+  const numRequired = targets.filter(d => d.widget.required).length;
+  const usedTargets: Set<string> = new Set([]);
+  const result = desiredColumns.every(col => {
+    const availableSingleTargetField = targets
+      .filter(d => !usedTargets.has(d.widgetName))
+      .find(d => d.widget.allowedTypes.includes(col.type));
+    const availableMultiTargetField = multiTargets.find(d => d.widget.allowedTypes.includes(col.type));
+
+    if (availableSingleTargetField) {
+      usedTargets.add(availableSingleTargetField.widgetName);
+      return true;
+    } else if (availableMultiTargetField) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  return {canBeUsed: result, isComplete: usedTargets.size >= numRequired};
+}
+
+// used for filtering out unsearched templates
+export function searchPredicate(
+  searchKey: string,
+  templateName: string,
+  templateDescription: string,
+): boolean {
+  const matchDescription = templateDescription && templateDescription.toLowerCase().includes(searchKey || '');
+  const matchName = templateName && templateName.toLowerCase().includes(searchKey || '');
+  return matchDescription || matchName;
+}

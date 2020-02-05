@@ -58,6 +58,12 @@ export function thumbnailLocation(templateName: string | null): string {
   if (!templateName) {
     return 'logo.png';
   }
+  if (templateName === 'Polestar') {
+    return 'assets/polestar-logo.png';
+  }
+  if (templateName === 'AtomExplore') {
+    return 'assets/atom-logo.png';
+  }
   /* eslint-disable @typescript-eslint/ban-ts-ignore*/
   // @ts-ignore
   return (document.imageStore && document.imageStore[templateName]) || 'logo.png';

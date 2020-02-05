@@ -16,6 +16,10 @@ const SCATTERPLOT_EXAMPLE: any = {
     },
   },
 };
+const BASIC_TYPES = [
+  {display: '"quantitative"', value: '"quantitative"'},
+  {display: '"ordinal"', value: '"ordinal"'},
+];
 
 const SCATTERPLOT: Template = {
   widgets: [
@@ -27,13 +31,7 @@ const SCATTERPLOT: Template = {
     {
       widgetName: 'xType',
       widgetType: 'List',
-      widget: {
-        allowedValues: [
-          {display: '"quantitative"', value: '"quantitative"'},
-          {display: '"ordinal"', value: '"ordinal"'},
-        ],
-        defaultValue: '"quantitative"',
-      },
+      widget: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
     },
     {
       widgetName: 'yDim',
@@ -43,13 +41,7 @@ const SCATTERPLOT: Template = {
     {
       widgetName: 'yType',
       widgetType: 'List',
-      widget: {
-        allowedValues: [
-          {display: '"quantitative"', value: '"quantitative"'},
-          {display: '"ordinal"', value: '"ordinal"'},
-        ],
-        defaultValue: '"quantitative"',
-      },
+      widget: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
     },
     {
       widgetName: 'Color',
@@ -59,13 +51,7 @@ const SCATTERPLOT: Template = {
     {
       widgetName: 'colorType',
       widgetType: 'List',
-      widget: {
-        allowedValues: [
-          {display: '"quantitative"', value: '"quantitative"'},
-          {display: '"ordinal"', value: '"ordinal"'},
-        ],
-        defaultValue: '"ordinal"',
-      },
+      widget: {allowedValues: BASIC_TYPES, defaultValue: '"ordinal"'},
     },
     {
       widgetName: 'Single Color',
@@ -76,21 +62,13 @@ const SCATTERPLOT: Template = {
       },
     },
 
-    {
-      widgetName: 'OtherSettingsSection',
-      widgetType: 'Section',
-      widget: {text: 'Section for other settings'},
-    },
+    {widgetName: 'OtherSettingsSection', widgetType: 'Section', widget: null},
     {
       widgetName: 'Zeroes',
       widgetType: 'Switch',
       widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
     },
-    {
-      widgetName: 'Text6',
-      widgetType: 'Text',
-      widget: {text: 'This is a test message'},
-    },
+    {widgetName: 'Text6', widgetType: 'Text', widget: {text: 'This is a test message'}},
     {
       widgetName: `Radius`,
       widgetType: 'Slider',
@@ -98,29 +76,14 @@ const SCATTERPLOT: Template = {
     },
   ],
   widgetValidations: [
-    {
-      queryResult: 'hide',
-      queryTarget: 'xType',
-      query: '!parameters.xType',
-    },
-    {
-      queryResult: 'hide',
-      queryTarget: 'yType',
-      query: '!parameters.yDim',
-    },
-    {
-      queryResult: 'hide',
-      queryTarget: 'colorType',
-      query: '!parameters.Color',
-    },
-    {
-      queryResult: 'hide',
-      queryTarget: 'Single Color',
-      query: 'parameters.Color',
-    },
+    {queryResult: 'hide', queryTarget: 'xType', query: '!parameters.xType'},
+    {queryResult: 'hide', queryTarget: 'yType', query: '!parameters.yDim'},
+    {queryResult: 'hide', queryTarget: 'colorType', query: '!parameters.Color'},
+    {queryResult: 'hide', queryTarget: 'Single Color', query: 'parameters.Color'},
   ],
   templateName: 'Scatterplot',
-  templateDescription: 'A full ish scatterplot',
+  templateDescription:
+    'A simple scatterplot that can map color and position, supports ordinal and quantitative data.',
   templateLanguage: 'vega-lite',
   code: stringify(SCATTERPLOT_EXAMPLE),
 };

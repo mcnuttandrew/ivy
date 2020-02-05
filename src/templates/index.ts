@@ -79,35 +79,30 @@ export const widgetFactory: {[widgetType: string]: WidgetFactoryFunc} = {
       },
     } as TemplateWidget<SwitchWidget>),
   Text: idx =>
-    ({
-      widgetName: `Text${idx}`,
-      widgetType: 'Text',
-      widget: {
-        text: '',
-      },
-    } as TemplateWidget<TextWidget>),
+    ({widgetName: `Text${idx}`, widgetType: 'Text', widget: {text: ''}} as TemplateWidget<TextWidget>),
   Slider: idx =>
     ({
       widgetName: `Slider${idx}`,
       widgetType: 'Slider',
-      widget: {
-        minVal: 0,
-        maxVal: 10,
-        step: 1,
-        defaultValue: 5,
-      },
+      widget: {minVal: 0, maxVal: 10, step: 1, defaultValue: 5},
     } as TemplateWidget<SliderWidget>),
   Section: idx =>
     ({
       widgetName: `Section${idx}`,
       widgetType: 'Section',
-      widget: {text: 'New text'},
+      widget: null,
     } as TemplateWidget<SectionWidget>),
   Shortcuts: idx =>
     ({
       widgetName: `Shortcut${idx}`,
       widgetType: 'Shortcut',
       widget: {shortcuts: []},
+    } as TemplateWidget<ShortcutsWidget>),
+  FreeText: idx =>
+    ({
+      widgetName: `FreeText${idx}`,
+      widgetType: 'FreeText',
+      widget: {},
     } as TemplateWidget<ShortcutsWidget>),
 };
 
