@@ -13,7 +13,7 @@ export default function DataSymbol(props: Props): JSX.Element {
     case 'METACOLUMN':
       return <span>?</span>;
     case 'SUM':
-      return <span>Σ</span>;
+      return <span style={{fontSize: '15px'}}>Σ</span>;
     default:
     case 'DIMENSION':
       return <TiSortAlphabetically />;
