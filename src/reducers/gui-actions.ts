@@ -83,5 +83,7 @@ export const setEncodingMode: ActionResponse<string> = (state, payload) => {
 
   // figure out what the currently in use columns are and iteratively try to add them to the new one
   const columnMap = makeColNameMap(newState.columns);
-  return activeColumns(state).reduce((acc: AppState, k) => addToNextOpenSlot(acc, columnMap[k]), newState);
+  return activeColumns(state)
+    .filter(k => columnMap[k] && !columnMap[k].metaColumn)
+    .reduce((acc: AppState, k) => addToNextOpenSlot(acc, columnMap[k]), newState);
 };
