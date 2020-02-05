@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 
-import {GoPlus, GoTriangleDown} from 'react-icons/go';
-import {TiFilter, TiDeleteOutline} from 'react-icons/ti';
+import {TiFilter, TiDeleteOutline, TiArrowSortedDown, TiPlus} from 'react-icons/ti';
 
 import {GenericAction, CoerceTypePayload} from '../actions/index';
 import {DataType} from '../types';
@@ -88,7 +87,7 @@ export default function Pill(props: PillProps): JSX.Element {
       )}
       {!isMeta && !inEncoding && coerceType && (
         <div className="fixed-symbol-width" onClick={(): any => toggleOpen(!open)}>
-          {<GoTriangleDown />}
+          {<TiArrowSortedDown />}
         </div>
       )}
       <div className="fixed-symbol-width pill-symbol">
@@ -118,7 +117,7 @@ export default function Pill(props: PillProps): JSX.Element {
           })}
           onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
         >
-          <GoPlus />
+          <TiPlus />
         </div>
       )}
       {/* Change current selection */}

@@ -65,6 +65,6 @@ module.exports = {
       maxModules: 0, // Set the maximum number of modules to be shown
     },
   },
-  mode: isProd ? 'production' : 'development',
-  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
+  mode: isProd || isAnalysis ? 'production' : 'development',
+  devtool: isProd || isAnalysis ? 'source-map' : 'cheap-module-source-map',
 };
