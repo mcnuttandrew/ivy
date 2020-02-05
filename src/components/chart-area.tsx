@@ -4,7 +4,7 @@ import {VegaTheme, ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import {MdSettings, MdContentCopy, MdNoteAdd} from 'react-icons/md';
-import {GiBinoculars} from 'react-icons/gi';
+import {TiChartBarOutline} from 'react-icons/ti';
 import {GenericAction, DataRow} from '../actions';
 import Popover from './popover';
 import DataSearchMode from './program-search/data-search-mode';
@@ -77,7 +77,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             }
           >
             <span className="margin-right">Templates</span>
-            <GiBinoculars />
+            <TiChartBarOutline />
           </div>
           <div className="view-container">
             {views.map((view, idx) => {
