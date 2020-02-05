@@ -1,10 +1,14 @@
-import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import React, {Suspense} from 'react';
 import stringify from 'json-stringify-pretty-compact';
 import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
+const Editor = React.lazy(() =>
+  import(/* webpackChunkName: "monaco-component-wrapper" */ './monaco-wrap').then(module => ({
+    default: module.default,
+  })),
+);
+
 import Popover from './popover';
-import {EDITOR_OPTIONS} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 import {classnames, serializeTemplate, get} from '../utils';
@@ -84,35 +88,12 @@ function sortObjectAlphabetically(obj: any): any {
 export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
-    this.editorDidMount = this.editorDidMount.bind(this);
     this.handleCodeUpdate = this.handleCodeUpdate.bind(this);
     this.state = {
       error: null,
       updateMode: 'automatic',
       suggestionBox: false,
     };
-  }
-  editorDidMount(editor: any): void {
-    editor.focus();
-    /* eslint-disable */
-    // @ts-ignore
-    import('monaco-themes/themes/Chrome DevTools.json').then(data => {
-      // @ts-ignore
-      monaco.editor.defineTheme('cobalt', data);
-      // @ts-ignore
-      monaco.editor.setTheme('cobalt');
-    });
-    /* eslint-enable */
-  }
-
-  componentDidUpdate(props: any): void {
-    // on change code mode scroll to top
-    if (props.codeMode !== this.props.codeMode) {
-      /* eslint-disable */
-      // @ts-ignore
-      this.refs.monaco.editor.setScrollPosition({scrollTop: 0});
-       /* eslint-enable */
-    }
   }
 
   getCurrentCode(): string {
@@ -279,17 +260,7 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render(): JSX.Element {
-    const {
-      editMode,
-      editorFontSize,
-      codeMode,
-      setProgrammaticView,
-      showProgrammaticMode,
-      chainActions,
-      setCodeMode,
-      setEditMode,
-    } = this.props;
-    const {updateMode} = this.state;
+    const {editMode, setProgrammaticView, showProgrammaticMode} = this.props;
     const currentCode = this.getCurrentCode();
     return (
       <div className="full-height full-width code-container flex-down">
@@ -305,29 +276,22 @@ export default class CodeEditor extends React.Component<Props, State> {
             {this.controls()}
             <div className="flex-down full-height full-width">
               {editMode && this.suggestionBox()}
-              {
-                /*eslint-disable react/no-string-refs*/
-                <MonacoEditor
-                  ref="monaco"
-                  language="json"
-                  theme="monokai"
-                  height={'calc(100%)'}
-                  value={currentCode}
-                  options={{...EDITOR_OPTIONS, fontSize: editorFontSize}}
-                  onChange={(code: string): void => {
-                    if (codeMode === 'EXPORT TO JSON') {
-                      chainActions([(): any => setEditMode(true), (): any => setCodeMode('TEMPLATE')]);
-                      return;
-                    }
-
-                    if (updateMode === 'automatic') {
-                      this.handleCodeUpdate(code);
-                    }
-                  }}
-                  editorDidMount={this.editorDidMount}
+              <Suspense fallback={<div>Loading...</div>}>
+                <Editor
+                  codeMode={this.props.codeMode}
+                  currentCode={currentCode}
+                  chainActions={this.props.chainActions}
+                  editorFontSize={this.props.editorFontSize}
+                  setCodeMode={this.props.setCodeMode}
+                  setEditMode={this.props.setEditMode}
+                  spec={this.props.spec}
+                  specCode={this.props.specCode}
+                  template={this.props.template}
+                  templateMap={this.props.templateMap}
+                  updateMode={this.state.updateMode}
+                  handleCodeUpdate={this.handleCodeUpdate}
                 />
-                /*eslint-en able react/no-string-refs*/
-              }
+              </Suspense>
             </div>
           </div>
         )}

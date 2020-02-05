@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AppWrap from './components/app-wrap';
-import setupMonaco from './utils/monaco';
+// import setupMonaco from './utils/monaco';
+import('./utils/monaco').then(setupMonaco => {
+  setupMonaco.default();
+});
 import {PREVENT_ACCIDENTAL_LEAVE} from './constants/CONFIG';
 import {retrieveThumbnails} from './thumbnail';
 
 import './stylesheets/main.css';
 import './stylesheets/rc-slider.css';
 
-setupMonaco();
 retrieveThumbnails();
 
 ReactDOM.render(<AppWrap />, document.querySelector('#root-container'));

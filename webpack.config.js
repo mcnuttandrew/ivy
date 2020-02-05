@@ -19,6 +19,44 @@ module.exports = {
 
   entry: {
     app: './src/app.tsx',
+    monacoConfig: './src/utils/monaco.ts',
+  },
+  output: {
+    chunkFilename: 'chunk-[name].[contenthash].js',
+    publicPath: '/dist/',
+  },
+  optimization: {
+    concatenateModules: false,
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 0,
+      cacheGroups: {
+        vega: {
+          test: /vega/,
+          name: 'vega',
+          priority: 10,
+          reuseExistingChunk: true,
+        },
+        vegaLite: {
+          test: /vega-lite/,
+          name: 'vega-lite',
+          priority: 20,
+          reuseExistingChunk: true,
+        },
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          name: 'vendor',
+          reuseExistingChunk: true,
+        },
+        default: {
+          name: 'default',
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
   module: {
     rules: [
