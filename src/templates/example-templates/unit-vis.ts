@@ -37,7 +37,8 @@ const UNIT_VIS_EXAMPLE: any = {
 
 const UNITVIS: Template = {
   templateName: 'UnitVis Test',
-  templateDescription: 'a test for the unit vis language',
+  templateDescription:
+    'A simple unit vis chart with a rudimentary preconfiguration, it makes use of the unit vis language.',
   templateLanguage: 'unit-vis',
   templateAuthor: 'BUILT_IN',
   code: stringify(UNIT_VIS_EXAMPLE),

@@ -13,7 +13,9 @@ import {NONE_TEMPLATE} from '../constants/index';
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
   createNewView: GenericAction<void>;
+  chainActions: GenericAction<any>;
   changeViewName: GenericAction<{idx: number; value: string}>;
+  clearEncoding: GenericAction<void>;
   columns: ColumnHeader[];
   currentTheme: VegaTheme;
   currentView: string;
@@ -35,6 +37,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
   render(): JSX.Element {
     const {
       changeViewName,
+      chainActions,
+      clearEncoding,
       cloneView,
       columns,
       createNewView,
@@ -66,7 +70,12 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             <span className="margin-right">Clone</span>
             <MdContentCopy />
           </div>
-          <div className="view-control" onClick={(): any => setEncodingMode(NONE_TEMPLATE)}>
+          <div
+            className="view-control"
+            onClick={(): any =>
+              chainActions([(): any => setEncodingMode(NONE_TEMPLATE), (): any => clearEncoding()])
+            }
+          >
             <span className="margin-right">Templates</span>
             <GiBinoculars />
           </div>

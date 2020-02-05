@@ -5,7 +5,6 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
-import NONE from '../templates/example-templates/none';
 
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
@@ -171,46 +170,28 @@ class RootComponent extends React.Component<RootProps> {
   }
 
   chartArea(): JSX.Element {
-    const {
-      cloneView,
-      changeViewName,
-      createNewView,
-      columns,
-      currentTheme,
-      currentView,
-      data,
-      deleteView,
-      encodingMode,
-      missingFields,
-      setEncodingMode,
-      spec,
-      switchView,
-      templates,
-      template,
-      templateMap,
-      templateComplete,
-      views,
-    } = this.props;
     return (
       <ChartArea
-        changeViewName={changeViewName}
-        cloneView={cloneView}
-        columns={columns}
-        createNewView={createNewView}
-        currentTheme={currentTheme}
-        currentView={currentView}
-        data={data}
-        deleteView={deleteView}
-        encodingMode={encodingMode}
-        missingFields={missingFields}
-        setEncodingMode={setEncodingMode}
-        spec={spec}
-        switchView={switchView}
-        template={template}
-        templateComplete={templateComplete}
-        templateMap={templateMap}
-        templates={templates}
-        views={views}
+        chainActions={this.props.chainActions}
+        changeViewName={this.props.changeViewName}
+        clearEncoding={this.props.clearEncoding}
+        cloneView={this.props.cloneView}
+        columns={this.props.columns}
+        createNewView={this.props.createNewView}
+        currentTheme={this.props.currentTheme}
+        currentView={this.props.currentView}
+        data={this.props.data}
+        deleteView={this.props.deleteView}
+        encodingMode={this.props.encodingMode}
+        missingFields={this.props.missingFields}
+        setEncodingMode={this.props.setEncodingMode}
+        spec={this.props.spec}
+        switchView={this.props.switchView}
+        template={this.props.template}
+        templateComplete={this.props.templateComplete}
+        templateMap={this.props.templateMap}
+        templates={this.props.templates}
+        views={this.props.views}
       />
     );
   }

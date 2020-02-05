@@ -618,8 +618,8 @@ input[type=number]::-webkit-outer-spin-button {
   grid-gap: 10px;
 }
 
-.data-search-mode .program-containers { 
-  grid-template-columns: 1fr 1fr;
+.data-search-mode .program-containers {
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .program-option {
@@ -642,14 +642,21 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .program-option-img-container img {
-  height: 75px;
-  width: 75px;
+  height: 65px;
+  width: 65px;
+  margin-right: 5px;
 }
 
 .program-option-type-symbol {
   font-size: 20px;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.program-option-search-match {
+  font-size: 12px;
+  font-weight: bolder;
+  color: forestgreen;
 }
 
 .widget-body {

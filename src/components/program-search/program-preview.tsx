@@ -16,21 +16,13 @@ interface Props {
 }
 
 export default function ProgramPreview(props: Props): JSX.Element {
-  const {
-    buttons,
-    isComplete,
-    setEncodingMode,
-    templateAuthor,
-    templateDescription,
-    templateName,
-    typeCounts,
-  } = props;
+  const {buttons, isComplete, setEncodingMode, templateDescription, templateName, typeCounts} = props;
 
   return (
     <div
       className={classnames({
         'program-option': true,
-        flex: true,
+        'flex-down': true,
         'program-option-as-button': !buttons,
       })}
       onClick={(): void => {
@@ -40,39 +32,41 @@ export default function ProgramPreview(props: Props): JSX.Element {
         setEncodingMode(templateName);
       }}
     >
-      <div className="program-option-img-container">
-        <img src={thumbnailLocation(templateName)} />
-      </div>
-      <div className="flex-down">
-        <h3>{templateName}</h3>
-        {templateDescription && <h5>{`${templateDescription}`}</h5>}
-        {templateAuthor && <h5>{`By: ${templateAuthor}`}</h5>}
+      <div className="flex">
+        <div className="program-option-img-container">
+          <img src={thumbnailLocation(templateName)} />
+        </div>
+        <div className="flex-down">
+          <h3>{templateName}</h3>
+          {isComplete && <div className="program-option-search-match">Search is a Full Match!</div>}
 
-        {buttons && (
-          <div className="flex">
-            {buttons.map(button => (
-              <button onClick={button.onClick} key={`${templateName}-${button.name}`}>
-                {button.name}
-              </button>
-            ))}
-          </div>
-        )}
-        {typeCounts && (
-          <div className="flex">
-            {['DIMENSION', 'MEASURE', 'TIME', 'SUM'].map((key: string) => {
-              return (
-                <div key={key} className="flex">
-                  <div className="program-option-type-symbol">
-                    <DataSymbol type={key as DataType} />
+          {typeCounts && (
+            <div className="flex">
+              {['DIMENSION', 'MEASURE', 'TIME', 'SUM'].map((key: string) => {
+                return (
+                  <div key={key} className="flex">
+                    <div className="program-option-type-symbol">
+                      <DataSymbol type={key as DataType} />
+                    </div>
+                    <div>{typeCounts[key]}</div>
                   </div>
-                  <div>{typeCounts[key]}</div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-        {isComplete && <div>Search Full Matches!</div>}
+                );
+              })}
+            </div>
+          )}
+          {/* {templateAuthor && <h5>{`By: ${templateAuthor}`}</h5>} */}
+          {buttons && (
+            <div className="flex">
+              {buttons.map(button => (
+                <button onClick={button.onClick} key={`${templateName}-${button.name}`}>
+                  {button.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+      {templateDescription && <h5>{`${templateDescription}`}</h5>}
     </div>
   );
 }

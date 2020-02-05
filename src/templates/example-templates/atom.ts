@@ -97,7 +97,8 @@ const ATOM_TEMPLATE: any = {
 
 const ATOM: Template = {
   templateName: 'AtomExplore',
-  templateDescription: 'A system for exploring unit visualizations',
+  templateDescription:
+    'A system for exploring unit visualizations, such as waffle plots and the like. Based on the work of Park et al.',
   templateLanguage: 'unit-vis',
   templateAuthor: 'BUILT_IN',
   code: stringify(ATOM_TEMPLATE),

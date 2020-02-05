@@ -33,7 +33,7 @@ function activeColumns(state: any): string[] {
     const val = templateMap[widget.widgetName];
     // we only care about the data containing columns
     if (widgetType === 'MultiDataTarget') {
-      return val.reduce((mem: Set<string>, key: string) => mem.add(key), acc);
+      return (val || []).reduce((mem: Set<string>, key: string) => mem.add(key), acc);
     }
     if (widgetType === 'DataTarget' && val) {
       return acc.add(val);

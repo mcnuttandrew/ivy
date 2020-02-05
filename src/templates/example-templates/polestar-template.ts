@@ -93,7 +93,8 @@ const shelfProgram: any = {
 
 const SHELF: Template = {
   templateName: 'Polestar',
-  templateDescription: 'A tablea-style shelf builder',
+  templateDescription:
+    'A tableau-style shelf builder, facilitates a wide variety of charting and exploration tasks.',
   templateLanguage: 'vega-lite',
   templateAuthor: 'BUILT_IN',
   code: stringify(shelfProgram),

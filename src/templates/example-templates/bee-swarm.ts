@@ -6,7 +6,7 @@ import {toList} from '../../utils';
 const BEESWARM_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
   width: 800,
-  height: 100,
+  height: 600,
   padding: {left: 5, right: 5, top: 0, bottom: 20},
   autosize: 'none',
 
@@ -84,7 +84,8 @@ const BEESWARM_EXAMPLE: any = {
 
 const BeeSwarm: Template = {
   templateName: 'BeeSwarm chart',
-  templateDescription: 'A unit approach to showing the sizes of groups',
+  templateDescription:
+    'A unit approach to showing the sizes and distribution of groups, uses a force simulation to minimize overlaps.',
   templateLanguage: 'vega',
   templateAuthor: 'BUILT_IN',
   widgets: [
