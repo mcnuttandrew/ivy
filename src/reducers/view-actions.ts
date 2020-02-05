@@ -1,7 +1,9 @@
 import stringify from 'json-stringify-pretty-compact';
 import produce from 'immer';
 import {TemplateMap, Template} from '../templates/types';
-import {ActionResponse, EMPTY_SPEC, AppState} from './default-state';
+import {ActionResponse, AppState} from './default-state';
+import NONE from '../templates/example-templates/none';
+import {constructDefaultTemplateMap, evaluateHydraProgram} from '../hydra-lang';
 
 export interface ViewCatalog {
   [x: string]: ViewCatalogEntry;
@@ -12,10 +14,12 @@ export interface ViewCatalogEntry {
   templateMap: TemplateMap;
   currentTemplateInstance?: Template;
 }
+const BLANK_TEMPLATE_MAP = constructDefaultTemplateMap(NONE);
 const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
-  spec: EMPTY_SPEC,
-  encodingMode: 'grammer',
-  templateMap: {},
+  spec: evaluateHydraProgram(NONE, BLANK_TEMPLATE_MAP),
+  encodingMode: NONE.templateName,
+  templateMap: BLANK_TEMPLATE_MAP,
+  currentTemplateInstance: NONE,
 };
 function updateCatalogView(state: AppState, view: string): AppState {
   const catalogEntry: ViewCatalogEntry = {
