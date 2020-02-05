@@ -79,7 +79,7 @@ const SCATTERPLOT: Template = {
     {
       widgetName: 'OtherSettingsSection',
       widgetType: 'Section',
-      widget: {text: 'Section for other settings'},
+      widget: null,
     },
     {
       widgetName: 'Zeroes',

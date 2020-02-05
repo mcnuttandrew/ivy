@@ -53,10 +53,7 @@ export interface TextWidget {
   text: string;
   [x: string]: any;
 }
-export interface SectionWidget {
-  text: string;
-  [x: string]: any;
-}
+export type SectionWidget = null;
 export interface SliderWidget {
   minVal: number;
   maxVal: number;

@@ -20,22 +20,13 @@ const BEESWARM_EXAMPLE: any = {
     {name: 'static', update: '[static]'},
   ],
 
-  data: [
-    {
-      name: 'table',
-      values: 'myData',
-    },
-  ],
+  data: [{name: 'table', values: 'myData'}],
 
   scales: [
     {
       name: 'xscale',
       type: 'band',
-      domain: {
-        data: 'table',
-        field: '[category]',
-        sort: true,
-      },
+      domain: {data: 'table', field: '[category]', sort: true},
       range: 'width',
     },
     {
@@ -100,74 +91,38 @@ const BeeSwarm: Template = {
     {
       widgetName: 'category',
       widgetType: 'DataTarget',
-      widget: {
-        allowedTypes: ['DIMENSION'],
-        required: true,
-      },
+      widget: {allowedTypes: ['DIMENSION'], required: true},
     },
-    {
-      widgetName: 'OtherSettingsSection',
-      widgetType: 'Section',
-      widget: {
-        text: 'Section for other settings',
-      },
-    },
+    {widgetName: 'OtherSettingsSection', widgetType: 'Section', widget: null},
     {
       widgetName: 'radius',
       widgetType: 'Slider',
-      widget: {
-        minVal: 2,
-        maxVal: 15,
-        step: 1,
-        defaultValue: 5,
-      },
+      widget: {minVal: 2, maxVal: 15, step: 1, defaultValue: 5},
     },
     {
       widgetName: 'collide',
       widgetType: 'Slider',
-      widget: {
-        minVal: 1,
-        maxVal: 10,
-        step: 1,
-        defaultValue: 1,
-      },
+      widget: {minVal: 1, maxVal: 10, step: 1, defaultValue: 1},
     },
     {
       widgetName: 'gravityX',
       widgetType: 'Slider',
-      widget: {
-        minVal: 0,
-        maxVal: 1,
-        step: 0.01,
-        defaultValue: 0.2,
-      },
+      widget: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.2},
     },
     {
       widgetName: 'gravityY',
       widgetType: 'Slider',
-      widget: {
-        minVal: 0,
-        maxVal: 1,
-        step: 0.01,
-        defaultValue: 0.1,
-      },
+      widget: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.1},
     },
     {
       widgetName: 'static',
       widgetType: 'Switch',
-      widget: {
-        activeValue: 'true',
-        inactiveValue: 'false',
-        defaultsToActive: false,
-      },
+      widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: false},
     },
     {
       widgetName: 'colorScheme',
       widgetType: 'List',
-      widget: {
-        allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
-        defaultValue: '"category20"',
-      },
+      widget: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: '"category20"'},
     },
   ],
   widgetValidations: [],

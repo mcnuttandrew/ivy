@@ -100,7 +100,7 @@ export const DEFAULT_STATE: AppState = {
   currentTemplateInstance: NONE,
   dataModalOpen: false,
   encodingMode: NONE.templateName,
-  showProgrammaticMode: false,
+  showProgrammaticMode: true,
   showGUIView: true,
   codeMode: 'EXPORT TO JSON',
   editorFontSize: 10,
