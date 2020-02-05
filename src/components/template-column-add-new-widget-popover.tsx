@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import Popover from './popover';
-import {AiOutlinePlusCircle} from 'react-icons/ai';
+import {TiPlus} from 'react-icons/ti';
 import {GenericAction} from '../actions';
 import {TemplateWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory, preconfiguredWidgets} from '../templates';
@@ -18,7 +18,7 @@ export default function TemplateColumnAddNewWidgetPopover(props: Props): JSX.Ele
       className="new-widget-menu"
       clickTarget={
         <button>
-          Add Widget <AiOutlinePlusCircle />
+          Add Widget <TiPlus />
         </button>
       }
       style={{

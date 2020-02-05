@@ -2,7 +2,7 @@ import React from 'react';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import {GenericAction} from '../actions/index';
-import {AiOutlinePlusCircle} from 'react-icons/ai';
+import {TiThLargeOutline} from 'react-icons/ti';
 import {thumbnailLocation} from '../thumbnail';
 import {NONE_TEMPLATE} from '../constants/index';
 
@@ -53,7 +53,7 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
               toggleProgramModal();
             }}
           >
-            <AiOutlinePlusCircle />
+            <TiThLargeOutline />
             <h3>Add more</h3>
           </div>
           {renderEncodingModeOption(

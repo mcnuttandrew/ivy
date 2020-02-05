@@ -1,13 +1,9 @@
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
-import {MdPlayCircleOutline} from 'react-icons/md';
 import stringify from 'json-stringify-pretty-compact';
-import {FaAngleDown, FaAngleUp} from 'react-icons/fa';
-import {MdSettings} from 'react-icons/md';
-import {IoIosCreate} from 'react-icons/io';
+import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Popover from './popover';
-import Selector from './selector';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
@@ -217,7 +213,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             <span>Suggestions</span>
             {suggestions.length ? <span>(!)</span> : ''}
           </h5>
-          <div>{suggestionBox ? <FaAngleDown /> : <FaAngleUp />}</div>
+          <div>{suggestionBox ? <TiArrowSortedDown /> : <TiArrowSortedUp />}</div>
         </div>
         {suggestionBox && (
           <div className="suggestion-box-body">
@@ -246,7 +242,6 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   controls(): JSX.Element {
     const {setCodeMode, codeMode, editMode, setEditMode, chainActions} = this.props;
-    const {updateMode} = this.state;
     return (
       <div className="code-option-tabs flex-down full-height background-2">
         <div
@@ -259,9 +254,9 @@ export default class CodeEditor extends React.Component<Props, State> {
           }
         >
           <div>{editMode ? 'SAVE' : 'EDIT'}</div>
-          <IoIosCreate />
+          <TiEdit />
         </div>
-        <Popover clickTarget={<MdSettings />} body={(): JSX.Element => this.editorControls()} />
+        <Popover clickTarget={<TiCog />} body={(): JSX.Element => this.editorControls()} />
 
         {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'SPECIFICATION', 'EXPORT TO JSON']
           .filter(d => d)
@@ -279,32 +274,6 @@ export default class CodeEditor extends React.Component<Props, State> {
               </div>
             );
           })}
-        <div className="execute-code-control">
-          <div
-            className="execute-code-control-button"
-            onClick={(): void => {
-              /* eslint-disable */
-              // @ts-ignore
-              const model = this.refs.monaco.editor.getModel();
-              /* eslint-enable */
-
-              const value = model.getValue();
-              this.handleCodeUpdate(value);
-            }}
-          >
-            <MdPlayCircleOutline />
-          </div>
-          <Selector
-            onChange={(newMode): void => {
-              this.setState({updateMode: newMode});
-            }}
-            selectedValue={updateMode}
-            options={[
-              {display: 'Auto', value: 'automatic'},
-              {display: 'Manual', value: 'manual'},
-            ]}
-          />
-        </div>
       </div>
     );
   }
@@ -329,18 +298,10 @@ export default class CodeEditor extends React.Component<Props, State> {
           onClick={(): any => setProgrammaticView()}
         >
           <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
-          {showProgrammaticMode ? <FaAngleDown /> : <FaAngleUp />}
+          {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
         </div>
         {showProgrammaticMode && (
           <div className="full-height full-width flex">
-            {/* <div
-          className={classnames({
-            'error-bar': true,
-            'has-error': Boolean(editorError),
-          })}
-        >
-          ERROR
-        </div> */}
             {this.controls()}
             <div className="flex-down full-height full-width">
               {editMode && this.suggestionBox()}

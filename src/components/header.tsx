@@ -1,5 +1,5 @@
 import React from 'react';
-import {MdUndo, MdRedo} from 'react-icons/md';
+import {TiArrowBack, TiArrowForward} from 'react-icons/ti';
 import Popover from './popover';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
@@ -28,7 +28,7 @@ export default class Header extends React.Component<HeaderProps> {
               (canUndo ? triggerUndo : NULL)();
             }}
           >
-            <MdUndo /> <span>UNDO</span>
+            <TiArrowBack /> <span>UNDO</span>
           </div>
           <div
             className={classnames({
@@ -39,7 +39,7 @@ export default class Header extends React.Component<HeaderProps> {
               (canRedo ? triggerRedo : NULL)();
             }}
           >
-            <MdRedo />
+            <TiArrowForward />
             <span>REDO</span>
           </div>
         </div>

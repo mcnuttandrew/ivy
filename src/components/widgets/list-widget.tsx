@@ -1,8 +1,7 @@
 import React from 'react';
 import {ListWidget, TemplateWidget} from '../../templates/types';
 import Selector from '../selector';
-import {MdSettings} from 'react-icons/md';
-import {TiDeleteOutline} from 'react-icons/ti';
+import {TiDeleteOutline, TiCog} from 'react-icons/ti';
 import Popover from '../popover';
 
 import {GeneralWidget} from './general-widget';
@@ -15,7 +14,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
       className="list-options-popover"
       clickTarget={
         <span className="tool-description">
-          <MdSettings /> Options{' '}
+          <TiCog /> Options{' '}
         </span>
       }
       style={{

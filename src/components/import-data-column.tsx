@@ -1,5 +1,5 @@
 import React from 'react';
-import {DiDatabase} from 'react-icons/di';
+import {TiDatabase} from 'react-icons/ti';
 import {GenericAction} from '../actions/index';
 
 interface Props {
@@ -16,7 +16,7 @@ export default class ImportDataColumn extends React.Component<Props> {
         <h1 className="section-title">Data</h1>
         <div className="flex space-between data-selection">
           <div className="flex center">
-            <DiDatabase />
+            <TiDatabase />
             <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
           </div>
           <button

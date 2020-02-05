@@ -3,8 +3,7 @@ import VegaWrapper from './vega-wrap';
 import {VegaTheme, ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
-import {MdSettings, MdContentCopy, MdNoteAdd} from 'react-icons/md';
-import {TiChartBarOutline} from 'react-icons/ti';
+import {TiCog, TiDocumentAdd, TiChartBarOutline, TiTabsOutline} from 'react-icons/ti';
 import {GenericAction, DataRow} from '../actions';
 import Popover from './popover';
 import DataSearchMode from './program-search/data-search-mode';
@@ -64,11 +63,11 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         <div className="chart-controls full-width flex">
           <div className="view-control" onClick={(): any => createNewView()}>
             <span className="margin-right">New</span>
-            <MdNoteAdd />
+            <TiDocumentAdd />
           </div>
           <div className="view-control" onClick={(): any => cloneView()}>
             <span className="margin-right">Clone</span>
-            <MdContentCopy />
+            <TiTabsOutline />
           </div>
           <div
             className="view-control"
@@ -93,8 +92,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
                   <Popover
                     className="list-options-popover"
                     clickTarget={
-                      <span className="tool-description">
-                        <MdSettings />
+                      <span className="view-settings">
+                        <TiCog />
                       </span>
                     }
                     style={{

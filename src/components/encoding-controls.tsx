@@ -1,7 +1,5 @@
 import React from 'react';
-import {FaEraser, FaSave} from 'react-icons/fa';
-import {GoRepoForked} from 'react-icons/go';
-import {IoIosCreate, IoMdCreate} from 'react-icons/io';
+import {TiArrowSync, TiPencil, TiEdit, TiFlowChildren, TiLockClosed, TiLockOpen} from 'react-icons/ti';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
@@ -52,13 +50,13 @@ export default function EncodingControls(props: Props): JSX.Element {
           (): any => setEditMode(true),
           (): any => setCodeMode('TEMPLATE'),
         ]),
-      icon: <IoMdCreate />,
+      icon: <TiPencil />,
       label: 'NEW',
     },
     {
       disabled: false,
       onClick: (): any => chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]),
-      icon: <GoRepoForked />,
+      icon: <TiFlowChildren />,
       label: 'FORK',
     },
     {
@@ -69,19 +67,19 @@ export default function EncodingControls(props: Props): JSX.Element {
         }
         chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
       },
-      icon: <FaSave />,
+      icon: !canSave || isGrammar ? <TiLockClosed /> : <TiLockOpen />,
       label: 'SAVE',
     },
     {
       disabled: isGrammar,
       onClick: isGrammar ? NULL : (): any => setEditMode(!editMode),
-      icon: <IoIosCreate />,
+      icon: <TiEdit />,
       label: editMode ? 'STOP EDIT' : 'START EDIT',
     },
     {
       disabled: false,
       onClick: clearEncoding,
-      icon: <FaEraser />,
+      icon: <TiArrowSync />,
       label: 'RESET',
     },
   ];
