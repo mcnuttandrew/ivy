@@ -92,7 +92,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
                   <Popover
                     className="list-options-popover"
                     clickTarget={
-                      <span className="tool-description">
+                      <span className="view-settings">
                         <TiCog />
                       </span>
                     }
