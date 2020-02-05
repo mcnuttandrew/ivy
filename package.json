@@ -57,6 +57,7 @@
     "typescript-json-schema": "^0.41.0",
     "vega-typings": "^0.10.2",
     "webpack": "4",
+    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.0.8",
     "webpack-command": "^0.2.1",
     "webpack-dev-server": "^3.2.1"
@@ -101,7 +102,8 @@
     "lint:fix": "eslint './src/**/*.{ts,tsx}'",
     "lint:styles": "stylelint 'src/stylesheets/main.css'",
     "test": "jest",
-    "prettify": "prettier --write 'src/**/*.{ts,tsx}'"
+    "prettify": "prettier --write 'src/**/*.{ts,tsx}'",
+    "analyze": "NODE_ENV=analysis webpack --profile > stats.json"
   },
   "jest": {
     "transform": {
