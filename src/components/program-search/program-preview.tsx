@@ -12,11 +12,20 @@ interface Props {
   buttons?: {name: string; onClick: any}[];
   setEncodingMode?: GenericAction<string>;
   typeCounts?: {[x: string]: string};
+  isComplete?: boolean;
 }
 
 export default function ProgramPreview(props: Props): JSX.Element {
-  const {templateName, templateDescription, templateAuthor, buttons, setEncodingMode, typeCounts} = props;
-  console.log('TODO TYPE COUNTS');
+  const {
+    buttons,
+    isComplete,
+    setEncodingMode,
+    templateAuthor,
+    templateDescription,
+    templateName,
+    typeCounts,
+  } = props;
+
   return (
     <div
       className={classnames({
@@ -62,6 +71,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
             })}
           </div>
         )}
+        {isComplete && <div>Search Full Matches!</div>}
       </div>
     </div>
   );

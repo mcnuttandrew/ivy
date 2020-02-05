@@ -4,6 +4,7 @@ import {classnames} from '../utils';
 import {GenericAction} from '../actions/index';
 import {AiOutlinePlusCircle} from 'react-icons/ai';
 import {thumbnailLocation} from '../thumbnail';
+import {NONE_TEMPLATE} from '../constants/index';
 
 interface Props {
   encodingMode: string;
@@ -63,7 +64,7 @@ export default class TemplatePreviewColumn extends React.Component<Props> {
             encodingMode,
           )}
           {templates
-            .filter(template => template.templateName !== '_____none_____')
+            .filter(template => template.templateName !== NONE_TEMPLATE)
             .map((template, idx) =>
               renderEncodingModeOption(
                 template.templateName,

@@ -988,7 +988,7 @@ input[type=number]::-webkit-outer-spin-button {
   cursor: pointer;
   font-size: 12px;
   height: 75px;
-  justify-content: center;
+  justify-content: flex-end;
   margin-right: 20px;
   min-width: 75px;
   padding: 5px;

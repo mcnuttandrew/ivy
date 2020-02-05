@@ -99,7 +99,7 @@ export const DEFAULT_STATE: AppState = {
   // encodingMode: 'Scatterplot',
   currentTemplateInstance: NONE,
   dataModalOpen: false,
-  encodingMode: '_____none_____',
+  encodingMode: NONE.templateName,
   showProgrammaticMode: false,
   showGUIView: true,
   codeMode: 'EXPORT TO JSON',

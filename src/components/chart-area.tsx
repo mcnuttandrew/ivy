@@ -8,6 +8,7 @@ import {GiBinoculars} from 'react-icons/gi';
 import {GenericAction, DataRow} from '../actions';
 import Popover from './popover';
 import DataSearchMode from './program-search/data-search-mode';
+import {NONE_TEMPLATE} from '../constants/index';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
@@ -55,7 +56,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
     const noneTemplate = template && template.templateLanguage === 'none';
     const showChart = !noneTemplate && (!template || templateComplete);
     return (
-      <div className="flex-down full-width full-height">
+      <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
           <div className="view-control" onClick={(): any => createNewView()}>
             <span className="margin-right">New</span>
@@ -65,7 +66,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             <span className="margin-right">Clone</span>
             <MdContentCopy />
           </div>
-          <div className="view-control" onClick={(): any => setEncodingMode('_____none_____')}>
+          <div className="view-control" onClick={(): any => setEncodingMode(NONE_TEMPLATE)}>
             <span className="margin-right">Templates</span>
             <GiBinoculars />
           </div>
@@ -116,7 +117,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           className={classnames({
             'chart-container': true,
             center: true,
-            'full-width': !!encodingMode,
+            'full-width': encodingMode !== NONE_TEMPLATE,
             'full-height': true,
           })}
         >

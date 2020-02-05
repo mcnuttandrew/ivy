@@ -75,15 +75,20 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
       widget.widget.allowedTypes.find((type: string) => type === column.type),
     );
 
-  const openMultiDropTargets = template.widgets
+  const openMultiDropTargets = template.widgets.filter((widget: TemplateWidget<WidgetSubType>) => {
     // select just the open drop targets
-    .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType === 'MultiDataTarget')
+    if (widget.widgetType !== 'MultiDataTarget') {
+      return false;
+    }
     // and that allow the type of drop column
-    .filter(
-      (widget: TemplateWidget<MultiDataTargetWidget>) =>
-        widget.widget.allowedTypes.find((type: string) => type === column.type) &&
-        (templateMap[widget.widgetName] || []).length < widget.widget.maxNumberOfTargets,
-    );
+    const {allowedTypes, maxNumberOfTargets} = widget.widget as MultiDataTargetWidget;
+    const multiTargetContainsDesiredType = !!allowedTypes.find((type: string) => type === column.type);
+    // and have space
+    const hasSpace =
+      (templateMap[widget.widgetName] || []).length < maxNumberOfTargets || !maxNumberOfTargets;
+    return multiTargetContainsDesiredType && hasSpace;
+  });
+
   const targets = [].concat(openDropTargets).concat(openMultiDropTargets);
   if (!targets.length) {
     // TODO add messaging about this

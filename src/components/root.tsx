@@ -325,7 +325,7 @@ class RootComponent extends React.Component<RootProps> {
             swapXAndYChannels={swapXAndYChannels}
           />
         )}
-        {encodingMode !== 'grammer' && (template || !encodingMode) && showGUIView && (
+        {encodingMode !== 'grammer' && template && showGUIView && (
           <TemplateColumn
             addWidget={addWidget}
             columns={columns}
@@ -337,7 +337,7 @@ class RootComponent extends React.Component<RootProps> {
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
             setAllTemplateValues={setAllTemplateValues}
-            template={!encodingMode ? NONE : template}
+            template={template}
             templateMap={templateMap}
           />
         )}
