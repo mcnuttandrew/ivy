@@ -151,6 +151,7 @@ input[type=number]::-webkit-outer-spin-button {
   align-items: center;
   border-left: thin solid lightgray;
   border-right: thin solid lightgray;
+  cursor: pointer;
   display: flex;
   font-size: 15px;
   height: 100%;
@@ -166,6 +167,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 .chart-controls .view-control:first-of-type {
   border-left: 0;
+}
+
+.chart-controls .selected-view-control {
+  background: lightgray;
+  cursor: not-allowed;
 }
 
 .view-container {
@@ -874,38 +880,6 @@ input[type=number]::-webkit-outer-spin-button {
   text-transform: none;
 }
 
-.coercion-tooltip-container {
-  position: relative;
-}
-
-.coercion-tooltip-background {
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 5001;
-}
-
-.coercion-tooltip {
-  background-color: white;
-  border-radius: 2px;
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  padding: 5px;
-  position: absolute;
-  height: auto;
-  width: auto;
-  top: 20px;
-  z-index: 5002;
-}
-
-.coercion-tooltip .selected-dimension {
-  background-color: steelblue;
-  color: white;
-}
-
 .state-action-controls {
   margin: 0 15px;
 }
@@ -966,43 +940,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 .template-modification-control-label {
   margin-left: 3px;
-}
-
-/* modal-tooltip */
-
-.modal-tooltip-container {
-  position: relative;
-}
-
-/* special position to allow the tooltip to breakout */
-.chart-controls .modal-tooltip-container {
-  position: unset;
-}
-
-.modal-tooltip {
-  border: 3px solid black;
-  border-radius: 2px;
-  background: lightgray;
-  display: flex;
-  padding: 20px;
-  position: absolute;
-  z-index: 1000;
-}
-
-.modal-tooltip::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-width: 10px;
-  border-style: solid;
-  border-color: transparent black transparent transparent;
-  top: 5px;
-  left: -20px;
-}
-
-.modal-tooltip-container .modal-tooltip {
-  overflow-y: auto;
 }
 
 .encoding-selection-option {
@@ -1069,25 +1006,6 @@ input[type=number]::-webkit-outer-spin-button {
 .shelf-dropdown {
   top: 3px;
   position: relative;
-}
-
-.tooltip-container .modal-background {
-  background: rgba(255, 255, 255, 0);
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 1000;
-}
-
-.tooltip-click-target {
-  cursor: pointer;
-}
-
-.list-options-popover .delete-option-button {
-  cursor: pointer;
-  font-size: 15px;
 }
 
 .tool-description {
@@ -1249,15 +1167,6 @@ input[type=number]::-webkit-outer-spin-button {
   background: #002340;
 }
 
-.code-option-tabs .tooltip-click-target {
-  font-size: 20px;
-}
-
-.code-option-tabs .tooltip-container {
-  align-items: center;
-  justify-content: center;
-}
-
 .about-bar {
   font-size: 15px;
 }
@@ -1266,6 +1175,10 @@ input[type=number]::-webkit-outer-spin-button {
   align-self: center;
   justify-content: space-around;
   font-size: 15px;
+}
+
+.code-edit-controls-button {
+  font-size: 25px;
 }
 
 /* split pane stuff */
@@ -1320,4 +1233,9 @@ input[type=number]::-webkit-outer-spin-button {
 
 .Resizer.disabled:hover {
   border-color: transparent;
+}
+
+.tooltip-internal {
+  display: flex;
+  width: 130px;
 }

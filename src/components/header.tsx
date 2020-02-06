@@ -1,6 +1,6 @@
 import React from 'react';
 import {TiArrowBack, TiArrowForward} from 'react-icons/ti';
-import Popover from './popover';
+import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
 
@@ -24,9 +24,7 @@ export default class Header extends React.Component<HeaderProps> {
               'action-deactivated': !canUndo,
               'state-action-button': true,
             })}
-            onClick={(): void => {
-              (canUndo ? triggerUndo : NULL)();
-            }}
+            onClick={(): any => (canUndo ? triggerUndo : NULL)()}
           >
             <TiArrowBack /> <span>UNDO</span>
           </div>
@@ -43,15 +41,18 @@ export default class Header extends React.Component<HeaderProps> {
             <span>REDO</span>
           </div>
         </div>
-        <Popover
-          clickTarget={<div className="about-bar">Template + Settings = Visualization (Learn More)</div>}
-          body={(): JSX.Element => (
+        <Tooltip
+          placement="bottom"
+          trigger="click"
+          overlay={
             <div>
               <h1>About this application</h1>
               <div>Terminology, etc</div>
             </div>
-          )}
-        />
+          }
+        >
+          <div className="about-bar">Template + Settings = Visualization (Learn More)</div>
+        </Tooltip>
       </div>
     );
   }

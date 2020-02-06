@@ -7,6 +7,7 @@ import {retrieveThumbnails} from './thumbnail';
 
 import './stylesheets/main.css';
 import './stylesheets/rc-slider.css';
+import 'rc-tooltip/assets/bootstrap_white.css';
 
 setupMonaco();
 retrieveThumbnails();

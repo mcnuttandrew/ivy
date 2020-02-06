@@ -3,6 +3,7 @@ import {TiArrowSync, TiPencil, TiEdit, TiFlowChildren, TiLockClosed, TiLockOpen}
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
+import Tooltip from 'rc-tooltip';
 
 interface Props {
   chainActions: GenericAction<any>;
@@ -52,12 +53,15 @@ export default function EncodingControls(props: Props): JSX.Element {
         ]),
       icon: <TiPencil />,
       label: 'NEW',
+      tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
     },
     {
       disabled: false,
       onClick: (): any => chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]),
       icon: <TiFlowChildren />,
       label: 'FORK',
+      tooltip:
+        'Create a new template starting from the current value of "Export To JSON" as the basis of the template.',
     },
     {
       disabled: !canSave || isGrammar,
@@ -69,18 +73,25 @@ export default function EncodingControls(props: Props): JSX.Element {
       },
       icon: !canSave || isGrammar ? <TiLockClosed /> : <TiLockOpen />,
       label: 'SAVE',
+      tooltip:
+        !canSave || isGrammar
+          ? 'There have been no changes made to this template and so doesnt need to be saved'
+          : 'Save the current template in to the template store, overwrites anything with the same name.',
     },
     {
       disabled: isGrammar,
       onClick: isGrammar ? NULL : (): any => setEditMode(!editMode),
       icon: <TiEdit />,
       label: editMode ? 'STOP EDIT' : 'START EDIT',
+      tooltip:
+        'Change to edit mode, allows you to modify what gui elements are present and how they visually relate',
     },
     {
       disabled: false,
       onClick: clearEncoding,
       icon: <TiArrowSync />,
       label: 'RESET',
+      tooltip: "Reset the template to it's blank state.",
     },
   ];
   return (
@@ -88,18 +99,24 @@ export default function EncodingControls(props: Props): JSX.Element {
       <div className="flex space-between full-width flex-wrap">
         {FULL_BUTTONS.map(button => {
           return (
-            <div
+            <Tooltip
               key={button.label}
-              className={classnames({
-                'template-modification-control': true,
-                'template-modification-control--disabled': button.disabled,
-              })}
-              onClick={(): void => {
-                button.onClick();
-              }}
+              placement="bottom"
+              trigger="hover"
+              overlay={<span className="tooltip-internal">{button.tooltip} </span>}
             >
-              {button.icon} <span className="template-modification-control-label">{button.label}</span>
-            </div>
+              <div
+                className={classnames({
+                  'template-modification-control': true,
+                  'template-modification-control--disabled': button.disabled,
+                })}
+                onClick={(): void => {
+                  button.onClick();
+                }}
+              >
+                {button.icon} <span className="template-modification-control-label">{button.label}</span>
+              </div>
+            </Tooltip>
           );
         })}
       </div>
