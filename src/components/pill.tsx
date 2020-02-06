@@ -32,7 +32,7 @@ function addToNext(props: AddToNextProps): JSX.Element {
   const {typeNotAddable, addToNextOpenSlot, column} = props;
   return (
     <Tooltip
-      placement="bottom"
+      placement="right"
       trigger="hover"
       overlay={
         <span className="tooltip-internal">

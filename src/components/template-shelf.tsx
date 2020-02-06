@@ -7,7 +7,7 @@ import {ColumnHeader} from '../types';
 import {DataTargetWidget, TemplateWidget} from '../templates/types';
 import {classnames} from '../utils';
 import {TEXT_TYPE} from '../constants/index';
-import Tooltip from 'rc-tooltip';
+import AllowedTypesList from './allowed-types-list';
 
 interface TemplateShelf {
   channelEncoding?: string;
@@ -51,13 +51,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
     />
   );
   return (
-    <div
-      ref={drop}
-      className={classnames({
-        'flex-down': true,
-        'shelf-container': true,
-      })}
-    >
+    <div ref={drop} className="flex-down shelf-container">
       <div className="shelf flex">
         <div className="field-label flex space-around">
           {!setName && <div className="flex">{field}</div>}
@@ -68,28 +62,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
               onChange={(event): any => setName(event.target.value)}
             />
           )}
-          <div className="flex data-type-container">
-            {widget.widget.allowedTypes.map(type => {
-              return (
-                <Tooltip
-                  key={type}
-                  placement="bottom"
-                  trigger="hover"
-                  overlay={
-                    <span className="tooltip-internal">{`Indicates that this data target accepts columns of ${type} type`}</span>
-                  }
-                >
-                  <div
-                    className={classnames({
-                      [`${type.toLowerCase()}-pill`]: true,
-                      'symbol-box': true,
-                    })}
-                    key={type}
-                  />
-                </Tooltip>
-              );
-            })}
-          </div>
+          <AllowedTypesList allowedTypes={widget.widget.allowedTypes} />
         </div>
         <div className="pill-dropzone">
           {!columnHeader && (

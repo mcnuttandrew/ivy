@@ -1,11 +1,11 @@
 import React from 'react';
 import {ListWidget, TemplateWidget} from '../../templates/types';
 import Selector from '../selector';
-import {TiDeleteOutline, TiCog} from 'react-icons/ti';
+import {TiCog} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 
 import {GeneralWidget} from './general-widget';
-import {EditParameterName, EditDisplayName, AddLabelToWidget} from './widget-common';
+import {EditParameterName, EditDisplayName, AddLabelToWidget, Reset} from './widget-common';
 
 function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -19,15 +19,14 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
           {widget.widget.allowedValues.map((value, jdx) => {
             return (
               <div key={jdx} className="flex">
-                <div
-                  className="delete-option-button"
+                <Reset
+                  tooltipLabel={'Remove this option from the list'}
+                  direction="left"
                   onClick={(): void => {
                     const updated = [...widget.widget.allowedValues].filter((_, jdx) => jdx !== idx);
                     setWidgetValue('allowedValues', updated, idx);
                   }}
-                >
-                  <TiDeleteOutline />
-                </div>
+                />
                 <div className="flex-down">
                   <input
                     value={value.value}
@@ -72,15 +71,14 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
           <div className="widget-title">{widget.displayName || widget.widgetName}</div>
           <Selector
             options={widget.widget.allowedValues}
-            selectedValue={templateMap[widget.widgetName]}
+            selectedValue={templateMap[widget.widgetName] || ''}
             onChange={(value: any): any => setTemplateValue({field: widget.widgetName, text: value})}
           />
-          <div
+          <Reset
+            tooltipLabel={`Reset to list to the default value: ${widget.widget.defaultValue}`}
             className="clear-option cursor-pointer"
             onClick={(): any => setTemplateValue({field: widget.widgetName, text: config.defaultValue})}
-          >
-            <TiDeleteOutline />
-          </div>
+          />
         </div>
       )}
       {editMode && (
@@ -94,7 +92,7 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
           <AddLabelToWidget label={'Current Value'}>
             <Selector
               options={config.allowedValues}
-              selectedValue={templateMap[widget.widgetName]}
+              selectedValue={templateMap[widget.widgetName] || ''}
               onChange={(value: any): any => {
                 setTemplateValue({field: widget.widgetName, text: value});
               }}
@@ -103,7 +101,7 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
           <AddLabelToWidget label={'Default value'}>
             <Selector
               options={config.allowedValues}
-              selectedValue={config.defaultValue}
+              selectedValue={config.defaultValue || ''}
               onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
             />
           </AddLabelToWidget>

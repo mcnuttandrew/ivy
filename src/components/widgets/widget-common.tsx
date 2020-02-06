@@ -1,5 +1,8 @@
 import React from 'react';
+import Tooltip from 'rc-tooltip';
 import {TemplateWidget, WidgetSubType} from '../../templates/types';
+import {TiDeleteOutline} from 'react-icons/ti';
+import {classnames} from '../../utils';
 
 interface EditParameterNameProps {
   widget: TemplateWidget<WidgetSubType>;
@@ -48,5 +51,34 @@ export function AddLabelToWidget(props: AddLabelToWidgetProps): JSX.Element {
       <div className="tool-description">{label}</div>
       {children}
     </div>
+  );
+}
+interface ResetProps {
+  onClick: any;
+  tooltipLabel: string;
+  className?: string;
+  direction?: string;
+}
+export function Reset(props: ResetProps): JSX.Element {
+  const {onClick, tooltipLabel, className, direction = 'right'} = props;
+  return (
+    <Tooltip
+      placement={direction}
+      trigger="hover"
+      overlay={
+        <span
+          className={classnames({
+            'tooltip-internal': true,
+            [className || '']: true,
+          })}
+        >
+          {tooltipLabel}
+        </span>
+      }
+    >
+      <div className="delete-option-button" onClick={onClick}>
+        <TiDeleteOutline />
+      </div>
+    </Tooltip>
   );
 }
