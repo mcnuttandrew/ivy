@@ -3,9 +3,9 @@ import VegaWrapper from './vega-wrap';
 import {VegaTheme, ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
+import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd, TiChartBarOutline, TiTabsOutline} from 'react-icons/ti';
 import {GenericAction, DataRow} from '../actions';
-import Popover from './popover';
 import DataSearchMode from './program-search/data-search-mode';
 import {NONE_TEMPLATE} from '../constants/index';
 
@@ -30,6 +30,126 @@ interface ChartAreaProps {
   templateMap: TemplateMap;
   templateComplete: boolean;
   views: string[];
+}
+
+interface NewViewProps {
+  createNewView: GenericAction<void>;
+}
+
+function newViewButton(props: NewViewProps): JSX.Element {
+  const {createNewView} = props;
+  return (
+    <Tooltip
+      placement="bottom"
+      trigger="hover"
+      overlay={<span className="tooltip-internal">Create a new view from the initial selection.</span>}
+    >
+      <div className="view-control" onClick={(): any => createNewView()}>
+        <span className="margin-right">New</span>
+        <TiDocumentAdd />
+      </div>
+    </Tooltip>
+  );
+}
+interface CloneViewrops {
+  cloneView: GenericAction<void>;
+}
+
+function cloneViewButton(props: CloneViewrops): JSX.Element {
+  const {cloneView} = props;
+  return (
+    <Tooltip
+      placement="bottom"
+      trigger="hover"
+      overlay={<span className="tooltip-internal">Clone the current view into a new view.</span>}
+    >
+      <div className="view-control" onClick={(): any => cloneView()}>
+        <span className="margin-right">Clone</span>
+        <TiTabsOutline />
+      </div>
+    </Tooltip>
+  );
+}
+
+interface SeeOptionsButtonProps {
+  setEncodingMode: GenericAction<string>;
+  clearEncoding: GenericAction<void>;
+  chainActions: GenericAction<any>;
+  onOptionsScreen: boolean;
+}
+
+function seeOptionsButton(props: SeeOptionsButtonProps): JSX.Element {
+  const {setEncodingMode, clearEncoding, chainActions, onOptionsScreen} = props;
+  return (
+    <Tooltip
+      placement="bottom"
+      trigger="hover"
+      overlay={
+        <span className="tooltip-internal">
+          {onOptionsScreen
+            ? 'Already on the template selection screen, click this will do nothing'
+            : 'Return to the template selection screen'}
+        </span>
+      }
+    >
+      <div
+        className={classnames({
+          'view-control': true,
+          'selected-view-control': onOptionsScreen,
+        })}
+        onClick={(): any =>
+          chainActions([(): any => setEncodingMode(NONE_TEMPLATE), (): any => clearEncoding()])
+        }
+      >
+        <span className="margin-right">Templates</span>
+        <TiChartBarOutline />
+      </div>
+    </Tooltip>
+  );
+}
+
+interface ViewOptionProps {
+  changeViewName: GenericAction<{idx: number; value: string}>;
+  currentView: string;
+  deleteView: GenericAction<string>;
+  idx: number;
+  switchView: GenericAction<string>;
+  view: string;
+}
+
+function viewOption(props: ViewOptionProps): JSX.Element {
+  const {idx, view, currentView, changeViewName, switchView, deleteView} = props;
+  return (
+    <div
+      key={idx}
+      className={classnames({
+        'view-control': true,
+        selected: view === currentView,
+      })}
+      onClick={(): any => switchView(view)}
+    >
+      <button>{view}</button>
+      <Tooltip
+        placement="bottom"
+        trigger="click"
+        overlay={
+          <div>
+            <div>View Controls</div>
+            <input
+              value={view}
+              type="text"
+              onChange={(e): any => changeViewName({idx, value: e.target.value})}
+            />
+            <button onClick={(): any => deleteView(view)}>delete view</button>
+          </div>
+        }
+      >
+        <span className="view-settings">
+          <TiCog />
+        </span>
+      </Tooltip>
+    </div>
+  );
 }
 
 export default class ChartArea extends React.Component<ChartAreaProps> {
@@ -61,64 +181,18 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
-          <div className="view-control" onClick={(): any => createNewView()}>
-            <span className="margin-right">New</span>
-            <TiDocumentAdd />
-          </div>
-          <div className="view-control" onClick={(): any => cloneView()}>
-            <span className="margin-right">Clone</span>
-            <TiTabsOutline />
-          </div>
-          <div
-            className="view-control"
-            onClick={(): any =>
-              chainActions([(): any => setEncodingMode(NONE_TEMPLATE), (): any => clearEncoding()])
-            }
-          >
-            <span className="margin-right">Templates</span>
-            <TiChartBarOutline />
-          </div>
+          {newViewButton({createNewView})}
+          {cloneViewButton({cloneView})}
+          {seeOptionsButton({
+            setEncodingMode,
+            clearEncoding,
+            chainActions,
+            onOptionsScreen: template && template.templateName === NONE_TEMPLATE,
+          })}
           <div className="view-container">
-            {views.map((view, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className={classnames({
-                    'view-control': true,
-                    selected: view === currentView,
-                  })}
-                >
-                  <button onClick={(): any => switchView(view)}>{view}</button>
-                  <Popover
-                    className="list-options-popover"
-                    clickTarget={
-                      <span className="view-settings">
-                        <TiCog />
-                      </span>
-                    }
-                    style={{
-                      width: '250px',
-                      height: '200px',
-                      left: '120px',
-                      top: '50px',
-                    }}
-                    body={(): JSX.Element => {
-                      return (
-                        <div>
-                          <div>View Controls</div>
-                          <input
-                            value={view}
-                            type="text"
-                            onChange={(e): any => changeViewName({idx, value: e.target.value})}
-                          />
-                          <button onClick={(): any => deleteView(view)}>delete view</button>
-                        </div>
-                      );
-                    }}
-                  />
-                </div>
-              );
-            })}
+            {views.map((view, idx) =>
+              viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
+            )}
           </div>
         </div>
         <div

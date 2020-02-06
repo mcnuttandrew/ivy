@@ -1,8 +1,7 @@
 import React from 'react';
 import {FreeTextWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
-import {EditParameterName, EditDisplayName} from './widget-common';
-import {TiDeleteOutline} from 'react-icons/ti';
+import {EditParameterName, EditDisplayName, Reset} from './widget-common';
 
 export default function FreeTextWidgetComponent(
   props: GeneralWidget<TemplateWidget<FreeTextWidget>>,
@@ -19,9 +18,10 @@ export default function FreeTextWidgetComponent(
         type="text"
         onChange={(event): any => setTemplateValue({field, text: event.target.value})}
       />
-      <div className="delete-option-button" onClick={(): any => setTemplateValue({field, text: ''})}>
-        <TiDeleteOutline />
-      </div>
+      <Reset
+        tooltipLabel={'Reset to free text widget to be empty'}
+        onClick={(): any => setTemplateValue({field, text: ''})}
+      />
     </div>
   );
 }

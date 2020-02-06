@@ -3,7 +3,7 @@ import MonacoEditor from 'react-monaco-editor';
 import stringify from 'json-stringify-pretty-compact';
 import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
-import Popover from './popover';
+import Tooltip from 'rc-tooltip';
 import {EDITOR_OPTIONS} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
@@ -256,7 +256,11 @@ export default class CodeEditor extends React.Component<Props, State> {
           <div>{editMode ? 'SAVE' : 'EDIT'}</div>
           <TiEdit />
         </div>
-        <Popover clickTarget={<TiCog />} body={(): JSX.Element => this.editorControls()} />
+        <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
+          <div className="code-edit-controls-button">
+            <TiCog />
+          </div>
+        </Tooltip>
 
         {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'SPECIFICATION', 'EXPORT TO JSON']
           .filter(d => d)

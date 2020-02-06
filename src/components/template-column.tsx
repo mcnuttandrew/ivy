@@ -9,12 +9,15 @@ import {
 } from '../actions';
 import {Template, TemplateWidget, WidgetSubType, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
-import TemplateColumnAddNewWidgetPopover from './template-column-add-new-widget-popover';
+
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
 import {updateThumbnail} from '../thumbnail';
 import {AddLabelToWidget} from './widgets/widget-common';
 import Selector from './selector';
+import Tooltip from 'rc-tooltip';
+import {TiPlus} from 'react-icons/ti';
+import {widgetFactory, preconfiguredWidgets} from '../templates';
 
 interface TemplateColumnProps {
   columns: ColumnHeader[];
@@ -30,6 +33,40 @@ interface TemplateColumnProps {
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
   setAllTemplateValues: GenericAction<TemplateMap>;
   moveWidget: GenericAction<MoveWidgetPayload>;
+}
+
+interface AddWidgetButtonProps {
+  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
+  widgets: TemplateWidget<WidgetSubType>[];
+}
+function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
+  const {addWidget, widgets} = props;
+  const options = Object.entries(widgetFactory).concat(Object.entries(preconfiguredWidgets));
+  return (
+    <Tooltip
+      placement="bottom"
+      trigger="click"
+      overlay={
+        <div>
+          <h3>Add New Widget</h3>
+          <div className="flex flex-wrap">
+            {options.map((row: any) => {
+              const [key, widget] = row;
+              return (
+                <button key={key} onClick={(): any => addWidget(widget(widgets.length))}>
+                  {`Add ${key}`}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      }
+    >
+      <button>
+        Add Widget <TiPlus />
+      </button>
+    </Tooltip>
+  );
 }
 
 function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {
@@ -180,7 +217,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         )}
         {editMode && (
           <div className="flex">
-            <TemplateColumnAddNewWidgetPopover widgets={template.widgets} addWidget={addWidget} />
+            <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />
             <button
               onClick={(): any =>
                 updateThumbnail(template.templateName).then(() =>

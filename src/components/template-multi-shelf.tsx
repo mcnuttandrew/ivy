@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
 
-import DataSymbol from './data-symbol';
+import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
@@ -65,6 +65,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
     >
       <div className="multi-shelf flex">
         <div className="field-label flex-down space-around">
+          <AllowedTypesList allowedTypes={allowed} />
           {!setName && <div>{field}</div>}
           {setName && (
             <input
@@ -73,11 +74,6 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
               onChange={(event): any => setName(event.target.value)}
             />
           )}
-          <div className="flex">
-            {widget.widget.allowedTypes.map(type => {
-              return <DataSymbol type={type} key={type} />;
-            })}
-          </div>
         </div>
         <div className="pill-dropzone">
           {columnHeaders.map((columnHeader, idx: number) => {

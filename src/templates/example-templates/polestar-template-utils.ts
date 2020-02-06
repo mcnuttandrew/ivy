@@ -10,8 +10,8 @@ import {
   WidgetValidation,
 } from '../types';
 import {toList} from '../../utils';
-const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'METACOLUMN', 'TIME'];
-const VegaLiteDataTypes = ['nominal', 'ordinal', 'quantitative', 'temporal']; //.map(toQuote);
+const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
+const VegaLiteDataTypes = ['nominal', 'ordinal', 'quantitative', 'temporal'];
 export const toQuote = (x: string): string => `"${x}"`;
 const justCountAgg = toList(['none', 'count']);
 justCountAgg[0].value = undefined;
