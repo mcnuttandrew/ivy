@@ -20,6 +20,7 @@ interface ChartAreaProps {
   currentView: string;
   data: DataRow[];
   deleteView: GenericAction<string>;
+  deleteTemplate: GenericAction<string>;
   encodingMode: string;
   missingFields: string[];
   setEncodingMode: GenericAction<string>;
@@ -165,6 +166,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       currentView,
       data,
       deleteView,
+      deleteTemplate,
       encodingMode,
       missingFields,
       setEncodingMode,
@@ -205,6 +207,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         >
           {noneTemplate && (
             <DataSearchMode
+              deleteTemplate={deleteTemplate}
               columns={columns}
               setEncodingMode={setEncodingMode}
               templates={templates}

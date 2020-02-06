@@ -34,7 +34,7 @@ import ChartArea from './chart-area';
 import CodeEditor from './code-editor';
 import DataColumn from './data-column';
 import DataModal from './data-modal';
-import ProgramModal from './program-search/program-modal';
+import CommunityProgramSearch from './program-search/community-modal';
 import EncodingColumn from './encoding-column';
 import EncodingControls from './encoding-controls';
 import Header from './header';
@@ -139,11 +139,17 @@ interface RootProps {
   triggerUndo: GenericAction<void>;
   updateFilter: GenericAction<UpdateFilterPayload>;
 }
+interface State {
+  // a mechanism to kick the component into a repaint
+  repaintIdx: number;
+}
 
-class RootComponent extends React.Component<RootProps> {
+class RootComponent extends React.Component<RootProps, State> {
   constructor(props: RootProps) {
     super(props);
     this.createFilter = this.createFilter.bind(this);
+    this.state = {repaintIdx: 0};
+    this.triggerRepaint = this.triggerRepaint.bind(this);
   }
   componentDidMount(): void {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
@@ -155,9 +161,13 @@ class RootComponent extends React.Component<RootProps> {
     console.error('ERRPR', error, errorInfo);
   }
 
+  triggerRepaint(): void {
+    this.setState({repaintIdx: this.state.repaintIdx + 1});
+  }
+
   createFilter(field: string): void {
+    // this biz-logic function is here in order to move the data off of the immutable reducer
     const {columns, createFilter, data} = this.props;
-    // const isDim = findField(state, payload.field).type === 'DIMENSION';
     const isDim = columns.find(x => x.field === field).type === 'DIMENSION';
     const newFilter: Filter = {
       filter: {
@@ -182,6 +192,7 @@ class RootComponent extends React.Component<RootProps> {
         currentView={this.props.currentView}
         data={this.props.data}
         deleteView={this.props.deleteView}
+        deleteTemplate={this.props.deleteTemplate}
         encodingMode={this.props.encodingMode}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
@@ -197,129 +208,84 @@ class RootComponent extends React.Component<RootProps> {
   }
 
   leftColumn(): JSX.Element {
-    const {
-      addToNextOpenSlot,
-      coerceType,
-      columns,
-      currentlySelectedFile,
-      deleteFilter,
-      fillableFields,
-      metaColumns,
-      setRepeats,
-      showGUIView,
-      spec,
-      template,
-      toggleDataModal,
-      updateFilter,
-    } = this.props;
     return (
       <div className="flex-down full-height column background-2">
-        <ImportDataColumn currentlySelectedFile={currentlySelectedFile} toggleDataModal={toggleDataModal} />
+        <ImportDataColumn
+          currentlySelectedFile={this.props.currentlySelectedFile}
+          toggleDataModal={this.props.toggleDataModal}
+        />
         <DataColumn
-          addToNextOpenSlot={addToNextOpenSlot}
-          coerceType={coerceType}
-          columns={columns}
+          addToNextOpenSlot={this.props.addToNextOpenSlot}
+          coerceType={this.props.coerceType}
+          columns={this.props.columns}
           createFilter={this.createFilter}
-          deleteFilter={deleteFilter}
-          fillableFields={fillableFields}
-          metaColumns={metaColumns}
+          deleteFilter={this.props.deleteFilter}
+          fillableFields={this.props.fillableFields}
+          metaColumns={this.props.metaColumns}
           onDropFilter={(item: any): any => this.createFilter(item.text)}
-          setRepeats={setRepeats}
-          showGUIView={showGUIView}
-          spec={spec}
-          template={template}
-          updateFilter={updateFilter}
+          setRepeats={this.props.setRepeats}
+          showGUIView={this.props.showGUIView}
+          spec={this.props.spec}
+          template={this.props.template}
+          updateFilter={this.props.updateFilter}
         />
       </div>
     );
   }
 
   centerColumn(): JSX.Element {
-    const {
-      addWidget,
-      chainActions,
-      changeMarkType,
-      clearEncoding,
-      columns,
-      deleteTemplate,
-      editMode,
-      encodingMode,
-      metaColumns,
-      modifyValueOnTemplate,
-      moveWidget,
-      removeWidget,
-      saveCurrentTemplate,
-      setAllTemplateValues,
-      setBlankTemplate,
-      setCodeMode,
-      setEditMode,
-      setEncodingMode,
-      setEncodingParameter,
-      setNewSpec,
-      showProgrammaticMode,
-      setTemplateValue,
-      setWidgetValue,
-      showGUIView,
-      spec,
-      swapXAndYChannels,
-      template,
-      templateMap,
-      templateSaveState,
-      templates,
-    } = this.props;
-
     return (
       <div className=" full-height full-width flex-down" style={{minWidth: '360px'}}>
         {SHOW_TEMPLATE_CONTROLS && (
           <EncodingControls
-            chainActions={chainActions}
-            clearEncoding={clearEncoding}
-            deleteTemplate={deleteTemplate}
-            editMode={editMode}
-            encodingMode={encodingMode}
-            modifyValueOnTemplate={modifyValueOnTemplate}
-            saveCurrentTemplate={saveCurrentTemplate}
-            setBlankTemplate={setBlankTemplate}
-            setCodeMode={setCodeMode}
-            setEditMode={setEditMode}
-            setEncodingMode={setEncodingMode}
-            template={template}
-            templateSaveState={templateSaveState}
-            templates={templates}
+            chainActions={this.props.chainActions}
+            clearEncoding={this.props.clearEncoding}
+            deleteTemplate={this.props.deleteTemplate}
+            editMode={this.props.editMode}
+            encodingMode={this.props.encodingMode}
+            modifyValueOnTemplate={this.props.modifyValueOnTemplate}
+            saveCurrentTemplate={this.props.saveCurrentTemplate}
+            setBlankTemplate={this.props.setBlankTemplate}
+            setCodeMode={this.props.setCodeMode}
+            setEditMode={this.props.setEditMode}
+            setEncodingMode={this.props.setEncodingMode}
+            template={this.props.template}
+            templateSaveState={this.props.templateSaveState}
+            templates={this.props.templates}
           />
         )}
-        {encodingMode === 'grammer' && showGUIView && (
+        {this.props.encodingMode === 'grammer' && this.props.showGUIView && (
           <EncodingColumn
-            changeMarkType={changeMarkType}
-            columns={columns}
-            metaColumns={metaColumns}
+            changeMarkType={this.props.changeMarkType}
+            columns={this.props.columns}
+            metaColumns={this.props.metaColumns}
             onDrop={(item: any): void => {
               if (item.disable) {
                 return;
               }
-              setEncodingParameter(item);
+              this.props.setEncodingParameter(item);
             }}
             onDropFilter={(item: any): any => this.createFilter(item.text)}
-            setEncodingParameter={setEncodingParameter}
-            setNewSpec={setNewSpec}
-            spec={spec}
-            swapXAndYChannels={swapXAndYChannels}
+            setEncodingParameter={this.props.setEncodingParameter}
+            setNewSpec={this.props.setNewSpec}
+            spec={this.props.spec}
+            swapXAndYChannels={this.props.swapXAndYChannels}
           />
         )}
-        {encodingMode !== 'grammer' && template && showGUIView && (
+        {this.props.encodingMode !== 'grammer' && this.props.template && this.props.showGUIView && (
           <TemplateColumn
-            addWidget={addWidget}
-            columns={columns}
-            editMode={editMode}
-            height={showProgrammaticMode && showGUIView && getHeight()}
-            moveWidget={moveWidget}
-            modifyValueOnTemplate={modifyValueOnTemplate}
-            removeWidget={removeWidget}
-            setTemplateValue={setTemplateValue}
-            setWidgetValue={setWidgetValue}
-            setAllTemplateValues={setAllTemplateValues}
-            template={template}
-            templateMap={templateMap}
+            addWidget={this.props.addWidget}
+            columns={this.props.columns}
+            editMode={this.props.editMode}
+            height={this.props.showProgrammaticMode && this.props.showGUIView && getHeight()}
+            moveWidget={this.props.moveWidget}
+            modifyValueOnTemplate={this.props.modifyValueOnTemplate}
+            removeWidget={this.props.removeWidget}
+            setTemplateValue={this.props.setTemplateValue}
+            setWidgetValue={this.props.setWidgetValue}
+            setAllTemplateValues={this.props.setAllTemplateValues}
+            template={this.props.template}
+            templateMap={this.props.templateMap}
           />
         )}
       </div>
@@ -327,109 +293,72 @@ class RootComponent extends React.Component<RootProps> {
   }
 
   codeEditor(): JSX.Element {
-    const {
-      addWidget,
-      codeMode,
-      chainActions,
-      editMode,
-      editorError,
-      editorFontSize,
-      readInTemplate,
-      readInTemplateMap,
-      setCodeMode,
-      setEditMode,
-      setEditorFontSize,
-      setNewSpecCode,
-      setProgrammaticView,
-      showProgrammaticMode,
-      spec,
-      specCode,
-      template,
-      templateMap,
-    } = this.props;
     return (
       <div
         className={classnames({
           'full-width': true,
           'flex-down': true,
-          'full-height': showProgrammaticMode,
+          'full-height': this.props.showProgrammaticMode,
         })}
       >
         <CodeEditor
-          addWidget={addWidget}
-          codeMode={codeMode}
-          chainActions={chainActions}
-          editMode={editMode}
-          editorError={editorError}
-          editorFontSize={editorFontSize}
-          readInTemplate={readInTemplate}
-          readInTemplateMap={readInTemplateMap}
-          setCodeMode={setCodeMode}
-          setEditMode={setEditMode}
-          setEditorFontSize={setEditorFontSize}
-          setNewSpecCode={setNewSpecCode}
-          setProgrammaticView={setProgrammaticView}
-          showProgrammaticMode={showProgrammaticMode}
-          spec={spec}
-          specCode={specCode}
-          template={template}
-          templateMap={templateMap}
+          addWidget={this.props.addWidget}
+          codeMode={this.props.codeMode}
+          chainActions={this.props.chainActions}
+          editMode={this.props.editMode}
+          editorError={this.props.editorError}
+          editorFontSize={this.props.editorFontSize}
+          readInTemplate={this.props.readInTemplate}
+          readInTemplateMap={this.props.readInTemplateMap}
+          setCodeMode={this.props.setCodeMode}
+          setEditMode={this.props.setEditMode}
+          setEditorFontSize={this.props.setEditorFontSize}
+          setNewSpecCode={this.props.setNewSpecCode}
+          setProgrammaticView={this.props.setProgrammaticView}
+          showProgrammaticMode={this.props.showProgrammaticMode}
+          spec={this.props.spec}
+          specCode={this.props.specCode}
+          template={this.props.template}
+          templateMap={this.props.templateMap}
         />
       </div>
     );
   }
 
   render(): JSX.Element {
-    const {
-      canRedo,
-      canUndo,
-      chainActions,
-      changeSelectedFile,
-      dataModalOpen,
-      deleteTemplate,
-      encodingMode,
-      loadCustomDataset,
-      loadExternalTemplate,
-      programModalOpen,
-      toggleDataModal,
-      toggleProgramModal,
-      triggerRedo,
-      triggerUndo,
-      showProgrammaticMode,
-      setEncodingMode,
-      templates,
-    } = this.props;
-
     return (
       <div className="flex-down full-width full-height">
-        {dataModalOpen && (
+        {this.props.dataModalOpen && (
           <DataModal
-            chainActions={chainActions}
-            changeSelectedFile={changeSelectedFile}
-            loadCustomDataset={loadCustomDataset}
-            toggleDataModal={toggleDataModal}
+            chainActions={this.props.chainActions}
+            changeSelectedFile={this.props.changeSelectedFile}
+            loadCustomDataset={this.props.loadCustomDataset}
+            toggleDataModal={this.props.toggleDataModal}
           />
         )}
-        {programModalOpen && (
-          <ProgramModal
-            chainActions={chainActions}
-            deleteTemplate={deleteTemplate}
-            loadExternalTemplate={loadExternalTemplate}
-            setEncodingMode={setEncodingMode}
-            templates={templates}
-            toggleProgramModal={toggleProgramModal}
+        {this.props.programModalOpen && (
+          <CommunityProgramSearch
+            triggerRepaint={this.triggerRepaint}
+            loadExternalTemplate={this.props.loadExternalTemplate}
+            toggleProgramModal={this.props.toggleProgramModal}
+            templates={this.props.templates}
           />
         )}
-        <Header canRedo={canRedo} canUndo={canUndo} triggerRedo={triggerRedo} triggerUndo={triggerUndo} />
+        <Header
+          canRedo={this.props.canRedo}
+          canUndo={this.props.canUndo}
+          triggerRedo={this.props.triggerRedo}
+          triggerUndo={this.props.triggerUndo}
+        />
         <div className="flex full-height relative">
           <DndProvider backend={HTML5Backend}>
-            <Wrapper showProgrammaticMode={showProgrammaticMode} showGUIView={true}>
+            <Wrapper showProgrammaticMode={this.props.showProgrammaticMode} showGUIView={true}>
               <div className="flex-down full-height">
                 <TemplatePreviewColumn
-                  encodingMode={encodingMode}
-                  setEncodingMode={setEncodingMode}
-                  templates={templates}
-                  toggleProgramModal={toggleProgramModal}
+                  encodingMode={this.props.encodingMode}
+                  setEncodingMode={this.props.setEncodingMode}
+                  templates={this.props.templates}
+                  toggleProgramModal={this.props.toggleProgramModal}
                 />
                 <div className="flex" style={{height: 'calc(100% - 77px)'}}>
                   {this.leftColumn()}
