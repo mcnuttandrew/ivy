@@ -5,6 +5,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
+import {thumbnailLocation} from '../thumbnail';
 
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
@@ -207,8 +208,12 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   leftColumn(): JSX.Element {
+    const {template} = this.props;
     return (
       <div className="flex-down full-height column background-2">
+        <div className="template-logo">
+          <img src={thumbnailLocation(template && template.templateName)} />
+        </div>
         <ImportDataColumn
           currentlySelectedFile={this.props.currentlySelectedFile}
           toggleDataModal={this.props.toggleDataModal}
@@ -225,7 +230,7 @@ class RootComponent extends React.Component<RootProps, State> {
           setRepeats={this.props.setRepeats}
           showGUIView={this.props.showGUIView}
           spec={this.props.spec}
-          template={this.props.template}
+          template={template}
           updateFilter={this.props.updateFilter}
         />
       </div>

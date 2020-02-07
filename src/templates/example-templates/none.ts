@@ -42,6 +42,10 @@ const NoneTemplate: Template = {
     },
   ],
   widgetValidations: [],
-  code: JSON.stringify({$schema: 'none'}),
+  code: JSON.stringify({
+    $schema: 'none',
+    dataTargetSearch: '[dataTargetSearch]',
+    // SearchKey: '[SearchKey]',
+  }),
 };
 export default NoneTemplate;

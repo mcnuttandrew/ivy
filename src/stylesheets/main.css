@@ -280,6 +280,12 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 
+.template-logo {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
 .template-column.column.edit-mode > div {
   margin-bottom: 200px;
 }

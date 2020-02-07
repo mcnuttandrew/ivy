@@ -278,7 +278,7 @@ export default class CodeEditor extends React.Component<Props, State> {
           {this.codeCollapse()}
           <div className="flex code-controls-buttons">
             <Tooltip
-              placement="top"
+              placement="bottom"
               trigger="hover"
               overlay={
                 <span className="tooltip-internal">
