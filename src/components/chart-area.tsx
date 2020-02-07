@@ -1,6 +1,6 @@
 import React from 'react';
 import VegaWrapper from './vega-wrap';
-import {VegaTheme, ColumnHeader} from '../types';
+import {VegaTheme, ColumnHeader, Json} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
@@ -24,7 +24,7 @@ interface ChartAreaProps {
   encodingMode: string;
   missingFields: string[];
   setEncodingMode: GenericAction<string>;
-  spec: any;
+  spec: Json;
   switchView: GenericAction<string>;
   template?: Template;
   templates: Template[];

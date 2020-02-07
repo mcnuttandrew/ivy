@@ -27,7 +27,7 @@ import {getUniques, getDomain, getTemplateSaveState, classnames, computeValidAdd
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {ColumnHeader, VegaTheme} from '../types';
+import {ColumnHeader, VegaTheme, Json} from '../types';
 import {AppState, DataReducerState} from '../reducers/default-state';
 
 import ChartArea from './chart-area';
@@ -196,7 +196,7 @@ class RootComponent extends React.Component<RootProps, State> {
         encodingMode={this.props.encodingMode}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
-        spec={this.props.spec}
+        spec={this.props.spec as Json}
         switchView={this.props.switchView}
         template={this.props.template}
         templateComplete={this.props.templateComplete}
