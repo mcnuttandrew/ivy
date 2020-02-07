@@ -75,6 +75,7 @@ interface RootProps {
   editMode: boolean;
   editorError: null | string;
   editorFontSize: number;
+  editorLineWrap: boolean;
   encodingMode: string;
   fillableFields: Set<string>;
   metaColumns: ColumnHeader[];
@@ -96,8 +97,8 @@ interface RootProps {
   chainActions: GenericAction<any>;
   changeMarkType: GenericAction<string>;
   changeSelectedFile: GenericAction<string>;
-  changeViewName: GenericAction<{idx: number; value: string}>;
   changeTheme: GenericAction<string>;
+  changeViewName: GenericAction<{idx: number; value: string}>;
   clearEncoding: GenericAction<void>;
   cloneView: GenericAction<void>;
   coerceType: GenericAction<CoerceTypePayload>;
@@ -117,11 +118,12 @@ interface RootProps {
   readInTemplateMap: GenericAction<HandleCodePayload>;
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
-  setBlankTemplate: GenericAction<boolean>;
   setAllTemplateValues: GenericAction<TemplateMap>;
+  setBlankTemplate: GenericAction<boolean>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEditorFontSize: GenericAction<number>;
+  setEditorLineWrap: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
   setEncodingParameter: GenericAction<SetTemplateValuePayload>;
   setGuiView: GenericAction<boolean>;
@@ -306,6 +308,8 @@ class RootComponent extends React.Component<RootProps, State> {
           codeMode={this.props.codeMode}
           chainActions={this.props.chainActions}
           editMode={this.props.editMode}
+          editorLineWrap={this.props.editorLineWrap}
+          setEditorLineWrap={this.props.setEditorLineWrap}
           editorError={this.props.editorError}
           editorFontSize={this.props.editorFontSize}
           readInTemplate={this.props.readInTemplate}
@@ -392,6 +396,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     editMode: base.editMode,
     editorError: base.editorError,
     editorFontSize: base.editorFontSize,
+    editorLineWrap: base.editorLineWrap,
     encodingMode: base.encodingMode,
     fillableFields: computeValidAddNexts(template, templateMap),
     metaColumns: base.metaColumns,

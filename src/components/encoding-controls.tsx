@@ -3,6 +3,7 @@ import {TiArrowSync, TiPencil, TiEdit, TiFlowChildren, TiLockClosed, TiLockOpen}
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
+import {TEMPLATE_BODY} from '../constants/index';
 import Tooltip from 'rc-tooltip';
 
 interface Props {
@@ -49,7 +50,7 @@ export default function EncodingControls(props: Props): JSX.Element {
         chainActions([
           (): any => setBlankTemplate(false),
           (): any => setEditMode(true),
-          (): any => setCodeMode('TEMPLATE'),
+          (): any => setCodeMode(TEMPLATE_BODY),
         ]),
       icon: <TiPencil />,
       label: 'NEW',

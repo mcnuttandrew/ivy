@@ -2,6 +2,7 @@ import produce from 'immer';
 
 import {ActionResponse, AppState, EMPTY_SPEC, toggle, blindSet} from './default-state';
 import {getTemplate} from '../utils';
+import {JSON_OUTPUT} from '../constants/index';
 
 import {evaluateHydraProgram} from '../hydra-lang';
 import {addToNextOpenSlot} from './apt-actions';
@@ -16,6 +17,7 @@ export const changeTheme = blindSet('currentTheme');
 export const setCodeMode = blindSet('codeMode');
 export const setEditMode = blindSet('editMode');
 export const setEditorFontSize = blindSet('editorFontSize');
+export const setEditorLineWrap = blindSet('editorLineWrap');
 export const setGuiView = blindSet('showGUIView');
 
 // TODO there is another quote trim somewhere
@@ -76,7 +78,7 @@ export const setEncodingMode: ActionResponse<string> = (state, payload) => {
   const newState = applyEncodingModeToState(
     produce(state, draftState => {
       draftState.editMode = false;
-      draftState.codeMode = 'EXPORT TO JSON';
+      draftState.codeMode = JSON_OUTPUT;
     }),
     {mode: payload, fillWithDefault: true},
   );

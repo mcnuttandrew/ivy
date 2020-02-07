@@ -371,11 +371,11 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .measure-pill {
-  background: lightseagreen;
+  background: mediumseagreen;
 }
 
 .dimension-pill {
-  background: mediumseagreen;
+  background: lightseagreen;
 }
 
 .time-pill {
@@ -1154,26 +1154,42 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 10px;
 }
 
-.code-option-tabs {
-  cursor: pointer;
+.code-controls {
   color: #ce9178;
+}
+
+.code-option-tabs {
   display: flex;
   font-size: 12px;
   text-align: center;
 }
 
+.code-option-tab-section {
+  align-items: flex-start;
+  margin-left: 15px;
+}
+
+.code-option-tab-section.option-disabled {
+  color: lightgray;
+  cursor: not-allowed;
+}
+
 .code-option-tab {
   align-items: center;
+  cursor: pointer;
   display: flex;
   justify-content: center;
-  margin-top: 3px;
   margin-bottom: 3px;
+  margin-right: 15px;
+  margin-top: 3px;
   width: 100%;
 }
 
 .code-option-tab.selected-tab {
   background: #002340;
 }
+
+
 
 .about-bar {
   font-size: 15px;

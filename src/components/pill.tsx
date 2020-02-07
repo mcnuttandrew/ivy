@@ -107,7 +107,7 @@ function addFilter(props: AddFilterProps): JSX.Element {
   const {column, inEncoding, createFilter} = props;
   return (
     <Tooltip
-      placement="right"
+      placement="left"
       trigger="hover"
       overlay={<span className="tooltip-internal">Create a new filter based on this column</span>}
     >

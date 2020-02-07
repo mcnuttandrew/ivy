@@ -4,7 +4,13 @@ import stringify from 'json-stringify-pretty-compact';
 import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
-import {EDITOR_OPTIONS} from '../constants/index';
+import {
+  EDITOR_OPTIONS,
+  JSON_OUTPUT,
+  WIDGET_VALUES,
+  WIDGET_CONFIGURATION,
+  TEMPLATE_BODY,
+} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 import {classnames, serializeTemplate, get} from '../utils';
@@ -12,16 +18,18 @@ import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/intros
 
 interface Props {
   addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
-  codeMode: string;
   chainActions: GenericAction<any>;
-  editorError: null | string;
+  codeMode: string;
   editMode: boolean;
+  editorError: null | string;
   editorFontSize: number;
+  editorLineWrap: boolean;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
   setCodeMode: GenericAction<string>;
-  setEditorFontSize: GenericAction<number>;
   setEditMode: GenericAction<boolean>;
+  setEditorFontSize: GenericAction<number>;
+  setEditorLineWrap: GenericAction<boolean>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<void>;
   showProgrammaticMode: boolean;
@@ -117,23 +125,30 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   getCurrentCode(): string {
     const {template, codeMode, specCode, spec, templateMap} = this.props;
-    if (codeMode === 'TEMPLATE') {
+    if (codeMode === TEMPLATE_BODY) {
       return template ? template.code : specCode;
     }
-    if (codeMode === 'PARAMETERS') {
+    if (codeMode === WIDGET_CONFIGURATION) {
       return template ? serializeTemplate(template) : 'PARAMETERIZATION NOT AVAILABLE';
     }
-    if (codeMode === 'EXPORT TO JSON') {
+    if (codeMode === JSON_OUTPUT) {
       return stringify(spec);
     }
-    if (codeMode === 'SPECIFICATION') {
+    if (codeMode === WIDGET_VALUES) {
       return JSON.stringify(sortObjectAlphabetically(templateMap), null, 2);
       // return JSON.stringify(templateMap, null, 2);
     }
   }
 
   editorControls(): JSX.Element {
-    const {setNewSpecCode, codeMode, editorFontSize, setEditorFontSize} = this.props;
+    const {
+      setNewSpecCode,
+      codeMode,
+      editorFontSize,
+      setEditorFontSize,
+      editorLineWrap,
+      setEditorLineWrap,
+    } = this.props;
     const fontSizes = [
       {name: 'small', size: 10},
       {name: 'medium', size: 15},
@@ -156,6 +171,23 @@ export default class CodeEditor extends React.Component<Props, State> {
             );
           })}
         </div>
+        <div className="flex">
+          <span>{`Line wrap`}</span>
+          {[
+            {name: 'on', value: true},
+            {name: 'off', value: false},
+          ].map(row => {
+            return (
+              <button
+                className={classnames({selected: row.value === editorLineWrap})}
+                key={row.name}
+                onClick={(): any => setEditorLineWrap(row.value)}
+              >
+                {row.name}
+              </button>
+            );
+          })}
+        </div>
         <h3>Text Manipulation Shortcuts</h3>
         {SHORTCUTS.map((shortcut: any) => {
           const {action, name, description} = shortcut;
@@ -164,7 +196,7 @@ export default class CodeEditor extends React.Component<Props, State> {
               className="flex-down"
               key={name}
               onClick={(): void => {
-                if (codeMode !== 'TEMPLATE') {
+                if (codeMode !== TEMPLATE_BODY) {
                   return;
                 }
                 setNewSpecCode({
@@ -201,7 +233,9 @@ export default class CodeEditor extends React.Component<Props, State> {
     const currentCode = this.getCurrentCode();
     // TODO this should move out of the render path
     const suggestions =
-      (template && codeMode === 'TEMPLATE' && synthesizeSuggestions(currentCode, template.widgets || [])) ||
+      (template &&
+        codeMode === TEMPLATE_BODY &&
+        synthesizeSuggestions(currentCode, template.widgets || [])) ||
       [];
     return (
       <div className="suggestion-box">
@@ -243,41 +277,67 @@ export default class CodeEditor extends React.Component<Props, State> {
   controls(): JSX.Element {
     const {setCodeMode, codeMode, editMode, setEditMode, chainActions} = this.props;
     return (
-      <div className="code-option-tabs flex-down full-height background-2">
-        <div
-          className="flex save-edit-button"
-          onClick={(): any =>
-            chainActions([
-              (): any => setEditMode(!editMode),
-              (): any => setCodeMode(editMode ? 'EXPORT TO JSON' : 'TEMPLATE'),
-            ])
-          }
-        >
-          <div>{editMode ? 'SAVE' : 'EDIT'}</div>
-          <TiEdit />
-        </div>
-        <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
-          <div className="code-edit-controls-button">
-            <TiCog />
-          </div>
-        </Tooltip>
-
-        {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'SPECIFICATION', 'EXPORT TO JSON']
-          .filter(d => d)
-          .map(key => {
+      <div className="code-controls flex background-2">
+        <div className="flex code-option-tabs">
+          {[
+            {label: 'TEMPLATE', buttons: [TEMPLATE_BODY, WIDGET_CONFIGURATION]},
+            {label: 'VIEW', buttons: [WIDGET_VALUES, JSON_OUTPUT]},
+          ].map(({label, buttons}) => {
             return (
               <div
+                key={label}
                 className={classnames({
-                  'code-option-tab': true,
-                  'selected-tab': key === codeMode,
+                  'code-option-tab-section': true,
+                  'flex-down': true,
+                  'option-disabled': !editMode && label === 'TEMPLATE',
                 })}
-                key={key}
-                onClick={(): any => setCodeMode(key)}
               >
-                {key}
+                <div>{label}</div>
+                <div className="flex">
+                  {buttons.map(key => {
+                    return (
+                      <div
+                        className={classnames({'code-option-tab': true, 'selected-tab': key === codeMode})}
+                        key={key}
+                        onClick={(): any => setCodeMode(key)}
+                      >
+                        {key}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             );
           })}
+        </div>
+        <Tooltip
+          placement="top"
+          trigger="hover"
+          overlay={
+            <span className="tooltip-internal">
+              Change to edit mode, allows you to modify what gui elements are present and how they visually
+              relate
+            </span>
+          }
+        >
+          <div
+            className="flex save-edit-button cursor-pointer"
+            onClick={(): any =>
+              chainActions([
+                (): any => setEditMode(!editMode),
+                (): any => setCodeMode(editMode ? JSON_OUTPUT : TEMPLATE_BODY),
+              ])
+            }
+          >
+            <div>{editMode ? 'STOP EDIT' : 'START EDIT'}</div>
+            <TiEdit />
+          </div>
+        </Tooltip>
+        <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
+          <div className="code-edit-controls-button cursor-pointer">
+            <TiCog />
+          </div>
+        </Tooltip>
       </div>
     );
   }
@@ -286,6 +346,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     const {
       editMode,
       editorFontSize,
+      editorLineWrap,
       codeMode,
       setProgrammaticView,
       showProgrammaticMode,
@@ -293,6 +354,7 @@ export default class CodeEditor extends React.Component<Props, State> {
       setCodeMode,
       setEditMode,
     } = this.props;
+    console.log(editorLineWrap);
     const {updateMode} = this.state;
     const currentCode = this.getCurrentCode();
     return (
@@ -305,7 +367,7 @@ export default class CodeEditor extends React.Component<Props, State> {
           {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
         </div>
         {showProgrammaticMode && (
-          <div className="full-height full-width flex">
+          <div className="full-height full-width flex-down">
             {this.controls()}
             <div className="flex-down full-height full-width">
               {editMode && this.suggestionBox()}
@@ -317,10 +379,14 @@ export default class CodeEditor extends React.Component<Props, State> {
                   theme="monokai"
                   height={'calc(100%)'}
                   value={currentCode}
-                  options={{...EDITOR_OPTIONS, fontSize: editorFontSize}}
+                  options={{
+                    ...EDITOR_OPTIONS,
+                    fontSize: editorFontSize,
+                    wordWrap: editorLineWrap ? 'on' : 'off',
+                  }}
                   onChange={(code: string): void => {
-                    if (codeMode === 'EXPORT TO JSON') {
-                      chainActions([(): any => setEditMode(true), (): any => setCodeMode('TEMPLATE')]);
+                    if (codeMode === JSON_OUTPUT) {
+                      chainActions([(): any => setEditMode(true), (): any => setCodeMode(TEMPLATE_BODY)]);
                       return;
                     }
 
