@@ -1,9 +1,17 @@
 import React from 'react';
-import {TiArrowSync, TiPencil, TiEdit, TiFlowChildren, TiLockClosed, TiLockOpen} from 'react-icons/ti';
+import {
+  TiHomeOutline,
+  TiArrowSync,
+  TiPencil,
+  TiEdit,
+  TiFlowChildren,
+  TiLockClosed,
+  TiLockOpen,
+} from 'react-icons/ti';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
-import {classnames, NULL} from '../utils';
-import {TEMPLATE_BODY} from '../constants/index';
+import {classnames, NULL, getTemplateName} from '../utils';
+import {TEMPLATE_BODY, NONE_TEMPLATE} from '../constants/index';
 import Tooltip from 'rc-tooltip';
 
 interface Props {
@@ -35,6 +43,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     editMode,
     saveCurrentTemplate,
     setBlankTemplate,
+    setEncodingMode,
     setCodeMode,
     setEditMode,
     template,
@@ -53,14 +62,14 @@ export default function EncodingControls(props: Props): JSX.Element {
           (): any => setCodeMode(TEMPLATE_BODY),
         ]),
       icon: <TiPencil />,
-      label: 'NEW',
+      label: 'New',
       tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
     },
     {
       disabled: false,
       onClick: (): any => chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]),
       icon: <TiFlowChildren />,
-      label: 'FORK',
+      label: 'Fork',
       tooltip:
         'Create a new template starting from the current value of "Export To JSON" as the basis of the template.',
     },
@@ -73,7 +82,7 @@ export default function EncodingControls(props: Props): JSX.Element {
         chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
       },
       icon: !canSave || isGrammar ? <TiLockClosed /> : <TiLockOpen />,
-      label: 'SAVE',
+      label: 'Save',
       tooltip:
         !canSave || isGrammar
           ? 'There have been no changes made to this template and so doesnt need to be saved'
@@ -83,7 +92,7 @@ export default function EncodingControls(props: Props): JSX.Element {
       disabled: isGrammar,
       onClick: isGrammar ? NULL : (): any => setEditMode(!editMode),
       icon: <TiEdit />,
-      label: editMode ? 'STOP EDIT' : 'START EDIT',
+      label: editMode ? 'Stop Edit' : 'Start Edit',
       tooltip:
         'Change to edit mode, allows you to modify what gui elements are present and how they visually relate',
     },
@@ -91,12 +100,29 @@ export default function EncodingControls(props: Props): JSX.Element {
       disabled: false,
       onClick: clearEncoding,
       icon: <TiArrowSync />,
-      label: 'RESET',
+      label: 'Reset',
       tooltip: "Reset the template to it's blank state.",
     },
   ];
   return (
-    <div className="encoding-mode-selector">
+    <div className="encoding-mode-selector flex-down">
+      <div className="flex space-between full-width">
+        <Tooltip
+          placement="bottom"
+          trigger="hover"
+          overlay={<span className="tooltip-internal">Return to the view of the template gallery.</span>}
+        >
+          <div className="template-modification-control" onClick={(): any => setEncodingMode(NONE_TEMPLATE)}>
+            <div className="template-modification-control-icon">
+              <TiHomeOutline />
+            </div>
+            <span className="template-modification-control-label">Home</span>
+          </div>
+        </Tooltip>
+        <div>
+          <h5>{getTemplateName(template)}</h5>
+        </div>
+      </div>
       <div className="flex space-between full-width flex-wrap">
         {FULL_BUTTONS.map(button => {
           return (
@@ -111,11 +137,10 @@ export default function EncodingControls(props: Props): JSX.Element {
                   'template-modification-control': true,
                   'template-modification-control--disabled': button.disabled,
                 })}
-                onClick={(): void => {
-                  button.onClick();
-                }}
+                onClick={(): any => button.onClick()}
               >
-                {button.icon} <span className="template-modification-control-label">{button.label}</span>
+                <div className="template-modification-control-icon">{button.icon}</div>
+                <span className="template-modification-control-label">{button.label}</span>
               </div>
             </Tooltip>
           );

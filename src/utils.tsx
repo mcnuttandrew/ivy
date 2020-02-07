@@ -8,6 +8,7 @@ import {
   MultiDataTargetWidget,
 } from './templates/types';
 import {AppState} from './reducers/default-state';
+import {NONE_TEMPLATE} from './constants/index';
 import {DataType, ColumnHeader} from './types';
 
 /* eslint-disable @typescript-eslint/no-empty-function*/
@@ -299,4 +300,20 @@ export function searchPredicate(
   const matchDescription = templateDescription && templateDescription.toLowerCase().includes(searchKey || '');
   const matchName = templateName && templateName.toLowerCase().includes(searchKey || '');
   return matchDescription || matchName;
+}
+
+export function sortObjectAlphabetically(obj: any): any {
+  return Object.entries(obj)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .reduce((acc: any, [key, val]) => {
+      acc[key] = val;
+      return acc;
+    }, {});
+}
+
+export function getTemplateName(template: Template | null): string {
+  if (!template) {
+    return 'T0';
+  }
+  return template && template.templateName === NONE_TEMPLATE ? 'Template Gallery' : template.templateName;
 }

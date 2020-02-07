@@ -23,7 +23,7 @@ button {
   background: none;
   cursor: pointer;
 
-  /* border: 2px solid black; */
+  /* border: 2px solid #333; */
   border: none;
   border-radius: 5px;
   font-size: 10px;
@@ -37,12 +37,12 @@ button:disabled {
 }
 
 button.selected {
-  background: black;
+  background: #333;
   color: white !important;
 }
 
 button.use-button {
-  border: 2px solid black;
+  border: 2px solid #333;
   text-decoration: none;
 }
 
@@ -196,10 +196,14 @@ input[type=number]::-webkit-outer-spin-button {
   width: 300px;
 }
 
+.main-content-container {
+  height: calc(100% - 40px);
+}
+
 .header {
   align-items: center;
   color: white;
-  height: 30px;
+  height: 40px;
   width: calc(100% - 30px);
   justify-content: space-between;
   padding: 0 15px;
@@ -211,6 +215,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .header img {
   height: 25px;
+  margin-right: 5px;
 }
 
 .bottom-fill {
@@ -295,7 +300,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .widget-section .widget-title {
-  color: black;
+  color: #333;
   font-size: 10px;
   font-weight: 700;
   white-space: nowrap;
@@ -306,7 +311,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .pill-container {
-  color: black;
+  color: #000;
   display: flex;
   flex-direction: column;
   margin-bottom: 5px;
@@ -498,7 +503,7 @@ input[type=number]::-webkit-outer-spin-button {
 .shelf .pill-dropzone {
   background: white;
   border-radius: 2px;
-  color: black;
+  color: #000;
   height: 100%;
   margin: 0 5px;
   position: relative;
@@ -712,7 +717,7 @@ input[type=number]::-webkit-outer-spin-button {
   background: none;
   border: none;
   width: 100%;
-  border-bottom: thin dotted black;
+  border-bottom: thin dotted #333;
 }
 
 .list-widget {
@@ -813,8 +818,17 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .code-collapse {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row-reverse;
   font-size: 12px;
+  padding: 0 15px;
   text-transform: uppercase;
+}
+
+.code-collapse.collapsed {
+  padding: 15px;
 }
 
 .error-bar {
@@ -909,8 +923,8 @@ input[type=number]::-webkit-outer-spin-button {
 .encoding-mode-selector {
   align-items: center;
   background: whitesmoke;
-  display: flex;
-  flex-direction: column;
+  height: 59px;
+  max-height: 59px;
   padding: 5px 10px;
   justify-content: space-between;
   white-space: nowrap;
@@ -919,31 +933,24 @@ input[type=number]::-webkit-outer-spin-button {
   width: calc(100% - 20px);
 }
 
-.encoding-mode-selector img {
-  height: 30px;
-  margin-right: 10px;
-}
-
-.encoding-mode-selector h1 {
-  font-size: 10px;
-}
-
-.encoding-mode-selector h3 {
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
 .template-modification-control {
   align-items: center;
   cursor: pointer;
   display: flex;
-  font-size: 12px;
-  margin-right: 5px;
+  font-size: 15px;
+  margin-right: 10px;
 }
 
 .template-modification-control.template-modification-control--disabled {
   cursor: not-allowed;
   opacity: 0.2;
+}
+
+.template-modification-control-icon {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: #333;
 }
 
 .template-modification-control-label {
@@ -1023,30 +1030,19 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .code-editor-controls {
-  color: black;
+  color: #333;
   padding: 2px;
   z-index: 10;
 }
 
 .code-editor-controls button,
 .code-editor-controls .hydra-selector {
-  color: black;
+  color: #333;
 }
 
-.execute-code-control {
-  align-items: center;
+.code-controls-buttons {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.execute-code-control .execute-code-control-button {
-  cursor: pointer;
-  font-size: 30px;
-}
-
-.execute-code-control .hydra-selector {
-  text-align-last: center;
+  align-items: center;
 }
 
 .DataTarget-widget-type .hydra-selector {
@@ -1154,9 +1150,7 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 10px;
 }
 
-.code-controls {
-  color: #ce9178;
-}
+
 
 .code-option-tabs {
   display: flex;
@@ -1170,14 +1164,16 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .code-option-tab-section.option-disabled {
-  color: lightgray;
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .code-option-tab {
   align-items: center;
   cursor: pointer;
+  color: #ce9178;
   display: flex;
+  font-size: 15px;
   justify-content: center;
   margin-bottom: 3px;
   margin-right: 15px;
@@ -1186,10 +1182,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .code-option-tab.selected-tab {
-  background: #002340;
+  text-decoration: underline;
 }
-
-
 
 .about-bar {
   font-size: 15px;
@@ -1202,7 +1196,11 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .code-edit-controls-button {
+  align-items: center;
+  display: flex;
   font-size: 25px;
+  justify-content: center;
+  margin-right: 10px;
 }
 
 /* split pane stuff */

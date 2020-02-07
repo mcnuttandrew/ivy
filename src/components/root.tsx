@@ -40,7 +40,6 @@ import EncodingControls from './encoding-controls';
 import Header from './header';
 import ImportDataColumn from './import-data-column';
 import TemplateColumn from './template-column';
-import TemplatePreviewColumn from './template-preview-column';
 
 // wrap the split pane functionality into a HOC
 const getHeight = (): number => Number(localStorage.getItem('splitPos'));
@@ -184,9 +183,7 @@ class RootComponent extends React.Component<RootProps, State> {
   chartArea(): JSX.Element {
     return (
       <ChartArea
-        chainActions={this.props.chainActions}
         changeViewName={this.props.changeViewName}
-        clearEncoding={this.props.clearEncoding}
         cloneView={this.props.cloneView}
         columns={this.props.columns}
         createNewView={this.props.createNewView}
@@ -296,36 +293,29 @@ class RootComponent extends React.Component<RootProps, State> {
 
   codeEditor(): JSX.Element {
     return (
-      <div
-        className={classnames({
-          'full-width': true,
-          'flex-down': true,
-          'full-height': this.props.showProgrammaticMode,
-        })}
-      >
-        <CodeEditor
-          addWidget={this.props.addWidget}
-          codeMode={this.props.codeMode}
-          chainActions={this.props.chainActions}
-          editMode={this.props.editMode}
-          editorLineWrap={this.props.editorLineWrap}
-          setEditorLineWrap={this.props.setEditorLineWrap}
-          editorError={this.props.editorError}
-          editorFontSize={this.props.editorFontSize}
-          readInTemplate={this.props.readInTemplate}
-          readInTemplateMap={this.props.readInTemplateMap}
-          setCodeMode={this.props.setCodeMode}
-          setEditMode={this.props.setEditMode}
-          setEditorFontSize={this.props.setEditorFontSize}
-          setNewSpecCode={this.props.setNewSpecCode}
-          setProgrammaticView={this.props.setProgrammaticView}
-          showProgrammaticMode={this.props.showProgrammaticMode}
-          spec={this.props.spec}
-          specCode={this.props.specCode}
-          template={this.props.template}
-          templateMap={this.props.templateMap}
-        />
-      </div>
+      <CodeEditor
+        addWidget={this.props.addWidget}
+        codeMode={this.props.codeMode}
+        chainActions={this.props.chainActions}
+        currentView={this.props.currentView}
+        editMode={this.props.editMode}
+        editorLineWrap={this.props.editorLineWrap}
+        setEditorLineWrap={this.props.setEditorLineWrap}
+        editorError={this.props.editorError}
+        editorFontSize={this.props.editorFontSize}
+        readInTemplate={this.props.readInTemplate}
+        readInTemplateMap={this.props.readInTemplateMap}
+        setCodeMode={this.props.setCodeMode}
+        setEditMode={this.props.setEditMode}
+        setEditorFontSize={this.props.setEditorFontSize}
+        setNewSpecCode={this.props.setNewSpecCode}
+        setProgrammaticView={this.props.setProgrammaticView}
+        showProgrammaticMode={this.props.showProgrammaticMode}
+        spec={this.props.spec}
+        specCode={this.props.specCode}
+        template={this.props.template}
+        templateMap={this.props.templateMap}
+      />
     );
   }
 
@@ -354,20 +344,12 @@ class RootComponent extends React.Component<RootProps, State> {
           triggerRedo={this.props.triggerRedo}
           triggerUndo={this.props.triggerUndo}
         />
-        <div className="flex full-height relative">
+        <div className="flex main-content-container relative">
           <DndProvider backend={HTML5Backend}>
             <Wrapper showProgrammaticMode={this.props.showProgrammaticMode} showGUIView={true}>
-              <div className="flex-down full-height">
-                <TemplatePreviewColumn
-                  encodingMode={this.props.encodingMode}
-                  setEncodingMode={this.props.setEncodingMode}
-                  templates={this.props.templates}
-                  toggleProgramModal={this.props.toggleProgramModal}
-                />
-                <div className="flex" style={{height: 'calc(100% - 77px)'}}>
-                  {this.leftColumn()}
-                  {this.centerColumn()}
-                </div>
+              <div className="flex full-height">
+                {this.leftColumn()}
+                {this.centerColumn()}
               </div>
               {this.codeEditor()}
             </Wrapper>

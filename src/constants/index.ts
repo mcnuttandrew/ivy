@@ -24,7 +24,7 @@ export const GRAMMAR_DESC = 'Tableau-style grammar of graphics';
 export const NONE_TEMPLATE = '_____none_____';
 
 // export const
-export const WIDGET_VALUES = 'SETTINGS';
-export const WIDGET_CONFIGURATION = 'PARAMS';
-export const JSON_OUTPUT = 'OUTPUT';
-export const TEMPLATE_BODY = 'BODY';
+export const WIDGET_VALUES = 'Settings';
+export const WIDGET_CONFIGURATION = 'Params';
+export const JSON_OUTPUT = 'Output';
+export const TEMPLATE_BODY = 'Body';

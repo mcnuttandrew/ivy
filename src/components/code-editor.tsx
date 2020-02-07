@@ -1,25 +1,26 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import MonacoWrapper from './monaco-wrapper';
 import stringify from 'json-stringify-pretty-compact';
 import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
 import {
-  EDITOR_OPTIONS,
   JSON_OUTPUT,
   WIDGET_VALUES,
   WIDGET_CONFIGURATION,
   TEMPLATE_BODY,
+  NONE_TEMPLATE,
 } from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
-import {classnames, serializeTemplate, get} from '../utils';
+import {classnames, serializeTemplate, get, sortObjectAlphabetically, getTemplateName} from '../utils';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
   addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
   chainActions: GenericAction<any>;
   codeMode: string;
+  currentView: string;
   editMode: boolean;
   editorError: null | string;
   editorFontSize: number;
@@ -38,11 +39,8 @@ interface Props {
   template?: Template;
   templateMap?: TemplateMap;
 }
-type updateMode = 'automatic' | 'manual';
 interface State {
-  error?: string;
   suggestionBox: boolean;
-  updateMode: updateMode;
 }
 
 const SHORTCUTS = [
@@ -80,47 +78,13 @@ const SHORTCUTS = [
   },
 ];
 
-function sortObjectAlphabetically(obj: any): any {
-  return Object.entries(obj)
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .reduce((acc: any, [key, val]) => {
-      acc[key] = val;
-      return acc;
-    }, {});
-}
-
 export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
-    this.editorDidMount = this.editorDidMount.bind(this);
     this.handleCodeUpdate = this.handleCodeUpdate.bind(this);
     this.state = {
-      error: null,
-      updateMode: 'automatic',
       suggestionBox: false,
     };
-  }
-  editorDidMount(editor: any): void {
-    editor.focus();
-    /* eslint-disable */
-    // @ts-ignore
-    import('monaco-themes/themes/Chrome DevTools.json').then(data => {
-      // @ts-ignore
-      monaco.editor.defineTheme('cobalt', data);
-      // @ts-ignore
-      monaco.editor.setTheme('cobalt');
-    });
-    /* eslint-enable */
-  }
-
-  componentDidUpdate(props: any): void {
-    // on change code mode scroll to top
-    if (props.codeMode !== this.props.codeMode) {
-      /* eslint-disable */
-      // @ts-ignore
-      this.refs.monaco.editor.setScrollPosition({scrollTop: 0});
-       /* eslint-enable */
-    }
   }
 
   getCurrentCode(): string {
@@ -275,13 +239,13 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   controls(): JSX.Element {
-    const {setCodeMode, codeMode, editMode, setEditMode, chainActions} = this.props;
+    const {template, setCodeMode, codeMode, editMode, setEditMode, chainActions, currentView} = this.props;
     return (
-      <div className="code-controls flex background-2">
+      <div className="code-controls flex background-2 space-between">
         <div className="flex code-option-tabs">
           {[
-            {label: 'TEMPLATE', buttons: [TEMPLATE_BODY, WIDGET_CONFIGURATION]},
-            {label: 'VIEW', buttons: [WIDGET_VALUES, JSON_OUTPUT]},
+            {label: `Template: ${getTemplateName(template)}`, buttons: [TEMPLATE_BODY, WIDGET_CONFIGURATION]},
+            {label: `View: ${currentView}`, buttons: [WIDGET_VALUES, JSON_OUTPUT]},
           ].map(({label, buttons}) => {
             return (
               <div
@@ -289,7 +253,7 @@ export default class CodeEditor extends React.Component<Props, State> {
                 className={classnames({
                   'code-option-tab-section': true,
                   'flex-down': true,
-                  'option-disabled': !editMode && label === 'TEMPLATE',
+                  'option-disabled': !editMode && label === 'Template',
                 })}
               >
                 <div>{label}</div>
@@ -310,97 +274,98 @@ export default class CodeEditor extends React.Component<Props, State> {
             );
           })}
         </div>
-        <Tooltip
-          placement="top"
-          trigger="hover"
-          overlay={
-            <span className="tooltip-internal">
-              Change to edit mode, allows you to modify what gui elements are present and how they visually
-              relate
-            </span>
-          }
-        >
-          <div
-            className="flex save-edit-button cursor-pointer"
-            onClick={(): any =>
-              chainActions([
-                (): any => setEditMode(!editMode),
-                (): any => setCodeMode(editMode ? JSON_OUTPUT : TEMPLATE_BODY),
-              ])
-            }
-          >
-            <div>{editMode ? 'STOP EDIT' : 'START EDIT'}</div>
-            <TiEdit />
+        <div className="flex-down">
+          {this.codeCollapse()}
+          <div className="flex code-controls-buttons">
+            <Tooltip
+              placement="top"
+              trigger="hover"
+              overlay={
+                <span className="tooltip-internal">
+                  Change to edit mode, allows you to modify what gui elements are present and how they
+                  visually relate
+                </span>
+              }
+            >
+              <div
+                className="flex template-modification-control cursor-pointer"
+                onClick={(): any =>
+                  chainActions([
+                    (): any => setEditMode(!editMode),
+                    (): any => setCodeMode(editMode ? JSON_OUTPUT : TEMPLATE_BODY),
+                  ])
+                }
+              >
+                <div className="template-modification-control-icon">
+                  <TiEdit />
+                </div>
+                <span className="template-modification-control-label">
+                  {editMode ? 'Stop Edit' : 'Start Edit'}
+                </span>
+              </div>
+            </Tooltip>
+            <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
+              <div className="code-edit-controls-button cursor-pointer">
+                <TiCog />
+              </div>
+            </Tooltip>
           </div>
-        </Tooltip>
-        <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
-          <div className="code-edit-controls-button cursor-pointer">
-            <TiCog />
-          </div>
-        </Tooltip>
+        </div>
+      </div>
+    );
+  }
+
+  codeCollapse(): JSX.Element {
+    const {showProgrammaticMode, setProgrammaticView} = this.props;
+    return (
+      <div
+        className={classnames({
+          'background-2': true,
+          'code-collapse': true,
+          collapsed: !showProgrammaticMode,
+        })}
+        onClick={(): any => setProgrammaticView()}
+      >
+        <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
+        {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
       </div>
     );
   }
 
   render(): JSX.Element {
-    const {
-      editMode,
-      editorFontSize,
-      editorLineWrap,
-      codeMode,
-      setProgrammaticView,
-      showProgrammaticMode,
-      chainActions,
-      setCodeMode,
-      setEditMode,
-    } = this.props;
-    console.log(editorLineWrap);
-    const {updateMode} = this.state;
-    const currentCode = this.getCurrentCode();
+    const {editMode, showProgrammaticMode} = this.props;
     return (
-      <div className="full-height full-width code-container flex-down">
-        <div
-          className="full-width background-2 cursor-pointer flex code-collapse"
-          onClick={(): any => setProgrammaticView()}
-        >
-          <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
-          {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
-        </div>
-        {showProgrammaticMode && (
-          <div className="full-height full-width flex-down">
-            {this.controls()}
-            <div className="flex-down full-height full-width">
-              {editMode && this.suggestionBox()}
-              {
-                /*eslint-disable react/no-string-refs*/
-                <MonacoEditor
-                  ref="monaco"
-                  language="json"
-                  theme="monokai"
-                  height={'calc(100%)'}
-                  value={currentCode}
-                  options={{
-                    ...EDITOR_OPTIONS,
-                    fontSize: editorFontSize,
-                    wordWrap: editorLineWrap ? 'on' : 'off',
-                  }}
-                  onChange={(code: string): void => {
-                    if (codeMode === JSON_OUTPUT) {
-                      chainActions([(): any => setEditMode(true), (): any => setCodeMode(TEMPLATE_BODY)]);
-                      return;
-                    }
-
-                    if (updateMode === 'automatic') {
-                      this.handleCodeUpdate(code);
-                    }
-                  }}
-                  editorDidMount={this.editorDidMount}
+      <div
+        className={classnames({
+          'full-width': true,
+          'flex-down': true,
+          'full-height': showProgrammaticMode,
+        })}
+      >
+        <div className="full-height full-width code-container flex-down">
+          {!showProgrammaticMode && this.codeCollapse()}
+          {showProgrammaticMode && (
+            <div className="full-height full-width flex-down">
+              {this.controls()}
+              <div className="flex-down full-height full-width">
+                {editMode && this.suggestionBox()}
+                <MonacoWrapper
+                  chainActions={this.props.chainActions}
+                  codeMode={this.props.codeMode}
+                  currentCode={this.getCurrentCode()}
+                  editMode={editMode}
+                  editorFontSize={this.props.editorFontSize}
+                  editorLineWrap={this.props.editorLineWrap}
+                  readInTemplate={this.props.readInTemplate}
+                  readInTemplateMap={this.props.readInTemplateMap}
+                  setCodeMode={this.props.setCodeMode}
+                  setEditMode={this.props.setEditMode}
+                  setNewSpecCode={this.props.setNewSpecCode}
                 />
-                /*eslint-en able react/no-string-refs*/
-              }
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }

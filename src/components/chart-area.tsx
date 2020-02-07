@@ -12,9 +12,7 @@ import {NONE_TEMPLATE} from '../constants/index';
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
   createNewView: GenericAction<void>;
-  chainActions: GenericAction<any>;
   changeViewName: GenericAction<{idx: number; value: string}>;
-  clearEncoding: GenericAction<void>;
   columns: ColumnHeader[];
   currentTheme: VegaTheme;
   currentView: string;
@@ -72,43 +70,6 @@ function cloneViewButton(props: CloneViewrops): JSX.Element {
   );
 }
 
-interface SeeOptionsButtonProps {
-  setEncodingMode: GenericAction<string>;
-  clearEncoding: GenericAction<void>;
-  chainActions: GenericAction<any>;
-  onOptionsScreen: boolean;
-}
-
-function seeOptionsButton(props: SeeOptionsButtonProps): JSX.Element {
-  const {setEncodingMode, clearEncoding, chainActions, onOptionsScreen} = props;
-  return (
-    <Tooltip
-      placement="bottom"
-      trigger="hover"
-      overlay={
-        <span className="tooltip-internal">
-          {onOptionsScreen
-            ? 'Already on the template selection screen, click this will do nothing'
-            : 'Return to the template selection screen'}
-        </span>
-      }
-    >
-      <div
-        className={classnames({
-          'view-control': true,
-          'selected-view-control': onOptionsScreen,
-        })}
-        onClick={(): any =>
-          chainActions([(): any => setEncodingMode(NONE_TEMPLATE), (): any => clearEncoding()])
-        }
-      >
-        <span className="margin-right">Templates</span>
-        <TiChartBarOutline />
-      </div>
-    </Tooltip>
-  );
-}
-
 interface ViewOptionProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
   currentView: string;
@@ -157,8 +118,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
   render(): JSX.Element {
     const {
       changeViewName,
-      chainActions,
-      clearEncoding,
       cloneView,
       columns,
       createNewView,
@@ -185,12 +144,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
         <div className="chart-controls full-width flex">
           {newViewButton({createNewView})}
           {cloneViewButton({cloneView})}
-          {seeOptionsButton({
-            setEncodingMode,
-            clearEncoding,
-            chainActions,
-            onOptionsScreen: template && template.templateName === NONE_TEMPLATE,
-          })}
           <div className="view-container">
             {views.map((view, idx) =>
               viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
