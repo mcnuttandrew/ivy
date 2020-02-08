@@ -330,11 +330,6 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   hotKeyProvider(): JSX.Element {
-    const keyMap = {
-      UNDO: 'cmd+z',
-      REDO: 'cmd+shift+z',
-      CLOSE_MODALS: 'Escape',
-    };
     const {
       canUndo,
       triggerUndo,
@@ -345,21 +340,33 @@ class RootComponent extends React.Component<RootProps, State> {
       toggleProgramModal,
       toggleDataModal,
     } = this.props;
-    console.log(dataModalOpen, programModalOpen);
-    const handlers = {
-      UNDO: (): any => canUndo && triggerUndo(),
-      REDO: (): any => canRedo && triggerRedo(),
-      CLOSE_MODALS: (): any => {
-        console.log('escape', dataModalOpen, programModalOpen);
-        if (dataModalOpen) {
-          toggleDataModal();
-        }
-        if (programModalOpen) {
-          toggleProgramModal();
-        }
-      },
-    };
-    return <GlobalHotKeys keyMap={keyMap} handlers={handlers} allowChanges={true} />;
+
+    return (
+      <GlobalHotKeys
+        keyMap={{
+          UNDO: 'command+z',
+          REDO: 'command+shift+z',
+          CLOSE_MODALS: 'Escape',
+        }}
+        handlers={{
+          UNDO: (): any => canUndo && triggerUndo(),
+          REDO: (e): any => {
+            console.log(e);
+            canRedo && triggerRedo();
+          },
+
+          CLOSE_MODALS: (): any => {
+            if (dataModalOpen) {
+              toggleDataModal();
+            }
+            if (programModalOpen) {
+              toggleProgramModal();
+            }
+          },
+        }}
+        allowChanges={true}
+      />
+    );
   }
 
   render(): JSX.Element {
