@@ -240,33 +240,69 @@ export default class CodeEditor extends React.Component<Props, State> {
 
   controls(): JSX.Element {
     const {template, setCodeMode, codeMode, editMode, setEditMode, chainActions, currentView} = this.props;
+    const templateName = `Template: ${getTemplateName(template)}`;
+    const BUTTONS = [
+      {
+        label: templateName,
+        buttons: [
+          {
+            key: TEMPLATE_BODY,
+            description:
+              'The templatized visualization program. Written in hydralang, may feature conditionals and variable interpolations.',
+          },
+          {
+            key: WIDGET_CONFIGURATION,
+            description:
+              'The configuration of the GUI elements for this template, modify it to change the configuration and apperance of the widgets.',
+          },
+        ],
+      },
+      {
+        label: `View: ${currentView}`,
+        buttons: [
+          {
+            key: WIDGET_VALUES,
+            description:
+              'The current value of the gui widgets, the values here will get combined with the body of the template to produce the out ',
+          },
+          {
+            key: JSON_OUTPUT,
+            description:
+              'The json output of the template, what is shown here will be evaluated by the renderer for each respective language',
+          },
+        ],
+      },
+    ];
     return (
       <div className="code-controls flex background-2 space-between">
         <div className="flex code-option-tabs">
-          {[
-            {label: `Template: ${getTemplateName(template)}`, buttons: [TEMPLATE_BODY, WIDGET_CONFIGURATION]},
-            {label: `View: ${currentView}`, buttons: [WIDGET_VALUES, JSON_OUTPUT]},
-          ].map(({label, buttons}) => {
+          {BUTTONS.map(({label, buttons}) => {
             return (
               <div
                 key={label}
                 className={classnames({
                   'code-option-tab-section': true,
                   'flex-down': true,
-                  'option-disabled': !editMode && label === 'Template',
+                  'option-disabled': !editMode && label === templateName,
                 })}
               >
                 <div>{label}</div>
                 <div className="flex">
-                  {buttons.map(key => {
+                  {buttons.map(({key, description}) => {
                     return (
-                      <div
-                        className={classnames({'code-option-tab': true, 'selected-tab': key === codeMode})}
+                      <Tooltip
                         key={key}
-                        onClick={(): any => setCodeMode(key)}
+                        placement="bottom"
+                        trigger="hover"
+                        overlay={<span className="tooltip-internal">{description}</span>}
                       >
-                        {key}
-                      </div>
+                        <div
+                          className={classnames({'code-option-tab': true, 'selected-tab': key === codeMode})}
+                          onClick={(): any => setCodeMode(key)}
+                        >
+                          {key}
+                        </div>
+                      </Tooltip>
                     );
                   })}
                 </div>

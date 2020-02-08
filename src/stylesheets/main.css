@@ -283,7 +283,11 @@ input[type=number]::-webkit-outer-spin-button {
 .template-logo {
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+}
+
+.template-logo img {
+  max-height: 55px;
 }
 
 .template-column.column.edit-mode > div {
@@ -1171,7 +1175,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .code-option-tab-section.option-disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.3;
 }
 
 .code-option-tab {

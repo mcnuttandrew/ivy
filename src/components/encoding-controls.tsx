@@ -10,7 +10,7 @@ import {
 } from 'react-icons/ti';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
-import {classnames, NULL, getTemplateName} from '../utils';
+import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY, NONE_TEMPLATE} from '../constants/index';
 import Tooltip from 'rc-tooltip';
 
@@ -62,7 +62,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           (): any => setCodeMode(TEMPLATE_BODY),
         ]),
       icon: <TiPencil />,
-      label: 'New',
+      label: 'Make blank',
       tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
     },
     {
@@ -106,7 +106,7 @@ export default function EncodingControls(props: Props): JSX.Element {
   ];
   return (
     <div className="encoding-mode-selector flex-down">
-      <div className="flex space-between full-width">
+      <div className="flex space-between full-width flex-wrap">
         <Tooltip
           placement="bottom"
           trigger="hover"
@@ -119,11 +119,6 @@ export default function EncodingControls(props: Props): JSX.Element {
             <span className="template-modification-control-label">Home</span>
           </div>
         </Tooltip>
-        <div>
-          <h5>{getTemplateName(template)}</h5>
-        </div>
-      </div>
-      <div className="flex space-between full-width flex-wrap">
         {FULL_BUTTONS.map(button => {
           return (
             <Tooltip

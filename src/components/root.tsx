@@ -24,7 +24,7 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {getUniques, getDomain, getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
+import {getUniques, getDomain, getTemplateSaveState, getTemplateName, computeValidAddNexts} from '../utils';
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
@@ -213,6 +213,10 @@ class RootComponent extends React.Component<RootProps, State> {
       <div className="flex-down full-height column background-2">
         <div className="template-logo">
           <img src={thumbnailLocation(template && template.templateName)} />
+          <div>
+            <h5>Currently template</h5>
+            <h4>{getTemplateName(template)}</h4>
+          </div>
         </div>
         <ImportDataColumn
           currentlySelectedFile={this.props.currentlySelectedFile}
