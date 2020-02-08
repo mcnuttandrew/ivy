@@ -7,6 +7,7 @@ import {
   TiFlowChildren,
   TiLockClosed,
   TiLockOpen,
+  TiThSmallOutline,
 } from 'react-icons/ti';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
@@ -29,6 +30,7 @@ interface Props {
   template?: Template;
   templateSaveState: string;
   templates?: Template[];
+  toggleProgramModal: GenericAction<void>;
 }
 
 const UPDATE_TEMPLATE: {[x: string]: boolean} = {
@@ -48,11 +50,19 @@ export default function EncodingControls(props: Props): JSX.Element {
     setEditMode,
     template,
     templateSaveState,
+    toggleProgramModal,
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const isGrammar = !template;
   const FULL_BUTTONS = [
+    {
+      disabled: false,
+      onClick: (): any => toggleProgramModal(),
+      icon: <TiThSmallOutline />,
+      label: 'Add more templates',
+      tooltip: 'View the list of available templates from the online community.',
+    },
     {
       disabled: false,
       onClick: (): any =>
@@ -62,7 +72,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           (): any => setCodeMode(TEMPLATE_BODY),
         ]),
       icon: <TiPencil />,
-      label: 'Make blank',
+      label: 'Blank',
       tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
     },
     {
@@ -108,7 +118,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     <div className="encoding-mode-selector flex-down">
       <div className="flex space-between full-width flex-wrap">
         <Tooltip
-          placement="bottom"
+          placement="top"
           trigger="hover"
           overlay={<span className="tooltip-internal">Return to the view of the template gallery.</span>}
         >
@@ -123,7 +133,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           return (
             <Tooltip
               key={button.label}
-              placement="bottom"
+              placement="top"
               trigger="hover"
               overlay={<span className="tooltip-internal">{button.tooltip} </span>}
             >

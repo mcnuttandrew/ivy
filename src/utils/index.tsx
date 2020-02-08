@@ -6,10 +6,10 @@ import {
   TemplateMap,
   DataTargetWidget,
   MultiDataTargetWidget,
-} from './templates/types';
-import {AppState} from './reducers/default-state';
-import {NONE_TEMPLATE} from './constants/index';
-import {DataType, ColumnHeader} from './types';
+} from '../templates/types';
+import {AppState} from '../reducers/default-state';
+import {NONE_TEMPLATE} from '../constants/index';
+import {DataType, ColumnHeader} from '../types';
 
 /* eslint-disable @typescript-eslint/no-empty-function*/
 export const NULL = (): void => {};

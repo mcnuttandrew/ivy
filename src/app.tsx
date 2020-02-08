@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppWrap from './components/app-wrap';
 import setupMonaco from './utils/monaco';
-import {PREVENT_ACCIDENTAL_LEAVE} from './constants/CONFIG';
-import {retrieveThumbnails} from './thumbnail';
+import {PREVENT_ACCIDENTAL_LEAVE} from './constants/index';
+import {retrieveThumbnails} from './utils/thumbnail';
 
 import './stylesheets/main.css';
 import './stylesheets/rc-slider.css';

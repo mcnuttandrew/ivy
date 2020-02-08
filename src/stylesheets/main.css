@@ -967,67 +967,6 @@ input[type=number]::-webkit-outer-spin-button {
   margin-left: 3px;
 }
 
-.encoding-selection-option {
-  align-items: center;
-  border: thin solid rgba(0, 0, 0, 0);
-  cursor: pointer;
-  font-size: 12px;
-  height: 75px;
-  justify-content: flex-end;
-  margin-right: 20px;
-  min-width: 75px;
-  padding: 5px;
-  text-transform: uppercase;
-  text-align: center;
-  width: 75px;
-}
-
-.encoding-selection-option.selected-encoding-option {
-  border: thin solid rgba(125, 125, 125, 1);
-}
-
-.encoding-selection-option:hover {
-  border: thin dashed rgba(125, 125, 125, 1);
-}
-
-.encoding-selection-option-img-container {
-  align-self: center;
-  display: flex;
-  justify-content: center;
-}
-
-.encoding-selection-option img {
-  max-height: 50px;
-  max-width: 50px;
-}
-
-.encoding-selection-modal-button {
-  align-items: center;
-  cursor: pointer;
-  font-size: 30px;
-  justify-content: center;
-  padding: 10px;
-  text-align: center;
-}
-
-.encoding-selection-modal-button h3 {
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.template-preview-column {
-  display: flex;
-  height: 100px;
-  max-width: 570px;
-  padding: 0 20px;
-}
-
-.template-preview-column .scroll-container {
-  display: flex;
-  overflow-x: scroll;
-  width: 100%;
-}
-
 .shelf-dropdown {
   top: 3px;
   position: relative;

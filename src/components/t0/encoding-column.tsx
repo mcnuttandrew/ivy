@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {GenericAction, SetTemplateValuePayload} from '../actions/index';
+import {GenericAction, SetTemplateValuePayload} from '../../actions/index';
 import Shelf from './shelf';
-import {ColumnHeader} from '../types';
-import Selector from './selector';
-import {get} from '../utils';
+import {ColumnHeader} from '../../types';
+import Selector from '../selector';
+import {get} from '../../utils';
 
 const PRIMITIVE_MARKS = ['AREA', 'BAR', 'CIRCLE', 'LINE', 'POINT', 'RECT', 'SQUARE', 'TEXT', 'TICK', 'TRAIL'];
 

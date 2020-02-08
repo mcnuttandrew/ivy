@@ -1,7 +1,7 @@
 import {setTemplateValues} from '../hydra-lang';
 import {TemplateWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory} from '../templates';
-import {get} from '../utils';
+import {get} from '.';
 import {generateFullTemplateMap, union, difference, buildSuggest, safeParse} from './introspec-utils';
 
 export interface Suggestion {

@@ -15,7 +15,7 @@ export interface EncodingOption {
   predicate: (spec: any) => boolean;
 }
 
-import {VegaMark} from './types';
+import {VegaMark} from '../types';
 export const marks: VegaMark[] = [
   'arc',
   'area',

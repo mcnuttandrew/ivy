@@ -6,9 +6,7 @@ import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
 
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
-import {thumbnailLocation} from '../thumbnail';
-
-import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
+import {thumbnailLocation} from '../utils/thumbnail';
 
 import * as actionCreators from '../actions/index';
 import {Filter} from '../actions/index';
@@ -35,9 +33,9 @@ import {AppState, DataReducerState} from '../reducers/default-state';
 import ChartArea from './chart-area';
 import CodeEditor from './code-editor';
 import DataColumn from './data-column';
-import DataModal from './data-modal';
-import CommunityProgramSearch from './program-search/community-modal';
-import EncodingColumn from './encoding-column';
+import DataModal from './modals/data-modal';
+import CommunityProgramSearch from './modals/community-modal';
+import EncodingColumn from './t0/encoding-column';
 import EncodingControls from './encoding-controls';
 import Header from './header';
 import ImportDataColumn from './import-data-column';
@@ -245,24 +243,23 @@ class RootComponent extends React.Component<RootProps, State> {
   centerColumn(): JSX.Element {
     return (
       <div className=" full-height full-width flex-down" style={{minWidth: '360px'}}>
-        {SHOW_TEMPLATE_CONTROLS && (
-          <EncodingControls
-            chainActions={this.props.chainActions}
-            clearEncoding={this.props.clearEncoding}
-            deleteTemplate={this.props.deleteTemplate}
-            editMode={this.props.editMode}
-            encodingMode={this.props.encodingMode}
-            modifyValueOnTemplate={this.props.modifyValueOnTemplate}
-            saveCurrentTemplate={this.props.saveCurrentTemplate}
-            setBlankTemplate={this.props.setBlankTemplate}
-            setCodeMode={this.props.setCodeMode}
-            setEditMode={this.props.setEditMode}
-            setEncodingMode={this.props.setEncodingMode}
-            template={this.props.template}
-            templateSaveState={this.props.templateSaveState}
-            templates={this.props.templates}
-          />
-        )}
+        <EncodingControls
+          chainActions={this.props.chainActions}
+          clearEncoding={this.props.clearEncoding}
+          deleteTemplate={this.props.deleteTemplate}
+          editMode={this.props.editMode}
+          encodingMode={this.props.encodingMode}
+          modifyValueOnTemplate={this.props.modifyValueOnTemplate}
+          saveCurrentTemplate={this.props.saveCurrentTemplate}
+          setBlankTemplate={this.props.setBlankTemplate}
+          setCodeMode={this.props.setCodeMode}
+          setEditMode={this.props.setEditMode}
+          setEncodingMode={this.props.setEncodingMode}
+          template={this.props.template}
+          templateSaveState={this.props.templateSaveState}
+          templates={this.props.templates}
+          toggleProgramModal={this.props.toggleProgramModal}
+        />
         {this.props.encodingMode === 'grammer' && this.props.showGUIView && (
           <EncodingColumn
             changeMarkType={this.props.changeMarkType}

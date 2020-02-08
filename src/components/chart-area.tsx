@@ -1,5 +1,5 @@
 import React from 'react';
-import VegaWrapper from './vega-wrap';
+import VegaWrapper from './renderers/vega-wrap';
 import {VegaTheme, ColumnHeader, Json} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
@@ -7,7 +7,7 @@ import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd, TiTabsOutline} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
-import DataSearchMode from './program-search/data-search-mode';
+import DataSearchMode from './renderers/data-search-mode';
 import {NONE_TEMPLATE} from '../constants/index';
 
 interface ChartAreaProps {

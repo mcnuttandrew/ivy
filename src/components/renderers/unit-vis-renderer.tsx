@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Json} from '../types';
+import {Json} from '../../types';
 
 import UnitVis from 'unit-vis';
 interface Props {

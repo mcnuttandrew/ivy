@@ -2,9 +2,9 @@ import React from 'react';
 import {TiDeleteOutline} from 'react-icons/ti';
 import Switch from 'react-switch';
 
-import {GenericAction, SetTemplateValuePayload} from '../actions/index';
-import Selector from './selector';
-import {EncodingOption} from '../constants';
+import {GenericAction, SetTemplateValuePayload} from '../../actions/index';
+import Selector from '../selector';
+import {EncodingOption} from '../../utils/t0';
 
 interface ConfigurationOptionProps {
   option: EncodingOption;
