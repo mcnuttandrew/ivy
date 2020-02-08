@@ -4,13 +4,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
-import {
-  JSON_OUTPUT,
-  WIDGET_VALUES,
-  WIDGET_CONFIGURATION,
-  TEMPLATE_BODY,
-  NONE_TEMPLATE,
-} from '../constants/index';
+import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 import {classnames, serializeTemplate, get, sortObjectAlphabetically, getTemplateName} from '../utils';
