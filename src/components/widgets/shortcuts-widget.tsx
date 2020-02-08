@@ -1,6 +1,7 @@
 import React from 'react';
 import {ShortcutsWidget, TemplateWidget, Shortcut} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
+import {IgnoreKeys} from 'react-hotkeys';
 import {AddLabelToWidget} from './widget-common';
 import {evaluateShortcut} from '../../hydra-lang';
 
@@ -35,14 +36,18 @@ export default function ShortcutsWidgetComponent(
             return (
               <div key={`${idx}-shortcut`} className="flex">
                 <AddLabelToWidget label={'Shortcut name'}>
-                  <input value={shortcut.label || ''} type="text" onChange={setValue('label')} />
+                  <IgnoreKeys style={{height: '100%'}}>
+                    <input value={shortcut.label || ''} type="text" onChange={setValue('label')} />
+                  </IgnoreKeys>
                 </AddLabelToWidget>
                 <AddLabelToWidget label={'Shortcut function'}>
-                  <input
-                    value={shortcut.shortcutFunction || ''}
-                    type="text"
-                    onChange={setValue('shortcutFunction')}
-                  />
+                  <IgnoreKeys style={{height: '100%'}}>
+                    <input
+                      value={shortcut.shortcutFunction || ''}
+                      type="text"
+                      onChange={setValue('shortcutFunction')}
+                    />
+                  </IgnoreKeys>
                 </AddLabelToWidget>
                 {executeShortcut(shortcut)}
               </div>

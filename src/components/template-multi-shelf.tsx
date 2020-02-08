@@ -1,5 +1,6 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
+import {IgnoreKeys} from 'react-hotkeys';
 
 import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
@@ -68,11 +69,13 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
           <AllowedTypesList allowedTypes={allowed} />
           {!setName && <div>{field}</div>}
           {setName && (
-            <input
-              type="text"
-              value={widget.widgetName}
-              onChange={(event): any => setName(event.target.value)}
-            />
+            <IgnoreKeys style={{height: '100%'}}>
+              <input
+                type="text"
+                value={widget.widgetName}
+                onChange={(event): any => setName(event.target.value)}
+              />
+            </IgnoreKeys>
           )}
         </div>
         <div className="pill-dropzone">

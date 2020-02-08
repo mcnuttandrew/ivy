@@ -2,6 +2,7 @@ import React from 'react';
 import {FreeTextWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
 import {EditParameterName, EditDisplayName, Reset} from './widget-common';
+import {IgnoreKeys} from 'react-hotkeys';
 
 export default function FreeTextWidgetComponent(
   props: GeneralWidget<TemplateWidget<FreeTextWidget>>,
@@ -13,11 +14,13 @@ export default function FreeTextWidgetComponent(
       {editMode && <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
       {editMode && <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
       {<div className="widget-title">{widget.displayName || widget.widgetName}</div>}
-      <input
-        value={templateMap[widget.widgetName] || ''}
-        type="text"
-        onChange={(event): any => setTemplateValue({field, text: event.target.value})}
-      />
+      <IgnoreKeys style={{height: '100%'}}>
+        <input
+          value={templateMap[widget.widgetName] || ''}
+          type="text"
+          onChange={(event): any => setTemplateValue({field, text: event.target.value})}
+        />
+      </IgnoreKeys>
       <Reset
         tooltipLabel={'Reset to free text widget to be empty'}
         onClick={(): any => setTemplateValue({field, text: ''})}

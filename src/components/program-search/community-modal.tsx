@@ -3,6 +3,7 @@ import {GenericAction} from '../../actions/index';
 import {Template} from '../../templates/types';
 import Modal from '../modal';
 import ProgramPreview from './program-preview';
+import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, buildCounts, classnames} from '../../utils';
 import {receiveThumbnail} from '../../thumbnail';
 
@@ -112,10 +113,12 @@ const SearchForPrograms: QueryBuild = (
     <div className="flex-down">
       <div className="flex-down">
         Enter Search term here (matches against template name, template description, and creator name)
-        <input
-          onChange={(e): any => setSearchObject({search: e.target.value})}
-          placeholder="type here for search"
-        />
+        <IgnoreKeys style={{height: '100%'}}>
+          <input
+            onChange={(e): any => setSearchObject({search: e.target.value})}
+            placeholder="type here for search"
+          />
+        </IgnoreKeys>
         <button onClick={(): void => triggerQuery()}>Run Search</button>
       </div>
       {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject)}

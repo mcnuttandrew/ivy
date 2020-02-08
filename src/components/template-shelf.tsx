@@ -1,5 +1,6 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
+import {IgnoreKeys} from 'react-hotkeys';
 
 import Pill from './pill';
 import Selector from './selector';
@@ -56,11 +57,13 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
         <div className="field-label flex space-around">
           {!setName && <div className="flex">{field}</div>}
           {setName && (
-            <input
-              type="text"
-              value={widget.widgetName}
-              onChange={(event): any => setName(event.target.value)}
-            />
+            <IgnoreKeys style={{height: '100%'}}>
+              <input
+                type="text"
+                value={widget.widgetName}
+                onChange={(event): any => setName(event.target.value)}
+              />
+            </IgnoreKeys>
           )}
           <AllowedTypesList allowedTypes={widget.widget.allowedTypes} />
         </div>

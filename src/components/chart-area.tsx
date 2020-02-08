@@ -4,7 +4,8 @@ import {VegaTheme, ColumnHeader, Json} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog, TiDocumentAdd, TiChartBarOutline, TiTabsOutline} from 'react-icons/ti';
+import {TiCog, TiDocumentAdd, TiTabsOutline} from 'react-icons/ti';
+import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
 import DataSearchMode from './program-search/data-search-mode';
 import {NONE_TEMPLATE} from '../constants/index';
@@ -97,11 +98,13 @@ function viewOption(props: ViewOptionProps): JSX.Element {
         overlay={
           <div>
             <div>View Controls</div>
-            <input
-              value={view}
-              type="text"
-              onChange={(e): any => changeViewName({idx, value: e.target.value})}
-            />
+            <IgnoreKeys style={{height: '100%'}}>
+              <input
+                value={view}
+                type="text"
+                onChange={(e): any => changeViewName({idx, value: e.target.value})}
+              />
+            </IgnoreKeys>
             <button onClick={(): any => deleteView(view)}>delete view</button>
           </div>
         }
