@@ -1,9 +1,9 @@
 import React from 'react';
-import {GenericAction, LoadDataPayload} from '../actions/index';
+import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
-import VegaDatasetMeta from '../constants/vega-datasets-counts';
-import DataSymbol from './data-symbol';
-import {DataType} from '../types';
+import VegaDatasetMeta from '../../constants/vega-datasets-counts';
+import DataSymbol from '../data-symbol';
+import {DataType} from '../../types';
 import Modal from './modal';
 
 interface Props {

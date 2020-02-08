@@ -1,11 +1,11 @@
 import React from 'react';
-import {GenericAction} from '../../actions/index';
-import {thumbnailLocation} from '../../thumbnail';
-import {classnames} from '../../utils';
+import {GenericAction} from '../actions/index';
+import {thumbnailLocation} from '../utils/thumbnail';
+import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog} from 'react-icons/ti';
-import DataSymbol from '../data-symbol';
-import {DataType} from '../../types';
+import DataSymbol from './data-symbol';
+import {DataType} from '../types';
 
 interface Props {
   alreadyPresent?: boolean;

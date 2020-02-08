@@ -1,5 +1,5 @@
 import React from 'react';
-import {classnames} from '../utils';
+import {classnames} from '../../utils';
 import {TiDelete} from 'react-icons/ti';
 
 interface Props {

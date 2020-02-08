@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {GenericAction} from '../../actions/index';
 import {Template} from '../../templates/types';
-import Modal from '../modal';
-import ProgramPreview from './program-preview';
+import Modal from './modal';
+import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, buildCounts, classnames} from '../../utils';
-import {receiveThumbnail} from '../../thumbnail';
+import {receiveThumbnail} from '../../utils/thumbnail';
 
 interface Props {
   loadExternalTemplate: GenericAction<Template>;

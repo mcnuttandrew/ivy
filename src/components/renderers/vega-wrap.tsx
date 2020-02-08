@@ -1,11 +1,11 @@
 import React from 'react';
 import {Vega} from 'react-vega';
-import {VegaTheme, Json} from '../types';
+import {VegaTheme, Json} from '../../types';
 import {Handler} from 'vega-tooltip';
-import {get} from '../utils';
+import {get} from '../../utils';
 import Table from './data-table';
 import UnitVisChart from './unit-vis-renderer';
-import {DataRow} from '../actions/index';
+import {DataRow} from '../../actions/index';
 
 interface VegaWrapperProps {
   spec: Json;

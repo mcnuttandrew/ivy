@@ -2,9 +2,9 @@ import React from 'react';
 import {GenericAction} from '../../actions/index';
 import {ColumnHeader} from '../../types';
 import {Template, TemplateMap} from '../../templates/types';
-import ProgramPreview from './program-preview';
+import ProgramPreview from '../program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix} from '../../utils';
-import {thumbnailLocation} from '../../thumbnail';
+import {thumbnailLocation} from '../../utils/thumbnail';
 import {GRAMMAR_NAME, GRAMMAR_DESC, NONE_TEMPLATE} from '../../constants/index';
 
 interface Props {

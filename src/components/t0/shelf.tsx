@@ -1,13 +1,13 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
 
-import {GenericAction, SetTemplateValuePayload} from '../actions/index';
-import Pill from './pill';
-import Selector from './selector';
-import {ColumnHeader} from '../types';
-import {classnames, get} from '../utils';
-import {configurationOptions, EncodingOption} from '../constants';
-import {TEXT_TYPE} from '../constants/index';
+import {GenericAction, SetTemplateValuePayload} from '../../actions/index';
+import Pill from '../pill';
+import Selector from '../selector';
+import {ColumnHeader} from '../../types';
+import {classnames, get} from '../../utils';
+import {configurationOptions, EncodingOption} from '../../utils/t0';
+import {TEXT_TYPE} from '../../constants/index';
 import ConfigurationOption from './configuration-option';
 
 interface ShelfProps {
