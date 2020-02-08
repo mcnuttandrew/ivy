@@ -86,6 +86,7 @@ export const setBlankTemplate = createAction<boolean>(actionTypes.SET_BLANK_TEMP
 export const setCodeMode = createAction<string>(actionTypes.SET_CODE_MODE);
 export const setEditMode = createAction<boolean>(actionTypes.SET_EDIT_MODE);
 export const setEditorFontSize = createAction<number>(actionTypes.SET_EDITOR_FONT_SIZE);
+export const setEditorLineWrap = createAction<number>(actionTypes.SET_EDITOR_LINE_WRAP);
 export const setEncodingMode = createAction<string>(actionTypes.SET_ENCODING_MODE);
 export const setEncodingParameter = createAction<SetTemplateValuePayload>(actionTypes.SET_ENCODING_PARAM);
 export const setGuiView = createAction<boolean>(actionTypes.SET_GUI_VIEW);

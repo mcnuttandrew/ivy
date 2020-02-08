@@ -1,5 +1,10 @@
 import PolestarTemplate from '../src/templates/example-templates/polestar-template';
-import {applyConditionals, evaluateHydraProgram, constructDefaultTemplateMap} from '../src/hydra-lang';
+import {
+  applyConditionals,
+  evaluateHydraProgram,
+  constructDefaultTemplateMap,
+  // backpropHydraProgram,
+} from '../src/hydra-lang';
 import Scatterplot from '../src/templates/example-templates/scatterplot';
 import produce from 'immer';
 
@@ -30,3 +35,56 @@ test('evaluateHydraProgram polestar template', () => {
   });
   expect(evaluateHydraProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
 });
+// const update1 = `
+// {
+//   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+//   "mark": {"type": "point", "tooltip": true, "size": 15, "color": "steelblue"},
+//   "encoding": {
+//     "x": {"field": null, "type": "quantitative", "scale": {"zero": true}},
+//     "y": {"field": null, "type": "quantitative", "scale": {"zero": true}},
+//     "color": null
+//   },
+//   "height":
+// }`;
+// const update2 = `
+// {
+//   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+//   "mark": {"type": "point", "tooltip": true, "size": 15, "color": "steelblue"},
+//   "encoding": {
+//     "x": {"field": null, "type": "quantitative", "scale": {"zero": true}},
+//     "y": {"field": null, "type": "quantitative", "scale": {"zero": true}},
+//     "color": null
+//   },
+//   "height": 300
+// }`;
+// const update3 = `
+// {
+//   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+//   "mark": {"type": "point", "tooltip": true, "size": 15, "color": "steelblue"},
+//   "encoding": {
+//     "x": {"field": null, "type": "quantitative", "scale": {"zero": true}},
+//     "y": {"field": "Cylinders", "type": "quantitative", "scale": {"zero": true}},
+//     "color": null
+//   },
+//   "height": 300
+// }`;
+// test.only('#backpropHydraProgram', () => {
+//   // const expectEqual = (a: string, b: string): void => expect(JSON.parse(a)).toEqual(JSON.parse(b));
+//   const templateMap = constructDefaultTemplateMap(Scatterplot);
+
+//   // no updates for invalid json
+//   const result1 = backpropHydraProgram(Scatterplot, templateMap, update1);
+//   expect(JSON.parse(result1.template.code)).toEqual(JSON.parse(Scatterplot.code));
+//   expect(result1.templateMap).toEqual(templateMap);
+
+//   // update the template where appropriate
+//   const result2 = backpropHydraProgram(Scatterplot, templateMap, update2);
+//   const withHeight = JSON.stringify({...JSON.parse(Scatterplot.code), height: 300});
+//   expect(JSON.parse(result2.template.code)).toEqual(JSON.parse(withHeight));
+//   expect(result2.templateMap).toEqual(templateMap);
+
+//   // update the template where appropriate
+//   const result3 = backpropHydraProgram(Scatterplot, templateMap, update3);
+//   expect(JSON.parse(result3.template.code)).toEqual(JSON.parse(withHeight));
+//   expect(result3.templateMap).toEqual({...templateMap, yDim: 'Cylinders'});
+// });

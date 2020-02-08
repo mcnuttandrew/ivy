@@ -5,6 +5,7 @@ import {Template, TemplateMap} from '../templates/types';
 import NONE from '../templates/example-templates/none';
 import {UndoRedoStackItem} from './undo-actions';
 import {ViewCatalog} from './view-actions';
+import {JSON_OUTPUT} from '../constants/index';
 
 export interface DataReducerState {
   data: {[x: string]: any}[];
@@ -32,6 +33,7 @@ export interface AppState {
   showGUIView: boolean;
   codeMode: string;
   editorFontSize: number;
+  editorLineWrap: boolean;
   programModalOpen: boolean;
 
   // undo redo
@@ -102,8 +104,9 @@ export const DEFAULT_STATE: AppState = {
   encodingMode: NONE.templateName,
   showProgrammaticMode: true,
   showGUIView: true,
-  codeMode: 'EXPORT TO JSON',
-  editorFontSize: 10,
+  codeMode: JSON_OUTPUT,
+  editorFontSize: 15,
+  editorLineWrap: true,
   programModalOpen: false,
 
   // undo redo

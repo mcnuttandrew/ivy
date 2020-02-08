@@ -25,25 +25,19 @@ interface DataColumnProps {
 }
 
 export default class DataColumn extends React.Component<DataColumnProps> {
-  render(): JSX.Element {
+  makePill(checkOptions: boolean): (column: ColumnHeader) => JSX.Element {
     const {
       addToNextOpenSlot,
       coerceType,
       columns,
       createFilter,
-      deleteFilter,
       fillableFields,
-      metaColumns,
-      onDropFilter,
       setRepeats,
       showGUIView,
       spec,
-      template,
-      updateFilter,
     } = this.props;
     const inUseFields = getAllInUseFields(spec);
-    const canFilter = !template || template.templateLanguage === 'vega-lite';
-    const makePill = (checkOptions: boolean) => (column: ColumnHeader): JSX.Element => {
+    return (column: ColumnHeader): JSX.Element => {
       return (
         <div className="pill-container" key={column.field}>
           <Pill
@@ -63,12 +57,27 @@ export default class DataColumn extends React.Component<DataColumnProps> {
         </div>
       );
     };
+  }
+
+  render(): JSX.Element {
+    const {
+      columns,
+      deleteFilter,
+      metaColumns,
+      onDropFilter,
+      showGUIView,
+      spec,
+      template,
+      updateFilter,
+    } = this.props;
+
+    const canFilter = !template;
     return (
       <div className="flex-down full-height">
         <h5>Data Columns</h5>
-        <div className="flex-down">{columns.map(makePill(false))}</div>
+        <div className="flex-down">{columns.map(this.makePill(false))}</div>
         {!template && showGUIView && <h5>Meta Columns</h5>}
-        {!template && showGUIView && <div className="flex-down">{metaColumns.map(makePill(true))}</div>}
+        {!template && showGUIView && <div className="flex-down">{metaColumns.map(this.makePill(true))}</div>}
 
         {showGUIView && canFilter && <h5> Filter </h5>}
         {showGUIView && canFilter && (

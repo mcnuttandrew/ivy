@@ -1,27 +1,30 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import MonacoWrapper from './monaco-wrapper';
 import stringify from 'json-stringify-pretty-compact';
 import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
-import {EDITOR_OPTIONS} from '../constants/index';
+import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
-import {classnames, serializeTemplate, get} from '../utils';
+import {classnames, serializeTemplate, get, sortObjectAlphabetically, getTemplateName} from '../utils';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
   addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
-  codeMode: string;
   chainActions: GenericAction<any>;
-  editorError: null | string;
+  codeMode: string;
+  currentView: string;
   editMode: boolean;
+  editorError: null | string;
   editorFontSize: number;
+  editorLineWrap: boolean;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
   setCodeMode: GenericAction<string>;
-  setEditorFontSize: GenericAction<number>;
   setEditMode: GenericAction<boolean>;
+  setEditorFontSize: GenericAction<number>;
+  setEditorLineWrap: GenericAction<boolean>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<void>;
   showProgrammaticMode: boolean;
@@ -30,11 +33,8 @@ interface Props {
   template?: Template;
   templateMap?: TemplateMap;
 }
-type updateMode = 'automatic' | 'manual';
 interface State {
-  error?: string;
   suggestionBox: boolean;
-  updateMode: updateMode;
 }
 
 const SHORTCUTS = [
@@ -72,68 +72,41 @@ const SHORTCUTS = [
   },
 ];
 
-function sortObjectAlphabetically(obj: any): any {
-  return Object.entries(obj)
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .reduce((acc: any, [key, val]) => {
-      acc[key] = val;
-      return acc;
-    }, {});
-}
-
 export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
-    this.editorDidMount = this.editorDidMount.bind(this);
     this.handleCodeUpdate = this.handleCodeUpdate.bind(this);
     this.state = {
-      error: null,
-      updateMode: 'automatic',
       suggestionBox: false,
     };
-  }
-  editorDidMount(editor: any): void {
-    editor.focus();
-    /* eslint-disable */
-    // @ts-ignore
-    import('monaco-themes/themes/Chrome DevTools.json').then(data => {
-      // @ts-ignore
-      monaco.editor.defineTheme('cobalt', data);
-      // @ts-ignore
-      monaco.editor.setTheme('cobalt');
-    });
-    /* eslint-enable */
-  }
-
-  componentDidUpdate(props: any): void {
-    // on change code mode scroll to top
-    if (props.codeMode !== this.props.codeMode) {
-      /* eslint-disable */
-      // @ts-ignore
-      this.refs.monaco.editor.setScrollPosition({scrollTop: 0});
-       /* eslint-enable */
-    }
   }
 
   getCurrentCode(): string {
     const {template, codeMode, specCode, spec, templateMap} = this.props;
-    if (codeMode === 'TEMPLATE') {
+    if (codeMode === TEMPLATE_BODY) {
       return template ? template.code : specCode;
     }
-    if (codeMode === 'PARAMETERS') {
+    if (codeMode === WIDGET_CONFIGURATION) {
       return template ? serializeTemplate(template) : 'PARAMETERIZATION NOT AVAILABLE';
     }
-    if (codeMode === 'EXPORT TO JSON') {
+    if (codeMode === JSON_OUTPUT) {
       return stringify(spec);
     }
-    if (codeMode === 'SPECIFICATION') {
+    if (codeMode === WIDGET_VALUES) {
       return JSON.stringify(sortObjectAlphabetically(templateMap), null, 2);
       // return JSON.stringify(templateMap, null, 2);
     }
   }
 
   editorControls(): JSX.Element {
-    const {setNewSpecCode, codeMode, editorFontSize, setEditorFontSize} = this.props;
+    const {
+      setNewSpecCode,
+      codeMode,
+      editorFontSize,
+      setEditorFontSize,
+      editorLineWrap,
+      setEditorLineWrap,
+    } = this.props;
     const fontSizes = [
       {name: 'small', size: 10},
       {name: 'medium', size: 15},
@@ -156,6 +129,23 @@ export default class CodeEditor extends React.Component<Props, State> {
             );
           })}
         </div>
+        <div className="flex">
+          <span>{`Line wrap`}</span>
+          {[
+            {name: 'on', value: true},
+            {name: 'off', value: false},
+          ].map(row => {
+            return (
+              <button
+                className={classnames({selected: row.value === editorLineWrap})}
+                key={row.name}
+                onClick={(): any => setEditorLineWrap(row.value)}
+              >
+                {row.name}
+              </button>
+            );
+          })}
+        </div>
         <h3>Text Manipulation Shortcuts</h3>
         {SHORTCUTS.map((shortcut: any) => {
           const {action, name, description} = shortcut;
@@ -164,7 +154,7 @@ export default class CodeEditor extends React.Component<Props, State> {
               className="flex-down"
               key={name}
               onClick={(): void => {
-                if (codeMode !== 'TEMPLATE') {
+                if (codeMode !== TEMPLATE_BODY) {
                   return;
                 }
                 setNewSpecCode({
@@ -201,7 +191,9 @@ export default class CodeEditor extends React.Component<Props, State> {
     const currentCode = this.getCurrentCode();
     // TODO this should move out of the render path
     const suggestions =
-      (template && codeMode === 'TEMPLATE' && synthesizeSuggestions(currentCode, template.widgets || [])) ||
+      (template &&
+        codeMode === TEMPLATE_BODY &&
+        synthesizeSuggestions(currentCode, template.widgets || [])) ||
       [];
     return (
       <div className="suggestion-box">
@@ -241,100 +233,169 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   controls(): JSX.Element {
-    const {setCodeMode, codeMode, editMode, setEditMode, chainActions} = this.props;
+    const {template, setCodeMode, codeMode, editMode, setEditMode, chainActions, currentView} = this.props;
+    const templateName = `Template: ${getTemplateName(template)}`;
+    const BUTTONS = [
+      {
+        label: templateName,
+        buttons: [
+          {
+            key: TEMPLATE_BODY,
+            description:
+              'The templatized visualization program. Written in hydralang, may feature conditionals and variable interpolations.',
+          },
+          {
+            key: WIDGET_CONFIGURATION,
+            description:
+              'The configuration of the GUI elements for this template, modify it to change the configuration and apperance of the widgets.',
+          },
+        ],
+      },
+      {
+        label: `View: ${currentView}`,
+        buttons: [
+          {
+            key: WIDGET_VALUES,
+            description:
+              'The current value of the gui widgets, the values here will get combined with the body of the template to produce the out ',
+          },
+          {
+            key: JSON_OUTPUT,
+            description:
+              'The json output of the template, what is shown here will be evaluated by the renderer for each respective language',
+          },
+        ],
+      },
+    ];
     return (
-      <div className="code-option-tabs flex-down full-height background-2">
-        <div
-          className="flex save-edit-button"
-          onClick={(): any =>
-            chainActions([
-              (): any => setEditMode(!editMode),
-              (): any => setCodeMode(editMode ? 'EXPORT TO JSON' : 'TEMPLATE'),
-            ])
-          }
-        >
-          <div>{editMode ? 'SAVE' : 'EDIT'}</div>
-          <TiEdit />
-        </div>
-        <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
-          <div className="code-edit-controls-button">
-            <TiCog />
-          </div>
-        </Tooltip>
-
-        {[editMode && 'TEMPLATE', editMode && 'PARAMETERS', 'SPECIFICATION', 'EXPORT TO JSON']
-          .filter(d => d)
-          .map(key => {
+      <div className="code-controls flex background-2 space-between">
+        <div className="flex code-option-tabs">
+          {BUTTONS.map(({label, buttons}) => {
             return (
               <div
+                key={label}
                 className={classnames({
-                  'code-option-tab': true,
-                  'selected-tab': key === codeMode,
+                  'code-option-tab-section': true,
+                  'flex-down': true,
+                  'option-disabled': !editMode && label === templateName,
                 })}
-                key={key}
-                onClick={(): any => setCodeMode(key)}
               >
-                {key}
+                <div>{label}</div>
+                <div className="flex">
+                  {buttons.map(({key, description}) => {
+                    return (
+                      <Tooltip
+                        key={key}
+                        placement="bottom"
+                        trigger="hover"
+                        overlay={<span className="tooltip-internal">{description}</span>}
+                      >
+                        <div
+                          className={classnames({'code-option-tab': true, 'selected-tab': key === codeMode})}
+                          onClick={(): any => setCodeMode(key)}
+                        >
+                          {key}
+                        </div>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
               </div>
             );
           })}
+        </div>
+        <div className="flex-down">
+          {this.codeCollapse()}
+          <div className="flex code-controls-buttons">
+            <Tooltip
+              placement="bottom"
+              trigger="hover"
+              overlay={
+                <span className="tooltip-internal">
+                  Change to edit mode, allows you to modify what gui elements are present and how they
+                  visually relate
+                </span>
+              }
+            >
+              <div
+                className="flex template-modification-control cursor-pointer"
+                onClick={(): any =>
+                  chainActions([
+                    (): any => setEditMode(!editMode),
+                    (): any => setCodeMode(editMode ? JSON_OUTPUT : TEMPLATE_BODY),
+                  ])
+                }
+              >
+                <div className="template-modification-control-icon">
+                  <TiEdit />
+                </div>
+                <span className="template-modification-control-label">
+                  {editMode ? 'Stop Edit' : 'Start Edit'}
+                </span>
+              </div>
+            </Tooltip>
+            <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
+              <div className="code-edit-controls-button cursor-pointer">
+                <TiCog />
+              </div>
+            </Tooltip>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  codeCollapse(): JSX.Element {
+    const {showProgrammaticMode, setProgrammaticView} = this.props;
+    return (
+      <div
+        className={classnames({
+          'background-2': true,
+          'code-collapse': true,
+          collapsed: !showProgrammaticMode,
+        })}
+        onClick={(): any => setProgrammaticView()}
+      >
+        <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
+        {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
       </div>
     );
   }
 
   render(): JSX.Element {
-    const {
-      editMode,
-      editorFontSize,
-      codeMode,
-      setProgrammaticView,
-      showProgrammaticMode,
-      chainActions,
-      setCodeMode,
-      setEditMode,
-    } = this.props;
-    const {updateMode} = this.state;
-    const currentCode = this.getCurrentCode();
+    const {editMode, showProgrammaticMode} = this.props;
     return (
-      <div className="full-height full-width code-container flex-down">
-        <div
-          className="full-width background-2 cursor-pointer flex code-collapse"
-          onClick={(): any => setProgrammaticView()}
-        >
-          <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
-          {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
-        </div>
-        {showProgrammaticMode && (
-          <div className="full-height full-width flex">
-            {this.controls()}
-            <div className="flex-down full-height full-width">
-              {editMode && this.suggestionBox()}
-              {
-                /*eslint-disable react/no-string-refs*/
-                <MonacoEditor
-                  ref="monaco"
-                  language="json"
-                  theme="monokai"
-                  height={'calc(100%)'}
-                  value={currentCode}
-                  options={{...EDITOR_OPTIONS, fontSize: editorFontSize}}
-                  onChange={(code: string): void => {
-                    if (codeMode === 'EXPORT TO JSON') {
-                      chainActions([(): any => setEditMode(true), (): any => setCodeMode('TEMPLATE')]);
-                      return;
-                    }
-
-                    if (updateMode === 'automatic') {
-                      this.handleCodeUpdate(code);
-                    }
-                  }}
-                  editorDidMount={this.editorDidMount}
+      <div
+        className={classnames({
+          'full-width': true,
+          'flex-down': true,
+          'full-height': showProgrammaticMode,
+        })}
+      >
+        <div className="full-height full-width code-container flex-down">
+          {!showProgrammaticMode && this.codeCollapse()}
+          {showProgrammaticMode && (
+            <div className="full-height full-width flex-down">
+              {this.controls()}
+              <div className="flex-down full-height full-width">
+                {editMode && this.suggestionBox()}
+                <MonacoWrapper
+                  chainActions={this.props.chainActions}
+                  codeMode={this.props.codeMode}
+                  currentCode={this.getCurrentCode()}
+                  editMode={editMode}
+                  editorFontSize={this.props.editorFontSize}
+                  editorLineWrap={this.props.editorLineWrap}
+                  readInTemplate={this.props.readInTemplate}
+                  readInTemplateMap={this.props.readInTemplateMap}
+                  setCodeMode={this.props.setCodeMode}
+                  setEditMode={this.props.setEditMode}
+                  setNewSpecCode={this.props.setNewSpecCode}
                 />
-                /*eslint-en able react/no-string-refs*/
-              }
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }

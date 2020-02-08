@@ -5,6 +5,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
+import {thumbnailLocation} from '../thumbnail';
 
 import {SHOW_TEMPLATE_CONTROLS} from '../constants/CONFIG';
 
@@ -23,11 +24,11 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {getUniques, getDomain, getTemplateSaveState, classnames, computeValidAddNexts} from '../utils';
+import {getUniques, getDomain, getTemplateSaveState, getTemplateName, computeValidAddNexts} from '../utils';
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {ColumnHeader, VegaTheme} from '../types';
+import {ColumnHeader, VegaTheme, Json} from '../types';
 import {AppState, DataReducerState} from '../reducers/default-state';
 
 import ChartArea from './chart-area';
@@ -40,7 +41,6 @@ import EncodingControls from './encoding-controls';
 import Header from './header';
 import ImportDataColumn from './import-data-column';
 import TemplateColumn from './template-column';
-import TemplatePreviewColumn from './template-preview-column';
 
 // wrap the split pane functionality into a HOC
 const getHeight = (): number => Number(localStorage.getItem('splitPos'));
@@ -75,6 +75,7 @@ interface RootProps {
   editMode: boolean;
   editorError: null | string;
   editorFontSize: number;
+  editorLineWrap: boolean;
   encodingMode: string;
   fillableFields: Set<string>;
   metaColumns: ColumnHeader[];
@@ -96,8 +97,8 @@ interface RootProps {
   chainActions: GenericAction<any>;
   changeMarkType: GenericAction<string>;
   changeSelectedFile: GenericAction<string>;
-  changeViewName: GenericAction<{idx: number; value: string}>;
   changeTheme: GenericAction<string>;
+  changeViewName: GenericAction<{idx: number; value: string}>;
   clearEncoding: GenericAction<void>;
   cloneView: GenericAction<void>;
   coerceType: GenericAction<CoerceTypePayload>;
@@ -117,11 +118,12 @@ interface RootProps {
   readInTemplateMap: GenericAction<HandleCodePayload>;
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
-  setBlankTemplate: GenericAction<boolean>;
   setAllTemplateValues: GenericAction<TemplateMap>;
+  setBlankTemplate: GenericAction<boolean>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEditorFontSize: GenericAction<number>;
+  setEditorLineWrap: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
   setEncodingParameter: GenericAction<SetTemplateValuePayload>;
   setGuiView: GenericAction<boolean>;
@@ -182,9 +184,7 @@ class RootComponent extends React.Component<RootProps, State> {
   chartArea(): JSX.Element {
     return (
       <ChartArea
-        chainActions={this.props.chainActions}
         changeViewName={this.props.changeViewName}
-        clearEncoding={this.props.clearEncoding}
         cloneView={this.props.cloneView}
         columns={this.props.columns}
         createNewView={this.props.createNewView}
@@ -196,7 +196,7 @@ class RootComponent extends React.Component<RootProps, State> {
         encodingMode={this.props.encodingMode}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
-        spec={this.props.spec}
+        spec={this.props.spec as Json}
         switchView={this.props.switchView}
         template={this.props.template}
         templateComplete={this.props.templateComplete}
@@ -208,8 +208,16 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   leftColumn(): JSX.Element {
+    const {template} = this.props;
     return (
       <div className="flex-down full-height column background-2">
+        <div className="template-logo">
+          <img src={thumbnailLocation(template && template.templateName)} />
+          <div>
+            <h5>Currently template</h5>
+            <h4>{getTemplateName(template)}</h4>
+          </div>
+        </div>
         <ImportDataColumn
           currentlySelectedFile={this.props.currentlySelectedFile}
           toggleDataModal={this.props.toggleDataModal}
@@ -226,7 +234,7 @@ class RootComponent extends React.Component<RootProps, State> {
           setRepeats={this.props.setRepeats}
           showGUIView={this.props.showGUIView}
           spec={this.props.spec}
-          template={this.props.template}
+          template={template}
           updateFilter={this.props.updateFilter}
         />
       </div>
@@ -294,34 +302,29 @@ class RootComponent extends React.Component<RootProps, State> {
 
   codeEditor(): JSX.Element {
     return (
-      <div
-        className={classnames({
-          'full-width': true,
-          'flex-down': true,
-          'full-height': this.props.showProgrammaticMode,
-        })}
-      >
-        <CodeEditor
-          addWidget={this.props.addWidget}
-          codeMode={this.props.codeMode}
-          chainActions={this.props.chainActions}
-          editMode={this.props.editMode}
-          editorError={this.props.editorError}
-          editorFontSize={this.props.editorFontSize}
-          readInTemplate={this.props.readInTemplate}
-          readInTemplateMap={this.props.readInTemplateMap}
-          setCodeMode={this.props.setCodeMode}
-          setEditMode={this.props.setEditMode}
-          setEditorFontSize={this.props.setEditorFontSize}
-          setNewSpecCode={this.props.setNewSpecCode}
-          setProgrammaticView={this.props.setProgrammaticView}
-          showProgrammaticMode={this.props.showProgrammaticMode}
-          spec={this.props.spec}
-          specCode={this.props.specCode}
-          template={this.props.template}
-          templateMap={this.props.templateMap}
-        />
-      </div>
+      <CodeEditor
+        addWidget={this.props.addWidget}
+        codeMode={this.props.codeMode}
+        chainActions={this.props.chainActions}
+        currentView={this.props.currentView}
+        editMode={this.props.editMode}
+        editorLineWrap={this.props.editorLineWrap}
+        setEditorLineWrap={this.props.setEditorLineWrap}
+        editorError={this.props.editorError}
+        editorFontSize={this.props.editorFontSize}
+        readInTemplate={this.props.readInTemplate}
+        readInTemplateMap={this.props.readInTemplateMap}
+        setCodeMode={this.props.setCodeMode}
+        setEditMode={this.props.setEditMode}
+        setEditorFontSize={this.props.setEditorFontSize}
+        setNewSpecCode={this.props.setNewSpecCode}
+        setProgrammaticView={this.props.setProgrammaticView}
+        showProgrammaticMode={this.props.showProgrammaticMode}
+        spec={this.props.spec}
+        specCode={this.props.specCode}
+        template={this.props.template}
+        templateMap={this.props.templateMap}
+      />
     );
   }
 
@@ -350,20 +353,12 @@ class RootComponent extends React.Component<RootProps, State> {
           triggerRedo={this.props.triggerRedo}
           triggerUndo={this.props.triggerUndo}
         />
-        <div className="flex full-height relative">
+        <div className="flex main-content-container relative">
           <DndProvider backend={HTML5Backend}>
             <Wrapper showProgrammaticMode={this.props.showProgrammaticMode} showGUIView={true}>
-              <div className="flex-down full-height">
-                <TemplatePreviewColumn
-                  encodingMode={this.props.encodingMode}
-                  setEncodingMode={this.props.setEncodingMode}
-                  templates={this.props.templates}
-                  toggleProgramModal={this.props.toggleProgramModal}
-                />
-                <div className="flex" style={{height: 'calc(100% - 77px)'}}>
-                  {this.leftColumn()}
-                  {this.centerColumn()}
-                </div>
+              <div className="flex full-height">
+                {this.leftColumn()}
+                {this.centerColumn()}
               </div>
               {this.codeEditor()}
             </Wrapper>
@@ -392,6 +387,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     editMode: base.editMode,
     editorError: base.editorError,
     editorFontSize: base.editorFontSize,
+    editorLineWrap: base.editorLineWrap,
     encodingMode: base.encodingMode,
     fillableFields: computeValidAddNexts(template, templateMap),
     metaColumns: base.metaColumns,

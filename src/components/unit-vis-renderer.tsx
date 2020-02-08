@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
+import {Json} from '../types';
 
 import UnitVis from 'unit-vis';
 interface Props {
-  spec: any;
+  spec: Json;
   data: any;
 }
 

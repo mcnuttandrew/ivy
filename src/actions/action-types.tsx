@@ -27,6 +27,7 @@ export const SET_ALL_TEMPLATE_VALUES = 'set-all-template-values';
 export const SET_BLANK_TEMPLATE = 'set-blank-template';
 export const SET_CODE_MODE = 'set-code-mode';
 export const SET_EDITOR_FONT_SIZE = 'set-editor-font-size';
+export const SET_EDITOR_LINE_WRAP = 'set-editor-line-wrap';
 export const SET_EDIT_MODE = 'set-edit-mode';
 export const SET_ENCODING_MODE = 'set-encoding-mode';
 export const SET_ENCODING_PARAM = 'set-encoding-param';

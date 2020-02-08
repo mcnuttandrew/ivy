@@ -197,7 +197,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
                   }
                 />
               </AddLabelToWidget>
-              <AddLabelToWidget label={'Description'}>
+              <AddLabelToWidget label={'Template Language'}>
                 <Selector
                   options={['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(key => ({
                     display: key,

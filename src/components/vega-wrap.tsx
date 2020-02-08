@@ -1,6 +1,6 @@
 import React from 'react';
 import {Vega} from 'react-vega';
-import {VegaTheme} from '../types';
+import {VegaTheme, Json} from '../types';
 import {Handler} from 'vega-tooltip';
 import {get} from '../utils';
 import Table from './data-table';
@@ -8,7 +8,7 @@ import UnitVisChart from './unit-vis-renderer';
 import {DataRow} from '../actions/index';
 
 interface VegaWrapperProps {
-  spec: any;
+  spec: Json;
   data: DataRow[];
   theme: VegaTheme;
   language?: string;
@@ -44,7 +44,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
       return <UnitVisChart data={data} spec={spec} />;
     }
     if (lang === 'hydra-data-table') {
-      return <Table data={data} spec={spec} />;
+      return <Table data={data} spec={spec as {columns: string[]}} />;
     }
     // HACK to prevent changes to the data
     const finalSpec = JSON.parse(JSON.stringify(spec));

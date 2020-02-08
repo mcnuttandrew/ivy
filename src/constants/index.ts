@@ -22,3 +22,9 @@ export const GRAMMAR_NAME = 'grammer';
 export const GRAMMAR_DESC = 'Tableau-style grammar of graphics';
 
 export const NONE_TEMPLATE = '_____none_____';
+
+// export const
+export const WIDGET_VALUES = 'Settings';
+export const WIDGET_CONFIGURATION = 'Params';
+export const JSON_OUTPUT = 'Output';
+export const TEMPLATE_BODY = 'Body';
