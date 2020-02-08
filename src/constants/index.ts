@@ -28,3 +28,7 @@ export const WIDGET_VALUES = 'Settings';
 export const WIDGET_CONFIGURATION = 'Params';
 export const JSON_OUTPUT = 'Output';
 export const TEMPLATE_BODY = 'Body';
+
+/* eslint-disable no-undef*/
+export const PREVENT_ACCIDENTAL_LEAVE = process.env.NODE_ENV === 'production';
+/* eslint-enable no-undef*/

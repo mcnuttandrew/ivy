@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppWrap from './components/app-wrap';
 import setupMonaco from './utils/monaco';
-import {PREVENT_ACCIDENTAL_LEAVE} from './constants/CONFIG';
+import {PREVENT_ACCIDENTAL_LEAVE} from './constants/index';
 import {retrieveThumbnails} from './thumbnail';
 
 import './stylesheets/main.css';

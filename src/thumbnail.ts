@@ -1,5 +1,6 @@
 import DomToImage from 'dom-to-image';
 import {set, get} from 'idb-keyval';
+import {NONE_TEMPLATE} from './constants/index';
 
 // well this is the hackiest file ever
 // The thumbnails store lives outside of the redux application in order to prevent the
@@ -63,6 +64,9 @@ export function thumbnailLocation(templateName: string | null): string {
   }
   if (templateName === 'AtomExplore') {
     return 'assets/atom-logo.png';
+  }
+  if (templateName === NONE_TEMPLATE) {
+    return 'assets/chart-gallery-logo.png';
   }
   /* eslint-disable @typescript-eslint/ban-ts-ignore*/
   // @ts-ignore
