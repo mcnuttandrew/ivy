@@ -1,5 +1,6 @@
 import React from 'react';
 import {TiDeleteOutline} from 'react-icons/ti';
+import {IgnoreKeys} from 'react-hotkeys';
 import {Range} from 'rc-slider';
 
 interface FilterProps {
@@ -34,33 +35,35 @@ export default function Filter({column, filter, updateFilter, deleteFilter}: Fil
       <div className="filter-contents">
         {range && (
           <div className="flex-down">
-            <div className="grid">
-              <span className="grid-col-1">min</span>
-              <input
-                className="grid-col-2"
-                type="number"
-                value={range[0]}
-                onChange={({target: {value}}): any => updateFilter([Number(value), range[1]])}
-              />
-              <span className="grid-col-1">max</span>
-              <input
-                className="grid-col-2"
-                type="number"
-                value={range[1]}
-                onChange={({target: {value}}): any => updateFilter([range[0], Number(value)])}
-              />
-            </div>
-            <div className="range-wrap ">
-              <Range
-                allowCross={false}
-                min={domain[0]}
-                max={domain[1]}
-                step={(domain[1] - domain[0]) / 100}
-                marks={{[domain[0]]: domain[0], [domain[1]]: domain[1]}}
-                defaultValue={range}
-                onChange={(x: number[]): any => updateFilter(x)}
-              />
-            </div>
+            <IgnoreKeys style={{height: '100%'}}>
+              <div className="grid">
+                <span className="grid-col-1">min</span>
+                <input
+                  className="grid-col-2"
+                  type="number"
+                  value={range[0]}
+                  onChange={({target: {value}}): any => updateFilter([Number(value), range[1]])}
+                />
+                <span className="grid-col-1">max</span>
+                <input
+                  className="grid-col-2"
+                  type="number"
+                  value={range[1]}
+                  onChange={({target: {value}}): any => updateFilter([range[0], Number(value)])}
+                />
+              </div>
+              <div className="range-wrap ">
+                <Range
+                  allowCross={false}
+                  min={domain[0]}
+                  max={domain[1]}
+                  step={(domain[1] - domain[0]) / 100}
+                  marks={{[domain[0]]: domain[0], [domain[1]]: domain[1]}}
+                  defaultValue={range}
+                  onChange={(x: number[]): any => updateFilter(x)}
+                />
+              </div>
+            </IgnoreKeys>
           </div>
         )}
         {oneOf && (

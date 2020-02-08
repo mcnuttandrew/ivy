@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
+import {GlobalHotKeys} from 'react-hotkeys';
 
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 import {thumbnailLocation} from '../thumbnail';
@@ -328,9 +329,43 @@ class RootComponent extends React.Component<RootProps, State> {
     );
   }
 
+  hotKeyProvider(): JSX.Element {
+    const keyMap = {
+      UNDO: 'cmd+z',
+      REDO: 'cmd+shift+z',
+      CLOSE_MODALS: 'Escape',
+    };
+    const {
+      canUndo,
+      triggerUndo,
+      canRedo,
+      triggerRedo,
+      dataModalOpen,
+      programModalOpen,
+      toggleProgramModal,
+      toggleDataModal,
+    } = this.props;
+    console.log(dataModalOpen, programModalOpen);
+    const handlers = {
+      UNDO: (): any => canUndo && triggerUndo(),
+      REDO: (): any => canRedo && triggerRedo(),
+      CLOSE_MODALS: (): any => {
+        console.log('escape', dataModalOpen, programModalOpen);
+        if (dataModalOpen) {
+          toggleDataModal();
+        }
+        if (programModalOpen) {
+          toggleProgramModal();
+        }
+      },
+    };
+    return <GlobalHotKeys keyMap={keyMap} handlers={handlers} allowChanges={true} />;
+  }
+
   render(): JSX.Element {
     return (
       <div className="flex-down full-width full-height">
+        {this.hotKeyProvider()}
         {this.props.dataModalOpen && (
           <DataModal
             chainActions={this.props.chainActions}

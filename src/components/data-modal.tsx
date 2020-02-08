@@ -1,7 +1,6 @@
 import React from 'react';
 import {GenericAction, LoadDataPayload} from '../actions/index';
-// import VegaDataPreAlias from 'vega-datasets';
-// const VegaData: {[key: string]: any} = VegaDataPreAlias;
+import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../constants/vega-datasets-counts';
 import DataSymbol from './data-symbol';
 import {DataType} from '../types';
@@ -55,14 +54,16 @@ export default class DataModal extends React.Component<Props, State> {
         <div className="flex space-between">
           <h3>Predefined Datasets</h3>
           <div>
-            <input
-              type="text"
-              value={searchTerm || ''}
-              onChange={(event): void => {
-                this.setState({searchTerm: event.target.value});
-              }}
-              placeholder="Search for dataset"
-            />
+            <IgnoreKeys style={{height: '100%'}}>
+              <input
+                type="text"
+                value={searchTerm || ''}
+                onChange={(event): void => {
+                  this.setState({searchTerm: event.target.value});
+                }}
+                placeholder="Search for dataset"
+              />
+            </IgnoreKeys>
           </div>
         </div>
 

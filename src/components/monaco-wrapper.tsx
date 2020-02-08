@@ -1,5 +1,6 @@
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
+import {IgnoreKeys} from 'react-hotkeys';
 
 import {
   EDITOR_OPTIONS,
@@ -78,27 +79,29 @@ export default class CodeEditor extends React.Component<Props> {
     } = this.props;
     return (
       /*eslint-disable react/no-string-refs*/
-      <MonacoEditor
-        ref="monaco"
-        language="json"
-        theme="monokai"
-        height="100%"
-        value={currentCode}
-        options={{
-          ...EDITOR_OPTIONS,
-          fontSize: editorFontSize,
-          wordWrap: editorLineWrap ? 'on' : 'off',
-        }}
-        onChange={(code: string): void => {
-          if (codeMode === JSON_OUTPUT) {
-            chainActions([(): any => setEditMode(true), (): any => setCodeMode(TEMPLATE_BODY)]);
-            return;
-          }
+      <IgnoreKeys style={{height: '100%'}}>
+        <MonacoEditor
+          ref="monaco"
+          language="json"
+          theme="monokai"
+          height="100%"
+          value={currentCode}
+          options={{
+            ...EDITOR_OPTIONS,
+            fontSize: editorFontSize,
+            wordWrap: editorLineWrap ? 'on' : 'off',
+          }}
+          onChange={(code: string): void => {
+            if (codeMode === JSON_OUTPUT) {
+              chainActions([(): any => setEditMode(true), (): any => setCodeMode(TEMPLATE_BODY)]);
+              return;
+            }
 
-          this.handleCodeUpdate(code);
-        }}
-        editorDidMount={this.editorDidMount}
-      />
+            this.handleCodeUpdate(code);
+          }}
+          editorDidMount={this.editorDidMount}
+        />
+      </IgnoreKeys>
       /*eslint-en able react/no-string-refs*/
     );
   }

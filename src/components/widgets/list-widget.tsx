@@ -3,6 +3,7 @@ import {ListWidget, TemplateWidget} from '../../templates/types';
 import Selector from '../selector';
 import {TiCog} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
+import {IgnoreKeys} from 'react-hotkeys';
 
 import {GeneralWidget} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, Reset} from './widget-common';
@@ -28,17 +29,19 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
                   }}
                 />
                 <div className="flex-down">
-                  <input
-                    value={value.value}
-                    type="text"
-                    onChange={(event): any => {
-                      const newVal = event.target.value;
-                      const updatedWidgets = widget.widget.allowedValues.map((d, indx) =>
-                        indx === jdx ? {display: newVal, value: newVal} : {...d},
-                      );
-                      setWidgetValue('allowedValues', updatedWidgets, idx);
-                    }}
-                  />
+                  <IgnoreKeys style={{height: '100%'}}>
+                    <input
+                      value={value.value}
+                      type="text"
+                      onChange={(event): any => {
+                        const newVal = event.target.value;
+                        const updatedWidgets = widget.widget.allowedValues.map((d, indx) =>
+                          indx === jdx ? {display: newVal, value: newVal} : {...d},
+                        );
+                        setWidgetValue('allowedValues', updatedWidgets, idx);
+                      }}
+                    />
+                  </IgnoreKeys>
                 </div>
               </div>
             );

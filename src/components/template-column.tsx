@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {IgnoreKeys} from 'react-hotkeys';
 import {ColumnHeader} from '../types';
 import {
   GenericAction,
@@ -173,30 +173,32 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         {editMode && template && (
           <div className="flex">
             <div className="flex">
-              <AddLabelToWidget label={'Name'}>
-                <input
-                  type="text"
-                  value={template.templateName}
-                  onChange={(event): any =>
-                    modifyValueOnTemplate({
-                      value: event.target.value,
-                      key: 'templateName',
-                    })
-                  }
-                />
-              </AddLabelToWidget>
-              <AddLabelToWidget label={'Description'}>
-                <input
-                  type="text"
-                  value={template.templateDescription}
-                  onChange={(event): any =>
-                    modifyValueOnTemplate({
-                      value: event.target.value,
-                      key: 'templateDescription',
-                    })
-                  }
-                />
-              </AddLabelToWidget>
+              <IgnoreKeys style={{height: '100%'}}>
+                <AddLabelToWidget label={'Name'}>
+                  <input
+                    type="text"
+                    value={template.templateName}
+                    onChange={(event): any =>
+                      modifyValueOnTemplate({
+                        value: event.target.value,
+                        key: 'templateName',
+                      })
+                    }
+                  />
+                </AddLabelToWidget>
+                <AddLabelToWidget label={'Description'}>
+                  <input
+                    type="text"
+                    value={template.templateDescription}
+                    onChange={(event): any =>
+                      modifyValueOnTemplate({
+                        value: event.target.value,
+                        key: 'templateDescription',
+                      })
+                    }
+                  />
+                </AddLabelToWidget>
+              </IgnoreKeys>
               <AddLabelToWidget label={'Template Language'}>
                 <Selector
                   options={['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(key => ({
