@@ -223,13 +223,17 @@ export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHea
     return acc;
   }, {});
 
-export function buildCounts(template: Template): any {
+function makeCount(widgets: TemplateWidget<WidgetSubType>[], useRequired: boolean): any {
   let targetCount = 0;
-  const counts = template.widgets.reduce(
+  const counts = widgets.reduce(
     (acc: any, row: TemplateWidget<WidgetSubType>) => {
       if (row.widgetType === 'DataTarget') {
+        const {allowedTypes, required} = row.widget as DataTargetWidget;
+        if (useRequired && !required) {
+          return acc;
+        }
         targetCount += 1;
-        const {allowedTypes} = row.widget as DataTargetWidget;
+
         allowedTypes.forEach((type: string) => {
           acc[type] += 1;
           if (allowedTypes.length > 1) {
@@ -238,7 +242,10 @@ export function buildCounts(template: Template): any {
         });
       }
       if (row.widgetType === 'MultiDataTarget') {
-        const {allowedTypes, maxNumberOfTargets} = row.widget as MultiDataTargetWidget;
+        const {allowedTypes, maxNumberOfTargets, required} = row.widget as MultiDataTargetWidget;
+        if (useRequired && !required) {
+          return acc;
+        }
         targetCount += maxNumberOfTargets || Infinity;
         allowedTypes.forEach((type: string) => {
           acc[type] += maxNumberOfTargets || Infinity;
@@ -257,6 +264,10 @@ export function buildCounts(template: Template): any {
     TIME: `${counts.mixingOn.has('TIME') ? '≤' : ''}${counts.TIME}`,
     SUM: `${targetCount}`,
   };
+}
+
+export function buildCounts(template: Template): any {
+  return {required: makeCount(template.widgets, true), complete: makeCount(template.widgets, false)};
 }
 
 export function searchDimensionsCanMatch(

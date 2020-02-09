@@ -42,7 +42,10 @@ button.selected {
 }
 
 button.use-button {
-  border: 2px solid #333;
+  border-radius: 0;
+  background: coral;
+
+  /* border: 2px solid #333; */
   text-decoration: none;
 }
 
@@ -645,24 +648,42 @@ input[type=number]::-webkit-outer-spin-button {
   height: 100%;
   overflow-y: scroll;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, 300px);
   grid-gap: 10px;
 }
 
 .data-search-mode .program-containers {
-  grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr; */
+
+  /* grid-template-columns: unset; */
+  grid-auto-flow: row dense;
+
+  /* grid-template: repeat(4, 0fr) / repeat(3, 300px); */
+
+  /* grid-template-rows: repeat(3, 300px); */
+  grid-template-columns: repeat(auto-fill, 300px);
 }
 
 .program-option {
+  background: whitesmoke;
+  box-shadow: 5px 5px 0 1px MediumPurple;
+  border-radius: 5px;
   border: thin solid rgba(0, 0, 0, 0);
-  font-size: 15px;
+  font-size: 12px;
   height: fit-content;
+  padding: 5px;
+  width: 275px;
 }
 
 .program-option-title {
   align-items: center;
   display: flex;
   justify-content: space-between;
+}
+
+.program-option-title h3 {
+  /* text-transform: uppercase; */
+  font-weight: bolder;
 }
 
 .program-option-settings {
@@ -674,10 +695,42 @@ input[type=number]::-webkit-outer-spin-button {
   margin-bottom: 200px;
 }
 
+.program-option-use-template-container {
+  margin-right: 5px;
+}
+
 .program-option-img-container img {
+  align-items: center;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
   height: 65px;
   width: 65px;
-  margin-right: 5px;
+}
+
+.program-option-type-pill {
+  border-top: 4px solid rgba(0, 0, 0, 0);
+  cursor: pointer;
+  margin-right: 2px;
+
+  /* padding: 0 3px; */
+}
+
+.program-option-type-pill--measure {
+  border-color: mediumseagreen;
+}
+
+.program-option-type-pill--dimension {
+  border-color: lightseagreen;
+}
+
+.program-option-type-pill--time {
+  border-color: pink;
+}
+
+.program-option-type-pill--metacolumn {
+  border-color: goldenrod;
 }
 
 .program-option-type-symbol {
@@ -692,6 +745,17 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 12px;
   font-weight: bolder;
   color: forestgreen;
+}
+
+.program-option-search-type-control {
+  cursor: pointer;
+  font-size: 10px;
+  color: salmon;
+  margin-right: 5px;
+}
+
+.program-option-search-type-control--selected {
+  text-decoration: underline;
 }
 
 .widget-body {
