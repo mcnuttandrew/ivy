@@ -23,8 +23,8 @@ interface Props {
   readInTemplateMap: GenericAction<HandleCodePayload>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
-  setEditorFontSize: GenericAction<number>;
-  setEditorLineWrap: GenericAction<boolean>;
+  setEditorFontSize: any;
+  setEditorLineWrap: any;
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<void>;
   showProgrammaticMode: boolean;
@@ -72,6 +72,16 @@ const SHORTCUTS = [
   },
 ];
 
+const fontSizes = [
+  {name: 'small', value: 10},
+  {name: 'medium', value: 15},
+  {name: 'large', value: 20},
+];
+const lineWraps = [
+  {name: 'on', value: true},
+  {name: 'off', value: false},
+];
+
 export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
@@ -107,45 +117,31 @@ export default class CodeEditor extends React.Component<Props, State> {
       editorLineWrap,
       setEditorLineWrap,
     } = this.props;
-    const fontSizes = [
-      {name: 'small', size: 10},
-      {name: 'medium', size: 15},
-      {name: 'large', size: 20},
+    const EDITOR_CONTROLS: any[] = [
+      {name: 'Font Size', options: fontSizes, update: setEditorFontSize, current: editorFontSize},
+      {name: 'Line wrap', options: lineWraps, update: setEditorLineWrap, current: editorLineWrap},
     ];
     return (
       <div className="flex-down code-editor-controls">
         <h3>Controls</h3>
-        <div className="flex">
-          <span>{`Font Size `}</span>
-          {fontSizes.map(row => {
-            return (
-              <button
-                className={classnames({selected: row.size === editorFontSize})}
-                key={row.name}
-                onClick={(): any => setEditorFontSize(row.size)}
-              >
-                {row.name}
-              </button>
-            );
-          })}
-        </div>
-        <div className="flex">
-          <span>{`Line wrap`}</span>
-          {[
-            {name: 'on', value: true},
-            {name: 'off', value: false},
-          ].map(row => {
-            return (
-              <button
-                className={classnames({selected: row.value === editorLineWrap})}
-                key={row.name}
-                onClick={(): any => setEditorLineWrap(row.value)}
-              >
-                {row.name}
-              </button>
-            );
-          })}
-        </div>
+        {EDITOR_CONTROLS.map(control => {
+          return (
+            <div className="flex" key={control.name}>
+              <span>{control.name}</span>
+              {control.options.map((row: any) => {
+                return (
+                  <button
+                    className={classnames({selected: row.value === control.current})}
+                    key={row.name}
+                    onClick={(): any => control.update(row.value)}
+                  >
+                    {row.name}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
         <h3>Text Manipulation Shortcuts</h3>
         {SHORTCUTS.map((shortcut: any) => {
           const {action, name, description} = shortcut;
