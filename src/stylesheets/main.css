@@ -274,7 +274,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .template-column {
-  max-width: 360px;
+  width: 100%;
 }
 
 .template-column.column.edit-mode {
@@ -997,10 +997,9 @@ input[type=number]::-webkit-outer-spin-button {
 .encoding-mode-selector {
   align-items: center;
   background: whitesmoke;
-  height: 59px;
-  max-height: 59px;
+  height: 55px;
+  justify-content: center;
   padding: 5px 10px;
-  justify-content: space-between;
   white-space: nowrap;
 
   /* sync with the padding */

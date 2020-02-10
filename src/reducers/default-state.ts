@@ -24,16 +24,12 @@ export interface AppState {
   editMode: boolean;
 
   // GUI
-  // currentTemplateInstance: SCATTERPLOT;
-  // encodingMode: 'Scatterplot';
   currentTemplateInstance: Template | null;
   dataModalOpen: boolean;
   encodingMode: string;
   showProgrammaticMode: boolean;
   showGUIView: boolean;
   codeMode: string;
-  editorFontSize: number;
-  editorLineWrap: boolean;
   programModalOpen: boolean;
 
   // undo redo
@@ -89,7 +85,6 @@ export const DEFAULT_STATE: AppState = {
   metaColumns: [],
 
   // spec configs
-  //  spec: EMPTY_SPEC,
   spec: {},
   specCode: stringify(EMPTY_SPEC),
   currentTheme: 'default',
@@ -97,16 +92,12 @@ export const DEFAULT_STATE: AppState = {
   editMode: false,
 
   // GUI
-  // currentTemplateInstance: SCATTERPLOT,
-  // encodingMode: 'Scatterplot',
   currentTemplateInstance: NONE,
   dataModalOpen: false,
   encodingMode: NONE.templateName,
   showProgrammaticMode: true,
   showGUIView: true,
   codeMode: JSON_OUTPUT,
-  editorFontSize: 15,
-  editorLineWrap: true,
   programModalOpen: false,
 
   // undo redo

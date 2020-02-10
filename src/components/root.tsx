@@ -24,6 +24,16 @@ import {
   DataRow,
 } from '../actions/index';
 import {getUniques, getDomain, getTemplateSaveState, getTemplateName, computeValidAddNexts} from '../utils';
+import {
+  getHeight,
+  writeHeight,
+  getWidth,
+  writeWidth,
+  getEditorFontSize,
+  writeEditorFontSize,
+  getEditorLineWrap,
+  writeEditorLineWrap,
+} from '../utils/local-storage';
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
@@ -42,7 +52,6 @@ import ImportDataColumn from './import-data-column';
 import TemplateColumn from './template-column';
 
 // wrap the split pane functionality into a HOC
-const getHeight = (): number => Number(localStorage.getItem('splitPos'));
 const Wrapper = (props: any): JSX.Element => {
   if (props.showProgrammaticMode && props.showGUIView) {
     return (
@@ -50,8 +59,8 @@ const Wrapper = (props: any): JSX.Element => {
         split="horizontal"
         minSize={60}
         style={{overflow: 'unset', position: 'relative'}}
-        defaultSize={getHeight()}
-        onChange={(size: any): any => localStorage.setItem('splitPos', size)}
+        defaultSize={getHeight() || 400}
+        onChange={writeHeight}
       >
         {props.children}
       </SplitPane>
@@ -73,8 +82,6 @@ interface RootProps {
   dataModalOpen: boolean;
   editMode: boolean;
   editorError: null | string;
-  editorFontSize: number;
-  editorLineWrap: boolean;
   encodingMode: string;
   fillableFields: Set<string>;
   metaColumns: ColumnHeader[];
@@ -121,8 +128,6 @@ interface RootProps {
   setBlankTemplate: GenericAction<boolean>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
-  setEditorFontSize: GenericAction<number>;
-  setEditorLineWrap: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
   setEncodingParameter: GenericAction<SetTemplateValuePayload>;
   setGuiView: GenericAction<boolean>;
@@ -306,16 +311,22 @@ class RootComponent extends React.Component<RootProps, State> {
         chainActions={this.props.chainActions}
         currentView={this.props.currentView}
         editMode={this.props.editMode}
-        editorLineWrap={this.props.editorLineWrap}
-        setEditorLineWrap={this.props.setEditorLineWrap}
+        editorLineWrap={getEditorLineWrap()}
         editorError={this.props.editorError}
-        editorFontSize={this.props.editorFontSize}
+        editorFontSize={getEditorFontSize()}
         readInTemplate={this.props.readInTemplate}
         readInTemplateMap={this.props.readInTemplateMap}
         setCodeMode={this.props.setCodeMode}
         setEditMode={this.props.setEditMode}
-        setEditorFontSize={this.props.setEditorFontSize}
         setNewSpecCode={this.props.setNewSpecCode}
+        setEditorFontSize={(size: number): void => {
+          writeEditorFontSize(size);
+          this.triggerRepaint();
+        }}
+        setEditorLineWrap={(value: boolean): void => {
+          writeEditorLineWrap(value);
+          this.triggerRepaint();
+        }}
         setProgrammaticView={this.props.setProgrammaticView}
         showProgrammaticMode={this.props.showProgrammaticMode}
         spec={this.props.spec}
@@ -394,14 +405,22 @@ class RootComponent extends React.Component<RootProps, State> {
         />
         <div className="flex main-content-container relative">
           <DndProvider backend={HTML5Backend}>
-            <Wrapper showProgrammaticMode={this.props.showProgrammaticMode} showGUIView={true}>
-              <div className="flex full-height">
-                {this.leftColumn()}
-                {this.centerColumn()}
-              </div>
-              {this.codeEditor()}
-            </Wrapper>
-            {this.chartArea()}
+            <SplitPane
+              split="vertical"
+              minSize={610}
+              style={{overflow: 'unset', position: 'relative'}}
+              defaultSize={getWidth() || 610}
+              onChange={writeWidth}
+            >
+              <Wrapper showProgrammaticMode={this.props.showProgrammaticMode} showGUIView={true}>
+                <div className="flex full-height full-width">
+                  {this.leftColumn()}
+                  {this.centerColumn()}
+                </div>
+                {this.codeEditor()}
+              </Wrapper>
+              {this.chartArea()}
+            </SplitPane>
           </DndProvider>
         </div>
       </div>
@@ -425,8 +444,6 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     dataModalOpen: base.dataModalOpen,
     editMode: base.editMode,
     editorError: base.editorError,
-    editorFontSize: base.editorFontSize,
-    editorLineWrap: base.editorLineWrap,
     encodingMode: base.encodingMode,
     fillableFields: computeValidAddNexts(template, templateMap),
     metaColumns: base.metaColumns,
