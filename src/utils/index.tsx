@@ -261,11 +261,11 @@ export function buildCounts(template: Template): any {
 
 export function searchDimensionsCanMatch(
   template: Template,
-  templateMap: TemplateMap,
+  targetCols: string[],
   columns: ColumnHeader[],
 ): {canBeUsed: boolean; isComplete: boolean} {
   const colMap = makeColNameMap(columns);
-  const desiredColumns = (templateMap.dataTargetSearch as string[]).map(key => colMap[key]);
+  const desiredColumns = targetCols.map(key => colMap[trim(key)]);
   const config = template.widgets;
   const targets = config.filter(d => d.type === 'DataTarget') as TemplateWidget<DataTargetWidget>[];
   const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as TemplateWidget<

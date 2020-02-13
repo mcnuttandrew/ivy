@@ -62,7 +62,11 @@ export default function DataSearchMode(props: Props): JSX.Element {
     if (template.templateName === NONE_TEMPLATE) {
       return acc;
     }
-    const {canBeUsed, isComplete} = searchDimensionsCanMatch(template, templateMap, columns);
+    const {canBeUsed, isComplete} = searchDimensionsCanMatch(
+      template,
+      templateMap.dataTargetSearch as string[],
+      columns,
+    );
     if (!canBeUsed) {
       return acc;
     }

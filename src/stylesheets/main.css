@@ -925,6 +925,17 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 
+.related-views-button {
+  align-items: center;
+  border: thin solid black;
+  border-radius: 5px;
+  display: flex;
+  font-weight: bolder;
+  justify-content: center;
+  /* text-transform: uppercase; */
+  font-size: 15px;
+}
+
 /* ERROR BAR IN CODE EDITOR */
 .code-container .error-bar {
   display: none;

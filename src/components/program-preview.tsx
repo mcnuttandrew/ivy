@@ -126,7 +126,6 @@ export default function ProgramPreview(props: Props): JSX.Element {
     preventUse,
   } = props;
   const [showDescription, setDescriptionShow] = useState(false);
-  console.log(templateName, typeCounts);
   return (
     <div
       className={classnames({
