@@ -932,7 +932,6 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   font-weight: bolder;
   justify-content: center;
-  /* text-transform: uppercase; */
   font-size: 15px;
 }
 
