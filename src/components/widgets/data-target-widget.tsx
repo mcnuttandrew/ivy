@@ -12,25 +12,25 @@ export default function DataTargetWidgetComponent(
   props: GeneralWidget<TemplateWidget<DataTargetWidget>>,
 ): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, columns, setTemplateValue} = props;
-  const fieldValue = templateMap[widget.widgetName];
+  const fieldValue = templateMap[widget.name];
   if (!editMode) {
     return (
       <TemplateShelf
         channelEncoding={trim(fieldValue as string)}
-        field={widget.widgetName}
+        field={widget.name}
         columns={columns}
         onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
         widget={widget}
       />
     );
   }
-  const allowedTypesSet = new Set(widget.widget.allowedTypes);
+  const allowedTypesSet = new Set(widget.config.allowedTypes);
 
   return (
     <div className="flex-down">
       <TemplateShelf
         channelEncoding={trim(fieldValue as string)}
-        field={widget.widgetName}
+        field={widget.name}
         columns={columns}
         onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
         widget={widget}
@@ -68,8 +68,8 @@ export default function DataTargetWidgetComponent(
           <span className="tool-description">Required:</span>
           <input
             type="checkbox"
-            onChange={(): any => setWidgetValue('required', !widget.widget.required, idx)}
-            checked={!!widget.widget.required}
+            onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
+            checked={!!widget.config.required}
           />
         </div>
       </div>

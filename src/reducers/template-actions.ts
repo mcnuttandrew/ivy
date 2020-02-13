@@ -41,10 +41,10 @@ function tryToGuessTheTypeForVegaLite(
   templateMap: TemplateMap,
   columns: ColumnHeader[],
 ): void {
-  const typeWidget = template.widgets.find(widget => widget.widgetName === `${payload.field}Type`);
-  if (typeWidget && payload.widgetType === 'DataTarget' && template.templateLanguage === 'vega-lite') {
+  const typeWidget = template.widgets.find(widget => widget.name === `${payload.field}Type`);
+  if (typeWidget && payload.type === 'DataTarget' && template.templateLanguage === 'vega-lite') {
     const column = columns.find(col => col.field === trim(payload.text as string));
-    const dims = (typeWidget.widget as ListWidget).allowedValues;
+    const dims = (typeWidget.config as ListWidget).allowedValues;
 
     if (column && column.type === 'DIMENSION' && dims.find(d => d.display === 'nominal')) {
       templateMap[`${payload.field}Type`] = '"nominal"';
@@ -187,18 +187,18 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
   // const template = state.currentTemplateInstance;
   const code = state.currentTemplateInstance.code;
   return produce(state, draftState => {
-    if (key === 'widgetName') {
+    if (key === 'name') {
       // update the old code with the new name
 
       const widget = draftState.currentTemplateInstance.widgets[idx];
-      const oldName = widget.widgetName;
+      const oldName = widget.name;
       /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       const oldValue = `\\[${widget[key]}\\]`;
       /* eslint-enable @typescript-eslint/ban-ts-ignore*/
       const re = new RegExp(oldValue, 'g');
       draftState.currentTemplateInstance.code = code.replace(re, `[${value}]`);
-      draftState.currentTemplateInstance.widgets[idx].widgetName = value;
+      draftState.currentTemplateInstance.widgets[idx].name = value;
 
       // update the template map with the new name
       draftState.templateMap[value] = state.templateMap[oldName];

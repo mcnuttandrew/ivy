@@ -72,7 +72,7 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
 function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {
   const sections = template.widgets.reduce(
     (acc, widget) => {
-      const type = widget.widgetType;
+      const type = widget.type;
       if (type === 'DataTarget' || type === 'MultiDataTarget' || type === 'Section') {
         return {
           currentSection: [widget],
@@ -92,7 +92,7 @@ function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {
 }
 
 const toSet = (widgets: TemplateWidget<WidgetSubType>[]): Set<string> =>
-  widgets.reduce((acc, row) => acc.add(row.widgetName), new Set() as Set<string>);
+  widgets.reduce((acc, row) => acc.add(row.name), new Set() as Set<string>);
 
 export default class TemplateColumn extends React.Component<TemplateColumnProps> {
   render(): JSX.Element {
@@ -134,18 +134,18 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       if (!section.length) {
         return null;
       }
-      const inBlankSection = section[0].widgetType === 'Section';
+      const inBlankSection = section[0].type === 'Section';
       const sectionContents = section.map((widget: TemplateWidget<WidgetSubType>, kdx) => {
         // the index is essential to maintain in order to make sure the updates happen correctly
         idx += 1;
-        if (!allowedWidgets.has(widget.widgetName)) {
+        if (!allowedWidgets.has(widget.name)) {
           return null;
         }
         return (
           <div
             className={classnames({
               'pad-widget': kdx && !inBlankSection,
-              [`${widget.widgetType}-widget-type`]: true,
+              [`${widget.type}-widget-type`]: true,
             })}
             key={`widget-${idx}`}
           >

@@ -21,7 +21,7 @@ export type SetTemplateValuePayload = {
   containingShelf?: string;
   text: string | string[];
   field: string;
-  widgetType?: WidgetType;
+  type?: WidgetType;
   isMeta?: boolean;
 };
 export type SetRepeatsPayload = {repeats: string[]; target: string};

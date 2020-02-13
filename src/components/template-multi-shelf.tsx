@@ -36,7 +36,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       canDrop: monitor.canDrop(),
     }),
   });
-  const allowed = widget.widget.allowedTypes;
+  const allowed = widget.config.allowedTypes;
   // if everything is allowed then recomendations dont matter much here
   const useGroupsAsTypes = ['DIMENSION', 'MEASURE', 'TIME'].every((key: DataType) => allowed.includes(key));
   const options = [{display: 'Select a value', value: null, group: null}].concat(
@@ -45,7 +45,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       value: column.field,
       group: useGroupsAsTypes
         ? column.type
-        : widget.widget.allowedTypes.includes(column.type)
+        : widget.config.allowedTypes.includes(column.type)
         ? 'RECOMENDED'
         : 'OUT OF TYPE',
     })),
@@ -53,7 +53,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
   const columnHeaders = channelEncodings
     .map(channelEncoding => columns.find(({field}) => channelEncoding && field === channelEncoding))
     .filter(d => d);
-  const maxValsHit = (widget.widget.maxNumberOfTargets || Infinity) < columnHeaders.length;
+  const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) < columnHeaders.length;
   const dropCommon = {field, multiTarget: true};
 
   return (
@@ -70,11 +70,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
           {!setName && <div>{field}</div>}
           {setName && (
             <IgnoreKeys style={{height: '100%'}}>
-              <input
-                type="text"
-                value={widget.widgetName}
-                onChange={(event): any => setName(event.target.value)}
-              />
+              <input type="text" value={widget.name} onChange={(event): any => setName(event.target.value)} />
             </IgnoreKeys>
           )}
         </div>

@@ -61,16 +61,16 @@ interface Props {
 
 function PlacementControls(props: Props): JSX.Element {
   const {code, widget, removeWidget, editMode} = props;
-  const showInUse = widget.widgetType !== 'Text';
+  const showInUse = widget.type !== 'Text';
   if (!editMode) {
     return <div />;
   }
   return (
     <div className="widget-handle flex">
-      <div>{widget.widgetType}</div>
+      <div>{widget.type}</div>
 
       <div className="in-use-status">
-        {showInUse ? (widgetInUse(code, widget.widgetName) ? 'in use' : 'not used') : ''}
+        {showInUse ? (widgetInUse(code, widget.name) ? 'in use' : 'not used') : ''}
       </div>
       <div className="cursor-pointer" onClick={removeWidget}>
         <TiDelete />
@@ -104,7 +104,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     columns,
     moveWidget,
   };
-  const widgetType = widget.widgetType;
+  const widgetType = widget.type;
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop({
     accept: 'WIDGET',

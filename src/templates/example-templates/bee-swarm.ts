@@ -89,44 +89,23 @@ const BeeSwarm: Template = {
   templateLanguage: 'vega',
   templateAuthor: 'BUILT_IN',
   widgets: [
+    {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
+    {name: 'OtherSettingsSection', type: 'Section', config: null, validations: []},
+    {name: 'radius', type: 'Slider', config: {minVal: 2, maxVal: 15, step: 1, defaultValue: 5}},
+    {name: 'collide', type: 'Slider', config: {minVal: 1, maxVal: 10, step: 1, defaultValue: 1}},
+    {name: 'gravityX', type: 'Slider', config: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.2}},
+    {name: 'gravityY', type: 'Slider', config: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.1}},
     {
-      widgetName: 'category',
-      widgetType: 'DataTarget',
-      widget: {allowedTypes: ['DIMENSION'], required: true},
-    },
-    {widgetName: 'OtherSettingsSection', widgetType: 'Section', widget: null},
-    {
-      widgetName: 'radius',
-      widgetType: 'Slider',
-      widget: {minVal: 2, maxVal: 15, step: 1, defaultValue: 5},
-    },
-    {
-      widgetName: 'collide',
-      widgetType: 'Slider',
-      widget: {minVal: 1, maxVal: 10, step: 1, defaultValue: 1},
+      name: 'static',
+      type: 'Switch',
+      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: false},
     },
     {
-      widgetName: 'gravityX',
-      widgetType: 'Slider',
-      widget: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.2},
-    },
-    {
-      widgetName: 'gravityY',
-      widgetType: 'Slider',
-      widget: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.1},
-    },
-    {
-      widgetName: 'static',
-      widgetType: 'Switch',
-      widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: false},
-    },
-    {
-      widgetName: 'colorScheme',
-      widgetType: 'List',
-      widget: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: '"category20"'},
+      name: 'colorScheme',
+      type: 'List',
+      config: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: '"category20"'},
     },
   ],
-  widgetValidations: [],
   code: stringify(BEESWARM_EXAMPLE),
 };
 export default BeeSwarm;

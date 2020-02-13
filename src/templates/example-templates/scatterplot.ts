@@ -23,63 +23,48 @@ const BASIC_TYPES = [
 
 const SCATTERPLOT: Template = {
   widgets: [
+    {name: 'xDim', type: 'DataTarget', config: {allowedTypes: ['MEASURE', 'DIMENSION'], required: true}},
     {
-      widgetName: 'xDim',
-      widgetType: 'DataTarget',
-      widget: {allowedTypes: ['MEASURE', 'DIMENSION'], required: true},
+      name: 'xType',
+      type: 'List',
+      config: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
+      validations: [{queryResult: 'hide', query: '!parameters.xType'}],
     },
     {
-      widgetName: 'xType',
-      widgetType: 'List',
-      widget: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
+      name: 'yDim',
+      type: 'DataTarget',
+      config: {allowedTypes: ['MEASURE', 'DIMENSION'], required: true},
     },
     {
-      widgetName: 'yDim',
-      widgetType: 'DataTarget',
-      widget: {allowedTypes: ['MEASURE', 'DIMENSION'], required: true},
+      name: 'yType',
+      type: 'List',
+      config: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
+      validations: [{queryResult: 'hide', query: '!parameters.yDim'}],
+    },
+    {name: 'Color', type: 'DataTarget', config: {allowedTypes: ['MEASURE', 'DIMENSION'], required: false}},
+    {
+      name: 'colorType',
+      type: 'List',
+      config: {allowedValues: BASIC_TYPES, defaultValue: '"ordinal"'},
+      validations: [{queryResult: 'hide', query: '!parameters.Color'}],
     },
     {
-      widgetName: 'yType',
-      widgetType: 'List',
-      widget: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
-    },
-    {
-      widgetName: 'Color',
-      widgetType: 'DataTarget',
-      widget: {allowedTypes: ['MEASURE', 'DIMENSION'], required: false},
-    },
-    {
-      widgetName: 'colorType',
-      widgetType: 'List',
-      widget: {allowedValues: BASIC_TYPES, defaultValue: '"ordinal"'},
-    },
-    {
-      widgetName: 'Single Color',
-      widgetType: 'List',
-      widget: {
+      name: 'Single Color',
+      type: 'List',
+      config: {
         allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})),
         defaultValue: '"steelblue"',
       },
+      validations: [{queryResult: 'hide', query: 'parameters.Color'}],
     },
 
-    {widgetName: 'OtherSettingsSection', widgetType: 'Section', widget: null},
+    {name: 'OtherSettingsSection', type: 'Section', config: null},
     {
-      widgetName: 'Zeroes',
-      widgetType: 'Switch',
-      widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+      name: 'Zeroes',
+      type: 'Switch',
+      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
     },
-    {widgetName: 'Text6', widgetType: 'Text', widget: {text: 'This is a test message'}},
-    {
-      widgetName: `Radius`,
-      widgetType: 'Slider',
-      widget: {minVal: 10, maxVal: 60, step: 1, defaultValue: 15},
-    },
-  ],
-  widgetValidations: [
-    {queryResult: 'hide', queryTarget: 'xType', query: '!parameters.xType'},
-    {queryResult: 'hide', queryTarget: 'yType', query: '!parameters.yDim'},
-    {queryResult: 'hide', queryTarget: 'colorType', query: '!parameters.Color'},
-    {queryResult: 'hide', queryTarget: 'Single Color', query: 'parameters.Color'},
+    {name: `Radius`, type: 'Slider', config: {minVal: 10, maxVal: 60, step: 1, defaultValue: 15}},
   ],
   templateName: 'Scatterplot',
   templateDescription:

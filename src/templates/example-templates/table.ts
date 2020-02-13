@@ -15,9 +15,9 @@ const DATATABLE: Template = {
   code: stringify(TABLE_EXAMPLE),
   widgets: [
     {
-      widgetName: 'columns',
-      widgetType: 'MultiDataTarget',
-      widget: {
+      name: 'columns',
+      type: 'MultiDataTarget',
+      config: {
         allowedTypes: ['MEASURE', 'DIMENSION', 'TIME'],
         required: true,
         minNumberOfTargets: 0,
@@ -25,6 +25,5 @@ const DATATABLE: Template = {
       },
     },
   ],
-  widgetValidations: [],
 };
 export default DATATABLE;

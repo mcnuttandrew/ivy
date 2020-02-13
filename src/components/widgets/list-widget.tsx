@@ -17,14 +17,14 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
       overlay={
         <div>
           <h3>List Options</h3>
-          {widget.widget.allowedValues.map((value, jdx) => {
+          {widget.config.allowedValues.map((value, jdx) => {
             return (
               <div key={jdx} className="flex">
                 <Reset
                   tooltipLabel={'Remove this option from the list'}
                   direction="left"
                   onClick={(): void => {
-                    const updated = [...widget.widget.allowedValues].filter((_, jdx) => jdx !== idx);
+                    const updated = [...widget.config.allowedValues].filter((_, jdx) => jdx !== idx);
                     setWidgetValue('allowedValues', updated, idx);
                   }}
                 />
@@ -35,7 +35,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
                       type="text"
                       onChange={(event): any => {
                         const newVal = event.target.value;
-                        const updatedWidgets = widget.widget.allowedValues.map((d, indx) =>
+                        const updatedWidgets = widget.config.allowedValues.map((d, indx) =>
                           indx === jdx ? {display: newVal, value: newVal} : {...d},
                         );
                         setWidgetValue('allowedValues', updatedWidgets, idx);
@@ -48,7 +48,7 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
           })}
           <button
             onClick={(): void => {
-              const updated = [...widget.widget.allowedValues, {display: 'X', value: 'X'}];
+              const updated = [...widget.config.allowedValues, {display: 'X', value: 'X'}];
               setWidgetValue('allowedValues', updated, idx);
             }}
           >
@@ -66,21 +66,21 @@ function OptionController(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX
 
 export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<ListWidget>>): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
-  const config = widget.widget;
+  const config = widget.config;
   return (
     <div className="list-widget">
       {!editMode && (
         <div className="flex">
-          <div className="widget-title">{widget.displayName || widget.widgetName}</div>
+          <div className="widget-title">{widget.displayName || widget.name}</div>
           <Selector
-            options={widget.widget.allowedValues}
-            selectedValue={templateMap[widget.widgetName] || ''}
-            onChange={(value: any): any => setTemplateValue({field: widget.widgetName, text: value})}
+            options={widget.config.allowedValues}
+            selectedValue={templateMap[widget.name] || ''}
+            onChange={(value: any): any => setTemplateValue({field: widget.name, text: value})}
           />
           <Reset
-            tooltipLabel={`Reset to list to the default value: ${widget.widget.defaultValue}`}
+            tooltipLabel={`Reset to list to the default value: ${widget.config.defaultValue}`}
             className="clear-option cursor-pointer"
-            onClick={(): any => setTemplateValue({field: widget.widgetName, text: config.defaultValue})}
+            onClick={(): any => setTemplateValue({field: widget.name, text: config.defaultValue})}
           />
         </div>
       )}
@@ -95,9 +95,9 @@ export default function ListWidgetComponent(props: GeneralWidget<TemplateWidget<
           <AddLabelToWidget label={'Current Value'}>
             <Selector
               options={config.allowedValues}
-              selectedValue={templateMap[widget.widgetName] || ''}
+              selectedValue={templateMap[widget.name] || ''}
               onChange={(value: any): any => {
-                setTemplateValue({field: widget.widgetName, text: value});
+                setTemplateValue({field: widget.name, text: value});
               }}
             />
           </AddLabelToWidget>

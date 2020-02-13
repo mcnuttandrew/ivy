@@ -16,9 +16,9 @@ export function EditParameterName(props: EditParameterNameProps): JSX.Element {
     <AddLabelToWidget label={'Parameter Name'}>
       <IgnoreKeys style={{height: '100%'}}>
         <input
-          value={widget.widgetName || ''}
+          value={widget.name || ''}
           type="text"
-          onChange={(event): any => setWidgetValue('widgetName', event.target.value, idx)}
+          onChange={(event): any => setWidgetValue('name', event.target.value, idx)}
         />
       </IgnoreKeys>
     </AddLabelToWidget>

@@ -99,39 +99,26 @@ const PieChart: Template = {
   templateAuthor: 'BUILT_IN',
   templateLanguage: 'vega',
   widgets: [
+    {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
     {
-      widgetName: 'category',
-      widgetType: 'DataTarget',
-      widget: {allowedTypes: ['DIMENSION'], required: true},
+      name: 'Sort',
+      type: 'Switch',
+      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+    },
+    {name: 'value', type: 'DataTarget', config: {allowedTypes: ['MEASURE'], required: true}},
+    {name: 'aggregate', type: 'List', config: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'}},
+    {name: 'OtherSettingsSection', type: 'Section', config: null},
+    {
+      name: 'colorScheme',
+      type: 'List',
+      config: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: '"category20"'},
     },
     {
-      widgetName: 'Sort',
-      widgetType: 'Switch',
-      widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
-    },
-    {
-      widgetName: 'value',
-      widgetType: 'DataTarget',
-      widget: {allowedTypes: ['MEASURE'], required: true},
-    },
-    {
-      widgetName: 'aggregate',
-      widgetType: 'List',
-      widget: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'},
-    },
-    {widgetName: 'OtherSettingsSection', widgetType: 'Section', widget: null},
-    {
-      widgetName: 'colorScheme',
-      widgetType: 'List',
-      widget: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: '"category20"'},
-    },
-    {
-      widgetName: 'DonutChart',
-      widgetType: 'Switch',
-      widget: {activeValue: '60', inactiveValue: '0', defaultsToActive: true},
+      name: 'DonutChart',
+      type: 'Switch',
+      config: {activeValue: '60', inactiveValue: '0', defaultsToActive: true},
     },
   ],
-  widgetValidations: [],
   code: stringify(PIECHART_EXAMPLE),
 };
 export default PieChart;
