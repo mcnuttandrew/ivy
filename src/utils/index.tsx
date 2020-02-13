@@ -221,16 +221,16 @@ export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHea
     return acc;
   }, {});
 
-function makeCount(widgets: TemplateWidget<WidgetSubType>[], useRequired: boolean): any {
-  let targetCount = 0;
-  const counts = widgets.reduce(
+export function buildCounts(template: Template): any {
+  let SUM = 0;
+  const counts = template.widgets.reduce(
     (acc: any, row: TemplateWidget<WidgetSubType>) => {
       if (row.type === 'DataTarget') {
         const {allowedTypes, required} = row.config as DataTargetWidget;
-        if (useRequired && !required) {
+        if (!required) {
           return acc;
         }
-        targetCount += 1;
+        SUM += 1;
 
         allowedTypes.forEach((type: string) => {
           acc[type] += 1;
@@ -240,13 +240,13 @@ function makeCount(widgets: TemplateWidget<WidgetSubType>[], useRequired: boolea
         });
       }
       if (row.type === 'MultiDataTarget') {
-        const {allowedTypes, maxNumberOfTargets, required} = row.config as MultiDataTargetWidget;
-        if (useRequired && !required) {
+        const {allowedTypes, minNumberOfTargets, required} = row.config as MultiDataTargetWidget;
+        if (!required) {
           return acc;
         }
-        targetCount += maxNumberOfTargets || Infinity;
+        SUM += Number(minNumberOfTargets) || 0;
         allowedTypes.forEach((type: string) => {
-          acc[type] += maxNumberOfTargets || Infinity;
+          acc[type] += Number(minNumberOfTargets) || 0;
           if (allowedTypes.length > 1) {
             acc.mixingOn = acc.mixingOn.add(type);
           }
@@ -256,16 +256,7 @@ function makeCount(widgets: TemplateWidget<WidgetSubType>[], useRequired: boolea
     },
     {DIMENSION: 0, MEASURE: 0, TIME: 0, mixingOn: new Set()},
   );
-  return {
-    DIMENSION: `${counts.mixingOn.has('DIMENSION') ? '≤' : ''}${counts.DIMENSION}`,
-    MEASURE: `${counts.mixingOn.has('MEASURE') ? '≤' : ''}${counts.MEASURE}`,
-    TIME: `${counts.mixingOn.has('TIME') ? '≤' : ''}${counts.TIME}`,
-    SUM: `${targetCount}`,
-  };
-}
-
-export function buildCounts(template: Template): any {
-  return {required: makeCount(template.widgets, true), complete: makeCount(template.widgets, false)};
+  return {DIMENSION: counts.DIMENSION, MEASURE: counts.MEASURE, TIME: counts.TIME, SUM};
 }
 
 export function searchDimensionsCanMatch(
@@ -280,10 +271,7 @@ export function searchDimensionsCanMatch(
   const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as TemplateWidget<
     MultiDataTargetWidget
   >[];
-  const numRequired = targets.filter(d => {
-    console.log(d, template.templateName);
-    return d.config.required;
-  }).length;
+  const numRequired = targets.filter(d => d.config.required).length;
   const usedTargets: Set<string> = new Set([]);
   const result = desiredColumns.every(col => {
     const availableSingleTargetField = targets

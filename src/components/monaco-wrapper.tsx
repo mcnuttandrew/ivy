@@ -2,34 +2,24 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import {IgnoreKeys} from 'react-hotkeys';
 
-import {
-  EDITOR_OPTIONS,
-  JSON_OUTPUT,
-  WIDGET_VALUES,
-  WIDGET_CONFIGURATION,
-  TEMPLATE_BODY,
-} from '../constants/index';
-import {GenericAction, HandleCodePayload} from '../actions';
+import {EDITOR_OPTIONS, JSON_OUTPUT, TEMPLATE_BODY} from '../constants/index';
+import {GenericAction} from '../actions';
 
 interface Props {
   chainActions: GenericAction<any>;
   codeMode: string;
   currentCode: string;
-  editMode: boolean;
   editorFontSize: number;
   editorLineWrap: boolean;
-  readInTemplate: GenericAction<HandleCodePayload>;
-  readInTemplateMap: GenericAction<HandleCodePayload>;
+  handleCodeUpdate: (x: string) => void;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
-  setNewSpecCode: GenericAction<HandleCodePayload>;
 }
 
 export default class CodeEditor extends React.Component<Props> {
   constructor(props: any) {
     super(props);
     this.editorDidMount = this.editorDidMount.bind(this);
-    this.handleCodeUpdate = this.handleCodeUpdate.bind(this);
   }
   editorDidMount(editor: any): void {
     editor.focus();
@@ -54,26 +44,14 @@ export default class CodeEditor extends React.Component<Props> {
     }
   }
 
-  handleCodeUpdate(code: string): void {
-    const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
-    const responseFunctionMap: {[x: string]: GenericAction<HandleCodePayload>} = {
-      [WIDGET_CONFIGURATION]: readInTemplate,
-      [WIDGET_VALUES]: readInTemplateMap,
-      [TEMPLATE_BODY]: setNewSpecCode,
-    };
-    Promise.resolve()
-      .then(() => JSON.parse(code))
-      .then(() => responseFunctionMap[codeMode]({code, inError: false}))
-      .catch(() => responseFunctionMap[codeMode]({code, inError: true}));
-  }
-
   render(): JSX.Element {
     const {
+      chainActions,
+      codeMode,
       currentCode,
       editorFontSize,
       editorLineWrap,
-      codeMode,
-      chainActions,
+      handleCodeUpdate,
       setCodeMode,
       setEditMode,
     } = this.props;
@@ -97,7 +75,7 @@ export default class CodeEditor extends React.Component<Props> {
               return;
             }
 
-            this.handleCodeUpdate(code);
+            handleCodeUpdate(code);
           }}
           editorDidMount={this.editorDidMount}
         />

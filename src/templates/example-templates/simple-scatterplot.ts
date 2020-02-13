@@ -9,13 +9,19 @@ const SCATTERPLOT: Template = {
     {
       name: 'colorType',
       type: 'List',
-      config: {allowedValues: ['"quantitative"', '"ordinal"'].map(x => ({display: x, value: x})), defaultValue: '"ordinal"'},
+      config: {
+        allowedValues: ['"quantitative"', '"ordinal"'].map(x => ({display: x, value: x})),
+        defaultValue: '"ordinal"',
+      },
       validations: [{queryResult: 'hide', query: '!parameters.Color'}],
     },
     {
       name: 'Single Color',
       type: 'List',
-      config: {allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})), defaultValue: '"steelblue"'},
+      config: {
+        allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})),
+        defaultValue: '"steelblue"',
+      },
       validations: [{queryResult: 'hide', query: 'parameters.Color'}],
     },
   ],
@@ -24,11 +30,16 @@ const SCATTERPLOT: Template = {
   templateLanguage: 'vega-lite',
   code: stringify({
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-    mark: {type: 'point', color: {CONDITIONAL: {query: '!parameters.Color', true: '[Single Color]', false: null}}},
+    mark: {
+      type: 'point',
+      color: {CONDITIONAL: {query: '!parameters.Color', true: '[Single Color]', false: null}},
+    },
     encoding: {
       x: {field: '[xDim]', type: 'quantitative'},
       y: {field: '[yDim]', type: 'quantitative'},
-      color: {CONDITIONAL: {query: 'parameters.Color', true: {field: '[Color]', type: '[colorType]'}, false: null}},
+      color: {
+        CONDITIONAL: {query: 'parameters.Color', true: {field: '[Color]', type: '[colorType]'}, false: null},
+      },
     },
   }),
 };

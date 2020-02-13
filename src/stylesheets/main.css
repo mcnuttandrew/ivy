@@ -291,6 +291,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .template-logo img {
   max-height: 55px;
+  max-width: 95px;
 }
 
 .template-column.column.edit-mode > div {
@@ -384,6 +385,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .symbol-box {
   border-right: 1px solid gray;
+  cursor: pointer;
   height: 5px;
   width: 100%;
 }
@@ -1273,6 +1275,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 .Resizer.disabled:hover {
   border-color: transparent;
+}
+
+.tooltip-icon {
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .tooltip-internal {

@@ -99,10 +99,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
             setEncodingMode={setEncodingMode}
             templateAuthor={'BUILT_IN'}
             buttons={[]}
-            typeCounts={{
-              complete: {DIMENSION: '≤9', MEASURE: '≤9', TIME: '≤9', SUM: '9'},
-              required: {DIMENSION: '≤9', MEASURE: '≤9', TIME: '≤9', SUM: '9'},
-            }}
+            typeCounts={{DIMENSION: 0, MEASURE: 0, TIME: 0, SUM: 9}}
           />
         )}
         {programs}

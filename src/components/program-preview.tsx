@@ -7,7 +7,7 @@ import {TiCog} from 'react-icons/ti';
 import DataSymbol from './data-symbol';
 import {DataType} from '../types';
 
-type TypeCounts = {complete: {[x: string]: string}; required: {[x: string]: string}};
+type TypeCounts = {[x: string]: number};
 interface Props {
   alreadyPresent?: boolean;
   buttons: {name: string; onClick: any}[];
@@ -23,7 +23,7 @@ interface Props {
 function partialMatch(): JSX.Element {
   return (
     <Tooltip
-      placement="bottom"
+      placement="right"
       trigger="hover"
       overlay={
         <div className="tooltip-internal">
@@ -40,7 +40,7 @@ function partialMatch(): JSX.Element {
 function fullMatch(): JSX.Element {
   return (
     <Tooltip
-      placement="bottom"
+      placement="right"
       trigger="hover"
       overlay={
         <div className="tooltip-internal">
@@ -86,7 +86,7 @@ function CardControls(props: CardControlsProps): JSX.Element {
 
 function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
   const messages = ['DIMENSION', 'MEASURE', 'TIME']
-    .filter(d => Number(typeCounts.required[d]) > 0)
+    .filter(d => typeCounts[d] > 0)
     .map((key: string) => {
       return (
         <div
@@ -97,7 +97,7 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
             [`program-option-type-pill--${key.toLowerCase()}`]: true,
           })}
         >
-          <span>{typeCounts.required[key]}</span>
+          <span>{typeCounts[key]}</span>
           <span className="program-option-type-symbol">
             <DataSymbol type={key as DataType} />
           </span>
@@ -126,6 +126,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
     preventUse,
   } = props;
   const [showDescription, setDescriptionShow] = useState(false);
+  console.log(templateName, typeCounts);
   return (
     <div
       className={classnames({

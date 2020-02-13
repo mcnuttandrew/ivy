@@ -34,7 +34,7 @@ export default function DataTargetWidgetComponent(
         columns={columns}
         onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
         widget={widget}
-        setName={(value: string): any => setWidgetValue('widgetName', value, idx)}
+        setName={(value: string): any => setWidgetValue('name', value, idx)}
       />
       <div className="flex space-evenly">
         <div className="flex-down">
