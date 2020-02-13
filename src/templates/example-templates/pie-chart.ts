@@ -99,26 +99,14 @@ const PieChart: Template = {
   templateAuthor: 'BUILT_IN',
   templateLanguage: 'vega',
   widgets: [
-    {
-      name: 'category',
-      type: 'DataTarget',
-      config: {allowedTypes: ['DIMENSION'], required: true},
-    },
+    {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
     {
       name: 'Sort',
       type: 'Switch',
       config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
     },
-    {
-      name: 'value',
-      type: 'DataTarget',
-      config: {allowedTypes: ['MEASURE'], required: true},
-    },
-    {
-      name: 'aggregate',
-      type: 'List',
-      config: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'},
-    },
+    {name: 'value', type: 'DataTarget', config: {allowedTypes: ['MEASURE'], required: true}},
+    {name: 'aggregate', type: 'List', config: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'}},
     {name: 'OtherSettingsSection', type: 'Section', config: null},
     {
       name: 'colorScheme',

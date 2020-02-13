@@ -1,20 +1,19 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, TemplateWidget, WidgetSubType, Validation} from '../types';
+import {Template, TemplateWidget, WidgetSubType} from '../types';
+type GenWidget = TemplateWidget<WidgetSubType>;
 import {toList} from '../../utils';
 import {
   makeDataTarget,
-  makeText,
+  makeFullAgg,
   makeSection,
+  makeSimpleAgg,
+  makeText,
+  makeTypeSelect,
   simpleList,
   simpleSwitch,
   simpleValidation,
-  // addValidation,
-  used,
-  unused,
   toQuote,
-  makeFullAgg,
-  makeSimpleAgg,
-  makeTypeSelect,
+  used,
 } from './polestar-template-utils';
 
 const MARK_TYPES = [
@@ -103,7 +102,7 @@ const SHELF: Template = {
     // x & y dimensions
     makeSection('Encoding header'),
     makeText('Encoding'),
-    ...['X', 'Y'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {
+    ...['X', 'Y'].reduce((acc: GenWidget[], key: string) => {
       return acc.concat([
         makeDataTarget(key),
         makeTypeSelect(key, 'quantitative'),
@@ -149,7 +148,7 @@ const SHELF: Template = {
     },
 
     // size & color dimensions
-    ...['Color', 'Size'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {
+    ...['Color', 'Size'].reduce((acc: GenWidget[], key: string) => {
       return acc.concat([
         makeDataTarget(key),
         makeTypeSelect(key, 'ordinal'),
@@ -160,7 +159,7 @@ const SHELF: Template = {
     }, []),
 
     // size & color dimensions
-    ...['Shape', 'Detail'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {
+    ...['Shape', 'Detail'].reduce((acc: GenWidget[], key: string) => {
       return acc.concat([makeDataTarget(key), makeTypeSelect(key, 'nominal')]);
     }, []),
     // text
@@ -172,40 +171,7 @@ const SHELF: Template = {
     // row / column
     makeSection('Facet Divider'),
     makeText('Repeat Small Multiply'),
-    ...['Row', 'Column'].reduce((acc: TemplateWidget<WidgetSubType>[], key: string) => {
-      return acc.concat([makeDataTarget(key)]);
-    }, []),
+    ...['Row', 'Column'].reduce((acc: GenWidget[], key: string) => acc.concat([makeDataTarget(key)]), []),
   ],
-  // TODO UGH
-  // widgetValidations: [
-  //   ...['X', 'Y'].reduce((acc: WidgetValidation[], key: string) => {
-  // simpleValidation()
-  //     [`${key}Type`, `${key}ScaleType`, `${key}IncludeZero`, `${key}bin`].forEach(addValidation(acc, key));
-  //     // remove the scale type options for order/nominal/temporal as it doesn't make sense
-  //     acc.push({
-  //       queryTarget: `${key}ScaleType`,
-  //       queryResult: 'show',
-  //       query: `Boolean(parameters.${key}) && parameters.${key}Type === "\\"quantitative\\""`,
-  //     });
-  //     return acc;
-  //   }, []),
-
-  //   ...['Color', 'Size'].reduce((acc: WidgetValidation[], key: string) => {
-  //     [`${key}Type`, `${key}bin`].forEach(addValidation(acc, key));
-  //     return acc;
-  //   }, []),
-
-  //   ...['Shape', 'Detail'].reduce((acc: WidgetValidation[], key: string) => {
-  //     [`${key}Type`].forEach(addValidation(acc, key));
-  //     return acc;
-  //   }, []),
-  //   // simple and full aggregate are paired
-  //   ...['X', 'Y', 'Size', 'Color', 'Text'].reduce((acc, key) => {
-  //     return acc.concat([
-  //       {queryTarget: `${key}AggFull`, query: unused(key), queryResult: 'hide'},
-  //       {queryTarget: `${key}AggSimple`, query: used(key), queryResult: 'hide'},
-  //     ]);
-  //   }, []),
-  // ],
 };
 export default SHELF;

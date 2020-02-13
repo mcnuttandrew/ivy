@@ -119,16 +119,6 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
  * @param templateMap - the specification/variable values defined by the gui
  */
 export function applyQueries(template: Template, templateMap: TemplateMap): TemplateWidget<any>[] {
-  // const widgetMap = template.widgets.reduce((acc: any, widget) => {
-  //   acc[widget.name] = true;
-  //   return acc;
-  // }, {});
-
-  // const validWidgetNames = template.widgetValidations.reduce((acc: {[x: string]: boolean}, validation) => {
-  //   const queryResult = evaluateQuery(validation.query, templateMap);
-  //   acc[validation.queryTarget] = validation.queryResult === 'show' ? queryResult : !queryResult;
-  //   return acc;
-  // }, widgetMap);
   return template.widgets.filter(widget => {
     if (!widget.validations || !widget.validations.length) {
       return true;

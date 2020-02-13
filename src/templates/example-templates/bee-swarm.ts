@@ -89,32 +89,12 @@ const BeeSwarm: Template = {
   templateLanguage: 'vega',
   templateAuthor: 'BUILT_IN',
   widgets: [
-    {
-      name: 'category',
-      type: 'DataTarget',
-      config: {allowedTypes: ['DIMENSION'], required: true},
-    },
+    {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
     {name: 'OtherSettingsSection', type: 'Section', config: null, validations: []},
-    {
-      name: 'radius',
-      type: 'Slider',
-      config: {minVal: 2, maxVal: 15, step: 1, defaultValue: 5},
-    },
-    {
-      name: 'collide',
-      type: 'Slider',
-      config: {minVal: 1, maxVal: 10, step: 1, defaultValue: 1},
-    },
-    {
-      name: 'gravityX',
-      type: 'Slider',
-      config: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.2},
-    },
-    {
-      name: 'gravityY',
-      type: 'Slider',
-      config: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.1},
-    },
+    {name: 'radius', type: 'Slider', config: {minVal: 2, maxVal: 15, step: 1, defaultValue: 5}},
+    {name: 'collide', type: 'Slider', config: {minVal: 1, maxVal: 10, step: 1, defaultValue: 1}},
+    {name: 'gravityX', type: 'Slider', config: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.2}},
+    {name: 'gravityY', type: 'Slider', config: {minVal: 0, maxVal: 1, step: 0.01, defaultValue: 0.1}},
     {
       name: 'static',
       type: 'Switch',
