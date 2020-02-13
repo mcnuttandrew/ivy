@@ -27,9 +27,24 @@ interface AddToNextProps {
   typeNotAddable: boolean;
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   column: ColumnHeader;
+  showTip: boolean;
 }
 function addToNext(props: AddToNextProps): JSX.Element {
-  const {typeNotAddable, addToNextOpenSlot, column} = props;
+  const {typeNotAddable, addToNextOpenSlot, column, showTip} = props;
+  const content = (
+    <div
+      className={classnames({
+        'fixed-symbol-width': true,
+        'fixed-symbol-width-disable': typeNotAddable,
+      })}
+      onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
+    >
+      <TiPlus />
+    </div>
+  );
+  if (!showTip) {
+    return content;
+  }
   return (
     <Tooltip
       placement="right"
@@ -42,15 +57,7 @@ function addToNext(props: AddToNextProps): JSX.Element {
         </span>
       }
     >
-      <div
-        className={classnames({
-          'fixed-symbol-width': true,
-          'fixed-symbol-width-disable': typeNotAddable,
-        })}
-        onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
-      >
-        <TiPlus />
-      </div>
+      {content}
     </Tooltip>
   );
 }
@@ -59,21 +66,28 @@ interface RemovePillProps {
   column: ColumnHeader;
   setEncodingParameter: any;
   containingField: string;
+  showTip: boolean;
 }
 function removePill(props: RemovePillProps): JSX.Element {
-  const {setEncodingParameter, column, containingField} = props;
+  const {setEncodingParameter, column, containingField, showTip} = props;
+  const content = (
+    <div
+      className="fixed-symbol-width"
+      onClick={(): any => setEncodingParameter({text: null, field: containingField, column})}
+    >
+      <TiDeleteOutline />
+    </div>
+  );
+  if (!showTip) {
+    return content;
+  }
   return (
     <Tooltip
       placement="bottom"
       trigger="hover"
       overlay={<span className="tooltip-internal">Remove this field from the containing data target</span>}
     >
-      <div
-        className="fixed-symbol-width"
-        onClick={(): any => setEncodingParameter({text: null, field: containingField, column})}
-      >
-        <TiDeleteOutline />
-      </div>
+      {content}
     </Tooltip>
   );
 }
@@ -81,8 +95,17 @@ function removePill(props: RemovePillProps): JSX.Element {
 interface PillTypeProps {
   column: ColumnHeader;
   isMeta: boolean;
+  showTip: boolean;
 }
-function pillType({isMeta, column}: PillTypeProps): JSX.Element {
+function pillType({isMeta, column, showTip}: PillTypeProps): JSX.Element {
+  const content = (
+    <div className="fixed-symbol-width pill-symbol">
+      <DataSymbol type={isMeta ? 'METACOLUMN' : column.type} />
+    </div>
+  );
+  if (!showTip) {
+    return content;
+  }
   return (
     <Tooltip
       placement="right"
@@ -91,9 +114,7 @@ function pillType({isMeta, column}: PillTypeProps): JSX.Element {
         <span className="tooltip-internal">{`This column has type ${column.type}. You can change it by clicking the settings icon in the data column`}</span>
       }
     >
-      <div className="fixed-symbol-width pill-symbol">
-        <DataSymbol type={isMeta ? 'METACOLUMN' : column.type} />
-      </div>
+      {content}
     </Tooltip>
   );
 }
@@ -102,26 +123,33 @@ interface AddFilterProps {
   column: ColumnHeader;
   inEncoding: boolean;
   createFilter?: (field: string) => void;
+  showTip: boolean;
 }
 function addFilter(props: AddFilterProps): JSX.Element {
-  const {column, inEncoding, createFilter} = props;
+  const {column, inEncoding, createFilter, showTip} = props;
+  const content = (
+    <div
+      className="fixed-symbol-width"
+      onClick={(): any => {
+        if (inEncoding) {
+          return;
+        }
+        createFilter(column.field);
+      }}
+    >
+      <TiFilter />
+    </div>
+  );
+  if (!showTip) {
+    return content;
+  }
   return (
     <Tooltip
       placement="left"
       trigger="hover"
       overlay={<span className="tooltip-internal">Create a new filter based on this column</span>}
     >
-      <div
-        className="fixed-symbol-width"
-        onClick={(): any => {
-          if (inEncoding) {
-            return;
-          }
-          createFilter(column.field);
-        }}
-      >
-        <TiFilter />
-      </div>
+      {content}
     </Tooltip>
   );
 }
@@ -130,9 +158,18 @@ interface TypePopoverProps {
   column: ColumnHeader;
   field: string;
   coerceType: GenericAction<CoerceTypePayload>;
+  showTip: boolean;
 }
 function typePopover(props: TypePopoverProps): JSX.Element {
-  const {column, field, coerceType} = props;
+  const {column, field, coerceType, showTip} = props;
+  const content = (
+    <div className="fixed-symbol-width">
+      <TiCogOutline />
+    </div>
+  );
+  if (!showTip) {
+    return content;
+  }
   return (
     <Tooltip
       placement="right"
@@ -159,9 +196,7 @@ function typePopover(props: TypePopoverProps): JSX.Element {
         </div>
       }
     >
-      <div className="fixed-symbol-width">
-        <TiCogOutline />
-      </div>
+      {content}
     </Tooltip>
   );
 }
@@ -191,6 +226,7 @@ export default function Pill(props: PillProps): JSX.Element {
   });
   const showAddFilter = !isMeta && !inEncoding && !hideGUI && createFilter;
   const showAutoAdd = !isMeta && !inEncoding && !hideGUI && addToNextOpenSlot;
+  const showTip = false;
   return (
     <div
       className={classnames({
@@ -202,13 +238,13 @@ export default function Pill(props: PillProps): JSX.Element {
       ref={dragRef}
       style={{opacity}}
     >
-      {!isMeta && !inEncoding && coerceType && typePopover({column, field, coerceType})}
-      {pillType({isMeta, column})}
+      {!isMeta && !inEncoding && coerceType && typePopover({column, field, coerceType, showTip})}
+      {pillType({isMeta, column, showTip})}
       <div className="pill-label">{column.field}</div>
-      {showAddFilter && addFilter({column, inEncoding, createFilter})}
-      {showAutoAdd && addToNext({column, addToNextOpenSlot, typeNotAddable})}
+      {showAddFilter && addFilter({column, inEncoding, createFilter, showTip})}
+      {showAutoAdd && addToNext({column, addToNextOpenSlot, typeNotAddable, showTip})}
       {fieldSelector && <div className="fixed-symbol-width">{fieldSelector}</div>}
-      {inEncoding && removePill({setEncodingParameter, column, containingField})}
+      {inEncoding && removePill({setEncodingParameter, column, containingField, showTip})}
     </div>
   );
 }

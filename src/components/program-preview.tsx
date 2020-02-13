@@ -3,7 +3,7 @@ import {GenericAction} from '../actions/index';
 import {thumbnailLocation} from '../utils/thumbnail';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog} from 'react-icons/ti';
+import {TiCog, TiInfoLarge} from 'react-icons/ti';
 import DataSymbol from './data-symbol';
 import {DataType} from '../types';
 
@@ -24,7 +24,7 @@ function partialMatch(): JSX.Element {
   return (
     <Tooltip
       placement="right"
-      trigger="hover"
+      trigger="click"
       overlay={
         <div className="tooltip-internal">
           The search you have supplied on the left partially matches this template. It does not conflict, but
@@ -32,7 +32,9 @@ function partialMatch(): JSX.Element {
         </div>
       }
     >
-      <span>Partial Match</span>
+      <span className="tooltip-icon">
+        <TiInfoLarge />
+      </span>
     </Tooltip>
   );
 }
@@ -41,7 +43,7 @@ function fullMatch(): JSX.Element {
   return (
     <Tooltip
       placement="right"
-      trigger="hover"
+      trigger="click"
       overlay={
         <div className="tooltip-internal">
           This template is a complete match, i.e. the query you have supplied to the left will completely fill
@@ -49,7 +51,9 @@ function fullMatch(): JSX.Element {
         </div>
       }
     >
-      <span>Full Match!</span>
+      <span className="tooltip-icon">
+        <TiInfoLarge />
+      </span>
     </Tooltip>
   );
 }
@@ -160,7 +164,8 @@ export default function ProgramPreview(props: Props): JSX.Element {
       </div>
       <div className="flex-down">
         <div className="flex space-between">
-          <div className="program-option-search-match">
+          <div className="program-option-search-match flex">
+            <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
             {isComplete && fullMatch()}
             {!isComplete && partialMatch()}
           </div>
