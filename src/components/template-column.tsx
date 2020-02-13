@@ -17,7 +17,7 @@ import {AddLabelToWidget} from './widgets/widget-common';
 import Selector from './selector';
 import Tooltip from 'rc-tooltip';
 import {TiPlus} from 'react-icons/ti';
-import {widgetFactory, preconfiguredWidgets} from '../templates';
+import {widgetFactory, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
 
 interface TemplateColumnProps {
   columns: ColumnHeader[];
@@ -41,24 +41,28 @@ interface AddWidgetButtonProps {
 }
 function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
   const {addWidget, widgets} = props;
-  const options = Object.entries(widgetFactory).concat(Object.entries(preconfiguredWidgets));
+
+  const renderOption = (row: [string, WidgetFactoryFunc]): JSX.Element => {
+    const [key, widget] = row;
+    // eslint-disable-next-line react/prop-types
+    const newWidget = widget(widgets.length);
+    return (
+      <button key={key} onClick={(): any => addWidget(newWidget)}>
+        {`Add ${key}`}
+      </button>
+    );
+  };
   return (
     <Tooltip
       placement="bottom"
       trigger="click"
       overlay={
-        <div>
+        <div className="add-widget-tooltip">
           <h3>Add New Widget</h3>
-          <div className="flex flex-wrap">
-            {options.map((row: any) => {
-              const [key, widget] = row;
-              return (
-                <button key={key} onClick={(): any => addWidget(widget(widgets.length))}>
-                  {`Add ${key}`}
-                </button>
-              );
-            })}
-          </div>
+          <h5>Basic Types</h5>
+          <div className="flex flex-wrap">{Object.entries(widgetFactory).map(renderOption)}</div>
+          <h5>More complex</h5>
+          <div className="flex flex-wrap">{Object.entries(preconfiguredWidgets).map(renderOption)}</div>
         </div>
       }
     >
