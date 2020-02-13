@@ -210,7 +210,7 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       console.log(key, value, idx);
       /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
-      draftState.currentTemplateInstance.widgets[idx].widget[key] = value;
+      draftState.currentTemplateInstance.widgets[idx].config[key] = value;
       /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     }
   });

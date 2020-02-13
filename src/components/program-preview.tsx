@@ -3,11 +3,11 @@ import {GenericAction} from '../actions/index';
 import {thumbnailLocation} from '../utils/thumbnail';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog} from 'react-icons/ti';
+import {TiCog, TiInfoLarge} from 'react-icons/ti';
 import DataSymbol from './data-symbol';
 import {DataType} from '../types';
 
-type TypeCounts = {complete: {[x: string]: string}; required: {[x: string]: string}};
+type TypeCounts = {[x: string]: number};
 interface Props {
   alreadyPresent?: boolean;
   buttons: {name: string; onClick: any}[];
@@ -23,8 +23,8 @@ interface Props {
 function partialMatch(): JSX.Element {
   return (
     <Tooltip
-      placement="bottom"
-      trigger="hover"
+      placement="right"
+      trigger="click"
       overlay={
         <div className="tooltip-internal">
           The search you have supplied on the left partially matches this template. It does not conflict, but
@@ -32,7 +32,9 @@ function partialMatch(): JSX.Element {
         </div>
       }
     >
-      <span>Partial Match</span>
+      <span className="tooltip-icon">
+        <TiInfoLarge />
+      </span>
     </Tooltip>
   );
 }
@@ -40,8 +42,8 @@ function partialMatch(): JSX.Element {
 function fullMatch(): JSX.Element {
   return (
     <Tooltip
-      placement="bottom"
-      trigger="hover"
+      placement="right"
+      trigger="click"
       overlay={
         <div className="tooltip-internal">
           This template is a complete match, i.e. the query you have supplied to the left will completely fill
@@ -49,7 +51,9 @@ function fullMatch(): JSX.Element {
         </div>
       }
     >
-      <span>Full Match!</span>
+      <span className="tooltip-icon">
+        <TiInfoLarge />
+      </span>
     </Tooltip>
   );
 }
@@ -86,7 +90,7 @@ function CardControls(props: CardControlsProps): JSX.Element {
 
 function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
   const messages = ['DIMENSION', 'MEASURE', 'TIME']
-    .filter(d => Number(typeCounts.required[d]) > 0)
+    .filter(d => typeCounts[d] > 0)
     .map((key: string) => {
       return (
         <div
@@ -97,7 +101,7 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
             [`program-option-type-pill--${key.toLowerCase()}`]: true,
           })}
         >
-          <span>{typeCounts.required[key]}</span>
+          <span>{typeCounts[key]}</span>
           <span className="program-option-type-symbol">
             <DataSymbol type={key as DataType} />
           </span>
@@ -160,7 +164,8 @@ export default function ProgramPreview(props: Props): JSX.Element {
       </div>
       <div className="flex-down">
         <div className="flex space-between">
-          <div className="program-option-search-match">
+          <div className="program-option-search-match flex">
+            <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
             {isComplete && fullMatch()}
             {!isComplete && partialMatch()}
           </div>

@@ -291,6 +291,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .template-logo img {
   max-height: 55px;
+  max-width: 95px;
 }
 
 .template-column.column.edit-mode > div {
@@ -384,6 +385,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .symbol-box {
   border-right: 1px solid gray;
+  cursor: pointer;
   height: 5px;
   width: 100%;
 }
@@ -763,7 +765,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 .program-option-search--description-toggle {
   cursor: pointer;
-  /* color: ; */
 }
 
 .widget-body {
@@ -924,6 +925,16 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 
+.related-views-button {
+  align-items: center;
+  border: thin solid black;
+  border-radius: 5px;
+  display: flex;
+  font-weight: bolder;
+  justify-content: center;
+  font-size: 15px;
+}
+
 /* ERROR BAR IN CODE EDITOR */
 .code-container .error-bar {
   display: none;
@@ -1019,7 +1030,6 @@ input[type=number]::-webkit-outer-spin-button {
   cursor: pointer;
   display: flex;
   font-size: 15px;
-  margin-right: 10px;
 }
 
 .template-modification-control.template-modification-control--disabled {
@@ -1273,6 +1283,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 .Resizer.disabled:hover {
   border-color: transparent;
+}
+
+.tooltip-icon {
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .tooltip-internal {

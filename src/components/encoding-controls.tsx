@@ -118,7 +118,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     <div className="encoding-mode-selector flex-down">
       <div className="flex space-between full-width flex-wrap">
         <Tooltip
-          placement="top"
+          placement="left"
           trigger="hover"
           overlay={<span className="tooltip-internal">Return to the view of the template gallery.</span>}
         >
@@ -133,7 +133,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           return (
             <Tooltip
               key={button.label}
-              placement="top"
+              placement="bottom"
               trigger="hover"
               overlay={<span className="tooltip-internal">{button.tooltip} </span>}
             >

@@ -29,8 +29,8 @@ function activeColumns(state: any): string[] {
   }
   const templateMap = state.templateMap;
   const templateInUse = template.widgets.reduce((acc: Set<string>, widget: any) => {
-    const widgetType = widget.widgetType;
-    const val = templateMap[widget.widgetName];
+    const widgetType = widget.type;
+    const val = templateMap[widget.name];
     // we only care about the data containing columns
     if (widgetType === 'MultiDataTarget') {
       return (val || []).reduce((mem: Set<string>, key: string) => mem.add(key), acc);

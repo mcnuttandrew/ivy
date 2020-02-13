@@ -2,6 +2,8 @@ import React from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
 import MetaColumnPicker from './meta-column-picker';
+import {TiInfoLarge} from 'react-icons/ti';
+import Tooltip from 'rc-tooltip';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {GenericAction, CoerceTypePayload, SetRepeatsPayload, UpdateFilterPayload} from '../actions/index';
@@ -74,7 +76,22 @@ export default class DataColumn extends React.Component<DataColumnProps> {
     const canFilter = !template;
     return (
       <div className="flex-down full-height">
-        <h5>Data Columns</h5>
+        <h5 className="flex">
+          <span>Data Columns</span>
+          <Tooltip
+            placement="bottom"
+            trigger="hover"
+            overlay={
+              <span className="tooltip-internal">
+                This is the data column, where you can modify the current pills. TODO: a example pill.
+              </span>
+            }
+          >
+            <div className="fixed-symbol-widthtooltip-icon">
+              <TiInfoLarge />
+            </div>
+          </Tooltip>
+        </h5>
         <div className="flex-down">{columns.map(this.makePill(false))}</div>
         {!template && showGUIView && <h5>Meta Columns</h5>}
         {!template && showGUIView && <div className="flex-down">{metaColumns.map(this.makePill(true))}</div>}

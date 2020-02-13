@@ -14,7 +14,7 @@ export default function AllowedTypesList(props: AllowedTypesListProps): JSX.Elem
           <Tooltip
             key={type}
             placement="bottom"
-            trigger="hover"
+            trigger="click"
             overlay={
               <span className="tooltip-internal">{`Indicates that this data target accepts columns of ${type} type`}</span>
             }

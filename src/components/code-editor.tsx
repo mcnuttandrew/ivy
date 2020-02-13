@@ -1,7 +1,7 @@
 import React from 'react';
 import MonacoWrapper from './monaco-wrapper';
 import stringify from 'json-stringify-pretty-compact';
-import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
+import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp, TiInfoLarge} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
@@ -171,9 +171,9 @@ export default class CodeEditor extends React.Component<Props, State> {
   handleCodeUpdate(code: string): void {
     const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
     const responseFunctionMap: {[x: string]: GenericAction<HandleCodePayload>} = {
-      PARAMETERS: readInTemplate,
-      SPECIFICATION: readInTemplateMap,
-      TEMPLATE: setNewSpecCode,
+      [WIDGET_CONFIGURATION]: readInTemplate,
+      [WIDGET_VALUES]: readInTemplateMap,
+      [TEMPLATE_BODY]: setNewSpecCode,
     };
     Promise.resolve()
       .then(() => JSON.parse(code))
@@ -280,19 +280,25 @@ export default class CodeEditor extends React.Component<Props, State> {
                 <div className="flex">
                   {buttons.map(({key, description}) => {
                     return (
-                      <Tooltip
+                      <div
                         key={key}
-                        placement="bottom"
-                        trigger="hover"
-                        overlay={<span className="tooltip-internal">{description}</span>}
+                        className={classnames({
+                          'code-option-tab': true,
+                          flex: true,
+                          'selected-tab': key === codeMode,
+                        })}
                       >
-                        <div
-                          className={classnames({'code-option-tab': true, 'selected-tab': key === codeMode})}
-                          onClick={(): any => setCodeMode(key)}
+                        <span onClick={(): any => setCodeMode(key)}>{key}</span>
+                        <Tooltip
+                          placement="top"
+                          trigger="click"
+                          overlay={<span className="tooltip-internal">{description}</span>}
                         >
-                          {key}
-                        </div>
-                      </Tooltip>
+                          <div className="tooltip-icon">
+                            <TiInfoLarge />
+                          </div>
+                        </Tooltip>
+                      </div>
                     );
                   })}
                 </div>
@@ -303,18 +309,9 @@ export default class CodeEditor extends React.Component<Props, State> {
         <div className="flex-down">
           {this.codeCollapse()}
           <div className="flex code-controls-buttons">
-            <Tooltip
-              placement="bottom"
-              trigger="hover"
-              overlay={
-                <span className="tooltip-internal">
-                  Change to edit mode, allows you to modify what gui elements are present and how they
-                  visually relate
-                </span>
-              }
-            >
-              <div
-                className="flex template-modification-control cursor-pointer"
+            <div className="flex  cursor-pointer">
+              <span
+                className="flex template-modification-control"
                 onClick={(): any =>
                   chainActions([
                     (): any => setEditMode(!editMode),
@@ -328,8 +325,22 @@ export default class CodeEditor extends React.Component<Props, State> {
                 <span className="template-modification-control-label">
                   {editMode ? 'Stop Edit' : 'Start Edit'}
                 </span>
-              </div>
-            </Tooltip>
+              </span>
+              <Tooltip
+                placement="top"
+                trigger="click"
+                overlay={
+                  <span className="tooltip-internal">
+                    Change to edit mode, allows you to modify what gui elements are present and how they
+                    visually relate
+                  </span>
+                }
+              >
+                <span>
+                  <TiInfoLarge />
+                </span>
+              </Tooltip>
+            </div>
             <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
               <div className="code-edit-controls-button cursor-pointer">
                 <TiCog />
@@ -379,14 +390,11 @@ export default class CodeEditor extends React.Component<Props, State> {
                   chainActions={this.props.chainActions}
                   codeMode={this.props.codeMode}
                   currentCode={this.getCurrentCode()}
-                  editMode={editMode}
                   editorFontSize={this.props.editorFontSize}
                   editorLineWrap={this.props.editorLineWrap}
-                  readInTemplate={this.props.readInTemplate}
-                  readInTemplateMap={this.props.readInTemplateMap}
+                  handleCodeUpdate={this.handleCodeUpdate}
                   setCodeMode={this.props.setCodeMode}
                   setEditMode={this.props.setEditMode}
-                  setNewSpecCode={this.props.setNewSpecCode}
                 />
               </div>
             </div>
