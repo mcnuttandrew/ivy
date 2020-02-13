@@ -112,7 +112,7 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
   return (
     <div className="flex-down">
       <div>{messages.length ? 'Requires at least' : 'Requires no fields to get started'}</div>
-      <div className="flex-down">{messages}</div>
+      <div className="flex flex-wrap">{messages}</div>
     </div>
   );
 }

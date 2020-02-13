@@ -236,6 +236,32 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   return evaluatableSpec;
 }
 
+const DUMMY = 'xxxxxEXAMPLExxxx';
+export function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]): {[x: string]: any} {
+  return widgets.reduce((acc: {[x: string]: any}, widget: TemplateWidget<WidgetSubType>) => {
+    const widgetType = widget.type;
+    if (widgetType === 'DataTarget') {
+      acc[widget.name] = `"${DUMMY}"`;
+    }
+    if (widgetType === 'MultiDataTarget') {
+      acc[widget.name] = `[${DUMMY}, ${DUMMY}]`;
+    }
+    if (widgetType === 'List') {
+      const localW = widget as TemplateWidget<ListWidget>;
+      acc[widget.name] = localW.config.defaultValue;
+    }
+    if (widgetType === 'Switch') {
+      const localW = widget as TemplateWidget<SwitchWidget>;
+      acc[widget.name] = localW.config.activeValue;
+    }
+    if (widgetType === 'Slider') {
+      const localW = widget as TemplateWidget<SliderWidget>;
+      acc[widget.name] = localW.config.defaultValue;
+    }
+    return acc;
+  }, {});
+}
+
 // type InterpolantEffect<T> = {predicate: (x: T) => boolean; effect: (x: T) => Json};
 // interface JsonInterpolatorProps {
 //   leafEffects: InterpolantEffect<Json>[];

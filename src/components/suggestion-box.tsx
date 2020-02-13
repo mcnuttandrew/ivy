@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 
-import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp, TiInfoLarge} from 'react-icons/ti';
+import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
-import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
+import {TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
-import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
+import {Template, TemplateWidget, WidgetSubType} from '../templates/types';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
@@ -19,25 +19,40 @@ interface Props {
 interface RenderSuggestionProps {
   addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
   handleCodeUpdate: (code: string) => void;
-  suggestion: Suggestion;
+  suggestions: Suggestion[];
   currentCode: string;
 }
 
-function renderSuggestion(props: RenderSuggestionProps): JSX.Element {
-  const {suggestion, currentCode, addWidget, handleCodeUpdate} = props;
-  const {from, to, comment = '', sideEffect} = suggestion;
+function renderSuggestion(props: RenderSuggestionProps, idx?: number): JSX.Element {
+  const {suggestions, currentCode, addWidget, handleCodeUpdate} = props;
+
+  function singleSuggestionButton(suggestion: Suggestion): JSX.Element {
+    const {comment = '', sideEffect} = suggestion;
+    return (
+      <button
+        onClick={(): void => {
+          handleCodeUpdate(takeSuggestion(currentCode, suggestion));
+          if (sideEffect) {
+            addWidget(sideEffect());
+          }
+        }}
+      >
+        {comment}
+      </button>
+    );
+  }
+  if (suggestions.length === 1) {
+    return singleSuggestionButton(suggestions[0]);
+  }
   return (
-    <button
-      onClick={(): void => {
-        handleCodeUpdate(takeSuggestion(currentCode, suggestion));
-        if (sideEffect) {
-          addWidget(sideEffect());
-        }
-      }}
-      key={`${from} -> ${to}-${0}`}
+    <Tooltip
+      placement="top"
+      trigger="click"
+      key={`${suggestions[0].from} -> ${idx}`}
+      overlay={<div className="suggestion-tooltip flex-down">{suggestions.map(singleSuggestionButton)}</div>}
     >
-      {comment}
-    </button>
+      <button>{`${suggestions[0].from} -> ?`}</button>
+    </Tooltip>
   );
 }
 
@@ -49,6 +64,10 @@ export default function suggestionBox(props: Props): JSX.Element {
   const suggestions =
     (template && codeMode === TEMPLATE_BODY && synthesizeSuggestions(currentCode, template.widgets || [])) ||
     [];
+  const suggestionGroups = suggestions.reduce((acc: {[x: string]: Suggestion[]}, row) => {
+    acc[row.from] = (acc[row.from] || []).concat(row);
+    return acc;
+  }, {});
   return (
     <div className="suggestion-box">
       <div
@@ -61,11 +80,11 @@ export default function suggestionBox(props: Props): JSX.Element {
       {suggestionBox && suggestions.length > 0 && (
         <div className="suggestion-box-body">
           {template &&
-            suggestions.map(suggestion =>
+            Object.values(suggestionGroups).map((suggestionGroup: Suggestion[]) =>
               renderSuggestion({
                 addWidget,
                 currentCode,
-                suggestion,
+                suggestions: suggestionGroup,
                 handleCodeUpdate,
               }),
             )}

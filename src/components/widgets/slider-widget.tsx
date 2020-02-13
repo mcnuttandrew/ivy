@@ -1,7 +1,7 @@
 import React from 'react';
 import {SliderWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget} from './general-widget';
-import {EditParameterName, EditDisplayName} from './widget-common';
+import {EditParameterName, EditDisplayName, AddLabelToWidget} from './widget-common';
 
 export default function SliderWidgetComponent(
   props: GeneralWidget<TemplateWidget<SliderWidget>>,
@@ -23,6 +23,7 @@ export default function SliderWidgetComponent(
           type="number"
           value={templateMap[widget.name]}
           onChange={({target: {value}}): any => setVal(value)}
+          step={widget.config.step}
         />
         <div className="flex-down">
           <input
@@ -53,6 +54,15 @@ export default function SliderWidgetComponent(
             )}
           </div>
         </div>
+        {editMode && (
+          <AddLabelToWidget label="Step Size">
+            <input
+              value={widget.config.step}
+              type="number"
+              onChange={(event): any => setWidgetValue('step', event.target.value, idx)}
+            />
+          </AddLabelToWidget>
+        )}
       </div>
     </div>
   );

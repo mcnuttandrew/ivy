@@ -317,3 +317,28 @@ export function getTemplateName(template: Template | null): string {
   }
   return template && template.templateName === NONE_TEMPLATE ? 'Template Gallery' : template.templateName;
 }
+
+export function union(setA: Set<any>, setB: Set<any>): Set<any> {
+  const _union = new Set(setA);
+  for (const elem of setB) {
+    _union.add(elem);
+  }
+  return _union;
+}
+export function difference(setA: Set<any>, setB: Set<any>): Set<any> {
+  const _difference = new Set(setA);
+  for (const elem of setB) {
+    _difference.delete(elem);
+  }
+  return _difference;
+}
+
+export function safeParse(code: string): string | boolean {
+  let x = null;
+  try {
+    x = JSON.parse(code);
+  } catch (e) {
+    x = false;
+  }
+  return x;
+}
