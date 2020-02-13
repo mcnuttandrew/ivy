@@ -39,7 +39,7 @@ export default function RelatedViews(props: Props): JSX.Element {
   });
   return (
     <div className="flex-down">
-      <h5>
+      <h5 className="flex">
         <span>Related Views</span>
         <Tooltip
           placement="top"

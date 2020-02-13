@@ -176,7 +176,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       <div className="full-height encoding-column" style={(height && {maxHeight: height}) || {}}>
         {editMode && template && (
           <div className="flex">
-            <div className="flex">
+            <div className="flex full-width space-between">
               <IgnoreKeys style={{height: '100%'}}>
                 <AddLabelToWidget label={'Name'}>
                   <input

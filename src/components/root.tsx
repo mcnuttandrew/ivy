@@ -223,6 +223,13 @@ class RootComponent extends React.Component<RootProps, State> {
             <h4>{getTemplateName(template)}</h4>
           </div>
         </div>
+        <RelatedViews
+          columns={this.props.columns}
+          setEncodingMode={this.props.setEncodingMode}
+          template={this.props.template}
+          templateMap={this.props.templateMap}
+          templates={this.props.templates}
+        />
         <ImportDataColumn
           currentlySelectedFile={this.props.currentlySelectedFile}
           toggleDataModal={this.props.toggleDataModal}
@@ -241,13 +248,6 @@ class RootComponent extends React.Component<RootProps, State> {
           spec={this.props.spec}
           template={template}
           updateFilter={this.props.updateFilter}
-        />
-        <RelatedViews
-          columns={this.props.columns}
-          setEncodingMode={this.props.setEncodingMode}
-          template={this.props.template}
-          templateMap={this.props.templateMap}
-          templates={this.props.templates}
         />
       </div>
     );

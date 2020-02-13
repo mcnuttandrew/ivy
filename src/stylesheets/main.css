@@ -1184,6 +1184,10 @@ input[type=number]::-webkit-outer-spin-button {
   text-transform: none;
 }
 
+.suggestion-tooltip {
+  
+}
+
 .code-option-tabs {
   display: flex;
   font-size: 12px;

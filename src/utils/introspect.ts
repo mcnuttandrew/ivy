@@ -1,14 +1,12 @@
-import {setTemplateValues} from '../hydra-lang';
+import {setTemplateValues, generateFullTemplateMap} from '../hydra-lang';
 import {TemplateWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory} from '../templates';
-import {get, trim} from './index';
-import {generateFullTemplateMap, union, difference, safeParse} from './introspec-utils';
+import {get, trim, union, difference, safeParse} from './index';
 
 export interface Suggestion {
   from: string;
   to: string;
   comment: string;
-  options?: Suggestion[];
   sideEffect?: any;
   codeEffect?: (code: string) => string;
   simpleReplace: boolean;
@@ -102,7 +100,6 @@ function inferFieldTransformationSuggestions(
 ): Suggestion[] {
   const widgetNames = widgets.reduce((acc, row) => acc.add(row.name).add(`[${row.name}]`), new Set());
   const possibleFields = Array.from(inferPossibleDataTargets(parsedCode));
-  console.log(possibleFields, widgetNames);
   // if fields are use as a value they are likely being used like [FIELDNAME]": "[key]
   // ignore column names that are in there
   const likelyFields = possibleFields.filter(
@@ -114,6 +111,9 @@ function inferFieldTransformationSuggestions(
   const dropTargets = widgets.filter(widget => widget.type === 'DataTarget').map(widget => widget.name);
 
   const suggestions = likelyFields.reduce((acc: Suggestion[], from) => {
+    if (widgetNames.has(`[${from}]`)) {
+      return acc;
+    }
     // suggest setting the found field to all of the existing widgets
     dropTargets.forEach((to: string) => acc.push(buildSuggest(from, to)));
 
