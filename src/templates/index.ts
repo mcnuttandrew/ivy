@@ -22,6 +22,7 @@ import DATATABLE from './example-templates/table';
 import NONE_TEMPLATE from './example-templates/none';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
+// import SIMPLE_SCATTER from './example-templates/simple-scatterplot';
 import SHELF from './example-templates/polestar-template';
 import UNITVIS from './example-templates/unit-vis';
 
@@ -36,7 +37,7 @@ export const BLANK_TEMPLATE: Template = {
 // META COLUMNS NOT CURRENTLY ALLOWED IN TEMPLATES
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 // const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
-type WidgetFactoryFunc = (idx: number) => TemplateWidget<WidgetSubType>;
+export type WidgetFactoryFunc = (idx: number) => TemplateWidget<WidgetSubType>;
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: idx =>
     ({
@@ -114,4 +115,5 @@ export const DEFAULT_TEMPLATES: Template[] = [
   BEESWARM_TEMPLATE,
   UNITVIS,
   NONE_TEMPLATE,
+  // SIMPLE_SCATTER,
 ];

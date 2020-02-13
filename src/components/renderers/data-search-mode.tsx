@@ -91,6 +91,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
   return (
     <div className="data-search-mode">
       <div className="program-containers">
+        {!programs.length && <div>No templates match your query</div>}
         {searchPredicate(templateMap.SearchKey as string, GRAMMAR_NAME, GRAMMAR_DESC) && (
           <ProgramPreview
             templateName={GRAMMAR_NAME}
@@ -105,7 +106,6 @@ export default function DataSearchMode(props: Props): JSX.Element {
           />
         )}
         {programs}
-        {!programs.length && <div>No templates match your query</div>}
       </div>
     </div>
   );

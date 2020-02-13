@@ -710,27 +710,30 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .program-option-type-pill {
-  border-top: 4px solid rgba(0, 0, 0, 0);
   cursor: pointer;
   margin-right: 2px;
-
-  /* padding: 0 3px; */
 }
 
-.program-option-type-pill--measure {
-  border-color: mediumseagreen;
+.program-option-type-pill::before {
+  content: '■';
+  font-size: 30px;
+  line-height: 15px;
+}
+
+.program-option-type-pill--measure::before {
+  color: mediumseagreen;
 }
 
 .program-option-type-pill--dimension {
-  border-color: lightseagreen;
+  color: lightseagreen;
 }
 
 .program-option-type-pill--time {
-  border-color: pink;
+  color: pink;
 }
 
 .program-option-type-pill--metacolumn {
-  border-color: goldenrod;
+  color: goldenrod;
 }
 
 .program-option-type-symbol {
@@ -756,6 +759,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 .program-option-search-type-control--selected {
   text-decoration: underline;
+}
+
+.program-option-search--description-toggle {
+  cursor: pointer;
+  /* color: ; */
 }
 
 .widget-body {
@@ -1270,4 +1278,8 @@ input[type=number]::-webkit-outer-spin-button {
 .tooltip-internal {
   display: flex;
   width: 130px;
+}
+
+.add-widget-tooltip {
+  width: 220px;
 }
