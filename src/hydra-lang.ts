@@ -2,7 +2,7 @@ import {
   Template,
   TemplateMap,
   TemplateWidget,
-  WidgetValidationQuery,
+  ValidationQuery,
   DataTargetWidget,
   WidgetSubType,
   ListWidget,
@@ -28,7 +28,7 @@ export type HydraConditinoal = {CONDITIONAL: ConditionalArgs};
  * @param query - for now uses the special widget validation langugage
  * @param templateMap - the specification/variable values defined by the gui
  */
-function evaluateQuery(query: WidgetValidationQuery, templateMap: TemplateMap): boolean {
+function evaluateQuery(query: ValidationQuery, templateMap: TemplateMap): boolean {
   // TODO add a type check function to this
   const generatedContent = new Function('parameters', `return ${query}`);
   return Boolean(generatedContent(templateMap));
@@ -119,17 +119,25 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
  * @param templateMap - the specification/variable values defined by the gui
  */
 export function applyQueries(template: Template, templateMap: TemplateMap): TemplateWidget<any>[] {
-  const widgetMap = template.widgets.reduce((acc: any, widget) => {
-    acc[widget.widgetName] = true;
-    return acc;
-  }, {});
+  // const widgetMap = template.widgets.reduce((acc: any, widget) => {
+  //   acc[widget.name] = true;
+  //   return acc;
+  // }, {});
 
-  const validWidgetNames = template.widgetValidations.reduce((acc: {[x: string]: boolean}, validation) => {
-    const queryResult = evaluateQuery(validation.query, templateMap);
-    acc[validation.queryTarget] = validation.queryResult === 'show' ? queryResult : !queryResult;
-    return acc;
-  }, widgetMap);
-  return template.widgets.filter(widget => validWidgetNames[widget.widgetName]);
+  // const validWidgetNames = template.widgetValidations.reduce((acc: {[x: string]: boolean}, validation) => {
+  //   const queryResult = evaluateQuery(validation.query, templateMap);
+  //   acc[validation.queryTarget] = validation.queryResult === 'show' ? queryResult : !queryResult;
+  //   return acc;
+  // }, widgetMap);
+  return template.widgets.filter(widget => {
+    if (!widget.validations || !widget.validations.length) {
+      return true;
+    }
+    return widget.validations.every(validation => {
+      const queryResult = evaluateQuery(validation.query, templateMap);
+      return validation.queryResult === 'show' ? queryResult : !queryResult;
+    });
+  });
 }
 
 /**
@@ -164,8 +172,8 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap): strin
  */
 export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
   const requiredFields = template.widgets
-    .filter(d => d.widgetType === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).widget.required)
-    .map(d => d.widgetName);
+    .filter(d => d.type === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).config.required)
+    .map(d => d.name);
   const missingFileds = requiredFields
     .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
     .filter(d => d.value)
@@ -191,23 +199,23 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
 export function constructDefaultTemplateMap(template: Template): TemplateMap {
   return template.widgets.reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
     let value = null;
-    if (w.widgetType === 'MultiDataTarget') {
+    if (w.type === 'MultiDataTarget') {
       value = [];
     }
-    if (w.widgetType === 'Text') {
+    if (w.type === 'Text') {
       return acc;
     }
-    if (w.widgetType === 'List') {
-      value = (w as TemplateWidget<ListWidget>).widget.defaultValue;
+    if (w.type === 'List') {
+      value = (w as TemplateWidget<ListWidget>).config.defaultValue;
     }
-    if (w.widgetType === 'Switch') {
+    if (w.type === 'Switch') {
       const localW = w as TemplateWidget<SwitchWidget>;
-      value = localW.widget.defaultsToActive ? localW.widget.activeValue : localW.widget.inactiveValue;
+      value = localW.config.defaultsToActive ? localW.config.activeValue : localW.config.inactiveValue;
     }
-    if (w.widgetType === 'Slider') {
-      value = (w as TemplateWidget<SliderWidget>).widget.defaultValue;
+    if (w.type === 'Slider') {
+      value = (w as TemplateWidget<SliderWidget>).config.defaultValue;
     }
-    acc[w.widgetName] = value;
+    acc[w.name] = value;
     return acc;
   }, {});
 }

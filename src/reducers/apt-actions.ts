@@ -67,25 +67,23 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   const openDropTargets = template.widgets
     // select just the open drop targets
     .filter(
-      (widget: TemplateWidget<WidgetSubType>) =>
-        widget.widgetType === 'DataTarget' && !templateMap[widget.widgetName],
+      (widget: TemplateWidget<WidgetSubType>) => widget.type === 'DataTarget' && !templateMap[widget.name],
     )
     // and that allow the type of drop column
     .filter((widget: TemplateWidget<DataTargetWidget>) =>
-      widget.widget.allowedTypes.find((type: string) => type === column.type),
+      widget.config.allowedTypes.find((type: string) => type === column.type),
     );
 
   const openMultiDropTargets = template.widgets.filter((widget: TemplateWidget<WidgetSubType>) => {
     // select just the open drop targets
-    if (widget.widgetType !== 'MultiDataTarget') {
+    if (widget.type !== 'MultiDataTarget') {
       return false;
     }
     // and that allow the type of drop column
-    const {allowedTypes, maxNumberOfTargets} = widget.widget as MultiDataTargetWidget;
+    const {allowedTypes, maxNumberOfTargets} = widget.config as MultiDataTargetWidget;
     const multiTargetContainsDesiredType = !!allowedTypes.find((type: string) => type === column.type);
     // and have space
-    const hasSpace =
-      (templateMap[widget.widgetName] || []).length < maxNumberOfTargets || !maxNumberOfTargets;
+    const hasSpace = (templateMap[widget.name] || []).length < maxNumberOfTargets || !maxNumberOfTargets;
     return multiTargetContainsDesiredType && hasSpace;
   });
 
@@ -95,19 +93,19 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
     return state;
   }
   const selectedWidget = targets[0];
-  if (selectedWidget.widgetType === 'MultiDataTarget') {
-    const oldVal = templateMap[selectedWidget.widgetName] || [];
+  if (selectedWidget.type === 'MultiDataTarget') {
+    const oldVal = templateMap[selectedWidget.name] || [];
     return setTemplateValue(state, {
-      field: selectedWidget.widgetName,
+      field: selectedWidget.name,
       text: (oldVal as string[]).filter((key: any) => key !== payload.field).concat([payload.field]),
-      widgetType: 'MultiDataTarget',
+      type: 'MultiDataTarget',
     });
   }
   // else is single drop target
   return setTemplateValue(state, {
-    field: selectedWidget.widgetName,
+    field: selectedWidget.name,
     text: `"${payload.field}"`,
-    widgetType: 'DataTarget',
+    type: 'DataTarget',
   });
 };
 

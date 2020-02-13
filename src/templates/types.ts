@@ -14,7 +14,7 @@ export interface TemplateWidget<T> {
   /**
    *   The name of widget to be used, this name will be swapped into the code string, must be unqiue
    */
-  widgetName: string;
+  name: string;
   /**
    * The name to be shown in the GUI, does not have to be unique.
    */
@@ -22,9 +22,16 @@ export interface TemplateWidget<T> {
   /**
    * The type of the widget to be used, this defined the specific gui item that the user interacts with
    */
-  widgetType: WidgetType;
-  widget: T;
-  [x: string]: any;
+  type: WidgetType;
+  config: T;
+  /**
+   * Sometimes you want to decative certain values depending on the state of the UI
+   * This advanced features allows you to do that
+   */
+  validations?: Validation[];
+
+  // i forget why this was necessary
+  // [x: string]: any;
 }
 export interface DataTargetWidget {
   allowedTypes: DataType[];
@@ -117,12 +124,6 @@ export interface Template {
    * The mechanism by which users interact with your template
    */
   widgets: TemplateWidget<WidgetSubType>[];
-
-  /**
-   * Sometimes you want to decative certain values depending on the state of the UI
-   * This advanced features allows you to do that
-   */
-  widgetValidations: WidgetValidation[];
   // TODO MAYBE ADD A PREVIEW PIC?
 }
 
@@ -131,18 +132,17 @@ export interface Template {
  * is accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if
  * there wasn't a current value for the x dimension called xDim you could do "!parameters.xDim"
  */
-export type WidgetValidationQuery = string;
+export type ValidationQuery = string;
 
-export interface WidgetValidation {
+/**
+ * What to do in response to the result of the query, should be either 'hide' or 'show'
+ */
+export type QueryResult = 'show' | 'hide';
+export interface Validation {
   /**
-   * What to do in response to the result of the query
+   * What to do in response to the result of the query, should be either 'hide' or 'show'
    */
-  queryResult: 'show' | 'hide';
-
-  /**
-   * The name of the variable being targeted
-   */
-  queryTarget: string;
+  queryResult: QueryResult;
 
   /**
    * A widget validation query, executed raw javascript. Parameter values (the value of the current ui)

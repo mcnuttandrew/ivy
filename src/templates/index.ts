@@ -31,99 +31,77 @@ export const BLANK_TEMPLATE: Template = {
   templateDescription: 'FILL IN DESCRIPTION',
   code: stringify(EMPTY_SPEC),
   widgets: [],
-  widgetValidations: [],
 };
 
 // META COLUMNS NOT CURRENTLY ALLOWED IN TEMPLATES
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 // const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 type WidgetFactoryFunc = (idx: number) => TemplateWidget<WidgetSubType>;
-export const widgetFactory: {[widgetType: string]: WidgetFactoryFunc} = {
+export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: idx =>
     ({
-      widgetName: `Dim${idx}`,
-      widgetType: 'DataTarget',
-      widget: {
-        allowedTypes: DATA_TYPES,
-        required: true,
-      },
+      name: `Dim${idx}`,
+      type: 'DataTarget',
+      config: {allowedTypes: DATA_TYPES, required: true},
     } as TemplateWidget<DataTargetWidget>),
   MultiDataTarget: idx =>
     ({
-      widgetName: `MultiDim${idx}`,
-      widgetType: 'MultiDataTarget',
-      widget: {
-        allowedTypes: DATA_TYPES,
-        required: true,
-        minNumberOfTargets: 0,
-      },
+      name: `MultiDim${idx}`,
+      type: 'MultiDataTarget',
+      config: {allowedTypes: DATA_TYPES, required: true, minNumberOfTargets: 0},
     } as TemplateWidget<MultiDataTargetWidget>),
   List: idx =>
     ({
-      widgetName: `ListItem${idx}`,
-      widgetType: 'List',
-      widget: {
-        allowedValues: [] as {display: string; value: string}[],
-        defaultValue: null,
-      },
+      name: `ListItem${idx}`,
+      type: 'List',
+      config: {allowedValues: [] as {display: string; value: string}[], defaultValue: null},
     } as TemplateWidget<ListWidget>),
 
   Switch: idx =>
     ({
-      widgetName: `Switch${idx}`,
-      widgetType: 'Switch',
-      widget: {
-        activeValue: 'true',
-        inactiveValue: 'false',
-        defaultsToActive: true,
-      },
+      name: `Switch${idx}`,
+      type: 'Switch',
+      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
     } as TemplateWidget<SwitchWidget>),
-  Text: idx =>
-    ({widgetName: `Text${idx}`, widgetType: 'Text', widget: {text: ''}} as TemplateWidget<TextWidget>),
+  Text: idx => ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as TemplateWidget<TextWidget>),
   Slider: idx =>
     ({
-      widgetName: `Slider${idx}`,
-      widgetType: 'Slider',
-      widget: {minVal: 0, maxVal: 10, step: 1, defaultValue: 5},
+      name: `Slider${idx}`,
+      type: 'Slider',
+      config: {minVal: 0, maxVal: 10, step: 1, defaultValue: 5},
     } as TemplateWidget<SliderWidget>),
   Section: idx =>
     ({
-      widgetName: `Section${idx}`,
-      widgetType: 'Section',
-      widget: null,
+      name: `Section${idx}`,
+      type: 'Section',
+      config: null,
     } as TemplateWidget<SectionWidget>),
   Shortcuts: idx =>
     ({
-      widgetName: `Shortcut${idx}`,
-      widgetType: 'Shortcut',
-      widget: {shortcuts: []},
+      name: `Shortcut${idx}`,
+      type: 'Shortcut',
+      config: {shortcuts: []},
     } as TemplateWidget<ShortcutsWidget>),
   FreeText: idx =>
     ({
-      widgetName: `FreeText${idx}`,
-      widgetType: 'FreeText',
-      widget: {},
+      name: `FreeText${idx}`,
+      type: 'FreeText',
+      config: {},
     } as TemplateWidget<ShortcutsWidget>),
 };
 
-export const preconfiguredWidgets: {[widgetType: string]: WidgetFactoryFunc} = {
+export const preconfiguredWidgets: {[type: string]: WidgetFactoryFunc} = {
   'Discrete Color Options': idx =>
     ({
-      widgetName: `ColorList${idx}`,
-      widgetType: 'List',
-      widget: {
-        allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES),
-        defaultValue: null,
-      },
+      name: `ColorList${idx}`,
+      type: 'List',
+      config: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: null},
     } as TemplateWidget<ListWidget>),
   'Data Types Options': idx =>
     ({
-      widgetName: `DataTypeOptions${idx}`,
-      widgetType: 'List',
-      widget: {
-        allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal']),
-        defaultValue: null,
-      },
+      name: `DataTypeOptions${idx}`,
+      type: 'List',
+      config: {allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal']), defaultValue: null},
     } as TemplateWidget<ListWidget>),
 };
 

@@ -102,13 +102,13 @@ export const getTemplate = (state: AppState, template: string): Template | null 
   return state.templates.find((d: any) => d.templateName === template);
 };
 
-export function widgetInUse(code: string, widgetName: string): boolean {
-  return Boolean(code.match(new RegExp(`\\[${widgetName}\\]`, 'g')));
+export function widgetInUse(code: string, name: string): boolean {
+  return Boolean(code.match(new RegExp(`\\[${name}\\]`, 'g')));
 }
 export function allWidgetsInUse(code: string, widgets: TemplateWidget<WidgetSubType>[]): boolean {
   return widgets
-    .filter((widget: TemplateWidget<WidgetSubType>) => widget.widgetType !== 'Text')
-    .every((widget: TemplateWidget<WidgetSubType>) => !!widgetInUse(code, widget.widgetName));
+    .filter((widget: TemplateWidget<WidgetSubType>) => widget.type !== 'Text')
+    .every((widget: TemplateWidget<WidgetSubType>) => !!widgetInUse(code, widget.name));
 }
 
 export const toSelectFormat = (arr: string[]): {value: string; label: string}[] =>
@@ -137,10 +137,9 @@ export function serializeTemplate(template: Template): string {
     $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
     templateName: template.templateName,
     templateDescription: template.templateDescription,
-    code: 'SEE CODE EDITOR',
+    code: 'SEE BODY',
     templateLanguage: template.templateLanguage,
     widgets: template.widgets,
-    widgetValidations: template.widgetValidations,
   });
 }
 
@@ -152,7 +151,6 @@ export function deserializeTemplate(templateString: string): Template {
     code: 'SEE CODE EDITOR',
     templateLanguage: code.templateLanguage,
     widgets: code.widgets,
-    widgetValidations: code.widgetValidations,
   };
 }
 
@@ -192,25 +190,25 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
     return toSet(dimCounter);
   }
   const result = template.widgets
-    .filter(d => ['MultiDataTarget', 'DataTarget'].includes(d.widgetType))
+    .filter(d => ['MultiDataTarget', 'DataTarget'].includes(d.type))
     .reduce((acc: any, widget: any) => {
-      const widgetType = widget.widgetType;
-      const widgetName = widget.widgetName;
-      const val = templateMap[widgetName];
+      const type = widget.type;
+      const name = widget.name;
+      const val = templateMap[name];
 
       if (
-        widgetType === 'MultiDataTarget' &&
-        (!val || val.length < widget.widget.maxNumberOfTargets || !widget.widget.maxNumberOfTargets)
+        type === 'MultiDataTarget' &&
+        (!val || val.length < widget.config.maxNumberOfTargets || !widget.config.maxNumberOfTargets)
       ) {
-        widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
+        widget.config.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(name));
       }
       // dont try figure it out if it's in use, needs to be before multidatatarget which has a truthy null, []
       if (val) {
         return acc;
       }
 
-      if (widgetType === 'DataTarget') {
-        widget.widget.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(widgetName));
+      if (type === 'DataTarget') {
+        widget.config.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(name));
       }
       return acc;
     }, dimCounter);
@@ -227,8 +225,8 @@ function makeCount(widgets: TemplateWidget<WidgetSubType>[], useRequired: boolea
   let targetCount = 0;
   const counts = widgets.reduce(
     (acc: any, row: TemplateWidget<WidgetSubType>) => {
-      if (row.widgetType === 'DataTarget') {
-        const {allowedTypes, required} = row.widget as DataTargetWidget;
+      if (row.type === 'DataTarget') {
+        const {allowedTypes, required} = row.config as DataTargetWidget;
         if (useRequired && !required) {
           return acc;
         }
@@ -241,8 +239,8 @@ function makeCount(widgets: TemplateWidget<WidgetSubType>[], useRequired: boolea
           }
         });
       }
-      if (row.widgetType === 'MultiDataTarget') {
-        const {allowedTypes, maxNumberOfTargets, required} = row.widget as MultiDataTargetWidget;
+      if (row.type === 'MultiDataTarget') {
+        const {allowedTypes, maxNumberOfTargets, required} = row.config as MultiDataTargetWidget;
         if (useRequired && !required) {
           return acc;
         }
@@ -278,20 +276,23 @@ export function searchDimensionsCanMatch(
   const colMap = makeColNameMap(columns);
   const desiredColumns = (templateMap.dataTargetSearch as string[]).map(key => colMap[key]);
   const config = template.widgets;
-  const targets = config.filter(d => d.widgetType === 'DataTarget') as TemplateWidget<DataTargetWidget>[];
-  const multiTargets = config.filter(d => d.widgetType === 'MultiDataTarget') as TemplateWidget<
+  const targets = config.filter(d => d.type === 'DataTarget') as TemplateWidget<DataTargetWidget>[];
+  const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as TemplateWidget<
     MultiDataTargetWidget
   >[];
-  const numRequired = targets.filter(d => d.widget.required).length;
+  const numRequired = targets.filter(d => {
+    console.log(d, template.templateName);
+    return d.config.required;
+  }).length;
   const usedTargets: Set<string> = new Set([]);
   const result = desiredColumns.every(col => {
     const availableSingleTargetField = targets
-      .filter(d => !usedTargets.has(d.widgetName))
-      .find(d => d.widget.allowedTypes.includes(col.type));
-    const availableMultiTargetField = multiTargets.find(d => d.widget.allowedTypes.includes(col.type));
+      .filter(d => !usedTargets.has(d.name))
+      .find(d => d.config.allowedTypes.includes(col.type));
+    const availableMultiTargetField = multiTargets.find(d => d.config.allowedTypes.includes(col.type));
 
     if (availableSingleTargetField) {
-      usedTargets.add(availableSingleTargetField.widgetName);
+      usedTargets.add(availableSingleTargetField.name);
       return true;
     } else if (availableMultiTargetField) {
       return true;

@@ -84,17 +84,12 @@ function inferFieldTransformationSuggestions(
   parsedCode: any,
   widgets: TemplateWidget<WidgetSubType>[],
 ): Suggestion[] {
-  const widgetNames = widgets.reduce(
-    (acc, row) => acc.add(row.widgetName).add(`[${row.widgetName}]`),
-    new Set(),
-  );
+  const widgetNames = widgets.reduce((acc, row) => acc.add(row.name).add(`[${row.name}]`), new Set());
   const likelyFields = Array.from(inferPossibleDataTargets(parsedCode))
     // if fields are use as a value they are likely being used like [FIELDNAME]": "[key]
     // ignore column names that are in there
     .filter(key => (code.includes(`": "${key}`) || code.includes(`":"${key}`)) && !widgetNames.has(key));
-  const dropTargets = widgets
-    .filter(widget => widget.widgetType === 'DataTarget')
-    .map(widget => widget.widgetName);
+  const dropTargets = widgets.filter(widget => widget.type === 'DataTarget').map(widget => widget.name);
 
   const suggestions = likelyFields.reduce((acc: Suggestion[], from) => {
     // suggest setting the found field to all of the existing widgets

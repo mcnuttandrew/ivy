@@ -9,7 +9,8 @@ export default function SwitchWidgetComponent(
   props: GeneralWidget<TemplateWidget<SwitchWidget>>,
 ): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
-  const isActive = templateMap[widget.widgetName] === widget.widget.activeValue;
+  const config = widget.config;
+  const isActive = templateMap[widget.name] === config.activeValue;
   const switchCommon = {
     offColor: '#E1E9F2',
     onColor: '#36425C',
@@ -17,14 +18,14 @@ export default function SwitchWidgetComponent(
     checkedIcon: false,
     width: 50,
   };
-  const config = widget.widget;
+
   const currentSwitch = (
     <Switch
       {...switchCommon}
       checked={isActive}
       onChange={(): void => {
         setTemplateValue({
-          field: widget.widgetName,
+          field: widget.name,
           text: isActive ? config.inactiveValue : config.activeValue,
         });
       }}
@@ -36,7 +37,7 @@ export default function SwitchWidgetComponent(
         <div className="flex space-between">
           {editMode && <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
           {editMode && <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
-          {!editMode && <div className="widget-title">{widget.displayName || widget.widgetName}</div>}
+          {!editMode && <div className="widget-title">{widget.displayName || widget.name}</div>}
           {!editMode && currentSwitch}
         </div>
       </div>

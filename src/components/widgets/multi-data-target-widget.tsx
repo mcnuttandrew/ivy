@@ -12,17 +12,17 @@ export default function MultiDataTargetComponent(
   props: GeneralWidget<TemplateWidget<MultiDataTargetWidget>>,
 ): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, templateMap, columns, setTemplateValue} = props;
-  const fieldValue = templateMap[widget.widgetName];
-  const allowedTypesSet = new Set(widget.widget.allowedTypes);
+  const fieldValue = templateMap[widget.name];
+  const allowedTypesSet = new Set(widget.config.allowedTypes);
   return (
     <div>
       <TemplateMultiShelf
         channelEncodings={(Array.isArray(fieldValue) ? (fieldValue as string[]) : []).map(trim)}
-        field={widget.widgetName}
+        field={widget.name}
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
-        setName={editMode ? (value: string): any => setWidgetValue('widgetName', value, idx) : null}
+        setName={editMode ? (value: string): any => setWidgetValue('name', value, idx) : null}
       />
       {editMode && (
         <div className="flex-down">
@@ -59,8 +59,8 @@ export default function MultiDataTargetComponent(
               <span className="tool-description">Required:</span>
               <input
                 type="checkbox"
-                onChange={(): any => setWidgetValue('required', !widget.widget.required, idx)}
-                checked={!!widget.widget.required}
+                onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
+                checked={!!widget.config.required}
               />
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function MultiDataTargetComponent(
             <div className="flex-down">
               <span className="tool-description">Min Targets</span>
               <input
-                value={widget.widget.minNumberOfTargets}
+                value={widget.config.minNumberOfTargets}
                 type="number"
                 onChange={(event): any => setWidgetValue('minNumberOfTargets', event.target.value, idx)}
               />
@@ -77,7 +77,7 @@ export default function MultiDataTargetComponent(
               <span className="tool-description">Max Targets</span>
               <input
                 type="number"
-                value={widget.widget.maxNumberOfTargets}
+                value={widget.config.maxNumberOfTargets}
                 onChange={(event): any => setWidgetValue('maxNumberOfTargets', event.target.value, idx)}
               />
             </div>

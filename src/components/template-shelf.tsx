@@ -35,7 +35,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
       .map(column => ({
         display: `${column.field} ${TEXT_TYPE[column.type]}`,
         value: column.field,
-        group: widget.widget.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
+        group: widget.config.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
       }))
       .sort((a, b) => a.display.localeCompare(b.display)),
   );
@@ -58,14 +58,10 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
           {!setName && <div className="flex">{field}</div>}
           {setName && (
             <IgnoreKeys style={{height: '100%'}}>
-              <input
-                type="text"
-                value={widget.widgetName}
-                onChange={(event): any => setName(event.target.value)}
-              />
+              <input type="text" value={widget.name} onChange={(event): any => setName(event.target.value)} />
             </IgnoreKeys>
           )}
-          <AllowedTypesList allowedTypes={widget.widget.allowedTypes} />
+          <AllowedTypesList allowedTypes={widget.config.allowedTypes} />
         </div>
         <div className="pill-dropzone">
           {!columnHeader && (

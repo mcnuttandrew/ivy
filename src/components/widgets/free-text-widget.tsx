@@ -8,15 +8,15 @@ export default function FreeTextWidgetComponent(
   props: GeneralWidget<TemplateWidget<FreeTextWidget>>,
 ): JSX.Element {
   const {widget, idx, setWidgetValue, editMode, setTemplateValue, templateMap} = props;
-  const field = widget.widgetName;
+  const field = widget.name;
   return (
     <div className="flex free-text-widget">
       {editMode && <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
       {editMode && <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />}
-      {<div className="widget-title">{widget.displayName || widget.widgetName}</div>}
+      {<div className="widget-title">{widget.displayName || widget.name}</div>}
       <IgnoreKeys style={{height: '100%'}}>
         <input
-          value={templateMap[widget.widgetName] || ''}
+          value={templateMap[widget.name] || ''}
           type="text"
           onChange={(event): any => setTemplateValue({field, text: event.target.value})}
         />

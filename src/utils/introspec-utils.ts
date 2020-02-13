@@ -3,24 +3,24 @@ import {Suggestion} from './introspect';
 const DUMMY = 'xxxxxEXAMPLExxxx';
 export function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]): {[x: string]: any} {
   return widgets.reduce((acc: {[x: string]: any}, widget: TemplateWidget<WidgetSubType>) => {
-    const widgetType = widget.widgetType;
+    const widgetType = widget.type;
     if (widgetType === 'DataTarget') {
-      acc[widget.widgetName] = `"${DUMMY}"`;
+      acc[widget.name] = `"${DUMMY}"`;
     }
     if (widgetType === 'MultiDataTarget') {
-      acc[widget.widgetName] = `[${DUMMY}, ${DUMMY}]`;
+      acc[widget.name] = `[${DUMMY}, ${DUMMY}]`;
     }
     if (widgetType === 'List') {
       const localW = widget as TemplateWidget<ListWidget>;
-      acc[widget.widgetName] = localW.widget.defaultValue;
+      acc[widget.name] = localW.config.defaultValue;
     }
     if (widgetType === 'Switch') {
       const localW = widget as TemplateWidget<SwitchWidget>;
-      acc[widget.widgetName] = localW.widget.activeValue;
+      acc[widget.name] = localW.config.activeValue;
     }
     if (widgetType === 'Slider') {
       const localW = widget as TemplateWidget<SliderWidget>;
-      acc[widget.widgetName] = localW.widget.defaultValue;
+      acc[widget.name] = localW.config.defaultValue;
     }
     return acc;
   }, {});

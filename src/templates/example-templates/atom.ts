@@ -1,72 +1,54 @@
 import stringify from 'json-stringify-pretty-compact';
-import {TemplateWidget, WidgetValidation, Template, WidgetSubType, SliderWidget} from '../types';
+import {TemplateWidget, Template, WidgetSubType, SliderWidget, QueryResult} from '../types';
 import {simpleList} from './polestar-template-utils';
 
 const TYPES = ['groupby', 'bin', 'passthrough', 'gridxy', 'flatten'];
 const ASPECT_RATIOS = ['square', 'parents', 'fillX', 'fillY', 'maxfill', 'custom'];
-function generateLevel(
-  idx: number,
-): {widgets: TemplateWidget<WidgetSubType>[]; widgetValidations: WidgetValidation[]; layout: any} {
+function generateLevel(idx: number): {widgets: TemplateWidget<WidgetSubType>[]; layout: any} {
+  const NEVER_HIDE = idx === 1;
   const widgets: TemplateWidget<WidgetSubType>[] = [
     {
-      widgetName: `Key${idx}`,
-      widgetType: 'DataTarget',
-      widget: {
-        allowedTypes: ['DIMENSION'],
-        required: false,
-      },
+      name: `Key${idx}`,
+      type: 'DataTarget',
+      config: {allowedTypes: ['DIMENSION'], required: false},
+      validations: [
+        !NEVER_HIDE && {
+          queryResult: 'hide' as QueryResult,
+          queryTarget: `Key${idx}`,
+          query: `!parameters.Key${idx - 1}`,
+        },
+      ].filter(d => d),
     },
     simpleList({
-      widgetName: `Key${idx}Type`,
+      name: `Key${idx}Type`,
       defaultVal: '"groupby"',
       displayName: `Key${idx}Type`,
       list: [...TYPES.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
+      validations: [
+        !NEVER_HIDE && {queryResult: 'hide' as QueryResult, query: `!parameters.Key${idx - 1}`},
+      ].filter(d => d),
     }),
     simpleList({
-      widgetName: `Key${idx}AspectRatio`,
+      name: `Key${idx}AspectRatio`,
       defaultVal: idx % 2 ? '"fillX"' : '"fillY"',
       displayName: `Key${idx}AspectRatio`,
       list: [...ASPECT_RATIOS.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
+      validations: [
+        !NEVER_HIDE && {queryResult: 'hide' as QueryResult, query: `!parameters.Key${idx - 1}`},
+      ].filter(d => d),
     }),
     {
-      widgetName: `Key${idx}numBins`,
+      name: `Key${idx}numBins`,
       displayName: 'NumBins',
-      widgetType: 'Slider',
-      widget: {
-        minVal: 1,
-        maxVal: 15,
-        step: 1,
-        defaultValue: 10,
-      },
+      type: 'Slider',
+      config: {minVal: 1, maxVal: 15, step: 1, defaultValue: 10},
+      validations: [{queryResult: 'hide', query: `parameters.Key${idx}Type !== '"bin"'`}],
     } as TemplateWidget<SliderWidget>,
   ];
-  const NEVER_HIDE = idx === 1;
-  const widgetValidations: any[] = [
-    !NEVER_HIDE && {
-      queryResult: 'hide',
-      queryTarget: `Key${idx}`,
-      query: `!parameters.Key${idx - 1}`,
-    },
-    !NEVER_HIDE && {
-      queryResult: 'hide',
-      queryTarget: `Key${idx}Type`,
-      query: `!parameters.Key${idx - 1}`,
-    },
-    !NEVER_HIDE && {
-      queryResult: 'hide',
-      queryTarget: `Key${idx}AspectRatio`,
-      query: `!parameters.Key${idx - 1}`,
-    },
-    {
-      queryResult: 'hide',
-      queryTarget: `Key${idx}numBins`,
-      query: `parameters.Key${idx}Type !== '"bin"'`,
-    },
-  ].filter(d => d);
+
   const cond = (query: string, tv: any): any => ({CONDITIONAL: {query, true: tv, deleteKeyOnFalse: true}});
   return {
     widgets,
-    widgetValidations,
     layout: cond(!NEVER_HIDE ? `parameters.Key${idx - 1}` : 'true', {
       subgroup: {
         key: cond(`parameters.Key${idx}`, `[Key${idx}]`),
@@ -103,16 +85,9 @@ const ATOM: Template = {
   templateAuthor: 'BUILT_IN',
   code: stringify(ATOM_TEMPLATE),
   widgets: [
-    {
-      widgetName: 'colorBy',
-      widgetType: 'DataTarget',
-      widget: {
-        allowedTypes: ['DIMENSION'],
-        required: true,
-      },
-    },
+    {name: 'colorBy', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
     simpleList({
-      widgetName: 'colorScheme',
+      name: 'colorScheme',
       defaultVal: '"schemeCategory10"',
       displayName: 'colorScheme',
       list: [
@@ -129,12 +104,11 @@ const ATOM: Template = {
       ],
     }),
     simpleList({
-      widgetName: `Shape`,
+      name: `Shape`,
       defaultVal: '"circle"',
       list: ['circle', 'rect'].map(d => ({display: d, value: `"${d}"`})),
     }),
     ...configurations.reduce((acc, d) => acc.concat(d.widgets), []),
   ],
-  widgetValidations: [...configurations.reduce((acc, d) => acc.concat(d.widgetValidations), [])],
 };
 export default ATOM;

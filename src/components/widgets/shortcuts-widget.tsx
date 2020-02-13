@@ -19,7 +19,7 @@ export default function ShortcutsWidgetComponent(
       {shortcut.label}
     </button>
   );
-  const shortcuts = widget.widget.shortcuts;
+  const shortcuts = widget.config.shortcuts;
   if (editMode) {
     return (
       <div className="flex-down shortcuts-widget">

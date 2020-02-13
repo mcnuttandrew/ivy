@@ -6,8 +6,8 @@ import {
   TemplateWidget,
   DataType,
   SectionWidget,
-  WidgetValidationQuery,
-  WidgetValidation,
+  ValidationQuery,
+  Validation,
 } from '../types';
 import {toList} from '../../utils';
 const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
@@ -16,87 +16,104 @@ export const toQuote = (x: string): string => `"${x}"`;
 const justCountAgg = toList(['none', 'count']);
 justCountAgg[0].value = undefined;
 const spatialAggs = [...justCountAgg, ...toList(['min', 'max', 'sum', 'mean', 'median', 'mode'])];
+
+export const used = (x: string): ValidationQuery => `parameters.${x}`;
+export const unused = (x: string): ValidationQuery => `!parameters.${x}`;
+
+/**
+ * build a simple validation
+ * @param key - the name of the dimension that will be check if it's around
+ */
+export const simpleValidation = (key: string): Validation => ({queryResult: 'hide', query: unused(key)});
+
 export const makeDataTarget = (dim: string): TemplateWidget<DataTargetWidget> => ({
-  widgetName: dim,
-  widgetType: 'DataTarget',
-  widget: {allowedTypes: ALLDATA_TYPES, required: false},
+  name: dim,
+  type: 'DataTarget',
+  config: {allowedTypes: ALLDATA_TYPES, required: false},
+  validations: [],
 });
 
 export const makeText = (textLabel: string): TemplateWidget<TextWidget> => ({
-  widgetName: textLabel,
-  widgetType: 'Text',
-  widget: {text: textLabel},
+  name: textLabel,
+  type: 'Text',
+  config: {text: textLabel},
+  validations: [],
 });
 export const makeSection = (sectionLabel: string): TemplateWidget<SectionWidget> => ({
-  widgetName: sectionLabel,
-  widgetType: 'Section',
-  widget: null,
+  name: sectionLabel,
+  type: 'Section',
+  config: null,
+  validations: [],
 });
 
 type displayType = {display: any; value: any};
 interface SimpleListType {
-  widgetName: string;
+  name: string;
   list: string[] | displayType[];
   defaultVal?: string;
   displayName?: string;
+  validations?: Validation[];
 }
 export const simpleList = ({
-  widgetName,
+  name,
   list,
   defaultVal,
   displayName,
+  validations,
 }: SimpleListType): TemplateWidget<ListWidget> => {
   const firstDisplayValue = (list[0] as displayType).display;
   return {
-    widgetName,
-    widgetType: 'List',
+    name,
+    type: 'List',
     displayName: displayName || null,
-    widget: {
+    config: {
       allowedValues: firstDisplayValue ? (list as displayType[]) : toList(list as string[]),
       defaultValue: defaultVal ? defaultVal : firstDisplayValue ? firstDisplayValue : (list as string[])[0],
     },
+    validations: validations || [],
   };
 };
 
 // varitals of simpleList
 export const makeSimpleAgg = (key: string): TemplateWidget<ListWidget> =>
   simpleList({
-    widgetName: `${key}AggSimple`,
+    name: `${key}AggSimple`,
     list: justCountAgg,
     displayName: `Aggregate`,
     defaultVal: toQuote('none'),
+    validations: [{queryResult: 'hide', query: unused(key)}],
   });
 export const makeFullAgg = (key: string): TemplateWidget<ListWidget> =>
   simpleList({
-    widgetName: `${key}AggFull`,
+    name: `${key}AggFull`,
     list: spatialAggs,
     displayName: `Aggregate`,
     defaultVal: toQuote('none'),
+    validations: [{queryResult: 'hide', query: used(key)}],
   });
 
 export const makeTypeSelect = (key: string, defaultVal: string): TemplateWidget<ListWidget> =>
   simpleList({
-    widgetName: `${key}Type`,
+    name: `${key}Type`,
     list: VegaLiteDataTypes,
     displayName: 'Data type',
     defaultVal: toQuote(defaultVal),
+    validations: [simpleValidation(key)],
   });
 
 interface SimpleSwitchType {
-  widgetName: string;
+  name: string;
   displayName?: string;
+  validations?: Validation[];
 }
-export const simpleSwitch = ({widgetName, displayName}: SimpleSwitchType): TemplateWidget<SwitchWidget> => ({
-  widgetName,
-  widgetType: 'Switch',
+export const simpleSwitch = ({
+  name,
+  displayName,
+  validations,
+}: SimpleSwitchType): TemplateWidget<SwitchWidget> => ({
+  name,
+  type: 'Switch',
   displayName: displayName || null,
-  widget: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+  config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+  validations: validations || [],
 });
-
-export const used = (x: string): WidgetValidationQuery => `parameters.${x}`;
-export const unused = (x: string): WidgetValidationQuery => `!parameters.${x}`;
-export function addValidation(acc: WidgetValidation[], key: string) {
-  return function adder(queryTarget: string): void {
-    acc.push({queryTarget, queryResult: 'hide', query: unused(key)});
-  };
-}

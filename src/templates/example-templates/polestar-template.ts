@@ -1,5 +1,5 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, TemplateWidget, WidgetSubType, WidgetValidation} from '../types';
+import {Template, TemplateWidget, WidgetSubType, Validation} from '../types';
 import {toList} from '../../utils';
 import {
   makeDataTarget,
@@ -7,7 +7,8 @@ import {
   makeSection,
   simpleList,
   simpleSwitch,
-  addValidation,
+  simpleValidation,
+  // addValidation,
   used,
   unused,
   toQuote,
@@ -107,13 +108,24 @@ const SHELF: Template = {
         makeDataTarget(key),
         makeTypeSelect(key, 'quantitative'),
         simpleList({
-          widgetName: `${key}ScaleType`,
+          name: `${key}ScaleType`,
           list: ['linear', 'log'],
           displayName: 'Scale type',
           defaultVal: toQuote('linear'),
+          validations: [
+            simpleValidation(key),
+            {
+              queryResult: 'show',
+              query: `Boolean(parameters.${key}) && parameters.${key}Type === "\\"quantitative\\""`,
+            },
+          ],
         }),
-        simpleSwitch({widgetName: `${key}IncludeZero`, displayName: 'Include Zero'}),
-        simpleSwitch({widgetName: `${key}bin`, displayName: 'Bin'}),
+        simpleSwitch({
+          name: `${key}IncludeZero`,
+          displayName: 'Include Zero',
+          validations: [simpleValidation(key)],
+        }),
+        simpleSwitch({name: `${key}bin`, displayName: 'Bin', validations: [simpleValidation(key)]}),
         makeFullAgg(key),
         makeSimpleAgg(key),
       ]);
@@ -121,11 +133,11 @@ const SHELF: Template = {
 
     // Mark type
     makeSection('MarkDivider'),
-    simpleList({widgetName: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('circle')}),
+    simpleList({name: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('circle')}),
     {
-      widgetType: 'Shortcut',
-      widgetName: 'main-shortcuts',
-      widget: {
+      type: 'Shortcut',
+      name: 'main-shortcuts',
+      config: {
         shortcuts: [
           {
             label: 'SWAP X & Y',
@@ -141,7 +153,7 @@ const SHELF: Template = {
       return acc.concat([
         makeDataTarget(key),
         makeTypeSelect(key, 'ordinal'),
-        simpleSwitch({widgetName: `${key}bin`}),
+        simpleSwitch({name: `${key}bin`}),
         makeFullAgg(key),
         makeSimpleAgg(key),
       ]);
@@ -164,34 +176,36 @@ const SHELF: Template = {
       return acc.concat([makeDataTarget(key)]);
     }, []),
   ],
-  widgetValidations: [
-    ...['X', 'Y'].reduce((acc: WidgetValidation[], key: string) => {
-      [`${key}Type`, `${key}ScaleType`, `${key}IncludeZero`, `${key}bin`].forEach(addValidation(acc, key));
-      // remove the scale type options for order/nominal/temporal as it doesn't make sense
-      acc.push({
-        queryTarget: `${key}ScaleType`,
-        queryResult: 'show',
-        query: `Boolean(parameters.${key}) && parameters.${key}Type === "\\"quantitative\\""`,
-      });
-      return acc;
-    }, []),
+  // TODO UGH
+  // widgetValidations: [
+  //   ...['X', 'Y'].reduce((acc: WidgetValidation[], key: string) => {
+  // simpleValidation()
+  //     [`${key}Type`, `${key}ScaleType`, `${key}IncludeZero`, `${key}bin`].forEach(addValidation(acc, key));
+  //     // remove the scale type options for order/nominal/temporal as it doesn't make sense
+  //     acc.push({
+  //       queryTarget: `${key}ScaleType`,
+  //       queryResult: 'show',
+  //       query: `Boolean(parameters.${key}) && parameters.${key}Type === "\\"quantitative\\""`,
+  //     });
+  //     return acc;
+  //   }, []),
 
-    ...['Color', 'Size'].reduce((acc: WidgetValidation[], key: string) => {
-      [`${key}Type`, `${key}bin`].forEach(addValidation(acc, key));
-      return acc;
-    }, []),
+  //   ...['Color', 'Size'].reduce((acc: WidgetValidation[], key: string) => {
+  //     [`${key}Type`, `${key}bin`].forEach(addValidation(acc, key));
+  //     return acc;
+  //   }, []),
 
-    ...['Shape', 'Detail'].reduce((acc: WidgetValidation[], key: string) => {
-      [`${key}Type`].forEach(addValidation(acc, key));
-      return acc;
-    }, []),
-    // simple and full aggregate are paired
-    ...['X', 'Y', 'Size', 'Color', 'Text'].reduce((acc, key) => {
-      return acc.concat([
-        {queryTarget: `${key}AggFull`, query: unused(key), queryResult: 'hide'},
-        {queryTarget: `${key}AggSimple`, query: used(key), queryResult: 'hide'},
-      ]);
-    }, []),
-  ],
+  //   ...['Shape', 'Detail'].reduce((acc: WidgetValidation[], key: string) => {
+  //     [`${key}Type`].forEach(addValidation(acc, key));
+  //     return acc;
+  //   }, []),
+  //   // simple and full aggregate are paired
+  //   ...['X', 'Y', 'Size', 'Color', 'Text'].reduce((acc, key) => {
+  //     return acc.concat([
+  //       {queryTarget: `${key}AggFull`, query: unused(key), queryResult: 'hide'},
+  //       {queryTarget: `${key}AggSimple`, query: used(key), queryResult: 'hide'},
+  //     ]);
+  //   }, []),
+  // ],
 };
 export default SHELF;
