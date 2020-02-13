@@ -32,7 +32,6 @@ Object {
 exports[`#fillTemplateMapWithDefaults 2`] = `
 Object {
   "Color": null,
-  "OtherSettingsSection": null,
   "Radius": 15,
   "Single Color": "\\"steelblue\\"",
   "Zeroes": "true",
@@ -199,7 +198,6 @@ Object {
 exports[`#fillTemplateMapWithDefaults 4`] = `
 Object {
   "DonutChart": "60",
-  "OtherSettingsSection": null,
   "Sort": "true",
   "aggregate": "\\"mean\\"",
   "category": null,
