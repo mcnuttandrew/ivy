@@ -309,18 +309,9 @@ export default class CodeEditor extends React.Component<Props, State> {
         <div className="flex-down">
           {this.codeCollapse()}
           <div className="flex code-controls-buttons">
-            <Tooltip
-              placement="bottom"
-              trigger="hover"
-              overlay={
-                <span className="tooltip-internal">
-                  Change to edit mode, allows you to modify what gui elements are present and how they
-                  visually relate
-                </span>
-              }
-            >
-              <div
-                className="flex template-modification-control cursor-pointer"
+            <div className="flex  cursor-pointer">
+              <span
+                className="flex template-modification-control"
                 onClick={(): any =>
                   chainActions([
                     (): any => setEditMode(!editMode),
@@ -334,8 +325,22 @@ export default class CodeEditor extends React.Component<Props, State> {
                 <span className="template-modification-control-label">
                   {editMode ? 'Stop Edit' : 'Start Edit'}
                 </span>
-              </div>
-            </Tooltip>
+              </span>
+              <Tooltip
+                placement="top"
+                trigger="click"
+                overlay={
+                  <span className="tooltip-internal">
+                    Change to edit mode, allows you to modify what gui elements are present and how they
+                    visually relate
+                  </span>
+                }
+              >
+                <span>
+                  <TiInfoLarge />
+                </span>
+              </Tooltip>
+            </div>
             <Tooltip placement="right" trigger="click" overlay={this.editorControls()}>
               <div className="code-edit-controls-button cursor-pointer">
                 <TiCog />
