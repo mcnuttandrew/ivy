@@ -1,18 +1,20 @@
 import {setTemplateValues} from '../hydra-lang';
 import {TemplateWidget, WidgetSubType} from '../templates/types';
 import {widgetFactory} from '../templates';
-import {get} from '.';
-import {generateFullTemplateMap, union, difference, buildSuggest, safeParse} from './introspec-utils';
+import {get, trim} from './index';
+import {generateFullTemplateMap, union, difference, safeParse} from './introspec-utils';
 
 export interface Suggestion {
   from: string;
   to: string;
   comment: string;
+  options?: Suggestion[];
   sideEffect?: any;
   codeEffect?: (code: string) => string;
   simpleReplace: boolean;
 }
 
+// TODO i'd really like to just have one traverse function that i can add reduces to
 function walkTreeAndLookForFields(keyPredicate: (key: any) => boolean) {
   return function walker(spec: any): Set<string> {
     // if it's array interate across it
@@ -40,23 +42,22 @@ export function inferPossibleDataTargets(spec: any): Set<string> {
 function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[] {
   const suggestions = [];
   // check to see if the values that are in the code are specifically defined
-  if (code.match(/"values": \[((.|\s|\S)+?)\]/)) {
-    suggestions.push({
-      from: code.match(/"values": \[((.|\s|\S)+?)\]/s)[0],
-      to: '"name": "myData"',
-      comment: 'remove specific data',
-      simpleReplace: true,
-    });
-  }
-  if (get(parsedCode, ['data', 'url'])) {
+  const hasUrl = get(parsedCode, ['data', 'url']);
+  const hasValues = get(parsedCode, ['data', 'values']);
+  if (hasUrl || hasValues) {
     suggestions.push({
       from: 'data url',
       to: '"name": "myData"',
-      comment: 'remove specific data',
+      comment: 'Remove Specific data',
       simpleReplace: false,
       codeEffect: (code: string) => {
         const parsed = JSON.parse(code);
-        delete parsed.data.url;
+        if (hasUrl) {
+          delete parsed.data.url;
+        }
+        if (hasValues) {
+          delete parsed.data.values;
+        }
         parsed.data.name = 'myData';
         return JSON.stringify(parsed, null, 2);
       },
@@ -79,16 +80,37 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
   return suggestions;
 }
 
+const targetTrim = (key: string): string => {
+  let result = trim(key);
+  if (key[0] === '[' && key[key.length - 1] === ']') {
+    result = result.slice(1, key.length - 1);
+  }
+  return result;
+};
+
+const buildSuggest = (from: string, to: string): Suggestion => ({
+  from: `"${from}"`,
+  to: `"[${to}]"`,
+  comment: `${from} -> ${to}`,
+  simpleReplace: false,
+});
+
 function inferFieldTransformationSuggestions(
   code: string,
   parsedCode: any,
   widgets: TemplateWidget<WidgetSubType>[],
 ): Suggestion[] {
   const widgetNames = widgets.reduce((acc, row) => acc.add(row.name).add(`[${row.name}]`), new Set());
-  const likelyFields = Array.from(inferPossibleDataTargets(parsedCode))
-    // if fields are use as a value they are likely being used like [FIELDNAME]": "[key]
-    // ignore column names that are in there
-    .filter(key => (code.includes(`": "${key}`) || code.includes(`":"${key}`)) && !widgetNames.has(key));
+  const possibleFields = Array.from(inferPossibleDataTargets(parsedCode));
+  console.log(possibleFields, widgetNames);
+  // if fields are use as a value they are likely being used like [FIELDNAME]": "[key]
+  // ignore column names that are in there
+  const likelyFields = possibleFields.filter(
+    key =>
+      (code.includes(`": "${key}`) || code.includes(`":"${key}`)) &&
+      !widgetNames.has(key) &&
+      !widgetNames.has(targetTrim(key)),
+  );
   const dropTargets = widgets.filter(widget => widget.type === 'DataTarget').map(widget => widget.name);
 
   const suggestions = likelyFields.reduce((acc: Suggestion[], from) => {

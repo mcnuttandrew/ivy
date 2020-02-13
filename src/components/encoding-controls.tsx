@@ -26,6 +26,7 @@ interface Props {
   setBlankTemplate: GenericAction<boolean>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
+  setProgrammaticView: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
   template?: Template;
   templateSaveState: string;
@@ -45,9 +46,10 @@ export default function EncodingControls(props: Props): JSX.Element {
     editMode,
     saveCurrentTemplate,
     setBlankTemplate,
-    setEncodingMode,
     setCodeMode,
     setEditMode,
+    setEncodingMode,
+    setProgrammaticView,
     template,
     templateSaveState,
     toggleProgramModal,
@@ -70,6 +72,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           (): any => setBlankTemplate(false),
           (): any => setEditMode(true),
           (): any => setCodeMode(TEMPLATE_BODY),
+          (): any => setProgrammaticView(true),
         ]),
       icon: <TiPencil />,
       label: 'Blank',

@@ -41,13 +41,6 @@ export function difference(setA: Set<any>, setB: Set<any>): Set<any> {
   return _difference;
 }
 
-export const buildSuggest = (from: string, to: string): Suggestion => ({
-  from: `"${from}"`,
-  to: `"[${to}]"`,
-  comment: `${from} -> ${to}`,
-  simpleReplace: false,
-});
-
 // https://www.rosettacode.org/wiki/Balanced_brackets#Iterative
 // a very very dumb hack
 function isBalanced(str: string): boolean {

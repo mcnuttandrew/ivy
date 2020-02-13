@@ -192,7 +192,7 @@ export function constructDefaultTemplateMap(template: Template): TemplateMap {
     if (w.type === 'MultiDataTarget') {
       value = [];
     }
-    if (w.type === 'Text') {
+    if (w.type === 'Text' || w.type === 'Section') {
       return acc;
     }
     if (w.type === 'List') {
@@ -204,6 +204,9 @@ export function constructDefaultTemplateMap(template: Template): TemplateMap {
     }
     if (w.type === 'Slider') {
       value = (w as TemplateWidget<SliderWidget>).config.defaultValue;
+    }
+    if (w.type === 'FreeText') {
+      value = '';
     }
     acc[w.name] = value;
     return acc;

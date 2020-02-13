@@ -50,7 +50,9 @@ export default function RelatedViews(props: Props): JSX.Element {
             </div>
           }
         >
-          <TiInfoLarge />
+          <div>
+            <TiInfoLarge />
+          </div>
         </Tooltip>
       </h5>
       {relatedViews.map(x => (
@@ -66,7 +68,9 @@ export default function RelatedViews(props: Props): JSX.Element {
               </div>
             }
           >
-            <TiInfoLarge />
+            <div>
+              <TiInfoLarge />
+            </div>
           </Tooltip>
         </div>
       ))}

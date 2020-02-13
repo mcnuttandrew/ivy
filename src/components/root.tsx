@@ -134,7 +134,7 @@ interface RootProps {
   setGuiView: GenericAction<boolean>;
   setNewSpec: GenericAction<any>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
-  setProgrammaticView: GenericAction<void>;
+  setProgrammaticView: GenericAction<boolean>;
   setRepeats: GenericAction<SetRepeatsPayload>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
@@ -268,6 +268,7 @@ class RootComponent extends React.Component<RootProps, State> {
           setCodeMode={this.props.setCodeMode}
           setEditMode={this.props.setEditMode}
           setEncodingMode={this.props.setEncodingMode}
+          setProgrammaticView={this.props.setProgrammaticView}
           template={this.props.template}
           templateSaveState={this.props.templateSaveState}
           templates={this.props.templates}
@@ -395,6 +396,7 @@ class RootComponent extends React.Component<RootProps, State> {
             changeSelectedFile={this.props.changeSelectedFile}
             loadCustomDataset={this.props.loadCustomDataset}
             toggleDataModal={this.props.toggleDataModal}
+            setEncodingMode={this.props.setEncodingMode}
           />
         )}
         {this.props.programModalOpen && (

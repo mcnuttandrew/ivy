@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`#synthesizeSuggestions 1`] = `
+exports[`#synthesizeSuggestions different order - IsotypeBarChart 1`] = `
 Array [
   Object {
     "comment": "col -> Dim1 (CREATE Dim1)",
@@ -24,53 +24,75 @@ Array [
     "to": "\\"[Dim1]\\"",
   },
   Object {
+    "codeEffect": [Function],
     "comment": "remove specific data",
-    "from": "\\"values\\": [
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"cattle\\", \\"col\\": 3},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"cattle\\", \\"col\\": 2},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"cattle\\", \\"col\\": 1},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"pigs\\", \\"col\\": 2},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"pigs\\", \\"col\\": 1},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 10},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 9},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 8},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 7},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 6},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 5},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 4},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 3},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 2},
-      {\\"country\\": \\"Great Britain\\", \\"animal\\": \\"sheep\\", \\"col\\": 1},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 9},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 8},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 7},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 6},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 5},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 4},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 3},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 2},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"cattle\\", \\"col\\": 1},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"pigs\\", \\"col\\": 6},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"pigs\\", \\"col\\": 5},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"pigs\\", \\"col\\": 4},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"pigs\\", \\"col\\": 3},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"pigs\\", \\"col\\": 2},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"pigs\\", \\"col\\": 1},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"sheep\\", \\"col\\": 7},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"sheep\\", \\"col\\": 6},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"sheep\\", \\"col\\": 5},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"sheep\\", \\"col\\": 4},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"sheep\\", \\"col\\": 3},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"sheep\\", \\"col\\": 2},
-      {\\"country\\": \\"United States\\", \\"animal\\": \\"sheep\\", \\"col\\": 1}
-    ]",
-    "simpleReplace": true,
+    "from": "data url",
+    "simpleReplace": false,
     "to": "\\"name\\": \\"myData\\"",
   },
 ]
 `;
 
-exports[`#synthesizeSuggestions 2`] = `
+exports[`#synthesizeSuggestions different order - IsotypeBarChart 2`] = `
+Array [
+  Object {
+    "comment": "animal -> Dim1 (CREATE Dim1)",
+    "from": "\\"animal\\"",
+    "sideEffect": [Function],
+    "simpleReplace": false,
+    "to": "\\"[Dim1]\\"",
+  },
+  Object {
+    "comment": "country -> Dim1 (CREATE Dim1)",
+    "from": "\\"country\\"",
+    "sideEffect": [Function],
+    "simpleReplace": false,
+    "to": "\\"[Dim1]\\"",
+  },
+  Object {
+    "codeEffect": [Function],
+    "comment": "remove specific data",
+    "from": "data url",
+    "simpleReplace": false,
+    "to": "\\"name\\": \\"myData\\"",
+  },
+]
+`;
+
+exports[`#synthesizeSuggestions happy path - IsotypeBarChart 1`] = `
+Array [
+  Object {
+    "comment": "col -> Dim1 (CREATE Dim1)",
+    "from": "\\"col\\"",
+    "sideEffect": [Function],
+    "simpleReplace": false,
+    "to": "\\"[Dim1]\\"",
+  },
+  Object {
+    "comment": "animal -> Dim1 (CREATE Dim1)",
+    "from": "\\"animal\\"",
+    "sideEffect": [Function],
+    "simpleReplace": false,
+    "to": "\\"[Dim1]\\"",
+  },
+  Object {
+    "comment": "country -> Dim1 (CREATE Dim1)",
+    "from": "\\"country\\"",
+    "sideEffect": [Function],
+    "simpleReplace": false,
+    "to": "\\"[Dim1]\\"",
+  },
+  Object {
+    "codeEffect": [Function],
+    "comment": "remove specific data",
+    "from": "data url",
+    "simpleReplace": false,
+    "to": "\\"name\\": \\"myData\\"",
+  },
+]
+`;
+
+exports[`#synthesizeSuggestions happy path - IsotypeBarChart 2`] = `
 Array [
   Object {
     "comment": "col -> Dim1 (CREATE Dim1)",
@@ -96,7 +118,7 @@ Array [
 ]
 `;
 
-exports[`#synthesizeSuggestions 3`] = `
+exports[`#synthesizeSuggestions happy path - IsotypeBarChart 3`] = `
 Array [
   Object {
     "comment": "col -> Dim1",
