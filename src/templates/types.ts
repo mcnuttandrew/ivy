@@ -113,7 +113,7 @@ export interface Template {
   /**
    * The creator of the template
    */
-  templateAuthor?: string;
+  templateAuthor: string;
 
   /**
    * The code to be interpreted by the renderer

@@ -226,7 +226,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
             <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />
             <button
               onClick={(): any =>
-                updateThumbnail(template.templateName).then(() =>
+                updateThumbnail(template.templateName, template.templateAuthor).then(() =>
                   console.log('image update, todo trigger something'),
                 )
               }

@@ -87,7 +87,7 @@ const BeeSwarm: Template = {
   templateDescription:
     'A unit approach to showing the sizes and distribution of groups, uses a force simulation to minimize overlaps.',
   templateLanguage: 'vega',
-  templateAuthor: 'BUILT_IN',
+  templateAuthor: 'HYDRA-AUTHORS',
   widgets: [
     {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
     {name: 'OtherSettingsSection', type: 'Section', config: null, validations: []},

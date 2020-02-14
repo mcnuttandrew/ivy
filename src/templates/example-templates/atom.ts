@@ -82,7 +82,7 @@ const ATOM: Template = {
   templateDescription:
     'A system for exploring unit visualizations, such as waffle plots and the like. Based on the work of Park et al.',
   templateLanguage: 'unit-vis',
-  templateAuthor: 'BUILT_IN',
+  templateAuthor: 'HYDRA-AUTHORS',
   code: stringify(ATOM_TEMPLATE),
   widgets: [
     {name: 'colorBy', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},

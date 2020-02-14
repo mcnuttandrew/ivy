@@ -92,6 +92,7 @@ export const setNewSpec = createAction<any>(actionTypes.SET_NEW_ENCODING);
 export const setNewSpecCode = createAction<HandleCodePayload>(actionTypes.SET_NEW_ENCODING_CODE);
 export const setProgrammaticView = createAction<boolean>(actionTypes.TOGGLE_PROGRAMMATIC_VIEW);
 export const setRepeats = createAction<SetRepeatsPayload>(actionTypes.SET_REPEATS);
+export const setUserName = createAction<SetRepeatsPayload>(actionTypes.SET_USER_NAME);
 export const setTemplateValue = createAction<SetTemplateValuePayload>(actionTypes.SET_TEMPLATE_VALUE);
 export const setWidgetValue = createAction<SetWidgetValuePayload>(actionTypes.SET_WIDGET_VALUE);
 export const swapXAndYChannels = createAction<void>(actionTypes.SWAP_X_AND_Y_CHANNELS);

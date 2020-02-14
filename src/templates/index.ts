@@ -22,11 +22,13 @@ import DATATABLE from './example-templates/table';
 import NONE_TEMPLATE from './example-templates/none';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
+import {getUserName} from '../utils/local-storage';
 // import SIMPLE_SCATTER from './example-templates/simple-scatterplot';
 import SHELF from './example-templates/polestar-template';
 import UNITVIS from './example-templates/unit-vis';
 
 export const BLANK_TEMPLATE: Template = {
+  templateAuthor: getUserName(),
   templateLanguage: 'vega-lite',
   templateName: 'BLANK TEMPLATE',
   templateDescription: 'FILL IN DESCRIPTION',

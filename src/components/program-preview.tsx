@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {GenericAction} from '../actions/index';
-import {thumbnailLocation} from '../utils/thumbnail';
+import Thumbnail from './thumbnail';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiInfoLarge} from 'react-icons/ti';
@@ -140,7 +140,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
       <div className="flex">
         <div className="flex-down program-option-use-template-container">
           <div className="program-option-img-container" onClick={(): any => setEncodingMode(templateName)}>
-            <img src={thumbnailLocation(templateName)} />
+            <Thumbnail templateName={templateName} templateAuthor={templateAuthor} />
           </div>
           {!preventUse && (
             <button className="use-button" onClick={(): any => setEncodingMode(templateName)}>

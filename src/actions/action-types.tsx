@@ -32,6 +32,7 @@ export const SET_ENCODING_PARAM = 'set-encoding-param';
 export const SET_GUI_VIEW = 'set-gui-view';
 export const SET_NEW_ENCODING = 'set-new-encoding';
 export const SET_NEW_ENCODING_CODE = 'set-new-encoding-code';
+export const SET_USER_NAME = 'set-user-name';
 export const SET_REPEATS = 'set-repeats';
 export const SET_TEMPLATE_VALUE = 'set-template-value';
 export const SET_WIDGET_VALUE = 'set-widget-value';

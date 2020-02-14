@@ -5,13 +5,14 @@ import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, buildCounts, classnames} from '../../utils';
-import {receiveThumbnail} from '../../utils/thumbnail';
+// import {receiveThumbnail} from '../../utils/thumbnail';
 
 interface Props {
   loadExternalTemplate: GenericAction<Template>;
+  templates: Template[];
   toggleProgramModal: GenericAction<void>;
   triggerRepaint: any;
-  templates: Template[];
+  userName: string;
 }
 
 type QueryBuild = (
@@ -54,7 +55,7 @@ function fetchWithCache(url: string): Promise<any> {
 function runQuery(url: string, loadTemplates: any, triggerRepaint: any): void {
   fetchWithCache(url).then(result => {
     loadTemplates(result.map((x: any) => x.template));
-    result.forEach((x: any) => receiveThumbnail(x.template.templateName, x.templateImg));
+    // result.forEach((x: any) => receiveThumbnail(x.template.templateName, x.templateImg));
     setTimeout(triggerRepaint, 1000);
   });
 }
@@ -134,7 +135,7 @@ function toQueryParams(obj: {[x: string]: any}): string {
 }
 
 export default function CommunityPrograms(props: Props): JSX.Element {
-  const {loadExternalTemplate, toggleProgramModal, triggerRepaint, templates} = props;
+  const {loadExternalTemplate, toggleProgramModal, triggerRepaint, templates, userName} = props;
   const [mode, setMode] = useState(BY_TIME);
   const [queryIdx, queryIdxUpdate] = useState(1);
   const triggerQuery = (): any => queryIdxUpdate(queryIdx + 1);
@@ -161,15 +162,24 @@ export default function CommunityPrograms(props: Props): JSX.Element {
     <Modal
       modalToggle={toggleProgramModal}
       className="program-modal"
-      modalTitle="Choose, Remove, or Find New Programs"
+      modalTitle="Community Templates"
       bodyDirectionDown={true}
     >
       <div className="flex-down full-height-with-hide ">
         <div className="full-height-with-hide ">
           <div className="full-height">
-            COMMUNTIY PROGRAMS
+            <div className="full-width flex space-between">
+              <h3>Find new templates to use</h3>
+              <div className="flex">
+                <h3>{`Your user name: ${userName}`} </h3>
+              </div>
+            </div>
             <div>
-              {[BY_TIME, BY_STRING, BY_DATA].map(row => {
+              {[
+                BY_TIME,
+                // BY_STRING,
+                // BY_DATA
+              ].map(row => {
                 return (
                   <button
                     key={row}

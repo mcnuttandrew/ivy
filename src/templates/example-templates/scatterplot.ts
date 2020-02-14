@@ -66,6 +66,7 @@ const SCATTERPLOT: Template = {
     },
     {name: `Radius`, type: 'Slider', config: {minVal: 10, maxVal: 60, step: 1, defaultValue: 15}},
   ],
+  templateAuthor: 'HYDRA-AUTHORS',
   templateName: 'Scatterplot',
   templateDescription:
     'A simple scatterplot that can map color and position, supports ordinal and quantitative data.',
