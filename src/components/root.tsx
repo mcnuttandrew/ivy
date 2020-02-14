@@ -24,7 +24,14 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {getUniques, getDomain, getTemplateSaveState, getTemplateName, computeValidAddNexts} from '../utils';
+import {
+  getUniques,
+  getDomain,
+  getTemplateSaveState,
+  getTemplateName,
+  computeValidAddNexts,
+  classnames,
+} from '../utils';
 import {
   getHeight,
   writeHeight,
@@ -395,6 +402,7 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   render(): JSX.Element {
+    const {showProgrammaticMode} = this.props;
     return (
       <div className="flex-down full-width full-height">
         {this.hotKeyProvider()}
@@ -431,8 +439,14 @@ class RootComponent extends React.Component<RootProps, State> {
               defaultSize={getWidth() || 610}
               onChange={writeWidth}
             >
-              <Wrapper showProgrammaticMode={this.props.showProgrammaticMode} showGUIView={true}>
-                <div className="flex full-height full-width">
+              <Wrapper showProgrammaticMode={showProgrammaticMode} showGUIView={true}>
+                <div
+                  className={classnames({
+                    flex: true,
+                    'full-height': true,
+                    'special-bump-for-closed-code-container': !showProgrammaticMode,
+                  })}
+                >
                   {this.leftColumn()}
                   {this.centerColumn()}
                 </div>

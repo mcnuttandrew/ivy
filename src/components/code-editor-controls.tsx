@@ -1,12 +1,13 @@
 import React from 'react';
 import stringify from 'json-stringify-pretty-compact';
-import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp, TiInfoLarge} from 'react-icons/ti';
+import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
 import {classnames, get, getTemplateName} from '../utils';
+import SimpleTooltip from './simple-tooltip';
 
 const SHORTCUTS = [
   {
@@ -135,7 +136,7 @@ export function CodeCollapse(props: CodeCollapseProps): JSX.Element {
         'code-collapse': true,
         collapsed: !showProgrammaticMode,
       })}
-      onClick={(): any => setProgrammaticView(true)}
+      onClick={(): any => setProgrammaticView(!showProgrammaticMode)}
     >
       <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
       {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
@@ -244,15 +245,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
                       })}
                     >
                       <span onClick={(): any => setCodeMode(key)}>{key}</span>
-                      <Tooltip
-                        placement="top"
-                        trigger="click"
-                        overlay={<span className="tooltip-internal">{description}</span>}
-                      >
-                        <div className="tooltip-icon">
-                          <TiInfoLarge />
-                        </div>
-                      </Tooltip>
+                      <SimpleTooltip message={description} />
                     </div>
                   );
                 })}
@@ -281,20 +274,10 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
                 {editMode ? 'Stop Edit' : 'Start Edit'}
               </span>
             </span>
-            <Tooltip
-              placement="top"
-              trigger="click"
-              overlay={
-                <span className="tooltip-internal">
-                  Change to edit mode, allows you to modify what gui elements are present and how they
-                  visually relate
-                </span>
-              }
-            >
-              <span>
-                <TiInfoLarge />
-              </span>
-            </Tooltip>
+            <SimpleTooltip
+              message="Change to edit mode, allows you to modify what gui elements are present and how they
+                  visually relate"
+            />
           </div>
           <Tooltip
             placement="right"
