@@ -15,12 +15,11 @@ interface TemplateShelf {
   columns: ColumnHeader[];
   field: string;
   onDrop: any;
-  setName?: any;
   widget: TemplateWidget<DataTargetWidget>;
 }
 
 export default function TemplateShelf(props: TemplateShelf): JSX.Element {
-  const {channelEncoding, columns, field, onDrop, setName, widget} = props;
+  const {channelEncoding, columns, field, onDrop, widget} = props;
   // copy/pasta for drag and drop
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -55,12 +54,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
     <div ref={drop} className="flex-down shelf-container">
       <div className="shelf flex">
         <div className="field-label flex space-around">
-          {!setName && <div className="flex">{field}</div>}
-          {setName && (
-            <IgnoreKeys style={{height: '100%'}}>
-              <input type="text" value={widget.name} onChange={(event): any => setName(event.target.value)} />
-            </IgnoreKeys>
-          )}
+          <div className="flex">{field}</div>
           <AllowedTypesList allowedTypes={widget.config.allowedTypes} />
         </div>
         <div className="pill-dropzone">

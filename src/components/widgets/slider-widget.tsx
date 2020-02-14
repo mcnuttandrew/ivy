@@ -1,23 +1,50 @@
 import React from 'react';
 import {SliderWidget, TemplateWidget} from '../../templates/types';
-import {GeneralWidget} from './general-widget';
+import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget} from './widget-common';
 
-export default function SliderWidgetComponent(
-  props: GeneralWidget<TemplateWidget<SliderWidget>>,
-): JSX.Element {
-  const {widget, idx, setWidgetValue, editMode, templateMap, setTemplateValue} = props;
+function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Element {
+  const {widget, idx, setWidgetValue} = props;
+  return (
+    <div className="flex-down">
+      <div className="flex">
+        <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+        <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+      </div>
+      <div className="flex">
+        <AddLabelToWidget label="min value">
+          <input
+            value={widget.config.minVal}
+            type="number"
+            onChange={(event): any => setWidgetValue('minVal', event.target.value, idx)}
+          />
+        </AddLabelToWidget>
+        <AddLabelToWidget label="max value">
+          <input
+            value={widget.config.maxVal}
+            type="number"
+            onChange={(event): any => setWidgetValue('maxVal', event.target.value, idx)}
+          />
+        </AddLabelToWidget>
+        <AddLabelToWidget label="Step Size">
+          <input
+            value={widget.config.step}
+            type="number"
+            onChange={(event): any => setWidgetValue('step', event.target.value, idx)}
+          />
+        </AddLabelToWidget>
+      </div>
+    </div>
+  );
+}
+
+function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element {
+  const {widget, templateMap, setTemplateValue} = props;
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
   const setVal = (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`});
   return (
     <div className="slide-widget">
-      {!editMode && <div className="widget-title">{widget.displayName || widget.name}</div>}
-      {editMode && (
-        <div className="flex">
-          <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
-          <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
-        </div>
-      )}
+      <div className="widget-title">{widget.displayName || widget.name}</div>
       <div className="flex">
         <input
           type="number"
@@ -36,34 +63,20 @@ export default function SliderWidgetComponent(
             className="slider"
           />
           <div className="flex space-between">
-            {!editMode && <span>{widget.config.minVal}</span>}
-            {!editMode && <span>{widget.config.maxVal}</span>}
-            {editMode && (
-              <input
-                value={widget.config.minVal}
-                type="number"
-                onChange={(event): any => setWidgetValue('minVal', event.target.value, idx)}
-              />
-            )}
-            {editMode && (
-              <input
-                value={widget.config.maxVal}
-                type="number"
-                onChange={(event): any => setWidgetValue('maxVal', event.target.value, idx)}
-              />
-            )}
+            <span>{widget.config.minVal}</span>
+            <span>{widget.config.maxVal}</span>
           </div>
         </div>
-        {editMode && (
-          <AddLabelToWidget label="Step Size">
-            <input
-              value={widget.config.step}
-              type="number"
-              onChange={(event): any => setWidgetValue('step', event.target.value, idx)}
-            />
-          </AddLabelToWidget>
-        )}
       </div>
     </div>
   );
 }
+
+const SliderBuilder: WidgetBuilder = (widget, common) => {
+  const widg = widget as TemplateWidget<SliderWidget>;
+  return {
+    controls: <SliderWidgetConfiguration {...common} widget={widg} />,
+    uiElement: <SliderWidgetComponent {...common} widget={widg} />,
+  };
+};
+export default SliderBuilder;

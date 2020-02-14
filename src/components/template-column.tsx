@@ -118,6 +118,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
     const allowedWidgets = toSet(applyQueries(template, templateMap));
     const makeWidget = (widget: TemplateWidget<WidgetSubType>, idx: number): JSX.Element => (
       <GeneralWidget
+        allowedWidgets={allowedWidgets}
         code={template.code}
         columns={columns}
         editMode={editMode}
@@ -142,7 +143,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
       const sectionContents = section.map((widget: TemplateWidget<WidgetSubType>, kdx) => {
         // the index is essential to maintain in order to make sure the updates happen correctly
         idx += 1;
-        if (!allowedWidgets.has(widget.name)) {
+        if (!editMode && !allowedWidgets.has(widget.name)) {
           return null;
         }
         return (
@@ -236,8 +237,9 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
           </div>
         )}
         <div className={classnames({'template-column': true, 'edit-mode': editMode})}>
-          {!editMode && sectionedWidgets}
-          {editMode && template.widgets.map(makeWidget)}
+          {sectionedWidgets}
+          {/* {!editMode && sectionedWidgets} */}
+          {/* {editMode && template.widgets.map(makeWidget)} */}
         </div>
       </div>
     );

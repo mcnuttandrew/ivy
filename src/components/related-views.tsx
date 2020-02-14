@@ -19,7 +19,7 @@ interface Props {
 const targetTypes = new Set(['DataTarget', 'MultiDataTarget']);
 export default function RelatedViews(props: Props): JSX.Element {
   const {templates, templateMap, columns, template, setEncodingMode} = props;
-  if (template.templateName === NONE_TEMPLATE.templateName) {
+  if (!template || template.templateName === NONE_TEMPLATE.templateName) {
     return <div />;
   }
   const viewsOfInterest = template.widgets

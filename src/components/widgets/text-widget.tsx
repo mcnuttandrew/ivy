@@ -1,12 +1,10 @@
 import React from 'react';
 import {TextWidget, TemplateWidget} from '../../templates/types';
-import {GeneralWidget} from './general-widget';
+import {GeneralWidget, WidgetBuilder} from './general-widget';
 
-export default function TextWidgetComponent(props: GeneralWidget<TemplateWidget<TextWidget>>): JSX.Element {
-  const {widget, idx, setWidgetValue, editMode} = props;
-  if (!editMode) {
-    return <div className="text-widget">{widget.config.text}</div>;
-  }
+export function TextWidgetConfiguration(props: GeneralWidget<TextWidget>): JSX.Element {
+  const {widget, idx, setWidgetValue} = props;
+  console.log('TODO STYLING');
   return (
     <div className="text-widget">
       <textarea
@@ -17,3 +15,18 @@ export default function TextWidgetComponent(props: GeneralWidget<TemplateWidget<
     </div>
   );
 }
+
+export function TextWidgetComponent(props: GeneralWidget<TextWidget>): JSX.Element {
+  const {widget} = props;
+  return <div className="text-widget">{widget.config.text}</div>;
+}
+
+const TextBuilder: WidgetBuilder = (widget, common) => {
+  const widg = widget as TemplateWidget<TextWidget>;
+  return {
+    controls: <TextWidgetConfiguration {...common} widget={widg} />,
+    uiElement: <TextWidgetComponent {...common} widget={widg} />,
+  };
+};
+
+export default TextBuilder;
