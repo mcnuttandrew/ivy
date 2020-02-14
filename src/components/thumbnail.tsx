@@ -55,7 +55,7 @@ export default function Thumbnail(props: ThumbnailProps): JSX.Element {
   return (
     <img
       src={src}
-      onError={() => {
+      onError={(): void => {
         setSrc('logo.png');
       }}
     />

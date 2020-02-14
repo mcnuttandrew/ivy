@@ -170,7 +170,7 @@ export function getTemplateSaveState(base: AppState): SaveState {
   return associatedUpstreamTemplate === template ? 'EQUAL' : 'DIFFERENT';
 }
 
-const USE_LOCAL = true;
+const USE_LOCAL = false;
 export function serverPrefix(): string {
   return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
 }
