@@ -96,7 +96,7 @@ const PieChart: Template = {
   templateName: 'pie chart',
   templateDescription:
     'A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.',
-  templateAuthor: 'BUILT_IN',
+  templateAuthor: 'HYDRA-AUTHORS',
   templateLanguage: 'vega',
   widgets: [
     {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},

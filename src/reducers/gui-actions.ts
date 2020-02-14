@@ -17,6 +17,7 @@ export const changeTheme = blindSet('currentTheme');
 export const setCodeMode = blindSet('codeMode');
 export const setEditMode = blindSet('editMode');
 export const setGuiView = blindSet('showGUIView');
+export const setUserName = blindSet('userName');
 
 // TODO there is another quote trim somewhere
 const quoteTrim = (x: string): string => x.replace(/["']/g, '');

@@ -11,7 +11,7 @@ const DATATABLE: Template = {
   templateDescription:
     'A good old fashioned data table, show any type of data in a tabular format. A great way to double check your data.',
   templateLanguage: 'hydra-data-table',
-  templateAuthor: 'BUILT_IN',
+  templateAuthor: 'HYDRA-AUTHORS',
   code: stringify(TABLE_EXAMPLE),
   widgets: [
     {

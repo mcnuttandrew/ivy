@@ -7,7 +7,7 @@ const SECOND_TEXT =
 const NoneTemplate: Template = {
   templateName: '_____none_____',
   templateDescription: 'blank filler template',
-  templateAuthor: 'BUILT_IN',
+  templateAuthor: 'HYDRA-AUTHORS',
   templateLanguage: 'none',
   widgets: [
     {name: 'asddd', type: 'Section', config: null},

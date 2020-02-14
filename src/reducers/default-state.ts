@@ -12,40 +12,40 @@ export interface DataReducerState {
 }
 export interface AppState {
   // meta-data
-  currentlySelectedFile: string;
   columns: ColumnHeader[];
+  currentlySelectedFile: string;
   metaColumns: ColumnHeader[];
 
   // spec configs
+  currentTheme: string;
+  editMode: boolean;
+  editorError: boolean;
   spec: any;
   specCode: string;
-  currentTheme: string;
-  editorError: boolean;
-  editMode: boolean;
 
   // GUI
+  codeMode: string;
   currentTemplateInstance: Template | null;
   dataModalOpen: boolean;
   encodingMode: string;
-  showProgrammaticMode: boolean;
-  showGUIView: boolean;
-  codeMode: string;
   programModalOpen: boolean;
+  showGUIView: boolean;
+  showProgrammaticMode: boolean;
+  userName: string;
 
   // undo redo
-  undoStack: UndoRedoStackItem[];
   redoStack: UndoRedoStackItem[];
+  undoStack: UndoRedoStackItem[];
 
   // view stuff
-  views: string[];
-  viewCatalog: ViewCatalog;
   currentView: string;
+  viewCatalog: ViewCatalog;
+  views: string[];
 
   // template stuff
-
-  templates: Template[];
-  templateMap: TemplateMap;
   templateBuilderModalOpen: boolean;
+  templateMap: TemplateMap;
+  templates: Template[];
 }
 
 /**
@@ -99,6 +99,7 @@ export const DEFAULT_STATE: AppState = {
   showGUIView: true,
   codeMode: JSON_OUTPUT,
   programModalOpen: false,
+  userName: '',
 
   // undo redo
   undoStack: [],

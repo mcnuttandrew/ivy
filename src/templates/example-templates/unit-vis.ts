@@ -17,7 +17,7 @@ const UNITVIS: Template = {
   templateDescription:
     'A simple unit vis chart with a rudimentary preconfiguration, it makes use of the unit vis language.',
   templateLanguage: 'unit-vis',
-  templateAuthor: 'BUILT_IN',
+  templateAuthor: 'HYDRA-AUTHORS',
   code: stringify(UNIT_VIS_EXAMPLE),
   widgets: [
     {name: 'Key1', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},

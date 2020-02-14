@@ -137,6 +137,7 @@ export function serializeTemplate(template: Template): string {
     $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
     templateName: template.templateName,
     templateDescription: template.templateDescription,
+    templateAuthor: template.templateAuthor,
     code: 'SEE BODY',
     templateLanguage: template.templateLanguage,
     widgets: template.widgets,
@@ -151,6 +152,7 @@ export function deserializeTemplate(templateString: string): Template {
     code: 'SEE CODE EDITOR',
     templateLanguage: code.templateLanguage,
     widgets: code.widgets,
+    templateAuthor: code.templateAuthor,
   };
 }
 
@@ -168,7 +170,7 @@ export function getTemplateSaveState(base: AppState): SaveState {
   return associatedUpstreamTemplate === template ? 'EQUAL' : 'DIFFERENT';
 }
 
-const USE_LOCAL = false;
+const USE_LOCAL = true;
 export function serverPrefix(): string {
   return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
 }

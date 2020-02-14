@@ -4,9 +4,8 @@ import {ColumnHeader} from '../../types';
 import {Template, TemplateMap} from '../../templates/types';
 import ProgramPreview from '../program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix} from '../../utils';
-import {thumbnailLocation} from '../../utils/thumbnail';
-import {GRAMMAR_NAME, GRAMMAR_DESC, NONE_TEMPLATE} from '../../constants/index';
-
+import {GRAMMAR_DESC, GRAMMAR_NAME} from '../../constants';
+import NONE_TEMPLATE from '../../templates/example-templates/none';
 interface Props {
   columns: ColumnHeader[];
   deleteTemplate: GenericAction<string>;
@@ -16,7 +15,6 @@ interface Props {
 }
 
 function publish(templateName: string, template: Template): void {
-  const thumbnail = thumbnailLocation(templateName);
   fetch(`${serverPrefix()}/publish`, {
     method: 'POST',
     mode: 'cors', // no-cors, *cors, same-origin
@@ -29,11 +27,7 @@ function publish(templateName: string, template: Template): void {
     },
     redirect: 'follow', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *client
-    body: JSON.stringify({
-      template,
-      templateImg: thumbnail === 'logo.png' ? null : thumbnail,
-      creator: 'EXAMPLE_CREATOR',
-    }), // body data type must match "Content-Type" header
+    body: JSON.stringify({template, creator: template.templateAuthor}),
   }).then(x => {
     console.log(x);
   });
@@ -59,7 +53,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
   };
 
   const programs = templates.reduce((acc, template, idx) => {
-    if (template.templateName === NONE_TEMPLATE) {
+    if (template.templateName === NONE_TEMPLATE.templateName) {
       return acc;
     }
     const {canBeUsed, isComplete} = searchDimensionsCanMatch(
@@ -101,7 +95,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
             templateName={GRAMMAR_NAME}
             templateDescription={GRAMMAR_DESC}
             setEncodingMode={setEncodingMode}
-            templateAuthor={'BUILT_IN'}
+            templateAuthor={'HYDRA-AUTHORS'}
             buttons={[]}
             typeCounts={{DIMENSION: 0, MEASURE: 0, TIME: 0, SUM: 9}}
           />

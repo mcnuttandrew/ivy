@@ -6,7 +6,8 @@ import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
 
 import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
-import {thumbnailLocation} from '../utils/thumbnail';
+import {getUserName} from '../utils/local-storage';
+import Thumbnail from './thumbnail';
 
 import * as actionCreators from '../actions/index';
 import {Filter} from '../actions/index';
@@ -97,6 +98,7 @@ interface RootProps {
   templateMap: TemplateMap;
   templateSaveState: string;
   templates: Template[];
+  userName: string;
   views: string[];
 
   addToNextOpenSlot: GenericAction<ColumnHeader>;
@@ -131,6 +133,7 @@ interface RootProps {
   setEditMode: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
   setEncodingParameter: GenericAction<SetTemplateValuePayload>;
+  setUserName: GenericAction<string>;
   setGuiView: GenericAction<boolean>;
   setNewSpec: GenericAction<any>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
@@ -162,6 +165,7 @@ class RootComponent extends React.Component<RootProps, State> {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     this.props.loadTemplates();
     this.props.prepareTemplate();
+    this.props.setUserName(getUserName());
   }
 
   componentDidCatch(error: any, errorInfo: any): void {
@@ -217,7 +221,11 @@ class RootComponent extends React.Component<RootProps, State> {
     return (
       <div className="flex-down full-height column background-2">
         <div className="template-logo">
-          <img src={thumbnailLocation(template && template.templateName)} />
+          <Thumbnail
+            templateName={template && template.templateName}
+            templateAuthor={template && template.templateAuthor}
+          />
+
           <div>
             <h5>Currently template</h5>
             <h4>{getTemplateName(template)}</h4>
@@ -405,6 +413,7 @@ class RootComponent extends React.Component<RootProps, State> {
             loadExternalTemplate={this.props.loadExternalTemplate}
             toggleProgramModal={this.props.toggleProgramModal}
             templates={this.props.templates}
+            userName={this.props.userName}
           />
         )}
         <Header
@@ -468,6 +477,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     templateMap,
     templateSaveState: getTemplateSaveState(base),
     templates: base.templates,
+    userName: base.userName,
     views: base.views,
   };
 }
