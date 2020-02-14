@@ -25,15 +25,10 @@ function thumbnailLocation(
     return {url: 'assets/chart-gallery-logo.png', local: true};
   }
   return {url: `${serverPrefix()}/thumbnail?author=${templateAuthor}&template=${templateName}`, local: false};
-  // /* eslint-disable @typescript-eslint/ban-ts-ignore*/
-  // // @ts-ignore
-  // return (document.imageStore && document.imageStore[templateName]) || 'logo.png';
-  // /* eslint-enable @typescript-eslint/ban-ts-ignore*/
 }
 
 export default function Thumbnail(props: ThumbnailProps): JSX.Element {
   const {templateName, templateAuthor} = props;
-  //   let src = '';
   const [src, setSrc] = useState('logo.png');
   useEffect(() => {
     const {url, local} = thumbnailLocation(templateName, templateAuthor);
@@ -41,23 +36,9 @@ export default function Thumbnail(props: ThumbnailProps): JSX.Element {
       setSrc(url);
       return;
     }
-    new Promise(() => {
-      fetch(url)
-        .then(x => x.text())
-        .then(x => {
-          setSrc(x);
-          //   console.log(src);
-        });
-    });
-    // src;
+    fetch(url)
+      .then(x => x.text())
+      .then(x => setSrc(x));
   }, [templateName, templateAuthor]);
-  //   console.log(src);
-  return (
-    <img
-      src={src}
-      onError={(): void => {
-        setSrc('logo.png');
-      }}
-    />
-  );
+  return <img src={src} onError={(): any => setSrc('logo.png')} />;
 }
