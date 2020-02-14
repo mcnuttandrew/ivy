@@ -803,23 +803,24 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .widget-handle span.grippy {
+  color: #ccc;
   content: '....';
-  width: 10px;
-  height: 20px;
-  display: inline-block;
-  overflow: hidden;
-  line-height: 5px;
-  padding: 3px 4px;
   cursor: move;
-  vertical-align: middle;
-  margin-top: -.7em;
-  margin-right: .3em;
-  font-size: 12px;
+  display: inline-block;
   font-family: sans-serif;
+  font-size: 12px;
+  height: 20px;
   letter-spacing: 2px;
-  color: #cccccc;
+  line-height: 5px;
+  margin-right: 0.3em;
+  margin-top: -0.7em;
+  overflow: hidden;
+  padding: 3px 4px;
   text-shadow: 1px 0 1px black;
+  vertical-align: middle;
+  width: 10px;
 }
+
 .widget-handle span.grippy::after {
   content: '.. .. .. ..';
 }

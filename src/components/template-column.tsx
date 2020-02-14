@@ -237,11 +237,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
             </button>
           </div>
         )}
-        <div className={classnames({'template-column': true, 'edit-mode': editMode})}>
-          {sectionedWidgets}
-          {/* {!editMode && sectionedWidgets} */}
-          {/* {editMode && template.widgets.map(makeWidget)} */}
-        </div>
+        <div className={classnames({'template-column': true, 'edit-mode': editMode})}>{sectionedWidgets}</div>
       </div>
     );
   }

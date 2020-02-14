@@ -12,8 +12,7 @@ import {
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
-import {TEMPLATE_BODY, NONE_TEMPLATE} from '../constants/index';
-import Tooltip from 'rc-tooltip';
+import {TEMPLATE_BODY} from '../constants/index';
 import SimpleTooltip from './simple-tooltip';
 
 interface Props {
@@ -49,7 +48,6 @@ export default function EncodingControls(props: Props): JSX.Element {
     setBlankTemplate,
     setCodeMode,
     setEditMode,
-    setEncodingMode,
     setProgrammaticView,
     template,
     templateSaveState,

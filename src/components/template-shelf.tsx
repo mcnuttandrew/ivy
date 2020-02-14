@@ -1,6 +1,5 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
-import {IgnoreKeys} from 'react-hotkeys';
 
 import Pill from './pill';
 import Selector from './selector';
