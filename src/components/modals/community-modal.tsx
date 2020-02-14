@@ -166,7 +166,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
     >
       <div className="flex-down full-height-with-hide ">
         <div className="full-height-with-hide ">
-          <div>
+          <div className="full-height">
             COMMUNTIY PROGRAMS
             <div>
               {[BY_TIME, BY_STRING, BY_DATA].map(row => {
@@ -186,6 +186,11 @@ export default function CommunityPrograms(props: Props): JSX.Element {
               })}
             </div>
             <div className="query-configuration-block">
+              {mode === BY_TIME && !loadedTemplates.length && (
+                <div className="lds-dual-ring-container">
+                  <div className="lds-dual-ring"></div>
+                </div>
+              )}
               {mode === BY_TIME &&
                 RecentPrograms(
                   loadedTemplates,
