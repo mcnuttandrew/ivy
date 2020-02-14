@@ -30,13 +30,24 @@ export type HydraConditinoal = {CONDITIONAL: ConditionalArgs};
  */
 function evaluateQuery(query: ValidationQuery, templateMap: TemplateMap): boolean {
   // TODO add a type check function to this
-  const generatedContent = new Function('parameters', `return ${query}`);
-  return Boolean(generatedContent(templateMap));
+  let result = false;
+  try {
+    const generatedContent = new Function('parameters', `return ${query}`);
+    result = Boolean(generatedContent(templateMap));
+  } catch (e) {
+    console.log('Query Evalu Error', e);
+  }
+  return result;
 }
 
 export function evaluateShortcut(shortcut: Shortcut, templateMap: TemplateMap): TemplateMap {
-  const generatedContent = new Function('parameters', `return ${shortcut.shortcutFunction}`);
-  const newMap = generatedContent(templateMap);
+  let newMap = templateMap;
+  try {
+    const generatedContent = new Function('parameters', `return ${shortcut.shortcutFunction}`);
+    newMap = generatedContent(templateMap);
+  } catch (e) {
+    console.log('Short cut error', e);
+  }
   return newMap;
 }
 

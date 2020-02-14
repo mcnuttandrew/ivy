@@ -303,7 +303,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .widget-section {
-  background: lightgray;
+  background: #e8e6e3;
   border-radius: 5px;
   margin-bottom: 5px;
   padding-bottom: 2px;
@@ -800,6 +800,28 @@ input[type=number]::-webkit-outer-spin-button {
   position: absolute;
   right: -70px;
   width: 55px;
+}
+
+.widget-handle span.grippy {
+  content: '....';
+  width: 10px;
+  height: 20px;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 5px;
+  padding: 3px 4px;
+  cursor: move;
+  vertical-align: middle;
+  margin-top: -.7em;
+  margin-right: .3em;
+  font-size: 12px;
+  font-family: sans-serif;
+  letter-spacing: 2px;
+  color: #cccccc;
+  text-shadow: 1px 0 1px black;
+}
+.widget-handle span.grippy::after {
+  content: '.. .. .. ..';
 }
 
 .blank-section .widget-handle,

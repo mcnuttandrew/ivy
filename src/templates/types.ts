@@ -29,9 +29,6 @@ export interface TemplateWidget<T> {
    * This advanced features allows you to do that
    */
   validations?: Validation[];
-
-  // i forget why this was necessary
-  // [x: string]: any;
 }
 export interface DataTargetWidget {
   allowedTypes: DataType[];

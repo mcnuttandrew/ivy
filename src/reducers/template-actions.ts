@@ -185,6 +185,7 @@ export const deleteTemplate: ActionResponse<string> = (state, payload) => {
   });
 };
 
+const topLevelKeys = new Set(['displayName', 'validations']);
 export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, payload) => {
   const {key, value, idx} = payload;
   // const template = state.currentTemplateInstance;
@@ -206,9 +207,11 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       // update the template map with the new name
       draftState.templateMap[value] = state.templateMap[oldName];
       delete draftState.templateMap[oldName];
-    } else if (key === 'displayName') {
-      // display name is a property of the widget container and not the widget parameter...
-      draftState.currentTemplateInstance.widgets[idx].displayName = value;
+    } else if (topLevelKeys.has(key)) {
+      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
+      // @ts-ignore
+      draftState.currentTemplateInstance.widgets[idx][key] = value;
+      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     } else {
       console.log(key, value, idx);
       /* eslint-disable @typescript-eslint/ban-ts-ignore*/
