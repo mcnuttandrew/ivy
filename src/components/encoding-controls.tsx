@@ -14,6 +14,7 @@ import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY, NONE_TEMPLATE} from '../constants/index';
 import Tooltip from 'rc-tooltip';
+import SimpleTooltip from './simple-tooltip';
 
 interface Props {
   chainActions: GenericAction<any>;
@@ -120,37 +121,30 @@ export default function EncodingControls(props: Props): JSX.Element {
   return (
     <div className="encoding-mode-selector flex-down">
       <div className="flex space-between full-width flex-wrap">
-        <Tooltip
-          placement="left"
-          trigger="hover"
-          overlay={<span className="tooltip-internal">Return to the view of the template gallery.</span>}
-        >
-          <div className="template-modification-control" onClick={(): any => setEncodingMode(NONE_TEMPLATE)}>
+        <div className="template-modification-control">
+          <div className="flex">
             <div className="template-modification-control-icon">
               <TiHomeOutline />
             </div>
             <span className="template-modification-control-label">Home</span>
           </div>
-        </Tooltip>
+          <SimpleTooltip message="Return to the view of the template gallery." />
+        </div>
         {FULL_BUTTONS.map(button => {
           return (
-            <Tooltip
+            <div
               key={button.label}
-              placement="bottom"
-              trigger="hover"
-              overlay={<span className="tooltip-internal">{button.tooltip} </span>}
+              className={classnames({
+                'template-modification-control': true,
+                'template-modification-control--disabled': button.disabled,
+              })}
             >
-              <div
-                className={classnames({
-                  'template-modification-control': true,
-                  'template-modification-control--disabled': button.disabled,
-                })}
-                onClick={(): any => button.onClick()}
-              >
+              <div className="flex" onClick={(): any => button.onClick()}>
                 <div className="template-modification-control-icon">{button.icon}</div>
                 <span className="template-modification-control-label">{button.label}</span>
               </div>
-            </Tooltip>
+              <SimpleTooltip message={button.tooltip} />
+            </div>
           );
         })}
       </div>

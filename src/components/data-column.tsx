@@ -80,7 +80,7 @@ export default class DataColumn extends React.Component<DataColumnProps> {
           <span>Data Columns</span>
           <Tooltip
             placement="bottom"
-            trigger="hover"
+            trigger="click"
             overlay={
               <span className="tooltip-internal">
                 This is the data column, where you can modify the current pills. TODO: a example pill.

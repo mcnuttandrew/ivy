@@ -1290,7 +1290,10 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .tooltip-icon {
-  font-size: 20px;
+  align-items: flex-start;
+  display: flex;
+  font-size: 15px;
+  height: 2em;
   cursor: pointer;
 }
 

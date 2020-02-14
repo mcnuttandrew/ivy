@@ -5,7 +5,6 @@ import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, buildCounts, classnames} from '../../utils';
-// import {receiveThumbnail} from '../../utils/thumbnail';
 
 interface Props {
   loadExternalTemplate: GenericAction<Template>;
@@ -38,7 +37,6 @@ function fetchWithCache(url: string): Promise<any> {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *client
@@ -55,7 +53,6 @@ function fetchWithCache(url: string): Promise<any> {
 function runQuery(url: string, loadTemplates: any, triggerRepaint: any): void {
   fetchWithCache(url).then(result => {
     loadTemplates(result.map((x: any) => x.template));
-    // result.forEach((x: any) => receiveThumbnail(x.template.templateName, x.templateImg));
     setTimeout(triggerRepaint, 1000);
   });
 }
