@@ -162,6 +162,9 @@ export const setBlankTemplate: ActionResponse<boolean> = (state, fork) => {
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
   if (fork) {
     newTemplate.code = currentCode;
+    if (state.encodingMode && state.encodingMode !== 'grammar') {
+      newTemplate.widgets = state.currentTemplateInstance.widgets;
+    }
   }
   return produce(state, draftState => {
     draftState.currentTemplateInstance = newTemplate;

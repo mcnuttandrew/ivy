@@ -136,7 +136,7 @@ export function CodeCollapse(props: CodeCollapseProps): JSX.Element {
         'code-collapse': true,
         collapsed: !showProgrammaticMode,
       })}
-      onClick={(): any => setProgrammaticView(true)}
+      onClick={(): any => setProgrammaticView(!showProgrammaticMode)}
     >
       <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
       {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}

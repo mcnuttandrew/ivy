@@ -241,6 +241,10 @@ input[type=number]::-webkit-outer-spin-button {
   text-decoration: underline;
 }
 
+.special-bump-for-closed-code-container {
+  max-height: calc(100% - 50px);
+}
+
 .section-title {
   font-size: 12px;
   font-weight: 100;
