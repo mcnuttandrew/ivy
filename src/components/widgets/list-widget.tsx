@@ -4,7 +4,7 @@ import Selector from '../selector';
 import {IgnoreKeys} from 'react-hotkeys';
 
 import {GeneralWidget, WidgetBuilder} from './general-widget';
-import {EditParameterName, EditDisplayName, AddLabelToWidget, Reset} from './widget-common';
+import {EditParameterName, EditDisplayName, AddLabelToWidget, Reset, widgetName} from './widget-common';
 
 export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -65,12 +65,12 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
 }
 
 function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue} = props;
+  const {widget, templateMap, setTemplateValue, editMode} = props;
   const config = widget.config;
   return (
     <div className="list-widget">
       <div className="flex">
-        <div className="widget-title">{widget.displayName || widget.name}</div>
+        <div className="widget-title">{widgetName(widget, editMode)}</div>
         <Selector
           options={widget.config.allowedValues}
           selectedValue={templateMap[widget.name] || ''}

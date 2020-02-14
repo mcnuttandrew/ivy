@@ -5,7 +5,7 @@ import {GeneralWidget, WidgetBuilder} from './general-widget';
 import TemplateMultiShelf from '../template-multi-shelf';
 import DataSymbol from '../data-symbol';
 import {trim} from '../../utils';
-import {EditParameterName, EditDisplayName} from './widget-common';
+import {EditParameterName, EditDisplayName, widgetName} from './widget-common';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
@@ -80,13 +80,13 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
 }
 
 function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): JSX.Element {
-  const {widget, templateMap, columns, setTemplateValue} = props;
+  const {widget, templateMap, columns, setTemplateValue, editMode} = props;
   const fieldValue = templateMap[widget.name];
   return (
     <div className="multi-data-target-widget">
       <TemplateMultiShelf
         channelEncodings={(Array.isArray(fieldValue) ? (fieldValue as string[]) : []).map(trim)}
-        field={widget.displayName || widget.name}
+        field={widgetName(widget, editMode)}
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}

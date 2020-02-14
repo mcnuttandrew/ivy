@@ -309,6 +309,10 @@ input[type=number]::-webkit-outer-spin-button {
   padding-bottom: 2px;
 }
 
+.widget-section.widget-section--editing {
+  margin-right: 50px;
+}
+
 .widget-section.blank-section {
   background: none;
 }
@@ -772,20 +776,40 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .widget-body {
+  align-items: center;
+  display: flex;
   width: 100%;
 }
 
-.widget-body textarea {
-  width: calc(100% - 5px);
+.widget-body > * {
+  width: 100%;
+}
+
+.widget-section.widget-section--editing .widget-body {
+  min-height: 30px;
 }
 
 .widget-handle {
   align-items: center;
-  background: #b5b5b5;
+  border-bottom: thin solid lightgray;
+  cursor: grab;
+  display: flex;
+  flex-direction: column;
   font-size: 10px;
   justify-content: space-between;
-  cursor: grab;
-  padding: 0 10px;
+  position: absolute;
+  right: -70px;
+  width: 55px;
+}
+
+.blank-section .widget-handle,
+.DataTarget-widget-type .widget-handle,
+.MultiDataTarget-widget-type .widget-handle {
+  right: -65px;
+}
+
+.widget-handle:hover {
+  background: whitesmoke;
 }
 
 .widget-handle-grip {
@@ -1106,6 +1130,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .edit-mode .widget {
   margin-bottom: 5px;
+  position: relative;
 }
 
 .slide-widget input[type=number] {

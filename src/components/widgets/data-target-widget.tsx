@@ -5,7 +5,7 @@ import {trim} from '../../utils';
 import DataSymbol from '../data-symbol';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import TemplateShelf from '../template-shelf';
-import {EditParameterName, EditDisplayName} from './widget-common';
+import {EditParameterName, EditDisplayName, widgetName} from './widget-common';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
@@ -61,12 +61,12 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
 }
 
 function DataTargetWidgetComponent(props: GeneralWidget<DataTargetWidget>): JSX.Element {
-  const {widget, templateMap, columns, setTemplateValue} = props;
+  const {widget, templateMap, columns, setTemplateValue, editMode} = props;
   const fieldValue = templateMap[widget.name];
   return (
     <TemplateShelf
       channelEncoding={trim(fieldValue as string)}
-      field={widget.displayName || widget.name}
+      field={widgetName(widget, editMode)}
       columns={columns}
       onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
       widget={widget}

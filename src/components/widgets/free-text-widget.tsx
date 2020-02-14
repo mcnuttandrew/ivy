@@ -1,7 +1,7 @@
 import React from 'react';
 import {FreeTextWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
-import {EditParameterName, EditDisplayName, Reset} from './widget-common';
+import {EditParameterName, EditDisplayName, Reset, widgetName} from './widget-common';
 import {IgnoreKeys} from 'react-hotkeys';
 
 function FreeTextWidgetConfiguration(props: GeneralWidget<FreeTextWidget>): JSX.Element {
@@ -15,11 +15,11 @@ function FreeTextWidgetConfiguration(props: GeneralWidget<FreeTextWidget>): JSX.
 }
 
 function FreeTextWidgetComponent(props: GeneralWidget<FreeTextWidget>): JSX.Element {
-  const {widget, setTemplateValue, templateMap} = props;
+  const {widget, setTemplateValue, templateMap, editMode} = props;
   const field = widget.name;
   return (
     <div className="flex free-text-widget">
-      {<div className="widget-title">{widget.displayName || widget.name}</div>}
+      <div className="widget-title">{widgetName(widget, editMode)}</div>
       <IgnoreKeys style={{height: '100%'}}>
         <input
           value={templateMap[widget.name] || ''}

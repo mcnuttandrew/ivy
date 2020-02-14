@@ -166,6 +166,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
           className={classnames({
             'widget-section': true,
             'blank-section': inBlankSection,
+            'widget-section--editing': editMode,
           })}
           key={`section-${jdx}`}
         >

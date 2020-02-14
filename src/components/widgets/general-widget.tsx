@@ -1,11 +1,13 @@
 import React, {useRef} from 'react';
-import {TiDelete, TiCog} from 'react-icons/ti';
 import {useDrag, useDrop, DropTargetMonitor} from 'react-dnd';
 import {XYCoord} from 'dnd-core';
-import Selector from '../selector';
-import Tooltip from 'rc-tooltip';
 
+import {TemplateMap, TemplateWidget, WidgetSubType} from '../../templates/types';
+import {ColumnHeader} from '../../types';
+import {GenericAction, SetTemplateValuePayload} from '../../actions';
 import {classnames} from '../../utils';
+
+import WidgetConfigurationControls from './widget-configuration-controls';
 
 import DataTargetBuilder from './data-target-widget';
 import FreeTextBuilder from './free-text-widget';
@@ -17,16 +19,12 @@ import SliderBuilder from './slider-widget';
 import SwitchBuilder from './switch-widget';
 import TextBuilder from './text-widget';
 
-import {TemplateMap, TemplateWidget, WidgetSubType} from '../../templates/types';
-import {ColumnHeader} from '../../types';
-import {GenericAction, SetTemplateValuePayload} from '../../actions';
-import {widgetInUse} from '../../utils';
-
 export interface GeneralWidget<T> {
   columns: ColumnHeader[];
+  editMode: boolean;
   idx: number;
-  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setAllTemplateValues: GenericAction<TemplateMap>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
   templateMap: TemplateMap;
   widget: TemplateWidget<T>;
@@ -40,8 +38,8 @@ interface Props {
   idx: number;
   moveWidget: (...args: any[]) => void;
   removeWidget: any;
-  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setAllTemplateValues: GenericAction<TemplateMap>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
   templateMap: TemplateMap;
   widget: TemplateWidget<WidgetSubType>;
@@ -63,70 +61,6 @@ const builders = {
   Switch: SwitchBuilder,
   Text: TextBuilder,
 };
-
-interface PlacementControls {
-  allowedWidgets: Set<string>;
-  code: string;
-  widget: TemplateWidget<WidgetSubType>;
-  controls: JSX.Element;
-  removeWidget: any;
-  editMode: boolean;
-}
-const dontShowUsedIf = new Set(['Section', 'Text']);
-function PlacementControls(props: PlacementControls): JSX.Element {
-  const {allowedWidgets, code, controls, editMode, removeWidget, widget} = props;
-  if (!editMode) {
-    return <div />;
-  }
-  return (
-    <div className="widget-handle flex">
-      <Tooltip
-        placement="right"
-        trigger="click"
-        overlay={
-          <div className="flex-down">
-            <h3>{widget.type}</h3>
-            {!dontShowUsedIf.has(widget.type) && (
-              <h5>{`Widget is currently ${widgetInUse(code, widget.name) ? 'in use' : 'not used'}`}</h5>
-            )}
-            {controls}
-            <button onClick={removeWidget}>
-              Delete Widget <TiDelete />
-            </button>
-            <h5>Validations (Logic for showing/hiding this widget)</h5>
-            {(widget.validations || []).map(validation => {
-              <div className="flex">
-                <Selector
-                  options={['show', 'hide'].map(key => ({display: key, value: key}))}
-                  selectedValue={validation.queryResult}
-                  onChange={(value: any): any => {
-                    console.log('woah');
-                  }}
-                />
-                <div>{validation.query}</div>
-              </div>;
-            })}
-            <button
-              onClick={(): void => {
-                console.log('igh');
-              }}
-            >
-              Add a validation
-            </button>
-          </div>
-        }
-      >
-        <div className="flex-down">
-          <div className="code-edit-controls-button cursor-pointer">
-            <TiCog />
-          </div>
-          <div className="in-use-status">{allowedWidgets.has(widget.name) ? 'Shown' : 'Hidden'}</div>
-        </div>
-      </Tooltip>
-    </div>
-  );
-}
-
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
 export default function GeneralWidgetComponent(props: Props): JSX.Element {
@@ -214,7 +148,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
       })}
     >
       <div className="widget-body">{uiElement}</div>
-      <PlacementControls {...props} controls={controls} />
+      <WidgetConfigurationControls {...props} controls={controls} />
     </div>
   );
 }

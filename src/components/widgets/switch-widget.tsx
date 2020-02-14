@@ -3,7 +3,7 @@ import Switch from 'react-switch';
 import {IgnoreKeys} from 'react-hotkeys';
 import {SwitchWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
-import {EditParameterName, EditDisplayName, AddLabelToWidget} from './widget-common';
+import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName} from './widget-common';
 
 const switchCommon = {
   offColor: '#E1E9F2',
@@ -56,7 +56,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
 }
 
 function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue} = props;
+  const {widget, templateMap, setTemplateValue, editMode} = props;
   const config = widget.config;
   const isActive = templateMap[widget.name] === config.activeValue;
 
@@ -64,7 +64,7 @@ function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element 
     <div className="flex-down switch-widget">
       <div className="flex-down">
         <div className="flex space-between">
-          <div className="widget-title">{widget.displayName || widget.name}</div>
+          <div className="widget-title">{widgetName(widget, editMode)}</div>
           <Switch
             {...switchCommon}
             checked={isActive}

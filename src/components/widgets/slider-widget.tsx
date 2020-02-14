@@ -1,7 +1,7 @@
 import React from 'react';
 import {SliderWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
-import {EditParameterName, EditDisplayName, AddLabelToWidget} from './widget-common';
+import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName} from './widget-common';
 
 function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -39,12 +39,12 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
 }
 
 function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue} = props;
+  const {widget, templateMap, setTemplateValue, editMode} = props;
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
   const setVal = (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`});
   return (
     <div className="slide-widget">
-      <div className="widget-title">{widget.displayName || widget.name}</div>
+      <div className="widget-title">{widgetName(widget, editMode)}</div>
       <div className="flex">
         <input
           type="number"
