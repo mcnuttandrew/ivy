@@ -8,6 +8,7 @@ import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates
 import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
+import NONE from '../templates/example-templates/none';
 
 interface Props {
   addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
@@ -175,7 +176,7 @@ export default class CodeEditor extends React.Component<Props> {
   }
 
   render(): JSX.Element {
-    const {editMode, showProgrammaticMode} = this.props;
+    const {editMode, showProgrammaticMode, template} = this.props;
     const currentCode = this.getCurrentCode();
     return (
       <div
@@ -188,6 +189,7 @@ export default class CodeEditor extends React.Component<Props> {
         <div className="full-height full-width code-container flex-down">
           {!showProgrammaticMode && (
             <CodeCollapse
+              disable={template && template.templateName === NONE.templateName}
               showProgrammaticMode={showProgrammaticMode}
               setProgrammaticView={this.props.setProgrammaticView}
             />

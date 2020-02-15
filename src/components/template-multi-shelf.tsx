@@ -1,6 +1,5 @@
 import React from 'react';
 import {useDrop} from 'react-dnd';
-import {IgnoreKeys} from 'react-hotkeys';
 
 import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
@@ -16,11 +15,10 @@ interface Props {
   field: string;
   onDrop: any;
   widget: TemplateWidget<MultiDataTargetWidget>;
-  setName?: any;
 }
 
 export default function TemplateMultiShelf(props: Props): JSX.Element {
-  const {channelEncodings, columns, field, onDrop, setName, widget} = props;
+  const {channelEncodings, columns, field, onDrop, widget} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -67,12 +65,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       <div className="multi-shelf flex">
         <div className="field-label flex-down space-around">
           <AllowedTypesList allowedTypes={allowed} />
-          {!setName && <div>{field}</div>}
-          {setName && (
-            <IgnoreKeys style={{height: '100%'}}>
-              <input type="text" value={widget.name} onChange={(event): any => setName(event.target.value)} />
-            </IgnoreKeys>
-          )}
+          <div>{field}</div>
         </div>
         <div className="pill-dropzone">
           {columnHeaders.map((columnHeader, idx: number) => {

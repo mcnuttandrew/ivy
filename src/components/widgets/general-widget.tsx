@@ -1,109 +1,71 @@
 import React, {useRef} from 'react';
-import {TiDelete} from 'react-icons/ti';
 import {useDrag, useDrop, DropTargetMonitor} from 'react-dnd';
 import {XYCoord} from 'dnd-core';
 
-import {classnames} from '../../utils';
-
-import DataTargetWidgetComponent from './data-target-widget';
-import FreeTextWidgetComponent from './free-text-widget';
-import ListWidgetComponent from './list-widget';
-import MultiDataTargetComponent from './multi-data-target-widget';
-import SectionWidgetComponent from './section-widget';
-import ShortcutsWidgetComponent from './shortcuts-widget';
-import SliderWidgetComponent from './slider-widget';
-import SwitchWidgetComponent from './switch-widget';
-import TextWidgetComponent from './text-widget';
-
-import {
-  DataTargetWidget,
-  FreeTextWidget,
-  ListWidget,
-  MultiDataTargetWidget,
-  SectionWidget,
-  ShortcutsWidget,
-  SliderWidget,
-  SwitchWidget,
-  TemplateMap,
-  TemplateWidget,
-  TextWidget,
-  WidgetSubType,
-} from '../../templates/types';
+import {TemplateMap, TemplateWidget, WidgetSubType} from '../../templates/types';
 import {ColumnHeader} from '../../types';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
-import {widgetInUse} from '../../utils';
+import {classnames} from '../../utils';
+
+import WidgetConfigurationControls from './widget-configuration-controls';
+
+import DataTargetBuilder from './data-target-widget';
+import FreeTextBuilder from './free-text-widget';
+import ListBuilder from './list-widget';
+import MultiDataTargetBuilder from './multi-data-target-widget';
+import SectionBuilder from './section-widget';
+import ShortcutBuilder from './shortcuts-widget';
+import SliderBuilder from './slider-widget';
+import SwitchBuilder from './switch-widget';
+import TextBuilder from './text-widget';
 
 export interface GeneralWidget<T> {
   columns: ColumnHeader[];
   editMode: boolean;
   idx: number;
-  moveWidget: (...args: any[]) => void;
-  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setAllTemplateValues: GenericAction<TemplateMap>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
   templateMap: TemplateMap;
-  widget: T;
+  widget: TemplateWidget<T>;
 }
 
 interface Props {
+  allowedWidgets: Set<string>;
   code: string;
   columns: ColumnHeader[];
   editMode: boolean;
   idx: number;
   moveWidget: (...args: any[]) => void;
   removeWidget: any;
-  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setAllTemplateValues: GenericAction<TemplateMap>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
   templateMap: TemplateMap;
   widget: TemplateWidget<WidgetSubType>;
 }
 
-function PlacementControls(props: Props): JSX.Element {
-  const {code, widget, removeWidget, editMode} = props;
-  const showInUse = widget.type !== 'Text';
-  if (!editMode) {
-    return <div />;
-  }
-  return (
-    <div className="widget-handle flex">
-      <div>{widget.type}</div>
+export type WidgetBuilder = (
+  widget: TemplateWidget<WidgetSubType>,
+  common: Props,
+) => {controls: any; uiElement: any};
 
-      <div className="in-use-status">
-        {showInUse ? (widgetInUse(code, widget.name) ? 'in use' : 'not used') : ''}
-      </div>
-      <div className="cursor-pointer" onClick={removeWidget}>
-        <TiDelete />
-      </div>
-    </div>
-  );
-}
-
+const builders = {
+  DataTarget: DataTargetBuilder,
+  FreeText: FreeTextBuilder,
+  List: ListBuilder,
+  MultiDataTarget: MultiDataTargetBuilder,
+  Section: SectionBuilder,
+  Shortcut: ShortcutBuilder,
+  Slider: SliderBuilder,
+  Switch: SwitchBuilder,
+  Text: TextBuilder,
+};
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
 export default function GeneralWidgetComponent(props: Props): JSX.Element {
-  const {
-    columns,
-    editMode,
-    widget,
-    idx,
-    setWidgetValue,
-    templateMap,
-    setTemplateValue,
-    setAllTemplateValues,
-    moveWidget,
-  } = props;
+  const {editMode, widget, idx, moveWidget} = props;
 
-  const common = {
-    idx,
-    setWidgetValue,
-    editMode,
-    templateMap,
-    setTemplateValue,
-    setAllTemplateValues,
-    columns,
-    moveWidget,
-  };
   const widgetType = widget.type;
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop({
@@ -173,46 +135,20 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
   if (editMode) {
     drag(drop(ref));
   }
+
+  const {controls, uiElement} = builders[widgetType](widget, props);
   return (
     <div
       ref={ref}
       style={{opacity}}
       className={classnames({
         widget: true,
-        'flex-down': true,
+        flex: true,
         'widget-drag': isDragging,
       })}
     >
-      <PlacementControls {...props} />
-      <div className="widget-body">
-        {widgetType === 'MultiDataTarget' && (
-          <MultiDataTargetComponent widget={widget as TemplateWidget<MultiDataTargetWidget>} {...common} />
-        )}
-        {widgetType === 'Switch' && (
-          <SwitchWidgetComponent widget={widget as TemplateWidget<SwitchWidget>} {...common} />
-        )}
-        {widgetType === 'List' && (
-          <ListWidgetComponent widget={widget as TemplateWidget<ListWidget>} {...common} />
-        )}
-        {widgetType === 'Text' && (
-          <TextWidgetComponent widget={widget as TemplateWidget<TextWidget>} {...common} />
-        )}
-        {widgetType === 'DataTarget' && (
-          <DataTargetWidgetComponent widget={widget as TemplateWidget<DataTargetWidget>} {...common} />
-        )}
-        {widgetType === 'Slider' && (
-          <SliderWidgetComponent widget={widget as TemplateWidget<SliderWidget>} {...common} />
-        )}
-        {widgetType === 'Section' && (
-          <SectionWidgetComponent widget={widget as TemplateWidget<SectionWidget>} {...common} />
-        )}
-        {widgetType === 'Shortcut' && (
-          <ShortcutsWidgetComponent widget={widget as TemplateWidget<ShortcutsWidget>} {...common} />
-        )}
-        {widgetType === 'FreeText' && (
-          <FreeTextWidgetComponent widget={widget as TemplateWidget<FreeTextWidget>} {...common} />
-        )}
-      </div>
+      <div className="widget-body">{uiElement}</div>
+      <WidgetConfigurationControls {...props} controls={controls} />
     </div>
   );
 }

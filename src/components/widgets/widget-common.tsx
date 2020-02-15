@@ -87,3 +87,10 @@ export function Reset(props: ResetProps): JSX.Element {
     </Tooltip>
   );
 }
+
+export function widgetName(widget: TemplateWidget<WidgetSubType>, editMode: boolean): string {
+  if (editMode) {
+    return widget.displayName ? `${widget.displayName} (${widget.name})` : widget.name;
+  }
+  return widget.displayName || widget.name;
+}

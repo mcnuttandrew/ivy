@@ -3,39 +3,22 @@ import {DataTargetWidget, TemplateWidget} from '../../templates/types';
 import {DataType} from '../../types';
 import {trim} from '../../utils';
 import DataSymbol from '../data-symbol';
-import {GeneralWidget} from './general-widget';
+import {GeneralWidget, WidgetBuilder} from './general-widget';
 import TemplateShelf from '../template-shelf';
+import {EditParameterName, EditDisplayName, widgetName} from './widget-common';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
-export default function DataTargetWidgetComponent(
-  props: GeneralWidget<TemplateWidget<DataTargetWidget>>,
-): JSX.Element {
-  const {widget, idx, setWidgetValue, editMode, templateMap, columns, setTemplateValue} = props;
-  const fieldValue = templateMap[widget.name];
-  if (!editMode) {
-    return (
-      <TemplateShelf
-        channelEncoding={trim(fieldValue as string)}
-        field={widget.name}
-        columns={columns}
-        onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
-        widget={widget}
-      />
-    );
-  }
+function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): JSX.Element {
+  const {widget, idx, setWidgetValue} = props;
   const allowedTypesSet = new Set(widget.config.allowedTypes);
 
   return (
     <div className="flex-down">
-      <TemplateShelf
-        channelEncoding={trim(fieldValue as string)}
-        field={widget.name}
-        columns={columns}
-        onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
-        widget={widget}
-        setName={(value: string): any => setWidgetValue('name', value, idx)}
-      />
+      <div className="flex">
+        <EditParameterName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+        <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
+      </div>
       <div className="flex space-evenly">
         <div className="flex-down">
           <span className="tool-description">Data Types:</span>
@@ -76,3 +59,27 @@ export default function DataTargetWidgetComponent(
     </div>
   );
 }
+
+function DataTargetWidgetComponent(props: GeneralWidget<DataTargetWidget>): JSX.Element {
+  const {widget, templateMap, columns, setTemplateValue, editMode} = props;
+  const fieldValue = templateMap[widget.name];
+  return (
+    <TemplateShelf
+      channelEncoding={trim(fieldValue as string)}
+      field={widgetName(widget, editMode)}
+      columns={columns}
+      onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
+      widget={widget}
+    />
+  );
+}
+
+const DataTargetBuilder: WidgetBuilder = (widget, common) => {
+  const widg = widget as TemplateWidget<DataTargetWidget>;
+  return {
+    controls: <DataTargetWidgetConfiguration {...common} widget={widg} />,
+    uiElement: <DataTargetWidgetComponent {...common} widget={widg} />,
+  };
+};
+
+export default DataTargetBuilder;
