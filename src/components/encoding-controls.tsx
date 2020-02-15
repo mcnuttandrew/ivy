@@ -125,7 +125,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     <div className="encoding-mode-selector flex-down">
       <div className="flex space-between full-width flex-wrap">
         <div className="template-modification-control">
-          <div className="flex" onClick={() => setEncodingMode(NONE.templateName)}>
+          <div className="flex" onClick={(): any => setEncodingMode(NONE.templateName)}>
             <div className="template-modification-control-icon">
               <TiHomeOutline />
             </div>
