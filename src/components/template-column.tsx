@@ -130,6 +130,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         setTemplateValue={setTemplateValue}
         setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
         templateMap={templateMap}
+        template={template}
         widget={widget}
       />
     );

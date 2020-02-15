@@ -4,31 +4,56 @@ import {useDrop} from 'react-dnd';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {DataTargetWidget, TemplateWidget} from '../templates/types';
-import {classnames} from '../utils';
+import {DataTargetWidget, TemplateWidget, Template} from '../templates/types';
+import {classnames, makeCustomType} from '../utils';
 import {TEXT_TYPE} from '../constants/index';
 import AllowedTypesList from './allowed-types-list';
 
+// TODO this type is a mess, it is very confusing.
 interface TemplateShelf {
-  channelEncoding?: string;
+  /**
+   * The current field held in the shelf, can be empty if nothing is there
+   */
+  shelfValue?: string;
+
+  /**
+   * The meta data for the columns
+   */
   columns: ColumnHeader[];
-  field: string;
+
+  /**
+   * The name of the shelf, the write parameter
+   */
+  shelfName: string;
+
+  /**
+   * What to do when something is droped on shelf
+   */
   onDrop: any;
+
+  /**
+   * The widget that this shelf is contained within
+   */
   widget: TemplateWidget<DataTargetWidget>;
+
+  /**
+   * The containing template
+   */
+  template: Template;
 }
 
 export default function TemplateShelf(props: TemplateShelf): JSX.Element {
-  const {channelEncoding, columns, field, onDrop, widget} = props;
-  // copy/pasta for drag and drop
+  const {shelfValue, columns, shelfName, onDrop, widget, template} = props;
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field}),
-    collect: monitor => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
+    drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field: shelfName}),
+    collect: monitor => ({isOver: monitor.isOver(), canDrop: monitor.canDrop()}),
   });
-  const options = [{display: 'Select a value', value: null, group: null}].concat(
+
+  const options = [
+    {display: 'Select a value', value: null, group: null},
+    ...template.customCards.map(card => ({display: card, value: card, group: 'Template Fields'})),
+  ].concat(
     columns
       .map(column => ({
         display: `${column.field} ${TEXT_TYPE[column.type]}`,
@@ -38,14 +63,18 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
       .sort((a, b) => a.display.localeCompare(b.display)),
   );
 
-  const columnHeader = columns.find(({field}) => channelEncoding && field === channelEncoding);
+  const columnHeader =
+    columns.find(({field}) => shelfValue && field === shelfValue) ||
+    (template.customCards || []).includes(shelfValue)
+      ? makeCustomType(shelfValue)
+      : null;
   const fieldSelector = (
     <Selector
       useGroups={true}
       options={options}
-      selectedValue={channelEncoding || ' '}
+      selectedValue={shelfValue || ' '}
       onChange={(text: string): void => {
-        onDrop({field, type: 'CARD', text: `"${text}"`, disable: false});
+        onDrop({field: shelfName, type: 'CARD', text: `"${text}"`, disable: false});
       }}
     />
   );
@@ -53,7 +82,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
     <div ref={drop} className="flex-down shelf-container">
       <div className="shelf flex">
         <div className="field-label flex space-around">
-          <div className="flex">{field}</div>
+          <div className="flex">{shelfName}</div>
           <AllowedTypesList allowedTypes={widget.config.allowedTypes} />
         </div>
         <div className="pill-dropzone">
@@ -67,17 +96,17 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
               {'drop a field here'}
             </div>
           )}
-          {channelEncoding && columnHeader && (
+          {shelfValue && columnHeader && (
             <Pill
               inEncoding={true}
-              containingShelf={field}
-              containingField={field}
+              containingShelf={shelfName}
+              containingField={shelfName}
               column={columnHeader}
               setEncodingParameter={onDrop}
               fieldSelector={fieldSelector}
             />
           )}
-          {!channelEncoding && !columnHeader && fieldSelector}
+          {!shelfValue && !columnHeader && fieldSelector}
         </div>
       </div>
     </div>

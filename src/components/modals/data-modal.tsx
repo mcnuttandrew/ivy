@@ -4,7 +4,7 @@ import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../../constants/vega-datasets-counts';
 import NONE from '../../templates/example-templates/none';
 import DataSymbol from '../data-symbol';
-import {DataType} from '../../types';
+import {DataType} from '../../templates/types';
 import Modal from './modal';
 
 interface Props {

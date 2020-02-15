@@ -1,15 +1,16 @@
 import stringify from 'json-stringify-pretty-compact';
 import {
-  TemplateWidget,
-  Template,
-  WidgetSubType,
-  TemplateMap,
   DataTargetWidget,
+  DataType,
   MultiDataTargetWidget,
+  Template,
+  TemplateMap,
+  TemplateWidget,
+  WidgetSubType,
 } from '../templates/types';
 import {AppState} from '../reducers/default-state';
 import {NONE_TEMPLATE} from '../constants/index';
-import {DataType, ColumnHeader} from '../types';
+import {ColumnHeader} from '../types';
 
 /* eslint-disable @typescript-eslint/no-empty-function*/
 export const NULL = (): void => {};
@@ -278,8 +279,8 @@ export function searchDimensionsCanMatch(
   const result = desiredColumns.every(col => {
     const availableSingleTargetField = targets
       .filter(d => !usedTargets.has(d.name))
-      .find(d => d.config.allowedTypes.includes(col.type));
-    const availableMultiTargetField = multiTargets.find(d => d.config.allowedTypes.includes(col.type));
+      .find(d => col && d.config.allowedTypes.includes(col.type));
+    const availableMultiTargetField = multiTargets.find(d => col && d.config.allowedTypes.includes(col.type));
 
     if (availableSingleTargetField) {
       usedTargets.add(availableSingleTargetField.name);
@@ -343,4 +344,8 @@ export function safeParse(code: string): string | boolean {
     x = false;
   }
   return x;
+}
+
+export function makeCustomType(field: string): ColumnHeader {
+  return {type: 'CUSTOM', field, originalType: 'CUSTOM', domain: []};
 }

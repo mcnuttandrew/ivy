@@ -1,4 +1,4 @@
-export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN';
+export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN' | 'CUSTOM';
 
 export type WidgetType =
   | 'DataTarget'
@@ -121,7 +121,11 @@ export interface Template {
    * The mechanism by which users interact with your template
    */
   widgets: TemplateWidget<WidgetSubType>[];
-  // TODO MAYBE ADD A PREVIEW PIC?
+
+  /**
+   * Advanced tool for providing special extra cards
+   */
+  customCards?: string[];
 }
 
 /**

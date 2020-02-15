@@ -10,6 +10,7 @@ export default function DataSymbol(props: Props): JSX.Element {
       return <TiSortNumerically />;
     case 'TIME':
       return <TiTime />;
+    case 'CUSTOM':
     case 'METACOLUMN':
       return <span>?</span>;
     case 'SUM':

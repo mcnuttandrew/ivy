@@ -3,8 +3,8 @@ import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {Template, TemplateWidget, WidgetSubType, WidgetType} from '../templates/types';
-import {ColumnHeader, DataType} from '../types';
+import {DataType, Template, TemplateWidget, WidgetSubType, WidgetType} from '../templates/types';
+import {ColumnHeader} from '../types';
 import * as actionTypes from '../actions/action-types';
 
 import {Action} from 'redux';
