@@ -1,14 +1,16 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, TemplateWidget, WidgetSubType} from '../types';
+import {Template, TemplateWidget, WidgetSubType, Validation} from '../types';
+import {Json, JsonMap} from '../../types';
 type GenWidget = TemplateWidget<WidgetSubType>;
 import {toList} from '../../utils';
 import {
+  makeAgg,
   makeDataTarget,
-  makeFullAgg,
+  makeMultiTarget,
   makeSection,
-  makeSimpleAgg,
   makeText,
   makeTypeSelect,
+  notCount,
   simpleList,
   simpleSwitch,
   simpleValidation,
@@ -29,16 +31,23 @@ const MARK_TYPES = [
   'TRAIL',
 ].map(x => x.toLowerCase());
 
+const META_COL_ROW = 'row';
+const META_COL_COL = 'column';
+const paramsInclude = (key: string): string => `Object.values(parameters).includes('\\"${key}\\"')`;
+const eitherMeta = `${paramsInclude(META_COL_ROW)} || ${paramsInclude(META_COL_COL)}`;
+const USING_META_COLS_VALIDATION: Validation = {queryResult: 'show', query: eitherMeta};
+
 // associated channel must have simple and full aggregates for this to work
-function aggregateConditional(key: string): any {
+function aggregateConditional(key: string): JsonMap {
+  const notNone = `(!parameters.${key} && parameters.${key}Agg !== "\\"none\\"")`;
   return {
     CONDITIONAL: {
-      query: `(parameters.${key} && parameters.${key}AggFull !== "\\"none\\"") || (!parameters.${key} && parameters.${key}AggSimple !== "\\"none\\"")`,
+      query: `!${notCount(key)} || ${notNone}`,
       true: {
         CONDITIONAL: {
-          query: `parameters.${key}`,
-          true: `[${key}AggFull]`,
-          false: `[${key}AggSimple]`,
+          query: notCount(key),
+          true: `[${key}Agg]`,
+          false: 'count',
         },
       },
       deleteKeyOnFalse: true,
@@ -46,63 +55,118 @@ function aggregateConditional(key: string): any {
   };
 }
 
-const renderObjectIf = (object: any, query: string, fieldName: string): any => ({
+function conditionalFieldName(key: string): JsonMap {
+  return {
+    CONDITIONAL: {
+      query: `${used(key)} && ${notCount(key)}`,
+      // true: `[${key}]`,
+      deleteKeyOnFalse: true,
+      true: {
+        CONDITIONAL: {
+          query: `(parameters.${key} === '\\"${META_COL_ROW}\\"') || (parameters.${key} === '\\"${META_COL_COL}\\"')`,
+          true: {repeat: `[${key}]`},
+          false: `[${key}]`,
+        },
+      },
+    },
+  };
+}
+
+const renderObjectIf = (object: Json, query: string, fieldName: string): JsonMap => ({
   [fieldName]: {CONDITIONAL: {query, true: object, deleteKeyOnFalse: true}},
 });
-const shelfProgram: any = {
-  $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
-  transform: [] as any[],
-  encoding: {
-    ...['X', 'Y'].reduce((acc: any, key) => {
-      return {
-        ...acc,
-        [key.toLowerCase()]: {
-          field: {CONDITIONAL: {query: used(key), true: `[${key}]`, deleteKeyOnFalse: true}},
-          type: `[${key}Type]`,
-          aggregate: aggregateConditional(key),
-          scale: {
-            // zero: `[${key}IncludeZero]`,
-            zero: {CONDITIONAL: {query: used(key), true: `[${key}IncludeZero]`, deleteKeyOnFalse: true}},
-            type: {CONDITIONAL: {query: used(key), true: `[${key}ScaleType]`, deleteKeyOnFalse: true}},
-            // CONDITIONAL: {true: {zero: `[${key}IncludeZero]`}, false: null, query: used(key)}
+const encoding = {
+  ...['X', 'Y'].reduce((acc: JsonMap, key) => {
+    const output = {
+      field: conditionalFieldName(key),
+      type: `[${key}Type]`,
+      aggregate: aggregateConditional(key),
+      scale: {
+        zero: {
+          CONDITIONAL: {
+            query: `${used(key)} && parameters.${key}IncludeZero`,
+            true: `[${key}IncludeZero]`,
+            deleteKeyOnFalse: true,
           },
         },
-      };
-    }, {}),
-
-    ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
-    ...renderObjectIf(
-      {
-        field: {CONDITIONAL: {query: 'parameters.Color', true: '[Color]', deleteKeyOnFalse: true}},
-        type: '[ColorType]',
-        aggregate: aggregateConditional('Color'),
+        type: {CONDITIONAL: {query: used(key), true: `[${key}ScaleType]`, deleteKeyOnFalse: true}},
+        // CONDITIONAL: {true: {zero: `[${key}IncludeZero]`}, false: null, query: used(key)}
       },
-      'parameters.Color || (parameters.ColorAggSimple !== "\\"none\\"")',
-      'color',
-    ),
-    ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, used('Shape'), 'shape'),
-    ...renderObjectIf({field: '[Text]', type: '[TextType]'}, used('Text'), 'text'),
-    ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, used('Detail'), 'detail'),
-    ...['Row', 'Column'].reduce((acc, key) => {
-      const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, used(key), key.toLowerCase());
-      return {...acc, ...newObj};
-    }, {}),
+    };
+    return {
+      ...acc,
+      ...renderObjectIf(output, used(key), key.toLowerCase()),
+    };
+  }, {}),
+
+  ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
+  ...renderObjectIf(
+    {field: conditionalFieldName('Color'), type: '[ColorType]', aggregate: aggregateConditional('Color')},
+    used('Color'),
+    'color',
+  ),
+  ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, used('Shape'), 'shape'),
+  ...renderObjectIf({field: '[Text]', type: '[TextType]'}, used('Text'), 'text'),
+  ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, used('Detail'), 'detail'),
+  ...['Row', 'Column'].reduce((acc, key) => {
+    const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, used(key), key.toLowerCase());
+    return {...acc, ...newObj};
+  }, {}),
+};
+const mark = {type: '[markType]', tooltip: true};
+const PolestarBody: Json = {
+  $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
+  transform: [] as JsonMap[],
+  repeat: {
+    CONDITIONAL: {
+      query: eitherMeta,
+      true: {
+        row: {
+          CONDITIONAL: {
+            query: paramsInclude(META_COL_ROW),
+            true: '[row]',
+            deleteKeyOnFalse: true,
+          },
+        },
+        column: {
+          CONDITIONAL: {
+            query: paramsInclude(META_COL_COL),
+            true: '[column]',
+            deleteKeyOnFalse: true,
+          },
+        },
+      },
+      deleteKeyOnFalse: true,
+    },
   },
-  mark: {type: '[markType]', tooltip: true},
+  encoding: {CONDITIONAL: {query: `!${eitherMeta}`, true: encoding, deleteKeyOnFalse: true}},
+  mark: {CONDITIONAL: {query: `!${eitherMeta}`, true: mark, deleteKeyOnFalse: true}},
+  spec: {CONDITIONAL: {query: eitherMeta, true: {encoding, mark}, deleteKeyOnFalse: true}},
 };
 
-const SHELF: Template = {
+const Polestar: Template = {
   templateName: 'Polestar',
   templateDescription:
     'A tableau-style shelf builder, facilitates a wide variety of charting and exploration tasks.',
   templateLanguage: 'vega-lite',
   templateAuthor: 'HYDRA-AUTHORS',
-  customCards: ['COUNT'],
-  code: stringify(shelfProgram),
+  customCards: ['COUNT', META_COL_ROW, META_COL_COL],
+  code: stringify(PolestarBody),
   widgets: [
+    makeSection('Meta Columns Section', [USING_META_COLS_VALIDATION]),
+    makeText('Meta Columns', [USING_META_COLS_VALIDATION]),
+    makeMultiTarget({
+      dim: META_COL_ROW,
+      validations: [{queryResult: 'show', query: paramsInclude(META_COL_ROW)}],
+    }),
+    makeMultiTarget({
+      dim: META_COL_COL,
+      validations: [{queryResult: 'show', query: paramsInclude(META_COL_COL)}],
+    }),
+
     // x & y dimensions
-    makeSection('Encoding header'),
-    makeText('Encoding'),
+    makeSection('Encoding header', []),
+    makeText('Encoding', []),
     ...['X', 'Y'].reduce((acc: GenWidget[], key: string) => {
       return acc.concat([
         makeDataTarget(key),
@@ -116,7 +180,7 @@ const SHELF: Template = {
             simpleValidation(key),
             {
               queryResult: 'show',
-              query: `Boolean(parameters.${key}) && parameters.${key}Type === "\\"quantitative\\""`,
+              query: `parameters.${key} && parameters.${key}Type === "\\"quantitative\\""`,
             },
           ],
         }),
@@ -125,14 +189,18 @@ const SHELF: Template = {
           displayName: 'Include Zero',
           validations: [simpleValidation(key)],
         }),
-        simpleSwitch({name: `${key}bin`, displayName: 'Bin', validations: [simpleValidation(key)]}),
-        makeFullAgg(key),
-        makeSimpleAgg(key),
+        simpleSwitch({
+          name: `${key}bin`,
+          displayName: 'Bin',
+          validations: [simpleValidation(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
+        }),
+        makeAgg(key),
+        // makeSimpleAgg(key),
       ]);
     }, []),
 
     // Mark type
-    makeSection('MarkDivider'),
+    makeSection('MarkDivider', []),
     simpleList({name: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('circle')}),
     {
       type: 'Shortcut',
@@ -153,9 +221,11 @@ const SHELF: Template = {
       return acc.concat([
         makeDataTarget(key),
         makeTypeSelect(key, 'ordinal'),
-        simpleSwitch({name: `${key}bin`}),
-        makeFullAgg(key),
-        makeSimpleAgg(key),
+        simpleSwitch({
+          name: `${key}bin`,
+          validations: [simpleValidation(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
+        }),
+        makeAgg(key),
       ]);
     }, []),
 
@@ -166,13 +236,12 @@ const SHELF: Template = {
     // text
     makeDataTarget('Text'),
     makeTypeSelect('Text', 'nominal'),
-    makeFullAgg('Text'),
-    makeSimpleAgg('Text'),
+    makeAgg('Text'),
 
     // row / column
-    makeSection('Facet Divider'),
-    makeText('Repeat Small Multiply'),
+    makeSection('Facet Divider', []),
+    makeText('Repeat Small Multiply', []),
     ...['Row', 'Column'].reduce((acc: GenWidget[], key: string) => acc.concat([makeDataTarget(key)]), []),
   ],
 };
-export default SHELF;
+export default Polestar;

@@ -35,7 +35,7 @@ function evaluateQuery(query: ValidationQuery, templateMap: TemplateMap): boolea
     const generatedContent = new Function('parameters', `return ${query}`);
     result = Boolean(generatedContent(templateMap));
   } catch (e) {
-    console.log('Query Evalu Error', e);
+    console.log('Query Evalu Error', e, query);
   }
   return result;
 }
@@ -46,7 +46,7 @@ export function evaluateShortcut(shortcut: Shortcut, templateMap: TemplateMap): 
     const generatedContent = new Function('parameters', `return ${shortcut.shortcutFunction}`);
     newMap = generatedContent(templateMap);
   } catch (e) {
-    console.log('Short cut error', e);
+    console.log('Short cut error', e, shortcut.shortcutFunction, shortcut.label);
   }
   return newMap;
 }

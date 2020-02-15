@@ -409,7 +409,8 @@ input[type="number"]::-webkit-outer-spin-button {
   background: pink;
 }
 
-.metacolumn-pill {
+.metacolumn-pill,
+.custom-pill {
   background: goldenrod;
 }
 
@@ -495,6 +496,12 @@ input[type="number"]::-webkit-outer-spin-button {
   position: absolute;
   top: -3px;
   width: 100%;
+}
+
+.multi-shelf .field-label {
+  font-weight: 900;
+  min-width: 50px;
+  width: 50px;
 }
 
 .shelf .label-control {

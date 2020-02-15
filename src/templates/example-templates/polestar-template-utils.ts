@@ -1,13 +1,14 @@
 import {
   DataTargetWidget,
-  ListWidget,
-  SwitchWidget,
-  TextWidget,
-  TemplateWidget,
   DataType,
+  ListWidget,
+  MultiDataTargetWidget,
   SectionWidget,
-  ValidationQuery,
+  SwitchWidget,
+  TemplateWidget,
+  TextWidget,
   Validation,
+  ValidationQuery,
 } from '../types';
 import {toList} from '../../utils';
 const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
@@ -19,6 +20,7 @@ const spatialAggs = [...justCountAgg, ...toList(['min', 'max', 'sum', 'mean', 'm
 
 export const used = (x: string): ValidationQuery => `parameters.${x}`;
 export const unused = (x: string): ValidationQuery => `!parameters.${x}`;
+export const notCount = (key: string): ValidationQuery => `parameters.${key} !== "\\"COUNT\\""`;
 
 /**
  * build a simple validation
@@ -33,17 +35,35 @@ export const makeDataTarget = (dim: string): TemplateWidget<DataTargetWidget> =>
   validations: [],
 });
 
-export const makeText = (textLabel: string): TemplateWidget<TextWidget> => ({
+interface MakeMultiTargetType {
+  dim: string;
+  validations: Validation[];
+}
+export const makeMultiTarget = ({
+  dim,
+  validations,
+}: MakeMultiTargetType): TemplateWidget<MultiDataTargetWidget> =>
+  ({
+    name: dim,
+    type: 'MultiDataTarget',
+    config: {allowedTypes: ALLDATA_TYPES, required: true, minNumberOfTargets: 0},
+    validations,
+  } as TemplateWidget<MultiDataTargetWidget>);
+
+export const makeText = (textLabel: string, validations: Validation[]): TemplateWidget<TextWidget> => ({
   name: textLabel,
   type: 'Text',
   config: {text: textLabel},
-  validations: [],
+  validations,
 });
-export const makeSection = (sectionLabel: string): TemplateWidget<SectionWidget> => ({
+export const makeSection = (
+  sectionLabel: string,
+  validations: Validation[],
+): TemplateWidget<SectionWidget> => ({
   name: sectionLabel,
   type: 'Section',
   config: null,
-  validations: [],
+  validations,
 });
 
 type displayType = {display: any; value: any};
@@ -74,22 +94,13 @@ export const simpleList = ({
   };
 };
 
-// varitals of simpleList
-export const makeSimpleAgg = (key: string): TemplateWidget<ListWidget> =>
+export const makeAgg = (key: string): TemplateWidget<ListWidget> =>
   simpleList({
-    name: `${key}AggSimple`,
-    list: justCountAgg,
-    displayName: `Aggregate`,
-    defaultVal: toQuote('none'),
-    validations: [{queryResult: 'hide', query: unused(key)}],
-  });
-export const makeFullAgg = (key: string): TemplateWidget<ListWidget> =>
-  simpleList({
-    name: `${key}AggFull`,
+    name: `${key}Agg`,
     list: spatialAggs,
     displayName: `Aggregate`,
     defaultVal: toQuote('none'),
-    validations: [{queryResult: 'hide', query: used(key)}],
+    validations: [{queryResult: 'show', query: `${used(key)} && ${notCount(key)}`}],
   });
 
 export const makeTypeSelect = (key: string, defaultVal: string): TemplateWidget<ListWidget> =>
@@ -98,7 +109,7 @@ export const makeTypeSelect = (key: string, defaultVal: string): TemplateWidget<
     list: VegaLiteDataTypes,
     displayName: 'Data type',
     defaultVal: toQuote(defaultVal),
-    validations: [simpleValidation(key)],
+    validations: [simpleValidation(key), {queryResult: 'show', query: `${used(key)} && ${notCount(key)}`}],
   });
 
 interface SimpleSwitchType {
