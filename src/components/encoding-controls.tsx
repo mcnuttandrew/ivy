@@ -13,6 +13,7 @@ import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
+import NONE from '../templates/example-templates/none';
 import SimpleTooltip from './simple-tooltip';
 
 interface Props {
@@ -48,6 +49,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     setBlankTemplate,
     setCodeMode,
     setEditMode,
+    setEncodingMode,
     setProgrammaticView,
     template,
     templateSaveState,
@@ -56,6 +58,7 @@ export default function EncodingControls(props: Props): JSX.Element {
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const isGrammar = !template;
+  const onGallery = template && template.templateName === NONE.templateName;
   const FULL_BUTTONS = [
     {
       disabled: false,
@@ -78,8 +81,10 @@ export default function EncodingControls(props: Props): JSX.Element {
       tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
     },
     {
-      disabled: false,
-      onClick: (): any => chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]),
+      disabled: onGallery,
+      onClick: onGallery
+        ? NULL
+        : (): any => chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]),
       icon: <TiFlowChildren />,
       label: 'Fork',
       tooltip:
@@ -101,8 +106,8 @@ export default function EncodingControls(props: Props): JSX.Element {
           : 'Save the current template in to the template store, overwrites anything with the same name.',
     },
     {
-      disabled: isGrammar,
-      onClick: isGrammar ? NULL : (): any => setEditMode(!editMode),
+      disabled: isGrammar || onGallery,
+      onClick: isGrammar || onGallery ? NULL : (): any => setEditMode(!editMode),
       icon: <TiEdit />,
       label: editMode ? 'Stop Edit' : 'Start Edit',
       tooltip:
@@ -120,7 +125,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     <div className="encoding-mode-selector flex-down">
       <div className="flex space-between full-width flex-wrap">
         <div className="template-modification-control">
-          <div className="flex">
+          <div className="flex" onClick={() => setEncodingMode(NONE.templateName)}>
             <div className="template-modification-control-icon">
               <TiHomeOutline />
             </div>

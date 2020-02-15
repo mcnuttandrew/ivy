@@ -126,9 +126,10 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
 interface CodeCollapseProps {
   showProgrammaticMode: boolean;
   setProgrammaticView: GenericAction<boolean>;
+  disable?: boolean;
 }
 export function CodeCollapse(props: CodeCollapseProps): JSX.Element {
-  const {showProgrammaticMode, setProgrammaticView} = props;
+  const {showProgrammaticMode, setProgrammaticView, disable} = props;
   return (
     <div
       className={classnames({
@@ -136,10 +137,16 @@ export function CodeCollapse(props: CodeCollapseProps): JSX.Element {
         'code-collapse': true,
         collapsed: !showProgrammaticMode,
       })}
-      onClick={(): any => setProgrammaticView(!showProgrammaticMode)}
+      onClick={(): any => {
+        if (!disable) {
+          setProgrammaticView(!showProgrammaticMode);
+        }
+      }}
     >
-      <div>{showProgrammaticMode ? 'Hide Code' : 'Show Code'}</div>
-      {showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
+      <div>
+        {disable ? 'CODE EDITOR DISABLED ON GALLERY' : showProgrammaticMode ? 'Hide Code' : 'Show Code'}
+      </div>
+      {disable ? null : showProgrammaticMode ? <TiArrowSortedDown /> : <TiArrowSortedUp />}
     </div>
   );
 }
