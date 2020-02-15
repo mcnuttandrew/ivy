@@ -97,6 +97,7 @@ const SHELF: Template = {
     'A tableau-style shelf builder, facilitates a wide variety of charting and exploration tasks.',
   templateLanguage: 'vega-lite',
   templateAuthor: 'HYDRA-AUTHORS',
+  customCards: ['COUNT'],
   code: stringify(shelfProgram),
   widgets: [
     // x & y dimensions

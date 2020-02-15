@@ -5,28 +5,28 @@ import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {MultiDataTargetWidget, TemplateWidget, DataType} from '../templates/types';
-import {classnames} from '../utils';
-import {TEXT_TYPE} from '../constants/index';
+import {MultiDataTargetWidget, TemplateWidget, DataType, Template} from '../templates/types';
+import {classnames, makeOptionsForDropdown, makeCustomType} from '../utils';
 
 interface Props {
-  channelEncodings?: string[];
+  shelfValues?: string[];
   columns: ColumnHeader[];
-  field: string;
+  shelfName: string;
   onDrop: any;
   widget: TemplateWidget<MultiDataTargetWidget>;
+  template: Template;
 }
 
 export default function TemplateMultiShelf(props: Props): JSX.Element {
-  const {channelEncodings, columns, field, onDrop, widget} = props;
+  const {shelfValues, columns, shelfName, onDrop, widget, template} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
     drop: (item: any) =>
       onDrop({
         ...item,
-        text: channelEncodings.concat([`${item.text}`]),
-        field,
+        text: shelfValues.concat([`${item.text}`]),
+        field: shelfName,
         multiTarget: true,
       }),
     collect: monitor => ({
@@ -37,22 +37,18 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
   const allowed = widget.config.allowedTypes;
   // if everything is allowed then recomendations dont matter much here
   const useGroupsAsTypes = ['DIMENSION', 'MEASURE', 'TIME'].every((key: DataType) => allowed.includes(key));
-  const options = [{display: 'Select a value', value: null, group: null}].concat(
-    columns.map(column => ({
-      display: `${column.field} ${TEXT_TYPE[column.type]}`,
-      value: column.field,
-      group: useGroupsAsTypes
-        ? column.type
-        : widget.config.allowedTypes.includes(column.type)
-        ? 'RECOMENDED'
-        : 'OUT OF TYPE',
-    })),
-  );
-  const columnHeaders = channelEncodings
-    .map(channelEncoding => columns.find(({field}) => channelEncoding && field === channelEncoding))
+  const options = makeOptionsForDropdown({template, widget, columns, useGroupsAsTypes});
+
+  const columnHeaders = shelfValues
+    .map(shelfValue => {
+      return columns.find(({field}) => shelfValue && field === shelfValue) ||
+        (template.customCards || []).includes(shelfValue)
+        ? makeCustomType(shelfValue)
+        : null;
+    })
     .filter(d => d);
   const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) < columnHeaders.length;
-  const dropCommon = {field, multiTarget: true};
+  const dropCommon = {field: shelfName, multiTarget: true};
 
   return (
     <div
@@ -65,7 +61,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       <div className="multi-shelf flex">
         <div className="field-label flex-down space-around">
           <AllowedTypesList allowedTypes={allowed} />
-          <div>{field}</div>
+          <div>{shelfName}</div>
         </div>
         <div className="pill-dropzone">
           {columnHeaders.map((columnHeader, idx: number) => {
@@ -73,12 +69,12 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
               <Pill
                 key={`${columnHeader.field}-${idx}`}
                 inEncoding={true}
-                containingShelf={field}
-                containingField={field}
+                containingShelf={shelfName}
+                containingField={shelfName}
                 column={columnHeader}
                 setEncodingParameter={(x: any): void => {
                   onDrop({
-                    text: channelEncodings.filter(d => d !== x.column.field),
+                    text: shelfValues.filter(d => d !== x.column.field),
                     ...dropCommon,
                   });
                 }}
@@ -88,7 +84,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
                     options={options}
                     selectedValue={columnHeader.field || ' '}
                     onChange={(text: string): void => {
-                      const newColumns = [...channelEncodings];
+                      const newColumns = [...shelfValues];
                       newColumns[idx] = `${text}`;
                       onDrop({text: newColumns, ...dropCommon});
                     }}
@@ -98,12 +94,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
             );
           })}
           {!maxValsHit && (
-            <div
-              className={classnames({
-                'blank-pill': true,
-                'highlight-drop': isOver || canDrop,
-              })}
-            >
+            <div className={classnames({'blank-pill': true, 'highlight-drop': isOver || canDrop})}>
               {'drop a field here'}
             </div>
           )}
@@ -111,13 +102,10 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
             <div className="flex">
               <Selector
                 useGroups={true}
-                options={options.filter(d => !channelEncodings.includes(d.value))}
+                options={options.filter(d => !shelfValues.includes(d.value))}
                 selectedValue={' '}
                 onChange={(x: any): void => {
-                  onDrop({
-                    text: channelEncodings.concat([`${x}`]),
-                    ...dropCommon,
-                  });
+                  onDrop({text: shelfValues.concat([`${x}`]), ...dropCommon});
                 }}
               />
             </div>

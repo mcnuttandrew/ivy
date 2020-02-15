@@ -5,7 +5,7 @@ import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiInfoLarge} from 'react-icons/ti';
 import DataSymbol from './data-symbol';
-import {DataType} from '../types';
+import {DataType} from '../templates/types';
 
 type TypeCounts = {[x: string]: number};
 interface Props {

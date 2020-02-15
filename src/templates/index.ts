@@ -1,6 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
+  DataType,
   ListWidget,
   MultiDataTargetWidget,
   SectionWidget,
@@ -13,7 +14,6 @@ import {
   ShortcutsWidget,
 } from './types';
 import {EMPTY_SPEC} from '../reducers/default-state';
-import {DataType} from '../types';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
 import ATOM from './example-templates/atom';
