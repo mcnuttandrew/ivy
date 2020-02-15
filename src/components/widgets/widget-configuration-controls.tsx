@@ -3,7 +3,7 @@ import {TiDelete, TiCog} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
 import {widgetInUse} from '../../utils';
-import {TemplateMap, TemplateWidget, WidgetSubType} from '../../templates/types';
+import {TemplateMap, TemplateWidget, WidgetSubType, Validation} from '../../templates/types';
 import {ColumnHeader} from '../../types';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
@@ -31,9 +31,20 @@ interface ValidationBuilderProps {
   widget: TemplateWidget<WidgetSubType>;
 }
 
+type TalidationUpdateLens = (d: Validation, val: any) => Validation;
+type TalidationUpdate = (jdx: number, updater: TalidationUpdateLens) => (value: any) => void;
+const fromStr: TalidationUpdateLens = (d, value): any => ({...d, queryResult: value} as Validation);
+const fromEvent: TalidationUpdateLens = (d, event): any => ({...d, query: event.target.value});
+
 function ValidationBuilder(props: ValidationBuilderProps): JSX.Element {
   const {widget, setWidgetValue, idx} = props;
   const validations = widget.validations || [];
+
+  const validationUpdate: TalidationUpdate = (jdx, updater) => (val): any => {
+    const mapper = (d: Validation, kdx: number): any => (jdx !== kdx ? {...d} : updater(d, val));
+    setWidgetValue('validations', validations.map(mapper), idx);
+  };
+
   return (
     <React.Fragment>
       <h3>Validations</h3>
@@ -45,32 +56,12 @@ function ValidationBuilder(props: ValidationBuilderProps): JSX.Element {
               <Selector
                 options={['show', 'hide'].map(key => ({display: key, value: key}))}
                 selectedValue={validation.queryResult}
-                onChange={(value: any): any => {
-                  const updatedValidations = validations.map((d, kdx) => {
-                    if (jdx === kdx) {
-                      return {...d};
-                    }
-                    return {...d, queryResult: value};
-                  });
-                  setWidgetValue('validations', updatedValidations, idx);
-                }}
+                onChange={validationUpdate(jdx, fromStr)}
               />
             </AddLabelToWidget>
             <AddLabelToWidget label="Query">
               <IgnoreKeys style={{height: '100%'}}>
-                <input
-                  value={validation.query}
-                  type="text"
-                  onChange={(event): any => {
-                    const updatedValidations = validations.map((d, kdx) => {
-                      if (jdx === kdx) {
-                        return {...d};
-                      }
-                      return {...d, query: event.target.value};
-                    });
-                    setWidgetValue('validations', updatedValidations, idx);
-                  }}
-                />
+                <input value={validation.query} type="text" onChange={validationUpdate(jdx, fromEvent)} />
               </IgnoreKeys>
             </AddLabelToWidget>
           </div>
@@ -98,7 +89,7 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
         placement="right"
         trigger="click"
         overlay={
-          <div className="flex-down">
+          <div className="flex-down widget-config-tooltip">
             <h3>{widget.type}</h3>
             {!dontShowUsedIf.has(widget.type) && (
               <h5>{`Widget is currently ${widgetInUse(code, widget.name) ? 'in use' : 'not used'}`}</h5>

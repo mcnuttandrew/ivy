@@ -4,7 +4,6 @@ import {GeneralWidget, WidgetBuilder} from './general-widget';
 
 export function TextWidgetConfiguration(props: GeneralWidget<TextWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
-  console.log('TODO STYLING');
   return (
     <div className="text-widget">
       <textarea
