@@ -5,8 +5,7 @@ import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
 import {DataTargetWidget, TemplateWidget, Template} from '../templates/types';
-import {classnames, makeCustomType} from '../utils';
-import {TEXT_TYPE} from '../constants/index';
+import {classnames, makeCustomType, makeOptionsForDropdown} from '../utils';
 import AllowedTypesList from './allowed-types-list';
 
 // TODO this type is a mess, it is very confusing.
@@ -50,19 +49,6 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
     collect: monitor => ({isOver: monitor.isOver(), canDrop: monitor.canDrop()}),
   });
 
-  const options = [
-    {display: 'Select a value', value: null, group: null},
-    ...template.customCards.map(card => ({display: card, value: card, group: 'Template Fields'})),
-  ].concat(
-    columns
-      .map(column => ({
-        display: `${column.field} ${TEXT_TYPE[column.type]}`,
-        value: column.field,
-        group: widget.config.allowedTypes.includes(column.type) ? 'RECOMENDED' : 'OUT OF TYPE',
-      }))
-      .sort((a, b) => a.display.localeCompare(b.display)),
-  );
-
   const columnHeader =
     columns.find(({field}) => shelfValue && field === shelfValue) ||
     (template.customCards || []).includes(shelfValue)
@@ -71,7 +57,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
   const fieldSelector = (
     <Selector
       useGroups={true}
-      options={options}
+      options={makeOptionsForDropdown({template, widget, columns})}
       selectedValue={shelfValue || ' '}
       onChange={(text: string): void => {
         onDrop({field: shelfName, type: 'CARD', text: `"${text}"`, disable: false});

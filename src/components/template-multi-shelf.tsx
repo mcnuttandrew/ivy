@@ -5,9 +5,8 @@ import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {MultiDataTargetWidget, TemplateWidget, DataType} from '../templates/types';
-import {classnames} from '../utils';
-import {TEXT_TYPE} from '../constants/index';
+import {MultiDataTargetWidget, TemplateWidget, DataType, Template} from '../templates/types';
+import {classnames, makeOptionsForDropdown, makeCustomType} from '../utils';
 
 interface Props {
   shelfValues?: string[];
@@ -15,10 +14,11 @@ interface Props {
   shelfName: string;
   onDrop: any;
   widget: TemplateWidget<MultiDataTargetWidget>;
+  template: Template;
 }
 
 export default function TemplateMultiShelf(props: Props): JSX.Element {
-  const {shelfValues, columns, shelfName, onDrop, widget} = props;
+  const {shelfValues, columns, shelfName, onDrop, widget, template} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -26,7 +26,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       onDrop({
         ...item,
         text: shelfValues.concat([`${item.text}`]),
-        shelfName,
+        field: shelfName,
         multiTarget: true,
       }),
     collect: monitor => ({
@@ -37,19 +37,15 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
   const allowed = widget.config.allowedTypes;
   // if everything is allowed then recomendations dont matter much here
   const useGroupsAsTypes = ['DIMENSION', 'MEASURE', 'TIME'].every((key: DataType) => allowed.includes(key));
-  const options = [{display: 'Select a value', value: null, group: null}].concat(
-    columns.map(column => ({
-      display: `${column.field} ${TEXT_TYPE[column.type]}`,
-      value: column.field,
-      group: useGroupsAsTypes
-        ? column.type
-        : widget.config.allowedTypes.includes(column.type)
-        ? 'RECOMENDED'
-        : 'OUT OF TYPE',
-    })),
-  );
+  const options = makeOptionsForDropdown({template, widget, columns, useGroupsAsTypes});
+
   const columnHeaders = shelfValues
-    .map(channelEncoding => columns.find(({field}) => channelEncoding && field === channelEncoding))
+    .map(shelfValue => {
+      return columns.find(({field}) => shelfValue && field === shelfValue) ||
+        (template.customCards || []).includes(shelfValue)
+        ? makeCustomType(shelfValue)
+        : null;
+    })
     .filter(d => d);
   const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) < columnHeaders.length;
   const dropCommon = {field: shelfName, multiTarget: true};
@@ -98,12 +94,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
             );
           })}
           {!maxValsHit && (
-            <div
-              className={classnames({
-                'blank-pill': true,
-                'highlight-drop': isOver || canDrop,
-              })}
-            >
+            <div className={classnames({'blank-pill': true, 'highlight-drop': isOver || canDrop})}>
               {'drop a field here'}
             </div>
           )}

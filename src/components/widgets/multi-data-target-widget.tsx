@@ -79,7 +79,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
 }
 
 function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): JSX.Element {
-  const {widget, templateMap, columns, setTemplateValue} = props;
+  const {widget, templateMap, columns, setTemplateValue, template} = props;
   const fieldValue = templateMap[widget.name];
   return (
     <div className="multi-data-target-widget">
@@ -89,6 +89,7 @@ function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): 
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
+        template={template}
       />
     </div>
   );
