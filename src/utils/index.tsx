@@ -363,7 +363,7 @@ export function makeOptionsForDropdown(
   const {template, columns, widget, useGroupsAsTypes} = props;
   return [
     {display: 'Select a value', value: null, group: null},
-    ...template.customCards.map(card => ({display: card, value: card, group: 'Template Fields'})),
+    ...(template.customCards || []).map(card => ({display: card, value: card, group: 'Template Fields'})),
   ].concat(
     columns
       .map(column => ({
