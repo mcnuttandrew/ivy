@@ -18,18 +18,8 @@ import {
   used,
 } from './polestar-template-utils';
 
-const MARK_TYPES = [
-  'AREA',
-  'BAR',
-  'CIRCLE',
-  'LINE',
-  'POINT',
-  'RECT',
-  'SQUARE',
-  'TEXT',
-  'TICK',
-  'TRAIL',
-].map(x => x.toLowerCase());
+const PRIMITVES = ['AREA', 'BAR', 'CIRCLE', 'LINE', 'POINT', 'RECT', 'SQUARE', 'TEXT', 'TICK', 'TRAIL'];
+const MARK_TYPES = PRIMITVES.map(x => x.toLowerCase());
 
 const META_COL_ROW = 'row';
 const META_COL_COL = 'column';
@@ -72,16 +62,6 @@ function zeroConditional(key: string): JsonMap {
     CONDITIONAL: {
       query: `${used(key)} && parameters.${key}IncludeZero && parameters.${key}Agg === "\\"quantitative\\""`,
       true: `[${key}IncludeZero]`,
-      deleteKeyOnFalse: true,
-    },
-  };
-}
-
-function typeConditional(key: string): JsonMap {
-  return {
-    CONDITIONAL: {
-      query: notCount(key),
-      true: `[${key}Type]`,
       deleteKeyOnFalse: true,
     },
   };
@@ -157,8 +137,8 @@ const PolestarBody: Json = {
       deleteKeyOnFalse: true,
     },
   },
-  encoding: {CONDITIONAL: {query: `!${eitherMeta}`, true: encoding, deleteKeyOnFalse: true}},
-  mark: {CONDITIONAL: {query: `!${eitherMeta}`, true: mark, deleteKeyOnFalse: true}},
+  encoding: {CONDITIONAL: {query: `!(${eitherMeta})`, true: encoding, deleteKeyOnFalse: true}},
+  mark: {CONDITIONAL: {query: `!(${eitherMeta})`, true: mark, deleteKeyOnFalse: true}},
   spec: {CONDITIONAL: {query: eitherMeta, true: {encoding, mark}, deleteKeyOnFalse: true}},
 };
 
@@ -213,7 +193,6 @@ const Polestar: Template = {
           validations: [simpleValidation(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
         }),
         makeAgg(key),
-        // makeSimpleAgg(key),
       ]);
     }, []),
 
