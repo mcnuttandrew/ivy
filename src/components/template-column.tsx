@@ -8,7 +8,7 @@ import {
   MoveWidgetPayload,
 } from '../actions';
 import {Template, TemplateWidget, WidgetSubType, TemplateMap} from '../templates/types';
-import {classnames} from '../utils';
+import {classnames, toSet} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
@@ -94,9 +94,6 @@ function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {
 
   return sections.sections.filter(d => d.length).concat([sections.currentSection]);
 }
-
-const toSet = (widgets: TemplateWidget<WidgetSubType>[]): Set<string> =>
-  widgets.reduce((acc, row) => acc.add(row.name), new Set() as Set<string>);
 
 export default class TemplateColumn extends React.Component<TemplateColumnProps> {
   render(): JSX.Element {

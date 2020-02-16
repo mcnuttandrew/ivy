@@ -160,7 +160,7 @@ export default function Pill(props: PillProps): JSX.Element {
     }),
   });
   const showAddFilter = !isMeta && !inEncoding && !hideGUI && createFilter && !isCustom;
-  const showAutoAdd = !isMeta && !inEncoding && !hideGUI && addToNextOpenSlot && !isCustom;
+  const showAutoAdd = !isMeta && !inEncoding && !hideGUI && addToNextOpenSlot;
   const showTypeCoerce = !isMeta && !inEncoding && coerceType && !isCustom;
   return (
     <div

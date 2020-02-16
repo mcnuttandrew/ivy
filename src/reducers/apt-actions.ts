@@ -7,8 +7,9 @@ import {
 } from '../templates/types';
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
-import {findField} from '../utils';
+import {findField, getOrMakeColumn, toSet} from '../utils';
 import produce from 'immer';
+import {applyQueries} from '../hydra-lang';
 
 export const TYPE_TRANSLATE: {[s: string]: string} = {
   DIMENSION: 'nominal',
@@ -62,39 +63,45 @@ const grammarBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
 const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
   const templateMap: TemplateMap = state.templateMap;
-  const column = findField(state, payload.field);
-  const widgetIndex = template.widgets.reduce((acc, widget, idx) => {
-    acc[widget.name] = idx;
-    return acc;
-  }, {} as {[x: string]: number});
+  // const column = findField(state, payload.field);
+  const column = getOrMakeColumn(payload.field, state.columns, template);
+  const allowedWidgets = toSet(applyQueries(template, templateMap));
   const openDropTargets = template.widgets
     // select just the open drop targets
     .filter(
-      (widget: TemplateWidget<WidgetSubType>) => widget.type === 'DataTarget' && !templateMap[widget.name],
+      (widget: TemplateWidget<WidgetSubType>) =>
+        allowedWidgets.has(widget.name) && widget.type === 'DataTarget' && !templateMap[widget.name],
     )
     // and that allow the type of drop column
-    .filter((widget: TemplateWidget<DataTargetWidget>) =>
-      widget.config.allowedTypes.find((type: string) => type === column.type),
+    .filter(
+      (widget: TemplateWidget<DataTargetWidget>) =>
+        widget.config.allowedTypes.includes(column.type) || column.type === 'CUSTOM',
     );
 
   const openMultiDropTargets = template.widgets.filter((widget: TemplateWidget<WidgetSubType>) => {
     // select just the open drop targets
-    if (widget.type !== 'MultiDataTarget') {
+    if (widget.type !== 'MultiDataTarget' || !allowedWidgets.has(widget.name)) {
       return false;
     }
     // and that allow the type of drop column
     const {allowedTypes, maxNumberOfTargets} = widget.config as MultiDataTargetWidget;
-    const multiTargetContainsDesiredType = !!allowedTypes.find((type: string) => type === column.type);
+    const multiTargetContainsDesiredType = allowedTypes.includes(column.type) || column.type === 'CUSTOM';
     // and have space
     const hasSpace = (templateMap[widget.name] || []).length < maxNumberOfTargets || !maxNumberOfTargets;
     return multiTargetContainsDesiredType && hasSpace;
   });
 
+  const widgetIndex = template.widgets.reduce((acc, widget, idx) => {
+    acc[widget.name] = idx;
+    return acc;
+  }, {} as {[x: string]: number});
   const targets = []
     .concat(openDropTargets)
     .concat(openMultiDropTargets)
     .sort((a, b) => widgetIndex[a.name] - widgetIndex[b.name]);
+
   if (!targets.length) {
+    console.log('no targets');
     // TODO add messaging about this
     return state;
   }

@@ -39,17 +39,11 @@ const USING_META_COLS_VALIDATION: Validation = {queryResult: 'show', query: eith
 
 // associated channel must have simple and full aggregates for this to work
 function aggregateConditional(key: string): JsonMap {
-  const notNone = `(!parameters.${key} && parameters.${key}Agg !== "\\"none\\"")`;
+  const notNone = `parameters.${key} && parameters.${key}Agg !== "\\"none\\""`;
   return {
     CONDITIONAL: {
-      query: `!${notCount(key)} || ${notNone}`,
-      true: {
-        CONDITIONAL: {
-          query: notCount(key),
-          true: `[${key}Agg]`,
-          false: 'count',
-        },
-      },
+      query: `${notNone} || !${notCount(key)}`,
+      true: {CONDITIONAL: {query: notCount(key), true: `[${key}Agg]`, false: 'count'}},
       deleteKeyOnFalse: true,
     },
   };
@@ -84,7 +78,9 @@ const encoding = {
       scale: {
         zero: {
           CONDITIONAL: {
-            query: `${used(key)} && parameters.${key}IncludeZero`,
+            query: `${used(
+              key,
+            )} && parameters.${key}IncludeZero && parameters.${key}Agg === "\\"quantitative\\""`,
             true: `[${key}IncludeZero]`,
             deleteKeyOnFalse: true,
           },
@@ -98,16 +94,19 @@ const encoding = {
       ...renderObjectIf(output, used(key), key.toLowerCase()),
     };
   }, {}),
+  ...['Size', 'Color', 'Shape', 'Text', 'Detail'].reduce((acc: JsonMap, key: string) => {
+    const output = {
+      field: conditionalFieldName(key),
+      type: `[${key}Type]`,
+      aggregate: aggregateConditional(key),
+    };
+    return {...acc, ...renderObjectIf(output, used(key), key.toLowerCase())};
+  }, {}),
+  // ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
 
-  ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
-  ...renderObjectIf(
-    {field: conditionalFieldName('Color'), type: '[ColorType]', aggregate: aggregateConditional('Color')},
-    used('Color'),
-    'color',
-  ),
-  ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, used('Shape'), 'shape'),
-  ...renderObjectIf({field: '[Text]', type: '[TextType]'}, used('Text'), 'text'),
-  ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, used('Detail'), 'detail'),
+  // ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, used('Shape'), 'shape'),
+  // ...renderObjectIf({field: '[Text]', type: '[TextType]'}, used('Text'), 'text'),
+  // ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, used('Detail'), 'detail'),
   ...['Row', 'Column'].reduce((acc, key) => {
     const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, used(key), key.toLowerCase());
     return {...acc, ...newObj};

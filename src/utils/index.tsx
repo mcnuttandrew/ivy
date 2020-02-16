@@ -393,3 +393,6 @@ export function makeOptionsForDropdown(
       .sort((a, b) => a.display.localeCompare(b.display)),
   );
 }
+
+export const toSet = (widgets: TemplateWidget<WidgetSubType>[]): Set<string> =>
+  widgets.reduce((acc, row) => acc.add(row.name), new Set() as Set<string>);
