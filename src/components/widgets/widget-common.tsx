@@ -1,12 +1,12 @@
 import React from 'react';
 import Tooltip from 'rc-tooltip';
-import {TemplateWidget, WidgetSubType} from '../../templates/types';
+import {GenWidget} from '../../templates/types';
 import {TiDeleteOutline} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {classnames} from '../../utils';
 
 interface EditParameterNameProps {
-  widget: TemplateWidget<WidgetSubType>;
+  widget: GenWidget;
   setWidgetValue: any;
   idx: number;
 }
@@ -26,7 +26,7 @@ export function EditParameterName(props: EditParameterNameProps): JSX.Element {
 }
 
 interface EditDisplayNameProps {
-  widget: TemplateWidget<WidgetSubType>;
+  widget: GenWidget;
   setWidgetValue: any;
   idx: number;
 }
@@ -88,7 +88,7 @@ export function Reset(props: ResetProps): JSX.Element {
   );
 }
 
-export function widgetName(widget: TemplateWidget<WidgetSubType>, editMode: boolean): string {
+export function widgetName(widget: GenWidget, editMode: boolean): string {
   if (editMode) {
     return widget.displayName ? `${widget.displayName} (${widget.name})` : widget.name;
   }

@@ -5,7 +5,7 @@ import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti'
 import Tooltip from 'rc-tooltip';
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
-import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
+import {Template, TemplateMap, GenWidget} from '../templates/types';
 import {classnames, get, getTemplateName} from '../utils';
 import SimpleTooltip from './simple-tooltip';
 
@@ -152,7 +152,7 @@ export function CodeCollapse(props: CodeCollapseProps): JSX.Element {
 }
 
 interface CodeEditorControlsProps {
-  addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
+  addWidget?: GenericAction<GenWidget>;
   chainActions: GenericAction<any>;
   codeMode: string;
   currentView: string;

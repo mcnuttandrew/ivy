@@ -4,7 +4,7 @@ import {
   TemplateWidget,
   ValidationQuery,
   DataTargetWidget,
-  WidgetSubType,
+  GenWidget,
   ListWidget,
   Shortcut,
   SwitchWidget,
@@ -198,7 +198,7 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
  * @param template
  */
 export function constructDefaultTemplateMap(template: Template): TemplateMap {
-  return template.widgets.reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
+  return template.widgets.reduce((acc: any, w: GenWidget) => {
     let value = null;
     if (w.type === 'MultiDataTarget') {
       value = [];
@@ -248,8 +248,8 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
 }
 
 const DUMMY = 'xxxxxEXAMPLExxxx';
-export function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]): {[x: string]: any} {
-  return widgets.reduce((acc: {[x: string]: any}, widget: TemplateWidget<WidgetSubType>) => {
+export function generateFullTemplateMap(widgets: GenWidget[]): {[x: string]: any} {
+  return widgets.reduce((acc: {[x: string]: any}, widget: GenWidget) => {
     const widgetType = widget.type;
     if (widgetType === 'DataTarget') {
       acc[widget.name] = `"${DUMMY}"`;

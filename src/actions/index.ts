@@ -3,7 +3,7 @@ import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {DataType, Template, TemplateWidget, WidgetSubType, WidgetType} from '../templates/types';
+import {DataType, Template, GenWidget, WidgetType} from '../templates/types';
 import {ColumnHeader} from '../types';
 import * as actionTypes from '../actions/action-types';
 
@@ -59,7 +59,7 @@ function createAction<T>(type: any): GenericAction<T> {
 }
 
 export const addToNextOpenSlot = createAction<ColumnHeader>(actionTypes.ADD_TO_NEXT_OPEN_SLOT);
-export const addWidget = createAction<TemplateWidget<WidgetSubType>>(actionTypes.ADD_TO_WIDGET_TEMPLATE);
+export const addWidget = createAction<GenWidget>(actionTypes.ADD_TO_WIDGET_TEMPLATE);
 export const changeMarkType = createAction<string>(actionTypes.CHANGE_MARK_TYPE);
 export const changeTheme = createAction<string>(actionTypes.CHANGE_THEME);
 export const changeViewName = createAction<{idx: number; value: string}>(actionTypes.CHANGE_VIEW_NAME);

@@ -1,7 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, TemplateWidget, WidgetSubType, Validation} from '../types';
+import {Template, GenWidget, Validation} from '../types';
 import {Json, JsonMap} from '../../types';
-type GenWidget = TemplateWidget<WidgetSubType>;
+
 import {toList} from '../../utils';
 import {
   makeAgg,

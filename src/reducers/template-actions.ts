@@ -8,7 +8,7 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {Template, TemplateWidget, WidgetSubType, TemplateMap, ListWidget} from '../templates/types';
+import {Template, TemplateWidget, GenWidget, TemplateMap, ListWidget} from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
 import {deserializeTemplate, trim} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
@@ -223,7 +223,7 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
 };
 
 // hey it's a lense
-type WidgetMod = (x: TemplateWidget<WidgetSubType>[]) => TemplateWidget<WidgetSubType>[];
+type WidgetMod = (x: GenWidget[]) => GenWidget[];
 const modifyCurrentWidgets = (state: AppState, mod: WidgetMod): AppState =>
   produce(state, draftState => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);

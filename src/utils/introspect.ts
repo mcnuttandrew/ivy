@@ -1,5 +1,5 @@
 import {setTemplateValues, generateFullTemplateMap} from '../hydra-lang';
-import {TemplateWidget, WidgetSubType} from '../templates/types';
+import {GenWidget} from '../templates/types';
 import {widgetFactory} from '../templates';
 import {get, trim, union, difference, safeParse} from './index';
 
@@ -96,7 +96,7 @@ const buildSuggest = (from: string, to: string): Suggestion => ({
 function inferFieldTransformationSuggestions(
   code: string,
   parsedCode: any,
-  widgets: TemplateWidget<WidgetSubType>[],
+  widgets: GenWidget[],
 ): Suggestion[] {
   const widgetNames = widgets.reduce((acc, row) => acc.add(row.name).add(`[${row.name}]`), new Set());
   const possibleFields = Array.from(inferPossibleDataTargets(parsedCode));
@@ -137,7 +137,7 @@ function inferFieldTransformationSuggestions(
  * @param code
  * @param widgets
  */
-export function synthesizeSuggestions(code: string, widgets: TemplateWidget<WidgetSubType>[]): Suggestion[] {
+export function synthesizeSuggestions(code: string, widgets: GenWidget[]): Suggestion[] {
   // simulate a full template
   const simulatedCompleteTemplate = generateFullTemplateMap(widgets);
   const parsedCode = safeParse(setTemplateValues(code, simulatedCompleteTemplate));

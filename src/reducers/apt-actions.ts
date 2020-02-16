@@ -3,7 +3,7 @@ import {
   TemplateMap,
   DataTargetWidget,
   MultiDataTargetWidget,
-  WidgetSubType,
+  GenWidget,
 } from '../templates/types';
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
@@ -69,7 +69,7 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   const openDropTargets = template.widgets
     // select just the open drop targets
     .filter(
-      (widget: TemplateWidget<WidgetSubType>) =>
+      (widget: GenWidget) =>
         allowedWidgets.has(widget.name) && widget.type === 'DataTarget' && !templateMap[widget.name],
     )
     // and that allow the type of drop column
@@ -78,7 +78,7 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
         widget.config.allowedTypes.includes(column.type) || column.type === 'CUSTOM',
     );
 
-  const openMultiDropTargets = template.widgets.filter((widget: TemplateWidget<WidgetSubType>) => {
+  const openMultiDropTargets = template.widgets.filter((widget: GenWidget) => {
     // select just the open drop targets
     if (widget.type !== 'MultiDataTarget' || !allowedWidgets.has(widget.name)) {
       return false;

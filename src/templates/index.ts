@@ -10,7 +10,7 @@ import {
   Template,
   TemplateWidget,
   TextWidget,
-  WidgetSubType,
+  GenWidget,
   ShortcutsWidget,
 } from './types';
 import {EMPTY_SPEC} from '../reducers/default-state';
@@ -39,7 +39,7 @@ export const BLANK_TEMPLATE: Template = {
 // META COLUMNS NOT CURRENTLY ALLOWED IN TEMPLATES
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 // const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
-export type WidgetFactoryFunc = (idx: number) => TemplateWidget<WidgetSubType>;
+export type WidgetFactoryFunc = (idx: number) => GenWidget;
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: idx =>
     ({
