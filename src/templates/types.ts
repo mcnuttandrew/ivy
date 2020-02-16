@@ -156,3 +156,8 @@ export interface Validation {
 export interface TemplateMap {
   [key: string]: string | string[];
 }
+
+/**
+ * Convience container type for the general template widget case
+ */
+export type GenWidget = TemplateWidget<WidgetSubType>;

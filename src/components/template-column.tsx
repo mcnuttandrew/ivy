@@ -7,8 +7,8 @@ import {
   SetWidgetValuePayload,
   MoveWidgetPayload,
 } from '../actions';
-import {Template, TemplateWidget, WidgetSubType, TemplateMap} from '../templates/types';
-import {classnames} from '../utils';
+import {Template, GenWidget, TemplateMap} from '../templates/types';
+import {classnames, toSet} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
@@ -27,7 +27,7 @@ interface TemplateColumnProps {
   template: Template;
   templateMap: TemplateMap;
 
-  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
+  addWidget: GenericAction<GenWidget>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   removeWidget: GenericAction<number>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
@@ -36,8 +36,8 @@ interface TemplateColumnProps {
 }
 
 interface AddWidgetButtonProps {
-  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
-  widgets: TemplateWidget<WidgetSubType>[];
+  addWidget: GenericAction<GenWidget>;
+  widgets: GenWidget[];
 }
 function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
   const {addWidget, widgets} = props;
@@ -73,7 +73,7 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
   );
 }
 
-function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {
+function buildSections(template: Template): GenWidget[][] {
   const sections = template.widgets.reduce(
     (acc, widget) => {
       const type = widget.type;
@@ -95,9 +95,6 @@ function buildSections(template: Template): TemplateWidget<WidgetSubType>[][] {
   return sections.sections.filter(d => d.length).concat([sections.currentSection]);
 }
 
-const toSet = (widgets: TemplateWidget<WidgetSubType>[]): Set<string> =>
-  widgets.reduce((acc, row) => acc.add(row.name), new Set() as Set<string>);
-
 export default class TemplateColumn extends React.Component<TemplateColumnProps> {
   render(): JSX.Element {
     const {
@@ -116,7 +113,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
     } = this.props;
     // TODO, this should maybe move off of the main path?
     const allowedWidgets = toSet(applyQueries(template, templateMap));
-    const makeWidget = (widget: TemplateWidget<WidgetSubType>, idx: number): JSX.Element => (
+    const makeWidget = (widget: GenWidget, idx: number): JSX.Element => (
       <GeneralWidget
         allowedWidgets={allowedWidgets}
         code={template.code}
@@ -141,7 +138,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         return null;
       }
       const inBlankSection = section[0].type === 'Section';
-      const sectionContents = section.map((widget: TemplateWidget<WidgetSubType>, kdx) => {
+      const sectionContents = section.map((widget: GenWidget, kdx) => {
         // the index is essential to maintain in order to make sure the updates happen correctly
         idx += 1;
         if (!editMode && !allowedWidgets.has(widget.name)) {

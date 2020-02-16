@@ -11,6 +11,7 @@ export default function DataSymbol(props: Props): JSX.Element {
     case 'TIME':
       return <TiTime />;
     case 'CUSTOM':
+      return <span>?</span>;
     case 'METACOLUMN':
       return <span>?</span>;
     case 'SUM':

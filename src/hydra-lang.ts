@@ -4,7 +4,7 @@ import {
   TemplateWidget,
   ValidationQuery,
   DataTargetWidget,
-  WidgetSubType,
+  GenWidget,
   ListWidget,
   Shortcut,
   SwitchWidget,
@@ -30,12 +30,13 @@ export type HydraConditinoal = {CONDITIONAL: ConditionalArgs};
  */
 function evaluateQuery(query: ValidationQuery, templateMap: TemplateMap): boolean {
   // TODO add a type check function to this
+  // TODO can probable keep a cache of these results?
   let result = false;
   try {
     const generatedContent = new Function('parameters', `return ${query}`);
     result = Boolean(generatedContent(templateMap));
   } catch (e) {
-    console.log('Query Evalu Error', e);
+    console.log('Query Evalu Error', e, query);
   }
   return result;
 }
@@ -46,7 +47,7 @@ export function evaluateShortcut(shortcut: Shortcut, templateMap: TemplateMap): 
     const generatedContent = new Function('parameters', `return ${shortcut.shortcutFunction}`);
     newMap = generatedContent(templateMap);
   } catch (e) {
-    console.log('Short cut error', e);
+    console.log('Short cut error', e, shortcut.shortcutFunction, shortcut.label);
   }
   return newMap;
 }
@@ -198,7 +199,7 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
  * @param template
  */
 export function constructDefaultTemplateMap(template: Template): TemplateMap {
-  return template.widgets.reduce((acc: any, w: TemplateWidget<WidgetSubType>) => {
+  return template.widgets.reduce((acc: any, w: GenWidget) => {
     let value = null;
     if (w.type === 'MultiDataTarget') {
       value = [];
@@ -248,8 +249,8 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
 }
 
 const DUMMY = 'xxxxxEXAMPLExxxx';
-export function generateFullTemplateMap(widgets: TemplateWidget<WidgetSubType>[]): {[x: string]: any} {
-  return widgets.reduce((acc: {[x: string]: any}, widget: TemplateWidget<WidgetSubType>) => {
+export function generateFullTemplateMap(widgets: GenWidget[]): {[x: string]: any} {
+  return widgets.reduce((acc: {[x: string]: any}, widget: GenWidget) => {
     const widgetType = widget.type;
     if (widgetType === 'DataTarget') {
       acc[widget.name] = `"${DUMMY}"`;

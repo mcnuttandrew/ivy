@@ -5,7 +5,7 @@ import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
 import {DataTargetWidget, TemplateWidget, Template} from '../templates/types';
-import {classnames, makeCustomType, makeOptionsForDropdown} from '../utils';
+import {classnames, getOrMakeColumn, makeOptionsForDropdown} from '../utils';
 import AllowedTypesList from './allowed-types-list';
 
 // TODO this type is a mess, it is very confusing.
@@ -49,11 +49,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
     collect: monitor => ({isOver: monitor.isOver(), canDrop: monitor.canDrop()}),
   });
 
-  const columnHeader =
-    columns.find(({field}) => shelfValue && field === shelfValue) ||
-    (template.customCards || []).includes(shelfValue)
-      ? makeCustomType(shelfValue)
-      : null;
+  const columnHeader = getOrMakeColumn(shelfValue, columns, template);
   const fieldSelector = (
     <Selector
       useGroups={true}

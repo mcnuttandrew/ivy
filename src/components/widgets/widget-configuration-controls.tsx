@@ -3,7 +3,7 @@ import {TiDelete, TiCog} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
 import {widgetInUse} from '../../utils';
-import {TemplateMap, TemplateWidget, WidgetSubType, Validation} from '../../templates/types';
+import {TemplateMap, GenWidget, Validation} from '../../templates/types';
 import {ColumnHeader} from '../../types';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
@@ -22,13 +22,13 @@ interface PlacementControlsProps {
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
   templateMap: TemplateMap;
-  widget: TemplateWidget<WidgetSubType>;
+  widget: GenWidget;
 }
 const dontShowUsedIf = new Set(['Section', 'Text']);
 interface ValidationBuilderProps {
   idx: number;
   setWidgetValue: any;
-  widget: TemplateWidget<WidgetSubType>;
+  widget: GenWidget;
 }
 
 type TalidationUpdateLens = (d: Validation, val: any) => Validation;

@@ -5,7 +5,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
 
-import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
+import {Template, TemplateMap, GenWidget} from '../templates/types';
 import {getUserName} from '../utils/local-storage';
 import Thumbnail from './thumbnail';
 
@@ -109,7 +109,7 @@ interface RootProps {
   views: string[];
 
   addToNextOpenSlot: GenericAction<ColumnHeader>;
-  addWidget: GenericAction<TemplateWidget<WidgetSubType>>;
+  addWidget: GenericAction<GenWidget>;
   chainActions: GenericAction<any>;
   changeMarkType: GenericAction<string>;
   changeSelectedFile: GenericAction<string>;

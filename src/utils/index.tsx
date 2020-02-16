@@ -6,7 +6,7 @@ import {
   Template,
   TemplateMap,
   TemplateWidget,
-  WidgetSubType,
+  GenWidget,
 } from '../templates/types';
 import {AppState} from '../reducers/default-state';
 import {TEXT_TYPE} from '../constants/index';
@@ -107,10 +107,10 @@ export const getTemplate = (state: AppState, template: string): Template | null 
 export function widgetInUse(code: string, name: string): boolean {
   return Boolean(code.match(new RegExp(`\\[${name}\\]`, 'g')));
 }
-export function allWidgetsInUse(code: string, widgets: TemplateWidget<WidgetSubType>[]): boolean {
+export function allWidgetsInUse(code: string, widgets: GenWidget[]): boolean {
   return widgets
-    .filter((widget: TemplateWidget<WidgetSubType>) => widget.type !== 'Text')
-    .every((widget: TemplateWidget<WidgetSubType>) => !!widgetInUse(code, widget.name));
+    .filter((widget: GenWidget) => widget.type !== 'Text')
+    .every((widget: GenWidget) => !!widgetInUse(code, widget.name));
 }
 
 export const toSelectFormat = (arr: string[]): {value: string; label: string}[] =>
@@ -228,7 +228,7 @@ export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHea
 export function buildCounts(template: Template): any {
   let SUM = 0;
   const counts = template.widgets.reduce(
-    (acc: any, row: TemplateWidget<WidgetSubType>) => {
+    (acc: any, row: GenWidget) => {
       if (row.type === 'DataTarget') {
         const {allowedTypes, required} = row.config as DataTargetWidget;
         if (!required) {
@@ -351,6 +351,21 @@ export function makeCustomType(field: string): ColumnHeader {
   return {type: 'CUSTOM', field, originalType: 'CUSTOM', domain: []};
 }
 
+export function getOrMakeColumn(
+  columnName: string,
+  columns: ColumnHeader[],
+  template: Template,
+): ColumnHeader | null {
+  const column = columns.find(({field}) => columnName && field === columnName);
+  if (column) {
+    return column;
+  }
+  if ((template.customCards || []).includes(columnName)) {
+    return makeCustomType(columnName);
+  }
+  return null;
+}
+
 interface MakeOptionsForDropdownProps {
   template: Template;
   columns: ColumnHeader[];
@@ -378,3 +393,6 @@ export function makeOptionsForDropdown(
       .sort((a, b) => a.display.localeCompare(b.display)),
   );
 }
+
+export const toSet = (widgets: GenWidget[]): Set<string> =>
+  widgets.reduce((acc, row) => acc.add(row.name), new Set() as Set<string>);

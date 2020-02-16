@@ -4,14 +4,14 @@ import stringify from 'json-stringify-pretty-compact';
 
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
-import {Template, TemplateMap, TemplateWidget, WidgetSubType} from '../templates/types';
+import {Template, TemplateMap, GenWidget} from '../templates/types';
 import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
 import NONE from '../templates/example-templates/none';
 
 interface Props {
-  addWidget?: GenericAction<TemplateWidget<WidgetSubType>>;
+  addWidget?: GenericAction<GenWidget>;
   chainActions: GenericAction<any>;
   codeMode: string;
   currentView: string;
