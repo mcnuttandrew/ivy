@@ -63,7 +63,10 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
   const templateMap: TemplateMap = state.templateMap;
   const column = findField(state, payload.field);
-
+  const widgetIndex = template.widgets.reduce((acc, widget, idx) => {
+    acc[widget.name] = idx;
+    return acc;
+  }, {} as {[x: string]: number});
   const openDropTargets = template.widgets
     // select just the open drop targets
     .filter(
@@ -87,7 +90,10 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
     return multiTargetContainsDesiredType && hasSpace;
   });
 
-  const targets = [].concat(openDropTargets).concat(openMultiDropTargets);
+  const targets = []
+    .concat(openDropTargets)
+    .concat(openMultiDropTargets)
+    .sort((a, b) => widgetIndex[a.name] - widgetIndex[b.name]);
   if (!targets.length) {
     // TODO add messaging about this
     return state;

@@ -6,7 +6,7 @@ import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
 import {MultiDataTargetWidget, TemplateWidget, DataType, Template} from '../templates/types';
-import {classnames, makeOptionsForDropdown, makeCustomType} from '../utils';
+import {classnames, makeOptionsForDropdown, getOrMakeColumn} from '../utils';
 
 interface Props {
   shelfValues?: string[];
@@ -40,12 +40,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
   const options = makeOptionsForDropdown({template, widget, columns, useGroupsAsTypes});
 
   const columnHeaders = shelfValues
-    .map(shelfValue => {
-      return columns.find(({field}) => shelfValue && field === shelfValue) ||
-        (template.customCards || []).includes(shelfValue)
-        ? makeCustomType(shelfValue)
-        : null;
-    })
+    .map(shelfValue => getOrMakeColumn(shelfValue, columns, template))
     .filter(d => d);
   const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) < columnHeaders.length;
   const dropCommon = {field: shelfName, multiTarget: true};

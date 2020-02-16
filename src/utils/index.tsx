@@ -351,6 +351,21 @@ export function makeCustomType(field: string): ColumnHeader {
   return {type: 'CUSTOM', field, originalType: 'CUSTOM', domain: []};
 }
 
+export function getOrMakeColumn(
+  shelfValue: string,
+  columns: ColumnHeader[],
+  template: Template,
+): ColumnHeader | null {
+  const column = columns.find(({field}) => shelfValue && field === shelfValue);
+  if (column) {
+    return column;
+  }
+  if ((template.customCards || []).includes(shelfValue)) {
+    return makeCustomType(shelfValue);
+  }
+  return null;
+}
+
 interface MakeOptionsForDropdownProps {
   template: Template;
   columns: ColumnHeader[];
