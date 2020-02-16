@@ -1,12 +1,12 @@
 import stringify from 'json-stringify-pretty-compact';
-import {TemplateWidget, Template, WidgetSubType, SliderWidget, QueryResult} from '../types';
+import {TemplateWidget, Template, GenWidget, SliderWidget, QueryResult} from '../types';
 import {simpleList} from './polestar-template-utils';
 
 const TYPES = ['groupby', 'bin', 'passthrough', 'gridxy', 'flatten'];
 const ASPECT_RATIOS = ['square', 'parents', 'fillX', 'fillY', 'maxfill', 'custom'];
-function generateLevel(idx: number): {widgets: TemplateWidget<WidgetSubType>[]; layout: any} {
+function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
   const NEVER_HIDE = idx === 1;
-  const widgets: TemplateWidget<WidgetSubType>[] = [
+  const widgets: GenWidget[] = [
     {
       name: `Key${idx}`,
       type: 'DataTarget',

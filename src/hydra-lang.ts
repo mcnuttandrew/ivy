@@ -30,6 +30,7 @@ export type HydraConditinoal = {CONDITIONAL: ConditionalArgs};
  */
 function evaluateQuery(query: ValidationQuery, templateMap: TemplateMap): boolean {
   // TODO add a type check function to this
+  // TODO can probable keep a cache of these results?
   let result = false;
   try {
     const generatedContent = new Function('parameters', `return ${query}`);

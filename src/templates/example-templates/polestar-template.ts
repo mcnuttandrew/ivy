@@ -37,13 +37,15 @@ const paramsInclude = (key: string): string => `Object.values(parameters).includ
 const eitherMeta = `${paramsInclude(META_COL_ROW)} || ${paramsInclude(META_COL_COL)}`;
 const USING_META_COLS_VALIDATION: Validation = {queryResult: 'show', query: eitherMeta};
 
-// associated channel must have simple and full aggregates for this to work
 function aggregateConditional(key: string): JsonMap {
-  const notNone = `parameters.${key} && parameters.${key}Agg !== "\\"none\\""`;
+  const isNone = `parameters.${key}Agg === "\\"none\\""`;
+  const isCount = `parameters.${key} === "\\"COUNT\\""`;
+  const filledIn = `parameters.${key}`;
+
   return {
     CONDITIONAL: {
-      query: `${notNone} || !${notCount(key)}`,
-      true: {CONDITIONAL: {query: notCount(key), true: `[${key}Agg]`, false: 'count'}},
+      query: `${isCount} || (${filledIn} && ${!isNone})`,
+      true: {CONDITIONAL: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
       deleteKeyOnFalse: true,
     },
   };
@@ -53,7 +55,6 @@ function conditionalFieldName(key: string): JsonMap {
   return {
     CONDITIONAL: {
       query: `${used(key)} && ${notCount(key)}`,
-      // true: `[${key}]`,
       deleteKeyOnFalse: true,
       true: {
         CONDITIONAL: {
@@ -62,6 +63,26 @@ function conditionalFieldName(key: string): JsonMap {
           false: `[${key}]`,
         },
       },
+    },
+  };
+}
+
+function zeroConditional(key: string): JsonMap {
+  return {
+    CONDITIONAL: {
+      query: `${used(key)} && parameters.${key}IncludeZero && parameters.${key}Agg === "\\"quantitative\\""`,
+      true: `[${key}IncludeZero]`,
+      deleteKeyOnFalse: true,
+    },
+  };
+}
+
+function typeConditional(key: string): JsonMap {
+  return {
+    CONDITIONAL: {
+      query: notCount(key),
+      true: `[${key}Type]`,
+      deleteKeyOnFalse: true,
     },
   };
 }
@@ -76,17 +97,20 @@ const encoding = {
       type: `[${key}Type]`,
       aggregate: aggregateConditional(key),
       scale: {
-        zero: {
-          CONDITIONAL: {
-            query: `${used(
-              key,
-            )} && parameters.${key}IncludeZero && parameters.${key}Agg === "\\"quantitative\\""`,
-            true: `[${key}IncludeZero]`,
-            deleteKeyOnFalse: true,
+        CONDITIONAL: {
+          query: notCount(key),
+          true: {
+            zero: zeroConditional(key),
+            type: {
+              CONDITIONAL: {
+                query: `${used(key)} && parameters.${key}Type ===  "\\"quantitative\\""`,
+                true: `[${key}ScaleType]`,
+                deleteKeyOnFalse: true,
+              },
+            },
           },
+          deleteKeyOnFalse: true,
         },
-        type: {CONDITIONAL: {query: used(key), true: `[${key}ScaleType]`, deleteKeyOnFalse: true}},
-        // CONDITIONAL: {true: {zero: `[${key}IncludeZero]`}, false: null, query: used(key)}
       },
     };
     return {
@@ -102,11 +126,6 @@ const encoding = {
     };
     return {...acc, ...renderObjectIf(output, used(key), key.toLowerCase())};
   }, {}),
-  // ...renderObjectIf({field: '[Size]', type: '[SizeType]'}, used('Size'), 'size'),
-
-  // ...renderObjectIf({field: '[Shape]', type: '[ShapeType]'}, used('Shape'), 'shape'),
-  // ...renderObjectIf({field: '[Text]', type: '[TextType]'}, used('Text'), 'text'),
-  // ...renderObjectIf({field: '[Detail]', type: '[DetailType]'}, used('Detail'), 'detail'),
   ...['Row', 'Column'].reduce((acc, key) => {
     const newObj = renderObjectIf({field: `[${key}]`, type: 'nominal'}, used(key), key.toLowerCase());
     return {...acc, ...newObj};

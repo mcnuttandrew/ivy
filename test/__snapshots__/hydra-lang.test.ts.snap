@@ -64,16 +64,7 @@ Object {
 exports[`evaluateHydraProgram polestar template 1`] = `
 Object {
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
-  "encoding": Object {
-    "x": Object {
-      "scale": Object {},
-      "type": "quantitative",
-    },
-    "y": Object {
-      "scale": Object {},
-      "type": "quantitative",
-    },
-  },
+  "encoding": Object {},
   "mark": Object {
     "tooltip": true,
     "type": "circle",
@@ -90,12 +81,7 @@ Object {
       "field": "GooD Dimension",
       "scale": Object {
         "type": "linear",
-        "zero": false,
       },
-      "type": "quantitative",
-    },
-    "y": Object {
-      "scale": Object {},
       "type": "quantitative",
     },
   },
@@ -111,21 +97,10 @@ exports[`evaluateHydraProgram polestar template 3`] = `
 Object {
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
-    "color": Object {
-      "aggregate": "count",
-      "type": "ordinal",
-    },
     "x": Object {
       "field": "Origin",
-      "scale": Object {
-        "type": "linear",
-        "zero": true,
-      },
-      "type": "nominal",
-    },
-    "y": Object {
       "scale": Object {},
-      "type": "quantitative",
+      "type": "nominal",
     },
   },
   "mark": Object {
