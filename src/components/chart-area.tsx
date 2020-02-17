@@ -1,7 +1,7 @@
 import React from 'react';
 import VegaWrapper from './renderers/vega-wrap';
 import {VegaTheme, ColumnHeader, Json} from '../types';
-import {Template, TemplateMap} from '../templates/types';
+import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd, TiTabsOutline} from 'react-icons/ti';
@@ -27,7 +27,6 @@ interface ChartAreaProps {
   switchView: GenericAction<string>;
   template?: Template;
   templates: Template[];
-  templateMap: TemplateMap;
   templateComplete: boolean;
   views: string[];
 }
@@ -136,7 +135,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       switchView,
       template,
       templateComplete,
-      templateMap,
       templates,
       views,
     } = this.props;

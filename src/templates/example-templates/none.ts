@@ -37,6 +37,7 @@ const NoneTemplate: Template = {
       config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: false},
       validations: [{query: '!parameters.Sort === "null"', queryResult: 'hide'}],
     },
+    // TODO add sort explanation for text
   ],
   code: JSON.stringify({
     $schema: 'none',
