@@ -22,6 +22,7 @@ export type SetTemplateValuePayload = {
   text: string | string[];
   field: string;
   type?: WidgetType;
+  // TODO delete during the T0 removal
   isMeta?: boolean;
 };
 export type SetRepeatsPayload = {repeats: string[]; target: string};

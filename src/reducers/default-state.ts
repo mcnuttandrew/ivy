@@ -43,7 +43,6 @@ export interface AppState {
   views: string[];
 
   // template stuff
-  templateBuilderModalOpen: boolean;
   templateMap: TemplateMap;
   templates: Template[];
 }
@@ -93,6 +92,7 @@ export const DEFAULT_STATE: AppState = {
 
   // GUI
   currentTemplateInstance: NONE,
+  // TODO COMBINE MODAL VALUES INTO A SINGLE KEY
   dataModalOpen: false,
   encodingMode: NONE.templateName,
   showProgrammaticMode: false,
@@ -114,5 +114,4 @@ export const DEFAULT_STATE: AppState = {
 
   templates: [],
   templateMap: {},
-  templateBuilderModalOpen: false,
 };

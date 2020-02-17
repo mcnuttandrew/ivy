@@ -69,7 +69,6 @@ const makeSortScore: MakeSortScoreType = (Sort: string) => (template): any => {
   if (Sort === 'complexity') {
     score = (template.code.match(/CONDITIONAL/g) || []).length;
   }
-  console.log(template.templateName, score, counts);
   return {template, score};
 };
 
