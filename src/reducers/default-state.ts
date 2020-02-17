@@ -95,7 +95,7 @@ export const DEFAULT_STATE: AppState = {
   currentTemplateInstance: NONE,
   dataModalOpen: false,
   encodingMode: NONE.templateName,
-  showProgrammaticMode: false,
+  showProgrammaticMode: true,
   showGUIView: true,
   codeMode: JSON_OUTPUT,
   programModalOpen: false,

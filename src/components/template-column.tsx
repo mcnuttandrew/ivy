@@ -12,7 +12,7 @@ import {classnames, toSet} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
-import {updateThumbnail} from '../utils/thumbnail';
+import {updateThumbnail} from '../utils';
 import {AddLabelToWidget} from './widgets/widget-common';
 import Selector from './selector';
 import Tooltip from 'rc-tooltip';

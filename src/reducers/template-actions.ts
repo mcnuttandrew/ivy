@@ -41,22 +41,26 @@ function tryToGuessTheTypeForVegaLite(
   templateMap: TemplateMap,
   columns: ColumnHeader[],
 ): void {
+  if (template.templateLanguage !== 'vega-lite') {
+    return;
+  }
   const typeWidget = template.widgets.find(widget => widget.name === `${payload.field}Type`);
-  if (typeWidget && payload.type === 'DataTarget' && template.templateLanguage === 'vega-lite') {
-    const column = columns.find(col => col.field === trim(payload.text as string));
-    const dims = (typeWidget.config as ListWidget).allowedValues;
+  if (!(typeWidget && payload.type === 'DataTarget')) {
+    return;
+  }
+  const column = columns.find(col => col.field === trim(payload.text as string));
+  const dims = (typeWidget.config as ListWidget).allowedValues;
 
-    if (column && column.type === 'DIMENSION' && dims.find(d => d.display === 'nominal')) {
-      templateMap[`${payload.field}Type`] = '"nominal"';
-    }
+  if (column && column.type === 'DIMENSION' && dims.find(d => d.display === 'nominal')) {
+    templateMap[`${payload.field}Type`] = '"nominal"';
+  }
 
-    if (column && column.type === 'MEASURE' && dims.find(d => d.display === 'quantitative')) {
-      templateMap[`${payload.field}Type`] = '"quantitative"';
-    }
+  if (column && column.type === 'MEASURE' && dims.find(d => d.display === 'quantitative')) {
+    templateMap[`${payload.field}Type`] = '"quantitative"';
+  }
 
-    if (column && column.type === 'TIME' && dims.find(d => d.display === 'temporal')) {
-      templateMap[`${payload.field}Type`] = '"temporal"';
-    }
+  if (column && column.type === 'TIME' && dims.find(d => d.display === 'temporal')) {
+    templateMap[`${payload.field}Type`] = '"temporal"';
   }
 }
 

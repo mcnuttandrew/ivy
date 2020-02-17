@@ -1,17 +1,17 @@
 import React from 'react';
 import {GenericAction} from '../../actions/index';
 import {ColumnHeader} from '../../types';
-import {Template, TemplateMap} from '../../templates/types';
+import {Template} from '../../templates/types';
 import ProgramPreview from '../program-preview';
-import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix} from '../../utils';
+import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../../utils';
 import {GRAMMAR_DESC, GRAMMAR_NAME} from '../../constants';
 import NONE_TEMPLATE from '../../templates/example-templates/none';
 interface Props {
   columns: ColumnHeader[];
   deleteTemplate: GenericAction<string>;
   setEncodingMode: GenericAction<string>;
+  spec: any;
   templates: Template[];
-  templateMap: TemplateMap;
 }
 
 function publish(templateName: string, template: Template): void {
@@ -34,7 +34,7 @@ function publish(templateName: string, template: Template): void {
 }
 
 export default function DataSearchMode(props: Props): JSX.Element {
-  const {setEncodingMode, templates, templateMap, columns, deleteTemplate} = props;
+  const {columns, deleteTemplate, setEncodingMode, spec, templates} = props;
   const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
     let onClick;
     if (key === 'Delete') {
@@ -51,24 +51,20 @@ export default function DataSearchMode(props: Props): JSX.Element {
     }
     return {onClick, name: key};
   };
-
+  const search = trim(spec.SearchKey as string);
   const programs = templates.reduce((acc, template, idx) => {
     if (template.templateName === NONE_TEMPLATE.templateName) {
       return acc;
     }
     const {canBeUsed, isComplete} = searchDimensionsCanMatch(
       template,
-      templateMap.dataTargetSearch as string[],
+      spec.dataTargetSearch as string[],
       columns,
     );
     if (!canBeUsed) {
       return acc;
     }
-    const nameIsValid = searchPredicate(
-      templateMap.SearchKey as string,
-      template.templateName,
-      template.templateDescription,
-    );
+    const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
     if (!nameIsValid) {
       return acc;
     }
@@ -90,7 +86,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
     <div className="data-search-mode">
       <div className="program-containers">
         {!programs.length && <div>No templates match your query</div>}
-        {searchPredicate(templateMap.SearchKey as string, GRAMMAR_NAME, GRAMMAR_DESC) && (
+        {searchPredicate(search, GRAMMAR_NAME, GRAMMAR_DESC) && (
           <ProgramPreview
             templateName={GRAMMAR_NAME}
             templateDescription={GRAMMAR_DESC}

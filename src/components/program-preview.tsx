@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {GenericAction} from '../actions/index';
 import Thumbnail from './thumbnail';
 import {classnames} from '../utils';
@@ -129,7 +129,6 @@ export default function ProgramPreview(props: Props): JSX.Element {
     typeCounts,
     preventUse,
   } = props;
-  const [showDescription, setDescriptionShow] = useState(false);
   return (
     <div
       className={classnames({
@@ -155,26 +154,21 @@ export default function ProgramPreview(props: Props): JSX.Element {
             </div>
             {CardControls({buttons, templateName, templateAuthor})}
           </div>
-
-          {alreadyPresent && (
-            <div className="program-option-search-match">A template by this name is already loaded</div>
-          )}
-          {typeCounts && RenderTypeCounts(typeCounts)}
+          <div className="program-option-description">{templateDescription}</div>
         </div>
       </div>
-      <div className="flex-down">
+      <div className="flex-down program-option-bottom">
         <div className="flex space-between">
           <div className="program-option-search-match flex">
             <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
             {isComplete && fullMatch()}
             {!isComplete && partialMatch()}
           </div>
-          <div
-            className="program-option-search--description-toggle"
-            onClick={(): void => setDescriptionShow(!showDescription)}
-          >{`About ${showDescription ? '-' : '+'}`}</div>
+          {typeCounts && RenderTypeCounts(typeCounts)}
         </div>
-        {showDescription && templateDescription && <p>{`${templateDescription}`}</p>}
+        {alreadyPresent && (
+          <div className="program-option-search-match">A template by this name is already loaded</div>
+        )}
       </div>
     </div>
   );

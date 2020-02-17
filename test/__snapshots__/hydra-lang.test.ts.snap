@@ -110,3 +110,11 @@ Object {
   "transform": Array [],
 }
 `;
+
+exports[`evaluateHydraProgram polestar template 4`] = `
+Object {
+  "$schema": "none",
+  "SearchKey": "should result",
+  "dataTargetSearch": Array [],
+}
+`;

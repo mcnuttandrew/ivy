@@ -669,14 +669,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .data-search-mode .program-containers {
-  /* grid-template-columns: 1fr 1fr 1fr; */
-
-  /* grid-template-columns: unset; */
   grid-auto-flow: row dense;
-
-  /* grid-template: repeat(4, 0fr) / repeat(3, 300px); */
-
-  /* grid-template-rows: repeat(3, 300px); */
   grid-template-columns: repeat(auto-fill, 300px);
 }
 
@@ -695,6 +688,7 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .program-option-title h3 {
@@ -705,6 +699,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .program-option-settings {
   cursor: pointer;
   font-size: 25px;
+  position: absolute;
+  right: 0;
+}
+
+.program-option-description {
+  font-size: 10px;
 }
 
 .program-containers .program-option:last-child {
@@ -773,12 +773,8 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-right: 5px;
 }
 
-.program-option-search-type-control--selected {
-  text-decoration: underline;
-}
-
-.program-option-search--description-toggle {
-  cursor: pointer;
+.program-option-bottom {
+  border-top: thin solid gray;
 }
 
 .widget-body {
@@ -871,6 +867,11 @@ input[type="number"]::-webkit-outer-spin-button {
 .text-widget {
   font-size: 12px;
   white-space: pre-line;
+}
+
+.free-text-widget {
+  display: flex;
+  align-self: center;
 }
 
 .widget-config-tooltip {

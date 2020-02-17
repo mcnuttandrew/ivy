@@ -234,7 +234,6 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   // 1. apply variables to string representation of code
   const interpolatedVals = setTemplateValues(template.code, templateMap);
   // 2. parse to json
-  // const parsedJson = JSON.parse(interpolatedVals);
   let parsedJson = null;
   try {
     parsedJson = JSON.parse(interpolatedVals);

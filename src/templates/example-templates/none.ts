@@ -24,7 +24,7 @@ const NoneTemplate: Template = {
   code: JSON.stringify({
     $schema: 'none',
     dataTargetSearch: '[dataTargetSearch]',
-    // SearchKey: '[SearchKey]',
+    SearchKey: `[SearchKey]`,
   }),
 };
 export default NoneTemplate;

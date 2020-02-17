@@ -6,6 +6,7 @@ import {
   // backpropHydraProgram,
 } from '../src/hydra-lang';
 import Scatterplot from '../src/templates/example-templates/scatterplot';
+import None from '../src/templates/example-templates/none';
 import produce from 'immer';
 
 test('#applyConditionals', () => {
@@ -18,7 +19,7 @@ test('#applyConditionals', () => {
   expect(applyConditionals(exampleTemplateMap2)(PARSED_CODE)).toMatchSnapshot();
 });
 
-test('evaluateHydraProgram polestar template', () => {
+test.only('evaluateHydraProgram polestar template', () => {
   const templateMap = constructDefaultTemplateMap(PolestarTemplate);
 
   expect(evaluateHydraProgram(PolestarTemplate, templateMap)).toMatchSnapshot();
@@ -34,6 +35,13 @@ test('evaluateHydraProgram polestar template', () => {
     draftState.ColorAggSimple = '"count"';
   });
   expect(evaluateHydraProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
+
+  expect(
+    evaluateHydraProgram(None, {
+      dataTargetSearch: [],
+      SearchKey: '"should result"',
+    }),
+  ).toMatchSnapshot();
 });
 // const update1 = `
 // {
