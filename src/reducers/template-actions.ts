@@ -64,12 +64,45 @@ function tryToGuessTheTypeForVegaLite(
   }
 }
 
+function removeFirstInstanceOf(a: string[], key: string): string[] {
+  let hasFound = false;
+  return a
+    .map(d => d)
+    .filter(x => {
+      if (hasFound) {
+        return true;
+      }
+      if (x === key) {
+        hasFound = true;
+        return false;
+      }
+      return true;
+    });
+}
+
+const bagDifference = (a: string[], b: string[]): string[] => b.reduce(removeFirstInstanceOf, a);
+
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
+  const getWidget = (name: string): TemplateWidget<any> | null =>
+    template.widgets.find(widget => widget.name === name);
+  const {containingShelf} = payload;
+  const fromWidget = getWidget(containingShelf);
+  const toWidget = getWidget(payload.field);
   return produce(state, draftState => {
-    if (payload.containingShelf) {
-      delete draftState.templateMap[payload.containingShelf];
+    if (containingShelf && fromWidget.type === 'DataTarget') {
+      delete draftState.templateMap[containingShelf];
     }
+    if (fromWidget && fromWidget.type === 'MultiDataTarget' && toWidget.type === 'MultiDataTarget') {
+      const oldVal = draftState.templateMap[containingShelf] as string[];
+      draftState.templateMap[containingShelf] = bagDifference(oldVal, payload.text as string[]);
+    }
+    if (fromWidget && fromWidget.type === 'MultiDataTarget' && toWidget.type === 'DataTarget') {
+      const oldVal = draftState.templateMap[containingShelf] as string[];
+      const val = removeFirstInstanceOf(oldVal, trim(payload.text as string));
+      draftState.templateMap[containingShelf] = val;
+    }
+
     draftState.templateMap[payload.field] = payload.text;
     tryToGuessTheTypeForVegaLite(
       draftState.currentTemplateInstance,

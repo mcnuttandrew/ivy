@@ -66,21 +66,19 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   // const column = findField(state, payload.field);
   const column = getOrMakeColumn(payload.field, state.columns, template);
   const allowedWidgets = toSet(applyQueries(template, templateMap));
-  const openDropTargets = template.widgets
+  const widgets = template.widgets.filter(widget => allowedWidgets.has(widget.name));
+  const openDropTargets = widgets
     // select just the open drop targets
-    .filter(
-      (widget: GenWidget) =>
-        allowedWidgets.has(widget.name) && widget.type === 'DataTarget' && !templateMap[widget.name],
-    )
+    .filter((widget: GenWidget) => widget.type === 'DataTarget' && !templateMap[widget.name])
     // and that allow the type of drop column
     .filter(
       (widget: TemplateWidget<DataTargetWidget>) =>
         widget.config.allowedTypes.includes(column.type) || column.type === 'CUSTOM',
     );
 
-  const openMultiDropTargets = template.widgets.filter((widget: GenWidget) => {
+  const openMultiDropTargets = widgets.filter((widget: GenWidget) => {
     // select just the open drop targets
-    if (widget.type !== 'MultiDataTarget' || !allowedWidgets.has(widget.name)) {
+    if (widget.type !== 'MultiDataTarget') {
       return false;
     }
     // and that allow the type of drop column
@@ -88,9 +86,12 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
     const multiTargetContainsDesiredType = allowedTypes.includes(column.type) || column.type === 'CUSTOM';
     // and have space
     const hasSpace = (templateMap[widget.name] || []).length < maxNumberOfTargets || !maxNumberOfTargets;
-    return multiTargetContainsDesiredType && hasSpace;
+    // and doesn't current contain the new value
+    const containsOldValue = templateMap[widget.name].includes(payload.field);
+    return multiTargetContainsDesiredType && hasSpace && !containsOldValue;
   });
 
+  // created sorted list, this enable user defined list to define auto add algorithm
   const widgetIndex = template.widgets.reduce((acc, widget, idx) => {
     acc[widget.name] = idx;
     return acc;
