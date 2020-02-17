@@ -10,7 +10,7 @@ import {
   SwitchWidget,
   SliderWidget,
 } from './templates/types';
-import {trim} from './utils';
+import {trim, get} from './utils';
 import {JsonMap, Json, JsonArray} from './types';
 
 interface ConditionalArgs {
@@ -208,7 +208,9 @@ export function constructDefaultTemplateMap(template: Template): TemplateMap {
       return acc;
     }
     if (w.type === 'List') {
-      value = (w as TemplateWidget<ListWidget>).config.defaultValue;
+      const localW = w as TemplateWidget<ListWidget>;
+      value = localW.config.defaultValue || get(localW, ['config', 'allowedValues', 0, 'value']);
+      // value = (w as TemplateWidget<ListWidget>).config.defaultValue;
     }
     if (w.type === 'Switch') {
       const localW = w as TemplateWidget<SwitchWidget>;
@@ -238,7 +240,8 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
   try {
     parsedJson = JSON.parse(interpolatedVals);
   } catch (e) {
-    console.log(e, 'crash');
+    console.error('crash', e);
+    console.error('crashed on ', interpolatedVals);
     parsedJson = {};
   }
   // 3. evaluate inline conditionals
@@ -259,7 +262,7 @@ export function generateFullTemplateMap(widgets: GenWidget[]): {[x: string]: any
     }
     if (widgetType === 'List') {
       const localW = widget as TemplateWidget<ListWidget>;
-      acc[widget.name] = localW.config.defaultValue;
+      acc[widget.name] = localW.config.defaultValue || get(localW, ['config', 'allowedValues', 0, 'value']);
     }
     if (widgetType === 'Switch') {
       const localW = widget as TemplateWidget<SwitchWidget>;

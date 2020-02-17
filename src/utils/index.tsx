@@ -226,16 +226,18 @@ export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHea
     return acc;
   }, {});
 
-export function buildCounts(template: Template): any {
+export function buildCounts(
+  template: Template,
+): {DIMENSION: number; MEASURE: number; TIME: number; SUM: number} {
   let SUM = 0;
   const counts = template.widgets.reduce(
     (acc: any, row: GenWidget) => {
       if (row.type === 'DataTarget') {
         const {allowedTypes, required} = row.config as DataTargetWidget;
+        SUM += 1;
         if (!required) {
           return acc;
         }
-        SUM += 1;
 
         allowedTypes.forEach((type: string) => {
           acc[type] += 1;
@@ -245,11 +247,16 @@ export function buildCounts(template: Template): any {
         });
       }
       if (row.type === 'MultiDataTarget') {
-        const {allowedTypes, minNumberOfTargets, required} = row.config as MultiDataTargetWidget;
+        const {
+          allowedTypes,
+          minNumberOfTargets,
+          maxNumberOfTargets,
+          required,
+        } = row.config as MultiDataTargetWidget;
+        SUM += Number(maxNumberOfTargets) || 0;
         if (!required) {
           return acc;
         }
-        SUM += Number(minNumberOfTargets) || 0;
         allowedTypes.forEach((type: string) => {
           acc[type] += Number(minNumberOfTargets) || 0;
           if (allowedTypes.length > 1) {
