@@ -216,7 +216,6 @@ class RootComponent extends React.Component<RootProps, State> {
         switchView={this.props.switchView}
         template={this.props.template}
         templateComplete={this.props.templateComplete}
-        templateMap={this.props.templateMap}
         templates={this.props.templates}
         views={this.props.views}
       />

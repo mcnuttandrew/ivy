@@ -1,14 +1,14 @@
 import React from 'react';
 import VegaWrapper from './renderers/vega-wrap';
 import {VegaTheme, ColumnHeader, Json} from '../types';
-import {Template, TemplateMap} from '../templates/types';
+import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd, TiTabsOutline} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
 import DataSearchMode from './renderers/data-search-mode';
-import {NONE_TEMPLATE} from '../constants/index';
+import NONE from '../templates/example-templates/none';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
@@ -27,7 +27,6 @@ interface ChartAreaProps {
   switchView: GenericAction<string>;
   template?: Template;
   templates: Template[];
-  templateMap: TemplateMap;
   templateComplete: boolean;
   views: string[];
 }
@@ -136,7 +135,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       switchView,
       template,
       templateComplete,
-      templateMap,
       templates,
       views,
     } = this.props;
@@ -157,7 +155,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
           className={classnames({
             'chart-container': true,
             center: true,
-            'full-width': encodingMode !== NONE_TEMPLATE,
+            'full-width': encodingMode !== NONE.templateName,
             'full-height': true,
           })}
         >
@@ -166,8 +164,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               deleteTemplate={deleteTemplate}
               columns={columns}
               setEncodingMode={setEncodingMode}
+              spec={spec}
               templates={templates}
-              templateMap={templateMap}
             />
           )}
           {showChart && (

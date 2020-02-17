@@ -2,6 +2,7 @@ import React from 'react';
 import {FreeTextWidget, TemplateWidget} from '../../templates/types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, Reset, widgetName} from './widget-common';
+import {trim} from '../../utils';
 import {IgnoreKeys} from 'react-hotkeys';
 
 function FreeTextWidgetConfiguration(props: GeneralWidget<FreeTextWidget>): JSX.Element {
@@ -22,9 +23,9 @@ function FreeTextWidgetComponent(props: GeneralWidget<FreeTextWidget>): JSX.Elem
       <div className="widget-title">{widgetName(widget, editMode)}</div>
       <IgnoreKeys style={{height: '100%'}}>
         <input
-          value={templateMap[widget.name] || ''}
+          value={trim((templateMap[widget.name] as string) || '')}
           type="text"
-          onChange={(event): any => setTemplateValue({field, text: event.target.value})}
+          onChange={(event): any => setTemplateValue({field, text: `"${event.target.value}"`})}
         />
       </IgnoreKeys>
       <Reset
