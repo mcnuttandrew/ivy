@@ -1,5 +1,6 @@
 import {get, set} from 'idb-keyval';
 import produce from 'immer';
+import stringify from 'json-stringify-pretty-compact';
 import {ActionResponse, AppState, blindSet, EMPTY_SPEC_BY_LANGUAGE} from './default-state';
 import {
   ModifyValueOnTemplatePayload,
@@ -194,19 +195,26 @@ export const readInTemplateMap: ActionResponse<HandleCodePayload> = (state, payl
   });
 };
 
-export const setBlankTemplate: ActionResponse<{fork: boolean; language: string}> = (
+export const setBlankTemplate: ActionResponse<{fork: string | null; language: string}> = (
   state,
   {fork, language},
 ) => {
-  const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
+  // const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
+
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
   newTemplate.code = JSON.stringify(EMPTY_SPEC_BY_LANGUAGE[language], null, 2);
   newTemplate.language = language;
-  if (fork) {
-    newTemplate.code = currentCode;
-    if (state.encodingMode && state.encodingMode !== 'grammar') {
-      newTemplate.widgets = state.currentTemplateInstance.widgets;
-    }
+  if (fork == 'output') {
+    newTemplate.code = stringify(evaluateHydraProgram(state.currentTemplateInstance, state.templateMap));
+    // if (state.encodingMode && state.encodingMode !== 'grammar') {
+    //   newTemplate.widgets = state.currentTemplateInstance.widgets;
+    // }
+  } else if (fork === 'body') {
+    newTemplate.code = state.currentTemplateInstance.code;
+    // newTemplate.widgets = state.currentTemplateInstance.widgets;
+  } else if (fork === 'all') {
+    newTemplate.code = state.currentTemplateInstance.code;
+    newTemplate.widgets = state.currentTemplateInstance.widgets;
   }
   return produce(state, draftState => {
     draftState.currentTemplateInstance = newTemplate;

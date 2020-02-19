@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import React from 'react';
 import {
@@ -26,7 +27,7 @@ interface Props {
   encodingMode: string;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   saveCurrentTemplate: GenericAction<void>;
-  setBlankTemplate: GenericAction<{fork: boolean; language: string}>;
+  setBlankTemplate: GenericAction<{fork: string | null; language: string}>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setProgrammaticView: GenericAction<boolean>;
@@ -73,7 +74,7 @@ export default function EncodingControls(props: Props): JSX.Element {
       disabled: false,
 
       icon: <TiPencil />,
-      customTooltip: (
+      customTooltip: (): JSX.Element => (
         <div className="tooltip-internal flex-down">
           <h5>Create Blank Template</h5>
           {['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(language => {
@@ -82,7 +83,7 @@ export default function EncodingControls(props: Props): JSX.Element {
                 key={language}
                 onClick={(): void => {
                   chainActions([
-                    (): any => setBlankTemplate({fork: false, language}),
+                    (): any => setBlankTemplate({fork: null, language}),
                     (): any => setEditMode(true),
                     (): any => setCodeMode(TEMPLATE_BODY),
                     (): any => setProgrammaticView(true),
@@ -98,13 +99,28 @@ export default function EncodingControls(props: Props): JSX.Element {
     },
     {
       disabled: onGallery,
-      onClick: onGallery
-        ? NULL
-        : (): any =>
-            chainActions([
-              (): any => setBlankTemplate({fork: true, language: template.templateLanguage}),
-              (): any => setEditMode(true),
-            ]),
+      customTooltip: (): JSX.Element => {
+        const buildReaction = (forkType: string) => (): any =>
+          chainActions([
+            (): any => setBlankTemplate({fork: forkType, language: template.templateLanguage}),
+            (): any => setEditMode(true),
+          ]);
+        return (
+          <div className="tooltip-internal flex-down">
+            <h5>How should we copy the current state?</h5>
+            <button onClick={buildReaction('output')}>Just output</button>
+            <button onClick={buildReaction('body')}>Body but not params</button>
+            <button onClick={buildReaction('all')}>Everything</button>
+          </div>
+        );
+      },
+      // onClick: onGallery
+      //   ? NULL
+      //   : (): any =>
+      //       chainActions([
+      //         (): any => setBlankTemplate({fork: true, language: template.templateLanguage}),
+      //         (): any => setEditMode(true),
+      //       ]),
       icon: <TiFlowChildren />,
       label: 'Fork',
       tooltip:
@@ -163,22 +179,21 @@ export default function EncodingControls(props: Props): JSX.Element {
           );
           if (customTooltip) {
             return (
-              <Tooltip key={button.label} placement="bottom" trigger="click" overlay={customTooltip}>
-                <div
-                  key={button.label}
-                  className={classnames({
-                    'template-modification-control': true,
-                    'template-modification-control--disabled': disabled,
-                  })}
-                >
-                  {iconComponent}
-                  <SimpleTooltip message={tooltip} />
-                </div>
-              </Tooltip>
+              <div
+                key={button.label}
+                className={classnames({
+                  'template-modification-control': true,
+                  'template-modification-control--disabled': disabled,
+                })}
+              >
+                <Tooltip placement="bottom" trigger="click" overlay={!disabled && customTooltip()}>
+                  <span className="flex">{iconComponent}</span>
+                </Tooltip>
+                <SimpleTooltip message={tooltip} />
+              </div>
             );
           }
 
-          console.log(customTooltip);
           return (
             <div
               key={button.label}
