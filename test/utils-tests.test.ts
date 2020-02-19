@@ -42,15 +42,3 @@ test('#fillTemplateMapWithDefaults', () => {
   expect(nextState2.spec).toMatchSnapshot();
   expect(nextState2.templateMap).toMatchSnapshot();
 });
-
-// // UGH come back to this later
-//
-// // @ts-ignore
-// import React from 'react';
-// import {mount} from 'enzyme';
-// import AppWrap from '../src/components/app-wrap';
-//
-// test('test mount', t => {
-//   const $ = mount(<AppWrap />);
-//   console.log($);
-// });

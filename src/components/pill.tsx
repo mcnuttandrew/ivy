@@ -101,7 +101,6 @@ interface BaseBallCardProps {
 }
 function baseBallCard(props: BaseBallCardProps): JSX.Element {
   const {column, field, coerceType} = props;
-  console.log(column);
   const summaryManips = [
     {key: 'count', show: 'Rows'},
     {key: 'missing', show: 'Missing'},

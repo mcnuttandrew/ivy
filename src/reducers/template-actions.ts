@@ -263,7 +263,6 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       draftState.currentTemplateInstance.widgets[idx][key] = value;
       /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     } else {
-      console.log(key, value, idx);
       /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx].config[key] = value;

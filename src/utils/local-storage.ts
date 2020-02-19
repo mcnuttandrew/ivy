@@ -111,7 +111,6 @@ const names = [
 
 export const randomSetUserNameIfUnset = (): void => {
   if (!getUserName()) {
-    console.log('ugh!');
     const name1 = names[Math.floor(Math.random() * names.length)];
     const name2 = names[Math.floor(Math.random() * names.length)];
     writeUserName(`${name1}-${name2}-${Math.floor(Math.random() * 100)}`);

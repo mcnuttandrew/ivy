@@ -224,13 +224,7 @@ export default class TemplateColumn extends React.Component<TemplateColumnProps>
         {editMode && (
           <div className="flex">
             <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />
-            <button
-              onClick={(): any =>
-                updateThumbnail(template.templateName, template.templateAuthor).then(() =>
-                  console.log('image update, todo trigger something'),
-                )
-              }
-            >
+            <button onClick={(): any => updateThumbnail(template.templateName, template.templateAuthor)}>
               Update Thumbnail
             </button>
           </div>
