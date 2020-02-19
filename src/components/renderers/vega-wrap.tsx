@@ -12,6 +12,7 @@ interface VegaWrapperProps {
   data: DataRow[];
   theme: VegaTheme;
   language?: string;
+  onError: (x: any) => any;
 }
 
 // no false positives
@@ -38,7 +39,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
   }
 
   render(): JSX.Element {
-    const {spec, data, theme, language = 'vega-lite'} = this.props;
+    const {spec, data, theme, language = 'vega-lite', onError} = this.props;
     const lang = inferredLanguage(spec) || language;
     if (lang === 'unit-vis') {
       return <UnitVisChart data={data} spec={spec} />;
@@ -46,7 +47,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     if (lang === 'hydra-data-table') {
       return <Table data={data} spec={spec as {columns: string[]}} />;
     }
-    // HACK to prevent changes to the data
+    // HACK to de-immutable-ize the spec
     const finalSpec = JSON.parse(JSON.stringify(spec));
     // this stratagey only supports one data set
     if (lang === 'vega') {
@@ -65,6 +66,7 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
     return (
       <Vega
         actions={false}
+        onError={onError}
         spec={finalSpec}
         mode={language as any}
         theme={theme}

@@ -21,9 +21,14 @@ interface TemplateShelf {
   columns: ColumnHeader[];
 
   /**
-   * The name of the shelf, the write parameter
+   * The value to be shown on the shelf
    */
   shelfName: string;
+
+  /**
+   * The write parameter
+   */
+  fieldKey: string;
 
   /**
    * What to do when something is droped on shelf
@@ -42,10 +47,10 @@ interface TemplateShelf {
 }
 
 export default function TemplateShelf(props: TemplateShelf): JSX.Element {
-  const {shelfValue, columns, shelfName, onDrop, widget, template} = props;
+  const {shelfValue, columns, shelfName, onDrop, widget, template, fieldKey} = props;
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field: shelfName}),
+    drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field: fieldKey}),
     collect: monitor => ({isOver: monitor.isOver(), canDrop: monitor.canDrop()}),
   });
 
@@ -56,7 +61,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
       options={makeOptionsForDropdown({template, widget, columns})}
       selectedValue={shelfValue || ' '}
       onChange={(text: string): void => {
-        onDrop({field: shelfName, type: 'CARD', text: `"${text}"`, disable: false});
+        onDrop({field: fieldKey, type: 'CARD', text: `"${text}"`, disable: false});
       }}
     />
   );
@@ -81,8 +86,8 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
           {shelfValue && columnHeader && (
             <Pill
               inEncoding={true}
-              containingShelf={shelfName}
-              containingField={shelfName}
+              containingShelf={fieldKey}
+              containingField={fieldKey}
               column={columnHeader}
               setEncodingParameter={onDrop}
               fieldSelector={fieldSelector}

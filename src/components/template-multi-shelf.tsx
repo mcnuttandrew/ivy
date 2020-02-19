@@ -11,6 +11,7 @@ import {classnames, makeOptionsForDropdown, getOrMakeColumn} from '../utils';
 interface Props {
   shelfValues?: string[];
   columns: ColumnHeader[];
+  fieldKey: string;
   shelfName: string;
   onDrop: any;
   widget: TemplateWidget<MultiDataTargetWidget>;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 export default function TemplateMultiShelf(props: Props): JSX.Element {
-  const {shelfValues, columns, shelfName, onDrop, widget, template} = props;
+  const {shelfValues, columns, shelfName, fieldKey, onDrop, widget, template} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -26,7 +27,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
       onDrop({
         ...item,
         text: shelfValues.concat([`${item.text}`]),
-        field: shelfName,
+        field: fieldKey,
         multiTarget: true,
       }),
     collect: monitor => ({
@@ -43,7 +44,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
     .map(shelfValue => getOrMakeColumn(shelfValue, columns, template))
     .filter(d => d);
   const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) < columnHeaders.length;
-  const dropCommon = {field: shelfName, multiTarget: true};
+  const dropCommon = {field: fieldKey, multiTarget: true};
 
   return (
     <div
