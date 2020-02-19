@@ -9,6 +9,7 @@ export interface ColumnHeader {
   secondaryType?: string;
   field: string;
   domain: number[] | string[];
+  summary: any;
   metaColumn?: boolean;
 }
 

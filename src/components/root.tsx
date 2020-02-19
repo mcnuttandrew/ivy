@@ -135,7 +135,7 @@ interface RootProps {
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
   setAllTemplateValues: GenericAction<TemplateMap>;
-  setBlankTemplate: GenericAction<boolean>;
+  setBlankTemplate: GenericAction<{fork: string | null; language: string}>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
@@ -484,6 +484,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     showProgrammaticMode: base.showProgrammaticMode,
     showGUIView: base.showGUIView,
     spec: template ? evaluateHydraProgram(template, templateMap) : base.spec,
+    // TODO i think speccode might be nonsense?
     specCode: base.specCode,
     template,
     templateComplete: !missingFields.length,

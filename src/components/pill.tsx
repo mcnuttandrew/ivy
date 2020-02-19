@@ -94,37 +94,55 @@ function addFilter(props: AddFilterProps): JSX.Element {
   );
 }
 
-interface TypePopoverProps {
+interface BaseBallCardProps {
   column: ColumnHeader;
   field: string;
   coerceType: GenericAction<CoerceTypePayload>;
 }
-function typePopover(props: TypePopoverProps): JSX.Element {
+function baseBallCard(props: BaseBallCardProps): JSX.Element {
   const {column, field, coerceType} = props;
-
+  const summaryManips = [
+    {key: 'count', show: 'Rows'},
+    {key: 'missing', show: 'Missing'},
+    {key: 'distinct', show: 'Unique'},
+    column.type !== 'DIMENSION' && {key: 'min', show: 'Min'},
+    column.type !== 'DIMENSION' && {key: 'max', show: 'Max'},
+  ].filter(d => d);
+  const summaryPresent = Object.keys(column.summary).length;
+  const isCustom = column.type === 'CUSTOM';
   return (
     <Tooltip
       placement="right"
       trigger="click"
       overlay={
         <div className="tooltip-internal flex-down">
-          <h5>Change Base Type</h5>
-          {['DIMENSION', 'MEASURE', 'TIME'].map((type: DataType) => {
-            return (
-              <button
-                className={classnames({
-                  'selected-dimension': column.type === type,
-                })}
-                onClick={(): any => coerceType({field, type})}
-                key={type}
-              >
-                {type}
-              </button>
-            );
-          })}
-          <button onClick={(): any => coerceType({field, type: column.originalType})}>
-            RESET TO ORIGINAL
-          </button>
+          <h3>Fields: {column.field}</h3>
+          {isCustom && <h5>Description</h5>}
+          {isCustom && <div>{column.summary.description}</div>}
+          {!isCustom && summaryPresent > 0 && <h5>Basic Statistics</h5>}
+          {!isCustom && summaryPresent > 0 && (
+            <div>{summaryManips.map(({key, show}) => `${show}: ${column.summary[key]}`).join(', ')}</div>
+          )}
+          {!isCustom && <h5>Change Base Type</h5>}
+          {!isCustom &&
+            ['DIMENSION', 'MEASURE', 'TIME'].map((type: DataType) => {
+              return (
+                <button
+                  className={classnames({
+                    'selected-dimension': column.type === type,
+                  })}
+                  onClick={(): any => coerceType({field, type})}
+                  key={type}
+                >
+                  {type}
+                </button>
+              );
+            })}
+          {!isCustom && (
+            <button onClick={(): any => coerceType({field, type: column.originalType})}>
+              RESET TO ORIGINAL
+            </button>
+          )}
         </div>
       }
     >
@@ -159,9 +177,9 @@ export default function Pill(props: PillProps): JSX.Element {
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
-  const showAddFilter = !isMeta && !inEncoding && !hideGUI && createFilter && !isCustom;
+  const showAddFilter = false && !isMeta && !inEncoding && !hideGUI && createFilter && !isCustom;
   const showAutoAdd = !isMeta && !inEncoding && !hideGUI && addToNextOpenSlot;
-  const showTypeCoerce = !isMeta && !inEncoding && coerceType && !isCustom;
+  const showTypeCoerce = !isMeta && !inEncoding && coerceType;
   return (
     <div
       className={classnames({
@@ -173,7 +191,7 @@ export default function Pill(props: PillProps): JSX.Element {
       ref={dragRef}
       style={{opacity}}
     >
-      {showTypeCoerce && typePopover({column, field, coerceType})}
+      {showTypeCoerce && baseBallCard({column, field, coerceType})}
       {pillType({isMeta, column})}
       <div className="pill-label">{column.field}</div>
       {showAddFilter && addFilter({column, inEncoding, createFilter})}

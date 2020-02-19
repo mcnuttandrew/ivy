@@ -174,6 +174,9 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               data={data}
               theme={currentTheme}
               language={template && template.templateLanguage}
+              onError={(e): void => {
+                console.log('upper error', e);
+              }}
             />
           )}
           {!noneTemplate && !showChart && (

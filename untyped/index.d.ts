@@ -1,4 +1,5 @@
 declare module 'type-analyzer';
+declare module 'datalib';
 declare module 'hoopoe';
 // TODO i guess
 //  {

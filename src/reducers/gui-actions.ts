@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import {ActionResponse, AppState, EMPTY_SPEC, toggle, blindSet} from './default-state';
+import {ActionResponse, AppState, EMPTY_SPEC_BY_LANGUAGE, toggle, blindSet} from './default-state';
 import {getTemplate} from '../utils';
 import {JSON_OUTPUT} from '../constants/index';
 
@@ -68,7 +68,7 @@ export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDef
   }
   return produce(state, draftState => {
     draftState.encodingMode = mode;
-    draftState.spec = EMPTY_SPEC;
+    draftState.spec = EMPTY_SPEC_BY_LANGUAGE['vega-lite'];
     draftState.currentTemplateInstance = null;
   });
 };

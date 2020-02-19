@@ -65,6 +65,7 @@
   "dependencies": {
     "@types/rc-slider": "^8.6.5",
     "d3-dsv": "^1.1.1",
+    "datalib": "^1.9.2",
     "dom-to-image": "^2.6.0",
     "idb-keyval": "^3.2.0",
     "immer": "^5.3.2",

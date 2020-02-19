@@ -85,7 +85,8 @@ function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): 
     <div className="multi-data-target-widget">
       <TemplateMultiShelf
         shelfValues={(Array.isArray(fieldValue) ? (fieldValue as string[]) : []).map(trim)}
-        shelfName={widget.name}
+        shelfName={widget.displayName || widget.name}
+        fieldKey={widget.name}
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}

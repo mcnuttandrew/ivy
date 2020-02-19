@@ -148,7 +148,11 @@ const Polestar: Template = {
     'A tableau-style shelf builder, facilitates a wide variety of charting and exploration tasks.',
   templateLanguage: 'vega-lite',
   templateAuthor: 'HYDRA-AUTHORS',
-  customCards: ['COUNT', META_COL_ROW, META_COL_COL],
+  customCards: [
+    {name: 'COUNT', description: 'use this card to treat channels as simple count aggregations'},
+    {name: META_COL_ROW, description: 'place this card onto fields to facet across by data column'},
+    {name: META_COL_COL, description: 'place this card onto fields to facet across by data column'},
+  ],
   code: stringify(PolestarBody),
   widgets: [
     makeSection('Meta Columns Section', [USING_META_COLS_VALIDATION]),

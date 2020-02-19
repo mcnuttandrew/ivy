@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 import React from 'react';
 import {
   TiHomeOutline,
@@ -9,6 +11,7 @@ import {
   TiLockOpen,
   TiThSmallOutline,
 } from 'react-icons/ti';
+import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
@@ -24,7 +27,7 @@ interface Props {
   encodingMode: string;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   saveCurrentTemplate: GenericAction<void>;
-  setBlankTemplate: GenericAction<boolean>;
+  setBlankTemplate: GenericAction<{fork: string | null; language: string}>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setProgrammaticView: GenericAction<boolean>;
@@ -69,22 +72,55 @@ export default function EncodingControls(props: Props): JSX.Element {
     },
     {
       disabled: false,
-      onClick: (): any =>
-        chainActions([
-          (): any => setBlankTemplate(false),
-          (): any => setEditMode(true),
-          (): any => setCodeMode(TEMPLATE_BODY),
-          (): any => setProgrammaticView(true),
-        ]),
+
       icon: <TiPencil />,
+      customTooltip: (): JSX.Element => (
+        <div className="tooltip-internal flex-down">
+          <h5>Create Blank Template</h5>
+          {['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(language => {
+            return (
+              <button
+                key={language}
+                onClick={(): void => {
+                  chainActions([
+                    (): any => setBlankTemplate({fork: null, language}),
+                    (): any => setEditMode(true),
+                    (): any => setCodeMode(TEMPLATE_BODY),
+                    (): any => setProgrammaticView(true),
+                  ]);
+                }}
+              >{`New ${language} template`}</button>
+            );
+          })}
+        </div>
+      ),
       label: 'Blank',
       tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
     },
     {
       disabled: onGallery,
-      onClick: onGallery
-        ? NULL
-        : (): any => chainActions([(): any => setBlankTemplate(true), (): any => setEditMode(true)]),
+      customTooltip: (): JSX.Element => {
+        const buildReaction = (forkType: string) => (): any =>
+          chainActions([
+            (): any => setBlankTemplate({fork: forkType, language: template.templateLanguage}),
+            (): any => setEditMode(true),
+          ]);
+        return (
+          <div className="tooltip-internal flex-down">
+            <h5>How should we copy the current state?</h5>
+            <button onClick={buildReaction('output')}>Just output</button>
+            <button onClick={buildReaction('body')}>Body but not params</button>
+            <button onClick={buildReaction('all')}>Everything</button>
+          </div>
+        );
+      },
+      // onClick: onGallery
+      //   ? NULL
+      //   : (): any =>
+      //       chainActions([
+      //         (): any => setBlankTemplate({fork: true, language: template.templateLanguage}),
+      //         (): any => setEditMode(true),
+      //       ]),
       icon: <TiFlowChildren />,
       label: 'Fork',
       tooltip:
@@ -134,19 +170,43 @@ export default function EncodingControls(props: Props): JSX.Element {
           <SimpleTooltip message="Return to the view of the template gallery." />
         </div>
         {FULL_BUTTONS.map(button => {
+          const {disabled, onClick, customTooltip, icon, label, tooltip} = button;
+          const iconComponent = (
+            <React.Fragment>
+              <div className="template-modification-control-icon">{icon}</div>
+              <span className="template-modification-control-label">{label}</span>
+            </React.Fragment>
+          );
+          if (customTooltip) {
+            return (
+              <div
+                key={button.label}
+                className={classnames({
+                  'template-modification-control': true,
+                  'template-modification-control--disabled': disabled,
+                })}
+              >
+                <Tooltip placement="bottom" trigger="click" overlay={!disabled && customTooltip()}>
+                  <span className="flex">{iconComponent}</span>
+                </Tooltip>
+                <SimpleTooltip message={tooltip} />
+              </div>
+            );
+          }
+
           return (
             <div
               key={button.label}
               className={classnames({
                 'template-modification-control': true,
-                'template-modification-control--disabled': button.disabled,
+                'template-modification-control--disabled': disabled,
               })}
             >
-              <div className="flex" onClick={(): any => button.onClick()}>
-                <div className="template-modification-control-icon">{button.icon}</div>
-                <span className="template-modification-control-label">{button.label}</span>
+              <div className="flex" onClick={(): any => onClick()}>
+                {iconComponent}
               </div>
-              <SimpleTooltip message={button.tooltip} />
+
+              <SimpleTooltip message={tooltip} />
             </div>
           );
         })}

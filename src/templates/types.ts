@@ -125,9 +125,9 @@ export interface Template {
   /**
    * Advanced tool for providing special extra cards
    */
-  customCards?: string[];
+  customCards?: CustomCard[];
 }
-
+export type CustomCard = {name: string; description: string};
 /**
  * A widget validation query, executed raw javascript. Parameter values (the value of the current ui)
  * is accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if

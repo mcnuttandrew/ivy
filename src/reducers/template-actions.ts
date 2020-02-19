@@ -1,6 +1,7 @@
 import {get, set} from 'idb-keyval';
 import produce from 'immer';
-import {ActionResponse, AppState, blindSet} from './default-state';
+import stringify from 'json-stringify-pretty-compact';
+import {ActionResponse, AppState, blindSet, EMPTY_SPEC_BY_LANGUAGE} from './default-state';
 import {
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
@@ -194,14 +195,26 @@ export const readInTemplateMap: ActionResponse<HandleCodePayload> = (state, payl
   });
 };
 
-export const setBlankTemplate: ActionResponse<boolean> = (state, fork) => {
-  const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
+export const setBlankTemplate: ActionResponse<{fork: string | null; language: string}> = (
+  state,
+  {fork, language},
+) => {
+  // const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
+
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
-  if (fork) {
-    newTemplate.code = currentCode;
-    if (state.encodingMode && state.encodingMode !== 'grammar') {
-      newTemplate.widgets = state.currentTemplateInstance.widgets;
-    }
+  newTemplate.code = JSON.stringify(EMPTY_SPEC_BY_LANGUAGE[language], null, 2);
+  newTemplate.language = language;
+  if (fork == 'output') {
+    newTemplate.code = stringify(evaluateHydraProgram(state.currentTemplateInstance, state.templateMap));
+    // if (state.encodingMode && state.encodingMode !== 'grammar') {
+    //   newTemplate.widgets = state.currentTemplateInstance.widgets;
+    // }
+  } else if (fork === 'body') {
+    newTemplate.code = state.currentTemplateInstance.code;
+    // newTemplate.widgets = state.currentTemplateInstance.widgets;
+  } else if (fork === 'all') {
+    newTemplate.code = state.currentTemplateInstance.code;
+    newTemplate.widgets = state.currentTemplateInstance.widgets;
   }
   return produce(state, draftState => {
     draftState.currentTemplateInstance = newTemplate;
@@ -250,7 +263,6 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       draftState.currentTemplateInstance.widgets[idx][key] = value;
       /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     } else {
-      console.log(key, value, idx);
       /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx].config[key] = value;

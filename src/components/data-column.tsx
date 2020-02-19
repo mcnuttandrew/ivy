@@ -2,14 +2,18 @@
 import React from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
-import MetaColumnPicker from './meta-column-picker';
+// import MetaColumnPicker from './meta-column-picker';
 import {TiInfoLarge} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {GenericAction, CoerceTypePayload, SetRepeatsPayload, UpdateFilterPayload} from '../actions/index';
-import {Template} from '../templates/types';
-import {getAllInUseFields, get, makeCustomType} from '../utils';
+import {Template, CustomCard} from '../templates/types';
+import {
+  // getAllInUseFields,
+  get,
+  makeCustomType,
+} from '../utils';
 import SimpleTooltip from './simple-tooltip';
 
 interface DataColumnProps {
@@ -40,23 +44,25 @@ interface MakePillProps {
   checkOptions: boolean;
 }
 
-type makePillType = (props: MakePillProps) => (column: ColumnHeader | string, idx: number) => JSX.Element;
+type makePillType = (props: MakePillProps) => (column: ColumnHeader | CustomCard, idx: number) => JSX.Element;
 const MakePill: makePillType = props => {
   const {
     addToNextOpenSlot,
     coerceType,
-    columns,
+    // columns,
     createFilter,
     fillableFields,
-    setRepeats,
+    // setRepeats,
     showGUIView,
-    spec,
-    checkOptions,
+    // spec,
+    // checkOptions,
   } = props;
-  const inUseFields = getAllInUseFields(spec);
+  // const inUseFields = getAllInUseFields(spec);
   return (column, idx): JSX.Element => {
-    const isString = typeof column === 'string';
-    const inferredColumn = isString ? makeCustomType(column as string) : (column as ColumnHeader);
+    const isCustomCard = 'description' in column;
+    const inferredColumn = isCustomCard
+      ? makeCustomType({...column} as CustomCard)
+      : (column as ColumnHeader);
     return (
       <div className="pill-container" key={`column-${idx}`}>
         <Pill
@@ -66,13 +72,16 @@ const MakePill: makePillType = props => {
           addToNextOpenSlot={addToNextOpenSlot}
           createFilter={createFilter}
           hideGUI={!showGUIView}
-          typeNotAddable={isString ? false : !fillableFields.has(inferredColumn.type as string)}
+          typeNotAddable={isCustomCard ? false : !fillableFields.has(inferredColumn.type as string)}
         />
-        {checkOptions && typeof column !== 'string' && inUseFields.has(column.field) && (
-          <div>
-            <MetaColumnPicker columns={columns} field={column.field} spec={spec} setRepeats={setRepeats} />
-          </div>
-        )}
+        {
+          // t0 deletions
+          // checkOptions && !isCustomCard && inUseFields.has(column.field) && (
+          //   <div>
+          //     <MetaColumnPicker columns={columns} field={column.field} spec={spec} setRepeats={setRepeats} />
+          //   </div>
+          // )
+        }
       </div>
     );
   };
