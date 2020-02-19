@@ -135,7 +135,7 @@ interface RootProps {
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
   setAllTemplateValues: GenericAction<TemplateMap>;
-  setBlankTemplate: GenericAction<boolean>;
+  setBlankTemplate: GenericAction<{fork: boolean; language: string}>;
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;

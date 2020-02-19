@@ -13,7 +13,7 @@ import {
   GenWidget,
   ShortcutsWidget,
 } from './types';
-import {EMPTY_SPEC} from '../reducers/default-state';
+import {EMPTY_SPEC_BY_LANGUAGE} from '../reducers/default-state';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
 import ATOM from './example-templates/atom';
@@ -32,7 +32,7 @@ export const BLANK_TEMPLATE: Template = {
   templateLanguage: 'vega-lite',
   templateName: 'BLANK TEMPLATE',
   templateDescription: 'FILL IN DESCRIPTION',
-  code: stringify(EMPTY_SPEC),
+  code: stringify(EMPTY_SPEC_BY_LANGUAGE['vega-lite']),
   widgets: [],
 };
 

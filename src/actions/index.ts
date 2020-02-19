@@ -83,7 +83,9 @@ export const readInTemplateMap = createAction<HandleCodePayload>(actionTypes.REA
 export const removeWidget = createAction<number>(actionTypes.REMOVE_WIDGET_FROM_TEMPLATE);
 export const saveCurrentTemplate = createAction<void>(actionTypes.SAVE_TEMPLATE);
 export const setAllTemplateValues = createAction<boolean>(actionTypes.SET_ALL_TEMPLATE_VALUES);
-export const setBlankTemplate = createAction<boolean>(actionTypes.SET_BLANK_TEMPLATE);
+export const setBlankTemplate = createAction<{fork: boolean; language: string}>(
+  actionTypes.SET_BLANK_TEMPLATE,
+);
 export const setCodeMode = createAction<string>(actionTypes.SET_CODE_MODE);
 export const setEditMode = createAction<boolean>(actionTypes.SET_EDIT_MODE);
 export const setEncodingMode = createAction<string>(actionTypes.SET_ENCODING_MODE);

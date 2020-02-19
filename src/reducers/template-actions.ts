@@ -1,6 +1,6 @@
 import {get, set} from 'idb-keyval';
 import produce from 'immer';
-import {ActionResponse, AppState, blindSet} from './default-state';
+import {ActionResponse, AppState, blindSet, EMPTY_SPEC_BY_LANGUAGE} from './default-state';
 import {
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
@@ -194,9 +194,14 @@ export const readInTemplateMap: ActionResponse<HandleCodePayload> = (state, payl
   });
 };
 
-export const setBlankTemplate: ActionResponse<boolean> = (state, fork) => {
+export const setBlankTemplate: ActionResponse<{fork: boolean; language: string}> = (
+  state,
+  {fork, language},
+) => {
   const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
+  newTemplate.code = JSON.stringify(EMPTY_SPEC_BY_LANGUAGE[language], null, 2);
+  newTemplate.language = language;
   if (fork) {
     newTemplate.code = currentCode;
     if (state.encodingMode && state.encodingMode !== 'grammar') {

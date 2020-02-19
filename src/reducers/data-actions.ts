@@ -1,4 +1,4 @@
-import {AppState, EMPTY_SPEC, ActionResponse, DataReducerState} from './default-state';
+import {AppState, EMPTY_SPEC_BY_LANGUAGE, ActionResponse, DataReducerState} from './default-state';
 import {ColumnHeader} from '../types';
 import produce from 'immer';
 import {TypeInference, DataRow} from '../actions/index';
@@ -7,7 +7,7 @@ import {constructDefaultTemplateMap} from '../hydra-lang';
 
 export const recieveData = (state: AppState): AppState => {
   return produce(state, draftState => {
-    draftState.spec = EMPTY_SPEC;
+    draftState.spec = EMPTY_SPEC_BY_LANGUAGE['vega-lite'];
     draftState.views = ['view1'];
     draftState.templateMap = state.currentTemplateInstance
       ? constructDefaultTemplateMap(state.currentTemplateInstance)

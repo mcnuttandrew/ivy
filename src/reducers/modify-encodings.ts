@@ -3,7 +3,7 @@ import stringify from 'json-stringify-pretty-compact';
 
 import {CoerceTypePayload, HandleCodePayload, SetTemplateValuePayload} from '../actions/index';
 import {findField, getAllInUseFields, extractFieldStringsForType, get} from '../utils';
-import {ActionResponse, EMPTY_SPEC, AppState, blindSet} from './default-state';
+import {ActionResponse, EMPTY_SPEC_BY_LANGUAGE, AppState, blindSet} from './default-state';
 import {TYPE_TRANSLATE} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {evaluateHydraProgram} from '../hydra-lang';
@@ -16,7 +16,7 @@ export const clearEncoding: ActionResponse<void> = state => {
     return fillTemplateMapWithDefaults(state);
   } else {
     return produce(state, draftState => {
-      draftState.spec = EMPTY_SPEC;
+      draftState.spec = EMPTY_SPEC_BY_LANGUAGE['vega-lite'];
     });
   }
 };

@@ -159,7 +159,7 @@ export default function Pill(props: PillProps): JSX.Element {
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
-  const showAddFilter = !isMeta && !inEncoding && !hideGUI && createFilter && !isCustom;
+  const showAddFilter = false && !isMeta && !inEncoding && !hideGUI && createFilter && !isCustom;
   const showAutoAdd = !isMeta && !inEncoding && !hideGUI && addToNextOpenSlot;
   const showTypeCoerce = !isMeta && !inEncoding && coerceType && !isCustom;
   return (

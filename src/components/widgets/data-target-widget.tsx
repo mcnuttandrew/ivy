@@ -65,8 +65,8 @@ function DataTargetWidgetComponent(props: GeneralWidget<DataTargetWidget>): JSX.
   return (
     <TemplateShelf
       shelfValue={trim(fieldValue as string)}
-      shelfName={widget.name}
-      fieldKey={widget.displayName || widget.name}
+      shelfName={widget.displayName || widget.name}
+      fieldKey={widget.name}
       columns={columns}
       onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
       widget={widget}

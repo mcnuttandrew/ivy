@@ -3,6 +3,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
 import NONE from '../templates/example-templates/none';
+import TABLE from '../templates/example-templates/table';
 import {UndoRedoStackItem} from './undo-actions';
 import {ViewCatalog} from './view-actions';
 import {JSON_OUTPUT} from '../constants/index';
@@ -70,13 +71,34 @@ export const toggle = (key: string): ActionResponse<null> => (state): AppState =
   });
 
 // TODO undo this embarrasment (specifically the type messes)
-const defaultEmpty = {
+const vegaLitEmpty = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   transform: [] as any[],
   mark: {type: 'point', tooltip: true},
   encoding: {},
 };
-export const EMPTY_SPEC = defaultEmpty;
+const vegaEmpty = {
+  $schema: 'https://vega.github.io/schema/vega/v5.json',
+  width: 400,
+  height: 200,
+  padding: 5,
+  data: [] as any[],
+  signals: [] as any[],
+  scales: [] as any[],
+  axes: [] as any[],
+  marks: [] as any[],
+};
+const unitVisEmpty = {
+  $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
+  layouts: [] as any[],
+  mark: {color: {key: '', type: 'categorical'}},
+};
+export const EMPTY_SPEC_BY_LANGUAGE: {[x: string]: any} = {
+  'vega-lite': vegaLitEmpty,
+  vega: vegaEmpty,
+  'unit-vis': unitVisEmpty,
+  'hydra-data-table': JSON.parse(TABLE.code),
+};
 export const DEFAULT_STATE: AppState = {
   // meta-data
   currentlySelectedFile: 'cars.json',
@@ -85,7 +107,7 @@ export const DEFAULT_STATE: AppState = {
 
   // spec configs
   spec: {},
-  specCode: stringify(EMPTY_SPEC),
+  specCode: stringify(EMPTY_SPEC_BY_LANGUAGE['vega-lite']),
   currentTheme: 'default',
   editorError: null,
   editMode: false,
