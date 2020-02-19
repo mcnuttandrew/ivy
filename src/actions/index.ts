@@ -13,6 +13,7 @@ import {AppState} from '../reducers/default-state';
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
+import {summary} from 'datalib';
 export type CoerceTypePayload = {field: string; type: DataType};
 export type ModifyValueOnTemplatePayload = {key: string; value: any; editorError?: any};
 export type MoveWidgetPayload = {fromIdx: number; toIdx: number};
@@ -35,6 +36,7 @@ export interface TypeInference {
   category: string;
   format: string;
   domain: [number, number] | string[];
+  summary: {[x: string]: number};
 }
 export type DataRow = {[x: string]: any};
 export type LoadDataPayload = {fileName: string; data: string};
@@ -117,12 +119,17 @@ export const chainActions = (actions: GenericAction<any>[]) => (dispatch: Dispat
 export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[]> => (
   dispatch: Dispatch,
 ): void => {
+  const summaries = summary(data).reduce((acc: any, d: any) => {
+    acc[d.field] = {...d, unique: null};
+    return acc;
+  }, {} as {[x: string]: any});
   dispatch({
     type: actionTypes.RECIEVE_TYPE_INFERENCES,
     payload: computeColMeta(data).map((columnMeta: any) => {
       const isDimension = columnMeta.category === 'DIMENSION';
       return {
         ...columnMeta,
+        summary: summaries[columnMeta.key],
         domain: (isDimension ? getUniques : getDomain)(data, columnMeta.key),
       };
     }),

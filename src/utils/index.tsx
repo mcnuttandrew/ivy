@@ -8,6 +8,7 @@ import {
   TemplateMap,
   TemplateWidget,
   GenWidget,
+  CustomCard,
 } from '../templates/types';
 import {AppState} from '../reducers/default-state';
 import {TEXT_TYPE} from '../constants/index';
@@ -355,8 +356,14 @@ export function safeParse(code: string): string | boolean {
   return x;
 }
 
-export function makeCustomType(field: string): ColumnHeader {
-  return {type: 'CUSTOM', field, originalType: 'CUSTOM', domain: []};
+export function makeCustomType(customCard: CustomCard): ColumnHeader {
+  return {
+    type: 'CUSTOM',
+    field: customCard.name,
+    originalType: 'CUSTOM',
+    domain: [],
+    summary: {description: customCard.description},
+  };
 }
 
 export function getOrMakeColumn(
@@ -368,8 +375,8 @@ export function getOrMakeColumn(
   if (column) {
     return column;
   }
-  if ((template.customCards || []).includes(columnName)) {
-    return makeCustomType(columnName);
+  if ((template.customCards || []).find(x => x.name === columnName)) {
+    return makeCustomType({name: columnName, description: ''});
   }
   return null;
 }
@@ -386,7 +393,7 @@ export function makeOptionsForDropdown(
   const {template, columns, widget, useGroupsAsTypes} = props;
   return [
     {display: 'Select a value', value: null, group: null},
-    ...(template.customCards || []).map(card => ({display: card, value: card, group: 'Template Fields'})),
+    ...(template.customCards || []).map(({name}) => ({display: name, value: name, group: 'Template Fields'})),
   ].concat(
     columns
       .map(column => ({

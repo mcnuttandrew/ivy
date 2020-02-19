@@ -23,13 +23,13 @@ export const recieveDataForDataReducer = (state: DataReducerState, payload: Data
 };
 
 export const recieveTypeInferences = (state: AppState, payload: TypeInference[]): AppState => {
-  const modifiedColumns = payload.map(({key, type, category, domain}) => {
+  const modifiedColumns = payload.map(({key, summary, category, domain}) => {
     const newHeader: ColumnHeader = {
       field: key,
       type: category as DataType,
       originalType: category as DataType,
-      secondaryType: type,
       domain,
+      summary,
     };
     return newHeader;
   });
@@ -50,24 +50,24 @@ export const recieveTypeInferences = (state: AppState, payload: TypeInference[])
     )
     .reduce((acc, row) => acc.concat(row), []);
 
-  const metaColumns: ColumnHeader[] = [
-    // 'repeat',
-    'row',
-    'column',
-  ].map((field: string) => {
-    const type: DataType = 'DIMENSION';
-    return {
-      type,
-      originalType: type,
-      secondaryType: 'metaColumn',
-      field,
-      domain: modifiedColumns.map((row: ColumnHeader) => row.field),
-      metaColumn: true,
-    };
-  });
+  // const metaColumns: ColumnHeader[] = [
+  //   // 'repeat',
+  //   'row',
+  //   'column',
+  // ].map((field: string) => {
+  //   const type: DataType = 'DIMENSION';
+  //   return {
+  //     type,
+  //     originalType: type,
+  //     secondaryType: 'metaColumn',
+  //     field,
+  //     domain: modifiedColumns.map((row: ColumnHeader) => row.field),
+  //     metaColumn: true,
+  //   };
+  // });
   return produce(state, draftState => {
     draftState.columns = orderedColumns;
-    draftState.metaColumns = metaColumns;
+    // draftState.metaColumns = metaColumns;
   });
 };
 
