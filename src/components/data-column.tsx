@@ -2,14 +2,18 @@
 import React from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
-import MetaColumnPicker from './meta-column-picker';
+// import MetaColumnPicker from './meta-column-picker';
 import {TiInfoLarge} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {GenericAction, CoerceTypePayload, SetRepeatsPayload, UpdateFilterPayload} from '../actions/index';
 import {Template, CustomCard} from '../templates/types';
-import {getAllInUseFields, get, makeCustomType} from '../utils';
+import {
+  // getAllInUseFields,
+  get,
+  makeCustomType,
+} from '../utils';
 import SimpleTooltip from './simple-tooltip';
 
 interface DataColumnProps {

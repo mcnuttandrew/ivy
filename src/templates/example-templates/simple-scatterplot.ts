@@ -9,13 +9,19 @@ const SCATTERPLOT: Template = {
     {
       name: 'colorType',
       type: 'List',
-      config: {allowedValues: ['"quantitative"', '"ordinal"'].map(x => ({display: x, value: x})), defaultValue: '"ordinal"'},
+      config: {
+        allowedValues: ['"quantitative"', '"ordinal"'].map(x => ({display: x, value: x})),
+        defaultValue: '"ordinal"',
+      },
       validations: [{query: '!parameters.Color', queryResult: 'hide'}],
     },
     {
       name: 'Single Color',
       type: 'List',
-      config: {allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})), defaultValue: '"steelblue"'},
+      config: {
+        allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})),
+        defaultValue: '"steelblue"',
+      },
       validations: [{query: 'parameters.Color', queryResult: 'hide'}],
     },
   ],
