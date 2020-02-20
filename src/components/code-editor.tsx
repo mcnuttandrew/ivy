@@ -29,7 +29,6 @@ interface Props {
   setProgrammaticView: GenericAction<boolean>;
   showProgrammaticMode: boolean;
   spec: any;
-  specCode: string;
   template: Template;
   templateMap: TemplateMap;
 }
@@ -86,19 +85,18 @@ export default class CodeEditor extends React.Component<Props> {
   }
 
   getCurrentCode(): string {
-    const {template, codeMode, specCode, spec, templateMap} = this.props;
+    const {template, codeMode, spec, templateMap} = this.props;
     if (codeMode === TEMPLATE_BODY) {
-      return template ? template.code : specCode;
+      return template.code;
     }
     if (codeMode === WIDGET_CONFIGURATION) {
-      return template ? serializeTemplate(template) : 'PARAMETERIZATION NOT AVAILABLE';
+      return serializeTemplate(template);
     }
     if (codeMode === JSON_OUTPUT) {
       return stringify(spec);
     }
     if (codeMode === WIDGET_VALUES) {
       return JSON.stringify(sortObjectAlphabetically(templateMap), null, 2);
-      // return JSON.stringify(templateMap, null, 2);
     }
   }
 
@@ -216,7 +214,6 @@ export default class CodeEditor extends React.Component<Props> {
                 setProgrammaticView={this.props.setProgrammaticView}
                 showProgrammaticMode={this.props.showProgrammaticMode}
                 spec={this.props.spec}
-                specCode={this.props.specCode}
                 template={this.props.template}
                 templateMap={this.props.templateMap}
               />

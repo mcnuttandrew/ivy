@@ -171,7 +171,6 @@ interface CodeEditorControlsProps {
   setProgrammaticView: GenericAction<boolean>;
   showProgrammaticMode: boolean;
   spec: any;
-  specCode: string;
   template: Template;
   templateMap: TemplateMap;
 }

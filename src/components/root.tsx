@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
-import stringify from 'json-stringify-pretty-compact';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
@@ -95,7 +94,6 @@ interface RootProps {
   showGUIView: boolean;
   showProgrammaticMode: boolean;
   spec: Spec;
-  specCode: string;
   template: Template;
   templateComplete: boolean;
   templateMap: TemplateMap;
@@ -320,7 +318,6 @@ class RootComponent extends React.Component<RootProps, State> {
         setProgrammaticView={this.props.setProgrammaticView}
         showProgrammaticMode={this.props.showProgrammaticMode}
         spec={this.props.spec}
-        specCode={this.props.specCode}
         template={this.props.template}
         templateMap={this.props.templateMap}
       />
@@ -451,7 +448,6 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     showProgrammaticMode: isGallery ? false : base.showProgrammaticMode,
     showGUIView: base.showGUIView,
     spec,
-    specCode: stringify(spec),
     template,
     templateComplete: !missingFields.length,
     templateMap,
