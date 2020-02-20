@@ -96,6 +96,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
           )}
           {!maxValsHit && (
             <div className="flex">
+              <button onClick={(): any => onDrop({field: fieldKey, text: []})}>Clear</button>
               <Selector
                 useGroups={true}
                 options={options.filter(d => !shelfValues.includes(d.value))}
