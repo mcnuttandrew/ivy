@@ -35,6 +35,9 @@ function updateCatalogView(state: AppState, view: string): AppState {
 
 export const switchView: ActionResponse<string> = (state, payload) => {
   const catalogEntry = state.viewCatalog[payload];
+  if (!catalogEntry) {
+    return state;
+  }
   return produce(updateCatalogView(state, state.currentView), draftState => {
     draftState.currentView = payload;
     draftState.spec = catalogEntry.spec;
