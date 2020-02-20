@@ -2,7 +2,7 @@ import React from 'react';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../../constants/vega-datasets-counts';
-import NONE from '../../templates/example-templates/none';
+import GALLERY from '../../templates/example-templates/gallery';
 import DataSymbol from '../data-symbol';
 import {DataType} from '../../templates/types';
 import Modal from './modal';
@@ -83,7 +83,7 @@ export default class DataModal extends React.Component<Props, State> {
                     chainActions([
                       (): any => changeSelectedFile(datasetName),
                       (): any => toggleDataModal(),
-                      (): any => setEncodingMode(NONE.templateName),
+                      (): any => setEncodingMode(GALLERY.templateName),
                     ])
                   }
                   className="flex dataset-list-item space-between"

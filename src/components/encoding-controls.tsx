@@ -16,7 +16,7 @@ import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template} from '../templates/types';
 import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 import SimpleTooltip from './simple-tooltip';
 
 interface Props {
@@ -61,7 +61,7 @@ export default function EncodingControls(props: Props): JSX.Element {
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const isGrammar = !template;
-  const onGallery = template && template.templateName === NONE.templateName;
+  const onGallery = template && template.templateName === GALLERY.templateName;
   const FULL_BUTTONS = [
     {
       disabled: false,
@@ -161,7 +161,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     <div className="encoding-mode-selector flex-down">
       <div className="flex space-between full-width flex-wrap">
         <div className="template-modification-control">
-          <div className="flex" onClick={(): any => setEncodingMode(NONE.templateName)}>
+          <div className="flex" onClick={(): any => setEncodingMode(GALLERY.templateName)}>
             <div className="template-modification-control-icon">
               <TiHomeOutline />
             </div>

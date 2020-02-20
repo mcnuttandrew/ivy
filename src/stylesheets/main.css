@@ -167,10 +167,6 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: 0 10px;
 }
 
-.chart-controls .view-control button {
-  height: 100%;
-}
-
 .chart-controls .view-control.selected {
   background: lightsalmon;
   font-weight: bolder;
@@ -217,6 +213,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .header button {
   color: white;
+}
+
+.view-control button {
+  height: 100%;
 }
 
 .header img {

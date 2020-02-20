@@ -4,7 +4,7 @@ import Tooltip from 'rc-tooltip';
 
 import {TiInfoLarge} from 'react-icons/ti';
 
-import NONE_TEMPLATE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 import {Template, TemplateMap} from '../templates/types';
 import {ColumnHeader} from '../types';
 import {searchDimensionsCanMatch} from '../utils';
@@ -19,7 +19,7 @@ interface Props {
 const targetTypes = new Set(['DataTarget', 'MultiDataTarget']);
 export default function RelatedViews(props: Props): JSX.Element {
   const {templates, templateMap, columns, template, setEncodingMode} = props;
-  if (!template || template.templateName === NONE_TEMPLATE.templateName) {
+  if (!template || template.templateName === GALLERY.templateName) {
     return <div />;
   }
   const viewsOfInterest = template.widgets
@@ -31,7 +31,7 @@ export default function RelatedViews(props: Props): JSX.Element {
       return acc;
     }, [] as string[]);
   const relatedViews: Template[] = templates.filter(x => {
-    if (x.templateName === NONE_TEMPLATE.templateName || x.templateName === template.templateName) {
+    if (x.templateName === GALLERY.templateName || x.templateName === template.templateName) {
       return false;
     }
     const {canBeUsed, isComplete} = searchDimensionsCanMatch(x, viewsOfInterest, columns);

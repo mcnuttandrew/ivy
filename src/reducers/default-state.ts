@@ -2,7 +2,7 @@ import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 import {ColumnHeader} from '../types';
 import {Template, TemplateMap} from '../templates/types';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 import TABLE from '../templates/example-templates/table';
 import {UndoRedoStackItem} from './undo-actions';
 import {ViewCatalog} from './view-actions';
@@ -113,10 +113,10 @@ export const DEFAULT_STATE: AppState = {
   editMode: false,
 
   // GUI
-  currentTemplateInstance: NONE,
+  currentTemplateInstance: GALLERY,
   // TODO COMBINE MODAL VALUES INTO A SINGLE KEY
   dataModalOpen: false,
-  encodingMode: NONE.templateName,
+  encodingMode: GALLERY.templateName,
   showProgrammaticMode: false,
   showGUIView: true,
   codeMode: JSON_OUTPUT,

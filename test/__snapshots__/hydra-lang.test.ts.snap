@@ -113,7 +113,7 @@ Object {
 
 exports[`evaluateHydraProgram polestar template 4`] = `
 Object {
-  "$schema": "none",
+  "$schema": "galleryLang",
   "Reverse Sort": "[Reverse Sort]",
   "SearchKey": "should result",
   "Sort": "[Sort]",

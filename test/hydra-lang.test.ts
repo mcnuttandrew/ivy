@@ -6,7 +6,7 @@ import {
   // backpropHydraProgram,
 } from '../src/hydra-lang';
 import Scatterplot from '../src/templates/example-templates/scatterplot';
-import None from '../src/templates/example-templates/none';
+import GALLERY from '../src/templates/example-templates/gallery';
 import produce from 'immer';
 
 test('#applyConditionals', () => {
@@ -37,7 +37,7 @@ test.only('evaluateHydraProgram polestar template', () => {
   expect(evaluateHydraProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
 
   expect(
-    evaluateHydraProgram(None, {
+    evaluateHydraProgram(GALLERY, {
       dataTargetSearch: [],
       SearchKey: '"should result"',
     }),

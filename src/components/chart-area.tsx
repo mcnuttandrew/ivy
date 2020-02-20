@@ -8,7 +8,7 @@ import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
 import DataSearchMode from './renderers/data-search-mode';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
@@ -130,8 +130,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       templates,
       views,
     } = this.props;
-    const noneTemplate = template && template.templateLanguage === 'none';
-    const showChart = !noneTemplate && (!template || templateComplete);
+    const templateGallery = template && template.templateLanguage === GALLERY.templateLanguage;
+    const showChart = !templateGallery && (!template || templateComplete);
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
@@ -140,18 +140,17 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
             )}
             {newViewButton({createNewView, cloneView})}
-            {/* {cloneViewButton({cloneView})} */}
           </div>
         </div>
         <div
           className={classnames({
             'chart-container': true,
             center: true,
-            'full-width': encodingMode !== NONE.templateName,
+            'full-width': encodingMode !== GALLERY.templateName,
             'full-height': true,
           })}
         >
-          {noneTemplate && (
+          {templateGallery && (
             <DataSearchMode
               deleteTemplate={deleteTemplate}
               columns={columns}
@@ -171,7 +170,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               }}
             />
           )}
-          {!noneTemplate && !showChart && (
+          {!templateGallery && !showChart && (
             <div className="chart-unfullfilled">
               <h2> Chart is not yet filled out </h2>
               <h5>{`Select values for the following fields: ${missingFields.join(', ')}`}</h5>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {serverPrefix} from '../utils';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 
 interface ThumbnailProps {
   templateName: string;
@@ -20,7 +20,7 @@ function thumbnailLocation(
   if (templateName === 'AtomExplore') {
     return {url: 'assets/atom-logo.png', local: true};
   }
-  if (templateName === NONE.templateName) {
+  if (templateName === GALLERY.templateName) {
     return {url: 'assets/chart-gallery-logo.png', local: true};
   }
   return {url: `${serverPrefix()}/thumbnail?author=${templateAuthor}&template=${templateName}`, local: false};

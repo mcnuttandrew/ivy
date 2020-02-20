@@ -8,7 +8,7 @@ import {Template, TemplateMap, GenWidget} from '../templates/types';
 import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 
 interface Props {
   addWidget?: GenericAction<GenWidget>;
@@ -189,7 +189,7 @@ export default class CodeEditor extends React.Component<Props> {
         <div className="full-height full-width code-container flex-down">
           {!showProgrammaticMode && (
             <CodeCollapse
-              disable={template && template.templateName === NONE.templateName}
+              disable={template && template.templateName === GALLERY.templateName}
               showProgrammaticMode={showProgrammaticMode}
               setProgrammaticView={this.props.setProgrammaticView}
             />

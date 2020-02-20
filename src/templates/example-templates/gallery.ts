@@ -6,11 +6,11 @@ const FIRST_TEXT =
 const SECOND_TEXT =
   '\n\n\n or by search for templates that match the data you are interested in visualizing, which you can do using this widget\n\n\n';
 const THIRD_TEXT = '\n\n\n You can also facilitate browsing by sorting: \n\n\n';
-const NoneTemplate: Template = {
-  templateName: '_____none_____',
+const Gallery: Template = {
+  templateName: '____gallery____',
   templateDescription: 'blank filler template',
   templateAuthor: 'HYDRA-AUTHORS',
-  templateLanguage: 'none',
+  templateLanguage: 'galleryLang',
   widgets: [
     {name: 'asddd', type: 'Section', config: null},
     {name: 'asd', type: 'Text', config: {text: FIRST_TEXT}},
@@ -40,11 +40,11 @@ const NoneTemplate: Template = {
     // TODO add sort explanation for text
   ],
   code: JSON.stringify({
-    $schema: 'none',
+    $schema: 'galleryLang',
     dataTargetSearch: '[dataTargetSearch]',
     SearchKey: `[SearchKey]`,
     Sort: '[Sort]',
     'Reverse Sort': '[Reverse Sort]',
   }),
 };
-export default NoneTemplate;
+export default Gallery;
