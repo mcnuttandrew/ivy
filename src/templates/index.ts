@@ -13,7 +13,6 @@ import {
   GenWidget,
   ShortcutsWidget,
 } from './types';
-import {EMPTY_SPEC_BY_LANGUAGE} from '../reducers/default-state';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
 import ATOM from './example-templates/atom';
@@ -25,6 +24,35 @@ import {getUserName} from '../utils/local-storage';
 // import SIMPLE_SCATTER from './example-templates/simple-scatterplot';
 import SHELF from './example-templates/polestar-template';
 import UNITVIS from './example-templates/unit-vis';
+
+const vegaLitEmpty: any = {
+  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+  transform: [] as any[],
+  mark: {type: 'point', tooltip: true},
+  encoding: {},
+};
+const vegaEmpty: any = {
+  $schema: 'https://vega.github.io/schema/vega/v5.json',
+  width: 400,
+  height: 200,
+  padding: 5,
+  data: [],
+  signals: [],
+  scales: [],
+  axes: [],
+  marks: [],
+};
+const unitVisEmpty: any = {
+  $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
+  layouts: [],
+  mark: {color: {key: '', type: 'categorical'}},
+};
+export const EMPTY_SPEC_BY_LANGUAGE: {[x: string]: any} = {
+  'vega-lite': vegaLitEmpty,
+  vega: vegaEmpty,
+  'unit-vis': unitVisEmpty,
+  'hydra-data-table': JSON.parse(DATATABLE.code),
+};
 
 export const BLANK_TEMPLATE: Template = {
   templateAuthor: getUserName(),

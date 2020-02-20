@@ -1,6 +1,6 @@
 import produce from 'immer';
-
-import {ActionResponse, AppState, toggle, blindSet} from './default-state';
+import {ActionResponse, AppState} from '../types';
+import {toggle, blindSet} from './reducer-utils';
 import {JSON_OUTPUT} from '../constants/index';
 
 import {addToNextOpenSlot} from './apt-actions';

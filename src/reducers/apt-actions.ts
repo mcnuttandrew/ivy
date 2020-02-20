@@ -1,14 +1,10 @@
 import {Widget, TemplateMap, DataTargetWidget, MultiDataTargetWidget, GenWidget} from '../templates/types';
-import {ActionResponse} from './default-state';
+import {ActionResponse} from '../types';
 import {setTemplateValue} from './template-actions';
 import {getOrMakeColumn, toSet} from '../utils';
 import {applyQueries} from '../hydra-lang';
 
-interface GuessPayload {
-  field: string;
-}
-
-const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
+export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payload) => {
   const template = state.currentTemplateInstance;
   const templateMap: TemplateMap = state.templateMap;
   const column = getOrMakeColumn(payload.field, state.columns, template);
@@ -68,8 +64,4 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
     text: `"${payload.field}"`,
     type: 'DataTarget',
   });
-};
-
-export const addToNextOpenSlot: ActionResponse<GuessPayload> = (state, payload) => {
-  return templateBasedGuess(state, payload);
 };

@@ -1,6 +1,6 @@
 // import {UpdateFilterPayload, Filter} from '../actions/index';
 // import {get} from '../utils';
-// import {ActionResponse} from './default-state';
+// import {ActionResponse} from './';
 // import produce from 'immer';
 // export const createFilter: ActionResponse<Filter> = (state, payload) => {
 //   return produce(state, draftState => {

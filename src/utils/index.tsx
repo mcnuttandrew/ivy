@@ -9,10 +9,9 @@ import {
   GenWidget,
   CustomCard,
 } from '../templates/types';
-import {AppState} from '../reducers/default-state';
 import {TEXT_TYPE} from '../constants/index';
 import GALLERY from '../templates/example-templates/gallery';
-import {ColumnHeader} from '../types';
+import {AppState, ColumnHeader} from '../types';
 
 /* eslint-disable @typescript-eslint/no-empty-function*/
 export const NULL = (): void => {};

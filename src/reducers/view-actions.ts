@@ -1,17 +1,8 @@
 import produce from 'immer';
-import {TemplateMap, Template} from '../templates/types';
-import {ActionResponse, AppState} from './default-state';
+import {ActionResponse, AppState, ViewCatalogEntry} from '../types';
 import GALLERY from '../templates/example-templates/gallery';
 import {constructDefaultTemplateMap} from '../hydra-lang';
 
-export interface ViewCatalog {
-  [x: string]: ViewCatalogEntry;
-}
-export interface ViewCatalogEntry {
-  encodingMode: string;
-  templateMap: TemplateMap;
-  currentTemplateInstance: Template;
-}
 const BLANK_TEMPLATE_MAP = constructDefaultTemplateMap(GALLERY);
 const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
   encodingMode: GALLERY.templateName,

@@ -5,7 +5,7 @@ import SCATTERPLOT_TEMPLATE from '../src/templates/example-templates/scatterplot
 import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
 import TABLE from '../src/templates/example-templates/table';
 
-import {DEFAULT_STATE} from '../src/reducers/default-state';
+import {DEFAULT_STATE} from '../src/reducers';
 import {setEncodingMode} from '../src/reducers/gui-actions';
 import {evaluateHydraProgram} from '../src/hydra-lang';
 

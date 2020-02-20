@@ -1,16 +1,6 @@
 import produce from 'immer';
-import {Template, TemplateMap} from '../templates/types';
-import {ActionResponse, AppState} from './default-state';
-import {ViewCatalog} from './view-actions';
+import {ActionResponse, AppState, UndoRedoStackItem} from '../types';
 
-export interface UndoRedoStackItem {
-  currentView: string;
-  currentTemplateInstance: Template;
-  encodingMode: string;
-  templateMap: TemplateMap;
-  views: string[];
-  viewCatalog: ViewCatalog;
-}
 const createStackItem = (state: AppState): UndoRedoStackItem => {
   return {
     currentView: state.currentView,

@@ -46,8 +46,7 @@ import {
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {ColumnHeader, Json} from '../types';
-import {AppState, DataReducerState} from '../reducers/default-state';
+import {AppState, DataReducerState, ColumnHeader, Json} from '../types';
 
 import ChartArea from './chart-area';
 import CodeEditor from './code-editor';

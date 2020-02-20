@@ -2,6 +2,10 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import * as actionTypes from '../actions/action-types';
 
+import {AppState, ActionResponse, DataReducerState} from '../types';
+import GALLERY from '../templates/example-templates/gallery';
+import {JSON_OUTPUT} from '../constants/index';
+
 import {pushToUndoStack, triggerRedo, triggerUndo} from './undo-actions';
 
 import {addToNextOpenSlot} from './apt-actions';
@@ -44,7 +48,40 @@ import {
   toggleProgramModal,
 } from './gui-actions';
 
-import {AppState, DEFAULT_STATE, ActionResponse, DataReducerState} from './default-state';
+export const DEFAULT_STATE: AppState = {
+  // meta-data
+  currentlySelectedFile: 'cars.json',
+  columns: [],
+
+  // spec configs
+  editorError: null,
+  editMode: false,
+
+  // GUI
+  currentTemplateInstance: GALLERY,
+  // TODO COMBINE MODAL VALUES INTO A SINGLE KEY
+  dataModalOpen: false,
+  encodingMode: GALLERY.templateName,
+  showProgrammaticMode: false,
+  showGUIView: true,
+  codeMode: JSON_OUTPUT,
+  programModalOpen: false,
+  userName: '',
+
+  // undo redo
+  undoStack: [],
+  redoStack: [],
+
+  // view stuff
+  views: ['view1'],
+  viewCatalog: {},
+  currentView: 'view1',
+
+  // template stuff
+
+  templates: [],
+  templateMap: {},
+};
 
 // second order effects
 const wrap = (func: ActionResponse<any>, wrapper: any): ActionResponse<any> => (state, payload): AppState =>

@@ -4,12 +4,11 @@ import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
 import {DataType, Template, GenWidget, WidgetType} from '../templates/types';
-import {ColumnHeader} from '../types';
+import {AppState, ColumnHeader} from '../types';
 import * as actionTypes from '../actions/action-types';
 
 import {Action} from 'redux';
 import {ThunkAction} from 'redux-thunk';
-import {AppState} from '../reducers/default-state';
 
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
