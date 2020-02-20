@@ -210,7 +210,6 @@ exports[`#fillTemplateMapWithDefaults 5`] = `
 Object {
   "$schema": "hydra-data-table",
   "columns": Array [],
-  "transforms": Array [],
 }
 `;
 
@@ -336,4 +335,9 @@ exports[`#setTemplateValues 2`] = `
 }"
 `;
 
-exports[`#setTemplateValues 3`] = `"{\\"$schema\\": \\"hydra-data-table\\", \\"transforms\\": [], \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]}"`;
+exports[`#setTemplateValues 3`] = `
+"{
+  \\"$schema\\": \\"hydra-data-table\\",
+  \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]
+}"
+`;
