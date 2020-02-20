@@ -20,7 +20,7 @@ interface ConditionalArgs {
   deleteKeyOnFalse?: boolean;
   deleteKeyOnTrue?: boolean;
 }
-export type HydraConditinoal = {CONDITIONAL: ConditionalArgs};
+export type HydraConditional = {$cond: ConditionalArgs};
 
 /**
  * Evaluate a hydra query, used for the widget validations and conditional checks
@@ -68,11 +68,11 @@ function shouldUpdateContainerWithValue(
 // mark: {
 //   type: 'point',
 //   tooltip: true,
-//   color: {CONDITIONAL: {true: '[Single Color]', false: null, query: {Color: null}}},
+//   color: {$cond: {true: '[Single Color]', false: null, query: {Color: null}}},
 // }}
 /**
  * Walk across the tree and apply conditionals are appropriate,
- * example conditional syntax: {CONDITIONAL: {true: '[Single Color]', false: null, query: '!parameters.Color}}
+ * example conditional syntax: {$cond: {true: '[Single Color]', false: null, query: '!parameters.Color}}
  *
  * @param templateMap - the specification/variable values defined by the gui
  * @returns JSON (any is the dumb stand in for json)
@@ -82,11 +82,11 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     // if it's array interate across it
     if (Array.isArray(spec)) {
       return spec.reduce((acc: JsonArray, child) => {
-        if (child && typeof child === 'object' && (child as JsonMap).CONDITIONAL) {
-          const valuemap = (child as unknown) as HydraConditinoal;
-          const queryResult = evaluateQuery(valuemap.CONDITIONAL.query, templateMap) ? 'true' : 'false';
-          if (!shouldUpdateContainerWithValue(queryResult, valuemap.CONDITIONAL)) {
-            return acc.concat(walker(valuemap.CONDITIONAL[queryResult]));
+        if (child && typeof child === 'object' && (child as JsonMap).$cond) {
+          const valuemap = (child as unknown) as HydraConditional;
+          const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
+          if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
+            return acc.concat(walker(valuemap.$cond[queryResult]));
           } else {
             return acc;
           }
@@ -99,11 +99,11 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
       return spec;
     }
     // if the object being consider is itself a conditional evaluate it
-    if (typeof spec === 'object' && spec.CONDITIONAL) {
-      const valuemap = (spec as unknown) as HydraConditinoal;
-      const queryResult = evaluateQuery(valuemap.CONDITIONAL.query, templateMap) ? 'true' : 'false';
-      if (!shouldUpdateContainerWithValue(queryResult, valuemap.CONDITIONAL)) {
-        return walker(valuemap.CONDITIONAL[queryResult]);
+    if (typeof spec === 'object' && spec.$cond) {
+      const valuemap = (spec as unknown) as HydraConditional;
+      const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
+      if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
+        return walker(valuemap.$cond[queryResult]);
       } else {
         return null;
       }
@@ -111,11 +111,11 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     // otherwise looks through its children
     return Object.entries(spec).reduce((acc: JsonMap, [key, value]: [string, Json]) => {
       // if it's a conditional, if so execute the conditional
-      if (value && typeof value === 'object' && (value as JsonMap).CONDITIONAL) {
-        const valuemap = (value as unknown) as HydraConditinoal;
-        const queryResult = evaluateQuery(valuemap.CONDITIONAL.query, templateMap) ? 'true' : 'false';
-        if (!shouldUpdateContainerWithValue(queryResult, valuemap.CONDITIONAL)) {
-          acc[key] = walker(valuemap.CONDITIONAL[queryResult]);
+      if (value && typeof value === 'object' && (value as JsonMap).$cond) {
+        const valuemap = (value as unknown) as HydraConditional;
+        const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
+        if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
+          acc[key] = walker(valuemap.$cond[queryResult]);
         }
       } else {
         acc[key] = walker(value);

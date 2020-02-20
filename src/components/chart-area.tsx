@@ -4,7 +4,7 @@ import {VegaTheme, ColumnHeader, Json} from '../types';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog, TiDocumentAdd, TiTabsOutline} from 'react-icons/ti';
+import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
 import DataSearchMode from './renderers/data-search-mode';

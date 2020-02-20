@@ -33,9 +33,9 @@ function aggregateConditional(key: string): JsonMap {
   const filledIn = `parameters.${key}`;
 
   return {
-    CONDITIONAL: {
+    $cond: {
       query: `${isCount} || (${filledIn} && ${!isNone})`,
-      true: {CONDITIONAL: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
+      true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
       deleteKeyOnFalse: true,
     },
   };
@@ -43,11 +43,11 @@ function aggregateConditional(key: string): JsonMap {
 
 function conditionalFieldName(key: string): JsonMap {
   return {
-    CONDITIONAL: {
+    $cond: {
       query: `${used(key)} && ${notCount(key)}`,
       deleteKeyOnFalse: true,
       true: {
-        CONDITIONAL: {
+        $cond: {
           query: `(parameters.${key} === '\\"${META_COL_ROW}\\"') || (parameters.${key} === '\\"${META_COL_COL}\\"')`,
           true: {repeat: `[${key}]`},
           false: `[${key}]`,
@@ -59,7 +59,7 @@ function conditionalFieldName(key: string): JsonMap {
 
 function zeroConditional(key: string): JsonMap {
   return {
-    CONDITIONAL: {
+    $cond: {
       query: `${used(key)} && parameters.${key}IncludeZero && parameters.${key}Agg === "\\"quantitative\\""`,
       true: `[${key}IncludeZero]`,
       deleteKeyOnFalse: true,
@@ -68,7 +68,7 @@ function zeroConditional(key: string): JsonMap {
 }
 
 const renderObjectIf = (object: Json, query: string, fieldName: string): JsonMap => ({
-  [fieldName]: {CONDITIONAL: {query, true: object, deleteKeyOnFalse: true}},
+  [fieldName]: {$cond: {query, true: object, deleteKeyOnFalse: true}},
 });
 const encoding = {
   ...['X', 'Y'].reduce((acc: JsonMap, key) => {
@@ -77,12 +77,12 @@ const encoding = {
       type: `[${key}Type]`,
       aggregate: aggregateConditional(key),
       scale: {
-        CONDITIONAL: {
+        $cond: {
           query: notCount(key),
           true: {
             zero: zeroConditional(key),
             type: {
-              CONDITIONAL: {
+              $cond: {
                 query: `${used(key)} && parameters.${key}Type ===  "\\"quantitative\\""`,
                 true: `[${key}ScaleType]`,
                 deleteKeyOnFalse: true,
@@ -116,18 +116,18 @@ const PolestarBody: Json = {
   $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
   transform: [] as JsonMap[],
   repeat: {
-    CONDITIONAL: {
+    $cond: {
       query: eitherMeta,
       true: {
         row: {
-          CONDITIONAL: {
+          $cond: {
             query: paramsInclude(META_COL_ROW),
             true: '[row]',
             deleteKeyOnFalse: true,
           },
         },
         column: {
-          CONDITIONAL: {
+          $cond: {
             query: paramsInclude(META_COL_COL),
             true: '[column]',
             deleteKeyOnFalse: true,
@@ -137,9 +137,9 @@ const PolestarBody: Json = {
       deleteKeyOnFalse: true,
     },
   },
-  encoding: {CONDITIONAL: {query: `!(${eitherMeta})`, true: encoding, deleteKeyOnFalse: true}},
-  mark: {CONDITIONAL: {query: `!(${eitherMeta})`, true: mark, deleteKeyOnFalse: true}},
-  spec: {CONDITIONAL: {query: eitherMeta, true: {encoding, mark}, deleteKeyOnFalse: true}},
+  encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding, deleteKeyOnFalse: true}},
+  mark: {$cond: {query: `!(${eitherMeta})`, true: mark, deleteKeyOnFalse: true}},
+  spec: {$cond: {query: eitherMeta, true: {encoding, mark}, deleteKeyOnFalse: true}},
 };
 
 const Polestar: Template = {

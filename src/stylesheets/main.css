@@ -173,7 +173,6 @@ input[type="number"]::-webkit-outer-spin-button {
   text-decoration: underline;
 }
 
-
 .chart-controls .selected-view-control {
   background: lightgray;
   cursor: not-allowed;
@@ -728,7 +727,6 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .coerce-data-type-button::before {
-  align-items: center;
   display: flex;
   content: "■";
   font-size: 25px;
@@ -1295,7 +1293,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .code-option-tab.selected-tab {
   background: lightsalmon;
-  /* text-decoration: underline; */
 }
 
 .about-bar {
