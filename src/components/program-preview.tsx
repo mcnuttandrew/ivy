@@ -101,17 +101,16 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
             [`program-option-type-pill--${key.toLowerCase()}`]: true,
           })}
         >
-          <span>{typeCounts[key]}</span>
           <span className="program-option-type-symbol">
             <DataSymbol type={key as DataType} />
           </span>
-          <span>fields</span>
+          <span>{typeCounts[key]}</span>
         </div>
       );
     });
   return (
     <div className="flex-down">
-      <div>{messages.length ? 'Requires at least' : 'Requires no fields to get started'}</div>
+      <div>{messages.length ? 'Requires at least' : 'No Fields Required'}</div>
       <div className="flex flex-wrap">{messages}</div>
     </div>
   );

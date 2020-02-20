@@ -19,7 +19,7 @@ import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
 import ATOM from './example-templates/atom';
 import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
 import DATATABLE from './example-templates/table';
-import NONE_TEMPLATE from './example-templates/none';
+import GALLERY from './example-templates/gallery';
 import PIECHART_TEMPLATE from './example-templates/pie-chart';
 import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
 import {getUserName} from '../utils/local-storage';
@@ -43,7 +43,7 @@ export type WidgetFactoryFunc = (idx: number) => GenWidget;
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: idx =>
     ({
-      name: `Dim${idx}`,
+      name: `Var${idx}`,
       type: 'DataTarget',
       config: {allowedTypes: DATA_TYPES, required: true},
     } as TemplateWidget<DataTargetWidget>),
@@ -116,6 +116,6 @@ export const DEFAULT_TEMPLATES: Template[] = [
   PIECHART_TEMPLATE,
   BEESWARM_TEMPLATE,
   UNITVIS,
-  NONE_TEMPLATE,
+  GALLERY,
   // SIMPLE_SCATTER,
 ];

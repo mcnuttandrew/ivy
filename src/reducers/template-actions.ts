@@ -1,6 +1,7 @@
 import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
+import {TEMPLATE_BODY} from '../constants';
 import {ActionResponse, AppState, blindSet, EMPTY_SPEC_BY_LANGUAGE} from './default-state';
 import {
   ModifyValueOnTemplatePayload,
@@ -216,10 +217,17 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
     newTemplate.code = state.currentTemplateInstance.code;
     newTemplate.widgets = state.currentTemplateInstance.widgets;
   }
-  return produce(state, draftState => {
-    draftState.currentTemplateInstance = newTemplate;
-    draftState.encodingMode = BLANK_TEMPLATE.templateName;
-  });
+  return fillTemplateMapWithDefaults(
+    produce(state, draftState => {
+      draftState.currentTemplateInstance = newTemplate;
+      draftState.encodingMode = BLANK_TEMPLATE.templateName;
+      if (fork) {
+        draftState.editMode = true;
+        draftState.codeMode = TEMPLATE_BODY;
+        draftState.showProgrammaticMode = true;
+      }
+    }),
+  );
 };
 
 export const deleteTemplate: ActionResponse<string> = (state, payload) => {

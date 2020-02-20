@@ -210,7 +210,6 @@ exports[`#fillTemplateMapWithDefaults 5`] = `
 Object {
   "$schema": "hydra-data-table",
   "columns": Array [],
-  "transforms": Array [],
 }
 `;
 
@@ -315,7 +314,7 @@ exports[`#setTemplateValues 2`] = `
     \\"tooltip\\": true,
     \\"size\\": \\"[Radius]\\",
     \\"color\\": {
-      \\"CONDITIONAL\\": {
+      \\"$cond\\": {
         \\"true\\": \\"[Single Color]\\",
         \\"false\\": null,
         \\"query\\": \\"!parameters.Color\\"
@@ -326,7 +325,7 @@ exports[`#setTemplateValues 2`] = `
     \\"x\\": {\\"field\\": \\"xDim_TEST\\", \\"type\\": \\"[xType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
     \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"[yType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
     \\"color\\": {
-      \\"CONDITIONAL\\": {
+      \\"$cond\\": {
         \\"query\\": \\"parameters.Color\\",
         \\"true\\": {\\"field\\": \\"[Color]\\", \\"type\\": \\"[colorType]\\"},
         \\"false\\": null
@@ -336,4 +335,9 @@ exports[`#setTemplateValues 2`] = `
 }"
 `;
 
-exports[`#setTemplateValues 3`] = `"{\\"$schema\\": \\"hydra-data-table\\", \\"transforms\\": [], \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]}"`;
+exports[`#setTemplateValues 3`] = `
+"{
+  \\"$schema\\": \\"hydra-data-table\\",
+  \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]
+}"
+`;

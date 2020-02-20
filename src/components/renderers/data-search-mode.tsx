@@ -4,7 +4,7 @@ import {ColumnHeader} from '../../types';
 import {Template} from '../../templates/types';
 import ProgramPreview from '../program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../../utils';
-import NONE_TEMPLATE from '../../templates/example-templates/none';
+import GALLERY from '../../templates/example-templates/gallery';
 interface Props {
   columns: ColumnHeader[];
   deleteTemplate: GenericAction<string>;
@@ -15,7 +15,6 @@ interface Props {
 
 export const SORTS = [
   'template name',
-  'min required measures',
   'min required measures',
   'min required dimensions',
   'min required times',
@@ -67,7 +66,7 @@ const makeSortScore: MakeSortScoreType = (Sort: string) => (template): any => {
     score = counts.SUM;
   }
   if (Sort === 'complexity') {
-    score = (template.code.match(/CONDITIONAL/g) || []).length;
+    score = (template.code.match(/$cond/g) || []).length;
   }
   return {template, score};
 };
@@ -101,7 +100,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
           : (a.score as number) - (b.score as number)),
     )
     .reduce((acc, {template}, idx) => {
-      if (template.templateName === NONE_TEMPLATE.templateName) {
+      if (template.templateName === GALLERY.templateName) {
         return acc;
       }
       const {canBeUsed, isComplete} = searchDimensionsCanMatch(

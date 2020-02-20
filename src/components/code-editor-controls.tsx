@@ -239,7 +239,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
                 'option-disabled': !editMode && label === templateName,
               })}
             >
-              <div>{label}</div>
+              <div className="code-option-section-label">{label}</div>
               <div className="flex">
                 {buttons.map(({key, description}) => {
                   return (

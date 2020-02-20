@@ -233,7 +233,7 @@ class RootComponent extends React.Component<RootProps, State> {
           />
 
           <div>
-            <h5>Currently template</h5>
+            <h5>Current Template</h5>
             <h4>{getTemplateName(template)}</h4>
           </div>
         </div>

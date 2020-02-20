@@ -12,7 +12,7 @@ import {
 } from '../templates/types';
 import {AppState} from '../reducers/default-state';
 import {TEXT_TYPE} from '../constants/index';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 import {ColumnHeader} from '../types';
 
 /* eslint-disable @typescript-eslint/no-empty-function*/
@@ -145,6 +145,7 @@ export function serializeTemplate(template: Template): string {
     code: 'SEE BODY',
     templateLanguage: template.templateLanguage,
     widgets: template.widgets,
+    customCards: template.customCards,
   });
 }
 
@@ -157,6 +158,7 @@ export function deserializeTemplate(templateString: string): Template {
     templateLanguage: code.templateLanguage,
     widgets: code.widgets,
     templateAuthor: code.templateAuthor,
+    customCards: code.customCards,
   };
 }
 
@@ -328,7 +330,9 @@ export function getTemplateName(template: Template | null): string {
   if (!template) {
     return 'T0';
   }
-  return template && template.templateName === NONE.templateName ? 'Template Gallery' : template.templateName;
+  return template && template.templateName === GALLERY.templateName
+    ? 'Template Gallery'
+    : template.templateName;
 }
 
 export function union(setA: Set<any>, setB: Set<any>): Set<any> {

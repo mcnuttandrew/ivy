@@ -2,7 +2,7 @@ import stringify from 'json-stringify-pretty-compact';
 import produce from 'immer';
 import {TemplateMap, Template} from '../templates/types';
 import {ActionResponse, AppState} from './default-state';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 import {constructDefaultTemplateMap, evaluateHydraProgram} from '../hydra-lang';
 
 export interface ViewCatalog {
@@ -14,12 +14,12 @@ export interface ViewCatalogEntry {
   templateMap: TemplateMap;
   currentTemplateInstance?: Template;
 }
-const BLANK_TEMPLATE_MAP = constructDefaultTemplateMap(NONE);
+const BLANK_TEMPLATE_MAP = constructDefaultTemplateMap(GALLERY);
 const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
-  spec: evaluateHydraProgram(NONE, BLANK_TEMPLATE_MAP),
-  encodingMode: NONE.templateName,
+  spec: evaluateHydraProgram(GALLERY, BLANK_TEMPLATE_MAP),
+  encodingMode: GALLERY.templateName,
   templateMap: BLANK_TEMPLATE_MAP,
-  currentTemplateInstance: NONE,
+  currentTemplateInstance: GALLERY,
 };
 function updateCatalogView(state: AppState, view: string): AppState {
   const catalogEntry: ViewCatalogEntry = {
@@ -35,6 +35,9 @@ function updateCatalogView(state: AppState, view: string): AppState {
 
 export const switchView: ActionResponse<string> = (state, payload) => {
   const catalogEntry = state.viewCatalog[payload];
+  if (!catalogEntry) {
+    return state;
+  }
   return produce(updateCatalogView(state, state.currentView), draftState => {
     draftState.currentView = payload;
     draftState.spec = catalogEntry.spec;

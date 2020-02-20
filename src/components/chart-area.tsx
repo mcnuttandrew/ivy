@@ -4,11 +4,11 @@ import {VegaTheme, ColumnHeader, Json} from '../types';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog, TiDocumentAdd, TiTabsOutline} from 'react-icons/ti';
+import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
 import DataSearchMode from './renderers/data-search-mode';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
@@ -33,38 +33,30 @@ interface ChartAreaProps {
 
 interface NewViewProps {
   createNewView: GenericAction<void>;
-}
-
-function newViewButton(props: NewViewProps): JSX.Element {
-  const {createNewView} = props;
-  return (
-    <Tooltip
-      placement="bottom"
-      trigger="hover"
-      overlay={<span className="tooltip-internal">Create a new view from the initial selection.</span>}
-    >
-      <div className="view-control" onClick={(): any => createNewView()}>
-        <span className="margin-right">New</span>
-        <TiDocumentAdd />
-      </div>
-    </Tooltip>
-  );
-}
-interface CloneViewrops {
   cloneView: GenericAction<void>;
 }
 
-function cloneViewButton(props: CloneViewrops): JSX.Element {
-  const {cloneView} = props;
+function newViewButton(props: NewViewProps): JSX.Element {
+  const {createNewView, cloneView} = props;
   return (
     <Tooltip
       placement="bottom"
-      trigger="hover"
-      overlay={<span className="tooltip-internal">Clone the current view into a new view.</span>}
+      trigger="click"
+      overlay={
+        <span className="flex-down">
+          <div className="flex">
+            <button onClick={(): any => createNewView()}>NEW</button>
+            <span>Create a new view from the initial selection.</span>
+          </div>
+          <div className="flex">
+            <button onClick={(): any => cloneView()}>CLONE</button>
+            <span>Clone the current view into a new view.</span>
+          </div>
+        </span>
+      }
     >
-      <div className="view-control" onClick={(): any => cloneView()}>
-        <span className="margin-right">Clone</span>
-        <TiTabsOutline />
+      <div className="view-control">
+        <TiDocumentAdd />
       </div>
     </Tooltip>
   );
@@ -138,28 +130,27 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       templates,
       views,
     } = this.props;
-    const noneTemplate = template && template.templateLanguage === 'none';
-    const showChart = !noneTemplate && (!template || templateComplete);
+    const templateGallery = template && template.templateLanguage === GALLERY.templateLanguage;
+    const showChart = !templateGallery && (!template || templateComplete);
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
-          {newViewButton({createNewView})}
-          {cloneViewButton({cloneView})}
           <div className="view-container">
             {views.map((view, idx) =>
               viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
             )}
+            {newViewButton({createNewView, cloneView})}
           </div>
         </div>
         <div
           className={classnames({
             'chart-container': true,
             center: true,
-            'full-width': encodingMode !== NONE.templateName,
+            'full-width': encodingMode !== GALLERY.templateName,
             'full-height': true,
           })}
         >
-          {noneTemplate && (
+          {templateGallery && (
             <DataSearchMode
               deleteTemplate={deleteTemplate}
               columns={columns}
@@ -179,7 +170,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               }}
             />
           )}
-          {!noneTemplate && !showChart && (
+          {!templateGallery && !showChart && (
             <div className="chart-unfullfilled">
               <h2> Chart is not yet filled out </h2>
               <h5>{`Select values for the following fields: ${missingFields.join(', ')}`}</h5>

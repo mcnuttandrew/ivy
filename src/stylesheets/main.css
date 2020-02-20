@@ -157,8 +157,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .chart-controls .view-control {
   align-items: center;
+  border-radius: 5px;
   border-left: thin solid lightgray;
-  border-right: thin solid lightgray;
   cursor: pointer;
   display: flex;
   font-size: 15px;
@@ -173,10 +173,6 @@ input[type="number"]::-webkit-outer-spin-button {
   text-decoration: underline;
 }
 
-.chart-controls .view-control:first-of-type {
-  border-left: 0;
-}
-
 .chart-controls .selected-view-control {
   background: lightgray;
   cursor: not-allowed;
@@ -189,7 +185,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .view-settings {
+  align-items: center;
+  justify-content: center;
+  display: flex;
   font-size: 15px;
+  height: 100%;
 }
 
 .center-column {
@@ -213,6 +213,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .header button {
   color: white;
+}
+
+.view-control button {
+  height: 100%;
 }
 
 .header img {
@@ -675,7 +679,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .program-option {
   background: whitesmoke;
-  box-shadow: 5px 5px 0 1px MediumPurple;
+  box-shadow: 5px 5px 0 1px lightgray;
   border-radius: 5px;
   border: thin solid rgba(0, 0, 0, 0);
   font-size: 12px;
@@ -730,25 +734,36 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-right: 2px;
 }
 
+.coerce-data-type-button::before {
+  display: flex;
+  content: "■";
+  font-size: 25px;
+  line-height: 15px;
+}
+
 .program-option-type-pill::before {
   content: "■";
   font-size: 30px;
   line-height: 15px;
 }
 
-.program-option-type-pill--measure::before {
+.program-option-type-pill--measure::before,
+.coerce-data-type-to--MEASURE::before {
   color: mediumseagreen;
 }
 
-.program-option-type-pill--dimension {
+.program-option-type-pill--dimension::before,
+.coerce-data-type-to--DIMENSION::before {
   color: lightseagreen;
 }
 
-.program-option-type-pill--time {
+.program-option-type-pill--time::before,
+.coerce-data-type-to--TIME::before {
   color: pink;
 }
 
-.program-option-type-pill--metacolumn {
+.program-option-type-pill--metacolumn::before,
+.coerce-data-type-to--METACOLUMN::before {
   color: goldenrod;
 }
 
@@ -1257,7 +1272,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .code-option-tab-section {
   align-items: flex-start;
-  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .code-option-tab-section.option-disabled {
@@ -1267,19 +1282,25 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .code-option-tab {
   align-items: center;
+  border-radius: 5px;
   cursor: pointer;
-  color: #ce9178;
+  color: black;
   display: flex;
   font-size: 15px;
   justify-content: center;
   margin-bottom: 3px;
   margin-right: 15px;
   margin-top: 3px;
+  padding: 0 15px;
   width: 100%;
 }
 
+.code-option-section-label {
+  padding: 0 15px;
+}
+
 .code-option-tab.selected-tab {
-  text-decoration: underline;
+  background: lightsalmon;
 }
 
 .about-bar {

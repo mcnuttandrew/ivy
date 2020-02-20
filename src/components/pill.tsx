@@ -115,7 +115,7 @@ function baseBallCard(props: BaseBallCardProps): JSX.Element {
       placement="right"
       trigger="click"
       overlay={
-        <div className="tooltip-internal flex-down">
+        <div className="flex-down">
           <h3>Fields: {column.field}</h3>
           {isCustom && <h5>Description</h5>}
           {isCustom && <div>{column.summary.description}</div>}
@@ -127,20 +127,30 @@ function baseBallCard(props: BaseBallCardProps): JSX.Element {
           {!isCustom &&
             ['DIMENSION', 'MEASURE', 'TIME'].map((type: DataType) => {
               return (
-                <button
+                <div
                   className={classnames({
+                    flex: true,
                     'selected-dimension': column.type === type,
+                    'coerce-data-type-button': true,
+                    [`coerce-data-type-to--${type}`]: true,
                   })}
-                  onClick={(): any => coerceType({field, type})}
                   key={type}
                 >
-                  {type}
-                </button>
+                  <button
+                    className={classnames({
+                      'selected-dimension': column.type === type,
+                    })}
+                    onClick={(): any => coerceType({field, type})}
+                  >
+                    {type}
+                  </button>
+                  {column.type === type && <span>(Currently)</span>}
+                </div>
               );
             })}
           {!isCustom && (
             <button onClick={(): any => coerceType({field, type: column.originalType})}>
-              RESET TO ORIGINAL
+              RESET TO ORIGINAL ({column.originalType})
             </button>
           )}
         </div>

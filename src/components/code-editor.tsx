@@ -8,7 +8,7 @@ import {Template, TemplateMap, GenWidget} from '../templates/types';
 import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
-import NONE from '../templates/example-templates/none';
+import GALLERY from '../templates/example-templates/gallery';
 
 interface Props {
   addWidget?: GenericAction<GenWidget>;
@@ -176,7 +176,7 @@ export default class CodeEditor extends React.Component<Props> {
   }
 
   render(): JSX.Element {
-    const {editMode, showProgrammaticMode, template} = this.props;
+    const {codeMode, editMode, showProgrammaticMode, template} = this.props;
     const currentCode = this.getCurrentCode();
     return (
       <div
@@ -189,7 +189,7 @@ export default class CodeEditor extends React.Component<Props> {
         <div className="full-height full-width code-container flex-down">
           {!showProgrammaticMode && (
             <CodeCollapse
-              disable={template && template.templateName === NONE.templateName}
+              disable={template && template.templateName === GALLERY.templateName}
               showProgrammaticMode={showProgrammaticMode}
               setProgrammaticView={this.props.setProgrammaticView}
             />
@@ -199,7 +199,7 @@ export default class CodeEditor extends React.Component<Props> {
               <CodeEditorControls
                 addWidget={this.props.addWidget}
                 chainActions={this.props.chainActions}
-                codeMode={this.props.codeMode}
+                codeMode={codeMode}
                 currentView={this.props.currentView}
                 currentCode={currentCode}
                 editMode={this.props.editMode}
@@ -221,7 +221,7 @@ export default class CodeEditor extends React.Component<Props> {
                 templateMap={this.props.templateMap}
               />
               <div className="flex-down full-height full-width">
-                {editMode && (
+                {editMode && codeMode === TEMPLATE_BODY && (
                   <SuggestionBox
                     addWidget={this.props.addWidget}
                     codeMode={this.props.codeMode}
@@ -232,7 +232,7 @@ export default class CodeEditor extends React.Component<Props> {
                 )}
                 <MonacoWrapper
                   chainActions={this.props.chainActions}
-                  codeMode={this.props.codeMode}
+                  codeMode={codeMode}
                   currentCode={currentCode}
                   editorFontSize={this.props.editorFontSize}
                   editorLineWrap={this.props.editorLineWrap}

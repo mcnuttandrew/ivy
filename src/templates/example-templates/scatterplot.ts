@@ -6,13 +6,13 @@ const SCATTERPLOT_EXAMPLE: any = {
     type: 'point',
     tooltip: true,
     size: '[Radius]',
-    color: {CONDITIONAL: {true: '[Single Color]', false: null, query: '!parameters.Color'}},
+    color: {$cond: {true: '[Single Color]', false: null, query: '!parameters.Color'}},
   },
   encoding: {
     x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
     y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
     color: {
-      CONDITIONAL: {query: 'parameters.Color', true: {field: '[Color]', type: '[colorType]'}, false: null},
+      $cond: {query: 'parameters.Color', true: {field: '[Color]', type: '[colorType]'}, false: null},
     },
   },
 };
