@@ -1,8 +1,8 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template, GenWidget, Validation} from '../types';
-import {Json, JsonMap} from '../../types';
+import {Json, JsonMap} from '../types';
 
-import {toList} from '../../utils';
+import {toList} from '../utils';
 import {
   makeAgg,
   makeDataTarget,

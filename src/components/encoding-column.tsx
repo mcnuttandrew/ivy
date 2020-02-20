@@ -7,7 +7,7 @@ import {
   SetWidgetValuePayload,
   MoveWidgetPayload,
 } from '../actions';
-import {Template, GenWidget, TemplateMap} from '../templates/types';
+import {Template, GenWidget, TemplateMap} from '../types';
 import {classnames, toSet} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
@@ -19,7 +19,7 @@ import Tooltip from 'rc-tooltip';
 import {TiPlus} from 'react-icons/ti';
 import {widgetFactory, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
 
-interface TemplateColumnProps {
+interface EncodingColumnProps {
   columns: ColumnHeader[];
   editMode: boolean;
   setTemplateValue?: any;
@@ -48,7 +48,7 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
     const newWidget = widget(widgets.length);
     return (
       <button key={key} onClick={(): any => addWidget(newWidget)}>
-        {`Add ${key}`}
+        Add {key}
       </button>
     );
   };
@@ -95,7 +95,7 @@ function buildSections(template: Template): GenWidget[][] {
   return sections.sections.filter(d => d.length).concat([sections.currentSection]);
 }
 
-export default class TemplateColumn extends React.Component<TemplateColumnProps> {
+export default class EncodingColumn extends React.Component<EncodingColumnProps> {
   render(): JSX.Element {
     const {
       addWidget,

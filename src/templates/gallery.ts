@@ -1,5 +1,5 @@
 import {Template} from '../types';
-import {SORTS} from '../../components/renderers/data-search-mode';
+import {SORTS} from '../components/renderers/data-search-mode';
 
 const FIRST_TEXT =
   'In order visualize your data, you need to pick a template to work in. To begin either select a template from the selection in main pane (to the right), or use this panel to search. Search can either happen through text:\n\n\n';

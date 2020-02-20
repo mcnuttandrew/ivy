@@ -2,7 +2,7 @@ import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 import {TEMPLATE_BODY} from '../constants';
-import {ActionResponse, AppState, blindSet, EMPTY_SPEC_BY_LANGUAGE} from './default-state';
+import {blindSet} from './reducer-utils';
 import {
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
@@ -10,8 +10,8 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {Template, TemplateWidget, GenWidget, TemplateMap, ListWidget} from '../templates/types';
-import {BLANK_TEMPLATE} from '../templates';
+import {ActionResponse, AppState, Template, Widget, GenWidget, TemplateMap, ListWidget} from '../types';
+import {BLANK_TEMPLATE, EMPTY_SPEC_BY_LANGUAGE} from '../templates';
 import {deserializeTemplate, trim} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
 import {ColumnHeader} from '../types';
@@ -19,11 +19,7 @@ import {ColumnHeader} from '../types';
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
   return produce(state, draftState => {
-    if (!state.currentTemplateInstance) {
-      return;
-    }
     draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
-    draftState.spec = evaluateHydraProgram(draftState.currentTemplateInstance, draftState.templateMap);
   });
 }
 export const recieveTemplates = blindSet('templates');
@@ -86,7 +82,7 @@ const bagDifference = (a: string[], b: string[]): string[] => b.reduce(removeFir
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
-  const getWidget = (name: string): TemplateWidget<any> | null =>
+  const getWidget = (name: string): Widget<any> | null =>
     template.widgets.find(widget => widget.name === name);
   const {containingShelf} = payload;
   const fromWidget = getWidget(containingShelf);
@@ -112,7 +108,6 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
       draftState.templateMap,
       state.columns,
     );
-    draftState.spec = evaluateHydraProgram(template, draftState.templateMap);
   });
 };
 
@@ -170,6 +165,15 @@ export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload>
   });
 };
 
+// set the spec code
+export const setNewSpecCode: ActionResponse<HandleCodePayload> = (state, payload) => {
+  const {code, inError} = payload;
+  return produce(state, draftState => {
+    draftState.currentTemplateInstance.code = code;
+    draftState.editorError = inError;
+  });
+};
+
 export const readInTemplate: ActionResponse<HandleCodePayload> = (state, payload) => {
   if (payload.inError) {
     return produce(state, draftState => {
@@ -200,19 +204,13 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
   state,
   {fork, language},
 ) => {
-  // const currentCode = (state.currentTemplateInstance && state.currentTemplateInstance.code) || state.specCode;
-
   const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
   newTemplate.code = JSON.stringify(EMPTY_SPEC_BY_LANGUAGE[language], null, 2);
   newTemplate.language = language;
   if (fork == 'output') {
     newTemplate.code = stringify(evaluateHydraProgram(state.currentTemplateInstance, state.templateMap));
-    // if (state.encodingMode && state.encodingMode !== 'grammar') {
-    //   newTemplate.widgets = state.currentTemplateInstance.widgets;
-    // }
   } else if (fork === 'body') {
     newTemplate.code = state.currentTemplateInstance.code;
-    // newTemplate.widgets = state.currentTemplateInstance.widgets;
   } else if (fork === 'all') {
     newTemplate.code = state.currentTemplateInstance.code;
     newTemplate.widgets = state.currentTemplateInstance.widgets;
@@ -285,7 +283,7 @@ const modifyCurrentWidgets = (state: AppState, mod: WidgetMod): AppState =>
   produce(state, draftState => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
   });
-export const addWidget: ActionResponse<TemplateWidget<any>> = (state, payload) =>
+export const addWidget: ActionResponse<Widget<any>> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.concat(payload));
 export const removeWidget: ActionResponse<number> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.filter((_: any, idx: number) => payload !== idx));

@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextWidget, TemplateWidget} from '../../templates/types';
+import {TextWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 
 export function TextWidgetConfiguration(props: GeneralWidget<TextWidget>): JSX.Element {
@@ -21,7 +21,7 @@ export function TextWidgetComponent(props: GeneralWidget<TextWidget>): JSX.Eleme
 }
 
 const TextBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<TextWidget>;
+  const widg = widget as Widget<TextWidget>;
   return {
     controls: <TextWidgetConfiguration {...common} widget={widg} />,
     uiElement: <TextWidgetComponent {...common} widget={widg} />,

@@ -1,10 +1,9 @@
 import React from 'react';
 import {GenericAction} from '../../actions/index';
-import {ColumnHeader} from '../../types';
-import {Template} from '../../templates/types';
+import {Template, ColumnHeader} from '../../types';
 import ProgramPreview from '../program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../../utils';
-import GALLERY from '../../templates/example-templates/gallery';
+import GALLERY from '../../templates/gallery';
 interface Props {
   columns: ColumnHeader[];
   deleteTemplate: GenericAction<string>;
@@ -81,9 +80,6 @@ export default function DataSearchMode(props: Props): JSX.Element {
     if (key === 'Publish') {
       onClick = (): any => {
         const template = templates.find(template => template.templateName === templateName);
-        if (!template) {
-          return;
-        }
         publish(templateName, template);
       };
     }
@@ -133,17 +129,6 @@ export default function DataSearchMode(props: Props): JSX.Element {
     <div className="data-search-mode">
       <div className="program-containers">
         {!programs.length && <div>No templates match your query</div>}
-        {/* LEFT Comment out for now, but it's the beginning of the end for T0 */}
-        {/* {searchPredicate(search, GRAMMAR_NAME, GRAMMAR_DESC) && (
-          <ProgramPreview
-            templateName={GRAMMAR_NAME}
-            templateDescription={GRAMMAR_DESC}
-            setEncodingMode={setEncodingMode}
-            templateAuthor={'HYDRA-AUTHORS'}
-            buttons={[]}
-            typeCounts={{DIMENSION: 0, MEASURE: 0, TIME: 0, SUM: 9}}
-          />
-        )} */}
         {programs}
       </div>
     </div>

@@ -4,11 +4,11 @@ import stringify from 'json-stringify-pretty-compact';
 
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
-import {Template, TemplateMap, GenWidget} from '../templates/types';
+import {Template, TemplateMap, GenWidget} from '../types';
 import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 
 interface Props {
   addWidget?: GenericAction<GenWidget>;
@@ -29,9 +29,8 @@ interface Props {
   setProgrammaticView: GenericAction<boolean>;
   showProgrammaticMode: boolean;
   spec: any;
-  specCode: string;
-  template?: Template;
-  templateMap?: TemplateMap;
+  template: Template;
+  templateMap: TemplateMap;
 }
 
 const SHORTCUTS = [
@@ -86,19 +85,18 @@ export default class CodeEditor extends React.Component<Props> {
   }
 
   getCurrentCode(): string {
-    const {template, codeMode, specCode, spec, templateMap} = this.props;
+    const {template, codeMode, spec, templateMap} = this.props;
     if (codeMode === TEMPLATE_BODY) {
-      return template ? template.code : specCode;
+      return template.code;
     }
     if (codeMode === WIDGET_CONFIGURATION) {
-      return template ? serializeTemplate(template) : 'PARAMETERIZATION NOT AVAILABLE';
+      return serializeTemplate(template);
     }
     if (codeMode === JSON_OUTPUT) {
       return stringify(spec);
     }
     if (codeMode === WIDGET_VALUES) {
       return JSON.stringify(sortObjectAlphabetically(templateMap), null, 2);
-      // return JSON.stringify(templateMap, null, 2);
     }
   }
 
@@ -216,7 +214,6 @@ export default class CodeEditor extends React.Component<Props> {
                 setProgrammaticView={this.props.setProgrammaticView}
                 showProgrammaticMode={this.props.showProgrammaticMode}
                 spec={this.props.spec}
-                specCode={this.props.specCode}
                 template={this.props.template}
                 templateMap={this.props.templateMap}
               />

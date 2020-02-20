@@ -13,15 +13,15 @@ import {
 } from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
-import {Template} from '../templates/types';
+import {Template} from '../types';
 import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 import SimpleTooltip from './simple-tooltip';
 
 interface Props {
   chainActions: GenericAction<any>;
-  clearEncoding: GenericAction<void>;
+  fillTemplateMapWithDefaults: GenericAction<void>;
   deleteTemplate: GenericAction<string>;
   editMode: boolean;
   encodingMode: string;
@@ -32,9 +32,9 @@ interface Props {
   setEditMode: GenericAction<boolean>;
   setProgrammaticView: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
-  template?: Template;
+  template: Template;
   templateSaveState: string;
-  templates?: Template[];
+  templates: Template[];
   toggleProgramModal: GenericAction<void>;
 }
 
@@ -46,7 +46,7 @@ const UPDATE_TEMPLATE: {[x: string]: boolean} = {
 export default function EncodingControls(props: Props): JSX.Element {
   const {
     chainActions,
-    clearEncoding,
+    fillTemplateMapWithDefaults,
     editMode,
     saveCurrentTemplate,
     setBlankTemplate,
@@ -60,8 +60,7 @@ export default function EncodingControls(props: Props): JSX.Element {
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
-  const isGrammar = !template;
-  const onGallery = template && template.templateName === GALLERY.templateName;
+  const onGallery = template.templateName === GALLERY.templateName;
   const FULL_BUTTONS = [
     {
       disabled: false,
@@ -127,23 +126,22 @@ export default function EncodingControls(props: Props): JSX.Element {
         'Create a new template starting from the current value of "Export To JSON" as the basis of the template.',
     },
     {
-      disabled: !canSave || isGrammar,
+      disabled: !canSave,
       onClick: (): void => {
-        if (!canSave || isGrammar) {
+        if (!canSave) {
           return;
         }
         chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
       },
-      icon: !canSave || isGrammar ? <TiLockClosed /> : <TiLockOpen />,
+      icon: !canSave ? <TiLockClosed /> : <TiLockOpen />,
       label: 'Save',
-      tooltip:
-        !canSave || isGrammar
-          ? 'There have been no changes made to this template and so doesnt need to be saved'
-          : 'Save the current template in to the template store, overwrites anything with the same name.',
+      tooltip: !canSave
+        ? 'There have been no changes made to this template and so doesnt need to be saved'
+        : 'Save the current template in to the template store, overwrites anything with the same name.',
     },
     {
-      disabled: isGrammar || onGallery,
-      onClick: isGrammar || onGallery ? NULL : (): any => setEditMode(!editMode),
+      disabled: onGallery,
+      onClick: onGallery ? NULL : (): any => setEditMode(!editMode),
       icon: <TiEdit />,
       label: editMode ? 'Stop Edit' : 'Start Edit',
       tooltip:
@@ -151,7 +149,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     },
     {
       disabled: false,
-      onClick: clearEncoding,
+      onClick: fillTemplateMapWithDefaults,
       icon: <TiArrowSync />,
       label: 'Reset',
       tooltip: "Reset the template to it's blank state.",

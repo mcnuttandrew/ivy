@@ -1,21 +1,19 @@
 import React from 'react';
 import VegaWrapper from './renderers/vega-wrap';
-import {VegaTheme, ColumnHeader, Json} from '../types';
-import {Template} from '../templates/types';
+import {Template, ColumnHeader, Json} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
 import DataSearchMode from './renderers/data-search-mode';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
   createNewView: GenericAction<void>;
   changeViewName: GenericAction<{idx: number; value: string}>;
   columns: ColumnHeader[];
-  currentTheme: VegaTheme;
   currentView: string;
   data: DataRow[];
   deleteView: GenericAction<string>;
@@ -25,7 +23,7 @@ interface ChartAreaProps {
   setEncodingMode: GenericAction<string>;
   spec: Json;
   switchView: GenericAction<string>;
-  template?: Template;
+  template: Template;
   templates: Template[];
   templateComplete: boolean;
   views: string[];
@@ -115,7 +113,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       cloneView,
       columns,
       createNewView,
-      currentTheme,
       currentView,
       data,
       deleteView,
@@ -130,8 +127,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       templates,
       views,
     } = this.props;
-    const templateGallery = template && template.templateLanguage === GALLERY.templateLanguage;
-    const showChart = !templateGallery && (!template || templateComplete);
+    const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
+    const showChart = !templateGallery && templateComplete;
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
@@ -163,7 +160,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             <VegaWrapper
               spec={spec}
               data={data}
-              theme={currentTheme}
               language={template && template.templateLanguage}
               onError={(e): void => {
                 console.log('upper error', e);

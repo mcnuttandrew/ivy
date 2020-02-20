@@ -3,13 +3,12 @@ import {useDrop} from 'react-dnd';
 
 import Pill from './pill';
 import Selector from './selector';
-import {ColumnHeader} from '../types';
-import {DataTargetWidget, TemplateWidget, Template} from '../templates/types';
+import {ColumnHeader, DataTargetWidget, Widget, Template} from '../types';
 import {classnames, getOrMakeColumn, makeOptionsForDropdown} from '../utils';
 import AllowedTypesList from './allowed-types-list';
 
 // TODO this type is a mess, it is very confusing.
-interface TemplateShelf {
+interface Shelf {
   /**
    * The current field held in the shelf, can be empty if nothing is there
    */
@@ -38,7 +37,7 @@ interface TemplateShelf {
   /**
    * The widget that this shelf is contained within
    */
-  widget: TemplateWidget<DataTargetWidget>;
+  widget: Widget<DataTargetWidget>;
 
   /**
    * The containing template
@@ -46,7 +45,7 @@ interface TemplateShelf {
   template: Template;
 }
 
-export default function TemplateShelf(props: TemplateShelf): JSX.Element {
+export default function Shelf(props: Shelf): JSX.Element {
   const {shelfValue, columns, shelfName, onDrop, widget, template, fieldKey} = props;
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -89,7 +88,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
               containingShelf={fieldKey}
               containingField={fieldKey}
               column={columnHeader}
-              setEncodingParameter={onDrop}
+              setParam={onDrop}
               fieldSelector={fieldSelector}
             />
           )}

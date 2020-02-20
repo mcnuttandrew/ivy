@@ -1,5 +1,5 @@
 import stringify from 'json-stringify-pretty-compact';
-import {TemplateWidget, Template, GenWidget, SliderWidget, QueryResult} from '../types';
+import {Widget, Template, GenWidget, SliderWidget, QueryResult} from '../types';
 import {simpleList} from './polestar-template-utils';
 
 const TYPES = ['groupby', 'bin', 'passthrough', 'gridxy', 'flatten'];
@@ -43,7 +43,7 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
       type: 'Slider',
       config: {minVal: 1, maxVal: 15, step: 1, defaultValue: 10},
       validations: [{queryResult: 'hide', query: `parameters.Key${idx}Type !== '"bin"'`}],
-    } as TemplateWidget<SliderWidget>,
+    } as Widget<SliderWidget>,
   ];
 
   const cond = (query: string, tv: any): any => ({$cond: {query, true: tv, deleteKeyOnFalse: true}});

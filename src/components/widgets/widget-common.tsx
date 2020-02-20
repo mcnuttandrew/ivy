@@ -1,6 +1,6 @@
 import React from 'react';
 import Tooltip from 'rc-tooltip';
-import {GenWidget} from '../../templates/types';
+import {GenWidget} from '../../types';
 import {TiDeleteOutline} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {classnames} from '../../utils';

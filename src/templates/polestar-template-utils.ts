@@ -5,12 +5,12 @@ import {
   MultiDataTargetWidget,
   SectionWidget,
   SwitchWidget,
-  TemplateWidget,
+  Widget,
   TextWidget,
   Validation,
   ValidationQuery,
 } from '../types';
-import {toList} from '../../utils';
+import {toList} from '../utils';
 const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 const VegaLiteDataTypes = ['nominal', 'ordinal', 'quantitative', 'temporal'];
 export const toQuote = (x: string): string => `"${x}"`;
@@ -28,7 +28,7 @@ export const notCount = (key: string): ValidationQuery => `parameters.${key} !==
  */
 export const simpleValidation = (key: string): Validation => ({queryResult: 'hide', query: unused(key)});
 
-export const makeDataTarget = (dim: string): TemplateWidget<DataTargetWidget> => ({
+export const makeDataTarget = (dim: string): Widget<DataTargetWidget> => ({
   name: dim,
   type: 'DataTarget',
   config: {allowedTypes: ALLDATA_TYPES, required: false},
@@ -39,27 +39,21 @@ interface MakeMultiTargetType {
   dim: string;
   validations: Validation[];
 }
-export const makeMultiTarget = ({
-  dim,
-  validations,
-}: MakeMultiTargetType): TemplateWidget<MultiDataTargetWidget> =>
+export const makeMultiTarget = ({dim, validations}: MakeMultiTargetType): Widget<MultiDataTargetWidget> =>
   ({
     name: dim,
     type: 'MultiDataTarget',
     config: {allowedTypes: ALLDATA_TYPES, required: true, minNumberOfTargets: 0},
     validations,
-  } as TemplateWidget<MultiDataTargetWidget>);
+  } as Widget<MultiDataTargetWidget>);
 
-export const makeText = (textLabel: string, validations: Validation[]): TemplateWidget<TextWidget> => ({
+export const makeText = (textLabel: string, validations: Validation[]): Widget<TextWidget> => ({
   name: textLabel,
   type: 'Text',
   config: {text: textLabel},
   validations,
 });
-export const makeSection = (
-  sectionLabel: string,
-  validations: Validation[],
-): TemplateWidget<SectionWidget> => ({
+export const makeSection = (sectionLabel: string, validations: Validation[]): Widget<SectionWidget> => ({
   name: sectionLabel,
   type: 'Section',
   config: null,
@@ -80,7 +74,7 @@ export const simpleList = ({
   defaultVal,
   displayName,
   validations,
-}: SimpleListType): TemplateWidget<ListWidget> => {
+}: SimpleListType): Widget<ListWidget> => {
   const firstDisplayValue = (list[0] as displayType).display;
   return {
     name,
@@ -94,7 +88,7 @@ export const simpleList = ({
   };
 };
 
-export const makeAgg = (key: string): TemplateWidget<ListWidget> =>
+export const makeAgg = (key: string): Widget<ListWidget> =>
   simpleList({
     name: `${key}Agg`,
     list: spatialAggs,
@@ -103,7 +97,7 @@ export const makeAgg = (key: string): TemplateWidget<ListWidget> =>
     validations: [{queryResult: 'show', query: `${used(key)} && ${notCount(key)}`}],
   });
 
-export const makeTypeSelect = (key: string, defaultVal: string): TemplateWidget<ListWidget> =>
+export const makeTypeSelect = (key: string, defaultVal: string): Widget<ListWidget> =>
   simpleList({
     name: `${key}Type`,
     list: VegaLiteDataTypes,
@@ -117,11 +111,7 @@ interface SimpleSwitchType {
   displayName?: string;
   validations?: Validation[];
 }
-export const simpleSwitch = ({
-  name,
-  displayName,
-  validations,
-}: SimpleSwitchType): TemplateWidget<SwitchWidget> => ({
+export const simpleSwitch = ({name, displayName, validations}: SimpleSwitchType): Widget<SwitchWidget> => ({
   name,
   type: 'Switch',
   displayName: displayName || null,

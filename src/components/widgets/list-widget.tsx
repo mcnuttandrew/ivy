@@ -1,5 +1,5 @@
 import React from 'react';
-import {ListWidget, TemplateWidget} from '../../templates/types';
+import {ListWidget, Widget} from '../../types';
 import Selector from '../selector';
 import {IgnoreKeys} from 'react-hotkeys';
 
@@ -87,7 +87,7 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
 }
 
 const ListBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<ListWidget>;
+  const widg = widget as Widget<ListWidget>;
   return {
     controls: <ListWidgetConfiguration {...common} widget={widg} />,
     uiElement: <ListWidgetComponent {...common} widget={widg} />,

@@ -1,7 +1,7 @@
 import React from 'react';
-import {MultiDataTargetWidget, TemplateWidget, DataType} from '../../templates/types';
+import {MultiDataTargetWidget, Widget, DataType} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
-import TemplateMultiShelf from '../template-multi-shelf';
+import MultiShelf from '../multi-shelf';
 import DataSymbol from '../data-symbol';
 import {trim} from '../../utils';
 import {EditParameterName, EditDisplayName} from './widget-common';
@@ -83,7 +83,7 @@ function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): 
   const fieldValue = templateMap[widget.name];
   return (
     <div className="multi-data-target-widget">
-      <TemplateMultiShelf
+      <MultiShelf
         shelfValues={(Array.isArray(fieldValue) ? (fieldValue as string[]) : []).map(trim)}
         shelfName={widget.displayName || widget.name}
         fieldKey={widget.name}
@@ -97,7 +97,7 @@ function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): 
 }
 
 const MultiDataTargetBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<MultiDataTargetWidget>;
+  const widg = widget as Widget<MultiDataTargetWidget>;
   return {
     controls: <MultiDataTargetWidgetConfiguration {...common} widget={widg} />,
     uiElement: <MultiDataTargetComponent {...common} widget={widg} />,

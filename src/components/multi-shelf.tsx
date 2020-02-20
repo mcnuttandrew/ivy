@@ -4,8 +4,7 @@ import {useDrop} from 'react-dnd';
 import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
 import Selector from './selector';
-import {ColumnHeader} from '../types';
-import {MultiDataTargetWidget, TemplateWidget, DataType, Template} from '../templates/types';
+import {ColumnHeader, MultiDataTargetWidget, Widget, DataType, Template} from '../types';
 import {classnames, makeOptionsForDropdown, getOrMakeColumn} from '../utils';
 
 interface Props {
@@ -14,11 +13,11 @@ interface Props {
   fieldKey: string;
   shelfName: string;
   onDrop: any;
-  widget: TemplateWidget<MultiDataTargetWidget>;
+  widget: Widget<MultiDataTargetWidget>;
   template: Template;
 }
 
-export default function TemplateMultiShelf(props: Props): JSX.Element {
+export default function MultiShelf(props: Props): JSX.Element {
   const {shelfValues, columns, shelfName, fieldKey, onDrop, widget, template} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
@@ -68,7 +67,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
                 containingShelf={shelfName}
                 containingField={shelfName}
                 column={columnHeader}
-                setEncodingParameter={(x: any): void => {
+                setParam={(x: any): void => {
                   onDrop({
                     text: shelfValues.filter(d => d !== x.column.field),
                     ...dropCommon,

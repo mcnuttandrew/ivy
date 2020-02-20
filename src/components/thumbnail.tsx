@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {serverPrefix} from '../utils';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 
 interface ThumbnailProps {
   templateName: string;

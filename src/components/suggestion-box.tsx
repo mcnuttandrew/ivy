@@ -5,7 +5,7 @@ import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
-import {Template, GenWidget} from '../templates/types';
+import {Template, GenWidget} from '../types';
 import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   codeMode: string;
   currentCode: string;
   handleCodeUpdate: (code: string) => void;
-  template?: Template;
+  template: Template;
 }
 
 interface RenderSuggestionProps {

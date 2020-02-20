@@ -2,18 +2,16 @@ import DomToImage from 'dom-to-image';
 import stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
-  DataType,
   MultiDataTargetWidget,
   Template,
   TemplateMap,
-  TemplateWidget,
+  Widget,
   GenWidget,
   CustomCard,
-} from '../templates/types';
-import {AppState} from '../reducers/default-state';
+} from '../types';
 import {TEXT_TYPE} from '../constants/index';
-import GALLERY from '../templates/example-templates/gallery';
-import {ColumnHeader} from '../types';
+import GALLERY from '../templates/gallery';
+import {AppState, ColumnHeader} from '../types';
 
 /* eslint-disable @typescript-eslint/no-empty-function*/
 export const NULL = (): void => {};
@@ -53,13 +51,6 @@ export function executePromisesInSeries(tasks: any): any {
   return tasks.reduce((promiseChain: any, task: any): any => promiseChain.then(task), Promise.resolve([]));
 }
 
-export function findField(state: AppState, targetField: string, columnKey = 'columns'): ColumnHeader {
-  if (columnKey === 'metaColumns') {
-    return state.metaColumns.find(({field}: {field: string}) => field === targetField);
-  }
-  return state.columns.find(({field}: {field: string}) => field === targetField);
-}
-
 // safely access elements on a nested object
 export function get(obj: any, route: (string | number)[]): any {
   if (!obj) {
@@ -77,46 +68,6 @@ export function get(obj: any, route: (string | number)[]): any {
   }
   return get(next, route.slice(1));
 }
-
-export function getAllInUseFields(spec: any): Set<string> {
-  // this only works for vega-lite
-  const inUse = new Set([]);
-  const encoding = (spec.spec && spec.spec.encoding) || spec.encoding || {};
-  Object.values(encoding).forEach((x: any) => {
-    if (!x) {
-      return;
-    }
-    const channel = x;
-    if (typeof channel.field === 'string') {
-      inUse.add(channel.field);
-      return;
-    }
-    if (channel.field && channel.field.repeat) {
-      inUse.add(channel.field.repeat);
-      return;
-    }
-  });
-  return inUse;
-}
-
-export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
-  columns.filter((column: ColumnHeader) => column.type === type).map((column: ColumnHeader) => column.field);
-
-export const getTemplate = (state: AppState, template: string): Template | null => {
-  return state.templates.find((d: any) => d.templateName === template);
-};
-
-export function widgetInUse(code: string, name: string): boolean {
-  return Boolean(code.match(new RegExp(`\\[${name}\\]`, 'g')));
-}
-export function allWidgetsInUse(code: string, widgets: GenWidget[]): boolean {
-  return widgets
-    .filter((widget: GenWidget) => widget.type !== 'Text')
-    .every((widget: GenWidget) => !!widgetInUse(code, widget.name));
-}
-
-export const toSelectFormat = (arr: string[]): {value: string; label: string}[] =>
-  arr.map((x: string) => ({value: x, label: x}));
 
 // setting dimensions requires that dimension name be wrapped in a string
 // here we strip them off so that the channel cencoding can find the correct value
@@ -165,11 +116,7 @@ export function deserializeTemplate(templateString: string): Template {
 type SaveState = 'NA' | 'NOT FOUND' | 'EQUAL' | 'DIFFERENT';
 export function getTemplateSaveState(base: AppState): SaveState {
   const template = base.currentTemplateInstance;
-  // using the grammar mode
-  if (!template) {
-    return 'NA';
-  }
-  const associatedUpstreamTemplate = getTemplate(base, template.templateName);
+  const associatedUpstreamTemplate = base.templates.find(t => t.templateName === template.templateName);
   if (!associatedUpstreamTemplate) {
     return 'NOT FOUND';
   }
@@ -182,7 +129,7 @@ export function serverPrefix(): string {
 }
 
 export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): Set<string> => {
-  const dims = ['DIMENSION', 'MEASURE', 'METACOLUMN', 'TIME'];
+  const dims = ['DIMENSION', 'MEASURE', 'TIME'];
   const dimCounter = dims.reduce((acc: any, key) => ({...acc, [key]: []}), {});
 
   const toSet = (counter: {[x: string]: any[]}): Set<string> =>
@@ -192,11 +139,6 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
         .map(x => x[0]),
     );
 
-  if (!template) {
-    dims.forEach(x => dimCounter[x].push(x));
-    // don't do anything with T0 for now
-    return toSet(dimCounter);
-  }
   const result = template.widgets
     .filter(d => ['MultiDataTarget', 'DataTarget'].includes(d.type))
     .reduce((acc: any, widget: any) => {
@@ -282,10 +224,8 @@ export function searchDimensionsCanMatch(
   const colMap = makeColNameMap(columns);
   const desiredColumns = targetCols.map(key => colMap[trim(key)]);
   const config = template.widgets;
-  const targets = config.filter(d => d.type === 'DataTarget') as TemplateWidget<DataTargetWidget>[];
-  const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as TemplateWidget<
-    MultiDataTargetWidget
-  >[];
+  const targets = config.filter(d => d.type === 'DataTarget') as Widget<DataTargetWidget>[];
+  const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as Widget<MultiDataTargetWidget>[];
   const numRequired = targets.filter(d => d.config.required).length;
   const usedTargets: Set<string> = new Set([]);
   const result = desiredColumns.every(col => {
@@ -327,9 +267,6 @@ export function sortObjectAlphabetically(obj: any): any {
 }
 
 export function getTemplateName(template: Template | null): string {
-  if (!template) {
-    return 'T0';
-  }
   return template && template.templateName === GALLERY.templateName
     ? 'Template Gallery'
     : template.templateName;
@@ -388,7 +325,7 @@ export function getOrMakeColumn(
 interface MakeOptionsForDropdownProps {
   template: Template;
   columns: ColumnHeader[];
-  widget: TemplateWidget<DataTargetWidget | MultiDataTargetWidget>;
+  widget: Widget<DataTargetWidget | MultiDataTargetWidget>;
   useGroupsAsTypes?: boolean;
 }
 export function makeOptionsForDropdown(

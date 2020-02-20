@@ -2,8 +2,7 @@ import React from 'react';
 import {TiDelete, TiCog} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
-import {widgetInUse} from '../../utils';
-import {TemplateMap, GenWidget, Validation} from '../../templates/types';
+import {TemplateMap, GenWidget, Validation} from '../../types';
 import {ColumnHeader} from '../../types';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
@@ -76,6 +75,10 @@ function ValidationBuilder(props: ValidationBuilderProps): JSX.Element {
       </button>
     </React.Fragment>
   );
+}
+
+function widgetInUse(code: string, name: string): boolean {
+  return Boolean(code.match(new RegExp(`\\[${name}\\]`, 'g')));
 }
 
 export default function WidgetConfigurationControls(props: PlacementControlsProps): JSX.Element {

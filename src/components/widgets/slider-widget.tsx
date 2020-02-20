@@ -1,5 +1,5 @@
 import React from 'react';
-import {SliderWidget, TemplateWidget} from '../../templates/types';
+import {SliderWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName} from './widget-common';
 
@@ -73,7 +73,7 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
 }
 
 const SliderBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<SliderWidget>;
+  const widg = widget as Widget<SliderWidget>;
   return {
     controls: <SliderWidgetConfiguration {...common} widget={widg} />,
     uiElement: <SliderWidgetComponent {...common} widget={widg} />,

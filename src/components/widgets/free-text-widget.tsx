@@ -1,5 +1,5 @@
 import React from 'react';
-import {FreeTextWidget, TemplateWidget} from '../../templates/types';
+import {FreeTextWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, Reset, widgetName} from './widget-common';
 import {trim} from '../../utils';
@@ -37,7 +37,7 @@ function FreeTextWidgetComponent(props: GeneralWidget<FreeTextWidget>): JSX.Elem
 }
 
 const FreeTextBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<FreeTextWidget>;
+  const widg = widget as Widget<FreeTextWidget>;
   return {
     controls: <FreeTextWidgetConfiguration {...common} widget={widg} />,
     uiElement: <FreeTextWidgetComponent {...common} widget={widg} />,

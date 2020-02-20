@@ -1,20 +1,8 @@
 import produce from 'immer';
-import {Template, TemplateMap} from '../templates/types';
-import {ActionResponse, AppState} from './default-state';
-import {ViewCatalog} from './view-actions';
+import {ActionResponse, AppState, UndoRedoStackItem} from '../types';
 
-export interface UndoRedoStackItem {
-  spec: any;
-  currentView: string;
-  currentTemplateInstance: Template;
-  encodingMode: string;
-  templateMap: TemplateMap;
-  views: string[];
-  viewCatalog: ViewCatalog;
-}
 const createStackItem = (state: AppState): UndoRedoStackItem => {
   return {
-    spec: state.spec,
     currentView: state.currentView,
     templateMap: state.templateMap,
     encodingMode: state.encodingMode,
@@ -27,7 +15,6 @@ const createStackItem = (state: AppState): UndoRedoStackItem => {
 // TODO if this gets any larger we will need to develop an itemized notion of undo
 const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
   return produce(state, draftState => {
-    draftState.spec = stackItem.spec;
     draftState.currentView = stackItem.currentView;
     draftState.templateMap = stackItem.templateMap;
     draftState.views = stackItem.views;

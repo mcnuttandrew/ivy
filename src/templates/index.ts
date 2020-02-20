@@ -8,24 +8,51 @@ import {
   SliderWidget,
   SwitchWidget,
   Template,
-  TemplateWidget,
+  Widget,
   TextWidget,
   GenWidget,
   ShortcutsWidget,
-} from './types';
-import {EMPTY_SPEC_BY_LANGUAGE} from '../reducers/default-state';
+} from '../types';
 import {toList} from '../utils';
-import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
-import ATOM from './example-templates/atom';
-import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
-import DATATABLE from './example-templates/table';
-import GALLERY from './example-templates/gallery';
-import PIECHART_TEMPLATE from './example-templates/pie-chart';
-import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
+import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './vega-common';
+import ATOM from './atom';
+import BEESWARM_TEMPLATE from './bee-swarm';
+import DATATABLE from './table';
+import PIECHART_TEMPLATE from './pie-chart';
+import SCATTERPLOT_TEMPLATE from './scatterplot';
 import {getUserName} from '../utils/local-storage';
-// import SIMPLE_SCATTER from './example-templates/simple-scatterplot';
-import SHELF from './example-templates/polestar-template';
-import UNITVIS from './example-templates/unit-vis';
+// import SIMPLE_SCATTER from './simple-scatterplot';
+import SHELF from './polestar-template';
+import UNITVIS from './unit-vis';
+
+const vegaLitEmpty: any = {
+  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+  transform: [] as any[],
+  mark: {type: 'point', tooltip: true},
+  encoding: {},
+};
+const vegaEmpty: any = {
+  $schema: 'https://vega.github.io/schema/vega/v5.json',
+  width: 400,
+  height: 200,
+  padding: 5,
+  data: [],
+  signals: [],
+  scales: [],
+  axes: [],
+  marks: [],
+};
+const unitVisEmpty: any = {
+  $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
+  layouts: [],
+  mark: {color: {key: '', type: 'categorical'}},
+};
+export const EMPTY_SPEC_BY_LANGUAGE: {[x: string]: any} = {
+  'vega-lite': vegaLitEmpty,
+  vega: vegaEmpty,
+  'unit-vis': unitVisEmpty,
+  'hydra-data-table': JSON.parse(DATATABLE.code),
+};
 
 export const BLANK_TEMPLATE: Template = {
   templateAuthor: getUserName(),
@@ -36,9 +63,7 @@ export const BLANK_TEMPLATE: Template = {
   widgets: [],
 };
 
-// META COLUMNS NOT CURRENTLY ALLOWED IN TEMPLATES
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
-// const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 export type WidgetFactoryFunc = (idx: number) => GenWidget;
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: idx =>
@@ -46,51 +71,51 @@ export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
       name: `Var${idx}`,
       type: 'DataTarget',
       config: {allowedTypes: DATA_TYPES, required: true},
-    } as TemplateWidget<DataTargetWidget>),
+    } as Widget<DataTargetWidget>),
   MultiDataTarget: idx =>
     ({
       name: `MultiDim${idx}`,
       type: 'MultiDataTarget',
       config: {allowedTypes: DATA_TYPES, required: true, minNumberOfTargets: 0},
-    } as TemplateWidget<MultiDataTargetWidget>),
+    } as Widget<MultiDataTargetWidget>),
   List: idx =>
     ({
       name: `ListItem${idx}`,
       type: 'List',
       config: {allowedValues: [] as {display: string; value: string}[], defaultValue: null},
-    } as TemplateWidget<ListWidget>),
+    } as Widget<ListWidget>),
 
   Switch: idx =>
     ({
       name: `Switch${idx}`,
       type: 'Switch',
       config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
-    } as TemplateWidget<SwitchWidget>),
-  Text: idx => ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as TemplateWidget<TextWidget>),
+    } as Widget<SwitchWidget>),
+  Text: idx => ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as Widget<TextWidget>),
   Slider: idx =>
     ({
       name: `Slider${idx}`,
       type: 'Slider',
       config: {minVal: 0, maxVal: 10, step: 1, defaultValue: 5},
-    } as TemplateWidget<SliderWidget>),
+    } as Widget<SliderWidget>),
   Section: idx =>
     ({
       name: `Section${idx}`,
       type: 'Section',
       config: null,
-    } as TemplateWidget<SectionWidget>),
+    } as Widget<SectionWidget>),
   Shortcuts: idx =>
     ({
       name: `Shortcut${idx}`,
       type: 'Shortcut',
       config: {shortcuts: []},
-    } as TemplateWidget<ShortcutsWidget>),
+    } as Widget<ShortcutsWidget>),
   FreeText: idx =>
     ({
       name: `FreeText${idx}`,
       type: 'FreeText',
       config: {},
-    } as TemplateWidget<ShortcutsWidget>),
+    } as Widget<ShortcutsWidget>),
 };
 
 export const preconfiguredWidgets: {[type: string]: WidgetFactoryFunc} = {
@@ -99,13 +124,13 @@ export const preconfiguredWidgets: {[type: string]: WidgetFactoryFunc} = {
       name: `ColorList${idx}`,
       type: 'List',
       config: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: null},
-    } as TemplateWidget<ListWidget>),
+    } as Widget<ListWidget>),
   'Data Types Options': idx =>
     ({
       name: `DataTypeOptions${idx}`,
       type: 'List',
       config: {allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal']), defaultValue: null},
-    } as TemplateWidget<ListWidget>),
+    } as Widget<ListWidget>),
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [
@@ -116,6 +141,5 @@ export const DEFAULT_TEMPLATES: Template[] = [
   PIECHART_TEMPLATE,
   BEESWARM_TEMPLATE,
   UNITVIS,
-  GALLERY,
   // SIMPLE_SCATTER,
 ];

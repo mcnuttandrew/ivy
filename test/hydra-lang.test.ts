@@ -1,12 +1,12 @@
-import PolestarTemplate from '../src/templates/example-templates/polestar-template';
+import PolestarTemplate from '../src/templates/polestar-template';
 import {
   applyConditionals,
   evaluateHydraProgram,
   constructDefaultTemplateMap,
   // backpropHydraProgram,
 } from '../src/hydra-lang';
-import Scatterplot from '../src/templates/example-templates/scatterplot';
-import GALLERY from '../src/templates/example-templates/gallery';
+import Scatterplot from '../src/templates/scatterplot';
+import GALLERY from '../src/templates/gallery';
 import produce from 'immer';
 
 test('#applyConditionals', () => {

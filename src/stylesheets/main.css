@@ -254,10 +254,6 @@ input[type="number"]::-webkit-outer-spin-button {
   text-transform: uppercase;
 }
 
-.section-body {
-  margin-bottom: 15px;
-}
-
 .section-subtitle {
   font-size: 12px;
 }
@@ -413,7 +409,6 @@ input[type="number"]::-webkit-outer-spin-button {
   background: pink;
 }
 
-.metacolumn-pill,
 .custom-pill {
   background: goldenrod;
 }
@@ -453,36 +448,6 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 10px;
   padding: 0;
   z-index: 1;
-}
-
-.shelf-configuration {
-  display: flex;
-  padding: 5px;
-  background: #bababa;
-  top: -5px;
-  position: relative;
-  align-items: center;
-  border-radius: 5px;
-  flex-wrap: wrap;
-  z-index: 0;
-}
-
-.shelf-configuration .option-row {
-  display: flex;
-  font-size: 10px;
-  margin-right: 20px;
-  padding: 0 5px;
-  justify-content: space-between;
-}
-
-.shelf-configuration .option-row .option-row-label {
-  white-space: nowrap;
-}
-
-.shelf-configuration .clear-option {
-  display: flex;
-  cursor: pointer;
-  font-size: 15px;
 }
 
 .shelf .field-label {
@@ -543,12 +508,6 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
 }
 
-/* IF WE RENEG ON THE COLORS OF PILLS THIS COMES BACK */
-
-/* .shelf .pill {
-  background: #e4e6e8;
-} */
-
 .shelf.filter-target {
   border: 0;
   padding: 0;
@@ -557,20 +516,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .shelf.filter-target .pill-dropzone {
   margin: 0;
-}
-
-.meta-column-filter-option-container {
-  flex-wrap: wrap;
-}
-
-.meta-column-filter-option-container .meta-column-filter-option {
-  cursor: pointer;
-  text-decoration: underline;
-  margin-right: 5px;
-}
-
-.meta-column-filter-count {
-  min-width: 30px;
 }
 
 .data-select {
@@ -760,11 +705,6 @@ input[type="number"]::-webkit-outer-spin-button {
 .program-option-type-pill--time::before,
 .coerce-data-type-to--TIME::before {
   color: pink;
-}
-
-.program-option-type-pill--metacolumn::before,
-.coerce-data-type-to--METACOLUMN::before {
-  color: goldenrod;
 }
 
 .program-option-type-symbol {
