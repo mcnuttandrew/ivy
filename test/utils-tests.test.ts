@@ -7,6 +7,7 @@ import TABLE from '../src/templates/example-templates/table';
 
 import {DEFAULT_STATE} from '../src/reducers/default-state';
 import {setEncodingMode} from '../src/reducers/gui-actions';
+import {evaluateHydraProgram} from '../src/hydra-lang';
 
 test('#setTemplateValues', () => {
   const filledOutPieTemplate = setTemplateValues(PIECHART_TEMPLATE.code, {
@@ -31,14 +32,14 @@ test('#setTemplateValues', () => {
 test('#fillTemplateMapWithDefaults', () => {
   const preparedState = setEncodingMode(recieveTemplates(DEFAULT_STATE, DEFAULT_TEMPLATES), 'Scatterplot');
   const newState = fillTemplateMapWithDefaults(preparedState);
-  expect(newState.spec).toMatchSnapshot();
+  expect(evaluateHydraProgram(newState.currentTemplateInstance, newState.templateMap)).toMatchSnapshot();
   expect(newState.templateMap).toMatchSnapshot();
 
   const nextState = fillTemplateMapWithDefaults(setEncodingMode(newState, 'pie chart'));
-  expect(nextState.spec).toMatchSnapshot();
+  expect(evaluateHydraProgram(nextState.currentTemplateInstance, nextState.templateMap)).toMatchSnapshot();
   expect(nextState.templateMap).toMatchSnapshot();
 
   const nextState2 = fillTemplateMapWithDefaults(setEncodingMode(newState, 'Data Table'));
-  expect(nextState2.spec).toMatchSnapshot();
+  expect(evaluateHydraProgram(nextState2.currentTemplateInstance, nextState2.templateMap)).toMatchSnapshot();
   expect(nextState2.templateMap).toMatchSnapshot();
 });

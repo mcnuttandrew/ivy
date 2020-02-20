@@ -19,11 +19,7 @@ import {ColumnHeader} from '../types';
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
   return produce(state, draftState => {
-    if (!state.currentTemplateInstance) {
-      return;
-    }
     draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
-    draftState.spec = evaluateHydraProgram(draftState.currentTemplateInstance, draftState.templateMap);
   });
 }
 export const recieveTemplates = blindSet('templates');
@@ -112,7 +108,6 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
       draftState.templateMap,
       state.columns,
     );
-    draftState.spec = evaluateHydraProgram(template, draftState.templateMap);
   });
 };
 
@@ -167,6 +162,15 @@ export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload>
     if (key === 'code') {
       draftState.editorError = payload.editorError;
     }
+  });
+};
+
+// set the spec code
+export const setNewSpecCode: ActionResponse<HandleCodePayload> = (state, payload) => {
+  const {code, inError} = payload;
+  return produce(state, draftState => {
+    draftState.currentTemplateInstance.code = code;
+    draftState.editorError = inError;
   });
 };
 

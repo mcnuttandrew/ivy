@@ -21,7 +21,7 @@ import SimpleTooltip from './simple-tooltip';
 
 interface Props {
   chainActions: GenericAction<any>;
-  clearEncoding: GenericAction<void>;
+  fillTemplateMapWithDefaults: GenericAction<void>;
   deleteTemplate: GenericAction<string>;
   editMode: boolean;
   encodingMode: string;
@@ -46,7 +46,7 @@ const UPDATE_TEMPLATE: {[x: string]: boolean} = {
 export default function EncodingControls(props: Props): JSX.Element {
   const {
     chainActions,
-    clearEncoding,
+    fillTemplateMapWithDefaults,
     editMode,
     saveCurrentTemplate,
     setBlankTemplate,
@@ -149,7 +149,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     },
     {
       disabled: false,
-      onClick: clearEncoding,
+      onClick: fillTemplateMapWithDefaults,
       icon: <TiArrowSync />,
       label: 'Reset',
       tooltip: "Reset the template to it's blank state.",

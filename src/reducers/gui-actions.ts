@@ -1,10 +1,8 @@
 import produce from 'immer';
 
 import {ActionResponse, AppState, toggle, blindSet} from './default-state';
-import {Template} from '../templates/types';
 import {JSON_OUTPUT} from '../constants/index';
 
-import {evaluateHydraProgram} from '../hydra-lang';
 import {addToNextOpenSlot} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
 import {makeColNameMap} from '../utils';
@@ -41,34 +39,14 @@ function activeColumns(state: any): string[] {
   return Array.from(templateInUse).map((key: string) => quoteTrim(key));
 }
 
-export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDefault: boolean}> = (
-  state,
-  {mode, fillWithDefault},
-) => {
-  if (!mode) {
-    return produce(state, draftState => {
-      draftState.encodingMode = mode;
-      draftState.spec = {};
-      draftState.currentTemplateInstance = null;
-    });
-  }
-  const template: Template = state.templates.find((d: any) => d.templateName === mode);
-  // INSTANTIATE TEMPLATE AS A LOCAL COPY
-  const updatedState = produce(state, draftState => {
-    draftState.encodingMode = mode;
-    draftState.spec = evaluateHydraProgram(template, state.templateMap);
-    draftState.currentTemplateInstance = template;
-  });
-  return fillWithDefault ? fillTemplateMapWithDefaults(updatedState) : updatedState;
-};
-
 export const setEncodingMode: ActionResponse<string> = (state, payload) => {
-  const newState = applyEncodingModeToState(
+  const newState = fillTemplateMapWithDefaults(
     produce(state, draftState => {
       draftState.editMode = false;
       draftState.codeMode = JSON_OUTPUT;
+      draftState.encodingMode = payload;
+      draftState.currentTemplateInstance = state.templates.find((d: any) => d.templateName === payload);
     }),
-    {mode: payload, fillWithDefault: true},
   );
 
   // figure out what the currently in use columns are and iteratively try to add them to the new one

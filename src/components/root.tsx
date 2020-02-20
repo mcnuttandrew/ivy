@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {DndProvider} from 'react-dnd';
+import stringify from 'json-stringify-pretty-compact';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
@@ -110,7 +111,7 @@ interface RootProps {
   chainActions: GenericAction<any>;
   changeSelectedFile: GenericAction<string>;
   changeViewName: GenericAction<{idx: number; value: string}>;
-  clearEncoding: GenericAction<void>;
+  fillTemplateMapWithDefaults: GenericAction<void>;
   cloneView: GenericAction<void>;
   coerceType: GenericAction<CoerceTypePayload>;
   createFilter: GenericAction<Filter>;
@@ -136,7 +137,6 @@ interface RootProps {
   setEncodingMode: GenericAction<string>;
   setUserName: GenericAction<string>;
   setGuiView: GenericAction<boolean>;
-  setNewSpec: GenericAction<any>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<boolean>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
@@ -261,7 +261,7 @@ class RootComponent extends React.Component<RootProps, State> {
       <div className=" full-height full-width flex-down" style={{minWidth: '360px'}}>
         <EncodingControls
           chainActions={this.props.chainActions}
-          clearEncoding={this.props.clearEncoding}
+          fillTemplateMapWithDefaults={this.props.fillTemplateMapWithDefaults}
           deleteTemplate={this.props.deleteTemplate}
           editMode={this.props.editMode}
           encodingMode={this.props.encodingMode}
@@ -434,6 +434,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   const templateMap = base.templateMap;
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
   const isGallery = GALLERY.templateName === template.templateName;
+  const spec = evaluateHydraProgram(template, templateMap);
   return {
     canRedo: base.redoStack.length >= 1,
     canUndo: base.undoStack.length >= 1,
@@ -451,8 +452,8 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     programModalOpen: base.programModalOpen,
     showProgrammaticMode: isGallery ? false : base.showProgrammaticMode,
     showGUIView: base.showGUIView,
-    spec: evaluateHydraProgram(template, templateMap),
-    specCode: base.specCode,
+    spec,
+    specCode: stringify(spec),
     template,
     templateComplete: !missingFields.length,
     templateMap,

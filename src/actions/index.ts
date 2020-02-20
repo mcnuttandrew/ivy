@@ -62,7 +62,6 @@ function createAction<T>(type: any): GenericAction<T> {
 export const addToNextOpenSlot = createAction<ColumnHeader>(actionTypes.ADD_TO_NEXT_OPEN_SLOT);
 export const addWidget = createAction<GenWidget>(actionTypes.ADD_TO_WIDGET_TEMPLATE);
 export const changeViewName = createAction<{idx: number; value: string}>(actionTypes.CHANGE_VIEW_NAME);
-export const clearEncoding = createAction<void>(actionTypes.CLEAR_ENCODING);
 export const cloneView = createAction<void>(actionTypes.CLONE_VIEW);
 export const coerceType = createAction<CoerceTypePayload>(actionTypes.COERCE_TYPE);
 export const createFilter = createAction<ColumnHeader>(actionTypes.CREATE_FILTER);
@@ -88,7 +87,6 @@ export const setCodeMode = createAction<string>(actionTypes.SET_CODE_MODE);
 export const setEditMode = createAction<boolean>(actionTypes.SET_EDIT_MODE);
 export const setEncodingMode = createAction<string>(actionTypes.SET_ENCODING_MODE);
 export const setGuiView = createAction<boolean>(actionTypes.SET_GUI_VIEW);
-export const setNewSpec = createAction<any>(actionTypes.SET_NEW_ENCODING);
 export const setNewSpecCode = createAction<HandleCodePayload>(actionTypes.SET_NEW_ENCODING_CODE);
 export const setProgrammaticView = createAction<boolean>(actionTypes.TOGGLE_PROGRAMMATIC_VIEW);
 export const setUserName = createAction<string>(actionTypes.SET_USER_NAME);

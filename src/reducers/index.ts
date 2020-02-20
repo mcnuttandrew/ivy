@@ -2,21 +2,14 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import * as actionTypes from '../actions/action-types';
 
-import {
-  clearEncoding,
-  coerceType,
-  setNewSpec,
-  setNewSpecCode,
-  updateCodeRepresentation,
-} from './modify-encodings';
-
 import {pushToUndoStack, triggerRedo, triggerUndo} from './undo-actions';
 
 import {addToNextOpenSlot} from './apt-actions';
 
-import {createFilter, updateFilter, deleteFilter} from './filter-actions';
+// import {createFilter, updateFilter, deleteFilter} from './filter-actions';
 import {
   changeSelectedFile,
+  coerceType,
   recieveData,
   recieveDataForDataReducer,
   recieveTypeInferences,
@@ -35,6 +28,7 @@ import {
   saveCurrentTemplate,
   setAllTemplateValues,
   setBlankTemplate,
+  setNewSpecCode,
   setTemplateValue,
   setWidgetValue,
 } from './template-actions';
@@ -56,8 +50,6 @@ import {AppState, DEFAULT_STATE, ActionResponse, DataReducerState} from './defau
 const wrap = (func: ActionResponse<any>, wrapper: any): ActionResponse<any> => (state, payload): AppState =>
   wrapper(state, func(state, payload));
 const addUndo = (func: ActionResponse<any>): ActionResponse<any> => wrap(func, pushToUndoStack);
-const addUpdateCode = (func: ActionResponse<any>): ActionResponse<any> =>
-  wrap(func, updateCodeRepresentation);
 
 const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   // data modifications
@@ -66,19 +58,17 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.RECIEVE_TYPE_INFERENCES]: recieveTypeInferences,
 
   // encoding modifications
-  [actionTypes.ADD_TO_NEXT_OPEN_SLOT]: addUndo(addUpdateCode(addToNextOpenSlot)),
-  [actionTypes.CLEAR_ENCODING]: addUndo(addUpdateCode(clearEncoding)),
-  [actionTypes.COERCE_TYPE]: addUndo(addUpdateCode(coerceType)),
-  [actionTypes.SET_NEW_ENCODING]: addUndo(addUpdateCode(setNewSpec)),
+  [actionTypes.ADD_TO_NEXT_OPEN_SLOT]: addUndo(addToNextOpenSlot),
+  [actionTypes.COERCE_TYPE]: addUndo(coerceType),
   [actionTypes.SET_NEW_ENCODING_CODE]: addUndo(setNewSpecCode),
 
-  [actionTypes.TRIGGER_REDO]: addUpdateCode(triggerRedo),
-  [actionTypes.TRIGGER_UNDO]: addUpdateCode(triggerUndo),
+  [actionTypes.TRIGGER_REDO]: triggerRedo,
+  [actionTypes.TRIGGER_UNDO]: triggerUndo,
 
-  // filter modifications
-  [actionTypes.CREATE_FILTER]: addUndo(addUpdateCode(createFilter)),
-  [actionTypes.DELETE_FILTER]: addUndo(addUpdateCode(deleteFilter)),
-  [actionTypes.UPDATE_FILTER]: addUndo(addUpdateCode(updateFilter)),
+  // filter modifications (HIDDEN UNTIL THE WRNAGLING STORY COMES)
+  // [actionTypes.CREATE_FILTER]: addUndo(createFilter),
+  // [actionTypes.DELETE_FILTER]: addUndo(deleteFilter),
+  // [actionTypes.UPDATE_FILTER]: addUndo(updateFilter),
 
   // gui modifications
   [actionTypes.SET_CODE_MODE]: setCodeMode,
@@ -94,16 +84,16 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
   [actionTypes.DELETE_TEMPLATE]: deleteTemplate,
   [actionTypes.LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
-  [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: addUpdateCode(modifyValueOnTemplate),
+  [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: modifyValueOnTemplate,
   [actionTypes.MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
   [actionTypes.PREPARE_TEMPLATE]: fillTemplateMapWithDefaults,
-  [actionTypes.READ_IN_TEMPLATE]: addUpdateCode(readInTemplate),
-  [actionTypes.READ_IN_TEMPLATE_MAP]: addUpdateCode(readInTemplateMap),
+  [actionTypes.READ_IN_TEMPLATE]: readInTemplate,
+  [actionTypes.READ_IN_TEMPLATE_MAP]: readInTemplateMap,
   [actionTypes.RECIEVE_TEMPLATE]: recieveTemplates,
   [actionTypes.REMOVE_WIDGET_FROM_TEMPLATE]: addUndo(removeWidget),
   [actionTypes.SAVE_TEMPLATE]: saveCurrentTemplate,
   [actionTypes.SET_ALL_TEMPLATE_VALUES]: setAllTemplateValues,
-  [actionTypes.SET_BLANK_TEMPLATE]: addUpdateCode(setBlankTemplate),
+  [actionTypes.SET_BLANK_TEMPLATE]: setBlankTemplate,
   [actionTypes.SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
   [actionTypes.SET_WIDGET_VALUE]: addUndo(setWidgetValue),
 

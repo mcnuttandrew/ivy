@@ -1,17 +1,14 @@
-import {AppState, EMPTY_SPEC_BY_LANGUAGE, ActionResponse, DataReducerState} from './default-state';
+import {AppState, ActionResponse, DataReducerState} from './default-state';
 import {ColumnHeader} from '../types';
 import produce from 'immer';
-import {TypeInference, DataRow} from '../actions/index';
+import {TypeInference, DataRow, CoerceTypePayload} from '../actions/index';
 import {DataType} from '../templates/types';
 import {constructDefaultTemplateMap} from '../hydra-lang';
 
 export const recieveData = (state: AppState): AppState => {
   return produce(state, draftState => {
-    draftState.spec = EMPTY_SPEC_BY_LANGUAGE['vega-lite'];
     draftState.views = ['view1'];
-    draftState.templateMap = state.currentTemplateInstance
-      ? constructDefaultTemplateMap(state.currentTemplateInstance)
-      : {};
+    draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
     draftState.viewCatalog = {};
     draftState.undoStack = [];
     draftState.redoStack = [];
@@ -59,5 +56,13 @@ export const recieveTypeInferences = (state: AppState, payload: TypeInference[])
 export const changeSelectedFile: ActionResponse<string> = (state, payload) => {
   return produce(state, draftState => {
     draftState.currentlySelectedFile = payload;
+  });
+};
+
+export const coerceType: ActionResponse<CoerceTypePayload> = (state, payload) => {
+  const {field, type} = payload;
+  return produce(state, draftState => {
+    const columnIdx = state.columns.findIndex((d: any) => d.field === field);
+    draftState.columns[columnIdx].type = type;
   });
 };
