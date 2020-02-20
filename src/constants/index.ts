@@ -18,9 +18,6 @@ export const TEXT_TYPE: {[x: string]: string} = {
   TIME: '🕑',
 };
 
-export const GRAMMAR_NAME = 'grammer';
-export const GRAMMAR_DESC = 'Tableau-style grammar of graphics';
-
 // export const
 export const WIDGET_VALUES = 'Settings';
 export const WIDGET_CONFIGURATION = 'Params';

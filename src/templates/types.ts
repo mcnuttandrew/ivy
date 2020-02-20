@@ -1,4 +1,4 @@
-export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'METACOLUMN' | 'CUSTOM';
+export type DataType = 'MEASURE' | 'DIMENSION' | 'TIME' | 'CUSTOM';
 
 export type WidgetType =
   | 'DataTarget'

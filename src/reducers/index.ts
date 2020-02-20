@@ -3,14 +3,10 @@ import thunk from 'redux-thunk';
 import * as actionTypes from '../actions/action-types';
 
 import {
-  changeMarkType,
   clearEncoding,
   coerceType,
-  setEncodingParameter,
   setNewSpec,
   setNewSpecCode,
-  setRepeats,
-  swapXAndYChannels,
   updateCodeRepresentation,
 } from './modify-encodings';
 
@@ -72,14 +68,10 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
 
   // encoding modifications
   [actionTypes.ADD_TO_NEXT_OPEN_SLOT]: addUndo(addUpdateCode(addToNextOpenSlot)),
-  [actionTypes.CHANGE_MARK_TYPE]: addUndo(addUpdateCode(changeMarkType)),
   [actionTypes.CLEAR_ENCODING]: addUndo(addUpdateCode(clearEncoding)),
   [actionTypes.COERCE_TYPE]: addUndo(addUpdateCode(coerceType)),
-  [actionTypes.SET_ENCODING_PARAM]: addUndo(addUpdateCode(setEncodingParameter)),
   [actionTypes.SET_NEW_ENCODING]: addUndo(addUpdateCode(setNewSpec)),
   [actionTypes.SET_NEW_ENCODING_CODE]: addUndo(setNewSpecCode),
-  [actionTypes.SET_REPEATS]: addUndo(addUpdateCode(setRepeats)),
-  [actionTypes.SWAP_X_AND_Y_CHANNELS]: addUndo(addUpdateCode(swapXAndYChannels)),
 
   [actionTypes.TRIGGER_REDO]: addUpdateCode(triggerRedo),
   [actionTypes.TRIGGER_UNDO]: addUpdateCode(triggerUndo),

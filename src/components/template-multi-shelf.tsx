@@ -68,7 +68,7 @@ export default function TemplateMultiShelf(props: Props): JSX.Element {
                 containingShelf={shelfName}
                 containingField={shelfName}
                 column={columnHeader}
-                setEncodingParameter={(x: any): void => {
+                setParam={(x: any): void => {
                   onDrop({
                     text: shelfValues.filter(d => d !== x.column.field),
                     ...dropCommon,

@@ -50,24 +50,8 @@ export const recieveTypeInferences = (state: AppState, payload: TypeInference[])
     )
     .reduce((acc, row) => acc.concat(row), []);
 
-  // const metaColumns: ColumnHeader[] = [
-  //   // 'repeat',
-  //   'row',
-  //   'column',
-  // ].map((field: string) => {
-  //   const type: DataType = 'DIMENSION';
-  //   return {
-  //     type,
-  //     originalType: type,
-  //     secondaryType: 'metaColumn',
-  //     field,
-  //     domain: modifiedColumns.map((row: ColumnHeader) => row.field),
-  //     metaColumn: true,
-  //   };
-  // });
   return produce(state, draftState => {
     draftState.columns = orderedColumns;
-    // draftState.metaColumns = metaColumns;
   });
 };
 

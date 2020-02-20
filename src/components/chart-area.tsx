@@ -25,7 +25,7 @@ interface ChartAreaProps {
   setEncodingMode: GenericAction<string>;
   spec: Json;
   switchView: GenericAction<string>;
-  template?: Template;
+  template: Template;
   templates: Template[];
   templateComplete: boolean;
   views: string[];
@@ -130,8 +130,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       templates,
       views,
     } = this.props;
-    const templateGallery = template && template.templateLanguage === GALLERY.templateLanguage;
-    const showChart = !templateGallery && (!template || templateComplete);
+    const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
+    const showChart = !templateGallery && templateComplete;
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">

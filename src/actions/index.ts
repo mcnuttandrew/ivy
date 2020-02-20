@@ -23,10 +23,8 @@ export type SetTemplateValuePayload = {
   text: string | string[];
   field: string;
   type?: WidgetType;
-  // TODO delete during the T0 removal
-  isMeta?: boolean;
 };
-export type SetRepeatsPayload = {repeats: string[]; target: string};
+
 export type SetWidgetValuePayload = {idx: number; value: any; key: string};
 export type UpdateFilterPayload = {newFilterValue: (number | string)[]; idx: number};
 export interface TypeInference {
@@ -63,7 +61,6 @@ function createAction<T>(type: any): GenericAction<T> {
 
 export const addToNextOpenSlot = createAction<ColumnHeader>(actionTypes.ADD_TO_NEXT_OPEN_SLOT);
 export const addWidget = createAction<GenWidget>(actionTypes.ADD_TO_WIDGET_TEMPLATE);
-export const changeMarkType = createAction<string>(actionTypes.CHANGE_MARK_TYPE);
 export const changeTheme = createAction<string>(actionTypes.CHANGE_THEME);
 export const changeViewName = createAction<{idx: number; value: string}>(actionTypes.CHANGE_VIEW_NAME);
 export const clearEncoding = createAction<void>(actionTypes.CLEAR_ENCODING);
@@ -91,16 +88,13 @@ export const setBlankTemplate = createAction<{fork: string | null; language: str
 export const setCodeMode = createAction<string>(actionTypes.SET_CODE_MODE);
 export const setEditMode = createAction<boolean>(actionTypes.SET_EDIT_MODE);
 export const setEncodingMode = createAction<string>(actionTypes.SET_ENCODING_MODE);
-export const setEncodingParameter = createAction<SetTemplateValuePayload>(actionTypes.SET_ENCODING_PARAM);
 export const setGuiView = createAction<boolean>(actionTypes.SET_GUI_VIEW);
 export const setNewSpec = createAction<any>(actionTypes.SET_NEW_ENCODING);
 export const setNewSpecCode = createAction<HandleCodePayload>(actionTypes.SET_NEW_ENCODING_CODE);
 export const setProgrammaticView = createAction<boolean>(actionTypes.TOGGLE_PROGRAMMATIC_VIEW);
-export const setRepeats = createAction<SetRepeatsPayload>(actionTypes.SET_REPEATS);
-export const setUserName = createAction<SetRepeatsPayload>(actionTypes.SET_USER_NAME);
+export const setUserName = createAction<string>(actionTypes.SET_USER_NAME);
 export const setTemplateValue = createAction<SetTemplateValuePayload>(actionTypes.SET_TEMPLATE_VALUE);
 export const setWidgetValue = createAction<SetWidgetValuePayload>(actionTypes.SET_WIDGET_VALUE);
-export const swapXAndYChannels = createAction<void>(actionTypes.SWAP_X_AND_Y_CHANNELS);
 export const switchView = createAction<string>(actionTypes.SWITCH_VIEW);
 export const toggleDataModal = createAction<void>(actionTypes.TOGGLE_DATA_MODAL);
 export const toggleProgramModal = createAction<void>(actionTypes.TOGGLE_PROGRAM_MODAL);

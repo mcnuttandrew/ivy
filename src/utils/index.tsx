@@ -53,13 +53,6 @@ export function executePromisesInSeries(tasks: any): any {
   return tasks.reduce((promiseChain: any, task: any): any => promiseChain.then(task), Promise.resolve([]));
 }
 
-export function findField(state: AppState, targetField: string, columnKey = 'columns'): ColumnHeader {
-  if (columnKey === 'metaColumns') {
-    return state.metaColumns.find(({field}: {field: string}) => field === targetField);
-  }
-  return state.columns.find(({field}: {field: string}) => field === targetField);
-}
-
 // safely access elements on a nested object
 export function get(obj: any, route: (string | number)[]): any {
   if (!obj) {
@@ -76,27 +69,6 @@ export function get(obj: any, route: (string | number)[]): any {
     return null;
   }
   return get(next, route.slice(1));
-}
-
-export function getAllInUseFields(spec: any): Set<string> {
-  // this only works for vega-lite
-  const inUse = new Set([]);
-  const encoding = (spec.spec && spec.spec.encoding) || spec.encoding || {};
-  Object.values(encoding).forEach((x: any) => {
-    if (!x) {
-      return;
-    }
-    const channel = x;
-    if (typeof channel.field === 'string') {
-      inUse.add(channel.field);
-      return;
-    }
-    if (channel.field && channel.field.repeat) {
-      inUse.add(channel.field.repeat);
-      return;
-    }
-  });
-  return inUse;
 }
 
 export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
@@ -165,10 +137,6 @@ export function deserializeTemplate(templateString: string): Template {
 type SaveState = 'NA' | 'NOT FOUND' | 'EQUAL' | 'DIFFERENT';
 export function getTemplateSaveState(base: AppState): SaveState {
   const template = base.currentTemplateInstance;
-  // using the grammar mode
-  if (!template) {
-    return 'NA';
-  }
   const associatedUpstreamTemplate = getTemplate(base, template.templateName);
   if (!associatedUpstreamTemplate) {
     return 'NOT FOUND';
@@ -192,11 +160,6 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
         .map(x => x[0]),
     );
 
-  if (!template) {
-    dims.forEach(x => dimCounter[x].push(x));
-    // don't do anything with T0 for now
-    return toSet(dimCounter);
-  }
   const result = template.widgets
     .filter(d => ['MultiDataTarget', 'DataTarget'].includes(d.type))
     .reduce((acc: any, widget: any) => {
@@ -327,9 +290,6 @@ export function sortObjectAlphabetically(obj: any): any {
 }
 
 export function getTemplateName(template: Template | null): string {
-  if (!template) {
-    return 'T0';
-  }
   return template && template.templateName === GALLERY.templateName
     ? 'Template Gallery'
     : template.templateName;

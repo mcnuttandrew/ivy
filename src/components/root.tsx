@@ -19,7 +19,6 @@ import {
   LoadDataPayload,
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
-  SetRepeatsPayload,
   SetTemplateValuePayload,
   SetWidgetValuePayload,
   UpdateFilterPayload,
@@ -54,7 +53,6 @@ import CodeEditor from './code-editor';
 import DataColumn from './data-column';
 import DataModal from './modals/data-modal';
 import CommunityProgramSearch from './modals/community-modal';
-import EncodingColumn from './t0/encoding-column';
 import EncodingControls from './encoding-controls';
 import Header from './header';
 import ImportDataColumn from './import-data-column';
@@ -94,7 +92,6 @@ interface RootProps {
   editorError: null | string;
   encodingMode: string;
   fillableFields: Set<string>;
-  metaColumns: ColumnHeader[];
   missingFields: string[];
   programModalOpen: boolean;
   showGUIView: boolean;
@@ -112,7 +109,6 @@ interface RootProps {
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   addWidget: GenericAction<GenWidget>;
   chainActions: GenericAction<any>;
-  changeMarkType: GenericAction<string>;
   changeSelectedFile: GenericAction<string>;
   changeTheme: GenericAction<string>;
   changeViewName: GenericAction<{idx: number; value: string}>;
@@ -140,16 +136,13 @@ interface RootProps {
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
-  setEncodingParameter: GenericAction<SetTemplateValuePayload>;
   setUserName: GenericAction<string>;
   setGuiView: GenericAction<boolean>;
   setNewSpec: GenericAction<any>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<boolean>;
-  setRepeats: GenericAction<SetRepeatsPayload>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
-  swapXAndYChannels: GenericAction<void>;
   switchView: GenericAction<string>;
   toggleDataModal: GenericAction<void>;
   toggleProgramModal: GenericAction<void>;
@@ -256,9 +249,7 @@ class RootComponent extends React.Component<RootProps, State> {
           createFilter={this.createFilter}
           deleteFilter={this.props.deleteFilter}
           fillableFields={this.props.fillableFields}
-          metaColumns={this.props.metaColumns}
           onDropFilter={(item: any): any => this.createFilter(item.text)}
-          setRepeats={this.props.setRepeats}
           showGUIView={this.props.showGUIView}
           spec={this.props.spec}
           template={template}
@@ -289,40 +280,20 @@ class RootComponent extends React.Component<RootProps, State> {
           templates={this.props.templates}
           toggleProgramModal={this.props.toggleProgramModal}
         />
-        {this.props.encodingMode === 'grammer' && this.props.showGUIView && (
-          <EncodingColumn
-            changeMarkType={this.props.changeMarkType}
-            columns={this.props.columns}
-            metaColumns={this.props.metaColumns}
-            onDrop={(item: any): void => {
-              if (item.disable) {
-                return;
-              }
-              this.props.setEncodingParameter(item);
-            }}
-            onDropFilter={(item: any): any => this.createFilter(item.text)}
-            setEncodingParameter={this.props.setEncodingParameter}
-            setNewSpec={this.props.setNewSpec}
-            spec={this.props.spec}
-            swapXAndYChannels={this.props.swapXAndYChannels}
-          />
-        )}
-        {this.props.encodingMode !== 'grammer' && this.props.template && this.props.showGUIView && (
-          <TemplateColumn
-            addWidget={this.props.addWidget}
-            columns={this.props.columns}
-            editMode={this.props.editMode}
-            height={this.props.showProgrammaticMode && this.props.showGUIView && getHeight()}
-            moveWidget={this.props.moveWidget}
-            modifyValueOnTemplate={this.props.modifyValueOnTemplate}
-            removeWidget={this.props.removeWidget}
-            setTemplateValue={this.props.setTemplateValue}
-            setWidgetValue={this.props.setWidgetValue}
-            setAllTemplateValues={this.props.setAllTemplateValues}
-            template={this.props.template}
-            templateMap={this.props.templateMap}
-          />
-        )}
+        <TemplateColumn
+          addWidget={this.props.addWidget}
+          columns={this.props.columns}
+          editMode={this.props.editMode}
+          height={this.props.showProgrammaticMode && this.props.showGUIView && getHeight()}
+          moveWidget={this.props.moveWidget}
+          modifyValueOnTemplate={this.props.modifyValueOnTemplate}
+          removeWidget={this.props.removeWidget}
+          setTemplateValue={this.props.setTemplateValue}
+          setWidgetValue={this.props.setWidgetValue}
+          setAllTemplateValues={this.props.setAllTemplateValues}
+          template={this.props.template}
+          templateMap={this.props.templateMap}
+        />
       </div>
     );
   }
@@ -480,12 +451,11 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     editorError: base.editorError,
     encodingMode: base.encodingMode,
     fillableFields: computeValidAddNexts(template, templateMap),
-    metaColumns: base.metaColumns,
     missingFields,
     programModalOpen: base.programModalOpen,
     showProgrammaticMode: isGallery ? false : base.showProgrammaticMode,
     showGUIView: base.showGUIView,
-    spec: template ? evaluateHydraProgram(template, templateMap) : base.spec,
+    spec: evaluateHydraProgram(template, templateMap),
     specCode: base.specCode,
     template,
     templateComplete: !missingFields.length,

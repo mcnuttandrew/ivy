@@ -10,7 +10,6 @@ export interface ColumnHeader {
   field: string;
   domain: number[] | string[];
   summary: any;
-  metaColumn?: boolean;
 }
 
 export type VegaMark =

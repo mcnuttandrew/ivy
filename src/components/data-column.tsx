@@ -2,18 +2,13 @@
 import React from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
-// import MetaColumnPicker from './meta-column-picker';
 import {TiInfoLarge} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
-import {GenericAction, CoerceTypePayload, SetRepeatsPayload, UpdateFilterPayload} from '../actions/index';
+import {GenericAction, CoerceTypePayload, UpdateFilterPayload} from '../actions/index';
 import {Template, CustomCard} from '../templates/types';
-import {
-  // getAllInUseFields,
-  get,
-  makeCustomType,
-} from '../utils';
+import {get, makeCustomType} from '../utils';
 import SimpleTooltip from './simple-tooltip';
 
 interface DataColumnProps {
@@ -23,12 +18,10 @@ interface DataColumnProps {
   createFilter: (field: string) => void;
   deleteFilter: GenericAction<number>;
   fillableFields: Set<string>;
-  metaColumns: ColumnHeader[];
   onDropFilter: any;
-  setRepeats: GenericAction<SetRepeatsPayload>;
   showGUIView: boolean;
   spec: any;
-  template?: Template;
+  template: Template;
   updateFilter: GenericAction<UpdateFilterPayload>;
 }
 
@@ -38,7 +31,6 @@ interface MakePillProps {
   columns: ColumnHeader[];
   createFilter: (field: string) => void;
   fillableFields: Set<string>;
-  setRepeats: GenericAction<SetRepeatsPayload>;
   showGUIView: boolean;
   spec: any;
   checkOptions: boolean;
@@ -46,18 +38,8 @@ interface MakePillProps {
 
 type makePillType = (props: MakePillProps) => (column: ColumnHeader | CustomCard, idx: number) => JSX.Element;
 const MakePill: makePillType = props => {
-  const {
-    addToNextOpenSlot,
-    coerceType,
-    // columns,
-    createFilter,
-    fillableFields,
-    // setRepeats,
-    showGUIView,
-    // spec,
-    // checkOptions,
-  } = props;
-  // const inUseFields = getAllInUseFields(spec);
+  const {addToNextOpenSlot, coerceType, createFilter, fillableFields, showGUIView} = props;
+
   return (column, idx): JSX.Element => {
     const isCustomCard = 'description' in column;
     const inferredColumn = isCustomCard
@@ -74,23 +56,15 @@ const MakePill: makePillType = props => {
           hideGUI={!showGUIView}
           typeNotAddable={isCustomCard ? false : !fillableFields.has(inferredColumn.type as string)}
         />
-        {
-          // t0 deletions
-          // checkOptions && !isCustomCard && inUseFields.has(column.field) && (
-          //   <div>
-          //     <MetaColumnPicker columns={columns} field={column.field} spec={spec} setRepeats={setRepeats} />
-          //   </div>
-          // )
-        }
       </div>
     );
   };
 };
 
 export default function DataColumn(props: DataColumnProps): JSX.Element {
-  const {columns, deleteFilter, metaColumns, onDropFilter, showGUIView, spec, template, updateFilter} = props;
+  const {columns, deleteFilter, onDropFilter, showGUIView, spec, template, updateFilter} = props;
 
-  const canFilter = !template;
+  const canFilter = false;
   const hasCustomCards = template && template.customCards && template.customCards.length > 0;
   return (
     <div className="flex-down full-height">
@@ -111,10 +85,6 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
         </Tooltip>
       </h5>
       <div className="flex-down">{columns.map(MakePill({...props, checkOptions: false}))}</div>
-      {!template && showGUIView && <h5>Meta Columns</h5>}
-      {!template && showGUIView && (
-        <div className="flex-down">{metaColumns.map(MakePill({...props, checkOptions: true}))}</div>
-      )}
 
       {hasCustomCards && (
         <h5 className="flex">

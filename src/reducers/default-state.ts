@@ -15,7 +15,6 @@ export interface AppState {
   // meta-data
   columns: ColumnHeader[];
   currentlySelectedFile: string;
-  metaColumns: ColumnHeader[];
 
   // spec configs
   currentTheme: string;
@@ -26,7 +25,7 @@ export interface AppState {
 
   // GUI
   codeMode: string;
-  currentTemplateInstance: Template | null;
+  currentTemplateInstance: Template;
   dataModalOpen: boolean;
   encodingMode: string;
   programModalOpen: boolean;
@@ -103,7 +102,6 @@ export const DEFAULT_STATE: AppState = {
   // meta-data
   currentlySelectedFile: 'cars.json',
   columns: [],
-  metaColumns: [],
 
   // spec configs
   spec: {},

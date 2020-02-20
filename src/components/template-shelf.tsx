@@ -89,7 +89,7 @@ export default function TemplateShelf(props: TemplateShelf): JSX.Element {
               containingShelf={fieldKey}
               containingField={fieldKey}
               column={columnHeader}
-              setEncodingParameter={onDrop}
+              setParam={onDrop}
               fieldSelector={fieldSelector}
             />
           )}

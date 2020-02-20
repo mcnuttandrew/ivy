@@ -7,63 +7,16 @@ import {
 } from '../templates/types';
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
-import {findField, getOrMakeColumn, toSet} from '../utils';
-import produce from 'immer';
+import {getOrMakeColumn, toSet} from '../utils';
 import {applyQueries} from '../hydra-lang';
-
-export const TYPE_TRANSLATE: {[s: string]: string} = {
-  DIMENSION: 'nominal',
-  MEASURE: 'quantitative',
-  TIME: 'temporal',
-};
-
-const positionPrefs = ['x', 'y'];
-const commonPrefs = ['text', 'column', 'rows'];
-// listings inspired by APT
-const dimensionFieldPreferences = [...positionPrefs, 'color', 'shape', 'detail', 'size', ...commonPrefs];
-const measureFieldPreferences = [...positionPrefs, 'size', 'color', 'shape', 'detail', ...commonPrefs];
-type setMap = {[s: string]: boolean};
-
-const usuallyContinuous: setMap = {
-  x: true,
-  y: true,
-  size: true,
-};
-// roughly follow APT for automatic suggestion
-function guessType(channel: string, type: string): string {
-  if (type === 'DIMENSION') {
-    return usuallyContinuous[channel] ? 'ordinal' : 'nominal';
-  }
-  return TYPE_TRANSLATE[type];
-}
 
 interface GuessPayload {
   field: string;
 }
-const grammarBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
-  // TODO this needs to be done smarter, see if the aglorithm can be copied form polestar
-  const encoding = state.spec.encoding;
-  const column = findField(state, payload.field);
-  const fields = column.type === 'DIMENSION' ? dimensionFieldPreferences : measureFieldPreferences;
-  const channel = fields.find(field => {
-    return !encoding[field] || JSON.stringify(encoding[field]) === '{}';
-  });
-  // TODO add messaging about not being able to find a place to put the thing
-  if (!channel) {
-    return state;
-  }
-  return produce(state, draftState => {
-    draftState.spec.encoding[channel] = {
-      field: payload.field,
-      type: guessType(channel, column.type),
-    };
-  });
-};
 
 const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
   const templateMap: TemplateMap = state.templateMap;
-  // const column = findField(state, payload.field);
   const column = getOrMakeColumn(payload.field, state.columns, template);
   const allowedWidgets = toSet(applyQueries(template, templateMap));
   const widgets = template.widgets.filter(widget => allowedWidgets.has(widget.name));
@@ -124,6 +77,5 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
 };
 
 export const addToNextOpenSlot: ActionResponse<GuessPayload> = (state, payload) => {
-  const encodingMode = state.encodingMode;
-  return (encodingMode !== 'grammer' ? templateBasedGuess : grammarBasedGuess)(state, payload);
+  return templateBasedGuess(state, payload);
 };

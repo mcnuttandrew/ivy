@@ -36,9 +36,7 @@ export const BLANK_TEMPLATE: Template = {
   widgets: [],
 };
 
-// META COLUMNS NOT CURRENTLY ALLOWED IN TEMPLATES
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
-// const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME', 'METACOLUMN'];
 export type WidgetFactoryFunc = (idx: number) => GenWidget;
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: idx =>

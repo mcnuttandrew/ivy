@@ -7,7 +7,7 @@ import {JSON_OUTPUT} from '../constants/index';
 import {evaluateHydraProgram} from '../hydra-lang';
 import {addToNextOpenSlot} from './apt-actions';
 import {fillTemplateMapWithDefaults} from './template-actions';
-import {getAllInUseFields, makeColNameMap} from '../utils';
+import {makeColNameMap} from '../utils';
 
 export const toggleDataModal = toggle('dataModalOpen');
 export const toggleProgramModal = toggle('programModalOpen');
@@ -25,9 +25,6 @@ const quoteTrim = (x: string): string => x.replace(/["']/g, '');
 // TODO this should probably move somewhere else?
 function activeColumns(state: any): string[] {
   const template = state.currentTemplateInstance;
-  if (!template) {
-    return Array.from(getAllInUseFields(state.spec));
-  }
   const templateMap = state.templateMap;
   const templateInUse = template.widgets.reduce((acc: Set<string>, widget: any) => {
     const widgetType = widget.type;
@@ -85,6 +82,6 @@ export const setEncodingMode: ActionResponse<string> = (state, payload) => {
   // figure out what the currently in use columns are and iteratively try to add them to the new one
   const columnMap = makeColNameMap(newState.columns);
   return activeColumns(state)
-    .filter(k => columnMap[k] && !columnMap[k].metaColumn)
+    .filter(k => columnMap[k])
     .reduce((acc: AppState, k) => addToNextOpenSlot(acc, columnMap[k]), newState);
 };

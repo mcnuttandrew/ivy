@@ -172,8 +172,8 @@ interface CodeEditorControlsProps {
   showProgrammaticMode: boolean;
   spec: any;
   specCode: string;
-  template?: Template;
-  templateMap?: TemplateMap;
+  template: Template;
+  templateMap: TemplateMap;
 }
 export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.Element {
   const {

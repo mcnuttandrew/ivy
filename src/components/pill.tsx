@@ -19,7 +19,7 @@ export interface PillProps {
   fieldSelector?: JSX.Element;
   hideGUI?: boolean;
   inEncoding: boolean;
-  setEncodingParameter?: any;
+  setParam?: any;
   typeNotAddable?: boolean;
 }
 
@@ -45,15 +45,15 @@ function addToNext(props: AddToNextProps): JSX.Element {
 
 interface RemovePillProps {
   column: ColumnHeader;
-  setEncodingParameter: any;
+  setParam: any;
   containingField: string;
 }
 function removePill(props: RemovePillProps): JSX.Element {
-  const {setEncodingParameter, column, containingField} = props;
+  const {setParam, column, containingField} = props;
   return (
     <div
       className="fixed-symbol-width"
-      onClick={(): any => setEncodingParameter({text: null, field: containingField, column})}
+      onClick={(): any => setParam({text: null, field: containingField, column})}
     >
       <TiDeleteOutline />
     </div>
@@ -62,12 +62,11 @@ function removePill(props: RemovePillProps): JSX.Element {
 
 interface PillTypeProps {
   column: ColumnHeader;
-  isMeta: boolean;
 }
-function pillType({isMeta, column}: PillTypeProps): JSX.Element {
+function pillType({column}: PillTypeProps): JSX.Element {
   return (
     <div className="fixed-symbol-width pill-symbol">
-      <DataSymbol type={isMeta ? 'METACOLUMN' : column.type} />
+      <DataSymbol type={column.type} />
     </div>
   );
 }
@@ -174,40 +173,39 @@ export default function Pill(props: PillProps): JSX.Element {
     fieldSelector,
     hideGUI,
     inEncoding,
-    setEncodingParameter,
+    setParam,
     typeNotAddable,
   } = props;
   const field = column.field;
-  const isMeta = column.metaColumn;
   const isCustom = column.type === 'CUSTOM';
 
   const [{opacity}, dragRef] = useDrag({
-    item: {type: 'CARD', text: column.field, containingShelf, isMeta},
+    item: {type: 'CARD', text: column.field, containingShelf},
     collect: monitor => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
-  const showAddFilter = false && !isMeta && !inEncoding && !hideGUI && createFilter && !isCustom;
-  const showAutoAdd = !isMeta && !inEncoding && !hideGUI && addToNextOpenSlot;
-  const showTypeCoerce = !isMeta && !inEncoding && coerceType;
+  const showAddFilter = false && !inEncoding && !hideGUI && createFilter && !isCustom;
+  const showAutoAdd = !inEncoding && !hideGUI && addToNextOpenSlot;
+  const showTypeCoerce = !inEncoding && coerceType;
   return (
     <div
       className={classnames({
         pill: true,
         flex: true,
         'in-encoding-panel': inEncoding,
-        [`${isMeta ? 'metacolumn' : column.type.toLowerCase()}-pill`]: true,
+        [`${column.type.toLowerCase()}-pill`]: true,
       })}
       ref={dragRef}
       style={{opacity}}
     >
       {showTypeCoerce && baseBallCard({column, field, coerceType})}
-      {pillType({isMeta, column})}
+      {pillType({column})}
       <div className="pill-label">{column.field}</div>
       {showAddFilter && addFilter({column, inEncoding, createFilter})}
       {showAutoAdd && addToNext({column, addToNextOpenSlot, typeNotAddable})}
       {fieldSelector && <div className="fixed-symbol-width">{fieldSelector}</div>}
-      {inEncoding && removePill({setEncodingParameter, column, containingField})}
+      {inEncoding && removePill({setParam, column, containingField})}
     </div>
   );
 }

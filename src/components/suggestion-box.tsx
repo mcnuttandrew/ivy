@@ -13,7 +13,7 @@ interface Props {
   codeMode: string;
   currentCode: string;
   handleCodeUpdate: (code: string) => void;
-  template?: Template;
+  template: Template;
 }
 
 interface RenderSuggestionProps {

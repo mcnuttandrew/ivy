@@ -30,8 +30,8 @@ interface Props {
   showProgrammaticMode: boolean;
   spec: any;
   specCode: string;
-  template?: Template;
-  templateMap?: TemplateMap;
+  template: Template;
+  templateMap: TemplateMap;
 }
 
 const SHORTCUTS = [
