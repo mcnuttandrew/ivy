@@ -75,7 +75,7 @@ export default function EncodingControls(props: Props): JSX.Element {
 
       icon: <TiPencil />,
       customTooltip: (): JSX.Element => (
-        <div className="tooltip-internal flex-down">
+        <div className="flex-down">
           <h5>Create Blank Template</h5>
           {['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(language => {
             return (
@@ -94,7 +94,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           })}
         </div>
       ),
-      label: 'Blank',
+      label: 'New',
       tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
     },
     {

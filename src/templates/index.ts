@@ -43,7 +43,7 @@ export type WidgetFactoryFunc = (idx: number) => GenWidget;
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: idx =>
     ({
-      name: `Dim${idx}`,
+      name: `Var${idx}`,
       type: 'DataTarget',
       config: {allowedTypes: DATA_TYPES, required: true},
     } as TemplateWidget<DataTargetWidget>),

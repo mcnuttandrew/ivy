@@ -145,6 +145,7 @@ export function serializeTemplate(template: Template): string {
     code: 'SEE BODY',
     templateLanguage: template.templateLanguage,
     widgets: template.widgets,
+    customCards: template.customCards,
   });
 }
 
@@ -157,6 +158,7 @@ export function deserializeTemplate(templateString: string): Template {
     templateLanguage: code.templateLanguage,
     widgets: code.widgets,
     templateAuthor: code.templateAuthor,
+    customCards: code.customCards,
   };
 }
 

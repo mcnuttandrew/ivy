@@ -216,10 +216,12 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
     newTemplate.code = state.currentTemplateInstance.code;
     newTemplate.widgets = state.currentTemplateInstance.widgets;
   }
-  return produce(state, draftState => {
-    draftState.currentTemplateInstance = newTemplate;
-    draftState.encodingMode = BLANK_TEMPLATE.templateName;
-  });
+  return fillTemplateMapWithDefaults(
+    produce(state, draftState => {
+      draftState.currentTemplateInstance = newTemplate;
+      draftState.encodingMode = BLANK_TEMPLATE.templateName;
+    }),
+  );
 };
 
 export const deleteTemplate: ActionResponse<string> = (state, payload) => {

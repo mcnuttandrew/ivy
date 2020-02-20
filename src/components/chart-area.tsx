@@ -33,38 +33,30 @@ interface ChartAreaProps {
 
 interface NewViewProps {
   createNewView: GenericAction<void>;
-}
-
-function newViewButton(props: NewViewProps): JSX.Element {
-  const {createNewView} = props;
-  return (
-    <Tooltip
-      placement="bottom"
-      trigger="hover"
-      overlay={<span className="tooltip-internal">Create a new view from the initial selection.</span>}
-    >
-      <div className="view-control" onClick={(): any => createNewView()}>
-        <span className="margin-right">New</span>
-        <TiDocumentAdd />
-      </div>
-    </Tooltip>
-  );
-}
-interface CloneViewrops {
   cloneView: GenericAction<void>;
 }
 
-function cloneViewButton(props: CloneViewrops): JSX.Element {
-  const {cloneView} = props;
+function newViewButton(props: NewViewProps): JSX.Element {
+  const {createNewView, cloneView} = props;
   return (
     <Tooltip
       placement="bottom"
-      trigger="hover"
-      overlay={<span className="tooltip-internal">Clone the current view into a new view.</span>}
+      trigger="click"
+      overlay={
+        <span className="flex-down">
+          <div className="flex">
+            <button onClick={(): any => createNewView()}>NEW</button>
+            <span>Create a new view from the initial selection.</span>
+          </div>
+          <div className="flex">
+            <button onClick={(): any => cloneView()}>CLONE</button>
+            <span>Clone the current view into a new view.</span>
+          </div>
+        </span>
+      }
     >
-      <div className="view-control" onClick={(): any => cloneView()}>
-        <span className="margin-right">Clone</span>
-        <TiTabsOutline />
+      <div className="view-control">
+        <TiDocumentAdd />
       </div>
     </Tooltip>
   );
@@ -143,12 +135,12 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
-          {newViewButton({createNewView})}
-          {cloneViewButton({cloneView})}
           <div className="view-container">
             {views.map((view, idx) =>
               viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
             )}
+            {newViewButton({createNewView, cloneView})}
+            {/* {cloneViewButton({cloneView})} */}
           </div>
         </div>
         <div

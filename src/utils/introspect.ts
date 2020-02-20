@@ -119,7 +119,7 @@ function inferFieldTransformationSuggestions(
 
     // suggest creating a new widget
 
-    const suggestedNewWidgetName = `Dim${widgets.length + 1}`;
+    const suggestedNewWidgetName = `Var${widgets.length + 1}`;
     acc.push({
       from: `"${from}"`,
       to: `"[${suggestedNewWidgetName}]"`,

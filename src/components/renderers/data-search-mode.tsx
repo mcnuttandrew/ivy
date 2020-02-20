@@ -16,7 +16,6 @@ interface Props {
 export const SORTS = [
   'template name',
   'min required measures',
-  'min required measures',
   'min required dimensions',
   'min required times',
   'max allowed fields',
