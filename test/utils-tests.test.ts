@@ -1,9 +1,9 @@
 import {fillTemplateMapWithDefaults, recieveTemplates} from '../src/reducers/template-actions';
 import {setTemplateValues} from '../src/hydra-lang';
 import {DEFAULT_TEMPLATES} from '../src/templates';
-import SCATTERPLOT_TEMPLATE from '../src/templates/example-templates/scatterplot';
-import PIECHART_TEMPLATE from '../src/templates/example-templates/pie-chart';
-import TABLE from '../src/templates/example-templates/table';
+import SCATTERPLOT_TEMPLATE from '../src/templates/scatterplot';
+import PIECHART_TEMPLATE from '../src/templates/pie-chart';
+import TABLE from '../src/templates/table';
 
 import {DEFAULT_STATE} from '../src/reducers';
 import {setEncodingMode} from '../src/reducers/gui-actions';

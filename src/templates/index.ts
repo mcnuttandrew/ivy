@@ -21,7 +21,7 @@ import DATATABLE from './table';
 import PIECHART_TEMPLATE from './pie-chart';
 import SCATTERPLOT_TEMPLATE from './scatterplot';
 import {getUserName} from '../utils/local-storage';
-// import SIMPLE_SCATTER from './example-templates/simple-scatterplot';
+// import SIMPLE_SCATTER from './simple-scatterplot';
 import SHELF from './polestar-template';
 import UNITVIS from './unit-vis';
 
