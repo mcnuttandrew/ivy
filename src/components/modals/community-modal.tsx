@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {GenericAction} from '../../actions/index';
-import {Template} from '../../templates/types';
+import {Template} from '../../types';
 import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';

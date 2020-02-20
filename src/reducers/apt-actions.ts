@@ -1,5 +1,11 @@
-import {Widget, TemplateMap, DataTargetWidget, MultiDataTargetWidget, GenWidget} from '../templates/types';
-import {ActionResponse} from '../types';
+import {
+  ActionResponse,
+  Widget,
+  TemplateMap,
+  DataTargetWidget,
+  MultiDataTargetWidget,
+  GenWidget,
+} from '../types';
 import {setTemplateValue} from './template-actions';
 import {getOrMakeColumn, toSet} from '../utils';
 import {applyQueries} from '../hydra-lang';

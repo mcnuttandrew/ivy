@@ -9,7 +9,7 @@ import {
   Shortcut,
   SwitchWidget,
   SliderWidget,
-} from './templates/types';
+} from './types';
 import {trim, get} from './utils';
 import {JsonMap, Json, JsonArray} from './types';
 

@@ -10,7 +10,7 @@ import {
   Validation,
   ValidationQuery,
 } from '../types';
-import {toList} from '../../utils';
+import {toList} from '../utils';
 const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 const VegaLiteDataTypes = ['nominal', 'ordinal', 'quantitative', 'temporal'];
 export const toQuote = (x: string): string => `"${x}"`;

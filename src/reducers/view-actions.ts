@@ -1,6 +1,6 @@
 import produce from 'immer';
 import {ActionResponse, AppState, ViewCatalogEntry} from '../types';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 import {constructDefaultTemplateMap} from '../hydra-lang';
 
 const BLANK_TEMPLATE_MAP = constructDefaultTemplateMap(GALLERY);

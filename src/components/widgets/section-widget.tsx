@@ -1,5 +1,5 @@
 import React from 'react';
-import {SectionWidget, Widget} from '../../templates/types';
+import {SectionWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

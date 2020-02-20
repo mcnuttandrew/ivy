@@ -1,7 +1,7 @@
 import React from 'react';
 import Switch from 'react-switch';
 import {IgnoreKeys} from 'react-hotkeys';
-import {SwitchWidget, Widget} from '../../templates/types';
+import {SwitchWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName} from './widget-common';
 

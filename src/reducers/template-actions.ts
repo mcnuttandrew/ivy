@@ -2,7 +2,6 @@ import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 import {TEMPLATE_BODY} from '../constants';
-import {ActionResponse, AppState} from '../types';
 import {blindSet} from './reducer-utils';
 import {
   ModifyValueOnTemplatePayload,
@@ -11,7 +10,7 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {Template, Widget, GenWidget, TemplateMap, ListWidget} from '../templates/types';
+import {ActionResponse, AppState, Template, Widget, GenWidget, TemplateMap, ListWidget} from '../types';
 import {BLANK_TEMPLATE, EMPTY_SPEC_BY_LANGUAGE} from '../templates';
 import {deserializeTemplate, trim} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';

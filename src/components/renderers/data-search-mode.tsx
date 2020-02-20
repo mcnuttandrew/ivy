@@ -1,10 +1,9 @@
 import React from 'react';
 import {GenericAction} from '../../actions/index';
-import {ColumnHeader} from '../../types';
-import {Template} from '../../templates/types';
+import {Template, ColumnHeader} from '../../types';
 import ProgramPreview from '../program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../../utils';
-import GALLERY from '../../templates/example-templates/gallery';
+import GALLERY from '../../templates/gallery';
 interface Props {
   columns: ColumnHeader[];
   deleteTemplate: GenericAction<string>;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextWidget, Widget} from '../../templates/types';
+import {TextWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 
 export function TextWidgetConfiguration(props: GeneralWidget<TextWidget>): JSX.Element {

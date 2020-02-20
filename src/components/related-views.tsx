@@ -4,9 +4,8 @@ import Tooltip from 'rc-tooltip';
 
 import {TiInfoLarge} from 'react-icons/ti';
 
-import GALLERY from '../templates/example-templates/gallery';
-import {Template, TemplateMap} from '../templates/types';
-import {ColumnHeader} from '../types';
+import GALLERY from '../templates/gallery';
+import {ColumnHeader, Template, TemplateMap} from '../types';
 import {searchDimensionsCanMatch} from '../utils';
 
 interface Props {

@@ -13,10 +13,10 @@ import {
 } from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
-import {Template} from '../templates/types';
+import {Template} from '../types';
 import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 import SimpleTooltip from './simple-tooltip';
 
 interface Props {

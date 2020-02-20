@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import * as actionTypes from '../actions/action-types';
 
 import {AppState, ActionResponse, DataReducerState} from '../types';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 import {JSON_OUTPUT} from '../constants/index';
 
 import {pushToUndoStack, triggerRedo, triggerUndo} from './undo-actions';

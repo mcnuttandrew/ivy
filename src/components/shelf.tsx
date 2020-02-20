@@ -3,8 +3,7 @@ import {useDrop} from 'react-dnd';
 
 import Pill from './pill';
 import Selector from './selector';
-import {ColumnHeader} from '../types';
-import {DataTargetWidget, Widget, Template} from '../templates/types';
+import {ColumnHeader, DataTargetWidget, Widget, Template} from '../types';
 import {classnames, getOrMakeColumn, makeOptionsForDropdown} from '../utils';
 import AllowedTypesList from './allowed-types-list';
 

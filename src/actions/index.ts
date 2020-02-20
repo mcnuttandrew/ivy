@@ -3,7 +3,7 @@ import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {DataType, Template, GenWidget, WidgetType} from '../templates/types';
+import {DataType, Template, GenWidget, WidgetType} from '../types';
 import {AppState, ColumnHeader} from '../types';
 import * as actionTypes from '../actions/action-types';
 

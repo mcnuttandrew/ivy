@@ -6,8 +6,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
 
-import GALLERY from '../templates/example-templates/gallery';
-import {Template, TemplateMap, GenWidget} from '../templates/types';
+import GALLERY from '../templates/gallery';
 import {getUserName} from '../utils/local-storage';
 import Thumbnail from './thumbnail';
 
@@ -46,7 +45,7 @@ import {
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {AppState, DataReducerState, ColumnHeader, Json} from '../types';
+import {AppState, DataReducerState, ColumnHeader, Json, Template, TemplateMap, GenWidget} from '../types';
 
 import ChartArea from './chart-area';
 import CodeEditor from './code-editor';

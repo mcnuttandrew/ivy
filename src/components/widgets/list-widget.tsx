@@ -1,5 +1,5 @@
 import React from 'react';
-import {ListWidget, Widget} from '../../templates/types';
+import {ListWidget, Widget} from '../../types';
 import Selector from '../selector';
 import {IgnoreKeys} from 'react-hotkeys';
 

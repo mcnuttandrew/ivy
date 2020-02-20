@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {useDrag, useDrop, DropTargetMonitor} from 'react-dnd';
 import {XYCoord} from 'dnd-core';
 
-import {TemplateMap, Widget, GenWidget, Template} from '../../templates/types';
+import {TemplateMap, Widget, GenWidget, Template} from '../../types';
 import {ColumnHeader} from '../../types';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
 import {classnames} from '../../utils';

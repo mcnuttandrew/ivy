@@ -2,7 +2,7 @@ import React from 'react';
 import {TiDelete, TiCog} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
-import {TemplateMap, GenWidget, Validation} from '../../templates/types';
+import {TemplateMap, GenWidget, Validation} from '../../types';
 import {ColumnHeader} from '../../types';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';

@@ -12,18 +12,18 @@ import {
   TextWidget,
   GenWidget,
   ShortcutsWidget,
-} from './types';
+} from '../types';
 import {toList} from '../utils';
-import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './example-templates/vega-common';
-import ATOM from './example-templates/atom';
-import BEESWARM_TEMPLATE from './example-templates/bee-swarm';
-import DATATABLE from './example-templates/table';
-import PIECHART_TEMPLATE from './example-templates/pie-chart';
-import SCATTERPLOT_TEMPLATE from './example-templates/scatterplot';
+import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './vega-common';
+import ATOM from './atom';
+import BEESWARM_TEMPLATE from './bee-swarm';
+import DATATABLE from './table';
+import PIECHART_TEMPLATE from './pie-chart';
+import SCATTERPLOT_TEMPLATE from './scatterplot';
 import {getUserName} from '../utils/local-storage';
 // import SIMPLE_SCATTER from './example-templates/simple-scatterplot';
-import SHELF from './example-templates/polestar-template';
-import UNITVIS from './example-templates/unit-vis';
+import SHELF from './polestar-template';
+import UNITVIS from './unit-vis';
 
 const vegaLitEmpty: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',

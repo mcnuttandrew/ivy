@@ -1,5 +1,5 @@
 import {setTemplateValues, generateFullTemplateMap} from '../hydra-lang';
-import {GenWidget} from '../templates/types';
+import {GenWidget} from '../types';
 import {widgetFactory} from '../templates';
 import {get, trim, union, difference, safeParse} from './index';
 

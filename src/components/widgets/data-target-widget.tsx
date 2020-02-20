@@ -1,5 +1,5 @@
 import React from 'react';
-import {DataTargetWidget, Widget, DataType} from '../../templates/types';
+import {DataTargetWidget, Widget, DataType} from '../../types';
 import {trim} from '../../utils';
 import DataSymbol from '../data-symbol';
 import {GeneralWidget, WidgetBuilder} from './general-widget';

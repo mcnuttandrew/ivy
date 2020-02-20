@@ -7,7 +7,7 @@ import Tooltip from 'rc-tooltip';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {GenericAction, CoerceTypePayload, UpdateFilterPayload} from '../actions/index';
-import {Template, CustomCard} from '../templates/types';
+import {Template, CustomCard} from '../types';
 import {get, makeCustomType} from '../utils';
 import SimpleTooltip from './simple-tooltip';
 

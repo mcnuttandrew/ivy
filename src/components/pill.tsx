@@ -3,9 +3,8 @@ import Tooltip from 'rc-tooltip';
 import {TiFilter, TiDeleteOutline, TiCogOutline, TiPlus} from 'react-icons/ti';
 
 import {GenericAction, CoerceTypePayload} from '../actions/index';
-import {DataType} from '../templates/types';
 import {useDrag} from 'react-dnd';
-import {ColumnHeader} from '../types';
+import {ColumnHeader, DataType} from '../types';
 import DataSymbol from './data-symbol';
 import {classnames} from '../utils';
 

@@ -4,8 +4,7 @@ import {useDrop} from 'react-dnd';
 import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
 import Selector from './selector';
-import {ColumnHeader} from '../types';
-import {MultiDataTargetWidget, Widget, DataType, Template} from '../templates/types';
+import {ColumnHeader, MultiDataTargetWidget, Widget, DataType, Template} from '../types';
 import {classnames, makeOptionsForDropdown, getOrMakeColumn} from '../utils';
 
 interface Props {

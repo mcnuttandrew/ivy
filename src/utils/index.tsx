@@ -8,9 +8,9 @@ import {
   Widget,
   GenWidget,
   CustomCard,
-} from '../templates/types';
+} from '../types';
 import {TEXT_TYPE} from '../constants/index';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 import {AppState, ColumnHeader} from '../types';
 
 /* eslint-disable @typescript-eslint/no-empty-function*/

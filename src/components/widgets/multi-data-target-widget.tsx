@@ -1,5 +1,5 @@
 import React from 'react';
-import {MultiDataTargetWidget, Widget, DataType} from '../../templates/types';
+import {MultiDataTargetWidget, Widget, DataType} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import MultiShelf from '../multi-shelf';
 import DataSymbol from '../data-symbol';

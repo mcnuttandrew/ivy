@@ -4,11 +4,11 @@ import stringify from 'json-stringify-pretty-compact';
 
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
-import {Template, TemplateMap, GenWidget} from '../templates/types';
+import {Template, TemplateMap, GenWidget} from '../types';
 import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
-import GALLERY from '../templates/example-templates/gallery';
+import GALLERY from '../templates/gallery';
 
 interface Props {
   addWidget?: GenericAction<GenWidget>;

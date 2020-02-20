@@ -1,5 +1,5 @@
 import React from 'react';
-import {FreeTextWidget, Widget} from '../../templates/types';
+import {FreeTextWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, Reset, widgetName} from './widget-common';
 import {trim} from '../../utils';

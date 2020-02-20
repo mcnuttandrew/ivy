@@ -1,5 +1,5 @@
 import React from 'react';
-import {ShortcutsWidget, Widget, Shortcut} from '../../templates/types';
+import {ShortcutsWidget, Widget, Shortcut} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {IgnoreKeys} from 'react-hotkeys';
 import {AddLabelToWidget} from './widget-common';

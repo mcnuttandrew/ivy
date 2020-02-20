@@ -7,7 +7,7 @@ import {
   SetWidgetValuePayload,
   MoveWidgetPayload,
 } from '../actions';
-import {Template, GenWidget, TemplateMap} from '../templates/types';
+import {Template, GenWidget, TemplateMap} from '../types';
 import {classnames, toSet} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
