@@ -12,7 +12,7 @@ export interface ViewCatalogEntry {
   spec: any;
   encodingMode: string;
   templateMap: TemplateMap;
-  currentTemplateInstance?: Template;
+  currentTemplateInstance: Template;
 }
 const BLANK_TEMPLATE_MAP = constructDefaultTemplateMap(GALLERY);
 const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {

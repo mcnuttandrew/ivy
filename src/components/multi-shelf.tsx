@@ -18,7 +18,7 @@ interface Props {
   template: Template;
 }
 
-export default function TemplateMultiShelf(props: Props): JSX.Element {
+export default function MultiShelf(props: Props): JSX.Element {
   const {shelfValues, columns, shelfName, fieldKey, onDrop, widget, template} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({

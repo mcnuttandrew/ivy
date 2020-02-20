@@ -1,7 +1,7 @@
 import produce from 'immer';
 
-import {ActionResponse, AppState, EMPTY_SPEC_BY_LANGUAGE, toggle, blindSet} from './default-state';
-import {getTemplate} from '../utils';
+import {ActionResponse, AppState, toggle, blindSet} from './default-state';
+import {Template} from '../templates/types';
 import {JSON_OUTPUT} from '../constants/index';
 
 import {evaluateHydraProgram} from '../hydra-lang';
@@ -53,21 +53,14 @@ export const applyEncodingModeToState: ActionResponse<{mode: string; fillWithDef
       draftState.currentTemplateInstance = null;
     });
   }
-  if (mode !== 'grammer') {
-    // INSTANTIATE TEMPLATE AS A LOCAL COPY
-    const template = getTemplate(state, mode);
-    const updatedState = produce(state, draftState => {
-      draftState.encodingMode = mode;
-      draftState.spec = evaluateHydraProgram(template, state.templateMap);
-      draftState.currentTemplateInstance = template;
-    });
-    return fillWithDefault ? fillTemplateMapWithDefaults(updatedState) : updatedState;
-  }
-  return produce(state, draftState => {
+  const template: Template = state.templates.find((d: any) => d.templateName === mode);
+  // INSTANTIATE TEMPLATE AS A LOCAL COPY
+  const updatedState = produce(state, draftState => {
     draftState.encodingMode = mode;
-    draftState.spec = EMPTY_SPEC_BY_LANGUAGE['vega-lite'];
-    draftState.currentTemplateInstance = null;
+    draftState.spec = evaluateHydraProgram(template, state.templateMap);
+    draftState.currentTemplateInstance = template;
   });
+  return fillWithDefault ? fillTemplateMapWithDefaults(updatedState) : updatedState;
 };
 
 export const setEncodingMode: ActionResponse<string> = (state, payload) => {

@@ -254,7 +254,6 @@ input[type="number"]::-webkit-outer-spin-button {
   text-transform: uppercase;
 }
 
-
 .section-subtitle {
   font-size: 12px;
 }
@@ -509,12 +508,6 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
 }
 
-/* IF WE RENEG ON THE COLORS OF PILLS THIS COMES BACK */
-
-/* .shelf .pill {
-  background: #e4e6e8;
-} */
-
 .shelf.filter-target {
   border: 0;
   padding: 0;
@@ -523,20 +516,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .shelf.filter-target .pill-dropzone {
   margin: 0;
-}
-
-.meta-column-filter-option-container {
-  flex-wrap: wrap;
-}
-
-.meta-column-filter-option-container .meta-column-filter-option {
-  cursor: pointer;
-  text-decoration: underline;
-  margin-right: 5px;
-}
-
-.meta-column-filter-count {
-  min-width: 30px;
 }
 
 .data-select {

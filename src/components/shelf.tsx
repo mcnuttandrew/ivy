@@ -9,7 +9,7 @@ import {classnames, getOrMakeColumn, makeOptionsForDropdown} from '../utils';
 import AllowedTypesList from './allowed-types-list';
 
 // TODO this type is a mess, it is very confusing.
-interface TemplateShelf {
+interface Shelf {
   /**
    * The current field held in the shelf, can be empty if nothing is there
    */
@@ -46,7 +46,7 @@ interface TemplateShelf {
   template: Template;
 }
 
-export default function TemplateShelf(props: TemplateShelf): JSX.Element {
+export default function Shelf(props: Shelf): JSX.Element {
   const {shelfValue, columns, shelfName, onDrop, widget, template, fieldKey} = props;
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',

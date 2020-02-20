@@ -56,7 +56,7 @@ import CommunityProgramSearch from './modals/community-modal';
 import EncodingControls from './encoding-controls';
 import Header from './header';
 import ImportDataColumn from './import-data-column';
-import TemplateColumn from './template-column';
+import EncodingColumn from './encoding-column';
 import RelatedViews from './related-views';
 
 // wrap the split pane functionality into a HOC
@@ -280,7 +280,7 @@ class RootComponent extends React.Component<RootProps, State> {
           templates={this.props.templates}
           toggleProgramModal={this.props.toggleProgramModal}
         />
-        <TemplateColumn
+        <EncodingColumn
           addWidget={this.props.addWidget}
           columns={this.props.columns}
           editMode={this.props.editMode}

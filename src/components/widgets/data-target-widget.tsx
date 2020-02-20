@@ -3,7 +3,7 @@ import {DataTargetWidget, TemplateWidget, DataType} from '../../templates/types'
 import {trim} from '../../utils';
 import DataSymbol from '../data-symbol';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
-import TemplateShelf from '../template-shelf';
+import Shelf from '../shelf';
 import {EditParameterName, EditDisplayName} from './widget-common';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
@@ -63,7 +63,7 @@ function DataTargetWidgetComponent(props: GeneralWidget<DataTargetWidget>): JSX.
   const {widget, templateMap, columns, setTemplateValue, template} = props;
   const fieldValue = templateMap[widget.name];
   return (
-    <TemplateShelf
+    <Shelf
       shelfValue={trim(fieldValue as string)}
       shelfName={widget.displayName || widget.name}
       fieldKey={widget.name}

@@ -2,7 +2,6 @@ import DomToImage from 'dom-to-image';
 import stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
-  DataType,
   MultiDataTargetWidget,
   Template,
   TemplateMap,
@@ -71,25 +70,6 @@ export function get(obj: any, route: (string | number)[]): any {
   return get(next, route.slice(1));
 }
 
-export const extractFieldStringsForType = (columns: ColumnHeader[], type: DataType): string[] =>
-  columns.filter((column: ColumnHeader) => column.type === type).map((column: ColumnHeader) => column.field);
-
-export const getTemplate = (state: AppState, template: string): Template | null => {
-  return state.templates.find((d: any) => d.templateName === template);
-};
-
-export function widgetInUse(code: string, name: string): boolean {
-  return Boolean(code.match(new RegExp(`\\[${name}\\]`, 'g')));
-}
-export function allWidgetsInUse(code: string, widgets: GenWidget[]): boolean {
-  return widgets
-    .filter((widget: GenWidget) => widget.type !== 'Text')
-    .every((widget: GenWidget) => !!widgetInUse(code, widget.name));
-}
-
-export const toSelectFormat = (arr: string[]): {value: string; label: string}[] =>
-  arr.map((x: string) => ({value: x, label: x}));
-
 // setting dimensions requires that dimension name be wrapped in a string
 // here we strip them off so that the channel cencoding can find the correct value
 export function trim(dimName: string): string {
@@ -137,7 +117,7 @@ export function deserializeTemplate(templateString: string): Template {
 type SaveState = 'NA' | 'NOT FOUND' | 'EQUAL' | 'DIFFERENT';
 export function getTemplateSaveState(base: AppState): SaveState {
   const template = base.currentTemplateInstance;
-  const associatedUpstreamTemplate = getTemplate(base, template.templateName);
+  const associatedUpstreamTemplate = base.templates.find(t => t.templateName === template.templateName);
   if (!associatedUpstreamTemplate) {
     return 'NOT FOUND';
   }
@@ -150,7 +130,7 @@ export function serverPrefix(): string {
 }
 
 export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): Set<string> => {
-  const dims = ['DIMENSION', 'MEASURE', 'METACOLUMN', 'TIME'];
+  const dims = ['DIMENSION', 'MEASURE', 'TIME'];
   const dimCounter = dims.reduce((acc: any, key) => ({...acc, [key]: []}), {});
 
   const toSet = (counter: {[x: string]: any[]}): Set<string> =>
