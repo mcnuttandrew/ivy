@@ -5,6 +5,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
 
+import GALLERY from '../templates/example-templates/gallery';
 import {Template, TemplateMap, GenWidget} from '../templates/types';
 import {getUserName} from '../utils/local-storage';
 import Thumbnail from './thumbnail';
@@ -464,6 +465,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   const template = base.currentTemplateInstance;
   const templateMap = base.templateMap;
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
+  const isGallery = GALLERY.templateName === template.templateName;
   return {
     canRedo: base.redoStack.length >= 1,
     canUndo: base.undoStack.length >= 1,
@@ -474,17 +476,16 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     currentlySelectedFile: base.currentlySelectedFile,
     data: data.data,
     dataModalOpen: base.dataModalOpen,
-    editMode: base.editMode,
+    editMode: isGallery ? false : base.editMode,
     editorError: base.editorError,
     encodingMode: base.encodingMode,
     fillableFields: computeValidAddNexts(template, templateMap),
     metaColumns: base.metaColumns,
     missingFields,
     programModalOpen: base.programModalOpen,
-    showProgrammaticMode: base.showProgrammaticMode,
+    showProgrammaticMode: isGallery ? false : base.showProgrammaticMode,
     showGUIView: base.showGUIView,
     spec: template ? evaluateHydraProgram(template, templateMap) : base.spec,
-    // TODO i think speccode might be nonsense?
     specCode: base.specCode,
     template,
     templateComplete: !missingFields.length,
