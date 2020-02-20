@@ -1,7 +1,7 @@
 import {AppState, ColumnHeader, ActionResponse, DataReducerState} from '../types';
 import produce from 'immer';
-import {TypeInference, DataRow, CoerceTypePayload} from '../actions/index';
-import {DataType} from '../types';
+import {TypeInference, CoerceTypePayload} from '../actions/index';
+import {DataType, DataRow} from '../types';
 import {constructDefaultTemplateMap} from '../hydra-lang';
 
 export const recieveData = (state: AppState): AppState => {

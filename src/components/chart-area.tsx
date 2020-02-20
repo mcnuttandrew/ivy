@@ -1,11 +1,11 @@
 import React from 'react';
 import VegaWrapper from './renderers/vega-wrap';
-import {Template, ColumnHeader, Json} from '../types';
+import {Template, ColumnHeader, Json, DataRow} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
-import {GenericAction, DataRow} from '../actions';
+import {GenericAction} from '../actions';
 import DataSearchMode from './renderers/data-search-mode';
 import GALLERY from '../templates/gallery';
 

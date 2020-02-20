@@ -241,3 +241,41 @@ export interface TemplateMap {
  * Convience container type for the general template widget case
  */
 export type GenWidget = Widget<WidgetSubType>;
+
+export interface Suggestion {
+  from: string;
+  to: string;
+  comment: string;
+  sideEffect?: any;
+  codeEffect?: (code: string) => string;
+  simpleReplace: boolean;
+}
+
+export interface RendererProps {
+  spec: any;
+  data: DataRow[];
+  onError: (x: any) => any;
+  // Weird ones from gallery
+  columns: ColumnHeader[];
+  // deleteTemplate: GenericAction<string>;
+  // setEncodingMode: GenericAction<string>;
+  deleteTemplate: any;
+  setEncodingMode: any;
+  templates: Template[];
+}
+export interface HydraExtension {
+  /**
+   * React Component containing the rendering logic for this language
+   */
+  renderer: (props: RendererProps) => JSX.Element;
+  /**
+   * Given a code block and the collection of widgets, try to come up with suggestions to parameterize the code
+   * @param code
+   * @param widgets
+   * @return Suggestions[]
+   */
+  suggestion: (code: string, widgets: GenWidget[]) => Suggestion[];
+  language: string;
+}
+
+export type DataRow = {[x: string]: any};

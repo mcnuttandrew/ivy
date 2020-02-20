@@ -21,7 +21,6 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
   UpdateFilterPayload,
-  DataRow,
 } from '../actions/index';
 import {
   getUniques,
@@ -44,7 +43,16 @@ import {
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {AppState, DataReducerState, ColumnHeader, Json, Template, TemplateMap, GenWidget} from '../types';
+import {
+  AppState,
+  DataReducerState,
+  ColumnHeader,
+  Json,
+  Template,
+  TemplateMap,
+  GenWidget,
+  DataRow,
+} from '../types';
 
 import ChartArea from './chart-area';
 import CodeEditor from './code-editor';
