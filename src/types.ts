@@ -12,25 +12,6 @@ export interface ColumnHeader {
   summary: any;
 }
 
-export type VegaMark =
-  | 'arc'
-  | 'area'
-  | 'image'
-  | 'group'
-  | 'line'
-  | 'path'
-  | 'rect'
-  | 'rule'
-  | 'shape'
-  | 'symbol'
-  | 'text'
-  | 'trail';
-
-/**
- * One of 'excel' | 'ggplot2' | 'quartz' | 'vox' | 'dark'
- */
-export type VegaTheme = 'excel' | 'ggplot2' | 'quartz' | 'vox' | 'dark';
-
 // https://github.com/microsoft/TypeScript/issues/1897
 export interface JsonMap {
   [member: string]: string | number | boolean | null | JsonArray | JsonMap;

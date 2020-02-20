@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {useDrag, useDrop, DropTargetMonitor} from 'react-dnd';
 import {XYCoord} from 'dnd-core';
 
-import {TemplateMap, TemplateWidget, GenWidget, Template} from '../../templates/types';
+import {TemplateMap, Widget, GenWidget, Template} from '../../templates/types';
 import {ColumnHeader} from '../../types';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
 import {classnames} from '../../utils';
@@ -28,7 +28,7 @@ export interface GeneralWidget<T> {
   setWidgetValue: any;
   templateMap: TemplateMap;
   template: Template;
-  widget: TemplateWidget<T>;
+  widget: Widget<T>;
 }
 
 interface Props {

@@ -61,7 +61,6 @@ function createAction<T>(type: any): GenericAction<T> {
 
 export const addToNextOpenSlot = createAction<ColumnHeader>(actionTypes.ADD_TO_NEXT_OPEN_SLOT);
 export const addWidget = createAction<GenWidget>(actionTypes.ADD_TO_WIDGET_TEMPLATE);
-export const changeTheme = createAction<string>(actionTypes.CHANGE_THEME);
 export const changeViewName = createAction<{idx: number; value: string}>(actionTypes.CHANGE_VIEW_NAME);
 export const clearEncoding = createAction<void>(actionTypes.CLEAR_ENCODING);
 export const cloneView = createAction<void>(actionTypes.CLONE_VIEW);

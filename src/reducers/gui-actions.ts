@@ -13,7 +13,6 @@ export const toggleDataModal = toggle('dataModalOpen');
 export const toggleProgramModal = toggle('programModalOpen');
 
 export const setProgrammaticView = blindSet('showProgrammaticMode');
-export const changeTheme = blindSet('currentTheme');
 export const setCodeMode = blindSet('codeMode');
 export const setEditMode = blindSet('editMode');
 export const setGuiView = blindSet('showGUIView');

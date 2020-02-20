@@ -1,7 +1,7 @@
 import {
   Template,
   TemplateMap,
-  TemplateWidget,
+  Widget,
   ValidationQuery,
   DataTargetWidget,
   GenWidget,
@@ -130,7 +130,7 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
  * @param template
  * @param templateMap - the specification/variable values defined by the gui
  */
-export function applyQueries(template: Template, templateMap: TemplateMap): TemplateWidget<any>[] {
+export function applyQueries(template: Template, templateMap: TemplateMap): Widget<any>[] {
   return template.widgets.filter(widget => {
     if (!widget.validations || !widget.validations.length) {
       return true;
@@ -174,7 +174,7 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap): strin
  */
 export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
   const requiredFields = template.widgets
-    .filter(d => d.type === 'DataTarget' && (d as TemplateWidget<DataTargetWidget>).config.required)
+    .filter(d => d.type === 'DataTarget' && (d as Widget<DataTargetWidget>).config.required)
     .map(d => d.name);
   const missingFileds = requiredFields
     .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
@@ -208,16 +208,16 @@ export function constructDefaultTemplateMap(template: Template): TemplateMap {
       return acc;
     }
     if (w.type === 'List') {
-      const localW = w as TemplateWidget<ListWidget>;
+      const localW = w as Widget<ListWidget>;
       value = localW.config.defaultValue || get(localW, ['config', 'allowedValues', 0, 'value']);
-      // value = (w as TemplateWidget<ListWidget>).config.defaultValue;
+      // value = (w as Widget<ListWidget>).config.defaultValue;
     }
     if (w.type === 'Switch') {
-      const localW = w as TemplateWidget<SwitchWidget>;
+      const localW = w as Widget<SwitchWidget>;
       value = localW.config.defaultsToActive ? localW.config.activeValue : localW.config.inactiveValue;
     }
     if (w.type === 'Slider') {
-      value = (w as TemplateWidget<SliderWidget>).config.defaultValue;
+      value = (w as Widget<SliderWidget>).config.defaultValue;
     }
     if (w.type === 'FreeText') {
       value = '';
@@ -261,15 +261,15 @@ export function generateFullTemplateMap(widgets: GenWidget[]): {[x: string]: any
       acc[widget.name] = `[${DUMMY}, ${DUMMY}]`;
     }
     if (widgetType === 'List') {
-      const localW = widget as TemplateWidget<ListWidget>;
+      const localW = widget as Widget<ListWidget>;
       acc[widget.name] = localW.config.defaultValue || get(localW, ['config', 'allowedValues', 0, 'value']);
     }
     if (widgetType === 'Switch') {
-      const localW = widget as TemplateWidget<SwitchWidget>;
+      const localW = widget as Widget<SwitchWidget>;
       acc[widget.name] = localW.config.activeValue;
     }
     if (widgetType === 'Slider') {
-      const localW = widget as TemplateWidget<SliderWidget>;
+      const localW = widget as Widget<SliderWidget>;
       acc[widget.name] = localW.config.defaultValue;
     }
     return acc;

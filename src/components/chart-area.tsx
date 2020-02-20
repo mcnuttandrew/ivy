@@ -1,6 +1,6 @@
 import React from 'react';
 import VegaWrapper from './renderers/vega-wrap';
-import {VegaTheme, ColumnHeader, Json} from '../types';
+import {ColumnHeader, Json} from '../types';
 import {Template} from '../templates/types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
@@ -15,7 +15,6 @@ interface ChartAreaProps {
   createNewView: GenericAction<void>;
   changeViewName: GenericAction<{idx: number; value: string}>;
   columns: ColumnHeader[];
-  currentTheme: VegaTheme;
   currentView: string;
   data: DataRow[];
   deleteView: GenericAction<string>;
@@ -115,7 +114,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       cloneView,
       columns,
       createNewView,
-      currentTheme,
       currentView,
       data,
       deleteView,
@@ -163,7 +161,6 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             <VegaWrapper
               spec={spec}
               data={data}
-              theme={currentTheme}
               language={template && template.templateLanguage}
               onError={(e): void => {
                 console.log('upper error', e);

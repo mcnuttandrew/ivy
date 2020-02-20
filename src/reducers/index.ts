@@ -40,7 +40,6 @@ import {
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView, changeViewName} from './view-actions';
 import {
-  changeTheme,
   setCodeMode,
   setEditMode,
   setEncodingMode,
@@ -82,7 +81,6 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.UPDATE_FILTER]: addUndo(addUpdateCode(updateFilter)),
 
   // gui modifications
-  [actionTypes.CHANGE_THEME]: changeTheme,
   [actionTypes.SET_CODE_MODE]: setCodeMode,
   [actionTypes.SET_EDIT_MODE]: setEditMode,
   [actionTypes.SET_ENCODING_MODE]: addUndo(setEncodingMode),

@@ -4,7 +4,7 @@ import {useDrop} from 'react-dnd';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {DataTargetWidget, TemplateWidget, Template} from '../templates/types';
+import {DataTargetWidget, Widget, Template} from '../templates/types';
 import {classnames, getOrMakeColumn, makeOptionsForDropdown} from '../utils';
 import AllowedTypesList from './allowed-types-list';
 
@@ -38,7 +38,7 @@ interface Shelf {
   /**
    * The widget that this shelf is contained within
    */
-  widget: TemplateWidget<DataTargetWidget>;
+  widget: Widget<DataTargetWidget>;
 
   /**
    * The containing template

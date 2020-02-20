@@ -1,5 +1,5 @@
 import React from 'react';
-import {DataTargetWidget, TemplateWidget, DataType} from '../../templates/types';
+import {DataTargetWidget, Widget, DataType} from '../../templates/types';
 import {trim} from '../../utils';
 import DataSymbol from '../data-symbol';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
@@ -76,7 +76,7 @@ function DataTargetWidgetComponent(props: GeneralWidget<DataTargetWidget>): JSX.
 }
 
 const DataTargetBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<DataTargetWidget>;
+  const widg = widget as Widget<DataTargetWidget>;
   return {
     controls: <DataTargetWidgetConfiguration {...common} widget={widg} />,
     uiElement: <DataTargetWidgetComponent {...common} widget={widg} />,

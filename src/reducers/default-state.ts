@@ -17,7 +17,6 @@ export interface AppState {
   currentlySelectedFile: string;
 
   // spec configs
-  currentTheme: string;
   editMode: boolean;
   editorError: boolean;
   spec: any;
@@ -106,7 +105,6 @@ export const DEFAULT_STATE: AppState = {
   // spec configs
   spec: {},
   specCode: stringify(EMPTY_SPEC_BY_LANGUAGE['vega-lite']),
-  currentTheme: 'default',
   editorError: null,
   editMode: false,
 

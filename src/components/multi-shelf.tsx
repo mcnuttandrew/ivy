@@ -5,7 +5,7 @@ import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
 import Selector from './selector';
 import {ColumnHeader} from '../types';
-import {MultiDataTargetWidget, TemplateWidget, DataType, Template} from '../templates/types';
+import {MultiDataTargetWidget, Widget, DataType, Template} from '../templates/types';
 import {classnames, makeOptionsForDropdown, getOrMakeColumn} from '../utils';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
   fieldKey: string;
   shelfName: string;
   onDrop: any;
-  widget: TemplateWidget<MultiDataTargetWidget>;
+  widget: Widget<MultiDataTargetWidget>;
   template: Template;
 }
 

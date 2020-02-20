@@ -10,7 +10,7 @@ export type WidgetType =
   | 'Section'
   | 'Shortcut'
   | 'FreeText';
-export interface TemplateWidget<T> {
+export interface Widget<T> {
   /**
    *   The name of widget to be used, this name will be swapped into the code string, must be unqiue
    */
@@ -120,7 +120,7 @@ export interface Template {
   /**
    * The mechanism by which users interact with your template
    */
-  widgets: TemplateWidget<WidgetSubType>[];
+  widgets: Widget<WidgetSubType>[];
 
   /**
    * Advanced tool for providing special extra cards
@@ -160,4 +160,4 @@ export interface TemplateMap {
 /**
  * Convience container type for the general template widget case
  */
-export type GenWidget = TemplateWidget<WidgetSubType>;
+export type GenWidget = Widget<WidgetSubType>;

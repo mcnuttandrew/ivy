@@ -1,10 +1,4 @@
-import {
-  TemplateWidget,
-  TemplateMap,
-  DataTargetWidget,
-  MultiDataTargetWidget,
-  GenWidget,
-} from '../templates/types';
+import {Widget, TemplateMap, DataTargetWidget, MultiDataTargetWidget, GenWidget} from '../templates/types';
 import {ActionResponse} from './default-state';
 import {setTemplateValue} from './template-actions';
 import {getOrMakeColumn, toSet} from '../utils';
@@ -25,7 +19,7 @@ const templateBasedGuess: ActionResponse<GuessPayload> = (state, payload) => {
     .filter((widget: GenWidget) => widget.type === 'DataTarget' && !templateMap[widget.name])
     // and that allow the type of drop column
     .filter(
-      (widget: TemplateWidget<DataTargetWidget>) =>
+      (widget: Widget<DataTargetWidget>) =>
         widget.config.allowedTypes.includes(column.type) || column.type === 'CUSTOM',
     );
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Vega} from 'react-vega';
-import {VegaTheme, Json} from '../../types';
+import {Json} from '../../types';
 import {Handler} from 'vega-tooltip';
 import {get} from '../../utils';
 import Table from './data-table';
@@ -10,7 +10,6 @@ import {DataRow} from '../../actions/index';
 interface VegaWrapperProps {
   spec: Json;
   data: DataRow[];
-  theme: VegaTheme;
   language?: string;
   onError: (x: any) => any;
 }
@@ -33,13 +32,12 @@ function inferredLanguage(spec: any): string | null {
 // in effect it is a modest caching layer. It also allows us to obscure some of the odities of the vega interface
 export default class VegaWrapper extends React.Component<VegaWrapperProps> {
   shouldComponentUpdate(nextProps: VegaWrapperProps): boolean {
-    const diffSpec = JSON.stringify(this.props.spec) !== JSON.stringify(nextProps.spec);
-    const diffTheme = this.props.theme !== nextProps.theme;
-    return diffSpec || diffTheme;
+    // TODO to memoize
+    return JSON.stringify(this.props.spec) !== JSON.stringify(nextProps.spec);
   }
 
   render(): JSX.Element {
-    const {spec, data, theme, language = 'vega-lite', onError} = this.props;
+    const {spec, data, language = 'vega-lite', onError} = this.props;
     const lang = inferredLanguage(spec) || language;
     if (lang === 'unit-vis') {
       return <UnitVisChart data={data} spec={spec} />;
@@ -69,7 +67,6 @@ export default class VegaWrapper extends React.Component<VegaWrapperProps> {
         onError={onError}
         spec={finalSpec}
         mode={language as any}
-        theme={theme}
         tooltip={new Handler({}).call}
       />
     );

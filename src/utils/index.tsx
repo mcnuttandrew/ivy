@@ -5,7 +5,7 @@ import {
   MultiDataTargetWidget,
   Template,
   TemplateMap,
-  TemplateWidget,
+  Widget,
   GenWidget,
   CustomCard,
 } from '../templates/types';
@@ -225,10 +225,8 @@ export function searchDimensionsCanMatch(
   const colMap = makeColNameMap(columns);
   const desiredColumns = targetCols.map(key => colMap[trim(key)]);
   const config = template.widgets;
-  const targets = config.filter(d => d.type === 'DataTarget') as TemplateWidget<DataTargetWidget>[];
-  const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as TemplateWidget<
-    MultiDataTargetWidget
-  >[];
+  const targets = config.filter(d => d.type === 'DataTarget') as Widget<DataTargetWidget>[];
+  const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as Widget<MultiDataTargetWidget>[];
   const numRequired = targets.filter(d => d.config.required).length;
   const usedTargets: Set<string> = new Set([]);
   const result = desiredColumns.every(col => {
@@ -328,7 +326,7 @@ export function getOrMakeColumn(
 interface MakeOptionsForDropdownProps {
   template: Template;
   columns: ColumnHeader[];
-  widget: TemplateWidget<DataTargetWidget | MultiDataTargetWidget>;
+  widget: Widget<DataTargetWidget | MultiDataTargetWidget>;
   useGroupsAsTypes?: boolean;
 }
 export function makeOptionsForDropdown(

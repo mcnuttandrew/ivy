@@ -1,5 +1,5 @@
 import React from 'react';
-import {MultiDataTargetWidget, TemplateWidget, DataType} from '../../templates/types';
+import {MultiDataTargetWidget, Widget, DataType} from '../../templates/types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import MultiShelf from '../multi-shelf';
 import DataSymbol from '../data-symbol';
@@ -97,7 +97,7 @@ function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): 
 }
 
 const MultiDataTargetBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<MultiDataTargetWidget>;
+  const widg = widget as Widget<MultiDataTargetWidget>;
   return {
     controls: <MultiDataTargetWidgetConfiguration {...common} widget={widg} />,
     uiElement: <MultiDataTargetComponent {...common} widget={widg} />,

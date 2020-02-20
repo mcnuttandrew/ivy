@@ -45,7 +45,7 @@ import {
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {ColumnHeader, VegaTheme, Json} from '../types';
+import {ColumnHeader, Json} from '../types';
 import {AppState, DataReducerState} from '../reducers/default-state';
 
 import ChartArea from './chart-area';
@@ -83,7 +83,6 @@ interface RootProps {
   canUndo: boolean;
   codeMode: string;
   columns: ColumnHeader[];
-  currentTheme: VegaTheme;
   currentView: string;
   currentlySelectedFile: string;
   data: DataRow[];
@@ -110,7 +109,6 @@ interface RootProps {
   addWidget: GenericAction<GenWidget>;
   chainActions: GenericAction<any>;
   changeSelectedFile: GenericAction<string>;
-  changeTheme: GenericAction<string>;
   changeViewName: GenericAction<{idx: number; value: string}>;
   clearEncoding: GenericAction<void>;
   cloneView: GenericAction<void>;
@@ -198,7 +196,6 @@ class RootComponent extends React.Component<RootProps, State> {
         cloneView={this.props.cloneView}
         columns={this.props.columns}
         createNewView={this.props.createNewView}
-        currentTheme={this.props.currentTheme}
         currentView={this.props.currentView}
         data={this.props.data}
         deleteView={this.props.deleteView}
@@ -442,7 +439,6 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     canUndo: base.undoStack.length >= 1,
     codeMode: base.codeMode,
     columns: base.columns,
-    currentTheme: base.currentTheme,
     currentView: base.currentView,
     currentlySelectedFile: base.currentlySelectedFile,
     data: data.data,

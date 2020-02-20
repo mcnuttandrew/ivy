@@ -1,7 +1,6 @@
 export const ADD_TO_NEXT_OPEN_SLOT = 'add-to-next-open-slot';
 export const ADD_TO_WIDGET_TEMPLATE = 'add-widget-to-template';
 export const CHANGE_SELECTED_FILE = 'change-selected-file';
-export const CHANGE_THEME = 'change-theme';
 export const CHANGE_VIEW_NAME = 'change-view-name';
 export const CLEAR_ENCODING = 'clear-encoding';
 export const CLONE_VIEW = 'clone-view';

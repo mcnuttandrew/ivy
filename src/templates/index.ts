@@ -8,7 +8,7 @@ import {
   SliderWidget,
   SwitchWidget,
   Template,
-  TemplateWidget,
+  Widget,
   TextWidget,
   GenWidget,
   ShortcutsWidget,
@@ -44,51 +44,51 @@ export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
       name: `Var${idx}`,
       type: 'DataTarget',
       config: {allowedTypes: DATA_TYPES, required: true},
-    } as TemplateWidget<DataTargetWidget>),
+    } as Widget<DataTargetWidget>),
   MultiDataTarget: idx =>
     ({
       name: `MultiDim${idx}`,
       type: 'MultiDataTarget',
       config: {allowedTypes: DATA_TYPES, required: true, minNumberOfTargets: 0},
-    } as TemplateWidget<MultiDataTargetWidget>),
+    } as Widget<MultiDataTargetWidget>),
   List: idx =>
     ({
       name: `ListItem${idx}`,
       type: 'List',
       config: {allowedValues: [] as {display: string; value: string}[], defaultValue: null},
-    } as TemplateWidget<ListWidget>),
+    } as Widget<ListWidget>),
 
   Switch: idx =>
     ({
       name: `Switch${idx}`,
       type: 'Switch',
       config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
-    } as TemplateWidget<SwitchWidget>),
-  Text: idx => ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as TemplateWidget<TextWidget>),
+    } as Widget<SwitchWidget>),
+  Text: idx => ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as Widget<TextWidget>),
   Slider: idx =>
     ({
       name: `Slider${idx}`,
       type: 'Slider',
       config: {minVal: 0, maxVal: 10, step: 1, defaultValue: 5},
-    } as TemplateWidget<SliderWidget>),
+    } as Widget<SliderWidget>),
   Section: idx =>
     ({
       name: `Section${idx}`,
       type: 'Section',
       config: null,
-    } as TemplateWidget<SectionWidget>),
+    } as Widget<SectionWidget>),
   Shortcuts: idx =>
     ({
       name: `Shortcut${idx}`,
       type: 'Shortcut',
       config: {shortcuts: []},
-    } as TemplateWidget<ShortcutsWidget>),
+    } as Widget<ShortcutsWidget>),
   FreeText: idx =>
     ({
       name: `FreeText${idx}`,
       type: 'FreeText',
       config: {},
-    } as TemplateWidget<ShortcutsWidget>),
+    } as Widget<ShortcutsWidget>),
 };
 
 export const preconfiguredWidgets: {[type: string]: WidgetFactoryFunc} = {
@@ -97,13 +97,13 @@ export const preconfiguredWidgets: {[type: string]: WidgetFactoryFunc} = {
       name: `ColorList${idx}`,
       type: 'List',
       config: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES), defaultValue: null},
-    } as TemplateWidget<ListWidget>),
+    } as Widget<ListWidget>),
   'Data Types Options': idx =>
     ({
       name: `DataTypeOptions${idx}`,
       type: 'List',
       config: {allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal']), defaultValue: null},
-    } as TemplateWidget<ListWidget>),
+    } as Widget<ListWidget>),
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [

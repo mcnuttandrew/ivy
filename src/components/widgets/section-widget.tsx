@@ -1,5 +1,5 @@
 import React from 'react';
-import {SectionWidget, TemplateWidget} from '../../templates/types';
+import {SectionWidget, Widget} from '../../templates/types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,7 +13,7 @@ function SectionWidgetComponent(props: GeneralWidget<SectionWidget>): JSX.Elemen
 }
 
 const SectionBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as TemplateWidget<SectionWidget>;
+  const widg = widget as Widget<SectionWidget>;
   return {
     controls: <SectionWidgetConfiguration {...common} widget={widg} />,
     uiElement: <SectionWidgetComponent {...common} widget={widg} />,

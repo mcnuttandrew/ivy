@@ -178,7 +178,7 @@
         "widgets": {
           "description": "The mechanism by which users interact with your template",
           "items": {
-            "$ref": "#/definitions/TemplateWidget<WidgetSubType>"
+            "$ref": "#/definitions/Widget<WidgetSubType>"
           },
           "type": "array"
         }
@@ -201,7 +201,7 @@
       },
       "type": "object"
     },
-    "TemplateWidget": {
+    "Widget": {
       "additionalProperties": {},
       "properties": {
         "displayName": {
@@ -222,7 +222,7 @@
       },
       "type": "object"
     },
-    "TemplateWidget<WidgetSubType>": {
+    "Widget<WidgetSubType>": {
       "additionalProperties": {},
       "properties": {
         "displayName": {

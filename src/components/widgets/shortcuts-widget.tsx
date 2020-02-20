@@ -1,5 +1,5 @@
 import React from 'react';
-import {ShortcutsWidget, TemplateWidget, Shortcut} from '../../templates/types';
+import {ShortcutsWidget, Widget, Shortcut} from '../../templates/types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {IgnoreKeys} from 'react-hotkeys';
 import {AddLabelToWidget} from './widget-common';
@@ -81,8 +81,8 @@ function ShortcutsWidgetComponent(props: GeneralWidget<ShortcutsWidget>): JSX.El
 
 const ShortcutBuilder: WidgetBuilder = (widget, common) => {
   return {
-    controls: <ShortcutsWidgetConfiguration {...common} widget={widget as TemplateWidget<ShortcutsWidget>} />,
-    uiElement: <ShortcutsWidgetComponent {...common} widget={widget as TemplateWidget<ShortcutsWidget>} />,
+    controls: <ShortcutsWidgetConfiguration {...common} widget={widget as Widget<ShortcutsWidget>} />,
+    uiElement: <ShortcutsWidgetComponent {...common} widget={widget as Widget<ShortcutsWidget>} />,
   };
 };
 export default ShortcutBuilder;

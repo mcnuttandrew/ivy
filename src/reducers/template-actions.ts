@@ -10,7 +10,7 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {Template, TemplateWidget, GenWidget, TemplateMap, ListWidget} from '../templates/types';
+import {Template, Widget, GenWidget, TemplateMap, ListWidget} from '../templates/types';
 import {BLANK_TEMPLATE} from '../templates';
 import {deserializeTemplate, trim} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
@@ -86,7 +86,7 @@ const bagDifference = (a: string[], b: string[]): string[] => b.reduce(removeFir
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
-  const getWidget = (name: string): TemplateWidget<any> | null =>
+  const getWidget = (name: string): Widget<any> | null =>
     template.widgets.find(widget => widget.name === name);
   const {containingShelf} = payload;
   const fromWidget = getWidget(containingShelf);
@@ -279,7 +279,7 @@ const modifyCurrentWidgets = (state: AppState, mod: WidgetMod): AppState =>
   produce(state, draftState => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
   });
-export const addWidget: ActionResponse<TemplateWidget<any>> = (state, payload) =>
+export const addWidget: ActionResponse<Widget<any>> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.concat(payload));
 export const removeWidget: ActionResponse<number> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.filter((_: any, idx: number) => payload !== idx));
