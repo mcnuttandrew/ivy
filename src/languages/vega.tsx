@@ -5,7 +5,6 @@ import {Vega} from 'react-vega';
 import {RendererProps, Template, Suggestion} from '../types';
 import {Handler} from 'vega-tooltip';
 import {buildSynthesizer} from './suggestion-utils';
-import {get} from '../utils/index';
 
 function VegaRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
