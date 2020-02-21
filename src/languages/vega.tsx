@@ -1,8 +1,8 @@
-import {HydraExtension} from '../../types';
+import {HydraExtension} from '../types';
 
 import React from 'react';
 import {Vega} from 'react-vega';
-import {RendererProps, Template} from '../../types';
+import {RendererProps, Template} from '../types';
 import {Handler} from 'vega-tooltip';
 
 function VegaRenderer(props: RendererProps): JSX.Element {

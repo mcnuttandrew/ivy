@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {HydraExtension, RendererProps, JsonMap, Template} from '../../types';
-import TABLE from '../../templates/table';
+import {HydraExtension, RendererProps, JsonMap, Template} from '../types';
+import TABLE from '../templates/table';
 
 import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 

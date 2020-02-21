@@ -22,7 +22,7 @@ import GALLERY from './gallery';
 import SCATTERPLOT_TEMPLATE from './scatterplot';
 // import SIMPLE_SCATTER from './simple-scatterplot';
 import SHELF from './polestar-template';
-import UNITVIS from './unit-vis';
+import UNITVIS from './atom-example';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 export type WidgetFactoryFunc = (idx: number) => GenWidget;

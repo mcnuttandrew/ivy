@@ -8,6 +8,7 @@ import {
   Widget,
   GenWidget,
   CustomCard,
+  Suggestion,
 } from '../types';
 import {TEXT_TYPE} from '../constants/index';
 import GALLERY from '../templates/gallery';
@@ -272,31 +273,6 @@ export function getTemplateName(template: Template | null): string {
     : template.templateName;
 }
 
-export function union(setA: Set<any>, setB: Set<any>): Set<any> {
-  const _union = new Set(setA);
-  for (const elem of setB) {
-    _union.add(elem);
-  }
-  return _union;
-}
-export function difference(setA: Set<any>, setB: Set<any>): Set<any> {
-  const _difference = new Set(setA);
-  for (const elem of setB) {
-    _difference.delete(elem);
-  }
-  return _difference;
-}
-
-export function safeParse(code: string): string | boolean {
-  let x = null;
-  try {
-    x = JSON.parse(code);
-  } catch (e) {
-    x = false;
-  }
-  return x;
-}
-
 export function makeCustomType(customCard: CustomCard): ColumnHeader {
   return {
     type: 'CUSTOM',
@@ -393,3 +369,16 @@ export function removeFirstInstanceOf(a: string[], key: string): string[] {
 }
 
 export const bagDifference = (a: string[], b: string[]): string[] => b.reduce(removeFirstInstanceOf, a);
+
+/**
+ * Apply suggestion to code to generate updated code
+ * @param code
+ * @param suggestion
+ */
+export function takeSuggestion(code: string, suggestion: Suggestion): string {
+  const {simpleReplace, from, to, codeEffect} = suggestion;
+  if (codeEffect) {
+    return codeEffect(code);
+  }
+  return simpleReplace ? code.replace(from, to) : code.replace(new RegExp(from, 'g'), to);
+}

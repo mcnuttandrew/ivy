@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {HydraExtension, RendererProps, Template} from '../../types';
-
+import {HydraExtension, RendererProps, Template, Suggestion} from '../types';
+import {walkTreeAndLookForFields, buildSynthesizer} from './suggestion-utils';
 import UnitVis from 'unit-vis';
 
 function UnitVisRenderer(props: RendererProps): JSX.Element {
@@ -45,7 +45,7 @@ function UnitVisRenderer(props: RendererProps): JSX.Element {
 
 export const BLANK_TEMPLATE: Template = {
   templateAuthor: '',
-  templateLanguage: 'data-table',
+  templateLanguage: 'unit-vis',
   templateName: 'BLANK TEMPLATE',
   templateDescription: 'FILL IN DESCRIPTION',
   code: JSON.stringify(
@@ -60,9 +60,30 @@ export const BLANK_TEMPLATE: Template = {
   widgets: [],
 };
 
+function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[] {
+  const suggestions = [];
+  if (parsedCode.data && parsedCode.data.url) {
+    suggestions.push({
+      from: 'data url',
+      to: '"name": "myData"',
+      comment: 'remove specific data',
+      simpleReplace: false,
+      codeEffect: (code: string) => {
+        const parsed = JSON.parse(code);
+        delete parsed.data;
+        return JSON.stringify(parsed, null, 2);
+      },
+    });
+  }
+  return suggestions;
+}
+
+const buildSuggestions = (spec: any): Set<string> =>
+  walkTreeAndLookForFields((key: string) => key === 'key')(spec);
+
 const UNIT_VIS_CONFIG: HydraExtension = {
   renderer: UnitVisRenderer,
-  suggestion: () => [],
+  suggestion: buildSynthesizer(buildSuggestions, inferRemoveDataSuggestions),
   language: 'unit-vis',
   blankTemplate: BLANK_TEMPLATE,
 };

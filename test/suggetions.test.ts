@@ -1,7 +1,9 @@
 import {IsotypeBarChart} from './text-examples';
-import {synthesizeSuggestions, takeSuggestion} from '../src/utils/introspect';
+import {takeSuggestion} from '../src/utils/index';
+import VEGA_LITE from '../src/languages/vega-lite';
 
 test('#synthesizeSuggestions happy path - IsotypeBarChart', () => {
+  const synthesizeSuggestions = VEGA_LITE.suggestion;
   const suggestions = synthesizeSuggestions(IsotypeBarChart, []);
   expect(suggestions).toMatchSnapshot();
   // remove the foreign data
@@ -17,6 +19,7 @@ test('#synthesizeSuggestions happy path - IsotypeBarChart', () => {
 });
 
 test('#synthesizeSuggestions (remove data first) - IsotypeBarChart', () => {
+  const synthesizeSuggestions = VEGA_LITE.suggestion;
   const suggestions = synthesizeSuggestions(IsotypeBarChart, []);
   expect(suggestions).toMatchSnapshot();
   // remove the foreign data

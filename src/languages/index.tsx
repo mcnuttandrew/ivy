@@ -1,4 +1,4 @@
-import Vega from './vega/index';
+import Vega from './vega';
 import VegaLite from './vega-lite';
 import UnitVis from './unit-vis';
 import DataTable from './data-table';

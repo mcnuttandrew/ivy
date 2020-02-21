@@ -14,7 +14,7 @@ import {ActionResponse, AppState, Template, Widget, GenWidget, TemplateMap} from
 import {deserializeTemplate, trim, removeFirstInstanceOf, bagDifference} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
 
-import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite/index';
+import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite';
 
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
