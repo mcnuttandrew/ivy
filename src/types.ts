@@ -1,3 +1,4 @@
+import {GenericAction} from './actions/index';
 /**
  * The meta data for a particular data column.
  *
@@ -248,7 +249,7 @@ export interface Suggestion {
   from: string;
   to: string;
   comment: string;
-  sideEffect?: any;
+  sideEffect?: (setAllTemplateValues?: GenericAction<TemplateMap>) => GenWidget | null;
   codeEffect?: (code: string) => string;
   simpleReplace: boolean;
 }
@@ -270,7 +271,7 @@ export interface HydraExtension {
    * @param widgets
    * @return Suggestions[]
    */
-  suggestion: (code: string, widgets: GenWidget[]) => Suggestion[];
+  suggestion: (code: string, widgets: GenWidget[], columns: ColumnHeader[]) => Suggestion[];
   language: string;
   blankTemplate: Template;
 }

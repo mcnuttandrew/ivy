@@ -1,5 +1,5 @@
 import {setTemplateValues, generateFullTemplateMap} from '../hydra-lang';
-import {GenWidget, Suggestion} from '../types';
+import {GenWidget, Suggestion, ColumnHeader} from '../types';
 import {widgetFactory} from '../templates';
 import {trim} from '../utils';
 
@@ -72,6 +72,7 @@ function inferFieldTransformationSuggestions(
   parsedCode: any,
   widgets: GenWidget[],
   inferenceFunction: (spec: any) => Set<string>,
+  columns: ColumnHeader[],
 ): Suggestion[] {
   const widgetNames = widgets.reduce((acc, row) => acc.add(row.name).add(`[${row.name}]`), new Set());
   const possibleFields = Array.from(inferenceFunction(parsedCode));
@@ -89,6 +90,7 @@ function inferFieldTransformationSuggestions(
     if (widgetNames.has(`[${from}]`)) {
       return acc;
     }
+    const fieldPresentInData = columns.find(col => col.field === from);
     // suggest setting the found field to all of the existing widgets
     dropTargets.forEach((to: string) => acc.push(buildSuggest(from, to)));
 
@@ -102,6 +104,18 @@ function inferFieldTransformationSuggestions(
       simpleReplace: false,
       sideEffect: () => widgetFactory.DataTarget(widgets.length + 1),
     });
+    if (fieldPresentInData) {
+      acc.push({
+        from: `"${from}"`,
+        to: `"[${suggestedNewWidgetName}]"`,
+        comment: `${from} -> ${suggestedNewWidgetName} (CREATE/UPDATE ${suggestedNewWidgetName})`,
+        simpleReplace: false,
+        sideEffect: setTemplateValues => {
+          setTemplateValues({[suggestedNewWidgetName]: `"${from}"`});
+          return widgetFactory.DataTarget(widgets.length + 1);
+        },
+      });
+    }
     return acc;
   }, []);
   return suggestions;
@@ -116,7 +130,11 @@ export function buildSynthesizer(
    * @param code
    * @param widgets
    */
-  return function synthesizeSuggestions(code: string, widgets: GenWidget[]): Suggestion[] {
+  return function synthesizeSuggestions(
+    code: string,
+    widgets: GenWidget[],
+    columns: ColumnHeader[],
+  ): Suggestion[] {
     // simulate a full template
     const simulatedCompleteTemplate = generateFullTemplateMap(widgets);
     const parsedCode = safeParse(setTemplateValues(code, simulatedCompleteTemplate));
@@ -126,9 +144,11 @@ export function buildSynthesizer(
     }
     // start making suggestions
     const suggestions: Suggestion[] = [];
-    const addSugesstion = (suggestion: Suggestion): any => suggestions.push(suggestion);
-    inferFieldTransformationSuggestions(code, parsedCode, widgets, inferenceFunction).forEach(addSugesstion);
-    localDataSuggestions(code, parsedCode).forEach(addSugesstion);
+    const addSuggestion = (suggestion: Suggestion): any => suggestions.push(suggestion);
+    inferFieldTransformationSuggestions(code, parsedCode, widgets, inferenceFunction, columns).forEach(
+      addSuggestion,
+    );
+    localDataSuggestions(code, parsedCode).forEach(addSuggestion);
     const dedup: Suggestion[] = Object.values(
       suggestions.reduce((acc, row) => ({...acc, [row.comment]: row}), {}),
     );

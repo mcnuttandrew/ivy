@@ -310,6 +310,7 @@ class RootComponent extends React.Component<RootProps, State> {
       <CodeEditor
         addWidget={this.props.addWidget}
         codeMode={this.props.codeMode}
+        columns={this.props.columns}
         chainActions={this.props.chainActions}
         currentView={this.props.currentView}
         editMode={this.props.editMode}
@@ -330,6 +331,7 @@ class RootComponent extends React.Component<RootProps, State> {
           writeEditorLineWrap(value);
           this.triggerRepaint();
         }}
+        setAllTemplateValues={this.props.setAllTemplateValues}
         setProgrammaticView={this.props.setProgrammaticView}
         showProgrammaticMode={this.props.showProgrammaticMode}
         spec={this.props.spec}

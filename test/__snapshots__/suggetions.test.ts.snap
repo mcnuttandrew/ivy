@@ -135,6 +135,13 @@ Array [
     "to": "\\"[Var2]\\"",
   },
   Object {
+    "comment": "animal -> Var2 (CREATE/UPDATE Var2)",
+    "from": "\\"animal\\"",
+    "sideEffect": [Function],
+    "simpleReplace": false,
+    "to": "\\"[Var2]\\"",
+  },
+  Object {
     "comment": "country -> Var1",
     "from": "\\"country\\"",
     "simpleReplace": false,

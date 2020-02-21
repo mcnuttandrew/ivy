@@ -5,27 +5,30 @@ import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
-import {Template, GenWidget, Suggestion, HydraExtension} from '../types';
+import {Template, GenWidget, Suggestion, HydraExtension, ColumnHeader, TemplateMap} from '../types';
 import {takeSuggestion} from '../utils/index';
 
 interface Props {
   addWidget?: GenericAction<GenWidget>;
   codeMode: string;
+  columns: ColumnHeader[];
   currentCode: string;
   handleCodeUpdate: (code: string) => void;
   languages: {[x: string]: HydraExtension};
+  setAllTemplateValues: GenericAction<TemplateMap>;
   template: Template;
 }
 
 interface RenderSuggestionProps {
   addWidget?: GenericAction<GenWidget>;
   handleCodeUpdate: (code: string) => void;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   suggestions: Suggestion[];
   currentCode: string;
 }
 
 function renderSuggestion(props: RenderSuggestionProps, idx?: number): JSX.Element {
-  const {suggestions, currentCode, addWidget, handleCodeUpdate} = props;
+  const {suggestions, currentCode, addWidget, handleCodeUpdate, setAllTemplateValues} = props;
 
   function singleSuggestionButton(suggestion: Suggestion): JSX.Element {
     const {comment = '', sideEffect} = suggestion;
@@ -34,7 +37,10 @@ function renderSuggestion(props: RenderSuggestionProps, idx?: number): JSX.Eleme
         onClick={(): void => {
           handleCodeUpdate(takeSuggestion(currentCode, suggestion));
           if (sideEffect) {
-            addWidget(sideEffect());
+            const sideEffectResult = sideEffect(setAllTemplateValues);
+            if (sideEffectResult) {
+              addWidget(sideEffectResult);
+            }
           }
         }}
       >
@@ -59,7 +65,16 @@ function renderSuggestion(props: RenderSuggestionProps, idx?: number): JSX.Eleme
 
 // this maybe can become a memoize? I kinda forget how react memoize works?
 export default function suggestionBox(props: Props): JSX.Element {
-  const {codeMode, template, addWidget, languages, currentCode, handleCodeUpdate} = props;
+  const {
+    addWidget,
+    codeMode,
+    columns,
+    currentCode,
+    handleCodeUpdate,
+    languages,
+    setAllTemplateValues,
+    template,
+  } = props;
   const [suggestionBox, setSuggestionBox] = useState(true);
   // TODO this should move out of the render path
   const suggestionEngine =
@@ -68,7 +83,7 @@ export default function suggestionBox(props: Props): JSX.Element {
     (template &&
       codeMode === TEMPLATE_BODY &&
       suggestionEngine &&
-      suggestionEngine(currentCode, template.widgets || [])) ||
+      suggestionEngine(currentCode, template.widgets || [], columns)) ||
     [];
   const suggestionGroups = suggestions.reduce((acc: {[x: string]: Suggestion[]}, row) => {
     acc[row.from] = (acc[row.from] || []).concat(row);
@@ -92,6 +107,7 @@ export default function suggestionBox(props: Props): JSX.Element {
                 currentCode,
                 suggestions: suggestionGroup,
                 handleCodeUpdate,
+                setAllTemplateValues,
               }),
             )}
         </div>
