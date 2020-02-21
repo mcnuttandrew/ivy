@@ -107,75 +107,73 @@ function viewOption(props: ViewOptionProps): JSX.Element {
   );
 }
 
-export default class ChartArea extends React.Component<ChartAreaProps> {
-  render(): JSX.Element {
-    const {
-      changeViewName,
-      cloneView,
-      columns,
-      createNewView,
-      currentView,
-      data,
-      deleteView,
-      deleteTemplate,
-      encodingMode,
-      languages,
-      missingFields,
-      setEncodingMode,
-      spec,
-      switchView,
-      template,
-      templateComplete,
-      templates,
-      views,
-    } = this.props;
-    const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
-    console.log(languages);
-    const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
-    const showChart = !templateGallery && renderer && templateComplete;
-    return (
-      <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
-        <div className="chart-controls full-width flex">
-          <div className="view-container">
-            {views.map((view, idx) =>
-              viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
-            )}
-            {newViewButton({createNewView, cloneView})}
-          </div>
-        </div>
-        <div
-          className={classnames({
-            'chart-container': true,
-            center: true,
-            'full-width': encodingMode !== GALLERY.templateName,
-            'full-height': true,
-          })}
-        >
-          {templateGallery && (
-            <DataSearchMode
-              deleteTemplate={deleteTemplate}
-              columns={columns}
-              setEncodingMode={setEncodingMode}
-              spec={spec}
-              templates={templates}
-            />
+// TODO memoize the rendering stuff
+export default function ChartArea(props: ChartAreaProps): JSX.Element {
+  const {
+    changeViewName,
+    cloneView,
+    columns,
+    createNewView,
+    currentView,
+    data,
+    deleteView,
+    deleteTemplate,
+    encodingMode,
+    languages,
+    missingFields,
+    setEncodingMode,
+    spec,
+    switchView,
+    template,
+    templateComplete,
+    templates,
+    views,
+  } = props;
+  const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
+  const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
+  const showChart = !templateGallery && renderer && templateComplete;
+  return (
+    <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
+      <div className="chart-controls full-width flex">
+        <div className="view-container">
+          {views.map((view, idx) =>
+            viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
           )}
-          {showChart &&
-            renderer({
-              data,
-              spec,
-              onError: (e): void => {
-                console.log('upper error', e);
-              },
-            })}
-          {!templateGallery && !showChart && (
-            <div className="chart-unfullfilled">
-              <h2> Chart is not yet filled out </h2>
-              <h5>{`Select values for the following fields: ${missingFields.join(', ')}`}</h5>
-            </div>
-          )}
+          {newViewButton({createNewView, cloneView})}
         </div>
       </div>
-    );
-  }
+      <div
+        className={classnames({
+          'chart-container': true,
+          center: true,
+          'full-width': encodingMode !== GALLERY.templateName,
+          'full-height': true,
+        })}
+      >
+        {templateGallery && (
+          <DataSearchMode
+            deleteTemplate={deleteTemplate}
+            columns={columns}
+            setEncodingMode={setEncodingMode}
+            spec={spec}
+            templates={templates}
+          />
+        )}
+        {showChart &&
+          renderer({
+            data,
+            spec,
+            onError: (e): void => {
+              console.log('upper error', e);
+            },
+          })}
+        {!templateGallery && !showChart && (
+          <div className="chart-unfullfilled">
+            <h2> Chart is not yet filled out </h2>
+            <h5>Select values for the following fields: {missingFields.join(', ')}</h5>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
