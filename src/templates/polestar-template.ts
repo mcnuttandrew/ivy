@@ -31,10 +31,12 @@ function aggregateConditional(key: string): JsonMap {
   const isNone = `parameters.${key}Agg === "\\"none\\""`;
   const isCount = `parameters.${key} === "\\"COUNT\\""`;
   const filledIn = `parameters.${key}`;
+  const isQuantitative = `parameters.${key}Type === "\\"quantitative\\""`;
 
   return {
     $cond: {
-      query: `${isCount} || (${filledIn} && ${!isNone})`,
+      // query: `${isCount} || (${filledIn} && !${isNone})`,
+      query: `${filledIn} && ${isQuantitative}`,
       true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
       deleteKeyOnFalse: true,
     },

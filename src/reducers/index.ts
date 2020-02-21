@@ -123,7 +123,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
   [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: modifyValueOnTemplate,
   [actionTypes.MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
-  [actionTypes.PREPARE_TEMPLATE]: fillTemplateMapWithDefaults,
+  [actionTypes.FILL_TEMPLATEMAP_WITH_DEFAULTS]: fillTemplateMapWithDefaults,
   [actionTypes.READ_IN_TEMPLATE]: readInTemplate,
   [actionTypes.READ_IN_TEMPLATE_MAP]: readInTemplateMap,
   [actionTypes.RECIEVE_TEMPLATE]: recieveTemplates,
