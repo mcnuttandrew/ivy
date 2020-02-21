@@ -118,21 +118,6 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
       },
     });
   }
-  // i think this one is for vega?
-  if (Array.isArray(parsedCode.data) && parsedCode.data.find((d: any) => d.values)) {
-    const idx = parsedCode.data.findIndex((d: any) => d.values);
-    suggestions.push({
-      from: 'data url',
-      to: '"name": "myData"',
-      comment: 'remove specific data',
-      simpleReplace: false,
-      codeEffect: (code: string) => {
-        const parsed = JSON.parse(code);
-        parsed.data[idx].values = 'myData';
-        return JSON.stringify(parsed, null, 2);
-      },
-    });
-  }
   return suggestions;
 }
 

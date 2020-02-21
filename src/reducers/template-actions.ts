@@ -147,7 +147,6 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
   {fork, language},
 ) => {
   const newTemplate = JSON.parse(JSON.stringify(state.languages[language].blankTemplate));
-  // newTemplate.templateLanguage = language;
   newTemplate.templateAuthor = state.userName;
   if (fork == 'output') {
     newTemplate.code = stringify(evaluateHydraProgram(state.currentTemplateInstance, state.templateMap));

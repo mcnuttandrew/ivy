@@ -2,8 +2,10 @@ import {HydraExtension} from '../types';
 
 import React from 'react';
 import {Vega} from 'react-vega';
-import {RendererProps, Template} from '../types';
+import {RendererProps, Template, Suggestion} from '../types';
 import {Handler} from 'vega-tooltip';
+import {buildSynthesizer} from './suggestion-utils';
+import {get} from '../utils/index';
 
 function VegaRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
@@ -41,9 +43,28 @@ export const BLANK_TEMPLATE: Template = {
   widgets: [],
 };
 
+function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[] {
+  const suggestions = [];
+  if (Array.isArray(parsedCode.data) && parsedCode.data.find((d: any) => d.values)) {
+    const idx = parsedCode.data.findIndex((d: any) => d.values);
+    suggestions.push({
+      from: 'data url',
+      to: '"name": "myData"',
+      comment: 'remove specific data',
+      simpleReplace: false,
+      codeEffect: (code: string) => {
+        const parsed = JSON.parse(code);
+        parsed.data[idx].values = 'myData';
+        return JSON.stringify(parsed, null, 2);
+      },
+    });
+  }
+  return suggestions;
+}
+
 const VEGA: HydraExtension = {
   renderer: VegaRenderer,
-  suggestion: () => [],
+  suggestion: buildSynthesizer(() => new Set(), inferRemoveDataSuggestions),
   language: 'vega',
   blankTemplate: BLANK_TEMPLATE,
 };

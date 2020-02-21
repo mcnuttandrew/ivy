@@ -1,5 +1,4 @@
 import React from 'react';
-// import VegaWrapper from './renderers/vega-wrap';
 import {Template, ColumnHeader, Json, HydraExtension} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
