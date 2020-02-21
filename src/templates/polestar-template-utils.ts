@@ -94,7 +94,12 @@ export const makeAgg = (key: string): Widget<ListWidget> =>
     list: spatialAggs,
     displayName: `Aggregate`,
     defaultVal: toQuote('none'),
-    validations: [{queryResult: 'show', query: `${used(key)} && ${notCount(key)}`}],
+    validations: [
+      {
+        queryResult: 'show',
+        query: `${used(key)} && ${notCount(key)} && parameters.${key}Type === "\\"quantitative\\""`,
+      },
+    ],
   });
 
 export const makeTypeSelect = (key: string, defaultVal: string): Widget<ListWidget> =>

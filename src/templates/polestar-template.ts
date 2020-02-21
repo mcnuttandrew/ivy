@@ -28,13 +28,17 @@ const eitherMeta = `${paramsInclude(META_COL_ROW)} || ${paramsInclude(META_COL_C
 const USING_META_COLS_VALIDATION: Validation = {queryResult: 'show', query: eitherMeta};
 
 function aggregateConditional(key: string): JsonMap {
-  const isNone = `parameters.${key}Agg === "\\"none\\""`;
+  // old version of the query left around
+  // handling aggregate none case to reduce vega-lite errors proves to be pretty troublesome
+  // const isNone = `parameters.${key}Agg === "\\"none\\""`;
   const isCount = `parameters.${key} === "\\"COUNT\\""`;
   const filledIn = `parameters.${key}`;
+  const isQuantitative = `parameters.${key}Type === "\\"quantitative\\""`;
 
   return {
     $cond: {
-      query: `${isCount} || (${filledIn} && ${!isNone})`,
+      // query: `${isCount} || (${filledIn} && !${isNone})`,
+      query: `${filledIn} && ${isQuantitative}`,
       true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
       deleteKeyOnFalse: true,
     },

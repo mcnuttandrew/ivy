@@ -113,13 +113,6 @@ export default function EncodingControls(props: Props): JSX.Element {
           </div>
         );
       },
-      // onClick: onGallery
-      //   ? NULL
-      //   : (): any =>
-      //       chainActions([
-      //         (): any => setBlankTemplate({fork: true, language: template.templateLanguage}),
-      //         (): any => setEditMode(true),
-      //       ]),
       icon: <TiFlowChildren />,
       label: 'Fork',
       tooltip:

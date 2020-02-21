@@ -121,7 +121,6 @@ interface RootProps {
   loadTemplates: GenericAction<void>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
-  prepareTemplate: GenericAction<void>;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
   removeWidget: GenericAction<number>;
@@ -159,7 +158,7 @@ class RootComponent extends React.Component<RootProps, State> {
   componentDidMount(): void {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
     this.props.loadTemplates();
-    this.props.prepareTemplate();
+    this.props.fillTemplateMapWithDefaults();
     this.props.setUserName(getUserName());
   }
 
@@ -345,11 +344,7 @@ class RootComponent extends React.Component<RootProps, State> {
         }}
         handlers={{
           UNDO: (): any => canUndo && triggerUndo(),
-          REDO: (e): any => {
-            console.log(e);
-            canRedo && triggerRedo();
-          },
-
+          REDO: (): any => canRedo && triggerRedo(),
           CLOSE_MODALS: (): any => {
             if (dataModalOpen) {
               toggleDataModal();

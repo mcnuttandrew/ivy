@@ -72,7 +72,7 @@ export const modifyValueOnTemplate = createAction<ModifyValueOnTemplatePayload>(
   actionTypes.MODIFY_VALUE_ON_TEMPLATE,
 );
 export const moveWidget = createAction<MoveWidgetPayload>(actionTypes.MOVE_WIDGET_IN_TEMPLATE);
-export const prepareTemplate = createAction<void>(actionTypes.PREPARE_TEMPLATE);
+export const fillTemplateMapWithDefaults = createAction<void>(actionTypes.FILL_TEMPLATEMAP_WITH_DEFAULTS);
 export const readInTemplate = createAction<HandleCodePayload>(actionTypes.READ_IN_TEMPLATE);
 export const readInTemplateMap = createAction<HandleCodePayload>(actionTypes.READ_IN_TEMPLATE_MAP);
 export const removeWidget = createAction<number>(actionTypes.REMOVE_WIDGET_FROM_TEMPLATE);
