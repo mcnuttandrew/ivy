@@ -6,7 +6,7 @@
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "react-hooks"],
   "env": {
     "browser": true,
     "jasmine": true,
@@ -16,7 +16,8 @@
   "rules": {
     "prettier/prettier": ["error", { "singleQuote": true }],
     "@typescript-eslint/no-explicit-any": 0 ,
-    "@typescript-eslint/camelcase": 0
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/ban-ts-ignore": 0
   },
   "settings": {
     "react": {

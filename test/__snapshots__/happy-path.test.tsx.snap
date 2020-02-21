@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Happy path 1`] = `
+"In order visualize your data, you need to pick a template to work in. To begin either select a template from the selection in main pane (to the right), or use this panel to search. Search can either happen through text:
+
+
+Search for template
+
+
+ or by search for templates that match the data you are interested in visualizing, which you can do using this widget
+
+
+Data target searchdrop a field hereClearSelect a valueAcceleration 123Cylinders 123Displacement 123Horsepower 123Miles_per_Gallon 123Weight_in_lbs 123Name ABCOrigin ABCYear 🕑
+
+
+ You can also facilitate browsing by sorting: 
+
+
+Sorttemplate namemin required measuresmin required dimensionsmin required timesmax allowed fieldscomplexityReverse Sort"
+`;
+
+exports[`Happy path 2`] = `"Current TemplateTemplate GalleryData cars.jsonCHANGEData ColumnsNameOriginYearAccelerationCylindersDisplacementHorsepowerMiles_per_GallonWeight_in_lbs"`;
+
+exports[`Happy path 3`] = `"No templates match your query"`;

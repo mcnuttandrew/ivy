@@ -1,10 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
+
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
-
 import GALLERY from '../templates/gallery';
 import {getUserName} from '../utils/local-storage';
 import Thumbnail from './thumbnail';
@@ -44,7 +44,16 @@ import {
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {AppState, DataReducerState, ColumnHeader, Json, Template, TemplateMap, GenWidget} from '../types';
+import {
+  AppState,
+  DataReducerState,
+  ColumnHeader,
+  Json,
+  Template,
+  TemplateMap,
+  GenWidget,
+  HydraExtension,
+} from '../types';
 
 import ChartArea from './chart-area';
 import CodeEditor from './code-editor';
@@ -115,6 +124,7 @@ interface RootProps {
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
+  languages: {[x: string]: HydraExtension};
   loadCustomDataset: GenericAction<LoadDataPayload>;
   loadDataFromPredefinedDatasets: GenericAction<string>;
   loadExternalTemplate: GenericAction<Template>;
@@ -123,6 +133,7 @@ interface RootProps {
   moveWidget: GenericAction<MoveWidgetPayload>;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
+  recieveLanguages: GenericAction<{[x: string]: HydraExtension}>;
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
   setAllTemplateValues: GenericAction<TemplateMap>;
@@ -160,6 +171,7 @@ class RootComponent extends React.Component<RootProps, State> {
     this.props.loadTemplates();
     this.props.fillTemplateMapWithDefaults();
     this.props.setUserName(getUserName());
+    this.props.recieveLanguages(this.props.languages);
   }
 
   componentDidCatch(error: any, errorInfo: any): void {
@@ -196,6 +208,7 @@ class RootComponent extends React.Component<RootProps, State> {
         deleteView={this.props.deleteView}
         deleteTemplate={this.props.deleteTemplate}
         encodingMode={this.props.encodingMode}
+        languages={this.props.languages}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
         spec={this.props.spec as Json}
@@ -256,10 +269,11 @@ class RootComponent extends React.Component<RootProps, State> {
       <div className=" full-height full-width flex-down" style={{minWidth: '360px'}}>
         <EncodingControls
           chainActions={this.props.chainActions}
-          fillTemplateMapWithDefaults={this.props.fillTemplateMapWithDefaults}
           deleteTemplate={this.props.deleteTemplate}
           editMode={this.props.editMode}
           encodingMode={this.props.encodingMode}
+          fillTemplateMapWithDefaults={this.props.fillTemplateMapWithDefaults}
+          languages={this.props.languages}
           modifyValueOnTemplate={this.props.modifyValueOnTemplate}
           saveCurrentTemplate={this.props.saveCurrentTemplate}
           setBlankTemplate={this.props.setBlankTemplate}
@@ -277,12 +291,13 @@ class RootComponent extends React.Component<RootProps, State> {
           columns={this.props.columns}
           editMode={this.props.editMode}
           height={this.props.showProgrammaticMode && this.props.showGUIView && getHeight()}
-          moveWidget={this.props.moveWidget}
+          languages={this.props.languages}
           modifyValueOnTemplate={this.props.modifyValueOnTemplate}
+          moveWidget={this.props.moveWidget}
           removeWidget={this.props.removeWidget}
+          setAllTemplateValues={this.props.setAllTemplateValues}
           setTemplateValue={this.props.setTemplateValue}
           setWidgetValue={this.props.setWidgetValue}
-          setAllTemplateValues={this.props.setAllTemplateValues}
           template={this.props.template}
           templateMap={this.props.templateMap}
         />
@@ -301,6 +316,7 @@ class RootComponent extends React.Component<RootProps, State> {
         editorLineWrap={getEditorLineWrap()}
         editorError={this.props.editorError}
         editorFontSize={getEditorFontSize()}
+        languages={this.props.languages}
         readInTemplate={this.props.readInTemplate}
         readInTemplateMap={this.props.readInTemplateMap}
         setCodeMode={this.props.setCodeMode}

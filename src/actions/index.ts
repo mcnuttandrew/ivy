@@ -3,7 +3,7 @@ import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {DataType, Template, GenWidget, WidgetType, AppState, ColumnHeader} from '../types';
+import {DataType, Template, GenWidget, WidgetType, AppState, ColumnHeader, HydraExtension} from '../types';
 import * as actionTypes from '../actions/action-types';
 
 import {Action} from 'redux';
@@ -96,6 +96,7 @@ export const toggleProgramModal = createAction<void>(actionTypes.TOGGLE_PROGRAM_
 export const triggerRedo = createAction<void>(actionTypes.TRIGGER_REDO);
 export const triggerUndo = createAction<void>(actionTypes.TRIGGER_UNDO);
 export const updateFilter = createAction<UpdateFilterPayload>(actionTypes.UPDATE_FILTER);
+export const recieveLanguages = createAction<{[x: string]: HydraExtension}>(actionTypes.RECIEVE_LANGUAGES);
 
 export const chainActions = (actions: GenericAction<any>[]) => (dispatch: Dispatch): void => {
   executePromisesInSeries(
@@ -150,15 +151,21 @@ export const loadDataFromPredefinedDatasets: GenericAction<string> = fileName =>
   arg2,
   arg3,
 ): void => {
+  // infra for tests
+  // eslint-disable-next-line no-undef
+  if (process.env.NODE_ENV === 'test') {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const data = require(`vega-datasets/data/${fileName}`);
+    dispatch({type: actionTypes.RECIEVE_DATA, payload: data});
+    generateTypeInferences(data)(dispatch, arg2, arg3);
+    return;
+  }
+  // regular path
   fetch(vegaDatasetAdress(fileName))
     .then(d => d.text())
     .then(d => getReader(fileName)(d))
     .then(d => {
-      dispatch({
-        type: actionTypes.RECIEVE_DATA,
-        payload: d,
-      });
-
+      dispatch({type: actionTypes.RECIEVE_DATA, payload: d});
       generateTypeInferences(d)(dispatch, arg2, arg3);
     });
 };

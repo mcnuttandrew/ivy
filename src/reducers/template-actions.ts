@@ -10,11 +10,11 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {ActionResponse, AppState, Template, Widget, GenWidget, TemplateMap, ListWidget} from '../types';
-import {BLANK_TEMPLATE, EMPTY_SPEC_BY_LANGUAGE} from '../templates';
-import {deserializeTemplate, trim} from '../utils';
+import {ActionResponse, AppState, Template, Widget, GenWidget, TemplateMap} from '../types';
+import {deserializeTemplate, trim, removeFirstInstanceOf, bagDifference} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
-import {ColumnHeader} from '../types';
+
+import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite';
 
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
@@ -23,62 +23,6 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
   });
 }
 export const recieveTemplates = blindSet('templates');
-
-/**
- * Templates that use vega-lite often follow a specific pattern which we can usually guess some pieces of
- * This function checks the type a column thats being inserted and trys to intelligently set the type
- * of the associated channel as best it can
- * @param template
- * @param payload
- * @param templateMap
- * @param columns
- */
-function tryToGuessTheTypeForVegaLite(
-  template: Template,
-  payload: SetTemplateValuePayload,
-  templateMap: TemplateMap,
-  columns: ColumnHeader[],
-): void {
-  if (template.templateLanguage !== 'vega-lite') {
-    return;
-  }
-  const typeWidget = template.widgets.find(widget => widget.name === `${payload.field}Type`);
-  if (!(typeWidget && payload.type === 'DataTarget')) {
-    return;
-  }
-  const column = columns.find(col => col.field === trim(payload.text as string));
-  const dims = (typeWidget.config as ListWidget).allowedValues;
-
-  if (column && column.type === 'DIMENSION' && dims.find(d => d.display === 'nominal')) {
-    templateMap[`${payload.field}Type`] = '"nominal"';
-  }
-
-  if (column && column.type === 'MEASURE' && dims.find(d => d.display === 'quantitative')) {
-    templateMap[`${payload.field}Type`] = '"quantitative"';
-  }
-
-  if (column && column.type === 'TIME' && dims.find(d => d.display === 'temporal')) {
-    templateMap[`${payload.field}Type`] = '"temporal"';
-  }
-}
-
-function removeFirstInstanceOf(a: string[], key: string): string[] {
-  let hasFound = false;
-  return a
-    .map(d => d)
-    .filter(x => {
-      if (hasFound) {
-        return true;
-      }
-      if (x === key) {
-        hasFound = true;
-        return false;
-      }
-      return true;
-    });
-}
-
-const bagDifference = (a: string[], b: string[]): string[] => b.reduce(removeFirstInstanceOf, a);
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
@@ -152,10 +96,8 @@ export const loadExternalTemplate: ActionResponse<Template> = (state, payload) =
 export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload> = (state, payload) => {
   const {value, key} = payload;
   return produce(state, draftState => {
-    /* eslint-disable @typescript-eslint/ban-ts-ignore*/
     // @ts-ignore
     draftState.currentTemplateInstance[key] = value;
-    /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     if (key === 'templateName') {
       draftState.encodingMode = value;
     }
@@ -204,9 +146,8 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
   state,
   {fork, language},
 ) => {
-  const newTemplate = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
-  newTemplate.code = JSON.stringify(EMPTY_SPEC_BY_LANGUAGE[language], null, 2);
-  newTemplate.language = language;
+  const newTemplate = JSON.parse(JSON.stringify(state.languages[language].blankTemplate));
+  newTemplate.templateAuthor = state.userName;
   if (fork == 'output') {
     newTemplate.code = stringify(evaluateHydraProgram(state.currentTemplateInstance, state.templateMap));
   } else if (fork === 'body') {
@@ -218,7 +159,7 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
   return fillTemplateMapWithDefaults(
     produce(state, draftState => {
       draftState.currentTemplateInstance = newTemplate;
-      draftState.encodingMode = BLANK_TEMPLATE.templateName;
+      draftState.encodingMode = newTemplate.templateName;
       if (fork) {
         draftState.editMode = true;
         draftState.codeMode = TEMPLATE_BODY;
@@ -252,10 +193,8 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
 
       const widget = draftState.currentTemplateInstance.widgets[idx];
       const oldName = widget.name;
-      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       const oldValue = `\\[${widget[key]}\\]`;
-      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
       const re = new RegExp(oldValue, 'g');
       draftState.currentTemplateInstance.code = code.replace(re, `[${value}]`);
       draftState.currentTemplateInstance.widgets[idx].name = value;
@@ -264,15 +203,11 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       draftState.templateMap[value] = state.templateMap[oldName];
       delete draftState.templateMap[oldName];
     } else if (topLevelKeys.has(key)) {
-      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx][key] = value;
-      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     } else {
-      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx].config[key] = value;
-      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     }
   });
 };
@@ -282,6 +217,12 @@ type WidgetMod = (x: GenWidget[]) => GenWidget[];
 const modifyCurrentWidgets = (state: AppState, mod: WidgetMod): AppState =>
   produce(state, draftState => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
+    const draftedDefaults = constructDefaultTemplateMap(draftState.currentTemplateInstance);
+    draftState.currentTemplateInstance.widgets.forEach(widget => {
+      if (!draftState.templateMap[widget.name]) {
+        draftState.templateMap[widget.name] = draftedDefaults[widget.name];
+      }
+    });
   });
 export const addWidget: ActionResponse<Widget<any>> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.concat(payload));

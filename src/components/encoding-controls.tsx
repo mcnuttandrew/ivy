@@ -13,7 +13,7 @@ import {
 } from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
-import {Template} from '../types';
+import {Template, HydraExtension} from '../types';
 import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
 import GALLERY from '../templates/gallery';
@@ -25,6 +25,7 @@ interface Props {
   deleteTemplate: GenericAction<string>;
   editMode: boolean;
   encodingMode: string;
+  languages: {[x: string]: HydraExtension};
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   saveCurrentTemplate: GenericAction<void>;
   setBlankTemplate: GenericAction<{fork: string | null; language: string}>;
@@ -48,6 +49,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     chainActions,
     fillTemplateMapWithDefaults,
     editMode,
+    languages,
     saveCurrentTemplate,
     setBlankTemplate,
     setCodeMode,
@@ -76,7 +78,7 @@ export default function EncodingControls(props: Props): JSX.Element {
       customTooltip: (): JSX.Element => (
         <div className="flex-down">
           <h5>Create Blank Template</h5>
-          {['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(language => {
+          {Object.keys(languages).map(language => {
             return (
               <button
                 key={language}

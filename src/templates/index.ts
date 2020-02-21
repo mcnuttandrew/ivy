@@ -1,4 +1,3 @@
-import stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
   DataType,
@@ -21,48 +20,9 @@ import DATATABLE from './table';
 import PIECHART_TEMPLATE from './pie-chart';
 import GALLERY from './gallery';
 import SCATTERPLOT_TEMPLATE from './scatterplot';
-import {getUserName} from '../utils/local-storage';
 // import SIMPLE_SCATTER from './simple-scatterplot';
 import SHELF from './polestar-template';
-import UNITVIS from './unit-vis';
-
-const vegaLitEmpty: any = {
-  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  transform: [] as any[],
-  mark: {type: 'point', tooltip: true},
-  encoding: {},
-};
-const vegaEmpty: any = {
-  $schema: 'https://vega.github.io/schema/vega/v5.json',
-  width: 400,
-  height: 200,
-  padding: 5,
-  data: [],
-  signals: [],
-  scales: [],
-  axes: [],
-  marks: [],
-};
-const unitVisEmpty: any = {
-  $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
-  layouts: [],
-  mark: {color: {key: '', type: 'categorical'}},
-};
-export const EMPTY_SPEC_BY_LANGUAGE: {[x: string]: any} = {
-  'vega-lite': vegaLitEmpty,
-  vega: vegaEmpty,
-  'unit-vis': unitVisEmpty,
-  'hydra-data-table': JSON.parse(DATATABLE.code),
-};
-
-export const BLANK_TEMPLATE: Template = {
-  templateAuthor: getUserName(),
-  templateLanguage: 'vega-lite',
-  templateName: 'BLANK TEMPLATE',
-  templateDescription: 'FILL IN DESCRIPTION',
-  code: stringify(EMPTY_SPEC_BY_LANGUAGE['vega-lite']),
-  widgets: [],
-};
+import UNITVIS from './atom-example';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 export type WidgetFactoryFunc = (idx: number) => GenWidget;

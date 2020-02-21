@@ -17,6 +17,7 @@ import {
   recieveData,
   recieveDataForDataReducer,
   recieveTypeInferences,
+  recieveLanguages,
 } from './data-actions';
 import {
   addWidget,
@@ -56,6 +57,8 @@ export const DEFAULT_STATE: AppState = {
   // spec configs
   editorError: null,
   editMode: false,
+
+  languages: {},
 
   // GUI
   currentTemplateInstance: GALLERY,
@@ -117,6 +120,8 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.TOGGLE_PROGRAM_MODAL]: toggleProgramModal,
   [actionTypes.TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
 
+  [actionTypes.RECIEVE_LANGUAGES]: recieveLanguages,
+
   // template
   [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
   [actionTypes.DELETE_TEMPLATE]: deleteTemplate,
@@ -144,7 +149,10 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
 const NULL_ACTION: ActionResponse<void> = state => state;
 const reducers = {
   base: (state: AppState = DEFAULT_STATE, {type, payload}: {type: string; payload: any}): AppState => {
-    console.log(type);
+    // eslint-disable-next-line no-undef
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(type);
+    }
     return (actionFuncMap[type] || NULL_ACTION)(state, payload);
   },
   data: (

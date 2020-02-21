@@ -1,4 +1,4 @@
-import {AppState, ColumnHeader, ActionResponse, DataReducerState} from '../types';
+import {AppState, ColumnHeader, ActionResponse, DataReducerState, HydraExtension} from '../types';
 import produce from 'immer';
 import {TypeInference, DataRow, CoerceTypePayload} from '../actions/index';
 import {DataType} from '../types';
@@ -63,5 +63,11 @@ export const coerceType: ActionResponse<CoerceTypePayload> = (state, payload) =>
   return produce(state, draftState => {
     const columnIdx = state.columns.findIndex((d: any) => d.field === field);
     draftState.columns[columnIdx].type = type;
+  });
+};
+
+export const recieveLanguages: ActionResponse<{[x: string]: HydraExtension}> = (state, payload) => {
+  return produce(state, draftState => {
+    draftState.languages = payload;
   });
 };

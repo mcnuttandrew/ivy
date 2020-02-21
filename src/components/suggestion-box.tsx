@@ -5,14 +5,15 @@ import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
-import {Template, GenWidget} from '../types';
-import {synthesizeSuggestions, takeSuggestion, Suggestion} from '../utils/introspect';
+import {Template, GenWidget, Suggestion, HydraExtension} from '../types';
+import {takeSuggestion} from '../utils/index';
 
 interface Props {
   addWidget?: GenericAction<GenWidget>;
   codeMode: string;
   currentCode: string;
   handleCodeUpdate: (code: string) => void;
+  languages: {[x: string]: HydraExtension};
   template: Template;
 }
 
@@ -58,11 +59,16 @@ function renderSuggestion(props: RenderSuggestionProps, idx?: number): JSX.Eleme
 
 // this maybe can become a memoize? I kinda forget how react memoize works?
 export default function suggestionBox(props: Props): JSX.Element {
-  const {codeMode, template, addWidget, currentCode, handleCodeUpdate} = props;
+  const {codeMode, template, addWidget, languages, currentCode, handleCodeUpdate} = props;
   const [suggestionBox, setSuggestionBox] = useState(true);
   // TODO this should move out of the render path
+  const suggestionEngine =
+    languages[template.templateLanguage] && languages[template.templateLanguage].suggestion;
   const suggestions =
-    (template && codeMode === TEMPLATE_BODY && synthesizeSuggestions(currentCode, template.widgets || [])) ||
+    (template &&
+      codeMode === TEMPLATE_BODY &&
+      suggestionEngine &&
+      suggestionEngine(currentCode, template.widgets || [])) ||
     [];
   const suggestionGroups = suggestions.reduce((acc: {[x: string]: Suggestion[]}, row) => {
     acc[row.from] = (acc[row.from] || []).concat(row);

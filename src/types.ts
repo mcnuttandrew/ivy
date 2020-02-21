@@ -44,6 +44,8 @@ export interface AppState {
   editMode: boolean;
   editorError: boolean;
 
+  languages: {[x: string]: HydraExtension};
+
   // GUI
   codeMode: string;
   currentTemplateInstance: Template;
@@ -241,3 +243,36 @@ export interface TemplateMap {
  * Convience container type for the general template widget case
  */
 export type GenWidget = Widget<WidgetSubType>;
+
+export interface Suggestion {
+  from: string;
+  to: string;
+  comment: string;
+  sideEffect?: any;
+  codeEffect?: (code: string) => string;
+  simpleReplace: boolean;
+}
+
+export interface RendererProps {
+  spec: any;
+  data: DataRow[];
+  onError: (x: any) => any;
+}
+export interface HydraExtension {
+  /**
+   * React Component containing the rendering logic for this language
+   */
+  // TODO This type is wrong and crashes for functional components and probable any other components
+  renderer: (props: RendererProps) => JSX.Element;
+  /**
+   * Given a code block and the collection of widgets, try to come up with suggestions to parameterize the code
+   * @param code
+   * @param widgets
+   * @return Suggestions[]
+   */
+  suggestion: (code: string, widgets: GenWidget[]) => Suggestion[];
+  language: string;
+  blankTemplate: Template;
+}
+
+export type DataRow = {[x: string]: any};

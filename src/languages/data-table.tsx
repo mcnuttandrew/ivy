@@ -1,20 +1,15 @@
 import React, {useState} from 'react';
+import {HydraExtension, RendererProps, JsonMap, Template} from '../types';
+import TABLE from '../templates/table';
+
 import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
-interface Props {
-  spec: {
-    columns: string[];
-  };
-  data: {[x: string]: any}[];
-}
 
 const PAGE_SIZE = 30;
 const abstractCompare = (sortKey: string, reverseSort: boolean) => (a: any, b: any): number =>
   (reverseSort ? -1 : 1) * `${a[sortKey]}`.localeCompare(`${b[sortKey]}`);
-export default function DataTable(props: Props): JSX.Element {
-  const {
-    spec: {columns = []},
-    data = [],
-  } = props;
+function DataTableRenderer(props: RendererProps): JSX.Element {
+  const {spec, data = []} = props;
+  const {columns} = spec as JsonMap;
   const [page, setPage] = useState(0);
   const [sortKey, setSort] = useState(null);
   const [reverseSort, setSortOrder] = useState(false);
@@ -23,7 +18,7 @@ export default function DataTable(props: Props): JSX.Element {
   const prevPageExists = page > 0;
   // TODO sorting, pagination
   const reducedData = data.map(row =>
-    (columns || []).reduce((acc: any, column) => ({...acc, [column]: row[column]}), {}),
+    ((columns as any) || []).reduce((acc: any, column: any) => ({...acc, [column]: row[column]}), {} as any),
   );
   return (
     <div className="hydra-data-table">
@@ -40,7 +35,7 @@ export default function DataTable(props: Props): JSX.Element {
       <table>
         <thead>
           <tr>
-            {columns.map(column => {
+            {(columns as any[]).map((column: any) => {
               const isSort = column === sortKey;
               return (
                 <th key={column} onClick={(): any => (isSort ? setSortOrder(!reverseSort) : setSort(column))}>
@@ -58,7 +53,7 @@ export default function DataTable(props: Props): JSX.Element {
             .map((row, idx: number) => {
               return (
                 <tr key={idx}>
-                  {columns.map((column, jdx: number) => {
+                  {(columns as any[]).map((column: any, jdx: number) => {
                     return <td key={`${column}-${idx}-${jdx}`}>{row[column]}</td>;
                   })}
                 </tr>
@@ -69,3 +64,21 @@ export default function DataTable(props: Props): JSX.Element {
     </div>
   );
 }
+
+export const BLANK_TEMPLATE: Template = {
+  templateAuthor: '',
+  templateLanguage: 'data-table',
+  templateName: 'BLANK DATA TABLE',
+  templateDescription: 'FILL IN DESCRIPTION',
+  code: TABLE.code,
+  widgets: [],
+};
+
+const DATA_TABLE_CONFIG: HydraExtension = {
+  renderer: DataTableRenderer,
+  suggestion: () => [],
+  language: 'hydra-data-table',
+  blankTemplate: BLANK_TEMPLATE,
+};
+
+export default DATA_TABLE_CONFIG;
