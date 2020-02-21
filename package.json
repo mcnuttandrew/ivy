@@ -42,7 +42,6 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.4.0",
-    "fake-indexeddb": "^3.0.0",
     "hoopoe": "^1.0.1",
     "jest": "^24.9.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
@@ -108,6 +107,7 @@
     "lint:fix": "eslint './src/**/*.{ts,tsx}'",
     "lint:styles": "stylelint 'src/stylesheets/main.css'",
     "test": "NODE_ENV=test && jest",
+    "coverage": "yarn test  --collect-coverage",
     "prettify": "prettier --write 'src/**/*.{ts,tsx}'",
     "analyze": "NODE_ENV=analysis webpack --profile > stats.json"
   },
