@@ -16,6 +16,7 @@ export const FILL_TEMPLATEMAP_WITH_DEFAULTS = 'fill-template-map-with-defaults';
 export const READ_IN_TEMPLATE = 'read-in-template';
 export const READ_IN_TEMPLATE_MAP = 'read-in-template-map';
 export const RECIEVE_DATA = 'recieve-data';
+export const RECIEVE_LANGUAGES = 'recieve-languages';
 export const RECIEVE_TEMPLATE = 'recieve-templates';
 export const RECIEVE_TYPE_INFERENCES = 'recieve-type-inferences';
 export const REMOVE_WIDGET_FROM_TEMPLATE = 'remove-widget-from-template';

@@ -44,6 +44,8 @@ export interface AppState {
   editMode: boolean;
   editorError: boolean;
 
+  languages: {[x: string]: HydraExtension};
+
   // GUI
   codeMode: string;
   currentTemplateInstance: Template;
@@ -270,6 +272,7 @@ export interface HydraExtension {
    */
   suggestion: (code: string, widgets: GenWidget[]) => Suggestion[];
   language: string;
+  blankTemplate: Template;
 }
 
 export type DataRow = {[x: string]: any};

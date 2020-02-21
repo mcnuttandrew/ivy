@@ -74,7 +74,8 @@ export default function suggestionBox(props: Props): JSX.Element {
   const {codeMode, template, addWidget, languages, currentCode, handleCodeUpdate} = props;
   const [suggestionBox, setSuggestionBox] = useState(true);
   // TODO this should move out of the render path
-  const suggestionEngine = languages[template.templateLanguage].suggestion;
+  const suggestionEngine =
+    languages[template.templateLanguage] && languages[template.templateLanguage].suggestion;
   const suggestions =
     (template &&
       codeMode === TEMPLATE_BODY &&

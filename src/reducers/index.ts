@@ -17,6 +17,7 @@ import {
   recieveData,
   recieveDataForDataReducer,
   recieveTypeInferences,
+  recieveLanguages,
 } from './data-actions';
 import {
   addWidget,
@@ -56,6 +57,8 @@ export const DEFAULT_STATE: AppState = {
   // spec configs
   editorError: null,
   editMode: false,
+
+  languages: {},
 
   // GUI
   currentTemplateInstance: GALLERY,
@@ -116,6 +119,8 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.TOGGLE_DATA_MODAL]: toggleDataModal,
   [actionTypes.TOGGLE_PROGRAM_MODAL]: toggleProgramModal,
   [actionTypes.TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
+
+  [actionTypes.RECIEVE_LANGUAGES]: recieveLanguages,
 
   // template
   [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),

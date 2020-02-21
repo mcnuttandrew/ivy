@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {HydraExtension, RendererProps, JsonMap} from '../../types';
+import {HydraExtension, RendererProps, JsonMap, Template} from '../../types';
+import TABLE from '../../templates/table';
 
 import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
@@ -64,10 +65,20 @@ function DataTableRenderer(props: RendererProps): JSX.Element {
   );
 }
 
+export const BLANK_TEMPLATE: Template = {
+  templateAuthor: '',
+  templateLanguage: 'data-table',
+  templateName: 'BLANK DATA TABLE',
+  templateDescription: 'FILL IN DESCRIPTION',
+  code: TABLE.code,
+  widgets: [],
+};
+
 const DATA_TABLE_CONFIG: HydraExtension = {
   renderer: DataTableRenderer,
   suggestion: () => [],
   language: 'hydra-data-table',
+  blankTemplate: BLANK_TEMPLATE,
 };
 
 export default DATA_TABLE_CONFIG;

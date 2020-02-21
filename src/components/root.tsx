@@ -133,6 +133,7 @@ interface RootProps {
   moveWidget: GenericAction<MoveWidgetPayload>;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
+  recieveLanguages: GenericAction<{[x: string]: HydraExtension}>;
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
   setAllTemplateValues: GenericAction<TemplateMap>;
@@ -170,6 +171,7 @@ class RootComponent extends React.Component<RootProps, State> {
     this.props.loadTemplates();
     this.props.fillTemplateMapWithDefaults();
     this.props.setUserName(getUserName());
+    this.props.recieveLanguages(this.props.languages);
   }
 
   componentDidCatch(error: any, errorInfo: any): void {
@@ -267,10 +269,11 @@ class RootComponent extends React.Component<RootProps, State> {
       <div className=" full-height full-width flex-down" style={{minWidth: '360px'}}>
         <EncodingControls
           chainActions={this.props.chainActions}
-          fillTemplateMapWithDefaults={this.props.fillTemplateMapWithDefaults}
           deleteTemplate={this.props.deleteTemplate}
           editMode={this.props.editMode}
           encodingMode={this.props.encodingMode}
+          fillTemplateMapWithDefaults={this.props.fillTemplateMapWithDefaults}
+          languages={this.props.languages}
           modifyValueOnTemplate={this.props.modifyValueOnTemplate}
           saveCurrentTemplate={this.props.saveCurrentTemplate}
           setBlankTemplate={this.props.setBlankTemplate}
@@ -288,12 +291,13 @@ class RootComponent extends React.Component<RootProps, State> {
           columns={this.props.columns}
           editMode={this.props.editMode}
           height={this.props.showProgrammaticMode && this.props.showGUIView && getHeight()}
-          moveWidget={this.props.moveWidget}
+          languages={this.props.languages}
           modifyValueOnTemplate={this.props.modifyValueOnTemplate}
+          moveWidget={this.props.moveWidget}
           removeWidget={this.props.removeWidget}
+          setAllTemplateValues={this.props.setAllTemplateValues}
           setTemplateValue={this.props.setTemplateValue}
           setWidgetValue={this.props.setWidgetValue}
-          setAllTemplateValues={this.props.setAllTemplateValues}
           template={this.props.template}
           templateMap={this.props.templateMap}
         />

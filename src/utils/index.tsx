@@ -375,3 +375,21 @@ export function updateThumbnail(templateName: string, authorKey: string): Promis
     });
   });
 }
+
+export function removeFirstInstanceOf(a: string[], key: string): string[] {
+  let hasFound = false;
+  return a
+    .map(d => d)
+    .filter(x => {
+      if (hasFound) {
+        return true;
+      }
+      if (x === key) {
+        hasFound = true;
+        return false;
+      }
+      return true;
+    });
+}
+
+export const bagDifference = (a: string[], b: string[]): string[] => b.reduce(removeFirstInstanceOf, a);

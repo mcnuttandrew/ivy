@@ -2,7 +2,7 @@ import {HydraExtension} from '../../types';
 
 import React from 'react';
 import {Vega} from 'react-vega';
-import {RendererProps} from '../../types';
+import {RendererProps, Template} from '../../types';
 import {Handler} from 'vega-tooltip';
 
 function VegaRenderer(props: RendererProps): JSX.Element {
@@ -21,10 +21,31 @@ function VegaRenderer(props: RendererProps): JSX.Element {
   );
 }
 
+const vegaEmpty: any = {
+  $schema: 'https://vega.github.io/schema/vega/v5.json',
+  width: 400,
+  height: 200,
+  padding: 5,
+  data: [],
+  signals: [],
+  scales: [],
+  axes: [],
+  marks: [],
+};
+export const BLANK_TEMPLATE: Template = {
+  templateAuthor: '',
+  templateLanguage: 'vega',
+  templateName: 'BLANK TEMPLATE',
+  templateDescription: 'FILL IN DESCRIPTION',
+  code: JSON.stringify(vegaEmpty, null, 2),
+  widgets: [],
+};
+
 const VEGA: HydraExtension = {
   renderer: VegaRenderer,
   suggestion: () => [],
   language: 'vega',
+  blankTemplate: BLANK_TEMPLATE,
 };
 
 export default VEGA;

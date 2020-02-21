@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {HydraExtension, RendererProps} from '../../types';
+import {HydraExtension, RendererProps, Template} from '../../types';
 
 import UnitVis from 'unit-vis';
 
@@ -43,10 +43,28 @@ function UnitVisRenderer(props: RendererProps): JSX.Element {
   );
 }
 
+export const BLANK_TEMPLATE: Template = {
+  templateAuthor: '',
+  templateLanguage: 'data-table',
+  templateName: 'BLANK TEMPLATE',
+  templateDescription: 'FILL IN DESCRIPTION',
+  code: JSON.stringify(
+    {
+      $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
+      layouts: [],
+      mark: {color: {key: '', type: 'categorical'}},
+    },
+    null,
+    2,
+  ),
+  widgets: [],
+};
+
 const UNIT_VIS_CONFIG: HydraExtension = {
   renderer: UnitVisRenderer,
   suggestion: () => [],
   language: 'unit-vis',
+  blankTemplate: BLANK_TEMPLATE,
 };
 
 export default UNIT_VIS_CONFIG;

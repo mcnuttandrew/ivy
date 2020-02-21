@@ -7,7 +7,7 @@ import {
   SetWidgetValuePayload,
   MoveWidgetPayload,
 } from '../actions';
-import {Template, GenWidget, TemplateMap} from '../types';
+import {Template, GenWidget, TemplateMap, HydraExtension} from '../types';
 import {classnames, toSet} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
@@ -22,6 +22,7 @@ import {widgetFactory, preconfiguredWidgets, WidgetFactoryFunc} from '../templat
 interface EncodingColumnProps {
   columns: ColumnHeader[];
   editMode: boolean;
+  languages: {[x: string]: HydraExtension};
   setTemplateValue?: any;
   height?: number;
   template: Template;
@@ -102,6 +103,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
       columns,
       editMode,
       height,
+      languages,
       modifyValueOnTemplate,
       setAllTemplateValues,
       setTemplateValue,
@@ -205,7 +207,7 @@ export default class EncodingColumn extends React.Component<EncodingColumnProps>
               </IgnoreKeys>
               <AddLabelToWidget label={'Template Language'}>
                 <Selector
-                  options={['vega-lite', 'vega', 'unit-vis', 'hydra-data-table'].map(key => ({
+                  options={Object.keys(languages).map(key => ({
                     display: key,
                     value: key,
                   }))}
