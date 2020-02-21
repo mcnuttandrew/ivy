@@ -151,15 +151,21 @@ export const loadDataFromPredefinedDatasets: GenericAction<string> = fileName =>
   arg2,
   arg3,
 ): void => {
+  // infra for tests
+  // eslint-disable-next-line no-undef
+  if (process.env.NODE_ENV === 'test') {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const data = require(`vega-datasets/data/${fileName}`);
+    dispatch({type: actionTypes.RECIEVE_DATA, payload: data});
+    generateTypeInferences(data)(dispatch, arg2, arg3);
+    return;
+  }
+  // regular path
   fetch(vegaDatasetAdress(fileName))
     .then(d => d.text())
     .then(d => getReader(fileName)(d))
     .then(d => {
-      dispatch({
-        type: actionTypes.RECIEVE_DATA,
-        payload: d,
-      });
-
+      dispatch({type: actionTypes.RECIEVE_DATA, payload: d});
       generateTypeInferences(d)(dispatch, arg2, arg3);
     });
 };

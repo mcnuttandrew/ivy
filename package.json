@@ -32,7 +32,8 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-2": "^6.22.0",
     "css-loader": "^2.1.1",
-    "enzyme": "^3.10.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-config-react": "^1.1.7",
@@ -41,11 +42,14 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.4.0",
+    "fake-indexeddb": "^3.0.0",
     "hoopoe": "^1.0.1",
     "jest": "^24.9.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
+    "node-fetch": "^2.6.0",
     "postcss-loader": "^3.0.0",
     "prettier": "^1.18.2",
+    "react-dnd-test-utils": "^10.0.2",
     "react-test-renderer": "^16.12.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "0.13.1",
@@ -103,7 +107,7 @@
     "lint:ts": "eslint --ext .ts --ext .tsx src",
     "lint:fix": "eslint './src/**/*.{ts,tsx}'",
     "lint:styles": "stylelint 'src/stylesheets/main.css'",
-    "test": "jest",
+    "test": "NODE_ENV=test && jest",
     "prettify": "prettier --write 'src/**/*.{ts,tsx}'",
     "analyze": "NODE_ENV=analysis webpack --profile > stats.json"
   },
@@ -119,6 +123,16 @@
       "ts",
       "tsx",
       "js"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "monaco-editor": "<rootDir>/node_modules/react-monaco-editor",
+      "^dnd-core$": "dnd-core/dist/cjs",
+      "^react-dnd$": "react-dnd/dist/cjs",
+      "^react-dnd-html5-backend$": "react-dnd-html5-backend/dist/cjs",
+      "^react-dnd-touch-backend$": "react-dnd-touch-backend/dist/cjs",
+      "^react-dnd-test-backend$": "react-dnd-test-backend/dist/cjs",
+      "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs"
+    }
   }
 }

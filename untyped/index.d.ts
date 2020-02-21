@@ -1,6 +1,7 @@
 declare module 'type-analyzer';
 declare module 'datalib';
 declare module 'hoopoe';
+declare module 'enzyme-adapter-react-16';
 // TODO i guess
 //  {
 //   // export type Data = {[key: string]: string}[];

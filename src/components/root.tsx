@@ -1,10 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
+
 import {DndProvider} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
-
 import GALLERY from '../templates/gallery';
 import {getUserName} from '../utils/local-storage';
 import Thumbnail from './thumbnail';
