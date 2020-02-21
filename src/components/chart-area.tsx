@@ -1,12 +1,12 @@
 import React from 'react';
-import VegaWrapper from './renderers/vega-wrap';
-import {Template, ColumnHeader, Json, DataRow} from '../types';
+// import VegaWrapper from './renderers/vega-wrap';
+import {Template, ColumnHeader, Json, DataRow, HydraExtension} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction} from '../actions';
-import DataSearchMode from './renderers/data-search-mode';
+// import DataSearchMode from './renderers/data-search-mode';
 import GALLERY from '../templates/gallery';
 
 interface ChartAreaProps {
@@ -19,6 +19,7 @@ interface ChartAreaProps {
   deleteView: GenericAction<string>;
   deleteTemplate: GenericAction<string>;
   encodingMode: string;
+  languages: {[x: string]: HydraExtension};
   missingFields: string[];
   setEncodingMode: GenericAction<string>;
   spec: Json;
@@ -116,6 +117,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       currentView,
       data,
       deleteView,
+      languages,
       deleteTemplate,
       encodingMode,
       missingFields,
@@ -127,8 +129,8 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       templates,
       views,
     } = this.props;
-    const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
-    const showChart = !templateGallery && templateComplete;
+
+    const extension = languages[template.templateLanguage];
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
@@ -147,26 +149,20 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
             'full-height': true,
           })}
         >
-          {templateGallery && (
-            <DataSearchMode
-              deleteTemplate={deleteTemplate}
-              columns={columns}
-              setEncodingMode={setEncodingMode}
-              spec={spec}
-              templates={templates}
-            />
-          )}
-          {showChart && (
-            <VegaWrapper
-              spec={spec}
-              data={data}
-              language={template && template.templateLanguage}
-              onError={(e): void => {
+          {templateComplete &&
+            extension &&
+            extension.renderer({
+              spec: spec as any,
+              data,
+              onError: (e): void => {
                 console.log('upper error', e);
-              }}
-            />
-          )}
-          {!templateGallery && !showChart && (
+              },
+              deleteTemplate,
+              columns,
+              setEncodingMode,
+              templates,
+            })}
+          {!templateComplete && (
             <div className="chart-unfullfilled">
               <h2> Chart is not yet filled out </h2>
               <h5>{`Select values for the following fields: ${missingFields.join(', ')}`}</h5>

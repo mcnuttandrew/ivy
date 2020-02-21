@@ -4,7 +4,7 @@ import stringify from 'json-stringify-pretty-compact';
 
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
-import {Template, TemplateMap, GenWidget} from '../types';
+import {Template, TemplateMap, GenWidget, HydraExtension} from '../types';
 import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
@@ -19,6 +19,7 @@ interface Props {
   editorError: null | string;
   editorFontSize: number;
   editorLineWrap: boolean;
+  languages: {[x: string]: HydraExtension};
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
   setCodeMode: GenericAction<string>;
@@ -222,6 +223,7 @@ export default class CodeEditor extends React.Component<Props> {
                   <SuggestionBox
                     addWidget={this.props.addWidget}
                     codeMode={this.props.codeMode}
+                    languages={this.props.languages}
                     currentCode={currentCode}
                     handleCodeUpdate={this.handleCodeUpdate}
                     template={this.props.template}

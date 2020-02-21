@@ -267,6 +267,7 @@ export interface HydraExtension {
   /**
    * React Component containing the rendering logic for this language
    */
+  // TODO This type is wrong and crashes for functional components and probable any other components
   renderer: (props: RendererProps) => JSX.Element;
   /**
    * Given a code block and the collection of widgets, try to come up with suggestions to parameterize the code

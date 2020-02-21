@@ -45,13 +45,14 @@ import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 import {Spec} from 'vega-typings';
 import {
   AppState,
-  DataReducerState,
   ColumnHeader,
+  DataReducerState,
+  DataRow,
+  GenWidget,
+  HydraExtension,
   Json,
   Template,
   TemplateMap,
-  GenWidget,
-  DataRow,
 } from '../types';
 
 import ChartArea from './chart-area';
@@ -97,6 +98,7 @@ interface RootProps {
   editorError: null | string;
   encodingMode: string;
   fillableFields: Set<string>;
+  languages: {[x: string]: HydraExtension};
   missingFields: string[];
   programModalOpen: boolean;
   showGUIView: boolean;
@@ -205,6 +207,7 @@ class RootComponent extends React.Component<RootProps, State> {
         deleteView={this.props.deleteView}
         deleteTemplate={this.props.deleteTemplate}
         encodingMode={this.props.encodingMode}
+        languages={this.props.languages}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
         spec={this.props.spec as Json}
@@ -310,6 +313,7 @@ class RootComponent extends React.Component<RootProps, State> {
         editorLineWrap={getEditorLineWrap()}
         editorError={this.props.editorError}
         editorFontSize={getEditorFontSize()}
+        languages={this.props.languages}
         readInTemplate={this.props.readInTemplate}
         readInTemplateMap={this.props.readInTemplateMap}
         setCodeMode={this.props.setCodeMode}
