@@ -96,10 +96,8 @@ export const loadExternalTemplate: ActionResponse<Template> = (state, payload) =
 export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload> = (state, payload) => {
   const {value, key} = payload;
   return produce(state, draftState => {
-    /* eslint-disable @typescript-eslint/ban-ts-ignore*/
     // @ts-ignore
     draftState.currentTemplateInstance[key] = value;
-    /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     if (key === 'templateName') {
       draftState.encodingMode = value;
     }
@@ -196,10 +194,8 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
 
       const widget = draftState.currentTemplateInstance.widgets[idx];
       const oldName = widget.name;
-      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       const oldValue = `\\[${widget[key]}\\]`;
-      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
       const re = new RegExp(oldValue, 'g');
       draftState.currentTemplateInstance.code = code.replace(re, `[${value}]`);
       draftState.currentTemplateInstance.widgets[idx].name = value;
@@ -208,15 +204,11 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       draftState.templateMap[value] = state.templateMap[oldName];
       delete draftState.templateMap[oldName];
     } else if (topLevelKeys.has(key)) {
-      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx][key] = value;
-      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     } else {
-      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx].config[key] = value;
-      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
     }
   });
 };

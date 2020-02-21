@@ -108,6 +108,9 @@
     "analyze": "NODE_ENV=analysis webpack --profile > stats.json"
   },
   "jest": {
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ],
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },

@@ -23,13 +23,9 @@ function UnitVisRenderer(props: RendererProps): JSX.Element {
       oldSvg.remove();
     }
     if (spec) {
-      // D O N T  T E L L  M E  W H A T  T O  D O
-      // Y O U   A R E  N O T  M Y  D A D
       try {
-        /* eslint-disable @typescript-eslint/ban-ts-ignore*/
         // @ts-ignore
         UnitVis('special-hydra-target', specCopy);
-        /* eslint-enable @typescript-eslint/ban-ts-ignore*/
       } catch (e) {
         console.log('UnitVis Crash', e);
       }

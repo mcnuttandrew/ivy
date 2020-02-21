@@ -33,10 +33,8 @@ export default class DataModal extends React.Component<Props, State> {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (event): void => {
-      /* eslint-disable @typescript-eslint/ban-ts-ignore*/
       // @ts-ignore
       loadCustomDataset({fileName: file.name, data: event.target.result});
-      /* eslint-enable @typescript-eslint/ban-ts-ignore*/
       toggleDataModal();
     };
 
