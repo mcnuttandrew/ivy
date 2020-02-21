@@ -44,7 +44,16 @@ import {
 import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 
 import {Spec} from 'vega-typings';
-import {AppState, DataReducerState, ColumnHeader, Json, Template, TemplateMap, GenWidget} from '../types';
+import {
+  AppState,
+  DataReducerState,
+  ColumnHeader,
+  Json,
+  Template,
+  TemplateMap,
+  GenWidget,
+  HydraExtension,
+} from '../types';
 
 import ChartArea from './chart-area';
 import CodeEditor from './code-editor';
@@ -115,6 +124,7 @@ interface RootProps {
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
+  languages: {[x: string]: HydraExtension};
   loadCustomDataset: GenericAction<LoadDataPayload>;
   loadDataFromPredefinedDatasets: GenericAction<string>;
   loadExternalTemplate: GenericAction<Template>;
@@ -196,6 +206,7 @@ class RootComponent extends React.Component<RootProps, State> {
         deleteView={this.props.deleteView}
         deleteTemplate={this.props.deleteTemplate}
         encodingMode={this.props.encodingMode}
+        languages={this.props.languages}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
         spec={this.props.spec as Json}
@@ -301,6 +312,7 @@ class RootComponent extends React.Component<RootProps, State> {
         editorLineWrap={getEditorLineWrap()}
         editorError={this.props.editorError}
         editorFontSize={getEditorFontSize()}
+        languages={this.props.languages}
         readInTemplate={this.props.readInTemplate}
         readInTemplateMap={this.props.readInTemplateMap}
         setCodeMode={this.props.setCodeMode}

@@ -1,12 +1,12 @@
 import React from 'react';
-import VegaWrapper from './renderers/vega-wrap';
-import {Template, ColumnHeader, Json} from '../types';
+// import VegaWrapper from './renderers/vega-wrap';
+import {Template, ColumnHeader, Json, HydraExtension} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
-import DataSearchMode from './renderers/data-search-mode';
+import DataSearchMode from './gallery';
 import GALLERY from '../templates/gallery';
 
 interface ChartAreaProps {
@@ -19,6 +19,7 @@ interface ChartAreaProps {
   deleteView: GenericAction<string>;
   deleteTemplate: GenericAction<string>;
   encodingMode: string;
+  languages: {[x: string]: HydraExtension};
   missingFields: string[];
   setEncodingMode: GenericAction<string>;
   spec: Json;
@@ -118,6 +119,7 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       deleteView,
       deleteTemplate,
       encodingMode,
+      languages,
       missingFields,
       setEncodingMode,
       spec,
@@ -128,7 +130,9 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
       views,
     } = this.props;
     const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
-    const showChart = !templateGallery && templateComplete;
+    console.log(languages);
+    const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
+    const showChart = !templateGallery && renderer && templateComplete;
     return (
       <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
         <div className="chart-controls full-width flex">
@@ -156,16 +160,14 @@ export default class ChartArea extends React.Component<ChartAreaProps> {
               templates={templates}
             />
           )}
-          {showChart && (
-            <VegaWrapper
-              spec={spec}
-              data={data}
-              language={template && template.templateLanguage}
-              onError={(e): void => {
+          {showChart &&
+            renderer({
+              data,
+              spec,
+              onError: (e): void => {
                 console.log('upper error', e);
-              }}
-            />
-          )}
+              },
+            })}
           {!templateGallery && !showChart && (
             <div className="chart-unfullfilled">
               <h2> Chart is not yet filled out </h2>
