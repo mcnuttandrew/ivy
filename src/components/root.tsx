@@ -214,6 +214,8 @@ class RootComponent extends React.Component<RootProps, State> {
         languages={this.props.languages}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
+        setTemplateValue={this.props.setTemplateValue}
+        setMaterialization={this.props.setMaterialization}
         spec={this.props.spec as Json}
         switchView={this.props.switchView}
         template={this.props.template}

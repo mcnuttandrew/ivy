@@ -4,30 +4,32 @@ import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
-import {GenericAction, DataRow} from '../actions';
+import {GenericAction, DataRow, SetTemplateValuePayload} from '../actions';
 import DataSearchMode from './gallery';
 import GALLERY from '../templates/gallery';
 import {evaluateHydraProgram} from '../hydra-lang';
 
 interface ChartAreaProps {
-  cloneView: GenericAction<void>;
-  createNewView: GenericAction<void>;
   changeViewName: GenericAction<{idx: number; value: string}>;
+  cloneView: GenericAction<void>;
   columns: ColumnHeader[];
+  createNewView: GenericAction<void>;
   currentView: string;
   data: DataRow[];
-  deleteView: GenericAction<string>;
   deleteTemplate: GenericAction<string>;
+  deleteView: GenericAction<string>;
   encodingMode: string;
   languages: {[x: string]: HydraExtension};
   missingFields: string[];
   setEncodingMode: GenericAction<string>;
+  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   spec: Json;
   switchView: GenericAction<string>;
   template: Template;
+  templateComplete: boolean;
   templateMap: TemplateMap;
   templates: Template[];
-  templateComplete: boolean;
   views: string[];
   viewsToMaterialize: ViewsToMaterialize;
 }
@@ -124,6 +126,8 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     languages,
     missingFields,
     setEncodingMode,
+    setMaterialization,
+    setTemplateValue,
     spec,
     switchView,
     template,
@@ -137,6 +141,19 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
   const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
   const showChart = !templateGallery && renderer && templateComplete;
 
+  // const materializedViews = Object.entries(viewsToMaterialize).reduce((acc, row) => {
+  //   const [key, values] = row;
+  //   if (acc.length > 0) {
+  //     values.forEach(value => {
+  //       acc.forEach((view, idx) => {
+  //         acc[idx][key] = value;
+  //       });
+  //       // acc.push({key, value});
+  //     });
+  //     return acc;
+  //   }
+  //   return values.map(value => ({[key]: value}));
+  // }, []);
   const materializedViews = Object.entries(viewsToMaterialize).reduce((acc, row) => {
     const [key, values] = row;
     values.forEach(value => {
@@ -158,6 +175,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
       <div
         className={classnames({
           'chart-container': true,
+          'multi-view-container': materializedViews.length > 0,
           center: true,
           'full-width': encodingMode !== GALLERY.templateName,
           'full-height': true,
@@ -173,7 +191,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
           />
         )}
         {showChart &&
-          !materializedViews.length &&
+          materializedViews.length === 0 &&
           renderer({
             data,
             spec,
@@ -182,15 +200,30 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
             },
           })}
         {showChart &&
-          materializedViews.length &&
-          materializedViews.map(view => {
-            return renderer({
-              data,
-              spec: evaluateHydraProgram(template, {...templateMap, [view.key]: `"${view.value}"`}),
-              onError: (e): void => {
-                console.log('upper error', e);
-              },
-            });
+          materializedViews.length > 0 &&
+          materializedViews.map((view, idx) => {
+            return (
+              <div key={`view-${idx}`} className="render-wrapper">
+                <div>
+                  <span>{`${view.key}: ${view.value}`}</span>
+                  <button
+                    onClick={(): void => {
+                      setMaterialization({...viewsToMaterialize, [view.key]: []});
+                      setTemplateValue({field: view.key, text: `"${view.value}"`});
+                    }}
+                  >
+                    SELECT
+                  </button>
+                </div>
+                {renderer({
+                  data,
+                  spec: evaluateHydraProgram(template, {...templateMap, [view.key]: `"${view.value}"`}),
+                  onError: (e): void => {
+                    console.log('upper error', e);
+                  },
+                })}
+              </div>
+            );
           })}
         {!templateGallery && !showChart && (
           <div className="chart-unfullfilled">

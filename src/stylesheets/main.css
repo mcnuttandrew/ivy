@@ -126,8 +126,19 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow: scroll;
 }
 
+.chart-container.multi-view-container {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .chart-container > div {
   background: white;
+}
+
+.render-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 #special-hydra-target {

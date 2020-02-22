@@ -12,6 +12,7 @@ import {TemplateMap, Widget, GenWidget, Template, ViewsToMaterialize} from '../.
 import {ColumnHeader} from '../../types';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
 import {classnames} from '../../utils';
+import {getDefaultValueForWidget} from '../../hydra-lang';
 
 import WidgetConfigurationControls from './widget-configuration-controls';
 
@@ -81,11 +82,12 @@ interface GenericMaterializationMenuProps {
   viewsToMaterialize: ViewsToMaterialize;
   allowedValues: string[];
   setMaterialization: GenericAction<ViewsToMaterialize>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
   widget: GenWidget;
 }
 
 const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): null | JSX.Element => {
-  const {viewsToMaterialize, allowedValues, setMaterialization, widget} = props;
+  const {viewsToMaterialize, allowedValues, setMaterialization, widget, setTemplateValue} = props;
   const currentView = viewsToMaterialize[widget.name] || [];
   return (
     <div>
@@ -98,9 +100,11 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
               {...switchCommon}
               checked={checked}
               onChange={(): any => {
-                setMaterialization({
-                  ...viewsToMaterialize,
-                  [widget.name]: checked ? currentView.filter(d => d !== val) : currentView.concat(val),
+                const newVals = checked ? currentView.filter(d => d !== val) : currentView.concat(val);
+                setMaterialization({...viewsToMaterialize, [widget.name]: newVals});
+                setTemplateValue({
+                  field: widget.name,
+                  text: newVals.length ? `"$$$MATERIALIZING"` : getDefaultValueForWidget(widget),
                 });
               }}
             />
@@ -109,11 +113,21 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
       })}
       <div className="flex">
         <button
-          onClick={(): any => setMaterialization({...viewsToMaterialize, [widget.name]: allowedValues})}
+          onClick={(): any => {
+            setMaterialization({...viewsToMaterialize, [widget.name]: allowedValues});
+            setTemplateValue({field: widget.name, text: `"$$$MATERIALIZING"`});
+          }}
         >
           All on
         </button>
-        <button>All off</button>
+        <button
+          onClick={(): any => {
+            setMaterialization({...viewsToMaterialize, [widget.name]: []});
+            setTemplateValue({field: widget.name, text: getDefaultValueForWidget(widget)});
+          }}
+        >
+          All off
+        </button>
       </div>
     </div>
   );
@@ -122,7 +136,16 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
 export default function GeneralWidgetComponent(props: Props): JSX.Element {
-  const {editMode, widget, idx, moveWidget, viewsToMaterialize, columns, setMaterialization} = props;
+  const {
+    editMode,
+    widget,
+    idx,
+    moveWidget,
+    viewsToMaterialize,
+    columns,
+    setMaterialization,
+    setTemplateValue,
+  } = props;
 
   const widgetType = widget.type;
   const ref = useRef<HTMLDivElement>(null);
@@ -220,6 +243,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
                 setMaterialization={setMaterialization}
                 widget={widget}
                 allowedValues={options}
+                setTemplateValue={setTemplateValue}
               />
             </div>
           }

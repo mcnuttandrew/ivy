@@ -288,11 +288,12 @@ export function getOrMakeColumn(
   columns: ColumnHeader[],
   template: Template,
 ): ColumnHeader | null {
+  console.log(columnName);
   const column = columns.find(({field}) => columnName && field === columnName);
   if (column) {
     return column;
   }
-  if ((template.customCards || []).find(x => x.name === columnName)) {
+  if ((template.customCards || []).find(x => x.name === columnName) || columnName === '$$$MATERIALIZING') {
     return makeCustomType({name: columnName, description: ''});
   }
   return null;
