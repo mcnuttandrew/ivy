@@ -1,5 +1,5 @@
 import React from 'react';
-import {Template, ColumnHeader, Json, HydraExtension} from '../types';
+import {Template, ColumnHeader, Json, HydraExtension, ViewsToMaterialize, TemplateMap} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd} from 'react-icons/ti';
@@ -7,6 +7,7 @@ import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow} from '../actions';
 import DataSearchMode from './gallery';
 import GALLERY from '../templates/gallery';
+import {evaluateHydraProgram} from '../hydra-lang';
 
 interface ChartAreaProps {
   cloneView: GenericAction<void>;
@@ -24,9 +25,11 @@ interface ChartAreaProps {
   spec: Json;
   switchView: GenericAction<string>;
   template: Template;
+  templateMap: TemplateMap;
   templates: Template[];
   templateComplete: boolean;
   views: string[];
+  viewsToMaterialize: ViewsToMaterialize;
 }
 
 interface NewViewProps {
@@ -125,12 +128,23 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     switchView,
     template,
     templateComplete,
+    viewsToMaterialize,
     templates,
+    templateMap,
     views,
   } = props;
   const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
   const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
   const showChart = !templateGallery && renderer && templateComplete;
+
+  const materializedViews = Object.entries(viewsToMaterialize).reduce((acc, row) => {
+    const [key, values] = row;
+    values.forEach(value => {
+      acc.push({key, value});
+    });
+    return acc;
+  }, []);
+  console.log(materializedViews);
   return (
     <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
       <div className="chart-controls full-width flex">
@@ -159,12 +173,24 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
           />
         )}
         {showChart &&
+          !materializedViews.length &&
           renderer({
             data,
             spec,
             onError: (e): void => {
               console.log('upper error', e);
             },
+          })}
+        {showChart &&
+          materializedViews.length &&
+          materializedViews.map(view => {
+            return renderer({
+              data,
+              spec: evaluateHydraProgram(template, {...templateMap, [view.key]: `"${view.value}"`}),
+              onError: (e): void => {
+                console.log('upper error', e);
+              },
+            });
           })}
         {!templateGallery && !showChart && (
           <div className="chart-unfullfilled">

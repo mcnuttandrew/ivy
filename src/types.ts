@@ -69,7 +69,9 @@ export interface AppState {
   // template stuff
   templateMap: TemplateMap;
   templates: Template[];
+  viewsToMaterialize: ViewsToMaterialize;
 }
+export type ViewsToMaterialize = {[x: string]: string[]};
 /**
  * @param T the type of payload argument
  */

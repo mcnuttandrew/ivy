@@ -801,12 +801,22 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 100%;
 }
 
+.widget {
+  position: relative;
+}
+
 .widget input[type="text"],
 .widget input[type="number"] {
   background: none;
   border: none;
   width: 100%;
   border-bottom: thin dotted #333;
+}
+
+.materialize-button {
+  cursor: pointer;
+  position: absolute;
+  right: -15px;
 }
 
 .list-widget {

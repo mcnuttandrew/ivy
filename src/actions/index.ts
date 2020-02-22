@@ -3,7 +3,16 @@ import {csvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {DataType, Template, GenWidget, WidgetType, AppState, ColumnHeader, HydraExtension} from '../types';
+import {
+  AppState,
+  ColumnHeader,
+  DataType,
+  GenWidget,
+  HydraExtension,
+  Template,
+  ViewsToMaterialize,
+  WidgetType,
+} from '../types';
 import * as actionTypes from '../actions/action-types';
 
 import {Action} from 'redux';
@@ -97,6 +106,8 @@ export const triggerRedo = createAction<void>(actionTypes.TRIGGER_REDO);
 export const triggerUndo = createAction<void>(actionTypes.TRIGGER_UNDO);
 export const updateFilter = createAction<UpdateFilterPayload>(actionTypes.UPDATE_FILTER);
 export const recieveLanguages = createAction<{[x: string]: HydraExtension}>(actionTypes.RECIEVE_LANGUAGES);
+
+export const setMaterialization = createAction<ViewsToMaterialize>(actionTypes.SET_MATERIALIZATION);
 
 export const chainActions = (actions: GenericAction<any>[]) => (dispatch: Dispatch): void => {
   executePromisesInSeries(

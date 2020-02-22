@@ -25,6 +25,7 @@ const TextBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <TextWidgetConfiguration {...common} widget={widg} />,
     uiElement: <TextWidgetComponent {...common} widget={widg} />,
+    materializationOptions: (): string[] => [],
   };
 };
 

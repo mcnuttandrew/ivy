@@ -4,14 +4,7 @@ import {IgnoreKeys} from 'react-hotkeys';
 import {SwitchWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName} from './widget-common';
-
-const switchCommon = {
-  offColor: '#E1E9F2',
-  onColor: '#36425C',
-  height: 15,
-  checkedIcon: false,
-  width: 50,
-};
+import {switchCommon} from '../../constants';
 
 function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -86,6 +79,7 @@ const SwitchBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <SwitchWidgetConfiguration {...common} widget={widg} />,
     uiElement: <SwitchWidgetComponent {...common} widget={widg} />,
+    materializationOptions: (): string[] => [],
   };
 };
 
