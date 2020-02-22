@@ -65,7 +65,7 @@ const makeSortScore: MakeSortScoreType = (Sort: string) => (template): any => {
     score = counts.SUM;
   }
   if (Sort === 'complexity') {
-    score = (template.code.match(/$cond/g) || []).length;
+    score = (template.code.match(/\$cond/g) || []).length;
   }
   return {template, score};
 };

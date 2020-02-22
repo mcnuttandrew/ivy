@@ -29,12 +29,13 @@ const Gallery: Template = {
       type: 'List',
       config: {
         allowedValues: SORTS.map(display => ({display, value: `"${display}"`})),
+        defaultValue: `"complexity"`,
       },
     },
     {
       name: 'Reverse Sort',
       type: 'Switch',
-      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: false},
+      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
       validations: [{query: '!parameters.Sort === "null"', queryResult: 'hide'}],
     },
     // TODO add sort explanation for text
