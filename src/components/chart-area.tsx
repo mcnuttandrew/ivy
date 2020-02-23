@@ -164,7 +164,6 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
       {materializedViews.map((view, idx) => {
         const newTemplateMap = {...templateMap, ...view};
         const spec = evaluateHydraProgram(template, newTemplateMap);
-        console.log(view, spec);
         return (
           <div key={`view-${idx}`} className="render-wrapper">
             <div>

@@ -23,6 +23,7 @@ import SCATTERPLOT_TEMPLATE from './scatterplot';
 // import SIMPLE_SCATTER from './simple-scatterplot';
 import SHELF from './polestar-template';
 import UNITVIS from './atom-example';
+import PARALLEL_COORDINATES from './parallel-coordinates';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 export type WidgetFactoryFunc = (idx: number) => GenWidget;
@@ -103,5 +104,6 @@ export const DEFAULT_TEMPLATES: Template[] = [
   BEESWARM_TEMPLATE,
   GALLERY,
   UNITVIS,
+  PARALLEL_COORDINATES,
   // SIMPLE_SCATTER,
 ];
