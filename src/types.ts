@@ -26,6 +26,7 @@ export interface ViewCatalogEntry {
   encodingMode: string;
   templateMap: TemplateMap;
   currentTemplateInstance: Template;
+  viewsToMaterialize: ViewsToMaterialize;
 }
 export interface UndoRedoStackItem {
   currentView: string;
@@ -34,6 +35,7 @@ export interface UndoRedoStackItem {
   templateMap: TemplateMap;
   views: string[];
   viewCatalog: ViewCatalog;
+  viewsToMaterialize: ViewsToMaterialize;
 }
 
 export interface AppState {
@@ -69,7 +71,9 @@ export interface AppState {
   // template stuff
   templateMap: TemplateMap;
   templates: Template[];
+  viewsToMaterialize: ViewsToMaterialize;
 }
+export type ViewsToMaterialize = {[x: string]: string[]};
 /**
  * @param T the type of payload argument
  */

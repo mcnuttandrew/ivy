@@ -194,35 +194,41 @@ export function checkIfMapComplete(template: Template, templateMap: TemplateMap)
   return missing.length === 0;
 }
 
+export function getDefaultValueForWidget(widget: GenWidget): any {
+  if (widget.type === 'MultiDataTarget') {
+    return [];
+  }
+  if (widget.type === 'Text' || widget.type === 'Section') {
+    return null;
+  }
+  if (widget.type === 'List') {
+    const localW = widget as Widget<ListWidget>;
+    return localW.config.defaultValue || get(localW, ['config', 'allowedValues', 0, 'value']);
+  }
+  if (widget.type === 'Switch') {
+    const localW = widget as Widget<SwitchWidget>;
+    return localW.config.defaultsToActive ? localW.config.activeValue : localW.config.inactiveValue;
+  }
+  if (widget.type === 'Slider') {
+    return (widget as Widget<SliderWidget>).config.defaultValue;
+  }
+  if (widget.type === 'FreeText') {
+    return '';
+  }
+  return null;
+}
+const MARK_UP_COMPONENTS = new Set(['Text', 'Section']);
+
 /**
  * for template map holes that are NOT data columns, fill em as best you can
  * @param template
  */
 export function constructDefaultTemplateMap(template: Template): TemplateMap {
-  return template.widgets.reduce((acc: any, w: GenWidget) => {
-    let value = null;
-    if (w.type === 'MultiDataTarget') {
-      value = [];
-    }
-    if (w.type === 'Text' || w.type === 'Section') {
+  return template.widgets.reduce((acc: any, widget: GenWidget) => {
+    if (MARK_UP_COMPONENTS.has(widget.type)) {
       return acc;
     }
-    if (w.type === 'List') {
-      const localW = w as Widget<ListWidget>;
-      value = localW.config.defaultValue || get(localW, ['config', 'allowedValues', 0, 'value']);
-      // value = (w as Widget<ListWidget>).config.defaultValue;
-    }
-    if (w.type === 'Switch') {
-      const localW = w as Widget<SwitchWidget>;
-      value = localW.config.defaultsToActive ? localW.config.activeValue : localW.config.inactiveValue;
-    }
-    if (w.type === 'Slider') {
-      value = (w as Widget<SliderWidget>).config.defaultValue;
-    }
-    if (w.type === 'FreeText') {
-      value = '';
-    }
-    acc[w.name] = value;
+    acc[widget.name] = getDefaultValueForWidget(widget);
     return acc;
   }, {});
 }

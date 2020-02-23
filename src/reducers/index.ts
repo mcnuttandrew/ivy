@@ -33,6 +33,7 @@ import {
   saveCurrentTemplate,
   setAllTemplateValues,
   setBlankTemplate,
+  setMaterialization,
   setNewSpecCode,
   setTemplateValue,
   setWidgetValue,
@@ -84,6 +85,7 @@ export const DEFAULT_STATE: AppState = {
 
   templates: [],
   templateMap: {},
+  viewsToMaterialize: {},
 };
 
 // second order effects
@@ -138,6 +140,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.SET_BLANK_TEMPLATE]: setBlankTemplate,
   [actionTypes.SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
   [actionTypes.SET_WIDGET_VALUE]: addUndo(setWidgetValue),
+  [actionTypes.SET_MATERIALIZATION]: addUndo(setMaterialization),
 
   // views
   [actionTypes.CLONE_VIEW]: addUndo(cloneView),

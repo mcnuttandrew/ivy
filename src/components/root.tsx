@@ -46,13 +46,14 @@ import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
 import {Spec} from 'vega-typings';
 import {
   AppState,
-  DataReducerState,
   ColumnHeader,
+  DataReducerState,
+  GenWidget,
+  HydraExtension,
   Json,
   Template,
   TemplateMap,
-  GenWidget,
-  HydraExtension,
+  ViewsToMaterialize,
 } from '../types';
 
 import ChartArea from './chart-area';
@@ -98,6 +99,7 @@ interface RootProps {
   editorError: null | string;
   encodingMode: string;
   fillableFields: Set<string>;
+  languages: {[x: string]: HydraExtension};
   missingFields: string[];
   programModalOpen: boolean;
   showGUIView: boolean;
@@ -110,13 +112,13 @@ interface RootProps {
   templates: Template[];
   userName: string;
   views: string[];
+  viewsToMaterialize: ViewsToMaterialize;
 
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   addWidget: GenericAction<GenWidget>;
   chainActions: GenericAction<any>;
   changeSelectedFile: GenericAction<string>;
   changeViewName: GenericAction<{idx: number; value: string}>;
-  fillTemplateMapWithDefaults: GenericAction<void>;
   cloneView: GenericAction<void>;
   coerceType: GenericAction<CoerceTypePayload>;
   createFilter: GenericAction<Filter>;
@@ -124,7 +126,7 @@ interface RootProps {
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
-  languages: {[x: string]: HydraExtension};
+  fillTemplateMapWithDefaults: GenericAction<void>;
   loadCustomDataset: GenericAction<LoadDataPayload>;
   loadDataFromPredefinedDatasets: GenericAction<string>;
   loadExternalTemplate: GenericAction<Template>;
@@ -141,11 +143,12 @@ interface RootProps {
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
-  setUserName: GenericAction<string>;
   setGuiView: GenericAction<boolean>;
+  setMaterialization: GenericAction<ViewsToMaterialize>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<boolean>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  setUserName: GenericAction<string>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
   switchView: GenericAction<string>;
   toggleDataModal: GenericAction<void>;
@@ -205,18 +208,23 @@ class RootComponent extends React.Component<RootProps, State> {
         createNewView={this.props.createNewView}
         currentView={this.props.currentView}
         data={this.props.data}
-        deleteView={this.props.deleteView}
         deleteTemplate={this.props.deleteTemplate}
+        deleteView={this.props.deleteView}
         encodingMode={this.props.encodingMode}
         languages={this.props.languages}
         missingFields={this.props.missingFields}
         setEncodingMode={this.props.setEncodingMode}
+        setTemplateValue={this.props.setTemplateValue}
+        setAllTemplateValues={this.props.setAllTemplateValues}
+        setMaterialization={this.props.setMaterialization}
         spec={this.props.spec as Json}
         switchView={this.props.switchView}
         template={this.props.template}
         templateComplete={this.props.templateComplete}
+        templateMap={this.props.templateMap}
         templates={this.props.templates}
         views={this.props.views}
+        viewsToMaterialize={this.props.viewsToMaterialize}
       />
     );
   }
@@ -297,8 +305,10 @@ class RootComponent extends React.Component<RootProps, State> {
           removeWidget={this.props.removeWidget}
           setAllTemplateValues={this.props.setAllTemplateValues}
           setTemplateValue={this.props.setTemplateValue}
+          setMaterialization={this.props.setMaterialization}
           setWidgetValue={this.props.setWidgetValue}
           template={this.props.template}
+          viewsToMaterialize={this.props.viewsToMaterialize}
           templateMap={this.props.templateMap}
         />
       </div>
@@ -468,6 +478,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     templates: base.templates,
     userName: base.userName,
     views: base.views,
+    viewsToMaterialize: base.viewsToMaterialize,
   };
 }
 

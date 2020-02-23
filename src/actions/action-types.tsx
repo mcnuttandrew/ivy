@@ -25,6 +25,7 @@ export const SET_ALL_TEMPLATE_VALUES = 'set-all-template-values';
 export const SET_BLANK_TEMPLATE = 'set-blank-template';
 export const SET_CODE_MODE = 'set-code-mode';
 export const SET_EDIT_MODE = 'set-edit-mode';
+export const SET_MATERIALIZATION = 'set-materialization';
 export const SET_ENCODING_MODE = 'set-encoding-mode';
 export const SET_GUI_VIEW = 'set-gui-view';
 export const SET_NEW_ENCODING_CODE = 'set-new-encoding-code';

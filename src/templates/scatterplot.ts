@@ -1,5 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
+import {toList} from '../utils';
 const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   mark: {
@@ -16,10 +17,6 @@ const SCATTERPLOT_EXAMPLE: any = {
     },
   },
 };
-const BASIC_TYPES = [
-  {display: '"quantitative"', value: '"quantitative"'},
-  {display: '"ordinal"', value: '"ordinal"'},
-];
 
 const SCATTERPLOT: Template = {
   widgets: [
@@ -27,8 +24,8 @@ const SCATTERPLOT: Template = {
     {
       name: 'xType',
       type: 'List',
-      config: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
-      validations: [{queryResult: 'hide', query: '!parameters.xType'}],
+      config: {allowedValues: toList(['quantitative', 'ordinal'])},
+      validations: [{queryResult: 'hide', query: '!parameters.xDim'}],
     },
     {
       name: 'yDim',
@@ -38,23 +35,20 @@ const SCATTERPLOT: Template = {
     {
       name: 'yType',
       type: 'List',
-      config: {allowedValues: BASIC_TYPES, defaultValue: '"quantitative"'},
+      config: {allowedValues: toList(['quantitative', 'ordinal'])},
       validations: [{queryResult: 'hide', query: '!parameters.yDim'}],
     },
     {name: 'Color', type: 'DataTarget', config: {allowedTypes: ['MEASURE', 'DIMENSION'], required: false}},
     {
       name: 'colorType',
       type: 'List',
-      config: {allowedValues: BASIC_TYPES, defaultValue: '"ordinal"'},
+      config: {allowedValues: toList(['ordinal', 'quantitative'])},
       validations: [{queryResult: 'hide', query: '!parameters.Color'}],
     },
     {
       name: 'Single Color',
       type: 'List',
-      config: {
-        allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})),
-        defaultValue: '"steelblue"',
-      },
+      config: {allowedValues: toList(['steelblue', 'blue', 'red'])},
       validations: [{queryResult: 'hide', query: 'parameters.Color'}],
     },
 

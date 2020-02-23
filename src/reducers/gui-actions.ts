@@ -46,6 +46,7 @@ export const setEncodingMode: ActionResponse<string> = (state, payload) => {
       draftState.codeMode = JSON_OUTPUT;
       draftState.encodingMode = payload;
       draftState.currentTemplateInstance = state.templates.find((d: any) => d.templateName === payload);
+      draftState.viewsToMaterialize = {};
     }),
   );
 

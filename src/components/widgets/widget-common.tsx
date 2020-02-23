@@ -70,6 +70,7 @@ export function Reset(props: ResetProps): JSX.Element {
     <Tooltip
       placement={direction}
       trigger="hover"
+      mouseEnterDelay={0.5}
       overlay={
         <span
           className={classnames({

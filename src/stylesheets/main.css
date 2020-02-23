@@ -126,8 +126,28 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow: scroll;
 }
 
+.chart-container.multi-view-container {
+  align-items: flex-start;
+  background: linen;
+  display: flex;
+  flex-wrap: wrap;
+  height: fit-content;
+}
+
 .chart-container > div {
   background: white;
+}
+
+.render-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.render-wrapper .render-wrapper-title {
+  font-size: 10px;
 }
 
 #special-hydra-target {
@@ -151,6 +171,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .chart-controls {
   background: whitesmoke;
   height: 48px;
+  min-height: 48px;
   padding: 5px 0;
   position: relative;
 }
@@ -274,6 +295,7 @@ input[type="number"]::-webkit-outer-spin-button {
   max-height: 100%;
   overflow-y: scroll;
   padding: 15px;
+  padding-right: 20px;
 }
 
 .template-column {
@@ -801,12 +823,36 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 100%;
 }
 
+.widget {
+  position: relative;
+}
+
 .widget input[type="text"],
 .widget input[type="number"] {
   background: none;
   border: none;
   width: 100%;
   border-bottom: thin dotted #333;
+}
+
+.materialize-button {
+  cursor: pointer;
+  font-size: 20px;
+  opacity: 0.2;
+  position: absolute;
+  right: -25px;
+}
+
+.materialize-button-active {
+  opacity: 1;
+}
+
+.DataTarget-widget-type .materialize-button {
+  right: -20px;
+}
+
+.blank-section .materialize-button {
+  right: -20px;
 }
 
 .list-widget {

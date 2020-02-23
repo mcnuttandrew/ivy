@@ -10,11 +10,25 @@ import {
   SetTemplateValuePayload,
   SetWidgetValuePayload,
 } from '../actions/index';
-import {ActionResponse, AppState, Template, Widget, GenWidget, TemplateMap} from '../types';
+import {
+  ActionResponse,
+  AppState,
+  Template,
+  Widget,
+  GenWidget,
+  TemplateMap,
+  ViewsToMaterialize,
+} from '../types';
 import {deserializeTemplate, trim, removeFirstInstanceOf, bagDifference} from '../utils';
 import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
 
 import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite';
+
+export const setMaterialization: ActionResponse<ViewsToMaterialize> = (state, payload) => {
+  return produce(state, draftState => {
+    draftState.viewsToMaterialize = payload;
+  });
+};
 
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
@@ -45,6 +59,9 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
       draftState.templateMap[containingShelf] = val;
     }
 
+    if (state.templateMap[payload.field] === '"$$$MATERIALIZING"' && payload.text !== '"$$$MATERIALIZING"') {
+      delete draftState.viewsToMaterialize[payload.field];
+    }
     draftState.templateMap[payload.field] = payload.text;
     tryToGuessTheTypeForVegaLite(
       draftState.currentTemplateInstance,

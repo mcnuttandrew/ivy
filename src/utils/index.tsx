@@ -292,7 +292,7 @@ export function getOrMakeColumn(
   if (column) {
     return column;
   }
-  if ((template.customCards || []).find(x => x.name === columnName)) {
+  if ((template.customCards || []).find(x => x.name === columnName) || columnName === '$$$MATERIALIZING') {
     return makeCustomType({name: columnName, description: ''});
   }
   return null;

@@ -1,13 +1,12 @@
 import React from 'react';
 import {IgnoreKeys} from 'react-hotkeys';
-import {ColumnHeader} from '../types';
 import {
   GenericAction,
   ModifyValueOnTemplatePayload,
   SetWidgetValuePayload,
   MoveWidgetPayload,
 } from '../actions';
-import {Template, GenWidget, TemplateMap, HydraExtension} from '../types';
+import {Template, GenWidget, TemplateMap, HydraExtension, ViewsToMaterialize, ColumnHeader} from '../types';
 import {classnames, toSet} from '../utils';
 
 import GeneralWidget from './widgets/general-widget';
@@ -20,20 +19,21 @@ import {TiPlus} from 'react-icons/ti';
 import {widgetFactory, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
 
 interface EncodingColumnProps {
+  addWidget: GenericAction<GenWidget>;
   columns: ColumnHeader[];
   editMode: boolean;
-  languages: {[x: string]: HydraExtension};
-  setTemplateValue?: any;
   height?: number;
+  languages: {[x: string]: HydraExtension};
+  modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
+  moveWidget: GenericAction<MoveWidgetPayload>;
+  removeWidget: GenericAction<number>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
+  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setTemplateValue?: any;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
   template: Template;
   templateMap: TemplateMap;
-
-  addWidget: GenericAction<GenWidget>;
-  modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
-  removeWidget: GenericAction<number>;
-  setWidgetValue: GenericAction<SetWidgetValuePayload>;
-  setAllTemplateValues: GenericAction<TemplateMap>;
-  moveWidget: GenericAction<MoveWidgetPayload>;
+  viewsToMaterialize: ViewsToMaterialize;
 }
 
 interface AddWidgetButtonProps {
@@ -96,143 +96,146 @@ function buildSections(template: Template): GenWidget[][] {
   return sections.sections.filter(d => d.length).concat([sections.currentSection]);
 }
 
-export default class EncodingColumn extends React.Component<EncodingColumnProps> {
-  render(): JSX.Element {
-    const {
-      addWidget,
-      columns,
-      editMode,
-      height,
-      languages,
-      modifyValueOnTemplate,
-      setAllTemplateValues,
-      setTemplateValue,
-      setWidgetValue,
-      template,
-      templateMap,
-      removeWidget,
-      moveWidget,
-    } = this.props;
-    // TODO, this should maybe move off of the main path?
-    const allowedWidgets = toSet(applyQueries(template, templateMap));
-    const makeWidget = (widget: GenWidget, idx: number): JSX.Element => (
-      <GeneralWidget
-        allowedWidgets={allowedWidgets}
-        code={template.code}
-        columns={columns}
-        editMode={editMode}
-        idx={idx}
-        key={idx}
-        moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
-        removeWidget={(): any => removeWidget(idx)}
-        setAllTemplateValues={setAllTemplateValues}
-        setTemplateValue={setTemplateValue}
-        setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
-        templateMap={templateMap}
-        template={template}
-        widget={widget}
-      />
-    );
+export default function EncodingColumn(props: EncodingColumnProps): JSX.Element {
+  const {
+    addWidget,
+    columns,
+    editMode,
+    height,
+    languages,
+    modifyValueOnTemplate,
+    moveWidget,
+    removeWidget,
+    setAllTemplateValues,
+    setMaterialization,
+    setTemplateValue,
+    setWidgetValue,
+    template,
+    templateMap,
+    viewsToMaterialize,
+  } = props;
+  // TODO, this should maybe move off of the main path?
+  const allowedWidgets = toSet(applyQueries(template, templateMap));
+  const makeWidget = (widget: GenWidget, idx: number): JSX.Element => (
+    <GeneralWidget
+      allowedWidgets={allowedWidgets}
+      // eslint-disable-next-line react/prop-types
+      code={template.code}
+      columns={columns}
+      editMode={editMode}
+      idx={idx}
+      key={idx}
+      moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
+      removeWidget={(): any => removeWidget(idx)}
+      setAllTemplateValues={setAllTemplateValues}
+      setTemplateValue={setTemplateValue}
+      setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
+      templateMap={templateMap}
+      template={template}
+      viewsToMaterialize={viewsToMaterialize}
+      setMaterialization={setMaterialization}
+      widget={widget}
+    />
+  );
 
-    let idx = -1;
-    const sectionedWidgets = buildSections(template).map((section, jdx) => {
-      if (!section.length) {
-        return null;
-      }
-      const inBlankSection = section[0].type === 'Section';
-      const sectionContents = section.map((widget: GenWidget, kdx) => {
-        // the index is essential to maintain in order to make sure the updates happen correctly
-        idx += 1;
-        if (!editMode && !allowedWidgets.has(widget.name)) {
-          return null;
-        }
-        return (
-          <div
-            className={classnames({
-              'pad-widget': kdx && !inBlankSection,
-              [`${widget.type}-widget-type`]: true,
-            })}
-            key={`widget-${idx}`}
-          >
-            {makeWidget(widget, idx)}
-          </div>
-        );
-      });
-      if (!sectionContents.filter(d => d).length) {
+  let idx = -1;
+  const sectionedWidgets = buildSections(template).map((section, jdx) => {
+    if (!section.length) {
+      return null;
+    }
+    const inBlankSection = section[0].type === 'Section';
+    const sectionContents = section.map((widget: GenWidget, kdx) => {
+      // the index is essential to maintain in order to make sure the updates happen correctly
+      idx += 1;
+      if (!editMode && !allowedWidgets.has(widget.name)) {
         return null;
       }
       return (
         <div
           className={classnames({
-            'widget-section': true,
-            'blank-section': inBlankSection,
-            'widget-section--editing': editMode,
+            'pad-widget': kdx && !inBlankSection,
+            [`${widget.type}-widget-type`]: true,
           })}
-          key={`section-${jdx}`}
+          key={`widget-${idx}`}
         >
-          {sectionContents}
+          {makeWidget(widget, idx)}
         </div>
       );
     });
+    if (!sectionContents.filter(d => d).length) {
+      return null;
+    }
     return (
-      <div className="full-height encoding-column" style={(height && {maxHeight: height}) || {}}>
-        {editMode && template && (
-          <div className="flex">
-            <div className="flex full-width space-between">
-              <IgnoreKeys style={{height: '100%'}}>
-                <AddLabelToWidget label={'Name'}>
-                  <input
-                    type="text"
-                    value={template.templateName}
-                    onChange={(event): any =>
-                      modifyValueOnTemplate({
-                        value: event.target.value,
-                        key: 'templateName',
-                      })
-                    }
-                  />
-                </AddLabelToWidget>
-                <AddLabelToWidget label={'Description'}>
-                  <input
-                    type="text"
-                    value={template.templateDescription}
-                    onChange={(event): any =>
-                      modifyValueOnTemplate({
-                        value: event.target.value,
-                        key: 'templateDescription',
-                      })
-                    }
-                  />
-                </AddLabelToWidget>
-              </IgnoreKeys>
-              <AddLabelToWidget label={'Template Language'}>
-                <Selector
-                  options={Object.keys(languages).map(key => ({
-                    display: key,
-                    value: key,
-                  }))}
-                  selectedValue={template.templateLanguage}
-                  onChange={(value: any): any =>
+      <div
+        className={classnames({
+          'widget-section': true,
+          'blank-section': inBlankSection,
+          'widget-section--editing': editMode,
+        })}
+        key={`section-${jdx}`}
+      >
+        {sectionContents}
+      </div>
+    );
+  });
+  return (
+    <div className="full-height encoding-column" style={(height && {maxHeight: height}) || {}}>
+      {editMode && template && (
+        <div className="flex">
+          <div className="flex full-width space-between">
+            <IgnoreKeys style={{height: '100%'}}>
+              <AddLabelToWidget label={'Name'}>
+                <input
+                  type="text"
+                  value={template.templateName}
+                  onChange={(event): any =>
                     modifyValueOnTemplate({
-                      value,
-                      key: 'templateLanguage',
+                      value: event.target.value,
+                      key: 'templateName',
                     })
                   }
                 />
               </AddLabelToWidget>
-            </div>
+              <AddLabelToWidget label={'Description'}>
+                <input
+                  type="text"
+                  value={template.templateDescription}
+                  onChange={(event): any =>
+                    modifyValueOnTemplate({
+                      value: event.target.value,
+                      key: 'templateDescription',
+                    })
+                  }
+                />
+              </AddLabelToWidget>
+            </IgnoreKeys>
+            <AddLabelToWidget label={'Template Language'}>
+              <Selector
+                options={Object.keys(languages).map(key => ({
+                  display: key,
+                  value: key,
+                }))}
+                selectedValue={template.templateLanguage}
+                onChange={(value: any): any =>
+                  modifyValueOnTemplate({
+                    value,
+                    key: 'templateLanguage',
+                  })
+                }
+              />
+            </AddLabelToWidget>
           </div>
-        )}
-        {editMode && (
-          <div className="flex">
-            <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />
-            <button onClick={(): any => updateThumbnail(template.templateName, template.templateAuthor)}>
-              Update Thumbnail
-            </button>
-          </div>
-        )}
-        <div className={classnames({'template-column': true, 'edit-mode': editMode})}>{sectionedWidgets}</div>
-      </div>
-    );
-  }
+        </div>
+      )}
+      {editMode && (
+        <div className="flex">
+          <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />
+          <button onClick={(): any => updateThumbnail(template.templateName, template.templateAuthor)}>
+            Update Thumbnail
+          </button>
+        </div>
+      )}
+      <div className={classnames({'template-column': true, 'edit-mode': editMode})}>{sectionedWidgets}</div>
+    </div>
+  );
 }

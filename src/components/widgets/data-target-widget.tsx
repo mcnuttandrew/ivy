@@ -80,6 +80,7 @@ const DataTargetBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <DataTargetWidgetConfiguration {...common} widget={widg} />,
     uiElement: <DataTargetWidgetComponent {...common} widget={widg} />,
+    materializationOptions: (columns): string[] => columns.map(d => `"${d.field}"`),
   };
 };
 
