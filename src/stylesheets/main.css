@@ -295,6 +295,7 @@ input[type="number"]::-webkit-outer-spin-button {
   max-height: 100%;
   overflow-y: scroll;
   padding: 15px;
+  padding-right: 20px;
 }
 
 .template-column {
@@ -836,9 +837,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .materialize-button {
   cursor: pointer;
+  font-size: 20px;
   opacity: 0.2;
   position: absolute;
-  right: -20px;
+  right: -25px;
 }
 
 .materialize-button-active {
@@ -846,7 +848,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .DataTarget-widget-type .materialize-button {
-  right: -15px;
+  right: -20px;
+}
+
+.blank-section .materialize-button {
+  right: -20px;
 }
 
 .list-widget {

@@ -75,11 +75,13 @@ function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element 
 }
 
 const SwitchBuilder: WidgetBuilder = (widget, common) => {
-  const widg = widget as Widget<SwitchWidget>;
   return {
-    controls: <SwitchWidgetConfiguration {...common} widget={widg} />,
-    uiElement: <SwitchWidgetComponent {...common} widget={widg} />,
-    materializationOptions: (): string[] => [],
+    controls: <SwitchWidgetConfiguration {...common} widget={widget as Widget<SwitchWidget>} />,
+    uiElement: <SwitchWidgetComponent {...common} widget={widget as Widget<SwitchWidget>} />,
+    materializationOptions: (columns, widget): string[] => [
+      (widget as Widget<SwitchWidget>).config.activeValue,
+      (widget as Widget<SwitchWidget>).config.inactiveValue,
+    ],
   };
 };
 

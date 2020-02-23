@@ -116,6 +116,117 @@ function* cartesian(head?: any, ...tail: any): any {
   const remainder = tail.length > 0 ? cartesian(...tail) : [[]];
   for (const r of remainder) for (const h of head) yield [h, ...r];
 }
+interface MaterializeWrapperProps {
+  materializedViews: TemplateMap[];
+  templateMap: TemplateMap;
+  template: Template;
+  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
+  viewsToMaterialize: ViewsToMaterialize;
+  data: DataRow[];
+  spec: any;
+  renderer: any;
+}
+function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
+  const {
+    data,
+    materializedViews,
+    templateMap,
+    template,
+    setMaterialization,
+    setAllTemplateValues,
+    viewsToMaterialize,
+    renderer,
+  } = props;
+  const keySet = Object.entries(viewsToMaterialize)
+    .filter(d => d[1].length)
+    .reduce((acc, d: [string, string[]]) => acc.add(d[0]), new Set());
+  return (
+    <React.Fragment>
+      {materializedViews.map((view, idx) => {
+        const newTemplateMap = {...templateMap, ...view};
+        const spec = evaluateHydraProgram(template, newTemplateMap);
+        console.log(view, spec);
+        return (
+          <div key={`view-${idx}`} className="render-wrapper">
+            <div>
+              <span className="render-wrapper-title">
+                {Object.entries(view)
+                  .map(row => row.join(': '))
+                  .join(' ')}
+              </span>
+              <button
+                onClick={(): void => {
+                  const newMat = Object.keys(view).reduce(
+                    (acc, row) => {
+                      acc[row] = [];
+                      return acc;
+                    },
+                    {...viewsToMaterialize},
+                  );
+                  setMaterialization(newMat);
+                  setAllTemplateValues(newTemplateMap);
+                }}
+              >
+                SELECT
+              </button>
+              {keySet.size === 1 && (
+                <button
+                  onClick={(): void => {
+                    const key = Array.from(keySet)[0] as string;
+                    const value = view[key];
+                    setMaterialization({
+                      ...viewsToMaterialize,
+                      [Array.from(keySet)[0] as string]: viewsToMaterialize[key].filter(d => d !== value),
+                    });
+                  }}
+                >
+                  REMOVE
+                </button>
+              )}
+              {keySet.size > 1 && (
+                <Tooltip
+                  placement="top"
+                  trigger="click"
+                  overlay={
+                    <div className="flex-down">
+                      <h3>Remove which of the following keys</h3>
+                      {Array.from(keySet).map((key: string) => {
+                        const value = view[key as string];
+                        return (
+                          <button
+                            key={`${key}-${idx}`}
+                            onClick={(): void => {
+                              setMaterialization({
+                                ...viewsToMaterialize,
+                                [key]: viewsToMaterialize[key].filter(d => d !== value),
+                              });
+                            }}
+                          >
+                            {value}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  }
+                >
+                  <button>REMOVE</button>
+                </Tooltip>
+              )}
+            </div>
+            {renderer({
+              data,
+              spec,
+              onError: (e: any): void => {
+                console.log('upper error', e);
+              },
+            })}
+          </div>
+        );
+      })}{' '}
+    </React.Fragment>
+  );
+}
 
 // TODO memoize the rendering stuff
 export default function ChartArea(props: ChartAreaProps): JSX.Element {
@@ -133,7 +244,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     missingFields,
     setEncodingMode,
     setMaterialization,
-    setTemplateValue,
     setAllTemplateValues,
     spec,
     switchView,
@@ -157,27 +267,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
       })
     : [];
 
-  // const materializedViewsNew = Object.entries(viewsToMaterialize).reduce((acc, row) => {
-  //   const [key, values] = row;
-  //   if (acc.length > 0) {
-  //     values.forEach(value => {
-  //       acc.forEach((view, idx) => {
-  //         acc[idx][key] = value;
-  //       });
-  //       // acc.push({key, value});
-  //     });
-  //     return acc;
-  //   }
-  //   return values.map(value => ({[key]: value}));
-  // }, []);
-  // const materializedViews = Object.entries(viewsToMaterialize).reduce((acc, row) => {
-  //   const [key, values] = row;
-  //   values.forEach(value => {
-  //     acc.push({key, value});
-  //   });
-  //   return acc;
-  // }, []);
-  // console.log(materializedViews);
   return (
     <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
       <div className="chart-controls full-width flex">
@@ -217,53 +306,16 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
           })}
         {showChart &&
           materializedViews.length > 0 &&
-          materializedViews.map((view, idx) => {
-            const newTemplateMap = {...templateMap, ...view};
-            const spec = evaluateHydraProgram(template, newTemplateMap);
-            console.log(view, spec);
-            return (
-              <div key={`view-${idx}`} className="render-wrapper">
-                <div>
-                  <span className="render-wrapper-title">
-                    {Object.entries(view)
-                      .map(row => row.join(': '))
-                      .join(' ')}
-                  </span>
-                  <button
-                    onClick={(): void => {
-                      const newMat = Object.keys(view).reduce(
-                        (acc, row) => {
-                          acc[row] = [];
-                          return acc;
-                        },
-                        {...viewsToMaterialize},
-                      );
-                      setMaterialization(newMat);
-                      setAllTemplateValues(newTemplateMap);
-                    }}
-                  >
-                    SELECT
-                  </button>
-                  <button
-                    onClick={(): void => {
-                      setMaterialization({
-                        ...viewsToMaterialize,
-                        [view.key]: viewsToMaterialize[view.key].filter(d => d !== view.value),
-                      });
-                    }}
-                  >
-                    REMOVE
-                  </button>
-                </div>
-                {renderer({
-                  data,
-                  spec,
-                  onError: (e): void => {
-                    console.log('upper error', e);
-                  },
-                })}
-              </div>
-            );
+          materializeWrapper({
+            materializedViews,
+            templateMap,
+            template,
+            setMaterialization,
+            setAllTemplateValues,
+            viewsToMaterialize,
+            data,
+            spec,
+            renderer,
           })}
         {!templateGallery && !showChart && (
           <div className="chart-unfullfilled">
