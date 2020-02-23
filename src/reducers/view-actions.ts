@@ -8,12 +8,14 @@ const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
   encodingMode: GALLERY.templateName,
   templateMap: BLANK_TEMPLATE_MAP,
   currentTemplateInstance: GALLERY,
+  viewsToMaterialize: {},
 };
 function updateCatalogView(state: AppState, view: string): AppState {
   const catalogEntry: ViewCatalogEntry = {
     encodingMode: state.encodingMode,
     templateMap: state.templateMap,
     currentTemplateInstance: state.currentTemplateInstance,
+    viewsToMaterialize: state.viewsToMaterialize,
   };
   return produce(state, draftState => {
     draftState.viewCatalog[view] = catalogEntry;
@@ -30,6 +32,7 @@ export const switchView: ActionResponse<string> = (state, payload) => {
     draftState.encodingMode = catalogEntry.encodingMode;
     draftState.currentTemplateInstance = catalogEntry.currentTemplateInstance;
     draftState.templateMap = catalogEntry.templateMap;
+    draftState.viewsToMaterialize = catalogEntry.viewsToMaterialize;
   });
 };
 

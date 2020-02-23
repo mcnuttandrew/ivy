@@ -127,6 +127,7 @@ interface MaterializeWrapperProps {
   spec: any;
   renderer: any;
 }
+
 function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   const {
     data,
@@ -141,6 +142,23 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   const keySet = Object.entries(viewsToMaterialize)
     .filter(d => d[1].length)
     .reduce((acc, d: [string, string[]]) => acc.add(d[0]), new Set());
+
+  function removeButton(name: string, key: string, value: string): JSX.Element {
+    return (
+      <button
+        onClick={(): void => {
+          // const key = Array.from(keySet)[0] as string;
+          // const value = view[key];
+          setMaterialization({
+            ...viewsToMaterialize,
+            [key]: (viewsToMaterialize[key] || []).filter(d => d !== value),
+          });
+        }}
+      >
+        {name}
+      </button>
+    );
+  }
   return (
     <React.Fragment>
       {materializedViews.map((view, idx) => {
@@ -170,20 +188,12 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
               >
                 SELECT
               </button>
-              {keySet.size === 1 && (
-                <button
-                  onClick={(): void => {
-                    const key = Array.from(keySet)[0] as string;
-                    const value = view[key];
-                    setMaterialization({
-                      ...viewsToMaterialize,
-                      [Array.from(keySet)[0] as string]: viewsToMaterialize[key].filter(d => d !== value),
-                    });
-                  }}
-                >
-                  REMOVE
-                </button>
-              )}
+              {keySet.size === 1 &&
+                removeButton(
+                  'REMOVE',
+                  Array.from(keySet)[0] as string,
+                  view[Array.from(keySet)[0] as string] as string,
+                )}
               {keySet.size > 1 && (
                 <Tooltip
                   placement="top"
@@ -192,19 +202,10 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
                     <div className="flex-down">
                       <h3>Remove which of the following keys</h3>
                       {Array.from(keySet).map((key: string) => {
-                        const value = view[key as string];
-                        return (
-                          <button
-                            key={`${key}-${idx}`}
-                            onClick={(): void => {
-                              setMaterialization({
-                                ...viewsToMaterialize,
-                                [key]: viewsToMaterialize[key].filter(d => d !== value),
-                              });
-                            }}
-                          >
-                            {value}
-                          </button>
+                        return removeButton(
+                          `${key}: ${view[key as string]}`,
+                          key,
+                          view[key as string] as string,
                         );
                       })}
                     </div>

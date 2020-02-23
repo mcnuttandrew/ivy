@@ -26,6 +26,7 @@ export interface ViewCatalogEntry {
   encodingMode: string;
   templateMap: TemplateMap;
   currentTemplateInstance: Template;
+  viewsToMaterialize: ViewsToMaterialize;
 }
 export interface UndoRedoStackItem {
   currentView: string;
