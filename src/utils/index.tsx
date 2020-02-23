@@ -288,7 +288,6 @@ export function getOrMakeColumn(
   columns: ColumnHeader[],
   template: Template,
 ): ColumnHeader | null {
-  console.log(columnName);
   const column = columns.find(({field}) => columnName && field === columnName);
   if (column) {
     return column;
