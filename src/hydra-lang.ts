@@ -217,6 +217,7 @@ export function getDefaultValueForWidget(widget: GenWidget): any {
   }
   return null;
 }
+const MARK_UP_COMPONENTS = new Set(['Text', 'Section']);
 
 /**
  * for template map holes that are NOT data columns, fill em as best you can
@@ -224,6 +225,9 @@ export function getDefaultValueForWidget(widget: GenWidget): any {
  */
 export function constructDefaultTemplateMap(template: Template): TemplateMap {
   return template.widgets.reduce((acc: any, widget: GenWidget) => {
+    if (MARK_UP_COMPONENTS.has(widget.type)) {
+      return acc;
+    }
     acc[widget.name] = getDefaultValueForWidget(widget);
     return acc;
   }, {});
