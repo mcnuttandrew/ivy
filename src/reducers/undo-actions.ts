@@ -9,6 +9,7 @@ const createStackItem = (state: AppState): UndoRedoStackItem => {
     currentTemplateInstance: state.currentTemplateInstance,
     views: state.views,
     viewCatalog: state.viewCatalog,
+    viewsToMaterialize: state.viewsToMaterialize,
   };
 };
 
@@ -20,6 +21,7 @@ const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
     draftState.views = stackItem.views;
     draftState.encodingMode = stackItem.encodingMode;
     draftState.currentTemplateInstance = stackItem.currentTemplateInstance;
+    draftState.viewsToMaterialize = stackItem.viewsToMaterialize;
   });
 };
 // takes in an old state (via a wrapping function) and an updated state and push the contents

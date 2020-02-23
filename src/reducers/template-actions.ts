@@ -58,7 +58,11 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
       const val = removeFirstInstanceOf(oldVal, trim(payload.text as string));
       draftState.templateMap[containingShelf] = val;
     }
-
+    console.log(state.templateMap[payload.field], payload.text);
+    if (state.templateMap[payload.field] === '$$$MATERIALIZING' && payload.text !== '$$$MATERIALIZING') {
+      console.log('????');
+      delete draftState.viewsToMaterialize[payload.field];
+    }
     draftState.templateMap[payload.field] = payload.text;
     tryToGuessTheTypeForVegaLite(
       draftState.currentTemplateInstance,

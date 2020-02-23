@@ -92,7 +92,7 @@ const ListBuilder: WidgetBuilder = (widget, common) => {
     controls: <ListWidgetConfiguration {...common} widget={widg} />,
     uiElement: <ListWidgetComponent {...common} widget={widg} />,
     materializationOptions: (columns, widget): string[] =>
-      (widget as Widget<ListWidget>).config.allowedValues.map(d => d.display),
+      (widget as Widget<ListWidget>).config.allowedValues.map(d => `"${d.display}"`),
   };
 };
 

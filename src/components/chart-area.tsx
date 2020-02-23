@@ -5,7 +5,7 @@ import Tooltip from 'rc-tooltip';
 import {TiCog, TiDocumentAdd} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow, SetTemplateValuePayload} from '../actions';
-import DataSearchMode from './gallery';
+import Gallery from './gallery';
 import GALLERY from '../templates/gallery';
 import {evaluateHydraProgram} from '../hydra-lang';
 
@@ -23,6 +23,7 @@ interface ChartAreaProps {
   missingFields: string[];
   setEncodingMode: GenericAction<string>;
   setMaterialization: GenericAction<ViewsToMaterialize>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   spec: Json;
   switchView: GenericAction<string>;
@@ -111,6 +112,11 @@ function viewOption(props: ViewOptionProps): JSX.Element {
   );
 }
 
+function* cartesian(head?: any, ...tail: any): any {
+  const remainder = tail.length > 0 ? cartesian(...tail) : [[]];
+  for (const r of remainder) for (const h of head) yield [h, ...r];
+}
+
 // TODO memoize the rendering stuff
 export default function ChartArea(props: ChartAreaProps): JSX.Element {
   const {
@@ -128,6 +134,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     setEncodingMode,
     setMaterialization,
     setTemplateValue,
+    setAllTemplateValues,
     spec,
     switchView,
     template,
@@ -141,7 +148,16 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
   const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
   const showChart = !templateGallery && renderer && templateComplete;
 
-  // const materializedViews = Object.entries(viewsToMaterialize).reduce((acc, row) => {
+  const preCart = Object.entries(viewsToMaterialize).map(([key, values]) => {
+    return values.map(value => ({key, value}));
+  });
+  const materializedViews = preCart.length
+    ? [...cartesian(...preCart)].map(combo => {
+        return combo.reduce((acc: any, row: any) => ({...acc, [row.key]: row.value}), {});
+      })
+    : [];
+
+  // const materializedViewsNew = Object.entries(viewsToMaterialize).reduce((acc, row) => {
   //   const [key, values] = row;
   //   if (acc.length > 0) {
   //     values.forEach(value => {
@@ -154,14 +170,14 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
   //   }
   //   return values.map(value => ({[key]: value}));
   // }, []);
-  const materializedViews = Object.entries(viewsToMaterialize).reduce((acc, row) => {
-    const [key, values] = row;
-    values.forEach(value => {
-      acc.push({key, value});
-    });
-    return acc;
-  }, []);
-  console.log(materializedViews);
+  // const materializedViews = Object.entries(viewsToMaterialize).reduce((acc, row) => {
+  //   const [key, values] = row;
+  //   values.forEach(value => {
+  //     acc.push({key, value});
+  //   });
+  //   return acc;
+  // }, []);
+  // console.log(materializedViews);
   return (
     <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
       <div className="chart-controls full-width flex">
@@ -182,7 +198,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         })}
       >
         {templateGallery && (
-          <DataSearchMode
+          <Gallery
             deleteTemplate={deleteTemplate}
             columns={columns}
             setEncodingMode={setEncodingMode}
@@ -202,22 +218,46 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         {showChart &&
           materializedViews.length > 0 &&
           materializedViews.map((view, idx) => {
+            const newTemplateMap = {...templateMap, ...view};
+            const spec = evaluateHydraProgram(template, newTemplateMap);
+            console.log(view, spec);
             return (
               <div key={`view-${idx}`} className="render-wrapper">
                 <div>
-                  <span>{`${view.key}: ${view.value}`}</span>
+                  <span className="render-wrapper-title">
+                    {Object.entries(view)
+                      .map(row => row.join(': '))
+                      .join(' ')}
+                  </span>
                   <button
                     onClick={(): void => {
-                      setMaterialization({...viewsToMaterialize, [view.key]: []});
-                      setTemplateValue({field: view.key, text: `"${view.value}"`});
+                      const newMat = Object.keys(view).reduce(
+                        (acc, row) => {
+                          acc[row] = [];
+                          return acc;
+                        },
+                        {...viewsToMaterialize},
+                      );
+                      setMaterialization(newMat);
+                      setAllTemplateValues(newTemplateMap);
                     }}
                   >
                     SELECT
                   </button>
+                  <button
+                    onClick={(): void => {
+                      setMaterialization({
+                        ...viewsToMaterialize,
+                        [view.key]: viewsToMaterialize[view.key].filter(d => d !== view.value),
+                      });
+                    }}
+                  >
+                    REMOVE
+                  </button>
                 </div>
                 {renderer({
                   data,
-                  spec: evaluateHydraProgram(template, {...templateMap, [view.key]: `"${view.value}"`}),
+                  spec,
                   onError: (e): void => {
                     console.log('upper error', e);
                   },

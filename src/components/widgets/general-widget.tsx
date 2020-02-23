@@ -248,7 +248,13 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
             </div>
           }
         >
-          <div className="materialize-button">
+          <div
+            className={classnames({
+              'materialize-button': true,
+              'materialize-button-active':
+                viewsToMaterialize[widget.name] && viewsToMaterialize[widget.name].length > 0,
+            })}
+          >
             <TiFlash />
           </div>
         </Tooltip>

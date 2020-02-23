@@ -34,6 +34,7 @@ export interface UndoRedoStackItem {
   templateMap: TemplateMap;
   views: string[];
   viewCatalog: ViewCatalog;
+  viewsToMaterialize: ViewsToMaterialize;
 }
 
 export interface AppState {
