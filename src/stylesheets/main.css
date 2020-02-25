@@ -635,13 +635,13 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 100%;
   overflow-y: scroll;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 300px);
+  grid-template-columns: repeat(auto-fill, 250px);
   grid-gap: 10px;
 }
 
 .data-search-mode .program-containers {
   grid-auto-flow: row dense;
-  grid-template-columns: repeat(auto-fill, 300px);
+  grid-template-columns: repeat(auto-fill, 250px);
 }
 
 .program-option {
@@ -652,7 +652,7 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 12px;
   height: fit-content;
   padding: 5px;
-  width: 275px;
+  width: 225px;
 }
 
 .program-option-title {
