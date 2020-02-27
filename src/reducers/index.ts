@@ -46,8 +46,7 @@ import {
   setGuiView,
   setUserName,
   setProgrammaticView,
-  toggleDataModal,
-  toggleProgramModal,
+  setModalState,
 } from './gui-actions';
 
 export const DEFAULT_STATE: AppState = {
@@ -63,13 +62,11 @@ export const DEFAULT_STATE: AppState = {
 
   // GUI
   currentTemplateInstance: GALLERY,
-  // TODO COMBINE MODAL VALUES INTO A SINGLE KEY
-  dataModalOpen: false,
+  openModal: null,
   encodingMode: GALLERY.templateName,
   showProgrammaticMode: false,
   showGUIView: true,
   codeMode: JSON_OUTPUT,
-  programModalOpen: false,
   userName: '',
 
   // undo redo
@@ -118,8 +115,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.SET_ENCODING_MODE]: addUndo(setEncodingMode),
   [actionTypes.SET_GUI_VIEW]: setGuiView,
   [actionTypes.SET_USER_NAME]: setUserName,
-  [actionTypes.TOGGLE_DATA_MODAL]: toggleDataModal,
-  [actionTypes.TOGGLE_PROGRAM_MODAL]: toggleProgramModal,
+  [actionTypes.SET_MODAL_STATE]: setModalState,
   [actionTypes.TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
 
   [actionTypes.RECIEVE_LANGUAGES]: recieveLanguages,

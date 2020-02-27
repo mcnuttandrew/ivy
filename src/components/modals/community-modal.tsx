@@ -9,8 +9,8 @@ import {serverPrefix, buildCounts, classnames} from '../../utils';
 interface Props {
   loadExternalTemplate: GenericAction<Template>;
   templates: Template[];
-  toggleProgramModal: GenericAction<void>;
   triggerRepaint: any;
+  setModalState: GenericAction<string | null>;
   userName: string;
 }
 
@@ -22,6 +22,7 @@ type QueryBuild = (
   setSearchObject: any,
   searchObject: any,
   triggerQuery: any,
+  userName: string,
 ) => JSX.Element;
 
 const URL_CACHE: any = {};
@@ -70,6 +71,7 @@ function DisplayLoadedPrograms(
   loadedTemplates: Template[],
   localTemplates: Template[],
   makeButtonObject: any,
+  userName: string,
 ): JSX.Element {
   const loadedPrograms = localTemplates.reduce((acc, x) => acc.add(x.templateName), new Set());
   return (
@@ -84,16 +86,26 @@ function DisplayLoadedPrograms(
           templateAuthor={template.templateAuthor}
           preventUse={true}
           alreadyPresent={loadedPrograms.has(template.templateName)}
+          userName={userName}
         />
       ))}
     </div>
   );
 }
 
-const RecentPrograms: QueryBuild = (loadedTemplates, loadTemplates, makeButtonObject, localTemplates) => {
+const RecentPrograms: QueryBuild = (
+  loadedTemplates,
+  loadTemplates,
+  makeButtonObject,
+  localTemplates,
+  setSearchObject,
+  searchObject,
+  triggerQuery,
+  userName,
+) => {
   return (
     <div className="flex-down">
-      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject)}
+      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject, userName)}
     </div>
   );
 };
@@ -106,6 +118,7 @@ const SearchForPrograms: QueryBuild = (
   setSearchObject,
   searchObject,
   triggerQuery,
+  userName,
 ) => {
   return (
     <div className="flex-down">
@@ -119,7 +132,7 @@ const SearchForPrograms: QueryBuild = (
         </IgnoreKeys>
         <button onClick={(): void => triggerQuery()}>Run Search</button>
       </div>
-      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject)}
+      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject, userName)}
     </div>
   );
 };
@@ -132,7 +145,7 @@ function toQueryParams(obj: {[x: string]: any}): string {
 }
 
 export default function CommunityPrograms(props: Props): JSX.Element {
-  const {loadExternalTemplate, toggleProgramModal, triggerRepaint, templates, userName} = props;
+  const {loadExternalTemplate, setModalState, triggerRepaint, templates, userName} = props;
   const [mode, setMode] = useState(BY_TIME);
   const [queryIdx, queryIdxUpdate] = useState(1);
   const triggerQuery = (): any => queryIdxUpdate(queryIdx + 1);
@@ -157,7 +170,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
 
   return (
     <Modal
-      modalToggle={toggleProgramModal}
+      modalToggle={(): any => setModalState(null)}
       className="program-modal"
       modalTitle="Community Templates"
       bodyDirectionDown={true}
@@ -207,6 +220,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                   setSearchObject,
                   searchObject,
                   triggerQuery,
+                  userName,
                 )}
               {mode === BY_STRING &&
                 SearchForPrograms(
@@ -217,6 +231,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                   setSearchObject,
                   searchObject,
                   triggerQuery,
+                  userName,
                 )}
               {mode === BY_DATA && <div>WIP</div>}
             </div>

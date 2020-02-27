@@ -4,30 +4,22 @@ import {GenericAction} from '../actions/index';
 
 interface Props {
   currentlySelectedFile: string;
-  toggleDataModal: GenericAction<void>;
+  setModalState: GenericAction<string | null>;
 }
 
-export default class ImportDataColumn extends React.Component<Props> {
-  render(): JSX.Element {
-    const {currentlySelectedFile, toggleDataModal} = this.props;
+export default function ImportDataColumn(props: Props): JSX.Element {
+  const {currentlySelectedFile, setModalState} = props;
 
-    return (
-      <div className="flex-down full-height" style={{maxHeight: 'fit-content'}}>
-        <h1 className="section-title">Data</h1>
-        <div className="flex space-between data-selection">
-          <div className="flex center">
-            <TiDatabase />
-            <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
-          </div>
-          <button
-            onClick={(): void => {
-              toggleDataModal();
-            }}
-          >
-            CHANGE
-          </button>
+  return (
+    <div className="flex-down full-height" style={{maxHeight: 'fit-content'}}>
+      <h1 className="section-title">Data</h1>
+      <div className="flex space-between data-selection">
+        <div className="flex center">
+          <TiDatabase />
+          <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
         </div>
+        <button onClick={(): any => setModalState('data')}>CHANGE</button>
       </div>
-    );
-  }
+    </div>
+  );
 }

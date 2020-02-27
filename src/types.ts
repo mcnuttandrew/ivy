@@ -52,9 +52,8 @@ export interface AppState {
   // GUI
   codeMode: string;
   currentTemplateInstance: Template;
-  dataModalOpen: boolean;
+  openModal: string | null;
   encodingMode: string;
-  programModalOpen: boolean;
   showGUIView: boolean;
   showProgrammaticMode: boolean;
   userName: string;
@@ -267,7 +266,6 @@ export interface HydraExtension {
   /**
    * React Component containing the rendering logic for this language
    */
-  // TODO This type is wrong and crashes for functional components and probable any other components
   renderer: (props: RendererProps) => JSX.Element;
   /**
    * Given a code block and the collection of widgets, try to come up with suggestions to parameterize the code

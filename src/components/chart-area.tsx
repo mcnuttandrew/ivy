@@ -33,6 +33,7 @@ interface ChartAreaProps {
   templates: Template[];
   views: string[];
   viewsToMaterialize: ViewsToMaterialize;
+  userName: string;
 }
 
 interface NewViewProps {
@@ -237,22 +238,23 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     createNewView,
     currentView,
     data,
-    deleteView,
     deleteTemplate,
+    deleteView,
     encodingMode,
     languages,
     missingFields,
+    setAllTemplateValues,
     setEncodingMode,
     setMaterialization,
-    setAllTemplateValues,
     spec,
     switchView,
     template,
     templateComplete,
-    viewsToMaterialize,
-    templates,
     templateMap,
+    templates,
+    userName,
     views,
+    viewsToMaterialize,
   } = props;
   const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
   const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
@@ -293,6 +295,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
             setEncodingMode={setEncodingMode}
             spec={spec}
             templates={templates}
+            userName={userName}
           />
         )}
         {showChart &&
