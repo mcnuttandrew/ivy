@@ -77,7 +77,7 @@ const SliderBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <SliderWidgetConfiguration {...common} widget={widg} />,
     uiElement: <SliderWidgetComponent {...common} widget={widg} />,
-    materializationOptions: (): string[] => [],
+    materializationOptions: (): {name: string; group?: string}[] => [],
   };
 };
 export default SliderBuilder;

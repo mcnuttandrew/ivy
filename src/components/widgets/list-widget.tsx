@@ -91,8 +91,8 @@ const ListBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <ListWidgetConfiguration {...common} widget={widg} />,
     uiElement: <ListWidgetComponent {...common} widget={widg} />,
-    materializationOptions: (columns, widget): string[] =>
-      (widget as Widget<ListWidget>).config.allowedValues.map(d => `"${d.display}"`),
+    materializationOptions: (): {name: string; group?: string}[] =>
+      (widget as Widget<ListWidget>).config.allowedValues.map(d => ({name: `"${d.display}"`})),
   };
 };
 

@@ -6,7 +6,7 @@ import Tooltip from 'rc-tooltip';
 
 import Switch from 'react-switch';
 
-import {switchCommon} from '../../constants';
+import {switchCommon, MATERIALIZING} from '../../constants';
 
 import {TemplateMap, Widget, GenWidget, Template, ViewsToMaterialize} from '../../types';
 import {ColumnHeader} from '../../types';
@@ -63,7 +63,7 @@ export type WidgetBuilder = (
 ) => {
   controls: any;
   uiElement: any;
-  materializationOptions: (columns: ColumnHeader[], widget: GenWidget) => string[];
+  materializationOptions: (columns: ColumnHeader[], widget: GenWidget) => {name: string; group?: string}[];
 };
 
 const builders = {
@@ -79,47 +79,75 @@ const builders = {
 };
 
 interface GenericMaterializationMenuProps {
-  viewsToMaterialize: ViewsToMaterialize;
-  allowedValues: string[];
+  allowedValues: {name: string; group?: string}[];
   setMaterialization: GenericAction<ViewsToMaterialize>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  viewsToMaterialize: ViewsToMaterialize;
   widget: GenWidget;
 }
 
 const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): null | JSX.Element => {
   const {viewsToMaterialize, allowedValues, setMaterialization, widget, setTemplateValue} = props;
   const currentView = viewsToMaterialize[widget.name] || [];
+  const groups = allowedValues.reduce((acc, row) => {
+    acc[row.group || ''] = (acc[row.group || ''] || []).concat(row);
+    return acc;
+  }, {} as {[x: string]: {group?: string; name: string}[]});
+
   return (
     <div>
-      {allowedValues.map((val, idx) => {
-        const checked = (viewsToMaterialize[widget.name] || []).includes(val);
+      {Object.entries(groups).map(([key, group]) => {
+        const rows = group.map(({name}, idx) => {
+          const checked = (viewsToMaterialize[widget.name] || []).includes(name);
+          return (
+            <div key={idx} className="flex space-between">
+              <span>{name}</span>
+              <Switch
+                {...switchCommon}
+                checked={checked}
+                onChange={(): any => {
+                  const newVals = checked ? currentView.filter(d => d !== name) : currentView.concat(name);
+                  setMaterialization({...viewsToMaterialize, [widget.name]: newVals});
+                  setTemplateValue({
+                    field: widget.name,
+                    text: newVals.length ? `"${MATERIALIZING}"` : getDefaultValueForWidget(widget),
+                  });
+                }}
+              />
+            </div>
+          );
+        });
         return (
-          <div key={idx}>
-            <span>{val}</span>
-            <Switch
-              {...switchCommon}
-              checked={checked}
-              onChange={(): any => {
-                const newVals = checked ? currentView.filter(d => d !== val) : currentView.concat(val);
-                setMaterialization({...viewsToMaterialize, [widget.name]: newVals});
-                setTemplateValue({
-                  field: widget.name,
-                  text: newVals.length ? `"$$$MATERIALIZING"` : getDefaultValueForWidget(widget),
-                });
-              }}
-            />
+          <div className="flex-down margin-top" key={key}>
+            <h5>{key}</h5>
+            {rows}
           </div>
         );
       })}
-      <div className="flex">
+      <div className="flex margin-top">
         <button
           onClick={(): any => {
-            setMaterialization({...viewsToMaterialize, [widget.name]: allowedValues});
-            setTemplateValue({field: widget.name, text: `"$$$MATERIALIZING"`});
+            setMaterialization({...viewsToMaterialize, [widget.name]: allowedValues.map(({name}) => name)});
+            setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
           }}
         >
           All on
         </button>
+        {Object.entries(groups)
+          .filter(([key]) => key.length)
+          .map(([key, group]) => {
+            return (
+              <button
+                key={`button-${key}`}
+                onClick={(): any => {
+                  setMaterialization({...viewsToMaterialize, [widget.name]: group.map(({name}) => name)});
+                  setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
+                }}
+              >
+                {key} on
+              </button>
+            );
+          })}
         <button
           onClick={(): any => {
             setMaterialization({...viewsToMaterialize, [widget.name]: []});
@@ -137,14 +165,15 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
 export default function GeneralWidgetComponent(props: Props): JSX.Element {
   const {
+    columns,
     editMode,
-    widget,
     idx,
     moveWidget,
-    viewsToMaterialize,
-    columns,
     setMaterialization,
     setTemplateValue,
+    template,
+    viewsToMaterialize,
+    widget,
   } = props;
 
   const widgetType = widget.type;
@@ -231,19 +260,20 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     >
       <div className="widget-body">{uiElement}</div>
       <WidgetConfigurationControls {...props} controls={controls} />
-      {options.length > 0 && (
+      {options.length > 0 && !template.disallowFanOut && (
         <Tooltip
           placement="top"
           trigger="click"
           overlay={
             <div className="">
-              <h3>Materialize partial views</h3>
+              <h3>Select Values to Fan Across</h3>
+              <h5>Fanning values allows you to consider multiple options in simulatenously</h5>
               <GenericMaterializationMenu
-                viewsToMaterialize={viewsToMaterialize}
-                setMaterialization={setMaterialization}
-                widget={widget}
                 allowedValues={options}
+                setMaterialization={setMaterialization}
                 setTemplateValue={setTemplateValue}
+                viewsToMaterialize={viewsToMaterialize}
+                widget={widget}
               />
             </div>
           }

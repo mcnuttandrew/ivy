@@ -41,7 +41,7 @@ const FreeTextBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <FreeTextWidgetConfiguration {...common} widget={widg} />,
     uiElement: <FreeTextWidgetComponent {...common} widget={widg} />,
-    materializationOptions: (): string[] => [],
+    materializationOptions: (): {name: string; group?: string}[] => [],
   };
 };
 export default FreeTextBuilder;

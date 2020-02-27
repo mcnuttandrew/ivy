@@ -18,6 +18,7 @@ interface Props {
   templateDescription: string;
   templateName: string;
   typeCounts?: TypeCounts;
+  userName: string;
 }
 
 function partialMatch(): JSX.Element {
@@ -62,17 +63,20 @@ interface CardControlsProps {
   buttons: {name: string; onClick: any}[];
   templateName: string;
   templateAuthor?: string;
+  userName: string;
 }
 
 function CardControls(props: CardControlsProps): JSX.Element {
-  const {buttons, templateName, templateAuthor} = props;
+  const {buttons, templateName, templateAuthor, userName} = props;
   return (
     <Tooltip
       placement="bottom"
       trigger="click"
       overlay={
-        <div className="flex">
-          {templateAuthor && <span>{`By: ${templateAuthor}`}</span>}
+        <div className="flex-down">
+          <span>{`By: ${templateAuthor || 'UNKNOWN'} ${
+            templateAuthor === userName ? '(Thats you!)' : ''
+          }`}</span>
           {buttons.map(button => (
             <button onClick={button.onClick} key={`${templateName}-${button.name}`}>
               {button.name}
@@ -121,12 +125,13 @@ export default function ProgramPreview(props: Props): JSX.Element {
     alreadyPresent,
     buttons,
     isComplete,
+    preventUse,
     setEncodingMode,
+    templateAuthor,
     templateDescription,
     templateName,
-    templateAuthor,
     typeCounts,
-    preventUse,
+    userName,
   } = props;
   return (
     <div
@@ -151,7 +156,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
             <div className="flex-down">
               <h3>{templateName}</h3>
             </div>
-            {CardControls({buttons, templateName, templateAuthor})}
+            {CardControls({buttons, templateName, templateAuthor, userName})}
           </div>
           <div className="program-option-description">{templateDescription}</div>
         </div>

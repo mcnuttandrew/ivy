@@ -35,3 +35,5 @@ export const switchCommon = {
   checkedIcon: false,
   width: 50,
 };
+
+export const MATERIALIZING = '$PARAMETER FANNED OUT$';

@@ -10,6 +10,7 @@ interface Props {
   setEncodingMode: GenericAction<string>;
   spec: any;
   templates: Template[];
+  userName: string;
 }
 
 export const SORTS = [
@@ -71,7 +72,7 @@ const makeSortScore: MakeSortScoreType = (Sort: string) => (template): any => {
 };
 
 export default function DataSearchMode(props: Props): JSX.Element {
-  const {columns, deleteTemplate, setEncodingMode, spec, templates} = props;
+  const {columns, deleteTemplate, setEncodingMode, spec, templates, userName} = props;
   const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
     let onClick;
     if (key === 'Delete') {
@@ -111,16 +112,20 @@ export default function DataSearchMode(props: Props): JSX.Element {
       if (!nameIsValid) {
         return acc;
       }
+      const madeByUser = template.templateAuthor === userName;
+      const builtIn = template.templateAuthor === 'HYDRA-AUTHORS';
+      const buttons = madeByUser ? ['Publish', 'Delete'] : builtIn ? [] : ['Delete'];
       const newProg = (
         <ProgramPreview
-          templateName={template.templateName}
-          templateDescription={template.templateDescription}
-          templateAuthor={template.templateAuthor}
-          setEncodingMode={setEncodingMode}
+          buttons={buttons.map(makeButtonObject(template.templateName))}
           isComplete={isComplete}
           key={`${template.templateName}-${idx}`}
+          setEncodingMode={setEncodingMode}
+          templateAuthor={template.templateAuthor}
+          templateDescription={template.templateDescription}
+          templateName={template.templateName}
           typeCounts={buildCounts(template)}
-          buttons={['Publish', 'Delete'].map(makeButtonObject(template.templateName))}
+          userName={userName}
         />
       );
       return acc.concat(newProg);

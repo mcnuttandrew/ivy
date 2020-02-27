@@ -94,14 +94,13 @@ interface RootProps {
   currentView: string;
   currentlySelectedFile: string;
   data: DataRow[];
-  dataModalOpen: boolean;
   editMode: boolean;
   editorError: null | string;
   encodingMode: string;
   fillableFields: Set<string>;
   languages: {[x: string]: HydraExtension};
   missingFields: string[];
-  programModalOpen: boolean;
+  openModal: string | null;
   showGUIView: boolean;
   showProgrammaticMode: boolean;
   spec: Spec;
@@ -145,14 +144,13 @@ interface RootProps {
   setEncodingMode: GenericAction<string>;
   setGuiView: GenericAction<boolean>;
   setMaterialization: GenericAction<ViewsToMaterialize>;
+  setModalState: GenericAction<string | null>;
   setNewSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<boolean>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setUserName: GenericAction<string>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
   switchView: GenericAction<string>;
-  toggleDataModal: GenericAction<void>;
-  toggleProgramModal: GenericAction<void>;
   triggerRedo: GenericAction<void>;
   triggerUndo: GenericAction<void>;
   updateFilter: GenericAction<UpdateFilterPayload>;
@@ -166,8 +164,8 @@ class RootComponent extends React.Component<RootProps, State> {
   constructor(props: RootProps) {
     super(props);
     this.createFilter = this.createFilter.bind(this);
-    this.state = {repaintIdx: 0};
     this.triggerRepaint = this.triggerRepaint.bind(this);
+    this.state = {repaintIdx: 0};
   }
   componentDidMount(): void {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);
@@ -225,6 +223,7 @@ class RootComponent extends React.Component<RootProps, State> {
         templates={this.props.templates}
         views={this.props.views}
         viewsToMaterialize={this.props.viewsToMaterialize}
+        userName={this.props.userName}
       />
     );
   }
@@ -253,7 +252,7 @@ class RootComponent extends React.Component<RootProps, State> {
         />
         <ImportDataColumn
           currentlySelectedFile={this.props.currentlySelectedFile}
-          toggleDataModal={this.props.toggleDataModal}
+          setModalState={this.props.setModalState}
         />
         <DataColumn
           addToNextOpenSlot={this.props.addToNextOpenSlot}
@@ -288,11 +287,11 @@ class RootComponent extends React.Component<RootProps, State> {
           setCodeMode={this.props.setCodeMode}
           setEditMode={this.props.setEditMode}
           setEncodingMode={this.props.setEncodingMode}
+          setModalState={this.props.setModalState}
           setProgrammaticView={this.props.setProgrammaticView}
           template={this.props.template}
           templateSaveState={this.props.templateSaveState}
           templates={this.props.templates}
-          toggleProgramModal={this.props.toggleProgramModal}
         />
         <EncodingColumn
           addWidget={this.props.addWidget}
@@ -352,16 +351,7 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   hotKeyProvider(): JSX.Element {
-    const {
-      canUndo,
-      triggerUndo,
-      canRedo,
-      triggerRedo,
-      dataModalOpen,
-      programModalOpen,
-      toggleProgramModal,
-      toggleDataModal,
-    } = this.props;
+    const {canUndo, triggerUndo, canRedo, triggerRedo, openModal, setModalState} = this.props;
 
     return (
       <GlobalHotKeys
@@ -374,11 +364,8 @@ class RootComponent extends React.Component<RootProps, State> {
           UNDO: (): any => canUndo && triggerUndo(),
           REDO: (): any => canRedo && triggerRedo(),
           CLOSE_MODALS: (): any => {
-            if (dataModalOpen) {
-              toggleDataModal();
-            }
-            if (programModalOpen) {
-              toggleProgramModal();
+            if (openModal) {
+              setModalState(null);
             }
           },
         }}
@@ -392,20 +379,20 @@ class RootComponent extends React.Component<RootProps, State> {
     return (
       <div className="flex-down full-width full-height">
         {this.hotKeyProvider()}
-        {this.props.dataModalOpen && (
+        {this.props.openModal === 'data' && (
           <DataModal
             chainActions={this.props.chainActions}
             changeSelectedFile={this.props.changeSelectedFile}
             loadCustomDataset={this.props.loadCustomDataset}
-            toggleDataModal={this.props.toggleDataModal}
+            setModalState={this.props.setModalState}
             setEncodingMode={this.props.setEncodingMode}
           />
         )}
-        {this.props.programModalOpen && (
+        {this.props.openModal === 'community' && (
           <CommunityProgramSearch
             triggerRepaint={this.triggerRepaint}
             loadExternalTemplate={this.props.loadExternalTemplate}
-            toggleProgramModal={this.props.toggleProgramModal}
+            setModalState={this.props.setModalState}
             templates={this.props.templates}
             userName={this.props.userName}
           />
@@ -461,13 +448,12 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     currentView: base.currentView,
     currentlySelectedFile: base.currentlySelectedFile,
     data: data.data,
-    dataModalOpen: base.dataModalOpen,
     editMode: isGallery ? false : base.editMode,
     editorError: base.editorError,
     encodingMode: base.encodingMode,
     fillableFields: computeValidAddNexts(template, templateMap),
     missingFields,
-    programModalOpen: base.programModalOpen,
+    openModal: base.openModal,
     showProgrammaticMode: isGallery ? false : base.showProgrammaticMode,
     showGUIView: base.showGUIView,
     spec,

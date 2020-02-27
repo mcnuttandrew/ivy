@@ -10,7 +10,7 @@ import {
   CustomCard,
   Suggestion,
 } from '../types';
-import {TEXT_TYPE} from '../constants/index';
+import {TEXT_TYPE, MATERIALIZING} from '../constants/index';
 import GALLERY from '../templates/gallery';
 import {AppState, ColumnHeader} from '../types';
 
@@ -292,7 +292,7 @@ export function getOrMakeColumn(
   if (column) {
     return column;
   }
-  if ((template.customCards || []).find(x => x.name === columnName) || columnName === '$$$MATERIALIZING') {
+  if ((template.customCards || []).find(x => x.name === columnName) || columnName === `${MATERIALIZING}`) {
     return makeCustomType({name: columnName, description: ''});
   }
   return null;

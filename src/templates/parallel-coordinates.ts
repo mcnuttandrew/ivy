@@ -285,6 +285,7 @@ const ParallelCoordinates: Template = {
   templateDescription: 'A way to visualize the relationships between a variety of measure varables',
   templateAuthor: 'HYDRA-AUTHORS',
   templateLanguage: 'vega',
+  disallowFanOut: true,
   widgets: [
     ...[0, 1, 2, 3, 4, 5].reduce((acc, idx) => {
       acc.push({

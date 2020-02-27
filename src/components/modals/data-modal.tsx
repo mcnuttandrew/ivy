@@ -11,7 +11,7 @@ interface Props {
   changeSelectedFile: GenericAction<string>;
   chainActions: GenericAction<any>;
   loadCustomDataset: GenericAction<LoadDataPayload>;
-  toggleDataModal: GenericAction<void>;
+  setModalState: GenericAction<string | null>;
   setEncodingMode?: GenericAction<string>;
 }
 
@@ -29,24 +29,24 @@ export default class DataModal extends React.Component<Props, State> {
   }
 
   handleSubmit(event: any): void {
-    const {loadCustomDataset, toggleDataModal} = this.props;
+    const {loadCustomDataset, setModalState} = this.props;
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (event): void => {
       // @ts-ignore
       loadCustomDataset({fileName: file.name, data: event.target.result});
-      toggleDataModal();
+      setModalState(null);
     };
 
     reader.readAsText(file);
   }
   render(): JSX.Element {
-    const {changeSelectedFile, toggleDataModal, chainActions, setEncodingMode} = this.props;
+    const {changeSelectedFile, setModalState, chainActions, setEncodingMode} = this.props;
     const {searchTerm} = this.state;
 
     return (
       <Modal
-        modalToggle={toggleDataModal}
+        modalToggle={(): any => setModalState(null)}
         className="data-modal"
         modalTitle="Select Dataset"
         bodyDirectionDown={true}
@@ -80,7 +80,7 @@ export default class DataModal extends React.Component<Props, State> {
                   onClick={(): any =>
                     chainActions([
                       (): any => changeSelectedFile(datasetName),
-                      (): any => toggleDataModal(),
+                      (): any => setModalState(null),
                       (): any => setEncodingMode(GALLERY.templateName),
                     ])
                   }

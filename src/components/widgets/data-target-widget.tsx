@@ -80,7 +80,13 @@ const DataTargetBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <DataTargetWidgetConfiguration {...common} widget={widg} />,
     uiElement: <DataTargetWidgetComponent {...common} widget={widg} />,
-    materializationOptions: (columns): string[] => columns.map(d => `"${d.field}"`),
+    materializationOptions: (columns, widget): {name: string; group?: string}[] => {
+      const widg = widget as Widget<DataTargetWidget>;
+      return columns.map(d => ({
+        name: `"${d.field}"`,
+        group: widg.config.allowedTypes.includes(d.type) ? 'Recomended' : 'Not Recomended',
+      }));
+    },
   };
 };
 

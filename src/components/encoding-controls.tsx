@@ -33,10 +33,10 @@ interface Props {
   setEditMode: GenericAction<boolean>;
   setProgrammaticView: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
+  setModalState: GenericAction<string | null>;
   template: Template;
   templateSaveState: string;
   templates: Template[];
-  toggleProgramModal: GenericAction<void>;
 }
 
 const UPDATE_TEMPLATE: {[x: string]: boolean} = {
@@ -58,7 +58,7 @@ export default function EncodingControls(props: Props): JSX.Element {
     setProgrammaticView,
     template,
     templateSaveState,
-    toggleProgramModal,
+    setModalState,
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
@@ -66,7 +66,7 @@ export default function EncodingControls(props: Props): JSX.Element {
   const FULL_BUTTONS = [
     {
       disabled: false,
-      onClick: (): any => toggleProgramModal(),
+      onClick: (): any => setModalState('community'),
       icon: <TiThSmallOutline />,
       label: 'Add more templates',
       tooltip: 'View the list of available templates from the online community.',

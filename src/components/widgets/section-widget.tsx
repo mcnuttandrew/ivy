@@ -17,7 +17,7 @@ const SectionBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <SectionWidgetConfiguration {...common} widget={widg} />,
     uiElement: <SectionWidgetComponent {...common} widget={widg} />,
-    materializationOptions: (): string[] => [],
+    materializationOptions: (): {name: string; group?: string}[] => [],
   };
 };
 
