@@ -36,4 +36,4 @@ export const switchCommon = {
   width: 50,
 };
 
-export const MATERIALIZING = '$$$MATERIALIZING';
+export const MATERIALIZING = '$PARAMETER FANNED OUT$';
