@@ -21,9 +21,9 @@ interface ChartAreaProps {
   encodingMode: string;
   languages: {[x: string]: HydraExtension};
   missingFields: string[];
+  setAllTemplateValues: GenericAction<TemplateMap>;
   setEncodingMode: GenericAction<string>;
   setMaterialization: GenericAction<ViewsToMaterialize>;
-  setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   spec: Json;
   switchView: GenericAction<string>;
@@ -31,14 +31,14 @@ interface ChartAreaProps {
   templateComplete: boolean;
   templateMap: TemplateMap;
   templates: Template[];
+  userName: string;
   views: string[];
   viewsToMaterialize: ViewsToMaterialize;
-  userName: string;
 }
 
 interface NewViewProps {
-  createNewView: GenericAction<void>;
   cloneView: GenericAction<void>;
+  createNewView: GenericAction<void>;
 }
 
 function newViewButton(props: NewViewProps): JSX.Element {
@@ -118,27 +118,27 @@ function* cartesian(head?: any, ...tail: any): any {
   for (const r of remainder) for (const h of head) yield [h, ...r];
 }
 interface MaterializeWrapperProps {
-  materializedViews: TemplateMap[];
-  templateMap: TemplateMap;
-  template: Template;
-  setMaterialization: GenericAction<ViewsToMaterialize>;
-  setAllTemplateValues: GenericAction<TemplateMap>;
-  viewsToMaterialize: ViewsToMaterialize;
   data: DataRow[];
-  spec: any;
+  materializedViews: TemplateMap[];
   renderer: any;
+  setAllTemplateValues: GenericAction<TemplateMap>;
+  setMaterialization: GenericAction<ViewsToMaterialize>;
+  spec: any;
+  template: Template;
+  templateMap: TemplateMap;
+  viewsToMaterialize: ViewsToMaterialize;
 }
 
 function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   const {
     data,
     materializedViews,
-    templateMap,
-    template,
-    setMaterialization,
-    setAllTemplateValues,
-    viewsToMaterialize,
     renderer,
+    setAllTemplateValues,
+    setMaterialization,
+    template,
+    templateMap,
+    viewsToMaterialize,
   } = props;
   const keySet = Object.entries(viewsToMaterialize)
     .filter(d => d[1].length)
@@ -270,7 +270,15 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     : [];
 
   return (
-    <div className="flex-down full-width full-height" style={{overflow: 'hidden'}}>
+    <div
+      style={{overflow: 'hidden'}}
+      className={classnames({
+        'flex-down': true,
+        'full-width': true,
+        'full-height': true,
+        'background-linen': materializedViews.length > 0,
+      })}
+    >
       <div className="chart-controls full-width flex">
         <div className="view-container">
           {views.map((view, idx) =>
@@ -290,8 +298,8 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
       >
         {templateGallery && (
           <Gallery
-            deleteTemplate={deleteTemplate}
             columns={columns}
+            deleteTemplate={deleteTemplate}
             setEncodingMode={setEncodingMode}
             spec={spec}
             templates={templates}
@@ -310,15 +318,15 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         {showChart &&
           materializedViews.length > 0 &&
           materializeWrapper({
-            materializedViews,
-            templateMap,
-            template,
-            setMaterialization,
-            setAllTemplateValues,
-            viewsToMaterialize,
             data,
-            spec,
+            materializedViews,
             renderer,
+            setAllTemplateValues,
+            setMaterialization,
+            spec,
+            template,
+            templateMap,
+            viewsToMaterialize,
           })}
         {!templateGallery && !showChart && (
           <div className="chart-unfullfilled">

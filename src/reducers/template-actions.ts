@@ -1,7 +1,7 @@
 import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
-import {TEMPLATE_BODY} from '../constants';
+import {TEMPLATE_BODY, MATERIALIZING} from '../constants';
 import {blindSet} from './reducer-utils';
 import {
   ModifyValueOnTemplatePayload,
@@ -59,7 +59,7 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
       draftState.templateMap[containingShelf] = val;
     }
 
-    if (state.templateMap[payload.field] === '"$$$MATERIALIZING"' && payload.text !== '"$$$MATERIALIZING"') {
+    if (state.templateMap[payload.field] === `"${MATERIALIZING}"` && payload.text !== `"${MATERIALIZING}"`) {
       delete draftState.viewsToMaterialize[payload.field];
     }
     draftState.templateMap[payload.field] = payload.text;

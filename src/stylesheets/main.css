@@ -100,6 +100,10 @@ input[type="number"]::-webkit-outer-spin-button {
   justify-content: space-evenly;
 }
 
+.margin-top {
+  margin-top: 5px;
+}
+
 .margin-right {
   margin-right: 5px;
 }
@@ -555,6 +559,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .background-3 {
   background: #fafafa;
+}
+
+.background-linen {
+  background: linen;
 }
 
 .filter-container {

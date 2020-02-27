@@ -83,7 +83,7 @@ const ShortcutBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <ShortcutsWidgetConfiguration {...common} widget={widget as Widget<ShortcutsWidget>} />,
     uiElement: <ShortcutsWidgetComponent {...common} widget={widget as Widget<ShortcutsWidget>} />,
-    materializationOptions: (): string[] => [],
+    materializationOptions: (): {name: string; group?: string}[] => [],
   };
 };
 export default ShortcutBuilder;

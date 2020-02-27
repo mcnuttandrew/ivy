@@ -164,8 +164,8 @@ class RootComponent extends React.Component<RootProps, State> {
   constructor(props: RootProps) {
     super(props);
     this.createFilter = this.createFilter.bind(this);
-    this.state = {repaintIdx: 0};
     this.triggerRepaint = this.triggerRepaint.bind(this);
+    this.state = {repaintIdx: 0};
   }
   componentDidMount(): void {
     this.props.loadDataFromPredefinedDatasets(this.props.currentlySelectedFile);

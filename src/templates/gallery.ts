@@ -11,6 +11,7 @@ const Gallery: Template = {
   templateDescription: 'blank filler template',
   templateAuthor: 'HYDRA-AUTHORS',
   templateLanguage: 'galleryLang',
+  disallowFanOut: true,
   widgets: [
     {name: 'asddd', type: 'Section', config: null},
     {name: 'asd', type: 'Text', config: {text: FIRST_TEXT}},

@@ -101,7 +101,7 @@ const MultiDataTargetBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <MultiDataTargetWidgetConfiguration {...common} widget={widg} />,
     uiElement: <MultiDataTargetComponent {...common} widget={widg} />,
-    materializationOptions: (): string[] => [],
+    materializationOptions: (): {name: string; group?: string}[] => [],
   };
 };
 

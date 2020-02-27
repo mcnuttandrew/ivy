@@ -78,9 +78,9 @@ const SwitchBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <SwitchWidgetConfiguration {...common} widget={widget as Widget<SwitchWidget>} />,
     uiElement: <SwitchWidgetComponent {...common} widget={widget as Widget<SwitchWidget>} />,
-    materializationOptions: (columns, widget): string[] => [
-      (widget as Widget<SwitchWidget>).config.activeValue,
-      (widget as Widget<SwitchWidget>).config.inactiveValue,
+    materializationOptions: (): {name: string; group?: string}[] => [
+      {name: (widget as Widget<SwitchWidget>).config.activeValue},
+      {name: (widget as Widget<SwitchWidget>).config.inactiveValue},
     ],
   };
 };

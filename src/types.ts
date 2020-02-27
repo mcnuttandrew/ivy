@@ -212,6 +212,11 @@ export interface Template {
    * Advanced tool for providing special extra cards
    */
   customCards?: CustomCard[];
+
+  /**
+   * Whether or not to allow view materialization / fan out
+   */
+  disallowFanOut?: boolean;
 }
 export type CustomCard = {name: string; description: string};
 /**
