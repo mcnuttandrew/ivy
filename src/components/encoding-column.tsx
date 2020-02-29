@@ -1,5 +1,6 @@
 import React from 'react';
 import {IgnoreKeys} from 'react-hotkeys';
+import Switch from 'react-switch';
 import {
   GenericAction,
   ModifyValueOnTemplatePayload,
@@ -8,6 +9,7 @@ import {
 } from '../actions';
 import {Template, GenWidget, TemplateMap, HydraExtension, ViewsToMaterialize, ColumnHeader} from '../types';
 import {classnames, toSet} from '../utils';
+import {switchCommon} from '../constants';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
@@ -209,21 +211,35 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
                 />
               </AddLabelToWidget>
             </IgnoreKeys>
-            <AddLabelToWidget label={'Template Language'}>
-              <Selector
-                options={Object.keys(languages).map(key => ({
-                  display: key,
-                  value: key,
-                }))}
-                selectedValue={template.templateLanguage}
-                onChange={(value: any): any =>
-                  modifyValueOnTemplate({
-                    value,
-                    key: 'templateLanguage',
-                  })
-                }
-              />
-            </AddLabelToWidget>
+            <div className="flex-down">
+              <AddLabelToWidget label={'Template Language'}>
+                <Selector
+                  options={Object.keys(languages).map(key => ({
+                    display: key,
+                    value: key,
+                  }))}
+                  selectedValue={template.templateLanguage}
+                  onChange={(value: any): any =>
+                    modifyValueOnTemplate({
+                      value,
+                      key: 'templateLanguage',
+                    })
+                  }
+                />
+              </AddLabelToWidget>
+              <AddLabelToWidget label={'Disallow Fan Out'}>
+                <Switch
+                  {...switchCommon}
+                  checked={!!template.disallowFanOut}
+                  onChange={(): any =>
+                    modifyValueOnTemplate({
+                      value: !template.disallowFanOut,
+                      key: 'disallowFanOut',
+                    })
+                  }
+                />
+              </AddLabelToWidget>
+            </div>
           </div>
         </div>
       )}

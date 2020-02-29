@@ -424,11 +424,14 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .measure-pill {
-  background: mediumseagreen;
+  /* background: mediumseagreen; */
+  background: mediumaquamarine;
 }
 
 .dimension-pill {
-  background: lightseagreen;
+  /* background: lightseagreen; */
+  background: lightskyblue;
+
 }
 
 .time-pill {
@@ -1000,12 +1003,20 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .related-views-button {
   align-items: center;
-  border: thin solid black;
-  border-radius: 5px;
+  cursor: pointer;
   display: flex;
   font-weight: bolder;
-  justify-content: center;
+  justify-content: space-between;
   font-size: 15px;
+}
+
+.related-views-button::before {
+  content: '▉';
+  font-size: 12px;
+}
+
+.related-views-button:hover {
+  background: lightgray;
 }
 
 /* ERROR BAR IN CODE EDITOR */

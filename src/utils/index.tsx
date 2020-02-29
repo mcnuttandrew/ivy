@@ -93,6 +93,7 @@ export function serializeTemplate(template: Template): string {
     $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
     templateName: template.templateName,
     templateDescription: template.templateDescription,
+    disallowFanOut: template.disallowFanOut,
     templateAuthor: template.templateAuthor,
     code: 'SEE BODY',
     templateLanguage: template.templateLanguage,
@@ -106,6 +107,7 @@ export function deserializeTemplate(templateString: string): Template {
   return {
     templateName: code.templateName,
     templateDescription: code.templateDescription,
+    disallowFanOut: code.disallowFanOut,
     code: 'SEE CODE EDITOR',
     templateLanguage: code.templateLanguage,
     widgets: code.widgets,

@@ -38,6 +38,8 @@ export const BLANK_TEMPLATE: Template = {
   templateLanguage: 'vega',
   templateName: 'BLANK TEMPLATE',
   templateDescription: 'FILL IN DESCRIPTION',
+  disallowFanOut: false,
+  customCards: [],
   code: JSON.stringify(vegaEmpty, null, 2),
   widgets: [],
 };

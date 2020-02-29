@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React from 'react';
+import React, {useState} from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
 import {TiInfoLarge} from 'react-icons/ti';
@@ -61,14 +61,31 @@ const MakePill: makePillType = props => {
   };
 };
 
+const makePillGroup = (props: MakePillProps) => ([key, columns]: [string, ColumnHeader[]]): JSX.Element => {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className="flex-down" key={key}>
+      <div className="flex space-between">
+        <h5>{`${key} (${columns.length})`}</h5>
+        <button onClick={(): any => setOpen(!open)}>{open ? 'hide' : 'show'}</button>
+      </div>
+      {(open ? columns : []).map(MakePill(props))}
+    </div>
+  );
+};
+
 export default function DataColumn(props: DataColumnProps): JSX.Element {
   const {columns, deleteFilter, onDropFilter, showGUIView, spec, template, updateFilter} = props;
 
   const canFilter = false;
   const hasCustomCards = template && template.customCards && template.customCards.length > 0;
+  const columnGroups = columns.reduce((acc, row) => {
+    acc[row.type] = (acc[row.type] || []).concat(row);
+    return acc;
+  }, {} as {[x: string]: ColumnHeader[]});
   return (
-    <div className="flex-down full-height">
-      <h5 className="flex">
+    <div className="flex-down">
+      {/* <h5 className="flex">
         <span>Data Columns</span>
         <Tooltip
           placement="bottom"
@@ -83,8 +100,9 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
             <TiInfoLarge />
           </div>
         </Tooltip>
-      </h5>
-      <div className="flex-down">{columns.map(MakePill({...props, checkOptions: false}))}</div>
+      </h5> */}
+      {/* <div className="flex-down">{sortedColumns.map(MakePill({...props, checkOptions: false}))}</div> */}
+      {Object.entries(columnGroups).map(makePillGroup({...props, checkOptions: false}))}
 
       {hasCustomCards && (
         <h5 className="flex">
@@ -123,7 +141,6 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
           <FilterTarget onDrop={onDropFilter} />
         </div>
       )}
-      <div className="bottom-fill" />
     </div>
   );
 }

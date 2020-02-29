@@ -29,12 +29,13 @@ export interface ViewCatalogEntry {
   viewsToMaterialize: ViewsToMaterialize;
 }
 export interface UndoRedoStackItem {
-  currentView: string;
+  columns: ColumnHeader[];
   currentTemplateInstance: Template;
+  currentView: string;
   encodingMode: string;
   templateMap: TemplateMap;
-  views: string[];
   viewCatalog: ViewCatalog;
+  views: string[];
   viewsToMaterialize: ViewsToMaterialize;
 }
 

@@ -27,13 +27,14 @@ interface RenderSuggestionProps {
   currentCode: string;
 }
 
-function renderSuggestion(props: RenderSuggestionProps, idx?: number): JSX.Element {
+function renderSuggestion(props: RenderSuggestionProps, idx: number): JSX.Element {
   const {suggestions, currentCode, addWidget, handleCodeUpdate, setAllTemplateValues} = props;
 
   function singleSuggestionButton(suggestion: Suggestion): JSX.Element {
     const {comment = '', sideEffect} = suggestion;
     return (
       <button
+        key={`${idx}-button-${comment}`}
         onClick={(): void => {
           handleCodeUpdate(takeSuggestion(currentCode, suggestion));
           if (sideEffect) {
@@ -101,14 +102,17 @@ export default function suggestionBox(props: Props): JSX.Element {
       {suggestionBox && suggestions.length > 0 && (
         <div className="suggestion-box-body">
           {template &&
-            Object.values(suggestionGroups).map((suggestionGroup: Suggestion[]) =>
-              renderSuggestion({
-                addWidget,
-                currentCode,
-                suggestions: suggestionGroup,
-                handleCodeUpdate,
-                setAllTemplateValues,
-              }),
+            Object.values(suggestionGroups).map((suggestionGroup: Suggestion[], idx) =>
+              renderSuggestion(
+                {
+                  addWidget,
+                  currentCode,
+                  suggestions: suggestionGroup,
+                  handleCodeUpdate,
+                  setAllTemplateValues,
+                },
+                idx,
+              ),
             )}
         </div>
       )}
