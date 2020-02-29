@@ -124,6 +124,10 @@ input[type="number"]::-webkit-outer-spin-button {
   position: relative;
 }
 
+.capitolize {
+  text-transform: capitalize;
+}
+
 .chart-container {
   border-left: 1px solid lightgray;
   padding: 20px;

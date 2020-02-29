@@ -22,6 +22,24 @@ export interface PillProps {
   typeNotAddable?: boolean;
 }
 
+interface TooltipWrapperProps {
+  children: JSX.Element;
+  message: string;
+}
+function TooltipWrapper(props: TooltipWrapperProps): JSX.Element {
+  const {children, message} = props;
+  return (
+    <Tooltip
+      placement="top"
+      trigger="hover"
+      mouseEnterDelay={1.2}
+      overlay={<span className="tooltip-internal">{message}</span>}
+    >
+      {children}
+    </Tooltip>
+  );
+}
+
 interface AddToNextProps {
   typeNotAddable: boolean;
   addToNextOpenSlot: GenericAction<ColumnHeader>;
@@ -29,16 +47,21 @@ interface AddToNextProps {
 }
 function addToNext(props: AddToNextProps): JSX.Element {
   const {typeNotAddable, addToNextOpenSlot, column} = props;
+  const message = typeNotAddable
+    ? 'We are unable to figure out where to place this column into the current template. If you know better than us, you can click and drag or use a drop down on the data target.'
+    : 'Click to automatically add this column to the next available slot';
   return (
-    <div
-      className={classnames({
-        'fixed-symbol-width': true,
-        'fixed-symbol-width-disable': typeNotAddable,
-      })}
-      onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
-    >
-      <TiPlus />
-    </div>
+    <TooltipWrapper message={message}>
+      <div
+        className={classnames({
+          'fixed-symbol-width': true,
+          'fixed-symbol-width-disable': typeNotAddable,
+        })}
+        onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
+      >
+        <TiPlus />
+      </div>
+    </TooltipWrapper>
   );
 }
 
@@ -50,12 +73,14 @@ interface RemovePillProps {
 function removePill(props: RemovePillProps): JSX.Element {
   const {setParam, column, containingField} = props;
   return (
-    <div
-      className="fixed-symbol-width"
-      onClick={(): any => setParam({text: null, field: containingField, column})}
-    >
-      <TiDeleteOutline />
-    </div>
+    <TooltipWrapper message={'Remove this field from the containing data targe'}>
+      <div
+        className="fixed-symbol-width"
+        onClick={(): any => setParam({text: null, field: containingField, column})}
+      >
+        <TiDeleteOutline />
+      </div>
+    </TooltipWrapper>
   );
 }
 
@@ -64,9 +89,13 @@ interface PillTypeProps {
 }
 function pillType({column}: PillTypeProps): JSX.Element {
   return (
-    <div className="fixed-symbol-width pill-symbol">
-      <DataSymbol type={column.type} />
-    </div>
+    <TooltipWrapper
+      message={`This column has type ${column.type}. You can change it by clicking the settings icon in the data column`}
+    >
+      <div className="fixed-symbol-width pill-symbol">
+        <DataSymbol type={column.type} />
+      </div>
+    </TooltipWrapper>
   );
 }
 
@@ -78,17 +107,19 @@ interface AddFilterProps {
 function addFilter(props: AddFilterProps): JSX.Element {
   const {column, inEncoding, createFilter} = props;
   return (
-    <div
-      className="fixed-symbol-width"
-      onClick={(): any => {
-        if (inEncoding) {
-          return;
-        }
-        createFilter(column.field);
-      }}
-    >
-      <TiFilter />
-    </div>
+    <TooltipWrapper message="Create a new filter based on this column">
+      <div
+        className="fixed-symbol-width"
+        onClick={(): any => {
+          if (inEncoding) {
+            return;
+          }
+          createFilter(column.field);
+        }}
+      >
+        <TiFilter />
+      </div>
+    </TooltipWrapper>
   );
 }
 
