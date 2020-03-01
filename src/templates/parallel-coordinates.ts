@@ -27,11 +27,7 @@ const PARALLEL_COORS: any = {
       values: [
         ...[0, 1, 2, 3, 4, 5].map(idx => {
           return {
-            $cond: {
-              query: `parameters.Col${idx}`,
-              true: `[Col${idx}]`,
-              deleteKeyOnFalse: true,
-            },
+            $cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`},
           };
         }),
       ],
@@ -52,7 +48,6 @@ const PARALLEL_COORS: any = {
             nice: true,
             domain: {data: 'table', field: `[Col${idx}]`},
           },
-          deleteKeyOnFalse: true,
         },
       };
     }),
@@ -65,7 +60,6 @@ const PARALLEL_COORS: any = {
           domain: {data: 'table', field: '[ColorBy]', sort: true},
           range: 'category',
         },
-        deleteKeyOnFalse: true,
       },
     },
   ],
@@ -82,7 +76,6 @@ const PARALLEL_COORS: any = {
             title: `[Col${idx}]`,
             offset: {scale: 'ord', value: `[Col${idx}]`, mult: -1},
           },
-          deleteKeyOnFalse: true,
         },
       };
     }),
@@ -95,7 +88,6 @@ const PARALLEL_COORS: any = {
           stroke: 'color',
           title: '[ColorBy]',
         },
-        deleteKeyOnFalse: true,
       },
     },
   ],
@@ -308,7 +300,7 @@ const ParallelCoordinates: Template = {
     {
       name: `Single Color`,
       type: 'List',
-      config: {allowedValues: toList(namedColors)},
+      config: {allowedValues: toList(namedColors), defaultValue: `"CadetBlue"`},
       validations: [{query: 'parameters.ColorBy', queryResult: 'hide'}],
     },
   ],
