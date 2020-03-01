@@ -1305,7 +1305,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .code-option-section-label {
+  max-width: 180px;
+  overflow: hidden;
   padding: 0 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .code-option-tab.selected-tab {

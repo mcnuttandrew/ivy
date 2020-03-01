@@ -7,6 +7,7 @@ import {useDrag} from 'react-dnd';
 import {ColumnHeader, DataType} from '../types';
 import DataSymbol from './data-symbol';
 import {classnames} from '../utils';
+import {HoverTooltip} from './tooltips';
 
 export interface PillProps {
   addToNextOpenSlot?: GenericAction<ColumnHeader>;
@@ -22,24 +23,6 @@ export interface PillProps {
   typeNotAddable?: boolean;
 }
 
-interface TooltipWrapperProps {
-  children: JSX.Element;
-  message: string;
-}
-function TooltipWrapper(props: TooltipWrapperProps): JSX.Element {
-  const {children, message} = props;
-  return (
-    <Tooltip
-      placement="top"
-      trigger="hover"
-      mouseEnterDelay={1.2}
-      overlay={<span className="tooltip-internal">{message}</span>}
-    >
-      {children}
-    </Tooltip>
-  );
-}
-
 interface AddToNextProps {
   typeNotAddable: boolean;
   addToNextOpenSlot: GenericAction<ColumnHeader>;
@@ -51,7 +34,7 @@ function addToNext(props: AddToNextProps): JSX.Element {
     ? 'We are unable to figure out where to place this column into the current template. If you know better than us, you can click and drag or use a drop down on the data target.'
     : 'Click to automatically add this column to the next available slot';
   return (
-    <TooltipWrapper message={message}>
+    <HoverTooltip message={message}>
       <div
         className={classnames({
           'fixed-symbol-width': true,
@@ -61,7 +44,7 @@ function addToNext(props: AddToNextProps): JSX.Element {
       >
         <TiPlus />
       </div>
-    </TooltipWrapper>
+    </HoverTooltip>
   );
 }
 
@@ -73,14 +56,14 @@ interface RemovePillProps {
 function removePill(props: RemovePillProps): JSX.Element {
   const {setParam, column, containingField} = props;
   return (
-    <TooltipWrapper message={'Remove this field from the containing data targe'}>
+    <HoverTooltip message={'Remove this field from the containing data targe'}>
       <div
         className="fixed-symbol-width"
         onClick={(): any => setParam({text: null, field: containingField, column})}
       >
         <TiDeleteOutline />
       </div>
-    </TooltipWrapper>
+    </HoverTooltip>
   );
 }
 
@@ -89,13 +72,13 @@ interface PillTypeProps {
 }
 function pillType({column}: PillTypeProps): JSX.Element {
   return (
-    <TooltipWrapper
+    <HoverTooltip
       message={`This column has type ${column.type}. You can change it by clicking the settings icon in the data column`}
     >
       <div className="fixed-symbol-width pill-symbol">
         <DataSymbol type={column.type} />
       </div>
-    </TooltipWrapper>
+    </HoverTooltip>
   );
 }
 
@@ -107,7 +90,7 @@ interface AddFilterProps {
 function addFilter(props: AddFilterProps): JSX.Element {
   const {column, inEncoding, createFilter} = props;
   return (
-    <TooltipWrapper message="Create a new filter based on this column">
+    <HoverTooltip message="Create a new filter based on this column">
       <div
         className="fixed-symbol-width"
         onClick={(): any => {
@@ -119,7 +102,7 @@ function addFilter(props: AddFilterProps): JSX.Element {
       >
         <TiFilter />
       </div>
-    </TooltipWrapper>
+    </HoverTooltip>
   );
 }
 

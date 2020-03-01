@@ -22,6 +22,7 @@ import {
 import {
   addWidget,
   deleteTemplate,
+  duplicateWidget,
   fillTemplateMapWithDefaults,
   loadExternalTemplate,
   modifyValueOnTemplate,
@@ -123,6 +124,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   // template
   [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
   [actionTypes.DELETE_TEMPLATE]: deleteTemplate,
+  [actionTypes.DUPLICATE_WIDGET]: duplicateWidget,
   [actionTypes.LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
   [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: modifyValueOnTemplate,
   [actionTypes.MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),

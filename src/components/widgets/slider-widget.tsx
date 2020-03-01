@@ -26,11 +26,20 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             onChange={(event): any => setWidgetValue('maxVal', event.target.value, idx)}
           />
         </AddLabelToWidget>
+      </div>
+      <div className="flex">
         <AddLabelToWidget label="Step Size">
           <input
             value={widget.config.step}
             type="number"
             onChange={(event): any => setWidgetValue('step', event.target.value, idx)}
+          />
+        </AddLabelToWidget>
+        <AddLabelToWidget label="Default Value">
+          <input
+            value={widget.config.defaultValue}
+            type="number"
+            onChange={(event): any => setWidgetValue('defaultValue', event.target.value, idx)}
           />
         </AddLabelToWidget>
       </div>

@@ -125,6 +125,7 @@ interface RootProps {
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
+  duplicateWidget: GenericAction<number>;
   fillTemplateMapWithDefaults: GenericAction<void>;
   loadCustomDataset: GenericAction<LoadDataPayload>;
   loadDataFromPredefinedDatasets: GenericAction<string>;
@@ -296,6 +297,7 @@ class RootComponent extends React.Component<RootProps, State> {
         <EncodingColumn
           addWidget={this.props.addWidget}
           columns={this.props.columns}
+          duplicateWidget={this.props.duplicateWidget}
           editMode={this.props.editMode}
           height={this.props.showProgrammaticMode && this.props.showGUIView && getHeight()}
           languages={this.props.languages}

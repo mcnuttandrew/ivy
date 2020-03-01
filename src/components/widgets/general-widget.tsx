@@ -46,6 +46,7 @@ interface Props {
   editMode: boolean;
   idx: number;
   moveWidget: (...args: any[]) => void;
+  duplicateWidget: any;
   removeWidget: any;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setMaterialization: GenericAction<ViewsToMaterialize>;

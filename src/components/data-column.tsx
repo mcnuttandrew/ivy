@@ -2,14 +2,12 @@
 import React, {useState} from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
-import {TiInfoLarge} from 'react-icons/ti';
-import Tooltip from 'rc-tooltip';
 import Pill from './pill';
 import {ColumnHeader} from '../types';
 import {GenericAction, CoerceTypePayload, UpdateFilterPayload} from '../actions/index';
 import {Template, CustomCard} from '../types';
 import {get, makeCustomType} from '../utils';
-import SimpleTooltip from './simple-tooltip';
+import {SimpleTooltip} from './tooltips';
 
 interface DataColumnProps {
   addToNextOpenSlot: GenericAction<ColumnHeader>;
@@ -79,29 +77,15 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
 
   const canFilter = false;
   const hasCustomCards = template && template.customCards && template.customCards.length > 0;
-  const columnGroups = columns.reduce((acc, row) => {
-    acc[row.type] = (acc[row.type] || []).concat(row);
-    return acc;
-  }, {} as {[x: string]: ColumnHeader[]});
+  const columnGroups = columns.reduce(
+    (acc, row) => {
+      acc[row.type] = (acc[row.type] || []).concat(row);
+      return acc;
+    },
+    {DIMENSION: [], MEASURE: [], TIME: [], CUSTOM: []} as {[x: string]: ColumnHeader[]},
+  );
   return (
     <div className="flex-down">
-      {/* <h5 className="flex">
-        <span>Data Columns</span>
-        <Tooltip
-          placement="bottom"
-          trigger="click"
-          overlay={
-            <span className="tooltip-internal">
-              This is the data column, where you can modify the current pills. TODO: a example pill.
-            </span>
-          }
-        >
-          <div className="fixed-symbol-widthtooltip-icon">
-            <TiInfoLarge />
-          </div>
-        </Tooltip>
-      </h5> */}
-      {/* <div className="flex-down">{sortedColumns.map(MakePill({...props, checkOptions: false}))}</div> */}
       {Object.entries(columnGroups).map(makePillGroup({...props, checkOptions: false}))}
 
       {hasCustomCards && (

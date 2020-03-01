@@ -1,6 +1,6 @@
 import {setTemplateValues, generateFullTemplateMap} from '../hydra-lang';
 import {GenWidget, Suggestion, ColumnHeader} from '../types';
-import {widgetFactory} from '../templates';
+import {DataTargetFactory} from '../templates';
 import {trim} from '../utils';
 
 /**
@@ -102,7 +102,7 @@ function inferFieldTransformationSuggestions(
       to: `"[${suggestedNewWidgetName}]"`,
       comment: `${from} -> ${suggestedNewWidgetName} (CREATE ${suggestedNewWidgetName})`,
       simpleReplace: false,
-      sideEffect: () => widgetFactory.DataTarget(widgets.length + 1),
+      sideEffect: () => DataTargetFactory(widgets.length + 1),
     });
     if (fieldPresentInData) {
       acc.push({
@@ -112,7 +112,7 @@ function inferFieldTransformationSuggestions(
         simpleReplace: false,
         sideEffect: setTemplateValues => {
           setTemplateValues({[suggestedNewWidgetName]: `"${from}"`});
-          return widgetFactory.DataTarget(widgets.length + 1);
+          return DataTargetFactory(widgets.length + 1);
         },
       });
     }

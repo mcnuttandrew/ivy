@@ -76,6 +76,7 @@ export const createNewView = createAction<void>(actionTypes.CREATE_NEW_VIEW);
 export const deleteFilter = createAction<number>(actionTypes.DELETE_FILTER);
 export const deleteTemplate = createAction<string>(actionTypes.DELETE_TEMPLATE);
 export const deleteView = createAction<string>(actionTypes.DELETE_VIEW);
+export const duplicateWidget = createAction<number>(actionTypes.DUPLICATE_WIDGET);
 export const loadExternalTemplate = createAction<Template>(actionTypes.LOAD_EXTERNAL_TEMPLATE);
 export const modifyValueOnTemplate = createAction<ModifyValueOnTemplatePayload>(
   actionTypes.MODIFY_VALUE_ON_TEMPLATE,
