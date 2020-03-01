@@ -7,7 +7,7 @@ import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '.
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, GenWidget} from '../types';
 import {classnames, get, getTemplateName} from '../utils';
-import SimpleTooltip from './simple-tooltip';
+import {SimpleTooltip} from './tooltips';
 
 const SHORTCUTS = [
   {

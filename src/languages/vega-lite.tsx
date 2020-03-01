@@ -20,10 +20,9 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
   const finalSpec = JSON.parse(JSON.stringify(spec));
 
-  if (!get(finalSpec, ['data', 'values'])) {
+  if (!get(finalSpec, ['data', 'values']) && !get(finalSpec, ['data', 'sequence'])) {
     finalSpec.data = {values: data};
   }
-
   return (
     <Vega
       actions={false}
@@ -84,6 +83,8 @@ export const BLANK_TEMPLATE: Template = {
   templateLanguage: 'vega-lite',
   templateName: 'BLANK TEMPLATE',
   templateDescription: 'FILL IN DESCRIPTION',
+  disallowFanOut: false,
+  customCards: [],
   code: JSON.stringify(vegaLiteEmpty, null, 2),
   widgets: [],
 };

@@ -125,6 +125,7 @@ interface RootProps {
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
+  duplicateWidget: GenericAction<number>;
   fillTemplateMapWithDefaults: GenericAction<void>;
   loadCustomDataset: GenericAction<LoadDataPayload>;
   loadDataFromPredefinedDatasets: GenericAction<string>;
@@ -243,13 +244,6 @@ class RootComponent extends React.Component<RootProps, State> {
             <h4>{getTemplateName(template)}</h4>
           </div>
         </div>
-        <RelatedViews
-          columns={this.props.columns}
-          setEncodingMode={this.props.setEncodingMode}
-          template={this.props.template}
-          templateMap={this.props.templateMap}
-          templates={this.props.templates}
-        />
         <ImportDataColumn
           currentlySelectedFile={this.props.currentlySelectedFile}
           setModalState={this.props.setModalState}
@@ -266,6 +260,13 @@ class RootComponent extends React.Component<RootProps, State> {
           spec={this.props.spec}
           template={template}
           updateFilter={this.props.updateFilter}
+        />
+        <RelatedViews
+          columns={this.props.columns}
+          setEncodingMode={this.props.setEncodingMode}
+          template={this.props.template}
+          templateMap={this.props.templateMap}
+          templates={this.props.templates}
         />
       </div>
     );
@@ -296,6 +297,7 @@ class RootComponent extends React.Component<RootProps, State> {
         <EncodingColumn
           addWidget={this.props.addWidget}
           columns={this.props.columns}
+          duplicateWidget={this.props.duplicateWidget}
           editMode={this.props.editMode}
           height={this.props.showProgrammaticMode && this.props.showGUIView && getHeight()}
           languages={this.props.languages}

@@ -70,6 +70,8 @@ export const BLANK_TEMPLATE: Template = {
   templateLanguage: 'data-table',
   templateName: 'BLANK DATA TABLE',
   templateDescription: 'FILL IN DESCRIPTION',
+  disallowFanOut: true,
+  customCards: [],
   code: TABLE.code,
   widgets: [],
 };

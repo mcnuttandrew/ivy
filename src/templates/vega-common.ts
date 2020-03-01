@@ -15,3 +15,15 @@ export const VEGA_CATEGORICAL_COLOR_SCHEMES = [
   'tableau20',
 ];
 export const AGGREGATES = ['count', 'missing', 'distinct', 'sum', 'mean', 'median', 'min', 'max'];
+export const tableau10 = [
+  '#4E79A7',
+  '#F28E2C',
+  '#E15759',
+  '#76B7B2',
+  '#59A14F',
+  '#EDC949',
+  '#AF7AA1',
+  '#FF9DA7',
+  '#9C755F',
+  '#BAB0AB',
+];

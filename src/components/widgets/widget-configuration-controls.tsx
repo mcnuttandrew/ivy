@@ -1,5 +1,5 @@
 import React from 'react';
-import {TiDelete, TiCog} from 'react-icons/ti';
+import {TiDelete, TiCog, TiExportOutline} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
 import {TemplateMap, GenWidget, Validation} from '../../types';
@@ -17,6 +17,7 @@ interface PlacementControlsProps {
   idx: number;
   moveWidget: (...args: any[]) => void;
   removeWidget: any;
+  duplicateWidget: any;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
@@ -82,7 +83,17 @@ function widgetInUse(code: string, name: string): boolean {
 }
 
 export default function WidgetConfigurationControls(props: PlacementControlsProps): JSX.Element {
-  const {allowedWidgets, code, controls, editMode, removeWidget, widget, setWidgetValue, idx} = props;
+  const {
+    allowedWidgets,
+    code,
+    controls,
+    editMode,
+    removeWidget,
+    duplicateWidget,
+    widget,
+    setWidgetValue,
+    idx,
+  } = props;
   if (!editMode) {
     return <div />;
   }
@@ -100,9 +111,14 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
             {controls}
             <ValidationBuilder widget={widget} setWidgetValue={setWidgetValue} idx={idx} />
             <h3>Other Actions</h3>
-            <button onClick={removeWidget}>
-              Delete Widget <TiDelete />
-            </button>
+            <div className="flex">
+              <button onClick={duplicateWidget}>
+                Duplicate Widget <TiExportOutline />
+              </button>
+              <button onClick={removeWidget}>
+                Delete Widget <TiDelete />
+              </button>
+            </div>
           </div>
         }
       >

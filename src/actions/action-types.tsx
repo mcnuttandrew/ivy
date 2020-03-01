@@ -9,6 +9,7 @@ export const CREATE_NEW_VIEW = 'create-new-view';
 export const DELETE_FILTER = 'delete-filter';
 export const DELETE_TEMPLATE = 'delete-template';
 export const DELETE_VIEW = 'delete-view';
+export const DUPLICATE_WIDGET = 'duplicate-widget';
 export const LOAD_EXTERNAL_TEMPLATE = 'load-external-template';
 export const MODIFY_VALUE_ON_TEMPLATE = 'modify-value-on-template';
 export const MOVE_WIDGET_IN_TEMPLATE = 'move-widget-in-template';

@@ -17,7 +17,7 @@ import {Template, HydraExtension} from '../types';
 import {classnames, NULL} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
 import GALLERY from '../templates/gallery';
-import SimpleTooltip from './simple-tooltip';
+import {SimpleTooltip, HoverTooltip} from './tooltips';
 
 interface Props {
   chainActions: GenericAction<any>;
@@ -195,11 +195,11 @@ export default function EncodingControls(props: Props): JSX.Element {
                 'template-modification-control--disabled': disabled,
               })}
             >
-              <div className="flex" onClick={(): any => onClick()}>
-                {iconComponent}
-              </div>
-
-              <SimpleTooltip message={tooltip} />
+              <HoverTooltip message={tooltip}>
+                <div className="flex" onClick={(): any => onClick()}>
+                  {iconComponent}
+                </div>
+              </HoverTooltip>
             </div>
           );
         })}

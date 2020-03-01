@@ -124,6 +124,10 @@ input[type="number"]::-webkit-outer-spin-button {
   position: relative;
 }
 
+.capitolize {
+  text-transform: capitalize;
+}
+
 .chart-container {
   border-left: 1px solid lightgray;
   padding: 20px;
@@ -424,11 +428,13 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .measure-pill {
-  background: mediumseagreen;
+  /* background: mediumseagreen; */
+  background: mediumaquamarine;
 }
 
 .dimension-pill {
-  background: lightseagreen;
+  /* background: lightseagreen; */
+  background: lightskyblue;
 }
 
 .time-pill {
@@ -483,7 +489,6 @@ input[type="number"]::-webkit-outer-spin-button {
   min-width: 50px;
   position: relative;
   text-align: left;
-  text-transform: uppercase;
   width: 50px;
 }
 
@@ -1000,12 +1005,20 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .related-views-button {
   align-items: center;
-  border: thin solid black;
-  border-radius: 5px;
+  cursor: pointer;
   display: flex;
   font-weight: bolder;
-  justify-content: center;
+  justify-content: space-between;
   font-size: 15px;
+}
+
+.related-views-button::before {
+  content: '▉';
+  font-size: 12px;
+}
+
+.related-views-button:hover {
+  background: lightgray;
 }
 
 /* ERROR BAR IN CODE EDITOR */
@@ -1290,7 +1303,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .code-option-section-label {
+  max-width: 180px;
+  overflow: hidden;
   padding: 0 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .code-option-tab.selected-tab {

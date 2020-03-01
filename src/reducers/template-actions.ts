@@ -245,6 +245,15 @@ export const addWidget: ActionResponse<Widget<any>> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.concat(payload));
 export const removeWidget: ActionResponse<number> = (state, payload) =>
   modifyCurrentWidgets(state, d => d.filter((_: any, idx: number) => payload !== idx));
+export const duplicateWidget: ActionResponse<number> = (state, payload) =>
+  modifyCurrentWidgets(state, d => {
+    return d.reduce((acc, row, idx) => {
+      if (idx !== payload) {
+        return acc.concat(row);
+      }
+      return acc.concat([row, {...row, name: `${row.name}-copy`}]);
+    }, []);
+  });
 
 export const moveWidget: ActionResponse<MoveWidgetPayload> = (state, payload) => {
   const {fromIdx, toIdx} = payload;

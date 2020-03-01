@@ -4,8 +4,8 @@ import UnitVis from './unit-vis';
 import DataTable from './data-table';
 
 const DEFAULT_LANGUAGES = {
-  [Vega.language]: Vega,
   [VegaLite.language]: VegaLite,
+  [Vega.language]: Vega,
   [UnitVis.language]: UnitVis,
   [DataTable.language]: DataTable,
 };

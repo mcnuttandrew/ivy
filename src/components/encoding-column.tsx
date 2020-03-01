@@ -1,5 +1,6 @@
 import React from 'react';
 import {IgnoreKeys} from 'react-hotkeys';
+import Switch from 'react-switch';
 import {
   GenericAction,
   ModifyValueOnTemplatePayload,
@@ -8,6 +9,7 @@ import {
 } from '../actions';
 import {Template, GenWidget, TemplateMap, HydraExtension, ViewsToMaterialize, ColumnHeader} from '../types';
 import {classnames, toSet} from '../utils';
+import {switchCommon} from '../constants';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../hydra-lang';
@@ -15,12 +17,13 @@ import {updateThumbnail} from '../utils';
 import {AddLabelToWidget} from './widgets/widget-common';
 import Selector from './selector';
 import Tooltip from 'rc-tooltip';
-import {TiPlus} from 'react-icons/ti';
-import {widgetFactory, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
+import {TiPlus, TiChevronRight} from 'react-icons/ti';
+import {widgetFactoryByGroups, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
 
 interface EncodingColumnProps {
   addWidget: GenericAction<GenWidget>;
   columns: ColumnHeader[];
+  duplicateWidget: GenericAction<number>;
   editMode: boolean;
   height?: number;
   languages: {[x: string]: HydraExtension};
@@ -40,6 +43,7 @@ interface AddWidgetButtonProps {
   addWidget: GenericAction<GenWidget>;
   widgets: GenWidget[];
 }
+
 function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
   const {addWidget, widgets} = props;
 
@@ -48,9 +52,10 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
     // eslint-disable-next-line react/prop-types
     const newWidget = widget(widgets.length);
     return (
-      <button key={key} onClick={(): any => addWidget(newWidget)}>
-        Add {key}
-      </button>
+      <div key={key} onClick={(): any => addWidget(newWidget)} className="cursor-pointer">
+        <TiChevronRight />
+        <span>New {key}</span>
+      </div>
     );
   };
   return (
@@ -60,8 +65,14 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
       overlay={
         <div className="add-widget-tooltip">
           <h3>Add New Widget</h3>
-          <h5>Basic Types</h5>
-          <div className="flex flex-wrap">{Object.entries(widgetFactory).map(renderOption)}</div>
+          {Object.entries(widgetFactoryByGroups).map(([group, obj]) => {
+            return (
+              <React.Fragment key={group}>
+                <h5>{group}</h5>
+                {Object.entries(obj).map(renderOption)}
+              </React.Fragment>
+            );
+          })}
           <h5>More complex</h5>
           <div className="flex flex-wrap">{Object.entries(preconfiguredWidgets).map(renderOption)}</div>
         </div>
@@ -100,6 +111,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   const {
     addWidget,
     columns,
+    duplicateWidget,
     editMode,
     height,
     languages,
@@ -127,6 +139,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
       key={idx}
       moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
       removeWidget={(): any => removeWidget(idx)}
+      duplicateWidget={(): any => duplicateWidget(idx)}
       setAllTemplateValues={setAllTemplateValues}
       setTemplateValue={setTemplateValue}
       setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
@@ -209,21 +222,35 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
                 />
               </AddLabelToWidget>
             </IgnoreKeys>
-            <AddLabelToWidget label={'Template Language'}>
-              <Selector
-                options={Object.keys(languages).map(key => ({
-                  display: key,
-                  value: key,
-                }))}
-                selectedValue={template.templateLanguage}
-                onChange={(value: any): any =>
-                  modifyValueOnTemplate({
-                    value,
-                    key: 'templateLanguage',
-                  })
-                }
-              />
-            </AddLabelToWidget>
+            <div className="flex-down">
+              <AddLabelToWidget label={'Template Language'}>
+                <Selector
+                  options={Object.keys(languages).map(key => ({
+                    display: key,
+                    value: key,
+                  }))}
+                  selectedValue={template.templateLanguage}
+                  onChange={(value: any): any =>
+                    modifyValueOnTemplate({
+                      value,
+                      key: 'templateLanguage',
+                    })
+                  }
+                />
+              </AddLabelToWidget>
+              <AddLabelToWidget label={'Disallow Fan Out'}>
+                <Switch
+                  {...switchCommon}
+                  checked={!!template.disallowFanOut}
+                  onChange={(): any =>
+                    modifyValueOnTemplate({
+                      value: !template.disallowFanOut,
+                      key: 'disallowFanOut',
+                    })
+                  }
+                />
+              </AddLabelToWidget>
+            </div>
           </div>
         </div>
       )}

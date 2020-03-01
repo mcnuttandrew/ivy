@@ -7,6 +7,7 @@ import {useDrag} from 'react-dnd';
 import {ColumnHeader, DataType} from '../types';
 import DataSymbol from './data-symbol';
 import {classnames} from '../utils';
+import {HoverTooltip} from './tooltips';
 
 export interface PillProps {
   addToNextOpenSlot?: GenericAction<ColumnHeader>;
@@ -29,16 +30,21 @@ interface AddToNextProps {
 }
 function addToNext(props: AddToNextProps): JSX.Element {
   const {typeNotAddable, addToNextOpenSlot, column} = props;
+  const message = typeNotAddable
+    ? 'We are unable to figure out where to place this column into the current template. If you know better than us, you can click and drag or use a drop down on the data target.'
+    : 'Click to automatically add this column to the next available slot';
   return (
-    <div
-      className={classnames({
-        'fixed-symbol-width': true,
-        'fixed-symbol-width-disable': typeNotAddable,
-      })}
-      onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
-    >
-      <TiPlus />
-    </div>
+    <HoverTooltip message={message}>
+      <div
+        className={classnames({
+          'fixed-symbol-width': true,
+          'fixed-symbol-width-disable': typeNotAddable,
+        })}
+        onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
+      >
+        <TiPlus />
+      </div>
+    </HoverTooltip>
   );
 }
 
@@ -50,12 +56,14 @@ interface RemovePillProps {
 function removePill(props: RemovePillProps): JSX.Element {
   const {setParam, column, containingField} = props;
   return (
-    <div
-      className="fixed-symbol-width"
-      onClick={(): any => setParam({text: null, field: containingField, column})}
-    >
-      <TiDeleteOutline />
-    </div>
+    <HoverTooltip message={'Remove this field from the containing data targe'}>
+      <div
+        className="fixed-symbol-width"
+        onClick={(): any => setParam({text: null, field: containingField, column})}
+      >
+        <TiDeleteOutline />
+      </div>
+    </HoverTooltip>
   );
 }
 
@@ -64,9 +72,13 @@ interface PillTypeProps {
 }
 function pillType({column}: PillTypeProps): JSX.Element {
   return (
-    <div className="fixed-symbol-width pill-symbol">
-      <DataSymbol type={column.type} />
-    </div>
+    <HoverTooltip
+      message={`This column has type ${column.type}. You can change it by clicking the settings icon in the data column`}
+    >
+      <div className="fixed-symbol-width pill-symbol">
+        <DataSymbol type={column.type} />
+      </div>
+    </HoverTooltip>
   );
 }
 
@@ -78,17 +90,19 @@ interface AddFilterProps {
 function addFilter(props: AddFilterProps): JSX.Element {
   const {column, inEncoding, createFilter} = props;
   return (
-    <div
-      className="fixed-symbol-width"
-      onClick={(): any => {
-        if (inEncoding) {
-          return;
-        }
-        createFilter(column.field);
-      }}
-    >
-      <TiFilter />
-    </div>
+    <HoverTooltip message="Create a new filter based on this column">
+      <div
+        className="fixed-symbol-width"
+        onClick={(): any => {
+          if (inEncoding) {
+            return;
+          }
+          createFilter(column.field);
+        }}
+      >
+        <TiFilter />
+      </div>
+    </HoverTooltip>
   );
 }
 

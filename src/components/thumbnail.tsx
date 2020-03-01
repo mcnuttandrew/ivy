@@ -11,7 +11,7 @@ function thumbnailLocation(
   templateName: string | null,
   templateAuthor: string | null,
 ): {url: string; local: boolean} {
-  if (!templateName) {
+  if (!templateName || templateName === 'BLANK TEMPLATE') {
     return {url: 'logo.png', local: true};
   }
   if (templateName === 'Polestar') {

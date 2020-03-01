@@ -46,6 +46,7 @@ interface Props {
   editMode: boolean;
   idx: number;
   moveWidget: (...args: any[]) => void;
+  duplicateWidget: any;
   removeWidget: any;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setMaterialization: GenericAction<ViewsToMaterialize>;
@@ -260,7 +261,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     >
       <div className="widget-body">{uiElement}</div>
       <WidgetConfigurationControls {...props} controls={controls} />
-      {options.length > 0 && !template.disallowFanOut && (
+      {options.length > 0 && !template.disallowFanOut && !editMode && (
         <Tooltip
           placement="top"
           trigger="click"

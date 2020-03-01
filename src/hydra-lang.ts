@@ -17,8 +17,6 @@ interface ConditionalArgs {
   query: string;
   true?: Json;
   false?: Json;
-  deleteKeyOnFalse?: boolean;
-  deleteKeyOnTrue?: boolean;
 }
 export type HydraConditional = {$cond: ConditionalArgs};
 
@@ -58,8 +56,8 @@ function shouldUpdateContainerWithValue(
 ): boolean {
   // if a conditional doesn't want that value to get added to the traversing object then ingnore it
   return (
-    (queryResult === 'false' && conditional.deleteKeyOnFalse) ||
-    (queryResult === 'true' && conditional.deleteKeyOnTrue)
+    (queryResult === 'false' && !conditional[queryResult]) ||
+    (queryResult === 'true' && !conditional[queryResult])
   );
 }
 

@@ -40,7 +40,6 @@ function aggregateConditional(key: string): JsonMap {
       // query: `${isCount} || (${filledIn} && !${isNone})`,
       query: `${filledIn} && ${isQuantitative}`,
       true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
-      deleteKeyOnFalse: true,
     },
   };
 }
@@ -49,7 +48,6 @@ function conditionalFieldName(key: string): JsonMap {
   return {
     $cond: {
       query: `${used(key)} && ${notCount(key)}`,
-      deleteKeyOnFalse: true,
       true: {
         $cond: {
           query: `(parameters.${key} === '\\"${META_COL_ROW}\\"') || (parameters.${key} === '\\"${META_COL_COL}\\"')`,
@@ -66,13 +64,12 @@ function zeroConditional(key: string): JsonMap {
     $cond: {
       query: `${used(key)} && parameters.${key}IncludeZero && parameters.${key}Agg === "\\"quantitative\\""`,
       true: `[${key}IncludeZero]`,
-      deleteKeyOnFalse: true,
     },
   };
 }
 
 const renderObjectIf = (object: Json, query: string, fieldName: string): JsonMap => ({
-  [fieldName]: {$cond: {query, true: object, deleteKeyOnFalse: true}},
+  [fieldName]: {$cond: {query, true: object}},
 });
 const encoding = {
   ...['X', 'Y'].reduce((acc: JsonMap, key) => {
@@ -89,11 +86,9 @@ const encoding = {
               $cond: {
                 query: `${used(key)} && parameters.${key}Type ===  "\\"quantitative\\""`,
                 true: `[${key}ScaleType]`,
-                deleteKeyOnFalse: true,
               },
             },
           },
-          deleteKeyOnFalse: true,
         },
       },
     };
@@ -123,27 +118,14 @@ const PolestarBody: Json = {
     $cond: {
       query: eitherMeta,
       true: {
-        row: {
-          $cond: {
-            query: paramsInclude(META_COL_ROW),
-            true: '[row]',
-            deleteKeyOnFalse: true,
-          },
-        },
-        column: {
-          $cond: {
-            query: paramsInclude(META_COL_COL),
-            true: '[column]',
-            deleteKeyOnFalse: true,
-          },
-        },
+        row: {$cond: {query: paramsInclude(META_COL_ROW), true: '[row]'}},
+        column: {$cond: {query: paramsInclude(META_COL_COL), true: '[column]'}},
       },
-      deleteKeyOnFalse: true,
     },
   },
-  encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding, deleteKeyOnFalse: true}},
-  mark: {$cond: {query: `!(${eitherMeta})`, true: mark, deleteKeyOnFalse: true}},
-  spec: {$cond: {query: eitherMeta, true: {encoding, mark}, deleteKeyOnFalse: true}},
+  encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding}},
+  mark: {$cond: {query: `!(${eitherMeta})`, true: mark}},
+  spec: {$cond: {query: eitherMeta, true: {encoding, mark}}},
 };
 
 const Polestar: Template = {
