@@ -146,7 +146,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
             <Thumbnail templateName={templateName} templateAuthor={templateAuthor} />
           </div>
           {!preventUse && (
-            <button className="use-button" onClick={(): any => setEncodingMode(templateName)}>
+            <button type="button" className="use-button" onClick={(): any => setEncodingMode(templateName)}>
               USE
             </button>
           )}

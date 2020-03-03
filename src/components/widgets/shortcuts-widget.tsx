@@ -25,12 +25,18 @@ function ShortcutsWidgetConfiguration(props: GeneralWidget<ShortcutsWidget>): JS
             <div key={`${idx}-shortcut`} className="flex">
               <AddLabelToWidget label={'Shortcut name'}>
                 <IgnoreKeys style={{height: '100%'}}>
-                  <input value={shortcut.label || ''} type="text" onChange={setValue('label')} />
+                  <input
+                    aria-label={`Shortcut name`}
+                    value={shortcut.label || ''}
+                    type="text"
+                    onChange={setValue('label')}
+                  />
                 </IgnoreKeys>
               </AddLabelToWidget>
               <AddLabelToWidget label={'Shortcut function'}>
                 <IgnoreKeys style={{height: '100%'}}>
                   <input
+                    aria-label={`Shortcut function`}
                     value={shortcut.shortcutFunction || ''}
                     type="text"
                     onChange={setValue('shortcutFunction')}
@@ -66,6 +72,7 @@ function ShortcutsWidgetComponent(props: GeneralWidget<ShortcutsWidget>): JSX.El
       {widget.config.shortcuts.map(
         (shortcut: Shortcut): JSX.Element => (
           <button
+            type="button"
             onClick={(): void => {
               setAllTemplateValues(evaluateShortcut(shortcut, templateMap));
             }}

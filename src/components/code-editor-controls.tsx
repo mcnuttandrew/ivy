@@ -86,6 +86,7 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
             {control.options.map((row: any) => {
               return (
                 <button
+                  type="button"
                   className={classnames({selected: row.value === control.current})}
                   key={row.name}
                   onClick={(): any => control.update(row.value)}
@@ -114,7 +115,7 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
               });
             }}
           >
-            <button>{name}</button>
+            <button type="button">{name}</button>
             <div>{description}</div>
           </div>
         );

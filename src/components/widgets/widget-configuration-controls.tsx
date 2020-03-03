@@ -61,13 +61,19 @@ function ValidationBuilder(props: ValidationBuilderProps): JSX.Element {
             </AddLabelToWidget>
             <AddLabelToWidget label="Query">
               <IgnoreKeys style={{height: '100%'}}>
-                <input value={validation.query} type="text" onChange={validationUpdate(jdx, fromEvent)} />
+                <input
+                  aria-label={`Validation query`}
+                  value={validation.query}
+                  type="text"
+                  onChange={validationUpdate(jdx, fromEvent)}
+                />
               </IgnoreKeys>
             </AddLabelToWidget>
           </div>
         );
       })}
       <button
+        type="button"
         onClick={(): void => {
           setWidgetValue('validations', validations.concat({query: 'true', queryResult: 'show'}), idx);
         }}

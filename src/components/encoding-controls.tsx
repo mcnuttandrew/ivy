@@ -81,6 +81,7 @@ export default function EncodingControls(props: Props): JSX.Element {
           {Object.keys(languages).map(language => {
             return (
               <button
+                type="button"
                 key={language}
                 onClick={(): void => {
                   chainActions([
@@ -109,9 +110,15 @@ export default function EncodingControls(props: Props): JSX.Element {
         return (
           <div className="tooltip-internal flex-down">
             <h5>How should we copy the current state?</h5>
-            <button onClick={buildReaction('output')}>Just output</button>
-            <button onClick={buildReaction('body')}>Body but not params</button>
-            <button onClick={buildReaction('all')}>Everything</button>
+            <button type="button" onClick={buildReaction('output')}>
+              Just output
+            </button>
+            <button type="button" onClick={buildReaction('body')}>
+              Body but not params
+            </button>
+            <button type="button" onClick={buildReaction('all')}>
+              Everything
+            </button>
           </div>
         );
       },

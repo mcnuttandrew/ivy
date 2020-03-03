@@ -18,7 +18,9 @@ export default function ImportDataColumn(props: Props): JSX.Element {
           <TiDatabase />
           <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
         </div>
-        <button onClick={(): any => setModalState('data')}>CHANGE</button>
+        <button type="button" onClick={(): any => setModalState('data')}>
+          CHANGE
+        </button>
       </div>
     </div>
   );

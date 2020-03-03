@@ -30,6 +30,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
                     <DataSymbol type={type} />
                   </div>
                   <input
+                    aria-label={`Allowed checkbox for ${type}`}
                     type="checkbox"
                     checked={checked}
                     onChange={(): void => {
@@ -50,6 +51,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
           <span className="tool-description">Required:</span>
           <input
             type="checkbox"
+            aria-label="Widget is required"
             onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
             checked={!!widget.config.required}
           />

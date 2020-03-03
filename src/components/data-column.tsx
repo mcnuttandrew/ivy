@@ -65,7 +65,9 @@ const makePillGroup = (props: MakePillProps) => ([key, columns]: [string, Column
     <div className="flex-down" key={key}>
       <div className="flex space-between capitolize">
         <h5>{`${key.toLowerCase()} (${columns.length})`}</h5>
-        <button onClick={(): any => setOpen(!open)}>{open ? 'hide' : 'show'}</button>
+        <button type="button" onClick={(): any => setOpen(!open)}>
+          {open ? 'hide' : 'show'}
+        </button>
       </div>
       {(open ? columns : []).map(MakePill(props))}
     </div>

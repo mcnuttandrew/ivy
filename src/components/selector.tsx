@@ -29,6 +29,7 @@ export default function Selector(props: SelectorProps): JSX.Element {
   const groups = useGroups && groupBy(options);
   return (
     <select
+      aria-label="general purpose selector"
       className="hydra-selector"
       value={selectedValue}
       onChange={({target: {value}}): any => onChange(value)}

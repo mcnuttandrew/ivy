@@ -87,7 +87,7 @@ function viewOption(props: ViewOptionProps): JSX.Element {
       })}
       onClick={(): any => switchView(view)}
     >
-      <button>{view}</button>
+      <button type="button">{view}</button>
       <Tooltip
         placement="bottom"
         trigger="click"
@@ -96,6 +96,7 @@ function viewOption(props: ViewOptionProps): JSX.Element {
             <div>View Controls</div>
             <IgnoreKeys style={{height: '100%'}}>
               <input
+                aria-label={`Set view name`}
                 value={view}
                 type="text"
                 onChange={(e): any => changeViewName({idx, value: e.target.value})}
@@ -174,6 +175,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
                   .join(' ')}
               </span>
               <button
+                type="button"
                 onClick={(): void => {
                   const newMat = Object.keys(view).reduce(
                     (acc, row) => {

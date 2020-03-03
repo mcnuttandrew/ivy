@@ -34,6 +34,7 @@ function renderSuggestion(props: RenderSuggestionProps, idx: number): JSX.Elemen
     const {comment = '', sideEffect} = suggestion;
     return (
       <button
+        type="button"
         key={`${idx}-button-${comment}`}
         onClick={(): void => {
           handleCodeUpdate(takeSuggestion(currentCode, suggestion));
@@ -59,7 +60,7 @@ function renderSuggestion(props: RenderSuggestionProps, idx: number): JSX.Elemen
       key={`${suggestions[0].from} -> ${idx}`}
       overlay={<div className="suggestion-tooltip flex-down">{suggestions.map(singleSuggestionButton)}</div>}
     >
-      <button>{`${suggestions[0].from} -> ?`}</button>
+      <button type="button">{`${suggestions[0].from} -> ?`}</button>
     </Tooltip>
   );
 }

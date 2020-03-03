@@ -39,6 +39,7 @@ export default function Filter({column, filter, updateFilter, deleteFilter}: Fil
               <div className="grid">
                 <span className="grid-col-1">min</span>
                 <input
+                  aria-label="filter min value"
                   className="grid-col-2"
                   type="number"
                   value={range[0]}
@@ -46,6 +47,7 @@ export default function Filter({column, filter, updateFilter, deleteFilter}: Fil
                 />
                 <span className="grid-col-1">max</span>
                 <input
+                  aria-label="filter max value"
                   className="grid-col-2"
                   type="number"
                   value={range[1]}

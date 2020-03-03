@@ -126,6 +126,7 @@ export default class CodeEditor extends React.Component<Props> {
               {control.options.map((row: any) => {
                 return (
                   <button
+                    type="button"
                     className={classnames({selected: row.value === control.current})}
                     key={row.name}
                     onClick={(): any => control.update(row.value)}

@@ -78,7 +78,7 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
         </div>
       }
     >
-      <button>
+      <button type="button">
         Add Widget <TiPlus />
       </button>
     </Tooltip>
@@ -199,6 +199,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
             <IgnoreKeys style={{height: '100%'}}>
               <AddLabelToWidget label={'Name'}>
                 <input
+                  aria-label="Template Name"
                   type="text"
                   value={template.templateName}
                   onChange={(event): any =>
@@ -211,6 +212,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
               </AddLabelToWidget>
               <AddLabelToWidget label={'Description'}>
                 <input
+                  aria-label="Template Description"
                   type="text"
                   value={template.templateDescription}
                   onChange={(event): any =>
