@@ -28,6 +28,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
         <AddLabelToWidget label={'Active Value'}>
           <IgnoreKeys style={{height: '100%'}}>
             <input
+              aria-label={`Inactive value`}
               value={config.activeValue}
               type="text"
               onChange={(event): void => setWidgetValue('activeValue', event.target.value, idx)}
@@ -37,6 +38,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
         <AddLabelToWidget label={'Inactive Value'}>
           <IgnoreKeys style={{height: '100%'}}>
             <input
+              aria-label={`Inactive value`}
               value={config.inactiveValue}
               type="text"
               onChange={(event): void => setWidgetValue('inactiveValue', event.target.value, idx)}

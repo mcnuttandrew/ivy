@@ -39,5 +39,11 @@ export default function Thumbnail(props: ThumbnailProps): JSX.Element {
       .then(x => x.text())
       .then(x => setSrc(x));
   }, [templateName, templateAuthor]);
-  return <img src={src} onError={(): any => setSrc('logo.png')} />;
+  return (
+    <img
+      alt={`Logo for ${templateName} by ${templateAuthor}`}
+      src={src}
+      onError={(): any => setSrc('logo.png')}
+    />
+  );
 }

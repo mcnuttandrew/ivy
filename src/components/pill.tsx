@@ -149,6 +149,7 @@ function baseBallCard(props: BaseBallCardProps): JSX.Element {
                   key={type}
                 >
                   <button
+                    type="button"
                     className={classnames({
                       'selected-dimension': column.type === type,
                     })}

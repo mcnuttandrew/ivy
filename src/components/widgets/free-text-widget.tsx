@@ -23,6 +23,7 @@ function FreeTextWidgetComponent(props: GeneralWidget<FreeTextWidget>): JSX.Elem
       <div className="widget-title">{widgetName(widget, editMode)}</div>
       <IgnoreKeys style={{height: '100%'}}>
         <input
+          aria-label={`${widget.name} text box`}
           value={trim((templateMap[widget.name] as string) || '')}
           type="text"
           onChange={(event): any => setTemplateValue({field, text: `"${event.target.value}"`})}

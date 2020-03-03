@@ -7,6 +7,7 @@ export function TextWidgetConfiguration(props: GeneralWidget<TextWidget>): JSX.E
   return (
     <div className="text-widget">
       <textarea
+        aria-label={`Message`}
         placeholder="Type a message that will appear in the encoding area"
         value={widget.config.text}
         onChange={(event): any => setWidgetValue('text', event.target.value, idx)}

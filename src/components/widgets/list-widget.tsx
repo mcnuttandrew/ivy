@@ -37,6 +37,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
             <div className="flex-down">
               <IgnoreKeys style={{height: '100%'}}>
                 <input
+                  aria-label={`allow value set`}
                   value={value.value}
                   type="text"
                   onChange={(event): any => {
@@ -53,6 +54,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
         );
       })}
       <button
+        type="button"
         onClick={(): void => {
           const updated = [...widget.config.allowedValues, {display: 'X', value: 'X'}];
           setWidgetValue('allowedValues', updated, idx);

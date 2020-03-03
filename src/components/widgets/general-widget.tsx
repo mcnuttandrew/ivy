@@ -127,6 +127,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
       })}
       <div className="flex margin-top">
         <button
+          type="button"
           onClick={(): any => {
             setMaterialization({...viewsToMaterialize, [widget.name]: allowedValues.map(({name}) => name)});
             setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
@@ -139,6 +140,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
           .map(([key, group]) => {
             return (
               <button
+                type="button"
                 key={`button-${key}`}
                 onClick={(): any => {
                   setMaterialization({...viewsToMaterialize, [widget.name]: group.map(({name}) => name)});
@@ -150,6 +152,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
             );
           })}
         <button
+          type="button"
           onClick={(): any => {
             setMaterialization({...viewsToMaterialize, [widget.name]: []});
             setTemplateValue({field: widget.name, text: getDefaultValueForWidget(widget)});

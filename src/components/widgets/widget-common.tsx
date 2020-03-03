@@ -16,6 +16,7 @@ export function EditParameterName(props: EditParameterNameProps): JSX.Element {
     <AddLabelToWidget label={'Parameter Name'}>
       <IgnoreKeys style={{height: '100%'}}>
         <input
+          aria-label={`Parameter name`}
           value={widget.name || ''}
           type="text"
           onChange={(event): any => setWidgetValue('name', event.target.value, idx)}
@@ -36,6 +37,7 @@ export function EditDisplayName(props: EditDisplayNameProps): JSX.Element {
     <AddLabelToWidget label={'Display Name'}>
       <IgnoreKeys style={{height: '100%'}}>
         <input
+          aria-label={`Display name`}
           value={widget.displayName || ''}
           type="text"
           onChange={(event): any => setWidgetValue('displayName', event.target.value, idx)}

@@ -30,6 +30,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
                     <DataSymbol type={type} />
                   </div>
                   <input
+                    aria-label={`Allow ${type} in multidatatarget`}
                     type="checkbox"
                     checked={checked}
                     onChange={(): void => {
@@ -50,6 +51,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
         <div className="flex">
           <span className="tool-description">Required:</span>
           <input
+            aria-label={`Required`}
             type="checkbox"
             onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
             checked={!!widget.config.required}
@@ -60,6 +62,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
         <div className="flex-down">
           <span className="tool-description">Min Targets</span>
           <input
+            aria-label={`Min number of targets`}
             value={widget.config.minNumberOfTargets}
             type="number"
             onChange={(event): any => setWidgetValue('minNumberOfTargets', event.target.value, idx)}
@@ -68,6 +71,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
         <div className="flex-down">
           <span className="tool-description">Max Targets</span>
           <input
+            aria-label={`Max number of targets`}
             type="number"
             value={widget.config.maxNumberOfTargets}
             onChange={(event): any => setWidgetValue('maxNumberOfTargets', event.target.value, idx)}
