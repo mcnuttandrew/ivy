@@ -120,29 +120,24 @@ export interface Widget<T> {
 export interface DataTargetWidget {
   allowedTypes: DataType[];
   required: boolean;
-  [x: string]: any;
 }
 export interface MultiDataTargetWidget {
   allowedTypes: DataType[];
   minNumberOfTargets?: number;
   maxNumberOfTargets?: number;
   required: boolean;
-  [x: string]: any;
 }
 export interface ListWidget {
   allowedValues: {display: string; value: string}[];
   defaultValue: string;
-  [x: string]: any;
 }
 export interface SwitchWidget {
   activeValue: string;
   inactiveValue: string;
   defaultsToActive: boolean;
-  [x: string]: any;
 }
 export interface TextWidget {
   text: string;
-  [x: string]: any;
 }
 export type SectionWidget = null;
 export interface SliderWidget {
@@ -150,7 +145,6 @@ export interface SliderWidget {
   maxVal: number;
   step?: number;
   defaultValue: number;
-  [x: string]: any;
 }
 
 export interface Shortcut {

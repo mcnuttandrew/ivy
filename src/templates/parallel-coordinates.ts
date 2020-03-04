@@ -271,7 +271,7 @@ const namedColors = [
   'Yellow',
   'YellowGreen',
 ];
-
+const cols = [0, 1, 2, 3, 4, 5];
 const ParallelCoordinates: Template = {
   templateName: 'parallel coordinates',
   templateDescription: 'A way to visualize the relationships between a variety of measure varables',
@@ -279,7 +279,26 @@ const ParallelCoordinates: Template = {
   templateLanguage: 'vega',
   disallowFanOut: true,
   widgets: [
-    ...[0, 1, 2, 3, 4, 5].reduce((acc, idx) => {
+    {type: 'Section', name: 'warning header'},
+    {
+      type: 'Text',
+      name: 'repeat warning',
+      config: {text: 'This template requires each column be unique'},
+      validations: [
+        {
+          query: `${cols
+            .map((d, idx) =>
+              cols
+                .filter((x, jdx) => idx !== jdx)
+                .map(x => `(parameters.Col${d} && (parameters.Col${x} === parameters.Col${d}))`)
+                .join(' || '),
+            )
+            .join(' || ')}`,
+          queryResult: 'show',
+        },
+      ],
+    },
+    ...cols.reduce((acc, idx) => {
       acc.push({
         name: `Col${idx}`,
         type: 'DataTarget',

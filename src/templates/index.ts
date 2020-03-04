@@ -64,7 +64,7 @@ export const ShortcutsFactory: WidgetFactoryFunc = idx =>
 export const FreeTextFactory: WidgetFactoryFunc = idx =>
   ({name: `FreeText${idx}`, type: 'FreeText', config: {}} as Widget<ShortcutsWidget>);
 export const TextFactory: WidgetFactoryFunc = idx =>
-  ({name: `Text${idx}`, type: 'FreeText', config: {}} as Widget<TextWidget>);
+  ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as Widget<TextWidget>);
 
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: DataTargetFactory,
