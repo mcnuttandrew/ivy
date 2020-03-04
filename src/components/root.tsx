@@ -442,6 +442,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
   const isGallery = GALLERY.templateName === template.templateName;
   const spec = evaluateHydraProgram(template, templateMap);
+  console.log('fan out', base.viewsToMaterialize);
   return {
     canRedo: base.redoStack.length >= 1,
     canUndo: base.undoStack.length >= 1,

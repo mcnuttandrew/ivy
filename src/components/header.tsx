@@ -16,7 +16,7 @@ export default class Header extends React.Component<HeaderProps> {
     const {triggerUndo, triggerRedo, canRedo, canUndo} = this.props;
     return (
       <div className="header flex background-1">
-        <div className="flex">
+        <div className="flex center">
           <img alt="hydra logo" src="logo.png" />
           <div>Hydra</div>
           <div className="flex state-action-controls">

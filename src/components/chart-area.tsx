@@ -2,12 +2,13 @@ import React from 'react';
 import {Template, ColumnHeader, Json, HydraExtension, ViewsToMaterialize, TemplateMap} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog, TiDocumentAdd} from 'react-icons/ti';
+import {TiCog, TiDocumentAdd, TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, DataRow, SetTemplateValuePayload} from '../actions';
 import Gallery from './gallery';
 import GALLERY from '../templates/gallery';
 import {evaluateHydraProgram} from '../hydra-lang';
+import {HoverTooltip} from './tooltips';
 
 interface ChartAreaProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
@@ -102,7 +103,9 @@ function viewOption(props: ViewOptionProps): JSX.Element {
                 onChange={(e): any => changeViewName({idx, value: e.target.value})}
               />
             </IgnoreKeys>
-            <button onClick={(): any => deleteView(view)}>delete view</button>
+            <button type="button" onClick={(): any => deleteView(view)}>
+              delete view
+            </button>
           </div>
         }
       >
@@ -147,18 +150,19 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
 
   function removeButton(name: string, key: string, value: string): JSX.Element {
     return (
-      <button
+      <div
+        className="cursor-pointer"
         onClick={(): void => {
-          // const key = Array.from(keySet)[0] as string;
-          // const value = view[key];
           setMaterialization({
             ...viewsToMaterialize,
             [key]: (viewsToMaterialize[key] || []).filter(d => d !== value),
           });
         }}
       >
-        {name}
-      </button>
+        <HoverTooltip message="remove this option from the fan out">
+          <TiDeleteOutline />
+        </HoverTooltip>
+      </div>
     );
   }
   return (
@@ -168,54 +172,60 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
         const spec = evaluateHydraProgram(template, newTemplateMap);
         return (
           <div key={`view-${idx}`} className="render-wrapper">
-            <div>
+            <div className="render-wrapper-header">
               <span className="render-wrapper-title">
                 {Object.entries(view)
                   .map(row => row.join(': '))
                   .join(' ')}
               </span>
-              <button
-                type="button"
-                onClick={(): void => {
-                  const newMat = Object.keys(view).reduce(
-                    (acc, row) => {
-                      acc[row] = [];
-                      return acc;
-                    },
-                    {...viewsToMaterialize},
-                  );
-                  setMaterialization(newMat);
-                  setAllTemplateValues(newTemplateMap);
-                }}
-              >
-                SELECT
-              </button>
-              {keySet.size === 1 &&
-                removeButton(
-                  'REMOVE',
-                  Array.from(keySet)[0] as string,
-                  view[Array.from(keySet)[0] as string] as string,
-                )}
-              {keySet.size > 1 && (
-                <Tooltip
-                  placement="top"
-                  trigger="click"
-                  overlay={
-                    <div className="flex-down">
-                      <h3>Remove which of the following keys</h3>
-                      {Array.from(keySet).map((key: string) => {
-                        return removeButton(
-                          `${key}: ${view[key as string]}`,
-                          key,
-                          view[key as string] as string,
-                        );
-                      })}
-                    </div>
-                  }
+              <div className="flex render-wrapper-controls">
+                <div
+                  className="cursor-pointer"
+                  onClick={(): void => {
+                    const newMat = Object.keys(view).reduce(
+                      (acc, row) => {
+                        acc[row] = [];
+                        return acc;
+                      },
+                      {...viewsToMaterialize},
+                    );
+                    setMaterialization(newMat);
+                    setAllTemplateValues(newTemplateMap);
+                  }}
                 >
-                  <button>REMOVE</button>
-                </Tooltip>
-              )}
+                  <HoverTooltip message="select this view">
+                    <TiInputChecked />
+                  </HoverTooltip>
+                </div>
+                {keySet.size === 1 &&
+                  removeButton(
+                    'REMOVE',
+                    Array.from(keySet)[0] as string,
+                    view[Array.from(keySet)[0] as string] as string,
+                  )}
+                {keySet.size > 1 && (
+                  <Tooltip
+                    placement="top"
+                    trigger="click"
+                    overlay={
+                      <div className="flex-down">
+                        <h3>Remove which of the following keys</h3>
+                        {Array.from(keySet).map((key: string) => {
+                          return removeButton(
+                            `${key}: ${view[key as string]}`,
+                            key,
+                            view[key as string] as string,
+                          );
+                        })}
+                      </div>
+                    }
+                  >
+                    <div>
+                      <TiDeleteOutline />
+                    </div>
+                  </Tooltip>
+                )}
+              </div>
             </div>
             {renderer({
               data,
