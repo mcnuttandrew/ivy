@@ -11,7 +11,7 @@ import {switchCommon, MATERIALIZING} from '../../constants';
 import {TemplateMap, Widget, GenWidget, Template, ViewsToMaterialize} from '../../types';
 import {ColumnHeader} from '../../types';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
-import {classnames, trim} from '../../utils';
+import {classnames} from '../../utils';
 import {getDefaultValueForWidget} from '../../hydra-lang';
 
 import WidgetConfigurationControls from './widget-configuration-controls';
