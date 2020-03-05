@@ -227,7 +227,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
     },
   ];
   return (
-    <div className="code-controls flex background-2 space-between">
+    <div className="code-controls flex space-between">
       <div className="flex code-option-tabs">
         {BUTTONS.map(({label, buttons}) => {
           return (

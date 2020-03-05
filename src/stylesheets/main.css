@@ -26,9 +26,9 @@ button {
   border: none;
   border-radius: 5px;
   font-size: 10px;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   text-decoration: underline;
-  font-weight: 900;
+  /* font-weight: 900; */
 }
 
 button:disabled {
@@ -189,7 +189,6 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .chart-controls {
-  background: whitesmoke;
   height: 48px;
   min-height: 48px;
   padding: 5px 0;
@@ -369,7 +368,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .widget-section .widget-title {
   color: #333;
   font-size: 10px;
-  font-weight: 700;
+  /* font-weight: 700; */
   white-space: nowrap;
 }
 
@@ -476,8 +475,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .shelf {
   align-items: center;
-  background: #757575;
-  border: 2px solid #757575;
+  background: #333;
+  border: 2px solid #333;
   color: white;
   border-radius: 5px;
   font-size: 10px;
@@ -489,8 +488,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .multi-shelf {
   align-items: center;
-  background: #757575;
-  border: 2px solid #757575;
+  background: #333;
+  border: 2px solid #333;
   color: white;
   border-radius: 5px;
   font-size: 10px;
@@ -500,7 +499,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .shelf .field-label {
   align-items: center;
-  font-weight: 900;
+  /* font-weight: 900; */
   font-size: 12px;
   min-width: 50px;
   position: relative;
@@ -515,7 +514,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .multi-shelf .field-label {
-  font-weight: 900;
+  /* font-weight: 900; */
   min-width: 50px;
   width: 50px;
 }
@@ -575,7 +574,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .background-2 {
-  background: whitesmoke;
+  background: white;
 }
 
 .background-3 {
@@ -674,7 +673,6 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .program-option {
-  background: whitesmoke;
   box-shadow: 5px 5px 0 1px lightgray;
   border-radius: 5px;
   border: thin solid rgba(0, 0, 0, 0);
@@ -996,15 +994,16 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .code-collapse {
   align-items: center;
+  background: #333;
   cursor: pointer;
   display: flex;
   flex-direction: row-reverse;
   font-size: 12px;
   padding: 0 15px;
-  text-transform: uppercase;
 }
 
 .code-collapse.collapsed {
+  background: white;
   padding: 15px;
 }
 
@@ -1073,10 +1072,10 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #444;
   display: flex;
   font-size: 10px;
-  font-weight: 700;
+  /* font-weight: 700; */
   height: 10px;
   margin: 0;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   text-align-last: right;
   width: 100%;
 }
@@ -1116,7 +1115,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .encoding-mode-selector {
   align-items: center;
-  background: whitesmoke;
   height: 55px;
   justify-content: center;
   padding: 5px 10px;
@@ -1155,7 +1153,6 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .tool-description {
-  text-transform: uppercase;
   font-weight: 600;
   font-size: 10px;
 }
@@ -1169,6 +1166,11 @@ input[type="number"]::-webkit-outer-spin-button {
 .code-editor-controls button,
 .code-editor-controls .hydra-selector {
   color: #333;
+}
+
+.code-controls {
+  background: #333;
+  color: white;
 }
 
 .code-controls-buttons {
@@ -1299,14 +1301,14 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .code-option-tab-section.option-disabled {
   cursor: not-allowed;
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .code-option-tab {
   align-items: center;
   border-radius: 5px;
   cursor: pointer;
-  color: black;
+  /* color: black; */
   display: flex;
   font-size: 15px;
   justify-content: center;
