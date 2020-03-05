@@ -404,6 +404,7 @@ class RootComponent extends React.Component<RootProps, State> {
           canUndo={this.props.canUndo}
           triggerRedo={this.props.triggerRedo}
           triggerUndo={this.props.triggerUndo}
+          setEncodingMode={this.props.setEncodingMode}
         />
         <div className="flex main-content-container relative">
           <DndProvider backend={HTML5Backend}>

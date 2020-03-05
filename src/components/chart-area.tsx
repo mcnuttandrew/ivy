@@ -292,7 +292,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         'flex-down': true,
         'full-width': true,
         'full-height': true,
-        'background-linen': materializedViews.length > 0,
       })}
     >
       <div className="chart-controls full-width flex">
