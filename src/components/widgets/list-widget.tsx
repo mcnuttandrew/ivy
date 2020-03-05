@@ -2,6 +2,7 @@ import React from 'react';
 import {ListWidget, Widget} from '../../types';
 import Selector from '../selector';
 import {IgnoreKeys} from 'react-hotkeys';
+import {trim} from '../../utils/index';
 
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, Reset, widgetName} from './widget-common';
@@ -94,7 +95,7 @@ const ListBuilder: WidgetBuilder = (widget, common) => {
     controls: <ListWidgetConfiguration {...common} widget={widg} />,
     uiElement: <ListWidgetComponent {...common} widget={widg} />,
     materializationOptions: (): {name: string; group?: string}[] =>
-      (widget as Widget<ListWidget>).config.allowedValues.map(d => ({name: `"${d.display}"`})),
+      (widget as Widget<ListWidget>).config.allowedValues.map(d => ({name: `"${trim(d.display)}"`})),
   };
 };
 

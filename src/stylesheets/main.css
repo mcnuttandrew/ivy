@@ -1,7 +1,7 @@
 html,
 body,
 #root-container {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -149,13 +149,25 @@ input[type="number"]::-webkit-outer-spin-button {
 .render-wrapper {
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
   margin-right: 10px;
   margin-bottom: 10px;
 }
 
+.render-wrapper-header {
+  align-items: center;
+  background-color: lightgray;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
 .render-wrapper .render-wrapper-title {
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.render-wrapper > div:nth-child(2) {
+  padding: 0 10px;
 }
 
 #special-hydra-target {
@@ -325,6 +337,10 @@ input[type="number"]::-webkit-outer-spin-button {
 .template-logo img {
   max-height: 55px;
   max-width: 95px;
+}
+
+.template-logo h4 {
+  font-weight: 200;
 }
 
 .template-column.column.edit-mode > div {
@@ -1007,7 +1023,6 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: center;
   cursor: pointer;
   display: flex;
-  font-weight: bolder;
   justify-content: space-between;
   font-size: 15px;
 }

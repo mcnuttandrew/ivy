@@ -89,17 +89,22 @@ export const toList = (list: string[]): {display: string; value: string}[] =>
   }));
 
 export function serializeTemplate(template: Template): string {
-  return stringify({
-    $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
-    templateName: template.templateName,
-    templateDescription: template.templateDescription,
-    disallowFanOut: template.disallowFanOut,
-    templateAuthor: template.templateAuthor,
-    code: 'SEE BODY',
-    templateLanguage: template.templateLanguage,
-    widgets: template.widgets,
-    customCards: template.customCards,
-  });
+  // the commented out chunks of this are for preparring the code annotation figure
+  return stringify(
+    {
+      $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
+      templateName: template.templateName,
+      templateDescription: template.templateDescription,
+      templateAuthor: template.templateAuthor,
+      templateLanguage: template.templateLanguage,
+      disallowFanOut: template.disallowFanOut,
+      customCards: template.customCards,
+      params: template.widgets,
+      // body: JSON.parse(template.code),
+      code: 'SEE BODY',
+    },
+    {maxLength: 120},
+  );
 }
 
 export function deserializeTemplate(templateString: string): Template {
