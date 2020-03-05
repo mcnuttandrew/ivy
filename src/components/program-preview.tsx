@@ -105,9 +105,9 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
             [`program-option-type-pill--${key.toLowerCase()}`]: true,
           })}
         >
-          <span className="program-option-type-symbol">
+          {/* <span className="program-option-type-symbol">
             <DataSymbol type={key as DataType} />
-          </span>
+          </span> */}
           <span>{typeCounts[key]}</span>
         </div>
       );

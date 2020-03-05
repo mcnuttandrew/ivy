@@ -51,17 +51,21 @@ function newViewButton(props: NewViewProps): JSX.Element {
       overlay={
         <span className="flex-down">
           <div className="flex">
-            <button onClick={(): any => createNewView()}>NEW</button>
+            <button type="button" onClick={(): any => createNewView()}>
+              NEW
+            </button>
             <span>Create a new view from the initial selection.</span>
           </div>
           <div className="flex">
-            <button onClick={(): any => cloneView()}>CLONE</button>
+            <button type="button" onClick={(): any => cloneView()}>
+              CLONE
+            </button>
             <span>Clone the current view into a new view.</span>
           </div>
         </span>
       }
     >
-      <div className="view-control">
+      <div className="view-control new-view">
         <TiDocumentAdd />
       </div>
     </Tooltip>

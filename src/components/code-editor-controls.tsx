@@ -103,7 +103,7 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
         const {action, name, description} = shortcut;
         return (
           <div
-            className="flex-down"
+            className="flex"
             key={name}
             onClick={(): void => {
               if (codeMode !== TEMPLATE_BODY) {

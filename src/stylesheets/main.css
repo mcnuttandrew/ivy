@@ -13,6 +13,7 @@ h2,
 h3,
 h4,
 h5 {
+  font-weight: normal;
   margin: 0;
   padding: 0;
 }
@@ -201,7 +202,7 @@ input[type="number"]::-webkit-outer-spin-button {
   border-left: thin solid lightgray;
   cursor: pointer;
   display: flex;
-  font-size: 15px;
+  font-size: 20px;
   height: 100%;
   justify-content: center;
   padding: 0 10px;
@@ -213,6 +214,11 @@ input[type="number"]::-webkit-outer-spin-button {
   text-decoration: underline;
 }
 
+.chart-controls .view-control.new-view {
+  border: 0;
+}
+
+
 .chart-controls .selected-view-control {
   background: lightgray;
   cursor: not-allowed;
@@ -221,6 +227,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .view-container {
   display: flex;
   overflow-x: auto;
+  padding: 0 22px;
   width: 100%;
 }
 
@@ -256,6 +263,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .view-control button {
+  font-size: 13px;
   height: 100%;
 }
 
@@ -285,7 +293,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .special-bump-for-closed-code-container {
-  max-height: calc(100% - 50px);
+  max-height: calc(100% - 45px);
 }
 
 .section-title {
@@ -298,11 +306,8 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 12px;
 }
 
-.column-border {
-  border-right: thin solid #b5b5b5;
-}
-
 .column {
+  border-right: thin solid black;
   max-height: 100%;
   min-width: 220px;
   overflow-y: scroll;
@@ -330,12 +335,13 @@ input[type="number"]::-webkit-outer-spin-button {
 .template-logo {
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .template-logo img {
   max-height: 55px;
   max-width: 95px;
+  margin-right: 5px;
 }
 
 .template-logo h4 {
@@ -509,7 +515,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .shelf .field-label .data-type-container {
   position: absolute;
-  top: -3px;
+  top: -5px;
   width: 100%;
 }
 
@@ -995,6 +1001,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .code-collapse {
   align-items: center;
   background: #333;
+  border-top: thin solid black;
+  color: white;
   cursor: pointer;
   display: flex;
   flex-direction: row-reverse;
@@ -1003,7 +1011,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .code-collapse.collapsed {
-  background: white;
+  background: #333;
   padding: 15px;
 }
 
@@ -1353,7 +1361,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .Resizer {
   background: #000;
-  opacity: 0.2;
+  opacity: 1;
   z-index: 1;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -1372,7 +1380,7 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 11px;
   margin: -5px 0;
   border-top: 5px solid rgba(255, 255, 255, 0);
-  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  border-bottom: 5px solid rgba(0, 0, 0, 0);
   cursor: row-resize;
   width: 100%;
 }

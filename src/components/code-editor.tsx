@@ -103,67 +103,6 @@ export default class CodeEditor extends React.Component<Props> {
     }
   }
 
-  editorControls(): JSX.Element {
-    const {
-      setNewSpecCode,
-      codeMode,
-      editorFontSize,
-      setEditorFontSize,
-      editorLineWrap,
-      setEditorLineWrap,
-    } = this.props;
-    const EDITOR_CONTROLS: any[] = [
-      {name: 'Font Size', options: fontSizes, update: setEditorFontSize, current: editorFontSize},
-      {name: 'Line wrap', options: lineWraps, update: setEditorLineWrap, current: editorLineWrap},
-    ];
-    return (
-      <div className="flex-down code-editor-controls">
-        <h3>Controls</h3>
-        {EDITOR_CONTROLS.map(control => {
-          return (
-            <div className="flex" key={control.name}>
-              <span>{control.name}</span>
-              {control.options.map((row: any) => {
-                return (
-                  <button
-                    type="button"
-                    className={classnames({selected: row.value === control.current})}
-                    key={row.name}
-                    onClick={(): any => control.update(row.value)}
-                  >
-                    {row.name}
-                  </button>
-                );
-              })}
-            </div>
-          );
-        })}
-        <h3>Text Manipulation Shortcuts</h3>
-        {SHORTCUTS.map((shortcut: any) => {
-          const {action, name, description} = shortcut;
-          return (
-            <div
-              className="flex-down"
-              key={name}
-              onClick={(): void => {
-                if (codeMode !== TEMPLATE_BODY) {
-                  return;
-                }
-                setNewSpecCode({
-                  code: stringify(action(JSON.parse(this.getCurrentCode()))),
-                  inError: false,
-                });
-              }}
-            >
-              <button>{name}</button>
-              <div>{description}</div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
   handleCodeUpdate(code: string): void {
     const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
     const responseFunctionMap: {[x: string]: GenericAction<HandleCodePayload>} = {

@@ -18,7 +18,7 @@ export default class Header extends React.Component<HeaderProps> {
       <div className="header flex background-1">
         <div className="flex center">
           <img alt="hydra logo" src="logo.png" />
-          <div>Hydra</div>
+          <div>Ivy</div>
           <div className="flex state-action-controls">
             <div
               className={classnames({
