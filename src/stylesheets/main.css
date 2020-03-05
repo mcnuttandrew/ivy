@@ -295,9 +295,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .section-title {
-  font-size: 12px;
+  font-size: 20px;
   font-weight: 100;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .section-subtitle {
@@ -333,13 +333,16 @@ input[type="number"]::-webkit-outer-spin-button {
 .template-logo {
   align-items: center;
   display: flex;
+  margin-top: 5px;
   /* justify-content: space-between; */
 }
 
 .template-logo img {
-  max-height: 55px;
-  max-width: 95px;
-  margin-right: 5px;
+  max-height: 50px;
+  max-width: 90px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
 }
 
 .template-logo h4 {
@@ -1120,20 +1123,18 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .encoding-mode-selector {
   align-items: center;
-  height: 55px;
   justify-content: center;
-  padding: 5px 10px;
+  margin-bottom: 5px;
+  padding-right: 10px;
   white-space: nowrap;
-
-  /* sync with the padding */
-  width: calc(100% - 20px);
+  width: calc(100% - 10px);
 }
 
 .template-modification-control {
   align-items: center;
   cursor: pointer;
   display: flex;
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .template-modification-control.template-modification-control--disabled {

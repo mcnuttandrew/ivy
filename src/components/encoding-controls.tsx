@@ -33,7 +33,6 @@ interface Props {
   setEditMode: GenericAction<boolean>;
   setProgrammaticView: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
-  setModalState: GenericAction<string | null>;
   template: Template;
   templateSaveState: string;
   templates: Template[];
@@ -58,19 +57,11 @@ export default function EncodingControls(props: Props): JSX.Element {
     setProgrammaticView,
     template,
     templateSaveState,
-    setModalState,
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const onGallery = template.templateName === GALLERY.templateName;
   const FULL_BUTTONS = [
-    {
-      disabled: false,
-      onClick: (): any => setModalState('community'),
-      icon: <TiThSmallOutline />,
-      label: 'Add more templates',
-      tooltip: 'View the list of available templates from the online community.',
-    },
     {
       disabled: false,
 
@@ -160,15 +151,6 @@ export default function EncodingControls(props: Props): JSX.Element {
   return (
     <div className="encoding-mode-selector flex-down">
       <div className="flex space-between full-width flex-wrap">
-        <div className="template-modification-control">
-          <div className="flex" onClick={(): any => setEncodingMode(GALLERY.templateName)}>
-            <div className="template-modification-control-icon">
-              <TiHomeOutline />
-            </div>
-            <span className="template-modification-control-label">Home</span>
-          </div>
-          <SimpleTooltip message="Return to the view of the template gallery." />
-        </div>
         {FULL_BUTTONS.map(button => {
           const {disabled, onClick, customTooltip, icon, label, tooltip} = button;
           const iconComponent = (
@@ -179,18 +161,18 @@ export default function EncodingControls(props: Props): JSX.Element {
           );
           if (customTooltip) {
             return (
-              <div
-                key={button.label}
-                className={classnames({
-                  'template-modification-control': true,
-                  'template-modification-control--disabled': disabled,
-                })}
-              >
-                <Tooltip placement="bottom" trigger="click" overlay={!disabled && customTooltip()}>
-                  <span className="flex">{iconComponent}</span>
-                </Tooltip>
-                <SimpleTooltip message={tooltip} />
-              </div>
+              <HoverTooltip message={tooltip} key={button.label}>
+                <div
+                  className={classnames({
+                    'template-modification-control': true,
+                    'template-modification-control--disabled': disabled,
+                  })}
+                >
+                  <Tooltip placement="bottom" trigger="click" overlay={!disabled && customTooltip()}>
+                    <span className="flex">{iconComponent}</span>
+                  </Tooltip>
+                </div>
+              </HoverTooltip>
             );
           }
 

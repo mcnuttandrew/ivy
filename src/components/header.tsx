@@ -1,9 +1,10 @@
 import React from 'react';
-import {TiArrowBack, TiArrowForward} from 'react-icons/ti';
+import {TiArrowBack, TiArrowForward, TiThSmall, TiHome} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
 import GALLERY from '../templates/gallery';
+import {HoverTooltip} from './tooltips';
 
 interface HeaderProps {
   triggerUndo: GenericAction<void>;
@@ -11,10 +12,11 @@ interface HeaderProps {
   canRedo: boolean;
   canUndo: boolean;
   setEncodingMode: GenericAction<string>;
+  setModalState: GenericAction<string | null>;
 }
 
 export default function Header(props: HeaderProps): JSX.Element {
-  const {triggerUndo, triggerRedo, canRedo, canUndo, setEncodingMode} = props;
+  const {triggerUndo, triggerRedo, canRedo, canUndo, setEncodingMode, setModalState} = props;
   return (
     <div className="header flex background-1">
       <div className="flex center">
@@ -43,6 +45,22 @@ export default function Header(props: HeaderProps): JSX.Element {
           >
             <TiArrowForward />
             <span>REDO</span>
+          </div>
+          <div className="state-action-button">
+            <HoverTooltip message="Add more templates">
+              <div className="flex" onClick={(): any => setModalState('community')}>
+                <TiThSmall />
+                <span className="template-modification-control-label">Add More templates</span>
+              </div>
+            </HoverTooltip>
+          </div>
+          <div className="state-action-button">
+            <HoverTooltip message="Return to the view of the template gallery.">
+              <div className="flex" onClick={(): any => setEncodingMode(GALLERY.templateName)}>
+                <TiHome />
+                <span className="template-modification-control-label">Return to Gallery</span>
+              </div>
+            </HoverTooltip>
           </div>
         </div>
       </div>
