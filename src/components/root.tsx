@@ -419,6 +419,7 @@ class RootComponent extends React.Component<RootProps, State> {
                   className={classnames({
                     flex: true,
                     'full-height': true,
+                    'full-width': true,
                     'special-bump-for-closed-code-container': !showProgrammaticMode,
                   })}
                 >

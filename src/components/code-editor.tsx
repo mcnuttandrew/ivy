@@ -90,16 +90,16 @@ export default class CodeEditor extends React.Component<Props> {
   getCurrentCode(): string {
     const {template, codeMode, spec, templateMap} = this.props;
     if (codeMode === TEMPLATE_BODY) {
-      return template.code;
+      return `${template.code}\n`;
     }
     if (codeMode === WIDGET_CONFIGURATION) {
-      return serializeTemplate(template);
+      return `${serializeTemplate(template)}\n`;
     }
     if (codeMode === JSON_OUTPUT) {
-      return stringify(spec);
+      return `${stringify(spec, {maxLength: 100})}\n`;
     }
     if (codeMode === WIDGET_VALUES) {
-      return JSON.stringify(sortObjectAlphabetically(templateMap), null, 2);
+      return `${JSON.stringify(sortObjectAlphabetically(templateMap), null, 2)}\n`;
     }
   }
 
