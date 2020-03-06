@@ -5,7 +5,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {Template, TemplateMap, GenWidget, HydraExtension, ColumnHeader} from '../types';
-import {classnames, serializeTemplate, get, sortObjectAlphabetically} from '../utils';
+import {classnames, serializeTemplate, sortObjectAlphabetically} from '../utils';
 import SuggestionBox from './suggestion-box';
 import CodeEditorControls, {CodeCollapse} from './code-editor-controls';
 import GALLERY from '../templates/gallery';
@@ -35,51 +35,6 @@ interface Props {
   template: Template;
   templateMap: TemplateMap;
 }
-
-const SHORTCUTS = [
-  {
-    name: 'Add Height/Width',
-    action: (code: any): any => {
-      const usingNested = !!code.spec;
-      if (usingNested) {
-        code.spec.height = 500;
-        code.spec.width = 500;
-      } else {
-        code.height = 500;
-        code.width = 500;
-      }
-      return code;
-    },
-    description: 'Insert height and width values in to the current template',
-  },
-  {
-    name: 'Clean Up',
-    action: (code: any): any => code,
-    description: 'Clean up the formatting of the current code',
-  },
-  {
-    name: 'Swap x and y',
-    action: (code: any): any => {
-      if (get(code, ['encoding', 'x', 'field']) && get(code, ['encoding', 'y', 'field'])) {
-        const xTemp = code.encoding.x.field;
-        code.encoding.x.field = code.encoding.y.field;
-        code.encoding.y.field = xTemp;
-      }
-      return code;
-    },
-    description: 'Swap the x and y dimensions of encoding if they exist',
-  },
-];
-
-const fontSizes = [
-  {name: 'small', value: 10},
-  {name: 'medium', value: 15},
-  {name: 'large', value: 20},
-];
-const lineWraps = [
-  {name: 'on', value: true},
-  {name: 'off', value: false},
-];
 
 export default class CodeEditor extends React.Component<Props> {
   constructor(props: any) {
