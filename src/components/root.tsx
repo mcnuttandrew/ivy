@@ -7,7 +7,6 @@ import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
 import GALLERY from '../templates/gallery';
 import {getUserName} from '../utils/local-storage';
-import Thumbnail from './thumbnail';
 
 import * as actionCreators from '../actions/index';
 import {Filter} from '../actions/index';
@@ -23,14 +22,7 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {
-  getUniques,
-  getDomain,
-  getTemplateSaveState,
-  getTemplateName,
-  computeValidAddNexts,
-  classnames,
-} from '../utils';
+import {getUniques, getDomain, getTemplateSaveState, computeValidAddNexts, classnames} from '../utils';
 import {
   getHeight,
   writeHeight,
@@ -233,17 +225,6 @@ class RootComponent extends React.Component<RootProps, State> {
     const {template} = this.props;
     return (
       <div className="flex-down full-height column background-2">
-        <div className="template-logo">
-          <Thumbnail
-            templateName={template && template.templateName}
-            templateAuthor={template && template.templateAuthor}
-          />
-
-          <div>
-            <h5>Current Template</h5>
-            <h4>{getTemplateName(template)}</h4>
-          </div>
-        </div>
         <ImportDataColumn
           currentlySelectedFile={this.props.currentlySelectedFile}
           setModalState={this.props.setModalState}
@@ -274,7 +255,7 @@ class RootComponent extends React.Component<RootProps, State> {
 
   centerColumn(): JSX.Element {
     return (
-      <div className=" full-height full-width flex-down" style={{minWidth: '360px'}}>
+      <div className="full-height full-width flex-down" style={{minWidth: '360px'}}>
         <EncodingControls
           chainActions={this.props.chainActions}
           deleteTemplate={this.props.deleteTemplate}
@@ -287,13 +268,12 @@ class RootComponent extends React.Component<RootProps, State> {
           setBlankTemplate={this.props.setBlankTemplate}
           setCodeMode={this.props.setCodeMode}
           setEditMode={this.props.setEditMode}
-          setEncodingMode={this.props.setEncodingMode}
-          setModalState={this.props.setModalState}
           setProgrammaticView={this.props.setProgrammaticView}
           template={this.props.template}
           templateSaveState={this.props.templateSaveState}
           templates={this.props.templates}
         />
+
         <EncodingColumn
           addWidget={this.props.addWidget}
           columns={this.props.columns}
@@ -353,7 +333,16 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   hotKeyProvider(): JSX.Element {
-    const {canUndo, triggerUndo, canRedo, triggerRedo, openModal, setModalState} = this.props;
+    const {
+      canRedo,
+      canUndo,
+      fillTemplateMapWithDefaults,
+      openModal,
+      setEncodingMode,
+      setModalState,
+      triggerRedo,
+      triggerUndo,
+    } = this.props;
 
     return (
       <GlobalHotKeys
@@ -361,8 +350,12 @@ class RootComponent extends React.Component<RootProps, State> {
           UNDO: 'command+z',
           REDO: 'command+shift+z',
           CLOSE_MODALS: 'Escape',
+          HOME: 'h',
+          CLEAR_ENCODING: 'r',
         }}
         handlers={{
+          CLEAR_ENCODING: (): any => fillTemplateMapWithDefaults(),
+          HOME: (): any => setEncodingMode(GALLERY.templateName),
           UNDO: (): any => canUndo && triggerUndo(),
           REDO: (): any => canRedo && triggerRedo(),
           CLOSE_MODALS: (): any => {
@@ -404,6 +397,9 @@ class RootComponent extends React.Component<RootProps, State> {
           canUndo={this.props.canUndo}
           triggerRedo={this.props.triggerRedo}
           triggerUndo={this.props.triggerUndo}
+          setEncodingMode={this.props.setEncodingMode}
+          setModalState={this.props.setModalState}
+          encodingMode={this.props.encodingMode}
         />
         <div className="flex main-content-container relative">
           <DndProvider backend={HTML5Backend}>

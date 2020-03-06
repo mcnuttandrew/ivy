@@ -103,7 +103,7 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
         const {action, name, description} = shortcut;
         return (
           <div
-            className="flex-down"
+            className="flex"
             key={name}
             onClick={(): void => {
               if (codeMode !== TEMPLATE_BODY) {
@@ -227,7 +227,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
     },
   ];
   return (
-    <div className="code-controls flex background-2 space-between">
+    <div className="code-controls flex space-between">
       <div className="flex code-option-tabs">
         {BUTTONS.map(({label, buttons}) => {
           return (

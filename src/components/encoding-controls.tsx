@@ -2,22 +2,22 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 import {
-  TiHomeOutline,
   TiArrowSync,
   TiPencil,
   TiEdit,
   TiFlowChildren,
   TiLockClosed,
   TiLockOpen,
-  TiThSmallOutline,
+  TiInfoLarge,
 } from 'react-icons/ti';
+import Thumbnail from './thumbnail';
 import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template, HydraExtension} from '../types';
-import {classnames, NULL} from '../utils';
+import {classnames, NULL, getTemplateName} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
 import GALLERY from '../templates/gallery';
-import {SimpleTooltip, HoverTooltip} from './tooltips';
+import {HoverTooltip} from './tooltips';
 
 interface Props {
   chainActions: GenericAction<any>;
@@ -32,8 +32,6 @@ interface Props {
   setCodeMode: GenericAction<string>;
   setEditMode: GenericAction<boolean>;
   setProgrammaticView: GenericAction<boolean>;
-  setEncodingMode: GenericAction<string>;
-  setModalState: GenericAction<string | null>;
   template: Template;
   templateSaveState: string;
   templates: Template[];
@@ -54,23 +52,14 @@ export default function EncodingControls(props: Props): JSX.Element {
     setBlankTemplate,
     setCodeMode,
     setEditMode,
-    setEncodingMode,
     setProgrammaticView,
     template,
     templateSaveState,
-    setModalState,
   } = props;
 
   const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const onGallery = template.templateName === GALLERY.templateName;
   const FULL_BUTTONS = [
-    {
-      disabled: false,
-      onClick: (): any => setModalState('community'),
-      icon: <TiThSmallOutline />,
-      label: 'Add more templates',
-      tooltip: 'View the list of available templates from the online community.',
-    },
     {
       disabled: false,
 
@@ -158,58 +147,75 @@ export default function EncodingControls(props: Props): JSX.Element {
     },
   ];
   return (
-    <div className="encoding-mode-selector flex-down">
-      <div className="flex space-between full-width flex-wrap">
-        <div className="template-modification-control">
-          <div className="flex" onClick={(): any => setEncodingMode(GALLERY.templateName)}>
-            <div className="template-modification-control-icon">
-              <TiHomeOutline />
-            </div>
-            <span className="template-modification-control-label">Home</span>
-          </div>
-          <SimpleTooltip message="Return to the view of the template gallery." />
-        </div>
-        {FULL_BUTTONS.map(button => {
-          const {disabled, onClick, customTooltip, icon, label, tooltip} = button;
-          const iconComponent = (
-            <React.Fragment>
-              <div className="template-modification-control-icon">{icon}</div>
-              <span className="template-modification-control-label">{label}</span>
-            </React.Fragment>
-          );
-          if (customTooltip) {
-            return (
-              <div
-                key={button.label}
-                className={classnames({
-                  'template-modification-control': true,
-                  'template-modification-control--disabled': disabled,
-                })}
-              >
-                <Tooltip placement="bottom" trigger="click" overlay={!disabled && customTooltip()}>
-                  <span className="flex">{iconComponent}</span>
-                </Tooltip>
-                <SimpleTooltip message={tooltip} />
-              </div>
-            );
-          }
+    <div className="template-logo">
+      <div className="template-logo-img-container">
+        <Thumbnail
+          templateName={template && template.templateName}
+          templateAuthor={template && template.templateAuthor}
+        />
+      </div>
 
-          return (
-            <div
-              key={button.label}
-              className={classnames({
-                'template-modification-control': true,
-                'template-modification-control--disabled': disabled,
-              })}
-            >
-              <HoverTooltip message={tooltip}>
-                <div className="flex" onClick={(): any => onClick()}>
-                  {iconComponent}
+      <div className="flex-down full-width">
+        <div className="encoding-mode-selector flex-down">
+          <div className="flex space-between full-width flex-wrap">
+            {FULL_BUTTONS.map(button => {
+              const {disabled, onClick, customTooltip, icon, label, tooltip} = button;
+              const iconComponent = (
+                <React.Fragment>
+                  <div className="template-modification-control-icon">{icon}</div>
+                  <span className="template-modification-control-label">{label}</span>
+                </React.Fragment>
+              );
+              if (customTooltip) {
+                return (
+                  <HoverTooltip message={tooltip} key={button.label}>
+                    <div
+                      className={classnames({
+                        'template-modification-control': true,
+                        'template-modification-control--disabled': disabled,
+                      })}
+                    >
+                      <Tooltip placement="bottom" trigger="click" overlay={!disabled && customTooltip()}>
+                        <span className="flex">{iconComponent}</span>
+                      </Tooltip>
+                    </div>
+                  </HoverTooltip>
+                );
+              }
+
+              return (
+                <div
+                  key={button.label}
+                  className={classnames({
+                    'template-modification-control': true,
+                    'template-modification-control--disabled': disabled,
+                  })}
+                >
+                  <HoverTooltip message={tooltip}>
+                    <div className="flex" onClick={(): any => onClick()}>
+                      {iconComponent}
+                    </div>
+                  </HoverTooltip>
                 </div>
-              </HoverTooltip>
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        </div>
+        <h5 className="flex">
+          Current Template{' '}
+          <Tooltip
+            placement="top"
+            trigger="click"
+            overlay={
+              <span className="tooltip-internal">
+                {template.templateDescription} By {template.templateAuthor}
+              </span>
+            }
+          >
+            <TiInfoLarge className="cursor-pointer" />
+          </Tooltip>
+        </h5>
+        <h4>{getTemplateName(template)}</h4>
       </div>
     </div>
   );
