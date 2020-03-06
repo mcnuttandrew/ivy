@@ -26,7 +26,7 @@ function thumbnailLocation(
   return {url: `${serverPrefix()}/thumbnail?author=${templateAuthor}&template=${templateName}`, local: false};
 }
 
-export default function Thumbnail(props: ThumbnailProps): JSX.Element {
+function Thumbnail(props: ThumbnailProps): JSX.Element {
   const {templateName, templateAuthor} = props;
   const [src, setSrc] = useState('logo.png');
   useEffect(() => {
@@ -47,3 +47,5 @@ export default function Thumbnail(props: ThumbnailProps): JSX.Element {
     />
   );
 }
+
+export default React.memo(Thumbnail);

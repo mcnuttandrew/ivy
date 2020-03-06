@@ -29,7 +29,7 @@ export const PREVENT_ACCIDENTAL_LEAVE = process.env.NODE_ENV === 'production';
 /* eslint-enable no-undef*/
 
 export const switchCommon = {
-  offColor: '#E1E9F2',
+  offColor: 'gray',
   onColor: '#36425C',
   height: 15,
   checkedIcon: false,

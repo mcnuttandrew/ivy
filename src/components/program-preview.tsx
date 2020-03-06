@@ -4,8 +4,7 @@ import Thumbnail from './thumbnail';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiInfoLarge} from 'react-icons/ti';
-import DataSymbol from './data-symbol';
-import {DataType} from '../types';
+import {HoverTooltip} from './tooltips';
 
 type TypeCounts = {[x: string]: number};
 interface Props {
@@ -97,24 +96,22 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
     .filter(d => typeCounts[d] > 0)
     .map((key: string) => {
       return (
-        <div
-          key={key}
-          className={classnames({
-            flex: true,
-            'program-option-type-pill': true,
-            [`program-option-type-pill--${key.toLowerCase()}`]: true,
-          })}
-        >
-          {/* <span className="program-option-type-symbol">
-            <DataSymbol type={key as DataType} />
-          </span> */}
-          <span>{typeCounts[key]}</span>
-        </div>
+        <HoverTooltip message={`The minimum number of required ${key} columns to render`} key={key}>
+          <div
+            className={classnames({
+              flex: true,
+              'program-option-type-pill': true,
+              [`program-option-type-pill--${key.toLowerCase()}`]: true,
+            })}
+          >
+            <span>{typeCounts[key]}</span>
+          </div>
+        </HoverTooltip>
       );
     });
   return (
-    <div className="flex-down">
-      <div>{messages.length ? 'Requires at least' : 'No Fields Required'}</div>
+    <div className="flex">
+      <div>{messages.length ? 'Requires' : 'No Fields Required'}</div>
       <div className="flex flex-wrap">{messages}</div>
     </div>
   );
@@ -153,26 +150,37 @@ export default function ProgramPreview(props: Props): JSX.Element {
         </div>
         <div className="flex-down full-width">
           <div className="program-option-title">
-            <div className="flex-down">
-              <h3>{templateName}</h3>
-            </div>
+            <h3
+              className="program-option-title-label cursor-pointer"
+              onClick={(): any => setEncodingMode(templateName)}
+            >
+              {templateName}
+            </h3>
             {CardControls({buttons, templateName, templateAuthor, userName})}
           </div>
-          <div className="program-option-description">{templateDescription}</div>
-        </div>
-      </div>
-      <div className="flex-down program-option-bottom">
-        <div className="flex space-between">
-          <div className="program-option-search-match flex">
-            <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
-            {isComplete && fullMatch()}
-            {!isComplete && partialMatch()}
+          <div className="flex-down">
+            <div
+              className="program-option-description cursor-pointer"
+              onClick={(): any => setEncodingMode(templateName)}
+            >
+              {templateDescription}
+            </div>
+            {typeCounts && RenderTypeCounts(typeCounts)}
+            <div className="flex-down ">
+              <div className="flex space-between">
+                <div className="program-option-search-match flex">
+                  <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
+                  {isComplete && fullMatch()}
+                  {!isComplete && partialMatch()}
+                </div>
+                {/* {typeCounts && RenderTypeCounts(typeCounts)} */}
+              </div>
+              {alreadyPresent && (
+                <div className="program-option-search-match">A template by this name is already loaded</div>
+              )}
+            </div>
           </div>
-          {typeCounts && RenderTypeCounts(typeCounts)}
         </div>
-        {alreadyPresent && (
-          <div className="program-option-search-match">A template by this name is already loaded</div>
-        )}
       </div>
     </div>
   );

@@ -43,9 +43,7 @@ button.selected {
 
 button.use-button {
   border-radius: 0;
-  background: coral;
-
-  /* border: 2px solid #333; */
+  font-weight: 900;
   text-decoration: none;
 }
 
@@ -139,7 +137,7 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: flex-start;
   display: flex;
   flex-wrap: wrap;
-  height: fit-content;
+  height: 100%;
 }
 
 .chart-container > div {
@@ -189,10 +187,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .chart-controls {
-  height: 48px;
-  min-height: 48px;
-  padding: 5px 0;
-  position: relative;
+  height: 45px;
+  min-height: 45px;
 }
 
 .chart-controls .view-control {
@@ -207,7 +203,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .chart-controls .view-control.selected {
-  background: lightsalmon;
+  background: lightgray;
   font-weight: bolder;
   text-decoration: underline;
 }
@@ -223,9 +219,10 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .view-container {
+  border-top: thin solid black;
   display: flex;
   overflow-x: auto;
-  padding: 0 22px;
+  /* padding: 0 22px; */
   width: 100%;
 }
 
@@ -337,12 +334,18 @@ input[type="number"]::-webkit-outer-spin-button {
   /* justify-content: space-between; */
 }
 
-.template-logo img {
-  max-height: 50px;
-  max-width: 90px;
+.template-logo-img-container {
+  align-items: center;
+  display: flex;
   margin-left: 10px;
   margin-right: 10px;
   margin-top: 5px;
+  width: 90px;
+  overflow: hidden;
+}
+
+.template-logo-img-container img {
+  max-height: 50px;
 }
 
 .template-logo h4 {
@@ -681,7 +684,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .program-option {
-  box-shadow: 5px 5px 0 1px lightgray;
+  /* box-shadow: 5px 5px 0 1px lightgray; */
   border-radius: 5px;
   border: thin solid rgba(0, 0, 0, 0);
   font-size: 12px;
@@ -698,8 +701,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .program-option-title h3 {
-  /* text-transform: uppercase; */
   font-weight: bolder;
+  max-width: 130px;
 }
 
 .program-option-settings {
@@ -711,6 +714,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .program-option-description {
   font-size: 10px;
+  min-height: 48px;
+  text-overflow: ellipsis;
 }
 
 .program-containers .program-option:last-child {
@@ -718,6 +723,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .program-option-use-template-container {
+  justify-content: center;
+  border-right: thin solid black;
+  padding-right: 5px;
   margin-right: 5px;
 }
 
@@ -746,7 +754,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .program-option-type-pill::before {
   content: "■";
   font-size: 30px;
-  line-height: 15px;
+  line-height: 10px;
 }
 
 .program-option-type-pill--measure::before,
@@ -776,13 +784,6 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 12px;
   font-weight: bolder;
   color: forestgreen;
-}
-
-.program-option-search-type-control {
-  cursor: pointer;
-  font-size: 10px;
-  color: salmon;
-  margin-right: 5px;
 }
 
 .program-option-bottom {
@@ -1123,6 +1124,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .encoding-mode-selector {
   align-items: center;
+  font-weight: 900;
   justify-content: center;
   margin-bottom: 5px;
   padding-right: 10px;
@@ -1285,7 +1287,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .suggestion-box-body {
-  background: #dbdbdb;
+  border-top: thin solid black;
   height: 100%;
   padding: 10px;
 }
@@ -1302,7 +1304,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .code-option-tab-section {
   align-items: flex-start;
-  margin-right: 15px;
+  /* margin-right: 15px; */
 }
 
 .code-option-tab-section.option-disabled {
@@ -1312,20 +1314,20 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .code-option-tab {
   align-items: center;
-  border-radius: 5px;
+  border-right: thin solid gray;
   cursor: pointer;
-  /* color: black; */
   display: flex;
   font-size: 15px;
   justify-content: center;
   margin-bottom: 3px;
-  margin-right: 15px;
+  /* margin-right: 15px; */
   margin-top: 3px;
   padding: 0 15px;
   width: 100%;
 }
 
 .code-option-section-label {
+  font-weight: 300;
   max-width: 180px;
   overflow: hidden;
   padding: 0 15px;
@@ -1334,7 +1336,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .code-option-tab.selected-tab {
-  background: lightsalmon;
+  background: darkgray;
 }
 
 .about-bar {

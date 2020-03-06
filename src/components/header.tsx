@@ -13,10 +13,11 @@ interface HeaderProps {
   canUndo: boolean;
   setEncodingMode: GenericAction<string>;
   setModalState: GenericAction<string | null>;
+  encodingMode: string;
 }
 
 export default function Header(props: HeaderProps): JSX.Element {
-  const {triggerUndo, triggerRedo, canRedo, canUndo, setEncodingMode, setModalState} = props;
+  const {triggerUndo, triggerRedo, canRedo, canUndo, setEncodingMode, setModalState, encodingMode} = props;
   return (
     <div className="header flex background-1">
       <div className="flex center">
@@ -58,7 +59,9 @@ export default function Header(props: HeaderProps): JSX.Element {
             <HoverTooltip message="Return to the view of the template gallery.">
               <div className="flex" onClick={(): any => setEncodingMode(GALLERY.templateName)}>
                 <TiHome />
-                <span className="template-modification-control-label">Return to Gallery</span>
+                <span className="template-modification-control-label">
+                  {encodingMode === GALLERY.templateName ? 'On Gallery' : 'Return to Gallery'}
+                </span>
               </div>
             </HoverTooltip>
           </div>

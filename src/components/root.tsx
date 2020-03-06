@@ -7,7 +7,6 @@ import SplitPane from 'react-split-pane';
 import {GlobalHotKeys} from 'react-hotkeys';
 import GALLERY from '../templates/gallery';
 import {getUserName} from '../utils/local-storage';
-import Thumbnail from './thumbnail';
 
 import * as actionCreators from '../actions/index';
 import {Filter} from '../actions/index';
@@ -23,14 +22,7 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {
-  getUniques,
-  getDomain,
-  getTemplateSaveState,
-  getTemplateName,
-  computeValidAddNexts,
-  classnames,
-} from '../utils';
+import {getUniques, getDomain, getTemplateSaveState, computeValidAddNexts, classnames} from '../utils';
 import {
   getHeight,
   writeHeight,
@@ -66,8 +58,6 @@ import Header from './header';
 import ImportDataColumn from './import-data-column';
 import EncodingColumn from './encoding-column';
 import RelatedViews from './related-views';
-import Tooltip from 'rc-tooltip';
-import {TiInfoLarge} from 'react-icons/ti';
 
 // wrap the split pane functionality into a HOC
 const Wrapper = (props: any): JSX.Element => {
@@ -264,52 +254,25 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   centerColumn(): JSX.Element {
-    const {template} = this.props;
-
     return (
       <div className="full-height full-width flex-down" style={{minWidth: '360px'}}>
-        <div className="template-logo">
-          <Thumbnail
-            templateName={template && template.templateName}
-            templateAuthor={template && template.templateAuthor}
-          />
-
-          <div className="flex-down full-width">
-            <EncodingControls
-              chainActions={this.props.chainActions}
-              deleteTemplate={this.props.deleteTemplate}
-              editMode={this.props.editMode}
-              encodingMode={this.props.encodingMode}
-              fillTemplateMapWithDefaults={this.props.fillTemplateMapWithDefaults}
-              languages={this.props.languages}
-              modifyValueOnTemplate={this.props.modifyValueOnTemplate}
-              saveCurrentTemplate={this.props.saveCurrentTemplate}
-              setBlankTemplate={this.props.setBlankTemplate}
-              setCodeMode={this.props.setCodeMode}
-              setEditMode={this.props.setEditMode}
-              setEncodingMode={this.props.setEncodingMode}
-              setProgrammaticView={this.props.setProgrammaticView}
-              template={this.props.template}
-              templateSaveState={this.props.templateSaveState}
-              templates={this.props.templates}
-            />
-            <h5 className="flex">
-              Current Template{' '}
-              <Tooltip
-                placement="top"
-                trigger="click"
-                overlay={
-                  <span className="tooltip-internal">
-                    {template.templateDescription} By {template.templateAuthor}
-                  </span>
-                }
-              >
-                <TiInfoLarge className="cursor-pointer" />
-              </Tooltip>
-            </h5>
-            <h4>{getTemplateName(template)}</h4>
-          </div>
-        </div>
+        <EncodingControls
+          chainActions={this.props.chainActions}
+          deleteTemplate={this.props.deleteTemplate}
+          editMode={this.props.editMode}
+          encodingMode={this.props.encodingMode}
+          fillTemplateMapWithDefaults={this.props.fillTemplateMapWithDefaults}
+          languages={this.props.languages}
+          modifyValueOnTemplate={this.props.modifyValueOnTemplate}
+          saveCurrentTemplate={this.props.saveCurrentTemplate}
+          setBlankTemplate={this.props.setBlankTemplate}
+          setCodeMode={this.props.setCodeMode}
+          setEditMode={this.props.setEditMode}
+          setProgrammaticView={this.props.setProgrammaticView}
+          template={this.props.template}
+          templateSaveState={this.props.templateSaveState}
+          templates={this.props.templates}
+        />
 
         <EncodingColumn
           addWidget={this.props.addWidget}
@@ -371,13 +334,14 @@ class RootComponent extends React.Component<RootProps, State> {
 
   hotKeyProvider(): JSX.Element {
     const {
-      canUndo,
-      triggerUndo,
       canRedo,
-      triggerRedo,
+      canUndo,
+      fillTemplateMapWithDefaults,
       openModal,
-      setModalState,
       setEncodingMode,
+      setModalState,
+      triggerRedo,
+      triggerUndo,
     } = this.props;
 
     return (
@@ -387,8 +351,10 @@ class RootComponent extends React.Component<RootProps, State> {
           REDO: 'command+shift+z',
           CLOSE_MODALS: 'Escape',
           HOME: 'h',
+          CLEAR_ENCODING: 'r',
         }}
         handlers={{
+          CLEAR_ENCODING: (): any => fillTemplateMapWithDefaults(),
           HOME: (): any => setEncodingMode(GALLERY.templateName),
           UNDO: (): any => canUndo && triggerUndo(),
           REDO: (): any => canRedo && triggerRedo(),
@@ -433,6 +399,7 @@ class RootComponent extends React.Component<RootProps, State> {
           triggerUndo={this.props.triggerUndo}
           setEncodingMode={this.props.setEncodingMode}
           setModalState={this.props.setModalState}
+          encodingMode={this.props.encodingMode}
         />
         <div className="flex main-content-container relative">
           <DndProvider backend={HTML5Backend}>

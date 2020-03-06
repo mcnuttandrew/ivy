@@ -2,8 +2,8 @@ import React from 'react';
 import {Template, ColumnHeader, Json, HydraExtension, ViewsToMaterialize, TemplateMap} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog, TiDocumentAdd, TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
-import {IgnoreKeys} from 'react-hotkeys';
+import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
+import ViewControls from './view-controls';
 import {GenericAction, DataRow, SetTemplateValuePayload} from '../actions';
 import Gallery from './gallery';
 import GALLERY from '../templates/gallery';
@@ -35,90 +35,6 @@ interface ChartAreaProps {
   userName: string;
   views: string[];
   viewsToMaterialize: ViewsToMaterialize;
-}
-
-interface NewViewProps {
-  cloneView: GenericAction<void>;
-  createNewView: GenericAction<void>;
-}
-
-function newViewButton(props: NewViewProps): JSX.Element {
-  const {createNewView, cloneView} = props;
-  return (
-    <Tooltip
-      placement="bottom"
-      trigger="click"
-      overlay={
-        <span className="flex-down">
-          <div className="flex">
-            <button type="button" onClick={(): any => createNewView()}>
-              NEW
-            </button>
-            <span>Create a new view from the initial selection.</span>
-          </div>
-          <div className="flex">
-            <button type="button" onClick={(): any => cloneView()}>
-              CLONE
-            </button>
-            <span>Clone the current view into a new view.</span>
-          </div>
-        </span>
-      }
-    >
-      <div className="view-control new-view">
-        <TiDocumentAdd />
-      </div>
-    </Tooltip>
-  );
-}
-
-interface ViewOptionProps {
-  changeViewName: GenericAction<{idx: number; value: string}>;
-  currentView: string;
-  deleteView: GenericAction<string>;
-  idx: number;
-  switchView: GenericAction<string>;
-  view: string;
-}
-
-function viewOption(props: ViewOptionProps): JSX.Element {
-  const {idx, view, currentView, changeViewName, switchView, deleteView} = props;
-  return (
-    <div
-      key={idx}
-      className={classnames({
-        'view-control': true,
-        selected: view === currentView,
-      })}
-      onClick={(): any => switchView(view)}
-    >
-      <button type="button">{view}</button>
-      <Tooltip
-        placement="bottom"
-        trigger="click"
-        overlay={
-          <div>
-            <div>View Controls</div>
-            <IgnoreKeys style={{height: '100%'}}>
-              <input
-                aria-label={`Set view name`}
-                value={view}
-                type="text"
-                onChange={(e): any => changeViewName({idx, value: e.target.value})}
-              />
-            </IgnoreKeys>
-            <button type="button" onClick={(): any => deleteView(view)}>
-              delete view
-            </button>
-          </div>
-        }
-      >
-        <span className="view-settings">
-          <TiCog />
-        </span>
-      </Tooltip>
-    </div>
-  );
 }
 
 function* cartesian(head?: any, ...tail: any): any {
@@ -294,14 +210,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         'full-height': true,
       })}
     >
-      <div className="chart-controls full-width flex">
-        <div className="view-container">
-          {views.map((view, idx) =>
-            viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
-          )}
-          {newViewButton({createNewView, cloneView})}
-        </div>
-      </div>
       <div
         className={classnames({
           'chart-container': true,
@@ -350,6 +258,15 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
           </div>
         )}
       </div>
+      <ViewControls
+        changeViewName={changeViewName}
+        cloneView={cloneView}
+        createNewView={createNewView}
+        currentView={currentView}
+        deleteView={deleteView}
+        switchView={switchView}
+        views={views}
+      />
     </div>
   );
 }
