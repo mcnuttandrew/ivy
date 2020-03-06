@@ -86,6 +86,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
     }
     return {onClick, name: key};
   };
+  console.log(spec);
   const search = trim(spec.SearchKey as string);
   const programs = templates
     .map(makeSortScore(spec.Sort))
@@ -115,6 +116,14 @@ export default function DataSearchMode(props: Props): JSX.Element {
       const madeByUser = template.templateAuthor === userName;
       const builtIn = template.templateAuthor === 'HYDRA-AUTHORS';
       const buttons = madeByUser ? ['Publish', 'Delete'] : builtIn ? [] : ['Delete'];
+      const counts = buildCounts(template);
+      const {SUM} = counts;
+      if (
+        (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
+        (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
+      ) {
+        return acc;
+      }
       const newProg = (
         <ProgramPreview
           buttons={buttons.map(makeButtonObject(template.templateName))}
@@ -124,7 +133,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
           templateAuthor={template.templateAuthor}
           templateDescription={template.templateDescription}
           templateName={template.templateName}
-          typeCounts={buildCounts(template)}
+          typeCounts={counts}
           userName={userName}
         />
       );

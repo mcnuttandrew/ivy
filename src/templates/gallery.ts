@@ -39,14 +39,48 @@ const Gallery: Template = {
       config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
       validations: [{query: '!parameters.Sort === "null"', queryResult: 'hide'}],
     },
-    // TODO add sort explanation for text
+    {
+      name: 'minRequiredTargets',
+      type: 'Slider',
+      config: {minVal: 0, maxVal: 20, step: 1, defaultValue: 0},
+      validations: [{query: 'false', queryResult: 'hide'}],
+    },
+    {
+      name: 'maxRequiredTargets',
+      type: 'Slider',
+      config: {minVal: 0, maxVal: 20, step: 1, defaultValue: 0},
+      validations: [{query: 'false', queryResult: 'hide'}],
+    },
+    {type: 'Text', name: 'shortcuts label', config: {text: 'Search Shortcuts'}},
+    {
+      name: `Shortcuts`,
+      type: 'Shortcut',
+      config: {
+        shortcuts: [
+          {
+            label: 'Unvariates',
+            shortcutFunction: '{...parameters, minRequiredTargets: 1, maxRequiredTargets: 1}',
+          },
+          {
+            label: 'Exploration',
+            shortcutFunction: '{...parameters, minRequiredTargets: 6, maxRequiredTargets: 0}',
+          },
+          {
+            label: 'Reset',
+            shortcutFunction: '{...parameters, minRequiredTargets: 0, maxRequiredTargets: 0}',
+          },
+        ],
+      },
+    },
   ],
   code: JSON.stringify({
     $schema: 'galleryLang',
     dataTargetSearch: '[dataTargetSearch]',
-    SearchKey: `[SearchKey]`,
+    SearchKey: '[SearchKey]',
     Sort: '[Sort]',
     'Reverse Sort': '[Reverse Sort]',
+    minRequiredTargets: '[minRequiredTargets]',
+    maxRequiredTargets: '[maxRequiredTargets]',
   }),
 };
 export default Gallery;

@@ -84,7 +84,7 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
       acc[row.type] = (acc[row.type] || []).concat(row);
       return acc;
     },
-    {DIMENSION: [], MEASURE: [], TIME: [], CUSTOM: []} as {[x: string]: ColumnHeader[]},
+    {DIMENSION: [], MEASURE: [], TIME: []} as {[x: string]: ColumnHeader[]},
   );
   return (
     <div className="flex-down">
