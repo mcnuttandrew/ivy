@@ -159,7 +159,9 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
         type === 'MultiDataTarget' &&
         (!val || val.length < widget.config.maxNumberOfTargets || !widget.config.maxNumberOfTargets)
       ) {
-        widget.config.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(name));
+        (widget.config.allowedTypes as string[])
+          .filter(d => dimCounter[d])
+          .forEach((allowedType: string): void => acc[allowedType].push(name));
       }
       // dont try figure it out if it's in use, needs to be before multidatatarget which has a truthy null, []
       if (val) {
@@ -167,7 +169,9 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
       }
 
       if (type === 'DataTarget') {
-        widget.config.allowedTypes.forEach((allowedType: string): void => acc[allowedType].push(name));
+        (widget.config.allowedTypes as string[])
+          .filter(d => dimCounter[d])
+          .forEach((allowedType: string): void => acc[allowedType].push(name));
       }
       return acc;
     }, dimCounter);

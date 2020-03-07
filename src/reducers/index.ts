@@ -100,7 +100,6 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   // encoding modifications
   [actionTypes.ADD_TO_NEXT_OPEN_SLOT]: addUndo(addToNextOpenSlot),
   [actionTypes.COERCE_TYPE]: addUndo(coerceType),
-  [actionTypes.SET_NEW_ENCODING_CODE]: addUndo(setNewSpecCode),
 
   [actionTypes.TRIGGER_REDO]: triggerRedo,
   [actionTypes.TRIGGER_UNDO]: triggerUndo,
@@ -109,9 +108,13 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   // [actionTypes.CREATE_FILTER]: addUndo(createFilter),
   // [actionTypes.DELETE_FILTER]: addUndo(deleteFilter),
   // [actionTypes.UPDATE_FILTER]: addUndo(updateFilter),
+  // code edits
+  [actionTypes.READ_IN_TEMPLATE]: readInTemplate,
+  [actionTypes.READ_IN_TEMPLATE_MAP]: readInTemplateMap,
+  [actionTypes.SET_NEW_ENCODING_CODE]: addUndo(setNewSpecCode),
 
   // gui modifications
-  [actionTypes.SET_CODE_MODE]: setCodeMode,
+  [actionTypes.SET_CODE_MODE]: addUndo(setCodeMode),
   [actionTypes.SET_EDIT_MODE]: setEditMode,
   [actionTypes.SET_ENCODING_MODE]: addUndo(setEncodingMode),
   [actionTypes.SET_GUI_VIEW]: setGuiView,
@@ -129,12 +132,10 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: modifyValueOnTemplate,
   [actionTypes.MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
   [actionTypes.FILL_TEMPLATEMAP_WITH_DEFAULTS]: fillTemplateMapWithDefaults,
-  [actionTypes.READ_IN_TEMPLATE]: readInTemplate,
-  [actionTypes.READ_IN_TEMPLATE_MAP]: readInTemplateMap,
   [actionTypes.RECIEVE_TEMPLATE]: recieveTemplates,
   [actionTypes.REMOVE_WIDGET_FROM_TEMPLATE]: addUndo(removeWidget),
   [actionTypes.SAVE_TEMPLATE]: saveCurrentTemplate,
-  [actionTypes.SET_ALL_TEMPLATE_VALUES]: setAllTemplateValues,
+  [actionTypes.SET_ALL_TEMPLATE_VALUES]: addUndo(setAllTemplateValues),
   [actionTypes.SET_BLANK_TEMPLATE]: setBlankTemplate,
   [actionTypes.SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
   [actionTypes.SET_WIDGET_VALUE]: addUndo(setWidgetValue),

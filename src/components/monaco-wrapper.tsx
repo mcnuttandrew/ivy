@@ -6,9 +6,9 @@ import {EDITOR_OPTIONS, JSON_OUTPUT, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
 
 interface Props {
-  chainActions: GenericAction<any>;
   codeMode: string;
   currentCode: string;
+  editMode: boolean;
   editorFontSize: number;
   editorLineWrap: boolean;
   handleCodeUpdate: (x: string) => void;
@@ -46,15 +46,16 @@ export default class CodeEditor extends React.Component<Props> {
 
   render(): JSX.Element {
     const {
-      chainActions,
       codeMode,
       currentCode,
+      editMode,
       editorFontSize,
       editorLineWrap,
       handleCodeUpdate,
       setCodeMode,
       setEditMode,
     } = this.props;
+    console.log('monaco render');
     return (
       /*eslint-disable react/no-string-refs*/
       <IgnoreKeys style={{height: '100%'}}>
@@ -70,8 +71,11 @@ export default class CodeEditor extends React.Component<Props> {
             wordWrap: editorLineWrap ? 'on' : 'off',
           }}
           onChange={(code: string): void => {
+            if (!editMode) {
+              setEditMode(true);
+            }
             if (codeMode === JSON_OUTPUT) {
-              chainActions([(): any => setEditMode(true), (): any => setCodeMode(TEMPLATE_BODY)]);
+              setCodeMode(TEMPLATE_BODY);
               return;
             }
 

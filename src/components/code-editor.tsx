@@ -60,12 +60,12 @@ export default class CodeEditor extends React.Component<Props> {
 
   handleCodeUpdate(code: string): void {
     const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
+    console.log('update', code);
     const responseFunctionMap: {[x: string]: GenericAction<HandleCodePayload>} = {
       [WIDGET_CONFIGURATION]: readInTemplate,
       [WIDGET_VALUES]: readInTemplateMap,
       [TEMPLATE_BODY]: setNewSpecCode,
     };
-    console.log(code);
     Promise.resolve()
       .then(() => JSON.parse(code))
       .then(() => responseFunctionMap[codeMode]({code, inError: false}))
@@ -130,9 +130,9 @@ export default class CodeEditor extends React.Component<Props> {
                   />
                 )}
                 <MonacoWrapper
-                  chainActions={this.props.chainActions}
                   codeMode={codeMode}
                   currentCode={currentCode}
+                  editMode={this.props.editMode}
                   editorFontSize={this.props.editorFontSize}
                   editorLineWrap={this.props.editorLineWrap}
                   handleCodeUpdate={this.handleCodeUpdate}
