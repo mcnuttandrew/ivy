@@ -55,7 +55,6 @@ export default class CodeEditor extends React.Component<Props> {
       setCodeMode,
       setEditMode,
     } = this.props;
-    console.log('monaco render');
     return (
       /*eslint-disable react/no-string-refs*/
       <IgnoreKeys style={{height: '100%'}}>

@@ -60,7 +60,6 @@ export default class CodeEditor extends React.Component<Props> {
 
   handleCodeUpdate(code: string): void {
     const {setNewSpecCode, readInTemplate, readInTemplateMap, codeMode} = this.props;
-    console.log('update', code);
     const responseFunctionMap: {[x: string]: GenericAction<HandleCodePayload>} = {
       [WIDGET_CONFIGURATION]: readInTemplate,
       [WIDGET_VALUES]: readInTemplateMap,
