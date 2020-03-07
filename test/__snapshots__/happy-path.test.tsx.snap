@@ -16,9 +16,9 @@ Data target searchdrop a field hereClearSelect a valueAcceleration 123Cylinders 
  You can also facilitate browsing by sorting: 
 
 
-Sorttemplate namemin required measuresmin required dimensionsmin required timesmax allowed fieldscomplexityReverse Sort"
+Sorttemplate namemin required measuresmin required dimensionsmin required timesmax allowed fieldscomplexityReverse SortSearch ShortcutsUnvariatesExplorationReset"
 `;
 
-exports[`Happy path 2`] = `"Data cars.jsonCHANGEdimension (2)hideNameOriginmeasure (6)hideAccelerationCylindersDisplacementHorsepowerMiles_per_GallonWeight_in_lbstime (1)hideYearcustom (0)hide"`;
+exports[`Happy path 2`] = `"Data cars.jsonCHANGEdimension (2)hideNameOriginmeasure (6)hideAccelerationCylindersDisplacementHorsepowerMiles_per_GallonWeight_in_lbstime (1)hideYear"`;
 
 exports[`Happy path 3`] = `"No templates match your query"`;

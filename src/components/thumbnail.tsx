@@ -26,6 +26,7 @@ function thumbnailLocation(
   return {url: `${serverPrefix()}/thumbnail?author=${templateAuthor}&template=${templateName}`, local: false};
 }
 
+const stupidCache: {[x: string]: string} = {};
 function Thumbnail(props: ThumbnailProps): JSX.Element {
   const {templateName, templateAuthor} = props;
   const [src, setSrc] = useState('logo.png');
@@ -35,9 +36,17 @@ function Thumbnail(props: ThumbnailProps): JSX.Element {
       setSrc(url);
       return;
     }
+    // check to see if the cache has this value stored, if so set it
+    if (stupidCache[url]) {
+      setSrc(stupidCache[url]);
+    }
+    // regardless of whether or not it does, go to the server and grab a copy
     fetch(url)
       .then(x => x.text())
-      .then(x => setSrc(x));
+      .then(x => {
+        stupidCache[url] = x;
+        return setSrc(x);
+      });
   }, [templateName, templateAuthor]);
   return (
     <img

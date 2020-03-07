@@ -129,9 +129,9 @@ export default class CodeEditor extends React.Component<Props> {
                   />
                 )}
                 <MonacoWrapper
-                  chainActions={this.props.chainActions}
                   codeMode={codeMode}
                   currentCode={currentCode}
+                  editMode={this.props.editMode}
                   editorFontSize={this.props.editorFontSize}
                   editorLineWrap={this.props.editorLineWrap}
                   handleCodeUpdate={this.handleCodeUpdate}

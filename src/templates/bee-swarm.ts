@@ -2,6 +2,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './vega-common';
 import {toList} from '../utils';
+import {AUTHORS} from '../constants/index';
 
 const BEESWARM_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
@@ -87,7 +88,7 @@ const BeeSwarm: Template = {
   templateDescription:
     'A unit approach to showing the sizes and distribution of groups, uses a force simulation to minimize overlaps.',
   templateLanguage: 'vega',
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   widgets: [
     {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
     {name: 'OtherSettingsSection', type: 'Section', config: null, validations: []},

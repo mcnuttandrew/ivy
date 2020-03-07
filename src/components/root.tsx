@@ -336,14 +336,21 @@ class RootComponent extends React.Component<RootProps, State> {
     const {
       canRedo,
       canUndo,
+      editMode,
       fillTemplateMapWithDefaults,
       openModal,
+      setEditMode,
       setEncodingMode,
       setModalState,
+      template,
       triggerRedo,
       triggerUndo,
     } = this.props;
-
+    const onGallery = template.templateName === GALLERY.templateName;
+    const withSay = (func: any, name: string) => (): any => {
+      console.log('hotkey', name);
+      func();
+    };
     return (
       <GlobalHotKeys
         keyMap={{
@@ -352,17 +359,19 @@ class RootComponent extends React.Component<RootProps, State> {
           CLOSE_MODALS: 'Escape',
           HOME: 'h',
           CLEAR_ENCODING: 'r',
+          TOGGLE_EDIT: 'e',
         }}
         handlers={{
-          CLEAR_ENCODING: (): any => fillTemplateMapWithDefaults(),
-          HOME: (): any => setEncodingMode(GALLERY.templateName),
-          UNDO: (): any => canUndo && triggerUndo(),
-          REDO: (): any => canRedo && triggerRedo(),
-          CLOSE_MODALS: (): any => {
+          TOGGLE_EDIT: withSay(() => !onGallery && setEditMode(!editMode), 'edit'),
+          CLEAR_ENCODING: withSay(() => fillTemplateMapWithDefaults(), 'clear'),
+          HOME: withSay(() => setEncodingMode(GALLERY.templateName), 'home'),
+          UNDO: withSay(() => canUndo && triggerUndo(), 'undo'),
+          REDO: withSay(() => canRedo && triggerRedo(), 'redo'),
+          CLOSE_MODALS: withSay(() => {
             if (openModal) {
               setModalState(null);
             }
-          },
+          }, 'close modals'),
         }}
         allowChanges={true}
       />

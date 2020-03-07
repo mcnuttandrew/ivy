@@ -201,8 +201,8 @@ export default function EncodingControls(props: Props): JSX.Element {
             })}
           </div>
         </div>
-        <h5 className="flex">
-          Current Template{' '}
+        <div className="flex">
+          <h5 className="flex">Current Template</h5>
           <Tooltip
             placement="top"
             trigger="click"
@@ -212,9 +212,11 @@ export default function EncodingControls(props: Props): JSX.Element {
               </span>
             }
           >
-            <TiInfoLarge className="cursor-pointer" />
+            <span>
+              <TiInfoLarge className="cursor-pointer" />
+            </span>
           </Tooltip>
-        </h5>
+        </div>
         <h4>{getTemplateName(template)}</h4>
       </div>
     </div>

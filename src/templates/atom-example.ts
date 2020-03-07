@@ -1,5 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
+import {AUTHORS} from '../constants/index';
 /* eslint-disable @typescript-eslint/camelcase */
 const UNIT_VIS_EXAMPLE: any = {
   $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
@@ -17,7 +18,7 @@ const UNITVIS: Template = {
   templateDescription:
     'A simple unit vis chart with a rudimentary preconfiguration, it makes use of the unit vis language.',
   templateLanguage: 'unit-vis',
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   code: stringify(UNIT_VIS_EXAMPLE),
   widgets: [
     {name: 'Key1', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},

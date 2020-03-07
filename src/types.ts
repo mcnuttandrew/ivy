@@ -33,6 +33,7 @@ export interface UndoRedoStackItem {
   currentTemplateInstance: Template;
   currentView: string;
   encodingMode: string;
+  codeMode: string;
   templateMap: TemplateMap;
   viewCatalog: ViewCatalog;
   views: string[];

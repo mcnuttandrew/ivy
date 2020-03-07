@@ -21,7 +21,10 @@ export default function Header(props: HeaderProps): JSX.Element {
   return (
     <div className="header flex background-1">
       <div className="flex center">
-        <div className="flex cursor-pointer" onClick={(): any => setEncodingMode(GALLERY.templateName)}>
+        <div
+          className="flex cursor-pointer center"
+          onClick={(): any => setEncodingMode(GALLERY.templateName)}
+        >
           <img alt="hydra logo" src="logo.png" />
           <div>Ivy</div>
         </div>

@@ -1,6 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template, GenWidget, Validation} from '../types';
 import {Json, JsonMap} from '../types';
+import {AUTHORS} from '../constants/index';
 
 import {toList} from '../utils';
 import {
@@ -133,7 +134,7 @@ const Polestar: Template = {
   templateDescription:
     'A tableau-style shelf builder, facilitates a wide variety of charting and exploration tasks.',
   templateLanguage: 'vega-lite',
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   customCards: [
     {name: 'COUNT', description: 'use this card to treat channels as simple count aggregations'},
     {name: META_COL_ROW, description: 'place this card onto fields to facet across by data column'},

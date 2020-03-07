@@ -1,5 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
+import {AUTHORS} from '../constants/index';
 
 const SCATTERPLOT: Template = {
   widgets: [
@@ -27,7 +28,7 @@ const SCATTERPLOT: Template = {
   ],
   templateName: 'Simple Scatterplot',
   templateDescription: 'A simple scatterplot that can map color and position.',
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   templateLanguage: 'vega-lite',
   code: stringify({
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',

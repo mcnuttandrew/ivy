@@ -1,6 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {toList} from '../utils';
+import {AUTHORS} from '../constants/index';
 const PARALLEL_COORS: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
   width: 700,
@@ -275,7 +276,7 @@ const cols = [0, 1, 2, 3, 4, 5];
 const ParallelCoordinates: Template = {
   templateName: 'parallel coordinates',
   templateDescription: 'A way to visualize the relationships between a variety of measure varables',
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   templateLanguage: 'vega',
   disallowFanOut: true,
   widgets: [
