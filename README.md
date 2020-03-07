@@ -1,4 +1,4 @@
-# Hydra or "Untitled Data Exploration Experience"
+# Ivy or "Untitled Data Exploration Experience"
 
 ### (Depending on who you ask)
 

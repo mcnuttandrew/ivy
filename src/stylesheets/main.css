@@ -124,7 +124,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .chart-container {
   border-left: 1px solid lightgray;
-  padding: 20px;
+  padding: 20px 5px;
   overflow: scroll;
 }
 

@@ -4,6 +4,7 @@ import {Template, ColumnHeader} from '../types';
 import ProgramPreview from './program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../utils';
 import GALLERY from '../templates/gallery';
+import {AUTHORS} from '../constants/index';
 interface Props {
   columns: ColumnHeader[];
   deleteTemplate: GenericAction<string>;
@@ -84,9 +85,14 @@ export default function DataSearchMode(props: Props): JSX.Element {
         publish(templateName, template);
       };
     }
+    if (key === 'Use') {
+      onClick = (): any => {
+        setEncodingMode(templateName);
+      };
+    }
     return {onClick, name: key};
   };
-  console.log(spec);
+
   const search = trim(spec.SearchKey as string);
   const programs = templates
     .map(makeSortScore(spec.Sort))
@@ -114,8 +120,8 @@ export default function DataSearchMode(props: Props): JSX.Element {
         return acc;
       }
       const madeByUser = template.templateAuthor === userName;
-      const builtIn = template.templateAuthor === 'HYDRA-AUTHORS';
-      const buttons = madeByUser ? ['Publish', 'Delete'] : builtIn ? [] : ['Delete'];
+      const builtIn = template.templateAuthor === AUTHORS;
+      const buttons = madeByUser ? ['Publish', 'Delete', 'Use'] : builtIn ? ['Use'] : ['Delete', 'Use'];
       const counts = buildCounts(template);
       const {SUM} = counts;
       if (

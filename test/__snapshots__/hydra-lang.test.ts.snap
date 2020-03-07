@@ -119,5 +119,7 @@ Object {
   "SearchKey": "should result",
   "Sort": "[Sort]",
   "dataTargetSearch": Array [],
+  "maxRequiredTargets": "[maxRequiredTargets]",
+  "minRequiredTargets": "[minRequiredTargets]",
 }
 `;

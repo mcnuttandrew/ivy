@@ -340,3 +340,232 @@ exports[`#setTemplateValues 3`] = `
   \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]
 }"
 `;
+
+exports[`serialize/deserialize template 1`] = `
+"{
+  \\"$schema\\": \\"https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json\\",
+  \\"templateName\\": \\"pie chart\\",
+  \\"templateDescription\\": \\"A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.\\",
+  \\"templateAuthor\\": \\"Ivy Authors\\",
+  \\"templateLanguage\\": \\"vega\\",
+  \\"widgets\\": [
+    {\\"name\\": \\"category\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"DIMENSION\\"], \\"required\\": true}},
+    {
+      \\"name\\": \\"Sort\\",
+      \\"type\\": \\"Switch\\",
+      \\"config\\": {\\"activeValue\\": \\"true\\", \\"inactiveValue\\": \\"false\\", \\"defaultsToActive\\": true}
+    },
+    {\\"name\\": \\"value\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"MEASURE\\"], \\"required\\": true}},
+    {
+      \\"name\\": \\"aggregate\\",
+      \\"type\\": \\"List\\",
+      \\"config\\": {
+        \\"allowedValues\\": [
+          {\\"display\\": \\"count\\", \\"value\\": \\"\\\\\\"count\\\\\\"\\"},
+          {\\"display\\": \\"missing\\", \\"value\\": \\"\\\\\\"missing\\\\\\"\\"},
+          {\\"display\\": \\"distinct\\", \\"value\\": \\"\\\\\\"distinct\\\\\\"\\"},
+          {\\"display\\": \\"sum\\", \\"value\\": \\"\\\\\\"sum\\\\\\"\\"},
+          {\\"display\\": \\"mean\\", \\"value\\": \\"\\\\\\"mean\\\\\\"\\"},
+          {\\"display\\": \\"median\\", \\"value\\": \\"\\\\\\"median\\\\\\"\\"},
+          {\\"display\\": \\"min\\", \\"value\\": \\"\\\\\\"min\\\\\\"\\"},
+          {\\"display\\": \\"max\\", \\"value\\": \\"\\\\\\"max\\\\\\"\\"}
+        ],
+        \\"defaultValue\\": \\"\\\\\\"mean\\\\\\"\\"
+      }
+    },
+    {\\"name\\": \\"OtherSettingsSection\\", \\"type\\": \\"Section\\", \\"config\\": null},
+    {
+      \\"name\\": \\"colorScheme\\",
+      \\"type\\": \\"List\\",
+      \\"config\\": {
+        \\"allowedValues\\": [
+          {\\"display\\": \\"accent\\", \\"value\\": \\"\\\\\\"accent\\\\\\"\\"},
+          {\\"display\\": \\"category10\\", \\"value\\": \\"\\\\\\"category10\\\\\\"\\"},
+          {\\"display\\": \\"category20\\", \\"value\\": \\"\\\\\\"category20\\\\\\"\\"},
+          {\\"display\\": \\"category20b\\", \\"value\\": \\"\\\\\\"category20b\\\\\\"\\"},
+          {\\"display\\": \\"category20c\\", \\"value\\": \\"\\\\\\"category20c\\\\\\"\\"},
+          {\\"display\\": \\"dark2\\", \\"value\\": \\"\\\\\\"dark2\\\\\\"\\"},
+          {\\"display\\": \\"paired\\", \\"value\\": \\"\\\\\\"paired\\\\\\"\\"},
+          {\\"display\\": \\"pastel1\\", \\"value\\": \\"\\\\\\"pastel1\\\\\\"\\"},
+          {\\"display\\": \\"pastel2\\", \\"value\\": \\"\\\\\\"pastel2\\\\\\"\\"},
+          {\\"display\\": \\"set1\\", \\"value\\": \\"\\\\\\"set1\\\\\\"\\"},
+          {\\"display\\": \\"set2\\", \\"value\\": \\"\\\\\\"set2\\\\\\"\\"},
+          {\\"display\\": \\"set3\\", \\"value\\": \\"\\\\\\"set3\\\\\\"\\"},
+          {\\"display\\": \\"tableau10\\", \\"value\\": \\"\\\\\\"tableau10\\\\\\"\\"},
+          {\\"display\\": \\"tableau20\\", \\"value\\": \\"\\\\\\"tableau20\\\\\\"\\"}
+        ],
+        \\"defaultValue\\": \\"\\\\\\"category20\\\\\\"\\"
+      }
+    },
+    {
+      \\"name\\": \\"DonutChart\\",
+      \\"type\\": \\"Switch\\",
+      \\"config\\": {\\"activeValue\\": \\"60\\", \\"inactiveValue\\": \\"0\\", \\"defaultsToActive\\": true}
+    }
+  ],
+  \\"code\\": \\"SEE BODY\\"
+}"
+`;
+
+exports[`serialize/deserialize template 2`] = `
+Object {
+  "code": "SEE CODE EDITOR",
+  "customCards": undefined,
+  "disallowFanOut": undefined,
+  "templateAuthor": "Ivy Authors",
+  "templateDescription": "A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.",
+  "templateLanguage": "vega",
+  "templateName": "pie chart",
+  "widgets": Array [
+    Object {
+      "config": Object {
+        "allowedTypes": Array [
+          "DIMENSION",
+        ],
+        "required": true,
+      },
+      "name": "category",
+      "type": "DataTarget",
+    },
+    Object {
+      "config": Object {
+        "activeValue": "true",
+        "defaultsToActive": true,
+        "inactiveValue": "false",
+      },
+      "name": "Sort",
+      "type": "Switch",
+    },
+    Object {
+      "config": Object {
+        "allowedTypes": Array [
+          "MEASURE",
+        ],
+        "required": true,
+      },
+      "name": "value",
+      "type": "DataTarget",
+    },
+    Object {
+      "config": Object {
+        "allowedValues": Array [
+          Object {
+            "display": "count",
+            "value": "\\"count\\"",
+          },
+          Object {
+            "display": "missing",
+            "value": "\\"missing\\"",
+          },
+          Object {
+            "display": "distinct",
+            "value": "\\"distinct\\"",
+          },
+          Object {
+            "display": "sum",
+            "value": "\\"sum\\"",
+          },
+          Object {
+            "display": "mean",
+            "value": "\\"mean\\"",
+          },
+          Object {
+            "display": "median",
+            "value": "\\"median\\"",
+          },
+          Object {
+            "display": "min",
+            "value": "\\"min\\"",
+          },
+          Object {
+            "display": "max",
+            "value": "\\"max\\"",
+          },
+        ],
+        "defaultValue": "\\"mean\\"",
+      },
+      "name": "aggregate",
+      "type": "List",
+    },
+    Object {
+      "config": null,
+      "name": "OtherSettingsSection",
+      "type": "Section",
+    },
+    Object {
+      "config": Object {
+        "allowedValues": Array [
+          Object {
+            "display": "accent",
+            "value": "\\"accent\\"",
+          },
+          Object {
+            "display": "category10",
+            "value": "\\"category10\\"",
+          },
+          Object {
+            "display": "category20",
+            "value": "\\"category20\\"",
+          },
+          Object {
+            "display": "category20b",
+            "value": "\\"category20b\\"",
+          },
+          Object {
+            "display": "category20c",
+            "value": "\\"category20c\\"",
+          },
+          Object {
+            "display": "dark2",
+            "value": "\\"dark2\\"",
+          },
+          Object {
+            "display": "paired",
+            "value": "\\"paired\\"",
+          },
+          Object {
+            "display": "pastel1",
+            "value": "\\"pastel1\\"",
+          },
+          Object {
+            "display": "pastel2",
+            "value": "\\"pastel2\\"",
+          },
+          Object {
+            "display": "set1",
+            "value": "\\"set1\\"",
+          },
+          Object {
+            "display": "set2",
+            "value": "\\"set2\\"",
+          },
+          Object {
+            "display": "set3",
+            "value": "\\"set3\\"",
+          },
+          Object {
+            "display": "tableau10",
+            "value": "\\"tableau10\\"",
+          },
+          Object {
+            "display": "tableau20",
+            "value": "\\"tableau20\\"",
+          },
+        ],
+        "defaultValue": "\\"category20\\"",
+      },
+      "name": "colorScheme",
+      "type": "List",
+    },
+    Object {
+      "config": Object {
+        "activeValue": "60",
+        "defaultsToActive": true,
+        "inactiveValue": "0",
+      },
+      "name": "DonutChart",
+      "type": "Switch",
+    },
+  ],
+}
+`;

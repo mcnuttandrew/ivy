@@ -37,3 +37,4 @@ export const switchCommon = {
 };
 
 export const MATERIALIZING = '$PARAMETER FANNED OUT$';
+export const AUTHORS = 'Ivy Authors';

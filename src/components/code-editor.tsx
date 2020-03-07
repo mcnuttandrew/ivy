@@ -65,6 +65,7 @@ export default class CodeEditor extends React.Component<Props> {
       [WIDGET_VALUES]: readInTemplateMap,
       [TEMPLATE_BODY]: setNewSpecCode,
     };
+    console.log(code);
     Promise.resolve()
       .then(() => JSON.parse(code))
       .then(() => responseFunctionMap[codeMode]({code, inError: false}))

@@ -8,6 +8,7 @@ import TABLE from '../src/templates/table';
 import {DEFAULT_STATE} from '../src/reducers';
 import {setEncodingMode} from '../src/reducers/gui-actions';
 import {evaluateHydraProgram} from '../src/hydra-lang';
+import {serializeTemplate, deserializeTemplate} from '../src/utils/index';
 
 test('#setTemplateValues', () => {
   const filledOutPieTemplate = setTemplateValues(PIECHART_TEMPLATE.code, {
@@ -42,4 +43,9 @@ test('#fillTemplateMapWithDefaults', () => {
   const nextState2 = fillTemplateMapWithDefaults(setEncodingMode(newState, 'Data Table'));
   expect(evaluateHydraProgram(nextState2.currentTemplateInstance, nextState2.templateMap)).toMatchSnapshot();
   expect(nextState2.templateMap).toMatchSnapshot();
+});
+
+test('serialize/deserialize template', () => {
+  expect(serializeTemplate(PIECHART_TEMPLATE)).toMatchSnapshot();
+  expect(deserializeTemplate(serializeTemplate(PIECHART_TEMPLATE))).toMatchSnapshot();
 });

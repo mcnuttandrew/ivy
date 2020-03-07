@@ -336,14 +336,17 @@ class RootComponent extends React.Component<RootProps, State> {
     const {
       canRedo,
       canUndo,
+      editMode,
       fillTemplateMapWithDefaults,
       openModal,
+      setEditMode,
       setEncodingMode,
       setModalState,
+      template,
       triggerRedo,
       triggerUndo,
     } = this.props;
-
+    const onGallery = template.templateName === GALLERY.templateName;
     return (
       <GlobalHotKeys
         keyMap={{
@@ -352,8 +355,10 @@ class RootComponent extends React.Component<RootProps, State> {
           CLOSE_MODALS: 'Escape',
           HOME: 'h',
           CLEAR_ENCODING: 'r',
+          TOGGLE_EDIT: 'e',
         }}
         handlers={{
+          TOGGLE_EDIT: (): any => !onGallery && setEditMode(!editMode),
           CLEAR_ENCODING: (): any => fillTemplateMapWithDefaults(),
           HOME: (): any => setEncodingMode(GALLERY.templateName),
           UNDO: (): any => canUndo && triggerUndo(),

@@ -1,6 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Widget, Template, GenWidget, SliderWidget, QueryResult} from '../types';
 import {simpleList} from './polestar-template-utils';
+import {AUTHORS} from '../constants/index';
 
 const TYPES = ['groupby', 'bin', 'passthrough', 'gridxy', 'flatten'];
 const ASPECT_RATIOS = ['square', 'parents', 'fillX', 'fillY', 'maxfill', 'custom'];
@@ -82,7 +83,7 @@ const ATOM: Template = {
   templateDescription:
     'A system for exploring unit visualizations, such as waffle plots and the like. Based on the work of Park et al.',
   templateLanguage: 'unit-vis',
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   code: stringify(ATOM_TEMPLATE),
   widgets: [
     {name: 'colorBy', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},

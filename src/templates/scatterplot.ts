@@ -1,6 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {toList} from '../utils';
+import {AUTHORS} from '../constants/index';
 const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   mark: {
@@ -60,7 +61,7 @@ const SCATTERPLOT: Template = {
     },
     {name: `Radius`, type: 'Slider', config: {minVal: 10, maxVal: 60, step: 1, defaultValue: 15}},
   ],
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   templateName: 'Scatterplot',
   templateDescription:
     'A simple scatterplot that can map color and position, supports ordinal and quantitative data.',

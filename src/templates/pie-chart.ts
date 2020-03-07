@@ -2,6 +2,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES, AGGREGATES} from './vega-common';
 import {toList} from '../utils';
+import {AUTHORS} from '../constants/index';
 // https://observablehq.com/@simon-lang/simple-vega-pie-chart
 const PIECHART_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
@@ -96,7 +97,7 @@ const PieChart: Template = {
   templateName: 'pie chart',
   templateDescription:
     'A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.',
-  templateAuthor: 'HYDRA-AUTHORS',
+  templateAuthor: AUTHORS,
   templateLanguage: 'vega',
   widgets: [
     {name: 'category', type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
