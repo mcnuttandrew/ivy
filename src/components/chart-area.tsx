@@ -1,5 +1,13 @@
 import React from 'react';
-import {Template, ColumnHeader, Json, HydraExtension, ViewsToMaterialize, TemplateMap} from '../types';
+import {
+  Template,
+  ColumnHeader,
+  Json,
+  HydraExtension,
+  ViewsToMaterialize,
+  TemplateMap,
+  RendererProps,
+} from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
@@ -161,7 +169,26 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   );
 }
 
-// TODO memoize the rendering stuff
+interface MemoizerProps {
+  renderer: (props: RendererProps) => JSX.Element;
+  spec: any;
+  data: DataRow[];
+  onError: (x: any) => any;
+}
+
+class MemoizeRender extends React.Component<MemoizerProps> {
+  shouldComponentUpdate(props: MemoizerProps): boolean {
+    return (
+      JSON.stringify(props.spec) !== JSON.stringify(this.props.spec) ||
+      JSON.stringify(props.data) !== JSON.stringify(this.props.data)
+    );
+  }
+  render(): JSX.Element {
+    const {renderer, onError, data, spec} = this.props;
+    return renderer({data, spec, onError});
+  }
+}
+
 export default function ChartArea(props: ChartAreaProps): JSX.Element {
   const {
     changeViewName,
@@ -229,15 +256,16 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
             userName={userName}
           />
         )}
-        {showChart &&
-          materializedViews.length === 0 &&
-          renderer({
-            data,
-            spec,
-            onError: (e): void => {
+        {showChart && materializedViews.length === 0 && (
+          <MemoizeRender
+            renderer={renderer}
+            data={data}
+            spec={spec}
+            onError={(e): void => {
               console.log('upper error', e);
-            },
-          })}
+            }}
+          />
+        )}
         {showChart &&
           materializedViews.length > 0 &&
           materializeWrapper({
