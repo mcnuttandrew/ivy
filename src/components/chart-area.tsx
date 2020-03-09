@@ -189,18 +189,19 @@ interface MemoizerProps {
   onError: (x: any) => any;
 }
 
-class MemoizeRender extends React.Component<MemoizerProps> {
-  shouldComponentUpdate(props: MemoizerProps): boolean {
-    return (
-      JSON.stringify(props.spec) !== JSON.stringify(this.props.spec) ||
-      JSON.stringify(props.data) !== JSON.stringify(this.props.data)
-    );
-  }
-  render(): JSX.Element {
-    const {renderer, onError, data, spec} = this.props;
+const MemoizeRender = React.memo(
+  function Memoizer(props: MemoizerProps): JSX.Element {
+    const {renderer, onError, data, spec} = props;
+    console.log('got run');
     return renderer({data, spec, onError});
-  }
-}
+  },
+  (prevProps, nextProps) => {
+    return (
+      JSON.stringify(prevProps.spec) === JSON.stringify(nextProps.spec) &&
+      JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data)
+    );
+  },
+);
 
 export default function ChartArea(props: ChartAreaProps): JSX.Element {
   const {
