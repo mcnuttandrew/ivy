@@ -5,6 +5,7 @@ import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
 import GALLERY from '../templates/gallery';
 import {HoverTooltip} from './tooltips';
+import {HOT_KEYS, HOT_KEY_DESCRIPTIONS} from '../constants/index';
 
 interface HeaderProps {
   triggerUndo: GenericAction<void>;
@@ -77,6 +78,16 @@ export default function Header(props: HeaderProps): JSX.Element {
           <div>
             <h1>About this application</h1>
             <div>Terminology, etc</div>
+            <h3>Hotkeys</h3>
+            <ul>
+              {Object.entries(HOT_KEYS).map(([key, value]) => {
+                return (
+                  <li key={key}>
+                    {value}: {HOT_KEY_DESCRIPTIONS[key]}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         }
       >
