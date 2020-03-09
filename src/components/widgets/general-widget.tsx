@@ -89,10 +89,32 @@ interface GenericMaterializationMenuProps {
 const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): null | JSX.Element => {
   const {templateMap, allowedValues, setMaterialization, widget, setTemplateValue} = props;
   const currentView = templateMap.systemValues.viewsToMaterialize[widget.name] || [];
-  const groups = allowedValues.reduce((acc, row) => {
-    acc[row.group || ''] = (acc[row.group || ''] || []).concat(row);
-    return acc;
-  }, {} as {[x: string]: {group?: string; name: string}[]});
+  const groups = allowedValues.reduce(
+    (acc, row) => {
+      acc[row.group || ''] = (acc[row.group || ''] || []).concat(row);
+      return acc;
+    },
+    {Recomended: [], 'Not Recomended': []} as {[x: string]: {group?: string; name: string}[]},
+  );
+  const foundButtons = Object.entries(groups)
+    .filter(([key]) => key.length)
+    .map(([key, group]) => {
+      return (
+        <button
+          type="button"
+          key={`button-${key}`}
+          onClick={(): any => {
+            setMaterialization({
+              ...templateMap.systemValues.viewsToMaterialize,
+              [widget.name]: group.map(({name}) => name),
+            });
+            setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
+          }}
+        >
+          {key} on
+        </button>
+      );
+    });
 
   return (
     <div>
@@ -128,6 +150,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
         );
       })}
       <div className="flex margin-top">
+        {foundButtons}
         <button
           type="button"
           onClick={(): any => {
@@ -138,27 +161,8 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
             setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
           }}
         >
-          All on
+          Use all
         </button>
-        {Object.entries(groups)
-          .filter(([key]) => key.length)
-          .map(([key, group]) => {
-            return (
-              <button
-                type="button"
-                key={`button-${key}`}
-                onClick={(): any => {
-                  setMaterialization({
-                    ...templateMap.systemValues.viewsToMaterialize,
-                    [widget.name]: group.map(({name}) => name),
-                  });
-                  setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
-                }}
-              >
-                {key} on
-              </button>
-            );
-          })}
         <button
           type="button"
           onClick={(): any => {
@@ -166,7 +170,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
             setTemplateValue({field: widget.name, text: getDefaultValueForWidget(widget)});
           }}
         >
-          All off
+          Use none
         </button>
       </div>
     </div>
