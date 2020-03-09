@@ -36,7 +36,6 @@ interface EncodingColumnProps {
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
   template: Template;
   templateMap: TemplateMap;
-  viewsToMaterialize: ViewsToMaterialize;
 }
 
 interface AddWidgetButtonProps {
@@ -124,7 +123,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
     setWidgetValue,
     template,
     templateMap,
-    viewsToMaterialize,
   } = props;
   // TODO, this should maybe move off of the main path?
   const allowedWidgets = toSet(applyQueries(template, templateMap));
@@ -145,7 +143,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
       setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
       templateMap={templateMap}
       template={template}
-      viewsToMaterialize={viewsToMaterialize}
       setMaterialization={setMaterialization}
       widget={widget}
     />

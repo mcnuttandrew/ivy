@@ -53,7 +53,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
 function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element {
   const {widget, templateMap, setTemplateValue, editMode} = props;
   const config = widget.config;
-  const isActive = templateMap[widget.name] === config.activeValue;
+  const isActive = templateMap.paramValues[widget.name] === config.activeValue;
 
   return (
     <div className="flex-down switch-widget">

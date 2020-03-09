@@ -3,9 +3,8 @@ import React, {useState} from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
 import Pill from './pill';
-import {ColumnHeader, DataTransform} from '../types';
 import {GenericAction, CoerceTypePayload, UpdateFilterPayload} from '../actions/index';
-import {Template, CustomCard} from '../types';
+import {Template, CustomCard, ColumnHeader, TemplateMap} from '../types';
 import {makeCustomType} from '../utils';
 import {SimpleTooltip} from './tooltips';
 
@@ -19,8 +18,8 @@ interface DataColumnProps {
   onDropFilter: any;
   showGUIView: boolean;
   template: Template;
+  templateMap: TemplateMap;
   updateFilter: GenericAction<UpdateFilterPayload>;
-  dataTransforms: DataTransform[];
 }
 
 interface MakePillProps {
@@ -74,7 +73,7 @@ const makePillGroup = (props: MakePillProps) => ([key, columns]: [string, Column
 };
 
 export default function DataColumn(props: DataColumnProps): JSX.Element {
-  const {columns, deleteFilter, onDropFilter, showGUIView, template, updateFilter, dataTransforms} = props;
+  const {columns, deleteFilter, onDropFilter, showGUIView, template, templateMap, updateFilter} = props;
 
   const hasCustomCards = template && template.customCards && template.customCards.length > 0;
   const columnGroups = columns.reduce(
@@ -100,7 +99,7 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
       {showGUIView && <h5> Filter </h5>}
       {showGUIView && (
         <div className="flex-down">
-          {dataTransforms
+          {templateMap.systemValues.dataTransforms
             .filter((filter: any) => {
               // dont try to render filters that we dont know how to render
               return filter.filter && !filter.filter.and;
@@ -111,9 +110,9 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
                   column={columns.find(({field}) => field === filter.filter.field)}
                   filter={filter}
                   key={`${idx}-filter`}
-                  updateFilter={(newFilterValue: any): void => {
-                    updateFilter({newFilterValue, idx});
-                  }}
+                  updateFilter={(newFilterValue: (string | number)[]): any =>
+                    updateFilter({newFilterValue, idx})
+                  }
                   deleteFilter={(): any => deleteFilter(idx)}
                 />
               );
@@ -122,7 +121,7 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
       )}
       {showGUIView && (
         <div>
-          <FilterTarget onDrop={onDropFilter} />
+          <FilterTarget onDrop={onDropFilter} columns={columns} />
         </div>
       )}
     </div>

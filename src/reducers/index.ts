@@ -54,7 +54,6 @@ export const DEFAULT_STATE: AppState = {
   // meta-data
   currentlySelectedFile: 'cars.json',
   columns: [],
-  dataTransforms: [],
 
   // spec configs
   editorError: null,
@@ -83,8 +82,13 @@ export const DEFAULT_STATE: AppState = {
   // template stuff
 
   templates: [],
-  templateMap: {},
-  viewsToMaterialize: {},
+  templateMap: {
+    paramValues: {},
+    systemValues: {
+      viewsToMaterialize: {},
+      dataTransforms: [],
+    },
+  },
 };
 
 // second order effects

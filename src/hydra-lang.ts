@@ -148,7 +148,7 @@ export function applyQueries(template: Template, templateMap: TemplateMap): Widg
  * @param templateMap - the specification/variable values defined by the gui
  */
 export const setTemplateValues = (code: string, templateMap: TemplateMap): string => {
-  const filledInSpec = Object.entries(templateMap).reduce(
+  const filledInSpec = Object.entries(templateMap.paramValues).reduce(
     (acc: string, [key, value]: [string, string | null]) => {
       if (trim(value) !== value) {
         // this supports the weird HACK required to make the interpolateion system
@@ -175,7 +175,7 @@ export function getMissingFields(template: Template, templateMap: TemplateMap): 
     .filter(d => d.type === 'DataTarget' && (d as Widget<DataTargetWidget>).config.required)
     .map(d => d.name);
   const missingFileds = requiredFields
-    .map((fieldName: string) => ({fieldName, value: !templateMap[fieldName]}))
+    .map((fieldName: string) => ({fieldName, value: !templateMap.paramValues[fieldName]}))
     .filter(d => d.value)
     .map(d => d.fieldName);
 
@@ -222,13 +222,15 @@ const MARK_UP_COMPONENTS = new Set(['Text', 'Section']);
  * @param template
  */
 export function constructDefaultTemplateMap(template: Template): TemplateMap {
-  return template.widgets.reduce((acc: any, widget: GenWidget) => {
+  const paramValues = template.widgets.reduce((acc: any, widget: GenWidget) => {
     if (MARK_UP_COMPONENTS.has(widget.type)) {
       return acc;
     }
     acc[widget.name] = getDefaultValueForWidget(widget);
     return acc;
   }, {});
+
+  return {paramValues, systemValues: {viewsToMaterialize: {}, dataTransforms: []}};
 }
 
 /**
@@ -255,8 +257,8 @@ export function evaluateHydraProgram(template: Template, templateMap: TemplateMa
 }
 
 const DUMMY = 'xxxxxEXAMPLExxxx';
-export function generateFullTemplateMap(widgets: GenWidget[]): {[x: string]: any} {
-  return widgets.reduce((acc: {[x: string]: any}, widget: GenWidget) => {
+export function generateFullTemplateMap(widgets: GenWidget[]): TemplateMap {
+  const paramValues = widgets.reduce((acc: {[x: string]: any}, widget: GenWidget) => {
     const widgetType = widget.type;
     if (widgetType === 'DataTarget') {
       acc[widget.name] = `"${DUMMY}"`;
@@ -278,6 +280,11 @@ export function generateFullTemplateMap(widgets: GenWidget[]): {[x: string]: any
     }
     return acc;
   }, {});
+
+  return {
+    paramValues,
+    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+  };
 }
 
 // type InterpolantEffect<T> = {predicate: (x: T) => boolean; effect: (x: T) => Json};

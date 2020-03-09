@@ -24,8 +24,8 @@ export default function RelatedViews(props: Props): JSX.Element {
   const viewsOfInterest = template.widgets
     .filter(x => targetTypes.has(x.type))
     .reduce((acc, widget) => {
-      if (templateMap[widget.name]) {
-        return acc.concat(templateMap[widget.name]);
+      if (templateMap.paramValues[widget.name]) {
+        return acc.concat(templateMap.paramValues[widget.name]);
       }
       return acc;
     }, [] as string[]);

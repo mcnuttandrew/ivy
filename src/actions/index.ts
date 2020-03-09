@@ -122,7 +122,6 @@ export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[
 ): void => {
   const summaries = summary(data).reduce((acc: any, d: any) => {
     acc[d.field] = {...d};
-    // acc[d.field] = {...d, unique: null};
     return acc;
   }, {} as {[x: string]: any});
   dispatch({

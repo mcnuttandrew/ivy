@@ -76,7 +76,7 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
         <div className="widget-title">{widgetName(widget, editMode)}</div>
         <Selector
           options={widget.config.allowedValues}
-          selectedValue={templateMap[widget.name] || ''}
+          selectedValue={templateMap.paramValues[widget.name] || ''}
           onChange={(value: any): any => setTemplateValue({field: widget.name, text: value})}
         />
         <Reset

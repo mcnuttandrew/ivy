@@ -111,7 +111,10 @@ function inferFieldTransformationSuggestions(
         comment: `${from} -> ${suggestedNewWidgetName} (CREATE/UPDATE ${suggestedNewWidgetName})`,
         simpleReplace: false,
         sideEffect: setTemplateValues => {
-          setTemplateValues({[suggestedNewWidgetName]: `"${from}"`});
+          setTemplateValues({
+            paramValues: {[suggestedNewWidgetName]: `"${from}"`},
+            systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+          });
           return DataTargetFactory(widgets.length + 1);
         },
       });

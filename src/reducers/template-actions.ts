@@ -26,7 +26,7 @@ import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite';
 
 export const setMaterialization: ActionResponse<ViewsToMaterialize> = (state, payload) => {
   return produce(state, draftState => {
-    draftState.viewsToMaterialize = payload;
+    draftState.templateMap.systemValues.viewsToMaterialize = payload;
   });
 };
 
@@ -47,22 +47,25 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
   const toWidget = getWidget(payload.field);
   return produce(state, draftState => {
     if (containingShelf && fromWidget.type === 'DataTarget') {
-      delete draftState.templateMap[containingShelf];
+      delete draftState.templateMap.paramValues[containingShelf];
     }
     if (fromWidget && fromWidget.type === 'MultiDataTarget' && toWidget.type === 'MultiDataTarget') {
-      const oldVal = draftState.templateMap[containingShelf] as string[];
-      draftState.templateMap[containingShelf] = bagDifference(oldVal, payload.text as string[]);
+      const oldVal = draftState.templateMap.paramValues[containingShelf] as string[];
+      draftState.templateMap.paramValues[containingShelf] = bagDifference(oldVal, payload.text as string[]);
     }
     if (fromWidget && fromWidget.type === 'MultiDataTarget' && toWidget.type === 'DataTarget') {
-      const oldVal = draftState.templateMap[containingShelf] as string[];
+      const oldVal = draftState.templateMap.paramValues[containingShelf] as string[];
       const val = removeFirstInstanceOf(oldVal, trim(payload.text as string));
-      draftState.templateMap[containingShelf] = val;
+      draftState.templateMap.paramValues[containingShelf] = val;
     }
 
-    if (state.templateMap[payload.field] === `"${MATERIALIZING}"` && payload.text !== `"${MATERIALIZING}"`) {
-      delete draftState.viewsToMaterialize[payload.field];
+    if (
+      state.templateMap.paramValues[payload.field] === `"${MATERIALIZING}"` &&
+      payload.text !== `"${MATERIALIZING}"`
+    ) {
+      delete draftState.templateMap.systemValues.viewsToMaterialize[payload.field];
     }
-    draftState.templateMap[payload.field] = payload.text;
+    draftState.templateMap.paramValues[payload.field] = payload.text;
     tryToGuessTheTypeForVegaLite(
       draftState.currentTemplateInstance,
       payload,
@@ -74,7 +77,16 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
 
 export const setAllTemplateValues: ActionResponse<TemplateMap> = (state, payload) => {
   return produce(state, draftState => {
-    draftState.templateMap = {...draftState.templateMap, ...payload};
+    draftState.templateMap = {
+      paramValues: {
+        ...draftState.templateMap.paramValues,
+        ...payload.paramValues,
+      },
+      systemValues: {
+        ...draftState.templateMap.systemValues,
+        ...payload.systemValues,
+      },
+    };
   });
 };
 
@@ -217,8 +229,8 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       draftState.currentTemplateInstance.widgets[idx].name = value;
 
       // update the template map with the new name
-      draftState.templateMap[value] = state.templateMap[oldName];
-      delete draftState.templateMap[oldName];
+      draftState.templateMap.paramValues[value] = state.templateMap.paramValues[oldName];
+      delete draftState.templateMap.paramValues[oldName];
     } else if (topLevelKeys.has(key)) {
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx][key] = value;
@@ -236,8 +248,8 @@ const modifyCurrentWidgets = (state: AppState, mod: WidgetMod): AppState =>
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
     const draftedDefaults = constructDefaultTemplateMap(draftState.currentTemplateInstance);
     draftState.currentTemplateInstance.widgets.forEach(widget => {
-      if (!draftState.templateMap[widget.name]) {
-        draftState.templateMap[widget.name] = draftedDefaults[widget.name];
+      if (!draftState.templateMap.paramValues[widget.name]) {
+        draftState.templateMap.paramValues[widget.name] = draftedDefaults.paramValues[widget.name];
       }
     });
   });

@@ -63,7 +63,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
 
 function DataTargetWidgetComponent(props: GeneralWidget<DataTargetWidget>): JSX.Element {
   const {widget, templateMap, columns, setTemplateValue, template} = props;
-  const fieldValue = templateMap[widget.name];
+  const fieldValue = templateMap.paramValues[widget.name];
   return (
     <Shelf
       shelfValue={trim(fieldValue as string)}

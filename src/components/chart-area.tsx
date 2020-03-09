@@ -27,7 +27,6 @@ interface ChartAreaProps {
   createNewView: GenericAction<void>;
   currentView: string;
   data: DataRow[];
-  dataTransforms: DataTransform[];
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
   encodingMode: string;
@@ -45,7 +44,6 @@ interface ChartAreaProps {
   templates: Template[];
   userName: string;
   views: string[];
-  viewsToMaterialize: ViewsToMaterialize;
 }
 
 function* cartesian(head?: any, ...tail: any): any {
@@ -61,7 +59,26 @@ interface MaterializeWrapperProps {
   spec: any;
   template: Template;
   templateMap: TemplateMap;
-  viewsToMaterialize: ViewsToMaterialize;
+}
+
+function prepareUpdate(
+  oldTemplateMap: TemplateMap,
+  newTemplateMap: TemplateMap,
+  view: TemplateMap,
+): TemplateMap {
+  return {
+    ...newTemplateMap,
+    systemValues: {
+      ...newTemplateMap.systemValues,
+      viewsToMaterialize: Object.keys(view.paramValues).reduce(
+        (acc, row) => {
+          acc[row] = [];
+          return acc;
+        },
+        {...oldTemplateMap.systemValues.viewsToMaterialize},
+      ),
+    },
+  };
 }
 
 function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
@@ -73,9 +90,8 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
     setMaterialization,
     template,
     templateMap,
-    viewsToMaterialize,
   } = props;
-  const keySet = Object.entries(viewsToMaterialize)
+  const keySet = Object.entries(templateMap.systemValues.viewsToMaterialize)
     .filter(d => d[1].length)
     .reduce((acc, d: [string, string[]]) => acc.add(d[0]), new Set());
   function removeButton(name: string, key: string, value: string): JSX.Element {
@@ -84,8 +100,10 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
         className="cursor-pointer"
         onClick={(): void => {
           setMaterialization({
-            ...viewsToMaterialize,
-            [key]: (viewsToMaterialize[key] || []).filter(d => d !== value),
+            // eslint-disable-next-line react/prop-types
+            ...templateMap.systemValues.viewsToMaterialize,
+            // eslint-disable-next-line react/prop-types
+            [key]: (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value),
           });
         }}
       >
@@ -98,30 +116,23 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   return (
     <React.Fragment>
       {materializedViews.map((view, idx) => {
-        const newTemplateMap = {...templateMap, ...view};
+        const newTemplateMap: TemplateMap = {
+          ...templateMap,
+          paramValues: {...templateMap.paramValues, ...view.paramValues},
+        };
         const spec = evaluateHydraProgram(template, newTemplateMap);
         return (
           <div key={`view-${idx}`} className="render-wrapper">
             <div className="render-wrapper-header">
               <span className="render-wrapper-title">
-                {Object.entries(view)
+                {Object.entries(view.paramValues)
                   .map(row => row.join(': '))
                   .join(' ')}
               </span>
               <div className="flex render-wrapper-controls">
                 <div
                   className="cursor-pointer"
-                  onClick={(): void => {
-                    const newMat = Object.keys(view).reduce(
-                      (acc, row) => {
-                        acc[row] = [];
-                        return acc;
-                      },
-                      {...viewsToMaterialize},
-                    );
-                    setMaterialization(newMat);
-                    setAllTemplateValues(newTemplateMap);
-                  }}
+                  onClick={(): any => setAllTemplateValues(prepareUpdate(templateMap, newTemplateMap, view))}
                 >
                   <HoverTooltip message="select this view">
                     <TiInputChecked />
@@ -131,7 +142,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
                   removeButton(
                     'REMOVE',
                     Array.from(keySet)[0] as string,
-                    view[Array.from(keySet)[0] as string] as string,
+                    view.paramValues[Array.from(keySet)[0] as string] as string,
                   )}
                 {keySet.size > 1 && (
                   <Tooltip
@@ -142,9 +153,9 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
                         <h3>Remove which of the following keys</h3>
                         {Array.from(keySet).map((key: string) => {
                           return removeButton(
-                            `${key}: ${view[key as string]}`,
+                            `${key}: ${view.paramValues[key as string]}`,
                             key,
-                            view[key as string] as string,
+                            view.paramValues[key as string] as string,
                           );
                         })}
                       </div>
@@ -157,6 +168,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
                 )}
               </div>
             </div>
+            {/* TODO memoize */}
             {renderer({
               data,
               spec,
@@ -199,7 +211,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     createNewView,
     currentView,
     data,
-    dataTransforms,
     deleteTemplate,
     deleteView,
     encodingMode,
@@ -216,16 +227,15 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     templates,
     userName,
     views,
-    viewsToMaterialize,
   } = props;
   // TODO memoize
-  const preparedData = wrangle(data, dataTransforms);
+  const preparedData = wrangle(data, templateMap.systemValues.dataTransforms);
 
   const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
   const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
   const showChart = !templateGallery && renderer && templateComplete;
 
-  const preCart = Object.entries(viewsToMaterialize).map(([key, values]) => {
+  const preCart = Object.entries(templateMap.systemValues.viewsToMaterialize).map(([key, values]) => {
     return values.map(value => ({key, value}));
   });
   const materializedViews = preCart.length
@@ -276,14 +286,18 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
           materializedViews.length > 0 &&
           materializeWrapper({
             data: preparedData,
-            materializedViews,
+            materializedViews: materializedViews.map(
+              (paramValues: {[x: string]: string | string[]}): TemplateMap => ({
+                systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+                paramValues,
+              }),
+            ),
             renderer,
             setAllTemplateValues,
             setMaterialization,
             spec,
             template,
             templateMap,
-            viewsToMaterialize,
           })}
         {!templateGallery && !showChart && (
           <div className="chart-unfullfilled">
