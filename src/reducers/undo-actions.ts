@@ -9,7 +9,6 @@ const createStackItem = (state: AppState): UndoRedoStackItem => {
     currentTemplateInstance: state.currentTemplateInstance,
     views: state.views,
     viewCatalog: state.viewCatalog,
-    viewsToMaterialize: state.viewsToMaterialize,
     columns: state.columns,
     codeMode: state.codeMode,
   };
@@ -23,7 +22,6 @@ const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
     draftState.views = stackItem.views;
     draftState.encodingMode = stackItem.encodingMode;
     draftState.currentTemplateInstance = stackItem.currentTemplateInstance;
-    draftState.viewsToMaterialize = stackItem.viewsToMaterialize;
     draftState.columns = stackItem.columns;
     draftState.codeMode = stackItem.codeMode;
   });

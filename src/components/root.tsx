@@ -10,7 +10,7 @@ import {getUserName} from '../utils/local-storage';
 
 import {HOT_KEYS} from '../constants/index';
 import * as actionCreators from '../actions/index';
-import {Filter} from '../actions/index';
+// import {Filter} from '../actions/index';
 import {
   CoerceTypePayload,
   GenericAction,
@@ -23,7 +23,7 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {getUniques, getDomain, getTemplateSaveState, computeValidAddNexts, classnames} from '../utils';
+import {getTemplateSaveState, computeValidAddNexts, classnames} from '../utils';
 import {
   getHeight,
   writeHeight,
@@ -104,7 +104,6 @@ interface RootProps {
   templates: Template[];
   userName: string;
   views: string[];
-  viewsToMaterialize: ViewsToMaterialize;
 
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   addWidget: GenericAction<GenWidget>;
@@ -113,7 +112,7 @@ interface RootProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
   cloneView: GenericAction<void>;
   coerceType: GenericAction<CoerceTypePayload>;
-  createFilter: GenericAction<Filter>;
+  createFilter: GenericAction<ColumnHeader>;
   createNewView: GenericAction<void>;
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
@@ -157,7 +156,7 @@ interface State {
 class RootComponent extends React.Component<RootProps, State> {
   constructor(props: RootProps) {
     super(props);
-    this.createFilter = this.createFilter.bind(this);
+    // this.createFilter = this.createFilter.bind(this);
     this.triggerRepaint = this.triggerRepaint.bind(this);
     this.state = {repaintIdx: 0};
   }
@@ -175,20 +174,6 @@ class RootComponent extends React.Component<RootProps, State> {
 
   triggerRepaint(): void {
     this.setState({repaintIdx: this.state.repaintIdx + 1});
-  }
-
-  createFilter(field: string): void {
-    // this biz-logic function is here in order to move the data off of the immutable reducer
-    const {columns, createFilter, data} = this.props;
-    const isDim = columns.find(x => x.field === field).type === 'DIMENSION';
-    const newFilter: Filter = {
-      filter: {
-        field: field,
-        // todo this is really slick, but we should probably be caching these values on load
-        [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(data, field),
-      },
-    };
-    createFilter(newFilter);
   }
 
   chartArea(): JSX.Element {
@@ -216,14 +201,13 @@ class RootComponent extends React.Component<RootProps, State> {
         templateMap={this.props.templateMap}
         templates={this.props.templates}
         views={this.props.views}
-        viewsToMaterialize={this.props.viewsToMaterialize}
         userName={this.props.userName}
       />
     );
   }
 
   leftColumn(): JSX.Element {
-    const {template} = this.props;
+    const {columns, createFilter} = this.props;
     return (
       <div className="flex-down full-height column background-2">
         <ImportDataColumn
@@ -233,18 +217,18 @@ class RootComponent extends React.Component<RootProps, State> {
         <DataColumn
           addToNextOpenSlot={this.props.addToNextOpenSlot}
           coerceType={this.props.coerceType}
-          columns={this.props.columns}
-          createFilter={this.createFilter}
+          columns={columns}
+          createFilter={createFilter}
           deleteFilter={this.props.deleteFilter}
           fillableFields={this.props.fillableFields}
-          onDropFilter={(item: any): any => this.createFilter(item.text)}
+          onDropFilter={(item: any): any => createFilter(columns.find(d => d.field === item.text))}
           showGUIView={this.props.showGUIView}
-          spec={this.props.spec}
-          template={template}
+          template={this.props.template}
+          templateMap={this.props.templateMap}
           updateFilter={this.props.updateFilter}
         />
         <RelatedViews
-          columns={this.props.columns}
+          columns={columns}
           setEncodingMode={this.props.setEncodingMode}
           template={this.props.template}
           templateMap={this.props.templateMap}
@@ -290,7 +274,6 @@ class RootComponent extends React.Component<RootProps, State> {
           setMaterialization={this.props.setMaterialization}
           setWidgetValue={this.props.setWidgetValue}
           template={this.props.template}
-          viewsToMaterialize={this.props.viewsToMaterialize}
           templateMap={this.props.templateMap}
         />
       </div>
@@ -442,7 +425,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
   const isGallery = GALLERY.templateName === template.templateName;
   const spec = evaluateHydraProgram(template, templateMap);
-  console.log('fan out', base.viewsToMaterialize);
+  console.log('fan out', base.templateMap.systemValues.viewsToMaterialize);
   return {
     canRedo: base.redoStack.length >= 1,
     canUndo: base.undoStack.length >= 1,
@@ -467,7 +450,6 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     templates: base.templates,
     userName: base.userName,
     views: base.views,
-    viewsToMaterialize: base.viewsToMaterialize,
   };
 }
 

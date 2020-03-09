@@ -18,7 +18,7 @@ export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payloa
   const widgets = template.widgets.filter(widget => allowedWidgets.has(widget.name));
   const openDropTargets = widgets
     // select just the open drop targets
-    .filter((widget: GenWidget) => widget.type === 'DataTarget' && !templateMap[widget.name])
+    .filter((widget: GenWidget) => widget.type === 'DataTarget' && !templateMap.paramValues[widget.name])
     // and that allow the type of drop column
     .filter(
       (widget: Widget<DataTargetWidget>) =>
@@ -34,9 +34,10 @@ export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payloa
     const {allowedTypes, maxNumberOfTargets} = widget.config as MultiDataTargetWidget;
     const multiTargetContainsDesiredType = allowedTypes.includes(column.type) || column.type === 'CUSTOM';
     // and have space
-    const hasSpace = (templateMap[widget.name] || []).length < maxNumberOfTargets || !maxNumberOfTargets;
+    const hasSpace =
+      (templateMap.paramValues[widget.name] || []).length < maxNumberOfTargets || !maxNumberOfTargets;
     // and doesn't current contain the new value
-    const containsOldValue = templateMap[widget.name].includes(payload.field);
+    const containsOldValue = templateMap.paramValues[widget.name].includes(payload.field);
     return multiTargetContainsDesiredType && hasSpace && !containsOldValue;
   });
 
@@ -57,7 +58,7 @@ export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payloa
   }
   const selectedWidget = targets[0];
   if (selectedWidget.type === 'MultiDataTarget') {
-    const oldVal = templateMap[selectedWidget.name] || [];
+    const oldVal = templateMap.paramValues[selectedWidget.name] || [];
     return setTemplateValue(state, {
       field: selectedWidget.name,
       text: (oldVal as string[]).filter((key: any) => key !== payload.field).concat([payload.field]),

@@ -12,20 +12,29 @@ import {serializeTemplate, deserializeTemplate} from '../src/utils/index';
 
 test('#setTemplateValues', () => {
   const filledOutPieTemplate = setTemplateValues(PIECHART_TEMPLATE.code, {
-    category: '"CATEGORY_TEST"',
-    value: '"VALUE_TEST"',
-    sortValues: 'true',
+    paramValues: {
+      category: '"CATEGORY_TEST"',
+      value: '"VALUE_TEST"',
+      sortValues: 'true',
+    },
+    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
   });
   expect(filledOutPieTemplate).toMatchSnapshot();
 
   const filledOutScatterTemplate = setTemplateValues(SCATTERPLOT_TEMPLATE.code, {
-    xDim: '"xDim_TEST"',
-    yDim: '"yDim_TEST"',
+    paramValues: {
+      xDim: '"xDim_TEST"',
+      yDim: '"yDim_TEST"',
+    },
+    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
   });
   expect(filledOutScatterTemplate).toMatchSnapshot();
 
   const filledOutTableTemplate = setTemplateValues(TABLE.code, {
-    columns: ['"xDim_TEST"', '"yDim_TEST"'],
+    paramValues: {
+      columns: ['"xDim_TEST"', '"yDim_TEST"'],
+    },
+    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
   });
   expect(filledOutTableTemplate).toMatchSnapshot();
 });

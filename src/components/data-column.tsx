@@ -3,23 +3,22 @@ import React, {useState} from 'react';
 import Filter from './filter';
 import FilterTarget from './filter-target';
 import Pill from './pill';
-import {ColumnHeader} from '../types';
 import {GenericAction, CoerceTypePayload, UpdateFilterPayload} from '../actions/index';
-import {Template, CustomCard} from '../types';
-import {get, makeCustomType} from '../utils';
+import {Template, CustomCard, ColumnHeader, TemplateMap} from '../types';
+import {makeCustomType} from '../utils';
 import {SimpleTooltip} from './tooltips';
 
 interface DataColumnProps {
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   coerceType: GenericAction<CoerceTypePayload>;
   columns: ColumnHeader[];
-  createFilter: (field: string) => void;
+  createFilter: GenericAction<ColumnHeader>;
   deleteFilter: GenericAction<number>;
   fillableFields: Set<string>;
   onDropFilter: any;
   showGUIView: boolean;
-  spec: any;
   template: Template;
+  templateMap: TemplateMap;
   updateFilter: GenericAction<UpdateFilterPayload>;
 }
 
@@ -27,10 +26,9 @@ interface MakePillProps {
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   coerceType: GenericAction<CoerceTypePayload>;
   columns: ColumnHeader[];
-  createFilter: (field: string) => void;
+  createFilter: GenericAction<ColumnHeader>;
   fillableFields: Set<string>;
   showGUIView: boolean;
-  spec: any;
   checkOptions: boolean;
 }
 
@@ -75,9 +73,8 @@ const makePillGroup = (props: MakePillProps) => ([key, columns]: [string, Column
 };
 
 export default function DataColumn(props: DataColumnProps): JSX.Element {
-  const {columns, deleteFilter, onDropFilter, showGUIView, spec, template, updateFilter} = props;
+  const {columns, deleteFilter, onDropFilter, showGUIView, template, templateMap, updateFilter} = props;
 
-  const canFilter = false;
   const hasCustomCards = template && template.customCards && template.customCards.length > 0;
   const columnGroups = columns.reduce(
     (acc, row) => {
@@ -99,10 +96,10 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
         <div className="flex-down">{template.customCards.map(MakePill({...props, checkOptions: false}))}</div>
       )}
 
-      {showGUIView && canFilter && <h5> Filter </h5>}
-      {showGUIView && canFilter && (
+      {showGUIView && <h5> Filter </h5>}
+      {showGUIView && (
         <div className="flex-down">
-          {(spec.transform || get(spec, ['spec', 'transform']) || [])
+          {templateMap.systemValues.dataTransforms
             .filter((filter: any) => {
               // dont try to render filters that we dont know how to render
               return filter.filter && !filter.filter.and;
@@ -113,18 +110,18 @@ export default function DataColumn(props: DataColumnProps): JSX.Element {
                   column={columns.find(({field}) => field === filter.filter.field)}
                   filter={filter}
                   key={`${idx}-filter`}
-                  updateFilter={(newFilterValue: any): void => {
-                    updateFilter({newFilterValue, idx});
-                  }}
+                  updateFilter={(newFilterValue: (string | number)[]): any =>
+                    updateFilter({newFilterValue, idx})
+                  }
                   deleteFilter={(): any => deleteFilter(idx)}
                 />
               );
             })}
         </div>
       )}
-      {showGUIView && canFilter && (
+      {showGUIView && (
         <div>
-          <FilterTarget onDrop={onDropFilter} />
+          <FilterTarget onDrop={onDropFilter} columns={columns} />
         </div>
       )}
     </div>

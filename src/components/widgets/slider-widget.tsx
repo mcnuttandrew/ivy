@@ -62,7 +62,7 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
         <input
           aria-label={`Current value`}
           type="number"
-          value={templateMap[widget.name]}
+          value={templateMap.paramValues[widget.name]}
           onChange={({target: {value}}): any => setVal(value)}
           step={widget.config.step}
         />
@@ -72,7 +72,7 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
             type="range"
             min={widget.config.minVal}
             max={widget.config.maxVal}
-            value={templateMap[widget.name]}
+            value={templateMap.paramValues[widget.name]}
             onChange={(event): any => setVal(event.target.value)}
             step={widget.config.step}
             className="slider"

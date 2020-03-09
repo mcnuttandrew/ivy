@@ -560,7 +560,6 @@ input[type="number"]::-webkit-outer-spin-button {
 .shelf.filter-target {
   border: 0;
   padding: 0;
-  margin-bottom: 200px;
 }
 
 .shelf.filter-target .pill-dropzone {

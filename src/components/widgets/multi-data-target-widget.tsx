@@ -84,7 +84,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
 
 function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): JSX.Element {
   const {widget, templateMap, columns, setTemplateValue, template} = props;
-  const fieldValue = templateMap[widget.name];
+  const fieldValue = templateMap.paramValues[widget.name];
   return (
     <div className="multi-data-target-widget">
       <MultiShelf

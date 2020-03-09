@@ -26,7 +26,7 @@ function activeColumns(state: any): string[] {
   const templateMap = state.templateMap;
   const templateInUse = template.widgets.reduce((acc: Set<string>, widget: any) => {
     const widgetType = widget.type;
-    const val = templateMap[widget.name];
+    const val = templateMap.paramValues[widget.name];
     // we only care about the data containing columns
     if (widgetType === 'MultiDataTarget') {
       return (val || []).reduce((mem: Set<string>, key: string) => mem.add(key), acc);
@@ -47,7 +47,6 @@ export const setEncodingMode: ActionResponse<string> = (state, payload) => {
       draftState.codeMode = JSON_OUTPUT;
       draftState.encodingMode = payload;
       draftState.currentTemplateInstance = state.templates.find((d: any) => d.templateName === payload);
-      draftState.viewsToMaterialize = {};
     }),
   );
 

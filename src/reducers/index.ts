@@ -10,7 +10,7 @@ import {pushToUndoStack, triggerRedo, triggerUndo} from './undo-actions';
 
 import {addToNextOpenSlot} from './apt-actions';
 
-// import {createFilter, updateFilter, deleteFilter} from './filter-actions';
+import {createFilter, updateFilter, deleteFilter} from './filter-actions';
 import {
   changeSelectedFile,
   coerceType,
@@ -82,8 +82,13 @@ export const DEFAULT_STATE: AppState = {
   // template stuff
 
   templates: [],
-  templateMap: {},
-  viewsToMaterialize: {},
+  templateMap: {
+    paramValues: {},
+    systemValues: {
+      viewsToMaterialize: {},
+      dataTransforms: [],
+    },
+  },
 };
 
 // second order effects
@@ -105,9 +110,9 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.TRIGGER_UNDO]: triggerUndo,
 
   // filter modifications (HIDDEN UNTIL THE WRNAGLING STORY COMES)
-  // [actionTypes.CREATE_FILTER]: addUndo(createFilter),
-  // [actionTypes.DELETE_FILTER]: addUndo(deleteFilter),
-  // [actionTypes.UPDATE_FILTER]: addUndo(updateFilter),
+  [actionTypes.CREATE_FILTER]: addUndo(createFilter),
+  [actionTypes.DELETE_FILTER]: addUndo(deleteFilter),
+  [actionTypes.UPDATE_FILTER]: addUndo(updateFilter),
   // code edits
   [actionTypes.READ_IN_TEMPLATE]: readInTemplate,
   [actionTypes.READ_IN_TEMPLATE_MAP]: readInTemplateMap,

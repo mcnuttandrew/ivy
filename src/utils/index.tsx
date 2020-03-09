@@ -153,7 +153,7 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
     .reduce((acc: any, widget: any) => {
       const type = widget.type;
       const name = widget.name;
-      const val = templateMap[name];
+      const val = templateMap.paramValues[name];
 
       if (
         type === 'MultiDataTarget' &&

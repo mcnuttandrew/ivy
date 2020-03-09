@@ -54,7 +54,6 @@ interface Props {
   setWidgetValue: any;
   template: Template;
   templateMap: TemplateMap;
-  viewsToMaterialize: ViewsToMaterialize;
   widget: GenWidget;
 }
 
@@ -83,13 +82,13 @@ interface GenericMaterializationMenuProps {
   allowedValues: {name: string; group?: string}[];
   setMaterialization: GenericAction<ViewsToMaterialize>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
-  viewsToMaterialize: ViewsToMaterialize;
+  templateMap: TemplateMap;
   widget: GenWidget;
 }
 
 const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): null | JSX.Element => {
-  const {viewsToMaterialize, allowedValues, setMaterialization, widget, setTemplateValue} = props;
-  const currentView = viewsToMaterialize[widget.name] || [];
+  const {templateMap, allowedValues, setMaterialization, widget, setTemplateValue} = props;
+  const currentView = templateMap.systemValues.viewsToMaterialize[widget.name] || [];
   const groups = allowedValues.reduce((acc, row) => {
     acc[row.group || ''] = (acc[row.group || ''] || []).concat(row);
     return acc;
@@ -99,7 +98,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
     <div>
       {Object.entries(groups).map(([key, group]) => {
         const rows = group.map(({name}, idx) => {
-          const checked = (viewsToMaterialize[widget.name] || []).includes(name);
+          const checked = (templateMap.systemValues.viewsToMaterialize[widget.name] || []).includes(name);
           return (
             <div key={idx} className="flex space-between">
               <span>{name}</span>
@@ -108,7 +107,10 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
                 checked={checked}
                 onChange={(): any => {
                   const newVals = checked ? currentView.filter(d => d !== name) : currentView.concat(name);
-                  setMaterialization({...viewsToMaterialize, [widget.name]: newVals});
+                  setMaterialization({
+                    ...templateMap.systemValues.viewsToMaterialize,
+                    [widget.name]: newVals,
+                  });
                   setTemplateValue({
                     field: widget.name,
                     text: newVals.length ? `"${MATERIALIZING}"` : getDefaultValueForWidget(widget),
@@ -129,7 +131,10 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
         <button
           type="button"
           onClick={(): any => {
-            setMaterialization({...viewsToMaterialize, [widget.name]: allowedValues.map(({name}) => name)});
+            setMaterialization({
+              ...templateMap.systemValues.viewsToMaterialize,
+              [widget.name]: allowedValues.map(({name}) => name),
+            });
             setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
           }}
         >
@@ -143,7 +148,10 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
                 type="button"
                 key={`button-${key}`}
                 onClick={(): any => {
-                  setMaterialization({...viewsToMaterialize, [widget.name]: group.map(({name}) => name)});
+                  setMaterialization({
+                    ...templateMap.systemValues.viewsToMaterialize,
+                    [widget.name]: group.map(({name}) => name),
+                  });
                   setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
                 }}
               >
@@ -154,7 +162,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
         <button
           type="button"
           onClick={(): any => {
-            setMaterialization({...viewsToMaterialize, [widget.name]: []});
+            setMaterialization({...templateMap.systemValues.viewsToMaterialize, [widget.name]: []});
             setTemplateValue({field: widget.name, text: getDefaultValueForWidget(widget)});
           }}
         >
@@ -176,7 +184,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
     setMaterialization,
     setTemplateValue,
     template,
-    viewsToMaterialize,
+    templateMap,
     widget,
   } = props;
 
@@ -276,7 +284,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
                 allowedValues={options}
                 setMaterialization={setMaterialization}
                 setTemplateValue={setTemplateValue}
-                viewsToMaterialize={viewsToMaterialize}
+                templateMap={templateMap}
                 widget={widget}
               />
             </div>
@@ -286,7 +294,8 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
             className={classnames({
               'materialize-button': true,
               'materialize-button-active':
-                viewsToMaterialize[widget.name] && viewsToMaterialize[widget.name].length > 0,
+                templateMap.systemValues.viewsToMaterialize[widget.name] &&
+                templateMap.systemValues.viewsToMaterialize[widget.name].length > 0,
             })}
           >
             <TiFlash />

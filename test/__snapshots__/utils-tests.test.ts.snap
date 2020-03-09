@@ -30,15 +30,21 @@ Object {
 
 exports[`#fillTemplateMapWithDefaults 2`] = `
 Object {
-  "Color": null,
-  "Radius": 15,
-  "Single Color": "\\"steelblue\\"",
-  "Zeroes": "true",
-  "colorType": "\\"ordinal\\"",
-  "xDim": null,
-  "xType": "\\"quantitative\\"",
-  "yDim": null,
-  "yType": "\\"quantitative\\"",
+  "paramValues": Object {
+    "Color": null,
+    "Radius": 15,
+    "Single Color": "\\"steelblue\\"",
+    "Zeroes": "true",
+    "colorType": "\\"ordinal\\"",
+    "xDim": null,
+    "xType": "\\"quantitative\\"",
+    "yDim": null,
+    "yType": "\\"quantitative\\"",
+  },
+  "systemValues": Object {
+    "dataTransforms": Array [],
+    "viewsToMaterialize": Object {},
+  },
 }
 `;
 
@@ -196,12 +202,18 @@ Object {
 
 exports[`#fillTemplateMapWithDefaults 4`] = `
 Object {
-  "DonutChart": "60",
-  "Sort": "true",
-  "aggregate": "\\"mean\\"",
-  "category": null,
-  "colorScheme": "\\"category20\\"",
-  "value": null,
+  "paramValues": Object {
+    "DonutChart": "60",
+    "Sort": "true",
+    "aggregate": "\\"mean\\"",
+    "category": null,
+    "colorScheme": "\\"category20\\"",
+    "value": null,
+  },
+  "systemValues": Object {
+    "dataTransforms": Array [],
+    "viewsToMaterialize": Object {},
+  },
 }
 `;
 
@@ -214,7 +226,13 @@ Object {
 
 exports[`#fillTemplateMapWithDefaults 6`] = `
 Object {
-  "columns": Array [],
+  "paramValues": Object {
+    "columns": Array [],
+  },
+  "systemValues": Object {
+    "dataTransforms": Array [],
+    "viewsToMaterialize": Object {},
+  },
 }
 `;
 

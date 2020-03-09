@@ -5,6 +5,7 @@ import {
   constructDefaultTemplateMap,
   // backpropHydraProgram,
 } from '../src/hydra-lang';
+import {TemplateMap} from '../src/types';
 import Scatterplot from '../src/templates/scatterplot';
 import GALLERY from '../src/templates/gallery';
 import produce from 'immer';
@@ -12,34 +13,43 @@ import produce from 'immer';
 test('#applyConditionals', () => {
   const PARSED_CODE = JSON.parse(Scatterplot.code);
 
-  const exampleTemplateMap1: any = {Color: null};
+  const exampleTemplateMap1: TemplateMap = {
+    paramValues: {Color: null},
+    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+  };
   expect(applyConditionals(exampleTemplateMap1)(PARSED_CODE)).toMatchSnapshot();
 
-  const exampleTemplateMap2: any = {Color: 'Wowza good dimension'};
+  const exampleTemplateMap2: TemplateMap = {
+    paramValues: {Color: 'Wowza good dimension'},
+    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+  };
   expect(applyConditionals(exampleTemplateMap2)(PARSED_CODE)).toMatchSnapshot();
 });
 
-test.only('evaluateHydraProgram polestar template', () => {
+test('evaluateHydraProgram polestar template', () => {
   const templateMap = constructDefaultTemplateMap(PolestarTemplate);
 
   expect(evaluateHydraProgram(PolestarTemplate, templateMap)).toMatchSnapshot();
   const templateMap2 = produce(templateMap, draftState => {
-    draftState.X = '"GooD Dimension"';
-    draftState.XIncludeZero = 'false';
+    draftState.paramValues.X = '"GooD Dimension"';
+    draftState.paramValues.XIncludeZero = 'false';
   });
   expect(evaluateHydraProgram(PolestarTemplate, templateMap2)).toMatchSnapshot();
 
   const templateMap3 = produce(templateMap, draftState => {
-    draftState.X = '"Origin"';
-    draftState.XType = '"nominal"';
-    draftState.ColorAggSimple = '"count"';
+    draftState.paramValues.X = '"Origin"';
+    draftState.paramValues.XType = '"nominal"';
+    draftState.paramValues.ColorAggSimple = '"count"';
   });
   expect(evaluateHydraProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
 
   expect(
     evaluateHydraProgram(GALLERY, {
-      dataTargetSearch: [],
-      SearchKey: '"should result"',
+      paramValues: {
+        dataTargetSearch: [],
+        SearchKey: '"should result"',
+      },
+      systemValues: {viewsToMaterialize: {}, dataTransforms: []},
     }),
   ).toMatchSnapshot();
 });

@@ -26,7 +26,12 @@ export interface ViewCatalogEntry {
   encodingMode: string;
   templateMap: TemplateMap;
   currentTemplateInstance: Template;
-  viewsToMaterialize: ViewsToMaterialize;
+}
+/**
+ * vega transform syntax
+ */
+export interface DataTransform {
+  [x: string]: any;
 }
 export interface UndoRedoStackItem {
   columns: ColumnHeader[];
@@ -37,7 +42,6 @@ export interface UndoRedoStackItem {
   templateMap: TemplateMap;
   viewCatalog: ViewCatalog;
   views: string[];
-  viewsToMaterialize: ViewsToMaterialize;
 }
 
 export interface AppState {
@@ -72,7 +76,6 @@ export interface AppState {
   // template stuff
   templateMap: TemplateMap;
   templates: Template[];
-  viewsToMaterialize: ViewsToMaterialize;
 }
 export type ViewsToMaterialize = {[x: string]: string[]};
 /**
@@ -241,7 +244,13 @@ export interface Validation {
 }
 
 export interface TemplateMap {
-  [key: string]: string | string[];
+  paramValues: {
+    [key: string]: string | string[];
+  };
+  systemValues: {
+    dataTransforms: DataTransform[];
+    viewsToMaterialize: ViewsToMaterialize;
+  };
 }
 
 /**

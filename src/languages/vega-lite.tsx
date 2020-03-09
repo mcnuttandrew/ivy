@@ -60,15 +60,15 @@ export function tryToGuessTheTypeForVegaLite(
   const dims = (typeWidget.config as ListWidget).allowedValues;
 
   if (column && column.type === 'DIMENSION' && dims.find(d => d.display === 'nominal')) {
-    templateMap[`${payload.field}Type`] = '"nominal"';
+    templateMap.paramValues[`${payload.field}Type`] = '"nominal"';
   }
 
   if (column && column.type === 'MEASURE' && dims.find(d => d.display === 'quantitative')) {
-    templateMap[`${payload.field}Type`] = '"quantitative"';
+    templateMap.paramValues[`${payload.field}Type`] = '"quantitative"';
   }
 
   if (column && column.type === 'TIME' && dims.find(d => d.display === 'temporal')) {
-    templateMap[`${payload.field}Type`] = '"temporal"';
+    templateMap.paramValues[`${payload.field}Type`] = '"temporal"';
   }
 }
 
