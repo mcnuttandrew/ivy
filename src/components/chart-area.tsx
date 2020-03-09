@@ -192,7 +192,6 @@ interface MemoizerProps {
 const MemoizeRender = React.memo(
   function Memoizer(props: MemoizerProps): JSX.Element {
     const {renderer, onError, data, spec} = props;
-    console.log('got run');
     return renderer({data, spec, onError});
   },
   (prevProps, nextProps) => {

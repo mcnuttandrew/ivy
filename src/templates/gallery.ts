@@ -16,7 +16,7 @@ const Gallery: Template = {
   widgets: [
     {name: 'asddd', type: 'Section', config: null},
     {name: 'asd', type: 'Text', config: {text: FIRST_TEXT}},
-    {name: 'SearchKey', displayName: 'Search for template', type: 'FreeText', config: {}},
+    {name: 'SearchKey', displayName: 'Search for template', type: 'FreeText', config: {useParagraph: false}},
     {name: 'asd', type: 'Text', config: {text: SECOND_TEXT}},
     {
       name: 'dataTargetSearch',
