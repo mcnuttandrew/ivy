@@ -173,7 +173,6 @@ export default function ProgramPreview(props: Props): JSX.Element {
                   {isComplete && fullMatch()}
                   {!isComplete && partialMatch()}
                 </div>
-                {/* {typeCounts && RenderTypeCounts(typeCounts)} */}
               </div>
               {alreadyPresent && (
                 <div className="program-option-search-match">A template by this name is already loaded</div>

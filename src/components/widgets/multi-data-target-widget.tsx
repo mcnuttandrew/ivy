@@ -2,8 +2,7 @@ import React from 'react';
 import {MultiDataTargetWidget, Widget, DataType} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import MultiShelf from '../multi-shelf';
-import DataSymbol from '../data-symbol';
-import {trim} from '../../utils';
+import {trim, classnames} from '../../utils';
 import {EditParameterName, EditDisplayName} from './widget-common';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
@@ -26,8 +25,14 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
               const checked = allowedTypesSet.has(type);
               return (
                 <div className="flex" key={type} style={{marginRight: '10px'}}>
-                  <div>
-                    <DataSymbol type={type} />
+                  <div
+                    className={classnames({
+                      flex: true,
+                      'program-option-type-pill': true,
+                      [`program-option-type-pill--${type.toLowerCase()}`]: true,
+                    })}
+                  >
+                    {type}
                   </div>
                   <input
                     aria-label={`Allow ${type} in multidatatarget`}
