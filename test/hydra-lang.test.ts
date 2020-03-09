@@ -24,22 +24,25 @@ test.only('evaluateHydraProgram polestar template', () => {
 
   expect(evaluateHydraProgram(PolestarTemplate, templateMap)).toMatchSnapshot();
   const templateMap2 = produce(templateMap, draftState => {
-    draftState.X = '"GooD Dimension"';
-    draftState.XIncludeZero = 'false';
+    draftState.paramValues.X = '"GooD Dimension"';
+    draftState.paramValues.XIncludeZero = 'false';
   });
   expect(evaluateHydraProgram(PolestarTemplate, templateMap2)).toMatchSnapshot();
 
   const templateMap3 = produce(templateMap, draftState => {
-    draftState.X = '"Origin"';
-    draftState.XType = '"nominal"';
-    draftState.ColorAggSimple = '"count"';
+    draftState.paramValues.X = '"Origin"';
+    draftState.paramValues.XType = '"nominal"';
+    draftState.paramValues.ColorAggSimple = '"count"';
   });
   expect(evaluateHydraProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
 
   expect(
     evaluateHydraProgram(GALLERY, {
-      dataTargetSearch: [],
-      SearchKey: '"should result"',
+      paramValues: {
+        dataTargetSearch: [],
+        SearchKey: '"should result"',
+      },
+      systemValues: {viewsToMaterialize: {}, dataTransforms: []},
     }),
   ).toMatchSnapshot();
 });

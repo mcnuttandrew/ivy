@@ -7,7 +7,6 @@ import {
   ViewsToMaterialize,
   TemplateMap,
   RendererProps,
-  DataTransform,
 } from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';

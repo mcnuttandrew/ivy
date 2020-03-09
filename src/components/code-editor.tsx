@@ -54,7 +54,10 @@ export default class CodeEditor extends React.Component<Props> {
       return `${stringify(spec, {maxLength: 100})}\n`;
     }
     if (codeMode === WIDGET_VALUES) {
-      return `${JSON.stringify(sortObjectAlphabetically(templateMap), null, 2)}\n`;
+      return `${stringify({
+        ...templateMap,
+        paramValues: sortObjectAlphabetically(templateMap.paramValues),
+      })}\n`;
     }
   }
 
