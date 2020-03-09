@@ -5,7 +5,6 @@ import {TiFilter, TiDeleteOutline, TiCogOutline, TiPlus} from 'react-icons/ti';
 import {GenericAction, CoerceTypePayload} from '../actions/index';
 import {useDrag} from 'react-dnd';
 import {ColumnHeader, DataType} from '../types';
-import DataSymbol from './data-symbol';
 import {classnames} from '../utils';
 import {HoverTooltip} from './tooltips';
 
@@ -15,7 +14,7 @@ export interface PillProps {
   column: ColumnHeader;
   containingField?: string;
   containingShelf?: string;
-  createFilter?: (field: string) => void;
+  createFilter?: GenericAction<ColumnHeader>;
   fieldSelector?: JSX.Element;
   hideGUI?: boolean;
   inEncoding: boolean;
@@ -67,25 +66,10 @@ function removePill(props: RemovePillProps): JSX.Element {
   );
 }
 
-interface PillTypeProps {
-  column: ColumnHeader;
-}
-function pillType({column}: PillTypeProps): JSX.Element {
-  return (
-    <HoverTooltip
-      message={`This column has type ${column.type}. You can change it by clicking the settings icon in the data column`}
-    >
-      <div className="fixed-symbol-width pill-symbol">
-        <DataSymbol type={column.type} />
-      </div>
-    </HoverTooltip>
-  );
-}
-
 interface AddFilterProps {
   column: ColumnHeader;
   inEncoding: boolean;
-  createFilter?: (field: string) => void;
+  createFilter?: GenericAction<ColumnHeader>;
 }
 function addFilter(props: AddFilterProps): JSX.Element {
   const {column, inEncoding, createFilter} = props;
@@ -97,7 +81,7 @@ function addFilter(props: AddFilterProps): JSX.Element {
           if (inEncoding) {
             return;
           }
-          createFilter(column.field);
+          createFilter(column);
         }}
       >
         <TiFilter />
@@ -199,7 +183,7 @@ export default function Pill(props: PillProps): JSX.Element {
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
-  const showAddFilter = false && !inEncoding && !hideGUI && createFilter && !isCustom;
+  const showAddFilter = !inEncoding && !hideGUI && createFilter && !isCustom;
   const showAutoAdd = !inEncoding && !hideGUI && addToNextOpenSlot;
   const showTypeCoerce = !inEncoding && coerceType;
   return (
@@ -214,7 +198,6 @@ export default function Pill(props: PillProps): JSX.Element {
       style={{opacity}}
     >
       {showTypeCoerce && baseBallCard({column, field, coerceType})}
-      {pillType({column})}
       <div className="pill-label">{column.field}</div>
       {showAddFilter && addFilter({column, inEncoding, createFilter})}
       {showAutoAdd && addToNext({column, addToNextOpenSlot, typeNotAddable})}

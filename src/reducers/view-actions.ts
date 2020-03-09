@@ -9,6 +9,7 @@ const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {
   templateMap: BLANK_TEMPLATE_MAP,
   currentTemplateInstance: GALLERY,
   viewsToMaterialize: {},
+  dataTransforms: [],
 };
 function updateCatalogView(state: AppState, view: string): AppState {
   const catalogEntry: ViewCatalogEntry = {
@@ -16,6 +17,7 @@ function updateCatalogView(state: AppState, view: string): AppState {
     templateMap: state.templateMap,
     currentTemplateInstance: state.currentTemplateInstance,
     viewsToMaterialize: state.viewsToMaterialize,
+    dataTransforms: state.dataTransforms,
   };
   return produce(state, draftState => {
     draftState.viewCatalog[view] = catalogEntry;

@@ -10,7 +10,7 @@ import {getUserName} from '../utils/local-storage';
 
 import {HOT_KEYS} from '../constants/index';
 import * as actionCreators from '../actions/index';
-import {Filter} from '../actions/index';
+// import {Filter} from '../actions/index';
 import {
   CoerceTypePayload,
   GenericAction,
@@ -23,7 +23,7 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {getUniques, getDomain, getTemplateSaveState, computeValidAddNexts, classnames} from '../utils';
+import {getTemplateSaveState, computeValidAddNexts, classnames} from '../utils';
 import {
   getHeight,
   writeHeight,
@@ -41,6 +41,7 @@ import {
   AppState,
   ColumnHeader,
   DataReducerState,
+  DataTransform,
   GenWidget,
   HydraExtension,
   Json,
@@ -87,6 +88,7 @@ interface RootProps {
   currentView: string;
   currentlySelectedFile: string;
   data: DataRow[];
+  dataTransforms: DataTransform[];
   editMode: boolean;
   editorError: null | string;
   encodingMode: string;
@@ -113,7 +115,7 @@ interface RootProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
   cloneView: GenericAction<void>;
   coerceType: GenericAction<CoerceTypePayload>;
-  createFilter: GenericAction<Filter>;
+  createFilter: GenericAction<ColumnHeader>;
   createNewView: GenericAction<void>;
   deleteFilter: GenericAction<number>;
   deleteTemplate: GenericAction<string>;
@@ -157,7 +159,7 @@ interface State {
 class RootComponent extends React.Component<RootProps, State> {
   constructor(props: RootProps) {
     super(props);
-    this.createFilter = this.createFilter.bind(this);
+    // this.createFilter = this.createFilter.bind(this);
     this.triggerRepaint = this.triggerRepaint.bind(this);
     this.state = {repaintIdx: 0};
   }
@@ -177,19 +179,19 @@ class RootComponent extends React.Component<RootProps, State> {
     this.setState({repaintIdx: this.state.repaintIdx + 1});
   }
 
-  createFilter(field: string): void {
-    // this biz-logic function is here in order to move the data off of the immutable reducer
-    const {columns, createFilter, data} = this.props;
-    const isDim = columns.find(x => x.field === field).type === 'DIMENSION';
-    const newFilter: Filter = {
-      filter: {
-        field: field,
-        // todo this is really slick, but we should probably be caching these values on load
-        [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(data, field),
-      },
-    };
-    createFilter(newFilter);
-  }
+  // createFilter(field: string): void {
+  //   // this biz-logic function is here in order to move the data off of the immutable reducer
+  //   const {columns, createFilter, data} = this.props;
+  //   const isDim = columns.find(x => x.field === field).type === 'DIMENSION';
+  //   const newFilter: Filter = {
+  //     filter: {
+  //       field: field,
+  //       // todo this is really slick, but we should probably be caching these values on load
+  //       [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(data, field),
+  //     },
+  //   };
+  //   createFilter(newFilter);
+  // }
 
   chartArea(): JSX.Element {
     return (
@@ -200,6 +202,7 @@ class RootComponent extends React.Component<RootProps, State> {
         createNewView={this.props.createNewView}
         currentView={this.props.currentView}
         data={this.props.data}
+        dataTransforms={this.props.dataTransforms}
         deleteTemplate={this.props.deleteTemplate}
         deleteView={this.props.deleteView}
         encodingMode={this.props.encodingMode}
@@ -234,12 +237,15 @@ class RootComponent extends React.Component<RootProps, State> {
           addToNextOpenSlot={this.props.addToNextOpenSlot}
           coerceType={this.props.coerceType}
           columns={this.props.columns}
-          createFilter={this.createFilter}
+          createFilter={this.props.createFilter}
+          dataTransforms={this.props.dataTransforms}
           deleteFilter={this.props.deleteFilter}
           fillableFields={this.props.fillableFields}
-          onDropFilter={(item: any): any => this.createFilter(item.text)}
+          onDropFilter={(item: any): any =>
+            this.props.createFilter(this.props.columns.find(d => d.field === item.text))
+          }
           showGUIView={this.props.showGUIView}
-          spec={this.props.spec}
+          // spec={this.props.spec}
           template={template}
           updateFilter={this.props.updateFilter}
         />
@@ -451,6 +457,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     currentView: base.currentView,
     currentlySelectedFile: base.currentlySelectedFile,
     data: data.data,
+    dataTransforms: base.dataTransforms,
     editMode: isGallery ? false : base.editMode,
     editorError: base.editorError,
     encodingMode: base.encodingMode,

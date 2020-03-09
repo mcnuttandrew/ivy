@@ -7,6 +7,7 @@ import {
   ViewsToMaterialize,
   TemplateMap,
   RendererProps,
+  DataTransform,
 } from '../types';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
@@ -17,6 +18,7 @@ import Gallery from './gallery';
 import GALLERY from '../templates/gallery';
 import {evaluateHydraProgram} from '../hydra-lang';
 import {HoverTooltip} from './tooltips';
+import {wrangle} from '../utils/wrangle';
 
 interface ChartAreaProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
@@ -25,6 +27,7 @@ interface ChartAreaProps {
   createNewView: GenericAction<void>;
   currentView: string;
   data: DataRow[];
+  dataTransforms: DataTransform[];
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
   encodingMode: string;
@@ -75,7 +78,6 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   const keySet = Object.entries(viewsToMaterialize)
     .filter(d => d[1].length)
     .reduce((acc, d: [string, string[]]) => acc.add(d[0]), new Set());
-
   function removeButton(name: string, key: string, value: string): JSX.Element {
     return (
       <div
@@ -197,6 +199,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     createNewView,
     currentView,
     data,
+    dataTransforms,
     deleteTemplate,
     deleteView,
     encodingMode,
@@ -215,6 +218,9 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     views,
     viewsToMaterialize,
   } = props;
+  // TODO memoize
+  const preparedData = wrangle(data, dataTransforms);
+
   const templateGallery = template.templateLanguage === GALLERY.templateLanguage;
   const renderer = languages[template.templateLanguage] && languages[template.templateLanguage].renderer;
   const showChart = !templateGallery && renderer && templateComplete;
@@ -259,7 +265,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         {showChart && materializedViews.length === 0 && (
           <MemoizeRender
             renderer={renderer}
-            data={data}
+            data={preparedData}
             spec={spec}
             onError={(e): void => {
               console.log('upper error', e);
@@ -269,7 +275,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         {showChart &&
           materializedViews.length > 0 &&
           materializeWrapper({
-            data,
+            data: preparedData,
             materializedViews,
             renderer,
             setAllTemplateValues,

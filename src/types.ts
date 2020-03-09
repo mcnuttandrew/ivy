@@ -27,6 +27,13 @@ export interface ViewCatalogEntry {
   templateMap: TemplateMap;
   currentTemplateInstance: Template;
   viewsToMaterialize: ViewsToMaterialize;
+  dataTransforms: DataTransform[];
+}
+/**
+ * vega transform syntax
+ */
+export interface DataTransform {
+  [x: string]: any;
 }
 export interface UndoRedoStackItem {
   columns: ColumnHeader[];
@@ -44,6 +51,7 @@ export interface AppState {
   // meta-data
   columns: ColumnHeader[];
   currentlySelectedFile: string;
+  dataTransforms: DataTransform[];
 
   // spec configs
   editMode: boolean;
