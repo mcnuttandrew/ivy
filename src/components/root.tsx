@@ -8,6 +8,7 @@ import {GlobalHotKeys} from 'react-hotkeys';
 import GALLERY from '../templates/gallery';
 import {getUserName} from '../utils/local-storage';
 
+import {HOT_KEYS} from '../constants/index';
 import * as actionCreators from '../actions/index';
 import {Filter} from '../actions/index';
 import {
@@ -353,14 +354,7 @@ class RootComponent extends React.Component<RootProps, State> {
     };
     return (
       <GlobalHotKeys
-        keyMap={{
-          UNDO: 'command+z',
-          REDO: 'command+shift+z',
-          CLOSE_MODALS: 'Escape',
-          HOME: 'h',
-          CLEAR_ENCODING: 'r',
-          TOGGLE_EDIT: 'e',
-        }}
+        keyMap={HOT_KEYS}
         handlers={{
           TOGGLE_EDIT: withSay(() => !onGallery && setEditMode(!editMode), 'edit'),
           CLEAR_ENCODING: withSay(() => fillTemplateMapWithDefaults(), 'clear'),

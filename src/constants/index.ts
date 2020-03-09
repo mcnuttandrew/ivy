@@ -38,3 +38,21 @@ export const switchCommon = {
 
 export const MATERIALIZING = '$PARAMETER FANNED OUT$';
 export const AUTHORS = 'Ivy Authors';
+
+export const HOT_KEYS: {[x: string]: string} = {
+  UNDO: 'command+z',
+  REDO: 'command+shift+z',
+  CLOSE_MODALS: 'Escape',
+  HOME: 'h',
+  CLEAR_ENCODING: 'r',
+  TOGGLE_EDIT: 'e',
+};
+
+export const HOT_KEY_DESCRIPTIONS: {[x: string]: string} = {
+  UNDO: 'Undo most recent action',
+  REDO: 'Redo most recent action',
+  CLOSE_MODALS: 'Close any open modals',
+  HOME: 'Return to the gallery',
+  CLEAR_ENCODING: 'Reset all current settings to default',
+  TOGGLE_EDIT: 'Toggle Edit mode on / off',
+};
