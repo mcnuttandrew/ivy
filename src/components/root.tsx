@@ -179,20 +179,6 @@ class RootComponent extends React.Component<RootProps, State> {
     this.setState({repaintIdx: this.state.repaintIdx + 1});
   }
 
-  // createFilter(field: string): void {
-  //   // this biz-logic function is here in order to move the data off of the immutable reducer
-  //   const {columns, createFilter, data} = this.props;
-  //   const isDim = columns.find(x => x.field === field).type === 'DIMENSION';
-  //   const newFilter: Filter = {
-  //     filter: {
-  //       field: field,
-  //       // todo this is really slick, but we should probably be caching these values on load
-  //       [isDim ? 'oneOf' : 'range']: (isDim ? getUniques : getDomain)(data, field),
-  //     },
-  //   };
-  //   createFilter(newFilter);
-  // }
-
   chartArea(): JSX.Element {
     return (
       <ChartArea
