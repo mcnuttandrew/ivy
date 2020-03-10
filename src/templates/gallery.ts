@@ -59,7 +59,7 @@ const Gallery: Template = {
       config: {
         shortcuts: [
           {
-            label: 'Unvariates',
+            label: 'Univariates',
             shortcutFunction: '{...parameters, minRequiredTargets: 1, maxRequiredTargets: 1}',
           },
           {
