@@ -1,16 +1,17 @@
 import {
   DataTargetWidget,
   DataType,
+  FreeTextWidget,
+  GenWidget,
   ListWidget,
   MultiDataTargetWidget,
   SectionWidget,
+  ShortcutsWidget,
   SliderWidget,
   SwitchWidget,
   Template,
-  Widget,
   TextWidget,
-  GenWidget,
-  ShortcutsWidget,
+  Widget,
 } from '../types';
 import {toList} from '../utils';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES, tableau10} from './vega-common';
@@ -62,7 +63,7 @@ export const SectionFactory: WidgetFactoryFunc = idx =>
 export const ShortcutsFactory: WidgetFactoryFunc = idx =>
   ({name: `Shortcut${idx}`, type: 'Shortcut', config: {shortcuts: []}} as Widget<ShortcutsWidget>);
 export const FreeTextFactory: WidgetFactoryFunc = idx =>
-  ({name: `FreeText${idx}`, type: 'FreeText', config: {}} as Widget<ShortcutsWidget>);
+  ({name: `FreeText${idx}`, type: 'FreeText', config: {useParagraph: false}} as Widget<FreeTextWidget>);
 export const TextFactory: WidgetFactoryFunc = idx =>
   ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as Widget<TextWidget>);
 

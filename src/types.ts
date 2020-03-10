@@ -133,7 +133,7 @@ export interface MultiDataTargetWidget {
 }
 export interface ListWidget {
   allowedValues: {display: string; value: string}[];
-  defaultValue: string;
+  defaultValue?: string;
 }
 export interface SwitchWidget {
   activeValue: string;
@@ -158,7 +158,9 @@ export interface Shortcut {
 export interface ShortcutsWidget {
   shortcuts: Shortcut[];
 }
-export type FreeTextWidget = {};
+export type FreeTextWidget = {
+  useParagraph: boolean;
+};
 export type WidgetSubType =
   | DataTargetWidget
   | MultiDataTargetWidget

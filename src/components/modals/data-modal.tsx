@@ -3,9 +3,10 @@ import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../../constants/vega-datasets-counts';
 import GALLERY from '../../templates/gallery';
-import DataSymbol from '../data-symbol';
 import {DataType} from '../../types';
 import Modal from './modal';
+import {classnames} from '../../utils/index';
+import {HoverTooltip} from '../tooltips';
 
 interface Props {
   changeSelectedFile: GenericAction<string>;
@@ -92,13 +93,22 @@ export default class DataModal extends React.Component<Props, State> {
                   </div>
                   <div className="flex">
                     <div className="icon-container">{datasetMeta.length} rows</div>
-                    {['MEASURE', 'DIMENSION', 'TIME'].map((dataType: DataType) => {
+                    {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
+                      const count = datasetMeta[dataType] || 0;
                       return (
                         <div key={`${datasetName}-${dataType}`} className="flex icon-container">
-                          <div className="icon">
-                            <DataSymbol type={dataType} />
-                          </div>
-                          {datasetMeta[dataType] || 0}
+                          <HoverTooltip
+                            message={`This data set has ${count} data columns with inferred type ${dataType}`}
+                          >
+                            <div
+                              className={classnames({
+                                flex: true,
+                                'program-option-type-pill': true,
+                                [`program-option-type-pill--${dataType.toLowerCase()}`]: true,
+                              })}
+                            ></div>
+                          </HoverTooltip>
+                          {count}
                         </div>
                       );
                     })}

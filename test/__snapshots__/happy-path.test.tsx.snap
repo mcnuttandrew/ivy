@@ -16,7 +16,7 @@ Data target searchdrop a field hereClearSelect a valueAcceleration 123Cylinders 
  You can also facilitate browsing by sorting: 
 
 
-Sorttemplate namemin required measuresmin required dimensionsmin required timesmax allowed fieldscomplexityReverse SortSearch ShortcutsUnvariatesExplorationReset"
+Sorttemplate namemin required measuresmin required dimensionsmin required timesmax allowed fieldscomplexityReverse SortSearch ShortcutsUnivariatesExplorationReset"
 `;
 
 exports[`Happy path 2`] = `"Data cars.jsonCHANGEdimension (2)hideNameOriginmeasure (6)hideAccelerationCylindersDisplacementHorsepowerMiles_per_GallonWeight_in_lbstime (1)hideYear Filter drop a field here"`;

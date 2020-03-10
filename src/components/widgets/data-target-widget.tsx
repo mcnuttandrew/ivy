@@ -1,10 +1,10 @@
 import React from 'react';
 import {DataTargetWidget, Widget, DataType} from '../../types';
 import {trim} from '../../utils';
-import DataSymbol from '../data-symbol';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import Shelf from '../shelf';
 import {EditParameterName, EditDisplayName} from './widget-common';
+import {classnames} from '../../utils/index';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 
@@ -26,8 +26,14 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
               const checked = allowedTypesSet.has(type);
               return (
                 <div className="flex" key={type} style={{marginRight: '10px'}}>
-                  <div>
-                    <DataSymbol type={type} />
+                  <div
+                    className={classnames({
+                      flex: true,
+                      'program-option-type-pill': true,
+                      [`program-option-type-pill--${type.toLowerCase()}`]: true,
+                    })}
+                  >
+                    {type}
                   </div>
                   <input
                     aria-label={`Allowed checkbox for ${type}`}
