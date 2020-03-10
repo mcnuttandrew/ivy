@@ -231,6 +231,18 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       // update the template map with the new name
       draftState.templateMap.paramValues[value] = state.templateMap.paramValues[oldName];
       delete draftState.templateMap.paramValues[oldName];
+      // update any relevant view materializations
+      draftState.templateMap.systemValues.viewsToMaterialize[value] = [
+        ...draftState.templateMap.systemValues.viewsToMaterialize[oldName],
+      ];
+      delete draftState.templateMap.systemValues.viewsToMaterialize[oldName];
+      console.log(draftState.templateMap.systemValues.viewsToMaterialize[value]);
+      // update any filters
+      draftState.templateMap.systemValues.dataTransforms = draftState.templateMap.systemValues.dataTransforms.map(
+        transform => {
+          return transform.filter.field === value ? {filter: {...transform.filter, field: value}} : transform;
+        },
+      );
     } else if (topLevelKeys.has(key)) {
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx][key] = value;

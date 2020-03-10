@@ -281,7 +281,7 @@ export default function GeneralWidgetComponent(props: Props): JSX.Element {
           placement="top"
           trigger="click"
           overlay={
-            <div className="">
+            <div className="fan-out-tooltip">
               <h3>Select Values to Fan Across</h3>
               <h5>Fanning values allows you to consider multiple options in simulatenously</h5>
               <GenericMaterializationMenu
