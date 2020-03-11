@@ -106,6 +106,7 @@ export const triggerRedo = createAction<void>(actionTypes.TRIGGER_REDO);
 export const triggerUndo = createAction<void>(actionTypes.TRIGGER_UNDO);
 export const updateFilter = createAction<UpdateFilterPayload>(actionTypes.UPDATE_FILTER);
 export const recieveLanguages = createAction<{[x: string]: HydraExtension}>(actionTypes.RECIEVE_LANGUAGES);
+export const recieveTemplates = createAction<Template[]>(actionTypes.RECIEVE_TEMPLATE);
 
 export const setMaterialization = createAction<ViewsToMaterialize>(actionTypes.SET_MATERIALIZATION);
 

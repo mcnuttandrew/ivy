@@ -4,7 +4,11 @@ import {Template} from '../../types';
 import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
-import {serverPrefix, buildCounts, classnames} from '../../utils';
+import {serverPrefix, buildCounts, toExportStr} from '../../utils';
+import {TiUploadOutline} from 'react-icons/ti';
+import {AUTHORS} from '../../constants';
+import JSZip from 'jszip';
+import {saveAs} from 'file-saver';
 
 interface Props {
   loadExternalTemplate: GenericAction<Template>;
@@ -12,6 +16,7 @@ interface Props {
   triggerRepaint: any;
   setModalState: GenericAction<string | null>;
   userName: string;
+  recieveTemplates: GenericAction<Template[]>;
 }
 
 type QueryBuild = (
@@ -145,8 +150,8 @@ function toQueryParams(obj: {[x: string]: any}): string {
 }
 
 export default function CommunityPrograms(props: Props): JSX.Element {
-  const {loadExternalTemplate, setModalState, triggerRepaint, templates, userName} = props;
-  const [mode, setMode] = useState(BY_TIME);
+  const {loadExternalTemplate, setModalState, triggerRepaint, templates, userName, recieveTemplates} = props;
+  const [mode] = useState(BY_TIME);
   const [queryIdx, queryIdxUpdate] = useState(1);
   const triggerQuery = (): any => queryIdxUpdate(queryIdx + 1);
 
@@ -172,19 +177,67 @@ export default function CommunityPrograms(props: Props): JSX.Element {
     <Modal
       modalToggle={(): any => setModalState(null)}
       className="program-modal"
-      modalTitle="Community Templates"
+      modalTitle="Add More Templates"
       bodyDirectionDown={true}
     >
       <div className="flex-down full-height-with-hide ">
         <div className="full-height-with-hide ">
           <div className="full-height">
             <div className="full-width flex space-between">
-              <h3>Find new templates to use</h3>
+              <div className="state-action-button">
+                <div className="flex-down">
+                  <h3>Load a template from your computer</h3>
+                  <div className="flex">
+                    <TiUploadOutline />
+                    <input
+                      type="file"
+                      multiple
+                      accept="*.ivy.json"
+                      onChange={function(event: any): void {
+                        const fileList = [];
+                        for (let i = 0; i < event.target.files.length; i++) {
+                          fileList.push(event.target.files[i]);
+                        }
+                        const loaderPromise = (file: any): any => {
+                          return new Promise(resolve => {
+                            const reader = new FileReader();
+                            reader.onload = (e): void => resolve(JSON.parse(e.target.result as string));
+                            reader.readAsText(file);
+                          });
+                        };
+                        Promise.all(fileList.map(loaderPromise)).then(newTemplates => {
+                          recieveTemplates(newTemplates);
+                          setModalState(null);
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button
+                  onClick={(): void => {
+                    const zip = new JSZip();
+                    templates
+                      .filter(d => d.templateAuthor !== AUTHORS)
+                      .forEach(template => {
+                        const fileName = `${toExportStr(template.templateName)}.${toExportStr(
+                          template.templateAuthor,
+                        )}.ivy.json`;
+                        zip.file(fileName, JSON.stringify(template, null, 2));
+                      });
+                    // when everything has been downloaded, we can trigger the dl
+                    zip.generateAsync({type: 'blob'}).then(blob => saveAs(blob, 'ivy-bundle.zip'));
+                  }}
+                >
+                  Export All Saved Templates To Disc
+                </button>
+              </div>
               <div className="flex">
                 <h3>{`Your user name: ${userName}`} </h3>
               </div>
             </div>
-            <div>
+            {/* <div>
               {[
                 BY_TIME,
                 // BY_STRING,
@@ -204,7 +257,8 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                   </button>
                 );
               })}
-            </div>
+            </div> */}
+            <h3>Load a template from the community template server</h3>
             <div className="query-configuration-block">
               {mode === BY_TIME && !loadedTemplates.length && (
                 <div className="lds-dual-ring-container">

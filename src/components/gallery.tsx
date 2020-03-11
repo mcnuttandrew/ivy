@@ -5,6 +5,7 @@ import ProgramPreview from './program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../utils';
 import GALLERY from '../templates/gallery';
 import {AUTHORS} from '../constants/index';
+import {saveAs} from 'file-saver';
 interface Props {
   columns: ColumnHeader[];
   deleteTemplate: GenericAction<string>;
@@ -72,6 +73,13 @@ const makeSortScore: MakeSortScoreType = (Sort: string) => (template): any => {
   return {template, score};
 };
 
+function toExportStr(str: string): string {
+  return str
+    .trim()
+    .toLowerCase()
+    .replace(/\s/g, '-');
+}
+
 export default function DataSearchMode(props: Props): JSX.Element {
   const {columns, deleteTemplate, setEncodingMode, spec, templates, userName} = props;
   const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
@@ -88,6 +96,13 @@ export default function DataSearchMode(props: Props): JSX.Element {
     if (key === 'Use') {
       onClick = (): any => {
         setEncodingMode(templateName);
+      };
+    }
+    if (key === 'Save to Disc') {
+      onClick = (): any => {
+        const template = templates.find(d => d.templateName === templateName);
+        const fileName = `${toExportStr(templateName)}.${toExportStr(template.templateAuthor)}.ivy.json`;
+        saveAs(JSON.stringify(template, null, 2), fileName);
       };
     }
     return {onClick, name: key};
@@ -121,7 +136,11 @@ export default function DataSearchMode(props: Props): JSX.Element {
       }
       const madeByUser = template.templateAuthor === userName;
       const builtIn = template.templateAuthor === AUTHORS;
-      const buttons = madeByUser ? ['Publish', 'Delete', 'Use'] : builtIn ? ['Use'] : ['Delete', 'Use'];
+      const buttons = madeByUser
+        ? ['Publish', 'Delete', 'Use', 'Save to Disc']
+        : builtIn
+        ? ['Use', 'Save to Disc']
+        : ['Delete', 'Use', 'Save to Disc'];
       const counts = buildCounts(template);
       const {SUM} = counts;
       if (
