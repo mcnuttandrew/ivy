@@ -128,6 +128,7 @@ interface RootProps {
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
   recieveLanguages: GenericAction<{[x: string]: HydraExtension}>;
+  recieveTemplates: GenericAction<Template[]>;
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
   setAllTemplateValues: GenericAction<TemplateMap>;
@@ -376,6 +377,7 @@ class RootComponent extends React.Component<RootProps, State> {
             setModalState={this.props.setModalState}
             templates={this.props.templates}
             userName={this.props.userName}
+            recieveTemplates={this.props.recieveTemplates}
           />
         )}
         <Header

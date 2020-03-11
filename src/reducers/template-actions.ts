@@ -2,7 +2,6 @@ import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
 import {TEMPLATE_BODY, MATERIALIZING} from '../constants';
-import {blindSet} from './reducer-utils';
 import {
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
@@ -36,7 +35,12 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
     draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
   });
 }
-export const recieveTemplates = blindSet('templates');
+
+export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => {
+  return produce(state, draftState => {
+    draftState.templates = draftState.templates.concat(payload);
+  });
+};
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   const template = state.currentTemplateInstance;

@@ -394,3 +394,10 @@ export function takeSuggestion(code: string, suggestion: Suggestion): string {
   }
   return simpleReplace ? code.replace(from, to) : code.replace(new RegExp(from, 'g'), to);
 }
+
+export function toExportStr(str: string): string {
+  return str
+    .trim()
+    .toLowerCase()
+    .replace(/\s/g, '-');
+}

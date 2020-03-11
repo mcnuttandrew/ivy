@@ -37,19 +37,17 @@ export default function Header(props: HeaderProps): JSX.Element {
             })}
             onClick={(): any => (canUndo ? triggerUndo : NULL)()}
           >
-            <TiArrowBack /> <span>UNDO</span>
+            <TiArrowBack /> <span>Undo</span>
           </div>
           <div
             className={classnames({
               'action-deactivated': !canRedo,
               'state-action-button': true,
             })}
-            onClick={(): void => {
-              (canRedo ? triggerRedo : NULL)();
-            }}
+            onClick={(): any => (canRedo ? triggerRedo : NULL)()}
           >
             <TiArrowForward />
-            <span>REDO</span>
+            <span>Redo</span>
           </div>
           <div className="state-action-button">
             <HoverTooltip message="Add more templates">
