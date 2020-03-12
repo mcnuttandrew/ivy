@@ -111,13 +111,17 @@ export default function DataSearchMode(props: Props): JSX.Element {
   const search = trim(spec.SearchKey as string);
   const programs = templates
     .map(makeSortScore(spec.Sort))
-    .sort(
-      (a, b) =>
+    .sort((a, b) => {
+      const sortResult =
         (spec['Reverse Sort'] ? -1 : 1) *
         (typeof a.score === 'string' && typeof b.score === 'string'
           ? (a.score as string).localeCompare(b.score as string)
-          : (a.score as number) - (b.score as number)),
-    )
+          : (a.score as number) - (b.score as number));
+      if (!sortResult) {
+        return a.template.templateName.localeCompare(a.template.templateName);
+      }
+      return sortResult;
+    })
     .reduce((acc, {template}, idx) => {
       if (template.templateName === GALLERY.templateName) {
         return acc;
@@ -155,10 +159,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
           isComplete={isComplete}
           key={`${template.templateName}-${idx}`}
           setEncodingMode={setEncodingMode}
-          templateAuthor={template.templateAuthor}
-          templateDescription={template.templateDescription}
-          templateName={template.templateName}
-          typeCounts={counts}
+          template={template}
           userName={userName}
         />
       );

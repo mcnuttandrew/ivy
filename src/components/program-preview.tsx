@@ -1,10 +1,11 @@
 import React from 'react';
 import {GenericAction} from '../actions/index';
 import Thumbnail from './thumbnail';
-import {classnames} from '../utils';
+import {classnames, buildCounts} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiInfoLarge} from 'react-icons/ti';
 import {HoverTooltip} from './tooltips';
+import {Template} from '../types';
 
 type TypeCounts = {[x: string]: number};
 interface Props {
@@ -13,10 +14,7 @@ interface Props {
   isComplete?: boolean;
   preventUse?: boolean;
   setEncodingMode?: GenericAction<string>;
-  templateAuthor: string;
-  templateDescription: string;
-  templateName: string;
-  typeCounts?: TypeCounts;
+  template: Template;
   userName: string;
 }
 
@@ -118,18 +116,9 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
 }
 
 export default function ProgramPreview(props: Props): JSX.Element {
-  const {
-    alreadyPresent,
-    buttons,
-    isComplete,
-    preventUse,
-    setEncodingMode,
-    templateAuthor,
-    templateDescription,
-    templateName,
-    typeCounts,
-    userName,
-  } = props;
+  const {alreadyPresent, buttons, isComplete, preventUse, setEncodingMode, template, userName} = props;
+  const {templateAuthor, templateDescription, templateName} = template;
+  const typeCounts = buildCounts(template);
   return (
     <div
       className={classnames({

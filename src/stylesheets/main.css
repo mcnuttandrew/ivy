@@ -1017,21 +1017,22 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
 }
 
-.related-views-button {
+.related-templates {
   align-items: center;
+  border-top: thin solid black;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  font-size: 15px;
-}
-
-.related-views-button::before {
-  content: '▉';
+  height: 100%;
+  justify-content: center;
   font-size: 12px;
+  width: 150px;
 }
 
-.related-views-button:hover {
-  background: lightgray;
+.related-templates-popover {
+  display: flex;
+  flex-wrap: wrap;
+  height: 350px;
+  overflow: auto;
+  width: 475px;
 }
 
 /* ERROR BAR IN CODE EDITOR */
@@ -1275,8 +1276,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .suggestion-box-body {
-  border-top: thin solid black;
-  height: 100%;
+  border-bottom: thin solid black;
+  height: max-content;
   padding: 10px;
 }
 

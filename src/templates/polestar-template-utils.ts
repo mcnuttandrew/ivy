@@ -120,6 +120,6 @@ export const simpleSwitch = ({name, displayName, validations}: SimpleSwitchType)
   name,
   type: 'Switch',
   displayName: displayName || null,
-  config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+  config: {active: 'true', inactive: 'false', defaultsToActive: true},
   validations: validations || [],
 });

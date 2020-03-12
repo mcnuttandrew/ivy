@@ -361,7 +361,7 @@ exports[`#setTemplateValues 3`] = `
 
 exports[`serialize/deserialize template 1`] = `
 "{
-  \\"$schema\\": \\"https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json\\",
+  \\"$schema\\": \\"https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.0.0.1.json\\",
   \\"templateName\\": \\"pie chart\\",
   \\"templateDescription\\": \\"A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.\\",
   \\"templateAuthor\\": \\"Ivy Authors\\",
@@ -371,7 +371,7 @@ exports[`serialize/deserialize template 1`] = `
     {
       \\"name\\": \\"Sort\\",
       \\"type\\": \\"Switch\\",
-      \\"config\\": {\\"activeValue\\": \\"true\\", \\"inactiveValue\\": \\"false\\", \\"defaultsToActive\\": true}
+      \\"config\\": {\\"active\\": \\"true\\", \\"inactive\\": \\"false\\", \\"defaultsToActive\\": true}
     },
     {\\"name\\": \\"value\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"MEASURE\\"], \\"required\\": true}},
     {
@@ -418,7 +418,7 @@ exports[`serialize/deserialize template 1`] = `
     {
       \\"name\\": \\"DonutChart\\",
       \\"type\\": \\"Switch\\",
-      \\"config\\": {\\"activeValue\\": \\"60\\", \\"inactiveValue\\": \\"0\\", \\"defaultsToActive\\": true}
+      \\"config\\": {\\"active\\": \\"60\\", \\"inactive\\": \\"0\\", \\"defaultsToActive\\": true}
     }
   ],
   \\"code\\": \\"SEE BODY\\"
@@ -447,9 +447,9 @@ Object {
     },
     Object {
       "config": Object {
-        "activeValue": "true",
+        "active": "true",
         "defaultsToActive": true,
-        "inactiveValue": "false",
+        "inactive": "false",
       },
       "name": "Sort",
       "type": "Switch",
@@ -577,9 +577,9 @@ Object {
     },
     Object {
       "config": Object {
-        "activeValue": "60",
+        "active": "60",
         "defaultsToActive": true,
-        "inactiveValue": "0",
+        "inactive": "0",
       },
       "name": "DonutChart",
       "type": "Switch",

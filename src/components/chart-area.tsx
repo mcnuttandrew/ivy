@@ -308,11 +308,17 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
       <ViewControls
         changeViewName={changeViewName}
         cloneView={cloneView}
+        columns={columns}
         createNewView={createNewView}
         currentView={currentView}
         deleteView={deleteView}
+        setEncodingMode={setEncodingMode}
         switchView={switchView}
+        template={template}
+        templateMap={templateMap}
+        templates={templates}
         views={views}
+        userName={userName}
       />
     </div>
   );

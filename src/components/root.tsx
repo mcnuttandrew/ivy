@@ -58,7 +58,6 @@ import EncodingControls from './encoding-controls';
 import Header from './header';
 import ImportDataColumn from './import-data-column';
 import EncodingColumn from './encoding-column';
-import RelatedViews from './related-views';
 
 // wrap the split pane functionality into a HOC
 const Wrapper = (props: any): JSX.Element => {
@@ -227,13 +226,6 @@ class RootComponent extends React.Component<RootProps, State> {
           template={this.props.template}
           templateMap={this.props.templateMap}
           updateFilter={this.props.updateFilter}
-        />
-        <RelatedViews
-          columns={columns}
-          setEncodingMode={this.props.setEncodingMode}
-          template={this.props.template}
-          templateMap={this.props.templateMap}
-          templates={this.props.templates}
         />
       </div>
     );

@@ -99,7 +99,7 @@ const BeeSwarm: Template = {
     {
       name: 'static',
       type: 'Switch',
-      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: false},
+      config: {active: 'true', inactive: 'false', defaultsToActive: false},
     },
     {
       name: 'colorScheme',

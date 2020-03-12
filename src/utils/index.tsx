@@ -92,7 +92,7 @@ export function serializeTemplate(template: Template): string {
   // the commented out chunks of this are for preparring the code annotation figure
   return stringify(
     {
-      $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
+      $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.0.0.1.json',
       templateName: template.templateName,
       templateDescription: template.templateDescription,
       templateAuthor: template.templateAuthor,
@@ -100,11 +100,11 @@ export function serializeTemplate(template: Template): string {
       disallowFanOut: template.disallowFanOut,
       customCards: template.customCards,
       widgets: template.widgets,
+      code: 'SEE BODY',
       // params: template.widgets,
       // body: JSON.parse(template.code),
-      code: 'SEE BODY',
     },
-    {maxLength: 120},
+    {maxLength: 110},
   );
 }
 

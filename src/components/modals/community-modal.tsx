@@ -4,7 +4,7 @@ import {Template} from '../../types';
 import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
-import {serverPrefix, buildCounts, toExportStr} from '../../utils';
+import {serverPrefix, toExportStr} from '../../utils';
 import {TiUploadOutline} from 'react-icons/ti';
 import {AUTHORS} from '../../constants';
 import JSZip from 'jszip';
@@ -83,12 +83,9 @@ function DisplayLoadedPrograms(
     <div className="program-containers">
       {loadedTemplates.map((template, idx) => (
         <ProgramPreview
-          typeCounts={buildCounts(template)}
           buttons={['save'].map(makeButtonObject(template))}
           key={`${template.templateName}-preview-${idx}`}
-          templateName={template.templateName}
-          templateDescription={template.templateDescription}
-          templateAuthor={template.templateAuthor}
+          template={template}
           preventUse={true}
           alreadyPresent={loadedPrograms.has(template.templateName)}
           userName={userName}
