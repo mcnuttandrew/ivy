@@ -201,7 +201,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
         {
           key: TEMPLATE_BODY,
           description:
-            'The templatized visualization program. Written in hydralang, may feature conditionals and variable interpolations.',
+            'The templatized visualization program. Written in ivylang, may feature conditionals and variable interpolations.',
         },
         {
           key: WIDGET_CONFIGURATION,

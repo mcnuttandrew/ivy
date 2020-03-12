@@ -1,6 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "Condition": {
+      "properties": {
+        "query": {
+          "description": "A widget Condition query, executed raw javascript. Parameter values (the value of the current ui)\nis accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if\nthere wasn't a current value for the x dimension called xDim you could do \"!parameters.xDim\"",
+          "type": "string"
+        },
+        "queryResult": {
+          "$ref": "#/definitions/QueryResult",
+          "description": "What to do in response to the result of the query, should be either 'hide' or 'show'"
+        }
+      },
+      "type": "object"
+    },
+    "ConditionQuery": {
+      "description": "A widget Condition query, executed raw javascript. Parameter values (the value of the current ui)\nis accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if\nthere wasn't a current value for the x dimension called xDim you could do \"!parameters.xDim\"",
+      "type": "string"
+    },
     "CustomCard": {
       "properties": {
         "description": {
@@ -51,6 +68,13 @@
     },
     "GenWidget": {
       "properties": {
+        "conditions": {
+          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          },
+          "type": "array"
+        },
         "config": {
           "anyOf": [
             {
@@ -95,13 +119,6 @@
         "type": {
           "$ref": "#/definitions/WidgetType",
           "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
-        },
-        "validations": {
-          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
-          "items": {
-            "$ref": "#/definitions/Validation"
-          },
-          "type": "array"
         }
       },
       "type": "object"
@@ -206,13 +223,13 @@
     },
     "SwitchWidget": {
       "properties": {
-        "activeValue": {
+        "active": {
           "type": "string"
         },
         "defaultsToActive": {
           "type": "boolean"
         },
-        "inactiveValue": {
+        "inactive": {
           "type": "string"
         }
       },
@@ -281,25 +298,15 @@
       },
       "type": "object"
     },
-    "Validation": {
-      "properties": {
-        "query": {
-          "description": "A widget validation query, executed raw javascript. Parameter values (the value of the current ui)\nis accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if\nthere wasn't a current value for the x dimension called xDim you could do \"!parameters.xDim\"",
-          "type": "string"
-        },
-        "queryResult": {
-          "$ref": "#/definitions/QueryResult",
-          "description": "What to do in response to the result of the query, should be either 'hide' or 'show'"
-        }
-      },
-      "type": "object"
-    },
-    "ValidationQuery": {
-      "description": "A widget validation query, executed raw javascript. Parameter values (the value of the current ui)\nis accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if\nthere wasn't a current value for the x dimension called xDim you could do \"!parameters.xDim\"",
-      "type": "string"
-    },
     "Widget": {
       "properties": {
+        "conditions": {
+          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          },
+          "type": "array"
+        },
         "config": {
           "$ref": "#/definitions/T"
         },
@@ -314,19 +321,19 @@
         "type": {
           "$ref": "#/definitions/WidgetType",
           "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
-        },
-        "validations": {
-          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
-          "items": {
-            "$ref": "#/definitions/Validation"
-          },
-          "type": "array"
         }
       },
       "type": "object"
     },
     "Widget<WidgetSubType>": {
       "properties": {
+        "conditions": {
+          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          },
+          "type": "array"
+        },
         "config": {
           "anyOf": [
             {
@@ -371,13 +378,6 @@
         "type": {
           "$ref": "#/definitions/WidgetType",
           "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
-        },
-        "validations": {
-          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
-          "items": {
-            "$ref": "#/definitions/Validation"
-          },
-          "type": "array"
         }
       },
       "type": "object"

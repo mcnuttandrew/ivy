@@ -79,7 +79,7 @@ export const BLANK_TEMPLATE: Template = {
 const DATA_TABLE_CONFIG: HydraExtension = {
   renderer: DataTableRenderer,
   suggestion: () => [],
-  language: 'hydra-data-table',
+  language: 'data-table',
   blankTemplate: BLANK_TEMPLATE,
 };
 

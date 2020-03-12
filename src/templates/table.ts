@@ -1,7 +1,7 @@
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
 const TABLE_EXAMPLE: any = {
-  $schema: 'hydra-data-table',
+  $schema: 'data-table',
   columns: '[columns]',
 };
 
@@ -9,7 +9,7 @@ const DATATABLE: Template = {
   templateName: 'Data Table',
   templateDescription:
     'A good old fashioned data table, show any type of data in a tabular format. A great way to double check your data.',
-  templateLanguage: 'hydra-data-table',
+  templateLanguage: 'data-table',
   templateAuthor: AUTHORS,
   code: JSON.stringify(TABLE_EXAMPLE, null, 2),
   widgets: [

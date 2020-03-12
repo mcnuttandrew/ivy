@@ -18,10 +18,10 @@ interface ConditionalArgs {
   true?: Json;
   false?: Json;
 }
-export type HydraConditional = {$cond: ConditionalArgs};
+export type IvyLangConditional = {$cond: ConditionalArgs};
 
 /**
- * Evaluate a hydra query, used for the widget conditions and conditional checks
+ * Evaluate a ivy query, used for the widget conditions and conditional checks
  * // TODO: this system doesn't support data type checking?
  * @param query - for now uses the special widget condition langugage
  * @param templateMap - the specification/variable values defined by the gui
@@ -81,7 +81,7 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     if (Array.isArray(spec)) {
       return spec.reduce((acc: JsonArray, child) => {
         if (child && typeof child === 'object' && (child as JsonMap).$cond) {
-          const valuemap = (child as unknown) as HydraConditional;
+          const valuemap = (child as unknown) as IvyLangConditional;
           const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
           if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
             return acc.concat(walker(valuemap.$cond[queryResult]));
@@ -98,7 +98,7 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     }
     // if the object being consider is itself a conditional evaluate it
     if (typeof spec === 'object' && spec.$cond) {
-      const valuemap = (spec as unknown) as HydraConditional;
+      const valuemap = (spec as unknown) as IvyLangConditional;
       const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
       if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
         return walker(valuemap.$cond[queryResult]);
@@ -110,7 +110,7 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     return Object.entries(spec).reduce((acc: JsonMap, [key, value]: [string, Json]) => {
       // if it's a conditional, if so execute the conditional
       if (value && typeof value === 'object' && (value as JsonMap).$cond) {
-        const valuemap = (value as unknown) as HydraConditional;
+        const valuemap = (value as unknown) as IvyLangConditional;
         const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
         if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
           acc[key] = walker(valuemap.$cond[queryResult]);
