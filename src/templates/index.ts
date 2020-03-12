@@ -50,7 +50,7 @@ export const SwitchFactory: WidgetFactoryFunc = idx =>
   ({
     name: `Switch${idx}`,
     type: 'Switch',
-    config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+    config: {active: 'true', inactive: 'false', defaultsToActive: true},
   } as Widget<SwitchWidget>);
 export const SliderFactory: WidgetFactoryFunc = idx =>
   ({

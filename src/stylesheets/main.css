@@ -1275,8 +1275,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .suggestion-box-body {
-  border-top: thin solid black;
-  height: 100%;
+  border-bottom: thin solid black;
+  /* height: 100%; */
+  height: max-content;
   padding: 10px;
 }
 

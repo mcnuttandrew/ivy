@@ -205,7 +205,7 @@ export function getDefaultValueForWidget(widget: GenWidget): any {
   }
   if (widget.type === 'Switch') {
     const localW = widget as Widget<SwitchWidget>;
-    return localW.config.defaultsToActive ? localW.config.activeValue : localW.config.inactiveValue;
+    return localW.config.defaultsToActive ? localW.config.active : localW.config.inactive;
   }
   if (widget.type === 'Slider') {
     return (widget as Widget<SliderWidget>).config.defaultValue;
@@ -272,7 +272,7 @@ export function generateFullTemplateMap(widgets: GenWidget[]): TemplateMap {
     }
     if (widgetType === 'Switch') {
       const localW = widget as Widget<SwitchWidget>;
-      acc[widget.name] = localW.config.activeValue;
+      acc[widget.name] = localW.config.active;
     }
     if (widgetType === 'Slider') {
       const localW = widget as Widget<SliderWidget>;

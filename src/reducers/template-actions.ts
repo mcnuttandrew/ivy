@@ -237,7 +237,7 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       delete draftState.templateMap.paramValues[oldName];
       // update any relevant view materializations
       draftState.templateMap.systemValues.viewsToMaterialize[value] = [
-        ...draftState.templateMap.systemValues.viewsToMaterialize[oldName],
+        ...(draftState.templateMap.systemValues.viewsToMaterialize[oldName] || []),
       ];
       delete draftState.templateMap.systemValues.viewsToMaterialize[oldName];
       console.log(draftState.templateMap.systemValues.viewsToMaterialize[value]);

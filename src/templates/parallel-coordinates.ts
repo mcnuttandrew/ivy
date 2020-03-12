@@ -308,7 +308,7 @@ const ParallelCoordinates: Template = {
       acc.push({
         name: `Col${idx}Zero`,
         type: 'Switch',
-        config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+        config: {active: 'true', inactive: 'false', defaultsToActive: true},
       });
       return acc;
     }, []),

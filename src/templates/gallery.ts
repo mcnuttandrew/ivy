@@ -37,7 +37,7 @@ const Gallery: Template = {
     {
       name: 'Reverse Sort',
       type: 'Switch',
-      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
       validations: [{query: '!parameters.Sort === "null"', queryResult: 'hide'}],
     },
     {

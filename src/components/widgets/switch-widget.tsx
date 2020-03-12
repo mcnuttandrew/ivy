@@ -29,9 +29,9 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
           <IgnoreKeys style={{height: '100%'}}>
             <input
               aria-label={`Inactive value`}
-              value={config.activeValue}
+              value={config.active}
               type="text"
-              onChange={(event): void => setWidgetValue('activeValue', event.target.value, idx)}
+              onChange={(event): void => setWidgetValue('active', event.target.value, idx)}
             />
           </IgnoreKeys>
         </AddLabelToWidget>
@@ -39,9 +39,9 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
           <IgnoreKeys style={{height: '100%'}}>
             <input
               aria-label={`Inactive value`}
-              value={config.inactiveValue}
+              value={config.inactive}
               type="text"
-              onChange={(event): void => setWidgetValue('inactiveValue', event.target.value, idx)}
+              onChange={(event): void => setWidgetValue('inactive', event.target.value, idx)}
             />
           </IgnoreKeys>
         </AddLabelToWidget>
@@ -53,7 +53,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
 function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element {
   const {widget, templateMap, setTemplateValue, editMode} = props;
   const config = widget.config;
-  const isActive = templateMap.paramValues[widget.name] === config.activeValue;
+  const isActive = templateMap.paramValues[widget.name] === config.active;
 
   return (
     <div className="flex-down switch-widget">
@@ -66,7 +66,7 @@ function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element 
             onChange={(): void => {
               setTemplateValue({
                 field: widget.name,
-                text: isActive ? config.inactiveValue : config.activeValue,
+                text: isActive ? config.inactive : config.active,
               });
             }}
           />
@@ -81,8 +81,8 @@ const SwitchBuilder: WidgetBuilder = (widget, common) => {
     controls: <SwitchWidgetConfiguration {...common} widget={widget as Widget<SwitchWidget>} />,
     uiElement: <SwitchWidgetComponent {...common} widget={widget as Widget<SwitchWidget>} />,
     materializationOptions: (): {name: string; group?: string}[] => [
-      {name: (widget as Widget<SwitchWidget>).config.activeValue},
-      {name: (widget as Widget<SwitchWidget>).config.inactiveValue},
+      {name: (widget as Widget<SwitchWidget>).config.active},
+      {name: (widget as Widget<SwitchWidget>).config.inactive},
     ],
   };
 };

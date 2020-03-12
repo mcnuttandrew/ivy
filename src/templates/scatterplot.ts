@@ -57,7 +57,7 @@ const SCATTERPLOT: Template = {
     {
       name: 'Zeroes',
       type: 'Switch',
-      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
     },
     {name: `Radius`, type: 'Slider', config: {minVal: 10, maxVal: 60, step: 1, defaultValue: 15}},
   ],

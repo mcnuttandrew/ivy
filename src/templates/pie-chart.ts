@@ -104,7 +104,7 @@ const PieChart: Template = {
     {
       name: 'Sort',
       type: 'Switch',
-      config: {activeValue: 'true', inactiveValue: 'false', defaultsToActive: true},
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
     },
     {name: 'value', type: 'DataTarget', config: {allowedTypes: ['MEASURE'], required: true}},
     {name: 'aggregate', type: 'List', config: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'}},
@@ -117,7 +117,7 @@ const PieChart: Template = {
     {
       name: 'DonutChart',
       type: 'Switch',
-      config: {activeValue: '60', inactiveValue: '0', defaultsToActive: true},
+      config: {active: '60', inactive: '0', defaultsToActive: true},
     },
   ],
   code: stringify(PIECHART_EXAMPLE),
