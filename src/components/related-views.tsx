@@ -2,25 +2,51 @@ import React from 'react';
 import {GenericAction} from '../actions/index';
 import Tooltip from 'rc-tooltip';
 
-import {TiInfoLarge} from 'react-icons/ti';
-
 import GALLERY from '../templates/gallery';
 import {ColumnHeader, Template, TemplateMap} from '../types';
 import {searchDimensionsCanMatch} from '../utils';
+import ProgramPreview from './program-preview';
+import {TiThLargeOutline} from 'react-icons/ti';
 
-interface Props {
+const targetTypes = new Set(['DataTarget', 'MultiDataTarget']);
+interface PopoverContentsProps {
+  relatedViews: Template[];
+  setEncodingMode: GenericAction<string>;
+  userName: string;
+}
+function PopoverContents(props: PopoverContentsProps): JSX.Element {
+  const {relatedViews, setEncodingMode, userName} = props;
+  return (
+    <div className="related-templates-popover">
+      <h3>Related Templates</h3>
+      <h5>
+        These templates accepted the same set of data fields as your current selection and are renderable with
+        that set
+      </h5>
+      {relatedViews.map((view, idx) => {
+        return (
+          <ProgramPreview
+            key={idx}
+            template={view}
+            setEncodingMode={setEncodingMode}
+            buttons={[]}
+            userName={userName}
+          />
+        );
+      })}
+    </div>
+  );
+}
+interface RelatedViewsProps {
   columns: ColumnHeader[];
-  setEncodingMode?: GenericAction<string>;
+  setEncodingMode: GenericAction<string>;
   templateMap: TemplateMap;
   template: Template;
   templates: Template[];
+  userName: string;
 }
-const targetTypes = new Set(['DataTarget', 'MultiDataTarget']);
-export default function RelatedViews(props: Props): JSX.Element {
-  const {templates, templateMap, columns, template, setEncodingMode} = props;
-  if (template.templateName === GALLERY.templateName) {
-    return <div />;
-  }
+export default function RelatedViews(props: RelatedViewsProps): JSX.Element {
+  const {templates, templateMap, columns, template, setEncodingMode, userName} = props;
   const viewsOfInterest = template.widgets
     .filter(x => targetTypes.has(x.type))
     .reduce((acc, widget) => {
@@ -30,6 +56,7 @@ export default function RelatedViews(props: Props): JSX.Element {
       return acc;
     }, [] as string[]);
   const relatedViews: Template[] = templates.filter(x => {
+    // dont suggest the gallery or the current template
     if (x.templateName === GALLERY.templateName || x.templateName === template.templateName) {
       return false;
     }
@@ -37,42 +64,26 @@ export default function RelatedViews(props: Props): JSX.Element {
     return canBeUsed && isComplete;
   });
   return (
-    <div className="flex-down">
-      <h5 className="flex">
-        <span>Related Views</span>
-        <Tooltip
-          placement="top"
-          trigger="click"
-          overlay={
-            <div className="tooltip-internal">
-              These are templates that are completely filled out from the current view
-            </div>
-          }
-        >
-          <div>
-            <TiInfoLarge />
-          </div>
-        </Tooltip>
-      </h5>
-      {relatedViews.map(x => (
-        <div className="related-views-button" key={x.templateName}>
-          <span onClick={(): any => setEncodingMode(x.templateName)}>{x.templateName}</span>
-          <Tooltip
-            placement="top"
-            trigger="click"
-            overlay={
-              <div className="tooltip-internal flex-down">
-                <h3>{x.templateName}</h3>
-                <p>{x.templateDescription}</p>
-              </div>
-            }
-          >
-            <div>
-              <TiInfoLarge />
-            </div>
-          </Tooltip>
+    <div className="flex-down related-templates">
+      <Tooltip
+        placement="top"
+        trigger="click"
+        overlay={
+          <PopoverContents
+            relatedViews={relatedViews}
+            setEncodingMode={setEncodingMode}
+            userName={userName}
+          />
+        }
+      >
+        <div className="flex-down">
+          <span>Related Templates</span>
+          <span>
+            {relatedViews.length} options
+            <TiThLargeOutline />
+          </span>
         </div>
-      ))}
+      </Tooltip>
     </div>
   );
 }

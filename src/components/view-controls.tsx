@@ -4,6 +4,8 @@ import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction} from '../actions';
 import Tooltip from 'rc-tooltip';
 import {classnames} from '../utils';
+import {ColumnHeader, Template, TemplateMap} from '../types';
+import RelatedViews from './related-views';
 
 interface NewViewProps {
   cloneView: GenericAction<void>;
@@ -17,33 +19,6 @@ function newViewButton(props: NewViewProps): JSX.Element {
       <TiDocumentAdd />
     </div>
   );
-  //   old version kept around
-  //   return (
-  //     <Tooltip
-  //       placement="bottom"
-  //       trigger="click"
-  //       overlay={
-  //         <span className="flex-down">
-  //           <div className="flex">
-  //             <button type="button" onClick={(): any => createNewView()}>
-  //               NEW
-  //             </button>
-  //             <span>Create a new view from the initial selection.</span>
-  //           </div>
-  //           <div className="flex">
-  //             <button type="button" onClick={(): any => cloneView()}>
-  //               CLONE
-  //             </button>
-  //             <span>Clone the current view into a new view.</span>
-  //           </div>
-  //         </span>
-  //       }
-  //     >
-  //       <div className="view-control new-view">
-  //         <TiDocumentAdd />
-  //       </div>
-  //     </Tooltip>
-  //   );
 }
 
 interface ViewOptionProps {
@@ -102,17 +77,45 @@ function viewOption(props: ViewOptionProps): JSX.Element {
 interface Props {
   changeViewName: GenericAction<{idx: number; value: string}>;
   cloneView: GenericAction<void>;
+  columns: ColumnHeader[];
   createNewView: GenericAction<void>;
   currentView: string;
   deleteView: GenericAction<string>;
+  setEncodingMode: GenericAction<string>;
   switchView: GenericAction<string>;
+  template: Template;
+  templateMap: TemplateMap;
+  templates: Template[];
   views: string[];
+  userName: string;
 }
 
 export default function ViewControls(props: Props): JSX.Element {
-  const {changeViewName, cloneView, createNewView, currentView, deleteView, switchView, views} = props;
+  const {
+    changeViewName,
+    cloneView,
+    createNewView,
+    currentView,
+    deleteView,
+    switchView,
+    views,
+    columns,
+    template,
+    setEncodingMode,
+    templateMap,
+    templates,
+    userName,
+  } = props;
   return (
     <div className="chart-controls full-width flex">
+      <RelatedViews
+        columns={columns}
+        setEncodingMode={setEncodingMode}
+        template={template}
+        templateMap={templateMap}
+        templates={templates}
+        userName={userName}
+      />
       <div className="view-container">
         {views.map((view, idx) =>
           viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),

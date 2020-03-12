@@ -39,7 +39,7 @@ export default function FilterTarget({onDrop, columns}: FilterTargetProps): JSX.
         trigger="click"
         overlay={
           <div className="tooltip-internal flex-down">
-            <h3>Add a transform</h3>
+            <h3>Add a filter</h3>
             <Selector
               onChange={(x): void => {
                 onDrop({text: x});
