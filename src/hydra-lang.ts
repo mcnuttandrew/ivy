@@ -2,7 +2,7 @@ import {
   Template,
   TemplateMap,
   Widget,
-  ValidationQuery,
+  ConditionQuery,
   DataTargetWidget,
   GenWidget,
   ListWidget,
@@ -21,12 +21,12 @@ interface ConditionalArgs {
 export type HydraConditional = {$cond: ConditionalArgs};
 
 /**
- * Evaluate a hydra query, used for the widget validations and conditional checks
+ * Evaluate a hydra query, used for the widget conditions and conditional checks
  * // TODO: this system doesn't support data type checking?
- * @param query - for now uses the special widget validation langugage
+ * @param query - for now uses the special widget condition langugage
  * @param templateMap - the specification/variable values defined by the gui
  */
-function evaluateQuery(query: ValidationQuery, templateMap: TemplateMap): boolean {
+function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean {
   // TODO add a type check function to this
   // TODO can probable keep a cache of these results?
   let result = false;
@@ -130,12 +130,12 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
  */
 export function applyQueries(template: Template, templateMap: TemplateMap): Widget<any>[] {
   return template.widgets.filter(widget => {
-    if (!widget.validations || !widget.validations.length) {
+    if (!widget.conditions || !widget.conditions.length) {
       return true;
     }
-    return widget.validations.every(validation => {
-      const queryResult = evaluateQuery(validation.query, templateMap);
-      return validation.queryResult === 'show' ? queryResult : !queryResult;
+    return widget.conditions.every(condition => {
+      const queryResult = evaluateQuery(condition.query, templateMap);
+      return condition.queryResult === 'show' ? queryResult : !queryResult;
     });
   });
 }

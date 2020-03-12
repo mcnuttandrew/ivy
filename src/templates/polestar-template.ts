@@ -1,5 +1,5 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, GenWidget, Validation} from '../types';
+import {Template, GenWidget, Condition} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
 
@@ -14,7 +14,7 @@ import {
   notCount,
   simpleList,
   simpleSwitch,
-  simpleValidation,
+  simpleCondition,
   toQuote,
   used,
 } from './polestar-template-utils';
@@ -26,7 +26,7 @@ const META_COL_ROW = 'row';
 const META_COL_COL = 'column';
 const paramsInclude = (key: string): string => `Object.values(parameters).includes('\\"${key}\\"')`;
 const eitherMeta = `${paramsInclude(META_COL_ROW)} || ${paramsInclude(META_COL_COL)}`;
-const USING_META_COLS_VALIDATION: Validation = {queryResult: 'show', query: eitherMeta};
+const USING_META_COLS_VALIDATION: Condition = {queryResult: 'show', query: eitherMeta};
 
 function aggregateConditional(key: string): JsonMap {
   // old version of the query left around
@@ -146,11 +146,11 @@ const Polestar: Template = {
     makeText('Meta Columns', [USING_META_COLS_VALIDATION]),
     makeMultiTarget({
       dim: META_COL_ROW,
-      validations: [{queryResult: 'show', query: paramsInclude(META_COL_ROW)}],
+      conditions: [{queryResult: 'show', query: paramsInclude(META_COL_ROW)}],
     }),
     makeMultiTarget({
       dim: META_COL_COL,
-      validations: [{queryResult: 'show', query: paramsInclude(META_COL_COL)}],
+      conditions: [{queryResult: 'show', query: paramsInclude(META_COL_COL)}],
     }),
 
     // x & y dimensions
@@ -165,8 +165,8 @@ const Polestar: Template = {
           list: ['linear', 'log'],
           displayName: 'Scale type',
           defaultVal: toQuote('linear'),
-          validations: [
-            simpleValidation(key),
+          conditions: [
+            simpleCondition(key),
             {
               queryResult: 'show',
               query: `parameters.${key} && parameters.${key}Type === "\\"quantitative\\""`,
@@ -176,12 +176,12 @@ const Polestar: Template = {
         simpleSwitch({
           name: `${key}IncludeZero`,
           displayName: 'Include Zero',
-          validations: [simpleValidation(key)],
+          conditions: [simpleCondition(key)],
         }),
         simpleSwitch({
           name: `${key}bin`,
           displayName: 'Bin',
-          validations: [simpleValidation(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
+          conditions: [simpleCondition(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
         }),
         makeAgg(key),
       ]);
@@ -211,7 +211,7 @@ const Polestar: Template = {
         makeTypeSelect(key, 'ordinal'),
         simpleSwitch({
           name: `${key}bin`,
-          validations: [simpleValidation(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
+          conditions: [simpleCondition(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
         }),
         makeAgg(key),
       ]);

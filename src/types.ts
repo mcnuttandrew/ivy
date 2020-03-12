@@ -29,7 +29,7 @@ export interface Widget<T> {
    * Sometimes you want to decative certain values depending on the state of the UI
    * This advanced features allows you to do that
    */
-  validations?: Validation[];
+  conditions?: Condition[];
 }
 export interface DataTargetWidget {
   allowedTypes: DataType[];
@@ -137,24 +137,24 @@ export type GenWidget = Widget<WidgetSubType>;
 
 export type CustomCard = {name: string; description: string};
 /**
- * A widget validation query, executed raw javascript. Parameter values (the value of the current ui)
+ * A widget Condition query, executed raw javascript. Parameter values (the value of the current ui)
  * is accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if
  * there wasn't a current value for the x dimension called xDim you could do "!parameters.xDim"
  */
-export type ValidationQuery = string;
+export type ConditionQuery = string;
 
 /**
  * What to do in response to the result of the query, should be either 'hide' or 'show'
  */
 export type QueryResult = 'show' | 'hide';
-export interface Validation {
+export interface Condition {
   /**
    * What to do in response to the result of the query, should be either 'hide' or 'show'
    */
   queryResult: QueryResult;
 
   /**
-   * A widget validation query, executed raw javascript. Parameter values (the value of the current ui)
+   * A widget Condition query, executed raw javascript. Parameter values (the value of the current ui)
    * is accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if
    * there wasn't a current value for the x dimension called xDim you could do "!parameters.xDim"
    */

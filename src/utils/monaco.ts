@@ -26,7 +26,7 @@ function addMarkdownProps(value: any): any {
 /* eslint-disable @typescript-eslint/no-var-requires */
 const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
 const vegaSchema = require('vega/build/vega-schema.json');
-const hydraSchema = require('../../assets/hydra-template.json');
+const hydraSchema = require('../../assets/ivy.json');
 const unitVisSchema = require('unit-vis/unit-vis-schema.json');
 /* eslint-enable @typescript-eslint/no-var-requires */
 addMarkdownProps(vegaSchema);
@@ -48,7 +48,7 @@ const schemas = [
   },
   {
     schema: hydraSchema,
-    uri: 'https://kind-goldwasser-f3ce26.netlify.com/assets/hydra-template.json',
+    uri: 'https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.json',
   },
   {
     schema: mergeDeep({}, vegaLiteSchema, {

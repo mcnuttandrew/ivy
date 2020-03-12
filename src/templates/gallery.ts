@@ -38,19 +38,19 @@ const Gallery: Template = {
       name: 'Reverse Sort',
       type: 'Switch',
       config: {active: 'true', inactive: 'false', defaultsToActive: true},
-      validations: [{query: '!parameters.Sort === "null"', queryResult: 'hide'}],
+      conditions: [{query: '!parameters.Sort === "null"', queryResult: 'hide'}],
     },
     {
       name: 'minRequiredTargets',
       type: 'Slider',
       config: {minVal: 0, maxVal: 20, step: 1, defaultValue: 0},
-      validations: [{query: 'false', queryResult: 'show'}],
+      conditions: [{query: 'false', queryResult: 'show'}],
     },
     {
       name: 'maxRequiredTargets',
       type: 'Slider',
       config: {minVal: 0, maxVal: 20, step: 1, defaultValue: 0},
-      validations: [{query: 'false', queryResult: 'show'}],
+      conditions: [{query: 'false', queryResult: 'show'}],
     },
     {type: 'Text', name: 'shortcuts label', config: {text: 'Search Shortcuts'}},
     {

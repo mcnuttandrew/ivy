@@ -26,7 +26,7 @@ const SCATTERPLOT: Template = {
       name: 'xType',
       type: 'List',
       config: {allowedValues: toList(['quantitative', 'ordinal'])},
-      validations: [{queryResult: 'hide', query: '!parameters.xDim'}],
+      conditions: [{queryResult: 'hide', query: '!parameters.xDim'}],
     },
     {
       name: 'yDim',
@@ -37,20 +37,20 @@ const SCATTERPLOT: Template = {
       name: 'yType',
       type: 'List',
       config: {allowedValues: toList(['quantitative', 'ordinal'])},
-      validations: [{queryResult: 'hide', query: '!parameters.yDim'}],
+      conditions: [{queryResult: 'hide', query: '!parameters.yDim'}],
     },
     {name: 'Color', type: 'DataTarget', config: {allowedTypes: ['MEASURE', 'DIMENSION'], required: false}},
     {
       name: 'colorType',
       type: 'List',
       config: {allowedValues: toList(['ordinal', 'quantitative'])},
-      validations: [{queryResult: 'hide', query: '!parameters.Color'}],
+      conditions: [{queryResult: 'hide', query: '!parameters.Color'}],
     },
     {
       name: 'Single Color',
       type: 'List',
       config: {allowedValues: toList(['steelblue', 'blue', 'red'])},
-      validations: [{queryResult: 'hide', query: 'parameters.Color'}],
+      conditions: [{queryResult: 'hide', query: 'parameters.Color'}],
     },
 
     {name: 'OtherSettingsSection', type: 'Section', config: null},
