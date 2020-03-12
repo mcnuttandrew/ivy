@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {HydraExtension, RendererProps, Template, Suggestion} from '../types';
+import {LanguageExtension, RendererProps, Template, Suggestion} from '../types';
 import {walkTreeAndLookForFields, buildSynthesizer} from './suggestion-utils';
 import UnitVis from 'unit-vis';
 
@@ -80,7 +80,7 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
 const buildSuggestions = (spec: any): Set<string> =>
   walkTreeAndLookForFields((key: string) => key === 'key')(spec);
 
-const UNIT_VIS_CONFIG: HydraExtension = {
+const UNIT_VIS_CONFIG: LanguageExtension = {
   renderer: UnitVisRenderer,
   suggestion: buildSynthesizer(buildSuggestions, inferRemoveDataSuggestions),
   language: 'unit-vis',

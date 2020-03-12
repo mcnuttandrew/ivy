@@ -3,7 +3,7 @@ import {
   Template,
   ColumnHeader,
   Json,
-  HydraExtension,
+  LanguageExtension,
   ViewsToMaterialize,
   TemplateMap,
   RendererProps,
@@ -15,7 +15,7 @@ import ViewControls from './view-controls';
 import {GenericAction, DataRow, SetTemplateValuePayload} from '../actions';
 import Gallery from './gallery';
 import GALLERY from '../templates/gallery';
-import {evaluateHydraProgram} from '../hydra-lang';
+import {evaluateIvyProgram} from '../ivy-lang';
 import {HoverTooltip} from './tooltips';
 import {wrangle} from '../utils/wrangle';
 
@@ -29,7 +29,7 @@ interface ChartAreaProps {
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
   encodingMode: string;
-  languages: {[x: string]: HydraExtension};
+  languages: {[x: string]: LanguageExtension};
   missingFields: string[];
   setAllTemplateValues: GenericAction<TemplateMap>;
   setEncodingMode: GenericAction<string>;
@@ -120,7 +120,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
           ...templateMap,
           paramValues: {...templateMap.paramValues, ...view.paramValues},
         };
-        const spec = evaluateHydraProgram(template, newTemplateMap);
+        const spec = evaluateIvyProgram(template, newTemplateMap);
         const cardName = Object.entries(view.paramValues)
           .map(row => row.join(': '))
           .join(' ');

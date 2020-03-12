@@ -219,7 +219,7 @@ Object {
 
 exports[`#fillTemplateMapWithDefaults 5`] = `
 Object {
-  "$schema": "hydra-data-table",
+  "$schema": "data-table",
   "columns": Array [],
 }
 `;
@@ -354,7 +354,7 @@ exports[`#setTemplateValues 2`] = `
 
 exports[`#setTemplateValues 3`] = `
 "{
-  \\"$schema\\": \\"hydra-data-table\\",
+  \\"$schema\\": \\"data-table\\",
   \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]
 }"
 `;

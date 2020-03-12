@@ -55,7 +55,7 @@ export interface AppState {
   editMode: boolean;
   editorError: boolean;
 
-  languages: {[x: string]: HydraExtension};
+  languages: {[x: string]: LanguageExtension};
 
   // GUI
   codeMode: string;
@@ -115,7 +115,11 @@ export interface RendererProps {
   data: DataRow[];
   onError: (x: any) => any;
 }
-export interface HydraExtension {
+
+/**
+ * Support for a particular language
+ */
+export interface LanguageExtension {
   /**
    * React Component containing the rendering logic for this language
    */

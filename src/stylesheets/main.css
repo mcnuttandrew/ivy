@@ -163,7 +163,7 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: 0 10px;
 }
 
-#special-hydra-target {
+#atom-key-special-container {
   display: flex;
   width: fit-content;
 }
@@ -1066,7 +1066,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* SELECT STUFF */
-.hydra-selector {
+.ivy-selector {
   background-color: rgba(0, 0, 0, 0);
   border: 0;
   color: #444;
@@ -1078,17 +1078,17 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
 }
 
-.hydra-selector::-ms-expand {
+.ivy-selector::-ms-expand {
   display: none;
 }
 
-.hydra-selector:focus {
+.ivy-selector:focus {
   border-color: #aaa;
   color: #222;
   outline: none;
 }
 
-.hydra-selector option {
+.ivy-selector option {
   font-weight: normal;
   text-transform: none;
 }
@@ -1161,7 +1161,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .code-editor-controls button,
-.code-editor-controls .hydra-selector {
+.code-editor-controls .ivy-selector {
   color: #333;
 }
 
@@ -1175,12 +1175,12 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: center;
 }
 
-.DataTarget-widget-type .hydra-selector {
+.DataTarget-widget-type .ivy-selector {
   position: absolute;
   top: 4px;
 }
 
-.fixed-symbol-width .hydra-selector {
+.fixed-symbol-width .ivy-selector {
   position: relative;
   top: 0;
   width: 10px;
@@ -1213,7 +1213,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* table styles: https://tablestyler.com/ */
-.hydra-data-table {
+.ivy-data-table {
   background: #fff;
   overflow: hidden;
   border: 1px solid #069;
@@ -1221,51 +1221,51 @@ input[type="number"]::-webkit-outer-spin-button {
   text-align: center;
 }
 
-.hydra-data-table-controls {
+.ivy-data-table-controls {
   font-size: 10px;
   width: 100%;
   flex-direction: row-reverse;
 }
 
-.hydra-data-table table {
+.ivy-data-table table {
   border-collapse: collapse;
   text-align: left;
   width: 100%;
 }
 
-.hydra-data-table table td,
-.hydra-data-table table th {
+.ivy-data-table table td,
+.ivy-data-table table th {
   padding: 0 3px;
 }
 
-.hydra-data-table table thead th {
+.ivy-data-table table thead th {
   background-color: #069;
   color: #fff;
   font-size: 15px;
   font-weight: normal;
 }
 
-.hydra-data-table table thead th:first-child {
+.ivy-data-table table thead th:first-child {
   border: none;
 }
 
-.hydra-data-table table tbody td {
+.ivy-data-table table tbody td {
   color: #00496b;
   border-left: 1px solid #e1eef4;
   font-size: 12px;
   font-weight: normal;
 }
 
-.hydra-data-table table tbody .alt td {
+.ivy-data-table table tbody .alt td {
   background: #e1eef4;
   color: #00496b;
 }
 
-.hydra-data-table table tbody td:first-child {
+.ivy-data-table table tbody td:first-child {
   border-left: none;
 }
 
-.hydra-data-table table tbody tr:last-child td {
+.ivy-data-table table tbody tr:last-child td {
   border-bottom: none;
 }
 

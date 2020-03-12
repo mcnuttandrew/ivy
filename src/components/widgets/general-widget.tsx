@@ -12,7 +12,7 @@ import {TemplateMap, Widget, GenWidget, Template, ViewsToMaterialize} from '../.
 import {ColumnHeader} from '../../types';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
 import {classnames} from '../../utils';
-import {getDefaultValueForWidget} from '../../hydra-lang';
+import {getDefaultValueForWidget} from '../../ivy-lang';
 
 import WidgetConfigurationControls from './widget-configuration-controls';
 

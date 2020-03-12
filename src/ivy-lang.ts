@@ -238,7 +238,7 @@ export function constructDefaultTemplateMap(template: Template): TemplateMap {
  * @param template
  * @param templateMap - the specification/variable values defined by the gui
  */
-export function evaluateHydraProgram(template: Template, templateMap: TemplateMap): Json {
+export function evaluateIvyProgram(template: Template, templateMap: TemplateMap): Json {
   // 1. apply variables to string representation of code
   const interpolatedVals = setTemplateValues(template.code, templateMap);
   // 2. parse to json
@@ -344,7 +344,7 @@ export function generateFullTemplateMap(widgets: GenWidget[]): TemplateMap {
 //  * @param template
 //  * @param templateMap - the specification/variable values defined by the gui
 //  */
-// export function backpropHydraProgram(
+// export function backpropIvyProgram(
 //   template: Template,
 //   templateMap: TemplateMap,
 //   newoutput: string,

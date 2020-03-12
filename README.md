@@ -1,6 +1,4 @@
-# Ivy or "Untitled Data Exploration Experience"
-
-### (Depending on who you ask)
+# Ivy - an Integrated Visualization Editor
 
 For local development install node deps and start development server as you normally would:
 

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {HydraExtension, RendererProps, JsonMap, Template} from '../types';
+import {LanguageExtension, RendererProps, JsonMap, Template} from '../types';
 import TABLE from '../templates/table';
 
 import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
@@ -21,8 +21,8 @@ function DataTableRenderer(props: RendererProps): JSX.Element {
     ((columns as any) || []).reduce((acc: any, column: any) => ({...acc, [column]: row[column]}), {} as any),
   );
   return (
-    <div className="hydra-data-table">
-      <div className="flex hydra-data-table-controls">
+    <div className="ivy-data-table">
+      <div className="flex ivy-data-table-controls">
         <button onClick={(): any => setPage(0)}>Reset</button>
         <button disabled={!nextPageExists} onClick={(): any => nextPageExists && setPage(page + 1)}>
           Next Page
@@ -76,7 +76,7 @@ export const BLANK_TEMPLATE: Template = {
   widgets: [],
 };
 
-const DATA_TABLE_CONFIG: HydraExtension = {
+const DATA_TABLE_CONFIG: LanguageExtension = {
   renderer: DataTableRenderer,
   suggestion: () => [],
   language: 'data-table',

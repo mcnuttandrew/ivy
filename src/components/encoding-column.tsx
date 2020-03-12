@@ -7,12 +7,19 @@ import {
   SetWidgetValuePayload,
   MoveWidgetPayload,
 } from '../actions';
-import {Template, GenWidget, TemplateMap, HydraExtension, ViewsToMaterialize, ColumnHeader} from '../types';
+import {
+  Template,
+  GenWidget,
+  TemplateMap,
+  LanguageExtension,
+  ViewsToMaterialize,
+  ColumnHeader,
+} from '../types';
 import {classnames, toSet} from '../utils';
 import {switchCommon} from '../constants';
 
 import GeneralWidget from './widgets/general-widget';
-import {applyQueries} from '../hydra-lang';
+import {applyQueries} from '../ivy-lang';
 import {updateThumbnail} from '../utils';
 import {AddLabelToWidget} from './widgets/widget-common';
 import Selector from './selector';
@@ -26,7 +33,7 @@ interface EncodingColumnProps {
   duplicateWidget: GenericAction<number>;
   editMode: boolean;
   height?: number;
-  languages: {[x: string]: HydraExtension};
+  languages: {[x: string]: LanguageExtension};
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
   removeWidget: GenericAction<number>;
