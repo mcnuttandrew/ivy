@@ -1,4 +1,4 @@
-import {setTemplateValues, generateFullTemplateMap} from '../hydra-lang';
+import {setTemplateValues, generateFullTemplateMap} from '../ivy-lang';
 import {GenWidget, Suggestion, ColumnHeader} from '../types';
 import {DataTargetFactory} from '../templates';
 import {trim} from '../utils';

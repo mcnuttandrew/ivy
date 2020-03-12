@@ -1,7 +1,7 @@
 import produce from 'immer';
 import {ActionResponse, AppState, ViewCatalogEntry} from '../types';
 import GALLERY from '../templates/gallery';
-import {constructDefaultTemplateMap} from '../hydra-lang';
+import {constructDefaultTemplateMap} from '../ivy-lang';
 
 const BLANK_TEMPLATE_MAP = constructDefaultTemplateMap(GALLERY);
 const BLANK_CATALOG_ENTRY: ViewCatalogEntry = {

@@ -26,7 +26,7 @@ export default function Header(props: HeaderProps): JSX.Element {
           className="flex cursor-pointer center"
           onClick={(): any => setEncodingMode(GALLERY.templateName)}
         >
-          <img alt="hydra logo" src="logo.png" />
+          <img alt="ivy logo" src="logo.png" />
           <div>Ivy</div>
         </div>
         <div className="flex state-action-controls">

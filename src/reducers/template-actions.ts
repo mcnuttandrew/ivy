@@ -19,7 +19,7 @@ import {
   ViewsToMaterialize,
 } from '../types';
 import {deserializeTemplate, trim, removeFirstInstanceOf, bagDifference} from '../utils';
-import {evaluateHydraProgram, constructDefaultTemplateMap} from '../hydra-lang';
+import {evaluateIvyProgram, constructDefaultTemplateMap} from '../ivy-lang';
 
 import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite';
 
@@ -182,7 +182,7 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
   const newTemplate = JSON.parse(JSON.stringify(state.languages[language].blankTemplate));
   newTemplate.templateAuthor = state.userName;
   if (fork == 'output') {
-    newTemplate.code = stringify(evaluateHydraProgram(state.currentTemplateInstance, state.templateMap));
+    newTemplate.code = stringify(evaluateIvyProgram(state.currentTemplateInstance, state.templateMap));
   } else if (fork === 'body') {
     newTemplate.code = state.currentTemplateInstance.code;
   } else if (fork === 'all') {

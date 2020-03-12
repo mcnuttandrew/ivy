@@ -30,7 +30,7 @@ export default function Selector(props: SelectorProps): JSX.Element {
   return (
     <select
       aria-label="general purpose selector"
-      className="hydra-selector"
+      className="ivy-selector"
       value={selectedValue}
       onChange={({target: {value}}): any => onChange(value)}
     >

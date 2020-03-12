@@ -5,7 +5,7 @@ import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
-import {Template, GenWidget, Suggestion, HydraExtension, ColumnHeader, TemplateMap} from '../types';
+import {Template, GenWidget, Suggestion, LanguageExtension, ColumnHeader, TemplateMap} from '../types';
 import {takeSuggestion} from '../utils/index';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
   columns: ColumnHeader[];
   currentCode: string;
   handleCodeUpdate: (code: string) => void;
-  languages: {[x: string]: HydraExtension};
+  languages: {[x: string]: LanguageExtension};
   setAllTemplateValues: GenericAction<TemplateMap>;
   template: Template;
 }

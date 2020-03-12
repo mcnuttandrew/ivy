@@ -1,4 +1,4 @@
-import {HydraExtension} from '../types';
+import {LanguageExtension} from '../types';
 
 import React from 'react';
 import {Vega} from 'react-vega';
@@ -63,7 +63,7 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
   return suggestions;
 }
 
-const VEGA: HydraExtension = {
+const VEGA: LanguageExtension = {
   renderer: VegaRenderer,
   suggestion: buildSynthesizer(() => new Set(), inferRemoveDataSuggestions),
   language: 'vega',

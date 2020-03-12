@@ -34,7 +34,7 @@ import {
   getEditorLineWrap,
   writeEditorLineWrap,
 } from '../utils/local-storage';
-import {evaluateHydraProgram, getMissingFields} from '../hydra-lang';
+import {evaluateIvyProgram, getMissingFields} from '../ivy-lang';
 
 import {Spec} from 'vega-typings';
 import {
@@ -42,7 +42,7 @@ import {
   ColumnHeader,
   DataReducerState,
   GenWidget,
-  HydraExtension,
+  LanguageExtension,
   Json,
   Template,
   TemplateMap,
@@ -90,7 +90,7 @@ interface RootProps {
   editorError: null | string;
   encodingMode: string;
   fillableFields: Set<string>;
-  languages: {[x: string]: HydraExtension};
+  languages: {[x: string]: LanguageExtension};
   missingFields: string[];
   openModal: string | null;
   showGUIView: boolean;
@@ -126,7 +126,7 @@ interface RootProps {
   moveWidget: GenericAction<MoveWidgetPayload>;
   readInTemplate: GenericAction<HandleCodePayload>;
   readInTemplateMap: GenericAction<HandleCodePayload>;
-  recieveLanguages: GenericAction<{[x: string]: HydraExtension}>;
+  recieveLanguages: GenericAction<{[x: string]: LanguageExtension}>;
   recieveTemplates: GenericAction<Template[]>;
   removeWidget: GenericAction<number>;
   saveCurrentTemplate: GenericAction<void>;
@@ -418,7 +418,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   const templateMap = base.templateMap;
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
   const isGallery = GALLERY.templateName === template.templateName;
-  const spec = evaluateHydraProgram(template, templateMap);
+  const spec = evaluateIvyProgram(template, templateMap);
   return {
     canRedo: base.redoStack.length >= 1,
     canUndo: base.undoStack.length >= 1,

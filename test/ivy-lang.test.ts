@@ -1,10 +1,10 @@
 import PolestarTemplate from '../src/templates/polestar-template';
 import {
   applyConditionals,
-  evaluateHydraProgram,
+  evaluateIvyProgram,
   constructDefaultTemplateMap,
-  // backpropHydraProgram,
-} from '../src/hydra-lang';
+  // backpropIvyProgram,
+} from '../src/ivy-lang';
 import {TemplateMap} from '../src/types';
 import Scatterplot from '../src/templates/scatterplot';
 import GALLERY from '../src/templates/gallery';
@@ -26,25 +26,25 @@ test('#applyConditionals', () => {
   expect(applyConditionals(exampleTemplateMap2)(PARSED_CODE)).toMatchSnapshot();
 });
 
-test('evaluateHydraProgram polestar template', () => {
+test('evaluateIvyProgram polestar template', () => {
   const templateMap = constructDefaultTemplateMap(PolestarTemplate);
 
-  expect(evaluateHydraProgram(PolestarTemplate, templateMap)).toMatchSnapshot();
+  expect(evaluateIvyProgram(PolestarTemplate, templateMap)).toMatchSnapshot();
   const templateMap2 = produce(templateMap, draftState => {
     draftState.paramValues.X = '"GooD Dimension"';
     draftState.paramValues.XIncludeZero = 'false';
   });
-  expect(evaluateHydraProgram(PolestarTemplate, templateMap2)).toMatchSnapshot();
+  expect(evaluateIvyProgram(PolestarTemplate, templateMap2)).toMatchSnapshot();
 
   const templateMap3 = produce(templateMap, draftState => {
     draftState.paramValues.X = '"Origin"';
     draftState.paramValues.XType = '"nominal"';
     draftState.paramValues.ColorAggSimple = '"count"';
   });
-  expect(evaluateHydraProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
+  expect(evaluateIvyProgram(PolestarTemplate, templateMap3)).toMatchSnapshot();
 
   expect(
-    evaluateHydraProgram(GALLERY, {
+    evaluateIvyProgram(GALLERY, {
       paramValues: {
         dataTargetSearch: [],
         SearchKey: '"should result"',
@@ -86,23 +86,23 @@ test('evaluateHydraProgram polestar template', () => {
 //   },
 //   "height": 300
 // }`;
-// test.only('#backpropHydraProgram', () => {
+// test.only('#backpropIvyProgram', () => {
 //   // const expectEqual = (a: string, b: string): void => expect(JSON.parse(a)).toEqual(JSON.parse(b));
 //   const templateMap = constructDefaultTemplateMap(Scatterplot);
 
 //   // no updates for invalid json
-//   const result1 = backpropHydraProgram(Scatterplot, templateMap, update1);
+//   const result1 = backpropIvyProgram(Scatterplot, templateMap, update1);
 //   expect(JSON.parse(result1.template.code)).toEqual(JSON.parse(Scatterplot.code));
 //   expect(result1.templateMap).toEqual(templateMap);
 
 //   // update the template where appropriate
-//   const result2 = backpropHydraProgram(Scatterplot, templateMap, update2);
+//   const result2 = backpropIvyProgram(Scatterplot, templateMap, update2);
 //   const withHeight = JSON.stringify({...JSON.parse(Scatterplot.code), height: 300});
 //   expect(JSON.parse(result2.template.code)).toEqual(JSON.parse(withHeight));
 //   expect(result2.templateMap).toEqual(templateMap);
 
 //   // update the template where appropriate
-//   const result3 = backpropHydraProgram(Scatterplot, templateMap, update3);
+//   const result3 = backpropIvyProgram(Scatterplot, templateMap, update3);
 //   expect(JSON.parse(result3.template.code)).toEqual(JSON.parse(withHeight));
 //   expect(result3.templateMap).toEqual({...templateMap, yDim: 'Cylinders'});
 // });

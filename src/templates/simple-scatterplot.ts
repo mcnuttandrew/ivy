@@ -14,7 +14,7 @@ const SCATTERPLOT: Template = {
         allowedValues: ['"quantitative"', '"ordinal"'].map(x => ({display: x, value: x})),
         defaultValue: '"ordinal"',
       },
-      validations: [{query: '!parameters.Color', queryResult: 'hide'}],
+      conditions: [{query: '!parameters.Color', queryResult: 'hide'}],
     },
     {
       name: 'Single Color',
@@ -23,7 +23,7 @@ const SCATTERPLOT: Template = {
         allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})),
         defaultValue: '"steelblue"',
       },
-      validations: [{query: 'parameters.Color', queryResult: 'hide'}],
+      conditions: [{query: 'parameters.Color', queryResult: 'hide'}],
     },
   ],
   templateName: 'Simple Scatterplot',

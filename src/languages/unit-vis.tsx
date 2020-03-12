@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
-import {HydraExtension, RendererProps, Template, Suggestion} from '../types';
+import {LanguageExtension, RendererProps, Template, Suggestion} from '../types';
 import {walkTreeAndLookForFields, buildSynthesizer} from './suggestion-utils';
 import UnitVis from 'unit-vis';
 
+const QUERY_KEY = 'atom-key-special-container';
 function UnitVisRenderer(props: RendererProps): JSX.Element {
   const {spec, data} = props;
   const specString = JSON.stringify(spec);
@@ -18,14 +19,14 @@ function UnitVisRenderer(props: RendererProps): JSX.Element {
       return;
     }
     specCopy.data = {values: data};
-    const oldSvg = document.querySelector('#special-hydra-target svg');
+    const oldSvg = document.querySelector(`#${QUERY_KEY} svg`);
     if (oldSvg) {
       oldSvg.remove();
     }
     if (spec) {
       try {
         // @ts-ignore
-        UnitVis('special-hydra-target', specCopy);
+        UnitVis(QUERY_KEY, specCopy);
       } catch (e) {
         console.log('UnitVis Crash', e);
       }
@@ -34,7 +35,7 @@ function UnitVisRenderer(props: RendererProps): JSX.Element {
 
   return (
     <div>
-      <div id="special-hydra-target" />
+      <div id={QUERY_KEY} />
     </div>
   );
 }
@@ -79,7 +80,7 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
 const buildSuggestions = (spec: any): Set<string> =>
   walkTreeAndLookForFields((key: string) => key === 'key')(spec);
 
-const UNIT_VIS_CONFIG: HydraExtension = {
+const UNIT_VIS_CONFIG: LanguageExtension = {
   renderer: UnitVisRenderer,
   suggestion: buildSynthesizer(buildSuggestions, inferRemoveDataSuggestions),
   language: 'unit-vis',

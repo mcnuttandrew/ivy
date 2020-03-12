@@ -2,7 +2,7 @@ import React from 'react';
 import {TiDelete, TiCog, TiExportOutline} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
-import {TemplateMap, GenWidget, Validation} from '../../types';
+import {TemplateMap, GenWidget, Condition} from '../../types';
 import {ColumnHeader} from '../../types';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
@@ -25,47 +25,47 @@ interface PlacementControlsProps {
   widget: GenWidget;
 }
 const dontShowUsedIf = new Set(['Section', 'Text']);
-interface ValidationBuilderProps {
+interface ConditionBuilderProps {
   idx: number;
   setWidgetValue: any;
   widget: GenWidget;
 }
 
-type TalidationUpdateLens = (d: Validation, val: any) => Validation;
+type TalidationUpdateLens = (d: Condition, val: any) => Condition;
 type TalidationUpdate = (jdx: number, updater: TalidationUpdateLens) => (value: any) => void;
-const fromStr: TalidationUpdateLens = (d, value): any => ({...d, queryResult: value} as Validation);
+const fromStr: TalidationUpdateLens = (d, value): any => ({...d, queryResult: value} as Condition);
 const fromEvent: TalidationUpdateLens = (d, event): any => ({...d, query: event.target.value});
 
-function ValidationBuilder(props: ValidationBuilderProps): JSX.Element {
+function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
   const {widget, setWidgetValue, idx} = props;
-  const validations = widget.validations || [];
+  const conditions = widget.conditions || [];
 
-  const validationUpdate: TalidationUpdate = (jdx, updater) => (val): any => {
-    const mapper = (d: Validation, kdx: number): any => (jdx !== kdx ? {...d} : updater(d, val));
-    setWidgetValue('validations', validations.map(mapper), idx);
+  const conditionUpdate: TalidationUpdate = (jdx, updater) => (val): any => {
+    const mapper = (d: Condition, kdx: number): any => (jdx !== kdx ? {...d} : updater(d, val));
+    setWidgetValue('conditions', conditions.map(mapper), idx);
   };
 
   return (
     <React.Fragment>
-      <h3>Validations</h3>
+      <h3>Conditions</h3>
       <h5>(Logic for showing/hiding this widget)</h5>
-      {validations.map((validation, jdx) => {
+      {conditions.map((condition, jdx) => {
         return (
-          <div className="flex" key={`validation-${jdx}`}>
+          <div className="flex" key={`condition-${jdx}`}>
             <AddLabelToWidget label="Query Result">
               <Selector
                 options={['show', 'hide'].map(key => ({display: key, value: key}))}
-                selectedValue={validation.queryResult}
-                onChange={validationUpdate(jdx, fromStr)}
+                selectedValue={condition.queryResult}
+                onChange={conditionUpdate(jdx, fromStr)}
               />
             </AddLabelToWidget>
             <AddLabelToWidget label="Query">
               <IgnoreKeys style={{height: '100%'}}>
                 <input
-                  aria-label={`Validation query`}
-                  value={validation.query}
+                  aria-label={`condition query`}
+                  value={condition.query}
                   type="text"
-                  onChange={validationUpdate(jdx, fromEvent)}
+                  onChange={conditionUpdate(jdx, fromEvent)}
                 />
               </IgnoreKeys>
             </AddLabelToWidget>
@@ -75,10 +75,10 @@ function ValidationBuilder(props: ValidationBuilderProps): JSX.Element {
       <button
         type="button"
         onClick={(): void => {
-          setWidgetValue('validations', validations.concat({query: 'true', queryResult: 'show'}), idx);
+          setWidgetValue('conditions', conditions.concat({query: 'true', queryResult: 'show'}), idx);
         }}
       >
-        Add a validation
+        Add a condition
       </button>
     </React.Fragment>
   );
@@ -115,7 +115,7 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
               <h5>{`Widget is currently ${widgetInUse(code, widget.name) ? 'in use' : 'not used'}`}</h5>
             )}
             {controls}
-            <ValidationBuilder widget={widget} setWidgetValue={setWidgetValue} idx={idx} />
+            <ConditionBuilder widget={widget} setWidgetValue={setWidgetValue} idx={idx} />
             <h3>Other Actions</h3>
             <div className="flex">
               <button onClick={duplicateWidget}>

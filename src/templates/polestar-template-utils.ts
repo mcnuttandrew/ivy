@@ -7,8 +7,8 @@ import {
   SwitchWidget,
   Widget,
   TextWidget,
-  Validation,
-  ValidationQuery,
+  Condition,
+  ConditionQuery,
 } from '../types';
 import {toList} from '../utils';
 const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
@@ -18,46 +18,46 @@ const justCountAgg = toList(['none', 'count']);
 justCountAgg[0].value = undefined;
 const spatialAggs = [...justCountAgg, ...toList(['min', 'max', 'sum', 'mean', 'median', 'mode'])];
 
-export const used = (x: string): ValidationQuery => `parameters.${x}`;
-export const unused = (x: string): ValidationQuery => `!parameters.${x}`;
-export const notCount = (key: string): ValidationQuery => `parameters.${key} !== "\\"COUNT\\""`;
+export const used = (x: string): ConditionQuery => `parameters.${x}`;
+export const unused = (x: string): ConditionQuery => `!parameters.${x}`;
+export const notCount = (key: string): ConditionQuery => `parameters.${key} !== "\\"COUNT\\""`;
 
 /**
- * build a simple validation
+ * build a simple condition
  * @param key - the name of the dimension that will be check if it's around
  */
-export const simpleValidation = (key: string): Validation => ({queryResult: 'hide', query: unused(key)});
+export const simpleCondition = (key: string): Condition => ({queryResult: 'hide', query: unused(key)});
 
 export const makeDataTarget = (dim: string): Widget<DataTargetWidget> => ({
   name: dim,
   type: 'DataTarget',
   config: {allowedTypes: ALLDATA_TYPES, required: false},
-  validations: [],
+  conditions: [],
 });
 
 interface MakeMultiTargetType {
   dim: string;
-  validations: Validation[];
+  conditions: Condition[];
 }
-export const makeMultiTarget = ({dim, validations}: MakeMultiTargetType): Widget<MultiDataTargetWidget> =>
+export const makeMultiTarget = ({dim, conditions}: MakeMultiTargetType): Widget<MultiDataTargetWidget> =>
   ({
     name: dim,
     type: 'MultiDataTarget',
     config: {allowedTypes: ALLDATA_TYPES, required: true, minNumberOfTargets: 0},
-    validations,
+    conditions,
   } as Widget<MultiDataTargetWidget>);
 
-export const makeText = (textLabel: string, validations: Validation[]): Widget<TextWidget> => ({
+export const makeText = (textLabel: string, conditions: Condition[]): Widget<TextWidget> => ({
   name: textLabel,
   type: 'Text',
   config: {text: textLabel},
-  validations,
+  conditions,
 });
-export const makeSection = (sectionLabel: string, validations: Validation[]): Widget<SectionWidget> => ({
+export const makeSection = (sectionLabel: string, conditions: Condition[]): Widget<SectionWidget> => ({
   name: sectionLabel,
   type: 'Section',
   config: null,
-  validations,
+  conditions,
 });
 
 type displayType = {display: any; value: any};
@@ -66,14 +66,14 @@ interface SimpleListType {
   list: string[] | displayType[];
   defaultVal?: string;
   displayName?: string;
-  validations?: Validation[];
+  conditions?: Condition[];
 }
 export const simpleList = ({
   name,
   list,
   defaultVal,
   displayName,
-  validations,
+  conditions,
 }: SimpleListType): Widget<ListWidget> => {
   const firstDisplayValue = (list[0] as displayType).display;
   return {
@@ -84,7 +84,7 @@ export const simpleList = ({
       allowedValues: firstDisplayValue ? (list as displayType[]) : toList(list as string[]),
       defaultValue: defaultVal ? defaultVal : firstDisplayValue ? firstDisplayValue : (list as string[])[0],
     },
-    validations: validations || [],
+    conditions: conditions || [],
   };
 };
 
@@ -94,7 +94,7 @@ export const makeAgg = (key: string): Widget<ListWidget> =>
     list: spatialAggs,
     displayName: `Aggregate`,
     defaultVal: toQuote('none'),
-    validations: [
+    conditions: [
       {
         queryResult: 'show',
         query: `${used(key)} && ${notCount(key)} && parameters.${key}Type === "\\"quantitative\\""`,
@@ -108,18 +108,18 @@ export const makeTypeSelect = (key: string, defaultVal: string): Widget<ListWidg
     list: VegaLiteDataTypes,
     displayName: 'Data type',
     defaultVal: toQuote(defaultVal),
-    validations: [simpleValidation(key), {queryResult: 'show', query: `${used(key)} && ${notCount(key)}`}],
+    conditions: [simpleCondition(key), {queryResult: 'show', query: `${used(key)} && ${notCount(key)}`}],
   });
 
 interface SimpleSwitchType {
   name: string;
   displayName?: string;
-  validations?: Validation[];
+  conditions?: Condition[];
 }
-export const simpleSwitch = ({name, displayName, validations}: SimpleSwitchType): Widget<SwitchWidget> => ({
+export const simpleSwitch = ({name, displayName, conditions}: SimpleSwitchType): Widget<SwitchWidget> => ({
   name,
   type: 'Switch',
   displayName: displayName || null,
   config: {active: 'true', inactive: 'false', defaultsToActive: true},
-  validations: validations || [],
+  conditions: conditions || [],
 });

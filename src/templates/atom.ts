@@ -12,7 +12,7 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
       name: `Key${idx}`,
       type: 'DataTarget',
       config: {allowedTypes: ['DIMENSION'], required: false},
-      validations: [
+      conditions: [
         !NEVER_HIDE && {
           queryResult: 'hide' as QueryResult,
           queryTarget: `Key${idx}`,
@@ -25,7 +25,7 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
       defaultVal: '"groupby"',
       displayName: `Key${idx}Type`,
       list: [...TYPES.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
-      validations: [
+      conditions: [
         !NEVER_HIDE && {queryResult: 'hide' as QueryResult, query: `!parameters.Key${idx - 1}`},
       ].filter(d => d),
     }),
@@ -34,7 +34,7 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
       defaultVal: idx % 2 ? '"fillX"' : '"fillY"',
       displayName: `Key${idx}AspectRatio`,
       list: [...ASPECT_RATIOS.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
-      validations: [
+      conditions: [
         !NEVER_HIDE && {queryResult: 'hide' as QueryResult, query: `!parameters.Key${idx - 1}`},
       ].filter(d => d),
     }),
@@ -43,7 +43,7 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
       displayName: 'NumBins',
       type: 'Slider',
       config: {minVal: 1, maxVal: 15, step: 1, defaultValue: 10},
-      validations: [{queryResult: 'hide', query: `parameters.Key${idx}Type !== '"bin"'`}],
+      conditions: [{queryResult: 'hide', query: `parameters.Key${idx}Type !== '"bin"'`}],
     } as Widget<SliderWidget>,
   ];
 

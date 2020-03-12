@@ -3,7 +3,7 @@ import {ShortcutsWidget, Widget, Shortcut} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {IgnoreKeys} from 'react-hotkeys';
 import {AddLabelToWidget} from './widget-common';
-import {evaluateShortcut} from '../../hydra-lang';
+import {evaluateShortcut} from '../../ivy-lang';
 
 function ShortcutsWidgetConfiguration(props: GeneralWidget<ShortcutsWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;

@@ -59,7 +59,7 @@ Object {
 }
 `;
 
-exports[`evaluateHydraProgram polestar template 1`] = `
+exports[`evaluateIvyProgram polestar template 1`] = `
 Object {
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {},
@@ -71,7 +71,7 @@ Object {
 }
 `;
 
-exports[`evaluateHydraProgram polestar template 2`] = `
+exports[`evaluateIvyProgram polestar template 2`] = `
 Object {
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
@@ -92,7 +92,7 @@ Object {
 }
 `;
 
-exports[`evaluateHydraProgram polestar template 3`] = `
+exports[`evaluateIvyProgram polestar template 3`] = `
 Object {
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
@@ -110,7 +110,7 @@ Object {
 }
 `;
 
-exports[`evaluateHydraProgram polestar template 4`] = `
+exports[`evaluateIvyProgram polestar template 4`] = `
 Object {
   "$schema": "galleryLang",
   "Reverse Sort": "[Reverse Sort]",

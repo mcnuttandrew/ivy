@@ -8,7 +8,7 @@ import {
 } from '../types';
 import {setTemplateValue} from './template-actions';
 import {getOrMakeColumn, toSet} from '../utils';
-import {applyQueries} from '../hydra-lang';
+import {applyQueries} from '../ivy-lang';
 
 export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payload) => {
   const template = state.currentTemplateInstance;

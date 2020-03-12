@@ -13,7 +13,7 @@ import {
 import Thumbnail from './thumbnail';
 import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
-import {Template, HydraExtension} from '../types';
+import {Template, LanguageExtension} from '../types';
 import {classnames, NULL, getTemplateName} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
 import GALLERY from '../templates/gallery';
@@ -25,7 +25,7 @@ interface Props {
   deleteTemplate: GenericAction<string>;
   editMode: boolean;
   encodingMode: string;
-  languages: {[x: string]: HydraExtension};
+  languages: {[x: string]: LanguageExtension};
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   saveCurrentTemplate: GenericAction<void>;
   setBlankTemplate: GenericAction<{fork: string | null; language: string}>;

@@ -1,7 +1,7 @@
 import {SetTemplateValuePayload} from '../actions';
 import {
   ColumnHeader,
-  HydraExtension,
+  LanguageExtension,
   ListWidget,
   RendererProps,
   Suggestion,
@@ -122,7 +122,7 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
   return suggestions;
 }
 
-const VEGA_LITE_CONFIG: HydraExtension = {
+const VEGA_LITE_CONFIG: LanguageExtension = {
   renderer: VegaLiteRenderer,
   suggestion: buildSynthesizer(inferPossibleDataTargets, inferRemoveDataSuggestions),
   language: 'vega-lite',
