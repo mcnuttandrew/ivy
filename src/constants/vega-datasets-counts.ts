@@ -170,6 +170,13 @@ const metaData: any = {
     MEASURE: 2,
     DIMENSION: 1,
   },
+  'ohlc.json': {
+    file: 'ohlc.json',
+    length: 44,
+    TIME: 1,
+    MEASURE: 5,
+    DIMENSION: 1,
+  },
   'points.json': {
     file: 'points.json',
     length: 100,
@@ -312,8 +319,8 @@ const metaData: any = {
   'sf-temps.csv': {
     file: 'sf-temps.csv',
     length: 8759,
-    MEASURE: 1,
     TIME: 1,
+    MEASURE: 1,
   },
   'sp500.csv': {
     file: 'sp500.csv',
@@ -350,6 +357,14 @@ const metaData: any = {
     length: 42049,
     MEASURE: 3,
     DIMENSION: 3,
+  },
+  'unemployment.tsv': {
+    file: 'unemployment.tsv',
+    length: 0,
+  },
+  'flights-200k.arrow': {
+    file: 'flights-200k.arrow',
+    length: 0,
   },
 };
 
