@@ -82,7 +82,12 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
         <Reset
           tooltipLabel={`Reset to list to the default value: ${widget.config.defaultValue}`}
           className="clear-option cursor-pointer"
-          onClick={(): any => setTemplateValue({field: widget.name, text: config.defaultValue})}
+          onClick={(): any =>
+            setTemplateValue({
+              field: widget.name,
+              text: config.defaultValue || config.allowedValues[0].value,
+            })
+          }
         />
       </div>
     </div>

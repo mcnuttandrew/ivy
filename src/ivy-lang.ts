@@ -34,7 +34,7 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
     const generatedContent = new Function('parameters', `return ${query}`);
     result = Boolean(generatedContent(templateMap.paramValues));
   } catch (e) {
-    console.log('Query Evalu Error', e, query);
+    console.log('Query Evalu Error', e, query, templateMap.paramValues);
   }
   return result;
 }
@@ -55,10 +55,7 @@ function shouldUpdateContainerWithValue(
   conditional: ConditionalArgs,
 ): boolean {
   // if a conditional doesn't want that value to get added to the traversing object then ingnore it
-  return (
-    (queryResult === 'false' && !conditional[queryResult]) ||
-    (queryResult === 'true' && !conditional[queryResult])
-  );
+  return !Object.keys(conditional).includes(queryResult);
 }
 
 // syntax example
@@ -68,6 +65,7 @@ function shouldUpdateContainerWithValue(
 //   tooltip: true,
 //   color: {$cond: {true: '[Single Color]', false: null, query: {Color: null}}},
 // }}
+// TODO: a lot of the logic in this could be cleaned up into a pretty combinator pattern
 /**
  * Walk across the tree and apply conditionals are appropriate,
  * example conditional syntax: {$cond: {true: '[Single Color]', false: null, query: '!parameters.Color}}

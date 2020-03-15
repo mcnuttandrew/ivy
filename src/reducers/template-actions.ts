@@ -215,7 +215,7 @@ export const deleteTemplate: ActionResponse<string> = (state, payload) => {
   });
 };
 
-const topLevelKeys = new Set(['displayName', 'validations']);
+const topLevelKeys = new Set(['displayName', 'conditions']);
 export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, payload) => {
   const {key, value, idx} = payload;
   // const template = state.currentTemplateInstance;

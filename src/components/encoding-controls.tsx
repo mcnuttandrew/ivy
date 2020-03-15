@@ -87,6 +87,7 @@ export default function EncodingControls(props: Props): JSX.Element {
       ),
       label: 'New',
       tooltip: 'Create a new blank template, good if you are pasting in some code from somewhere else.',
+      delay: 5,
     },
     {
       disabled: onGallery,
@@ -115,6 +116,7 @@ export default function EncodingControls(props: Props): JSX.Element {
       label: 'Fork',
       tooltip:
         'Create a new template starting from the current value of "Export To JSON" as the basis of the template.',
+      delay: 5,
     },
     {
       disabled: !canSave,
@@ -159,7 +161,7 @@ export default function EncodingControls(props: Props): JSX.Element {
         <div className="encoding-mode-selector flex-down">
           <div className="flex space-between full-width flex-wrap">
             {FULL_BUTTONS.map(button => {
-              const {disabled, onClick, customTooltip, icon, label, tooltip} = button;
+              const {disabled, onClick, customTooltip, icon, label, tooltip, delay} = button;
               const iconComponent = (
                 <React.Fragment>
                   <div className="template-modification-control-icon">{icon}</div>
@@ -168,7 +170,7 @@ export default function EncodingControls(props: Props): JSX.Element {
               );
               if (customTooltip) {
                 return (
-                  <HoverTooltip message={tooltip} key={button.label}>
+                  <HoverTooltip message={tooltip} key={button.label} delay={delay}>
                     <div
                       className={classnames({
                         'template-modification-control': true,

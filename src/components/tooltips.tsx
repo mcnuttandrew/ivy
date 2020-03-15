@@ -19,14 +19,15 @@ export function SimpleTooltip(props: SimpleTooltipProps): JSX.Element {
 interface HoverTooltipProps {
   children: JSX.Element;
   message: string;
+  delay?: number;
 }
 export function HoverTooltip(props: HoverTooltipProps): JSX.Element {
-  const {children, message} = props;
+  const {children, message, delay} = props;
   return (
     <Tooltip
       placement="top"
       trigger="hover"
-      mouseEnterDelay={1.2}
+      mouseEnterDelay={delay || 1.2}
       overlay={<span className="tooltip-internal">{message}</span>}
     >
       {children}
