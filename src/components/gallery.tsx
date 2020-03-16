@@ -192,6 +192,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
         key={`${template.templateName}-${idx}`}
         setEncodingMode={setEncodingMode}
         template={template}
+        hideMatches={false}
         userName={userName}
       />
     );

@@ -21,6 +21,7 @@ interface Props {
   userName: string;
   recieveTemplates: GenericAction<Template[]>;
   setUserName: GenericAction<string>;
+  setEncodingMode: GenericAction<string>;
 }
 
 interface QueryBuildParam {
@@ -28,9 +29,12 @@ interface QueryBuildParam {
   loadTemplates: any;
   makeButtonObject: any;
   localTemplates: Template[];
+  loadExternalTemplate: GenericAction<Template>;
   setSearchObject: any;
   searchObject: any;
   triggerQuery: any;
+  setEncodingMode: GenericAction<string>;
+  setModalState: GenericAction<string | null>;
   userName: string;
 }
 
@@ -83,28 +87,63 @@ function DisplayLoadedPrograms(
   localTemplates: Template[],
   makeButtonObject: any,
   userName: string,
+  loadExternalTemplate: GenericAction<Template>,
+  setEncodingMode: GenericAction<string>,
+  setModalState: GenericAction<string | null>,
 ): JSX.Element {
   const loadedPrograms = localTemplates.reduce((acc, x) => acc.add(x.templateName), new Set());
   return (
     <div className="program-containers">
-      {loadedTemplates.map((template, idx) => (
-        <ProgramPreview
-          buttons={['save'].map(makeButtonObject(template))}
-          key={`${template.templateName}-preview-${idx}`}
-          template={template}
-          preventUse={true}
-          alreadyPresent={loadedPrograms.has(template.templateName)}
-          userName={userName}
-        />
-      ))}
+      {loadedTemplates.map((template, idx) => {
+        const isLoaded = loadedPrograms.has(template.templateName);
+        return (
+          <ProgramPreview
+            buttons={['save'].map(makeButtonObject(template))}
+            key={`${template.templateName}-preview-${idx}`}
+            template={template}
+            alreadyPresent={isLoaded}
+            userName={userName}
+            hideMatches={true}
+            setEncodingMode={() => {
+              const setAndClose = () => {
+                setEncodingMode(template.templateName);
+                setModalState(null);
+              };
+              if (!isLoaded) {
+                loadExternalTemplate(template);
+                setTimeout(setAndClose, 750);
+              } else {
+                setAndClose();
+              }
+              console.log(template.templateName);
+            }}
+          />
+        );
+      })}
     </div>
   );
 }
 
-const RecentPrograms: QueryBuild = ({loadedTemplates, makeButtonObject, localTemplates, userName}) => {
+const RecentPrograms: QueryBuild = ({
+  loadedTemplates,
+  makeButtonObject,
+  localTemplates,
+  userName,
+  loadExternalTemplate,
+  setEncodingMode,
+  setModalState,
+}) => {
   return (
     <div className="flex-down">
-      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject, userName)}
+      {DisplayLoadedPrograms(
+        loadedTemplates,
+        localTemplates,
+        makeButtonObject,
+        userName,
+        loadExternalTemplate,
+        setEncodingMode,
+        setModalState,
+      )}
     </div>
   );
 };
@@ -116,6 +155,9 @@ const SearchForPrograms: QueryBuild = ({
   setSearchObject,
   triggerQuery,
   userName,
+  loadExternalTemplate,
+  setEncodingMode,
+  setModalState,
 }) => {
   return (
     <div className="flex-down">
@@ -129,7 +171,15 @@ const SearchForPrograms: QueryBuild = ({
         </IgnoreKeys>
         <button onClick={(): void => triggerQuery()}>Run Search</button>
       </div>
-      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject, userName)}
+      {DisplayLoadedPrograms(
+        loadedTemplates,
+        localTemplates,
+        makeButtonObject,
+        userName,
+        loadExternalTemplate,
+        setEncodingMode,
+        setModalState,
+      )}
     </div>
   );
 };
@@ -150,6 +200,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
     userName,
     recieveTemplates,
     setUserName,
+    setEncodingMode,
   } = props;
   const [mode] = useState(BY_TIME);
   const [queryIdx, queryIdxUpdate] = useState(1);
@@ -276,6 +327,9 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                   searchObject,
                   triggerQuery,
                   userName,
+                  loadExternalTemplate,
+                  setEncodingMode,
+                  setModalState,
                 })}
               {mode === BY_STRING &&
                 SearchForPrograms({
@@ -287,6 +341,9 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                   searchObject,
                   triggerQuery,
                   userName,
+                  loadExternalTemplate,
+                  setEncodingMode,
+                  setModalState,
                 })}
               {mode === BY_DATA && <div>WIP</div>}
             </div>

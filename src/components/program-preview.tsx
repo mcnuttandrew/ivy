@@ -1,5 +1,4 @@
 import React from 'react';
-import {GenericAction} from '../actions/index';
 import Thumbnail from './thumbnail';
 import {classnames, buildCounts} from '../utils';
 import Tooltip from 'rc-tooltip';
@@ -12,8 +11,8 @@ interface Props {
   alreadyPresent?: boolean;
   buttons: {name: string; onClick: any}[];
   isComplete?: boolean;
-  preventUse?: boolean;
-  setEncodingMode?: GenericAction<string>;
+  hideMatches: boolean;
+  setEncodingMode: any;
   template: Template;
   userName: string;
 }
@@ -116,7 +115,7 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
 }
 
 export default function ProgramPreview(props: Props): JSX.Element {
-  const {alreadyPresent, buttons, isComplete, preventUse, setEncodingMode, template, userName} = props;
+  const {alreadyPresent, buttons, isComplete, setEncodingMode, template, userName, hideMatches} = props;
   const {templateAuthor, templateDescription, templateName} = template;
   const typeCounts = buildCounts(template);
   return (
@@ -131,11 +130,9 @@ export default function ProgramPreview(props: Props): JSX.Element {
           <div className="program-option-img-container" onClick={(): any => setEncodingMode(templateName)}>
             <Thumbnail templateName={templateName} templateAuthor={templateAuthor} />
           </div>
-          {!preventUse && (
-            <button type="button" className="use-button" onClick={(): any => setEncodingMode(templateName)}>
-              USE
-            </button>
-          )}
+          <button type="button" className="use-button" onClick={(): any => setEncodingMode(templateName)}>
+            USE
+          </button>
         </div>
         <div className="flex-down full-width">
           <div className="program-option-title">
@@ -155,21 +152,19 @@ export default function ProgramPreview(props: Props): JSX.Element {
               {templateDescription}
             </div>
             {typeCounts && RenderTypeCounts(typeCounts)}
-            <div className="flex-down ">
-              <div className="flex space-between">
-                <div className="program-option-search-match flex">
-                  <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
-                  {isComplete && fullMatch()}
-                  {!isComplete && partialMatch()}
-                </div>
+            {!hideMatches && (
+              <div className="program-option-search-match flex">
+                <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
+                {isComplete && fullMatch()}
+                {!isComplete && partialMatch()}
               </div>
-              {alreadyPresent && (
-                <div className="program-option-search-match">A template by this name is already loaded</div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </div>
+      {alreadyPresent && (
+        <div className="program-option-search-match">This template already appears to be loaded</div>
+      )}
     </div>
   );
 }

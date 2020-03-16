@@ -371,6 +371,7 @@ class RootComponent extends React.Component<RootProps, State> {
             userName={this.props.userName}
             recieveTemplates={this.props.recieveTemplates}
             setUserName={this.props.setUserName}
+            setEncodingMode={this.props.setEncodingMode}
           />
         )}
         <Header

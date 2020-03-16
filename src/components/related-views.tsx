@@ -28,6 +28,7 @@ function PopoverContents(props: PopoverContentsProps): JSX.Element {
           <ProgramPreview
             key={idx}
             template={view}
+            hideMatches={false}
             setEncodingMode={setEncodingMode}
             buttons={[]}
             userName={userName}
