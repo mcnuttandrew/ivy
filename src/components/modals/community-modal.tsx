@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, {useState, useEffect} from 'react';
 import {GenericAction} from '../../actions/index';
 import {Template} from '../../types';
@@ -5,10 +6,12 @@ import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, toExportStr} from '../../utils';
-import {TiUploadOutline} from 'react-icons/ti';
+import {TiUploadOutline, TiEdit} from 'react-icons/ti';
+import Tooltip from 'rc-tooltip';
 import {AUTHORS} from '../../constants';
 import JSZip from 'jszip';
 import {saveAs} from 'file-saver';
+import {writeUserName} from '../../utils/local-storage';
 
 interface Props {
   loadExternalTemplate: GenericAction<Template>;
@@ -17,50 +20,66 @@ interface Props {
   setModalState: GenericAction<string | null>;
   userName: string;
   recieveTemplates: GenericAction<Template[]>;
+  setUserName: GenericAction<string>;
+  setEncodingMode: GenericAction<string>;
 }
 
-type QueryBuild = (
-  loadedTemplates: Template[],
-  loadTemplates: any,
-  makeButtonObject: any,
-  localTemplates: Template[],
-  setSearchObject: any,
-  searchObject: any,
-  triggerQuery: any,
-  userName: string,
-) => JSX.Element;
+interface QueryBuildParam {
+  loadedTemplates: Template[];
+  loadTemplates: any;
+  makeButtonObject: any;
+  localTemplates: Template[];
+  loadExternalTemplate: GenericAction<Template>;
+  setSearchObject: any;
+  searchObject: any;
+  triggerQuery: any;
+  setEncodingMode: GenericAction<string>;
+  setModalState: GenericAction<string | null>;
+  userName: string;
+}
 
+type QueryBuild = (props: QueryBuildParam) => JSX.Element;
+const FETCH_PARMS = {
+  mode: 'cors', // no-cors, *cors, same-origin
+  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+  credentials: 'same-origin', // include, *same-origin, omit
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+  },
+  redirect: 'follow', // manual, *follow, error
+  referrerPolicy: 'no-referrer', // no-referrer, *client
+};
 const URL_CACHE: any = {};
-function fetchWithCache(url: string): Promise<any> {
-  return new Promise(resolve => {
-    if (URL_CACHE[url]) {
-      resolve(URL_CACHE[url]);
-    } else {
-      fetch(url, {
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
-      })
-        .then(x => x.json())
-        .then(x => {
-          URL_CACHE[url] = x;
-          return resolve(x);
-        });
-    }
-  });
-}
 
 function runQuery(url: string, loadTemplates: any, triggerRepaint: any): void {
-  fetchWithCache(url).then(result => {
-    loadTemplates(result.map((x: any) => x.template));
+  if (URL_CACHE[url]) {
+    loadTemplates(URL_CACHE[url].map((x: any) => x.template));
     setTimeout(triggerRepaint, 1000);
-  });
+  }
+  fetch(url, FETCH_PARMS as any)
+    .then(x => x.json())
+    .then(x => {
+      URL_CACHE[url] = x;
+      loadTemplates(URL_CACHE[url].map((x: any) => x.template));
+      setTimeout(triggerRepaint, 1000);
+    })
+    .catch(e => console.log(e));
+}
+interface DeleteQueryProps {
+  url: string;
+  triggerRepaint: any;
+}
+function deleteQuery(props: DeleteQueryProps): Promise<any> {
+  const {url, triggerRepaint} = props;
+  return fetch(url, FETCH_PARMS as any)
+    .then(result => {
+      console.log(result);
+      setTimeout(triggerRepaint, 1000);
+    })
+    .catch(e => {
+      console.log(e);
+    });
 }
 
 const BY_TIME = 'Recent';
@@ -77,51 +96,82 @@ function DisplayLoadedPrograms(
   localTemplates: Template[],
   makeButtonObject: any,
   userName: string,
+  loadExternalTemplate: GenericAction<Template>,
+  setEncodingMode: GenericAction<string>,
+  setModalState: GenericAction<string | null>,
 ): JSX.Element {
   const loadedPrograms = localTemplates.reduce((acc, x) => acc.add(x.templateName), new Set());
   return (
     <div className="program-containers">
-      {loadedTemplates.map((template, idx) => (
-        <ProgramPreview
-          buttons={['save'].map(makeButtonObject(template))}
-          key={`${template.templateName}-preview-${idx}`}
-          template={template}
-          preventUse={true}
-          alreadyPresent={loadedPrograms.has(template.templateName)}
-          userName={userName}
-        />
-      ))}
+      {loadedTemplates
+        .filter(d => d)
+        .map((template, idx) => {
+          const isLoaded = loadedPrograms.has(template.templateName);
+          console.log(template);
+          return (
+            <ProgramPreview
+              buttons={['save', template.templateAuthor === userName && 'delete from server']
+                .filter(d => d)
+                .map(makeButtonObject(template))}
+              key={`${template.templateName}-preview-${idx}`}
+              template={template}
+              alreadyPresent={isLoaded}
+              userName={userName}
+              hideMatches={true}
+              setEncodingMode={(): void => {
+                const setAndClose = (): void => {
+                  setEncodingMode(template.templateName);
+                  setModalState(null);
+                };
+                if (!isLoaded) {
+                  loadExternalTemplate(template);
+                  setTimeout(setAndClose, 750);
+                } else {
+                  setAndClose();
+                }
+              }}
+            />
+          );
+        })}
     </div>
   );
 }
 
-const RecentPrograms: QueryBuild = (
+const RecentPrograms: QueryBuild = ({
   loadedTemplates,
-  loadTemplates,
   makeButtonObject,
   localTemplates,
-  setSearchObject,
-  searchObject,
-  triggerQuery,
   userName,
-) => {
+  loadExternalTemplate,
+  setEncodingMode,
+  setModalState,
+}) => {
   return (
     <div className="flex-down">
-      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject, userName)}
+      {DisplayLoadedPrograms(
+        loadedTemplates,
+        localTemplates,
+        makeButtonObject,
+        userName,
+        loadExternalTemplate,
+        setEncodingMode,
+        setModalState,
+      )}
     </div>
   );
 };
 
-const SearchForPrograms: QueryBuild = (
+const SearchForPrograms: QueryBuild = ({
   loadedTemplates,
-  loadTemplates,
   makeButtonObject,
   localTemplates,
   setSearchObject,
-  searchObject,
   triggerQuery,
   userName,
-) => {
+  loadExternalTemplate,
+  setEncodingMode,
+  setModalState,
+}) => {
   return (
     <div className="flex-down">
       <div className="flex-down">
@@ -134,7 +184,15 @@ const SearchForPrograms: QueryBuild = (
         </IgnoreKeys>
         <button onClick={(): void => triggerQuery()}>Run Search</button>
       </div>
-      {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject, userName)}
+      {DisplayLoadedPrograms(
+        loadedTemplates,
+        localTemplates,
+        makeButtonObject,
+        userName,
+        loadExternalTemplate,
+        setEncodingMode,
+        setModalState,
+      )}
     </div>
   );
 };
@@ -147,7 +205,16 @@ function toQueryParams(obj: {[x: string]: any}): string {
 }
 
 export default function CommunityPrograms(props: Props): JSX.Element {
-  const {loadExternalTemplate, setModalState, triggerRepaint, templates, userName, recieveTemplates} = props;
+  const {
+    loadExternalTemplate,
+    setModalState,
+    triggerRepaint,
+    templates,
+    userName,
+    recieveTemplates,
+    setUserName,
+    setEncodingMode,
+  } = props;
   const [mode] = useState(BY_TIME);
   const [queryIdx, queryIdxUpdate] = useState(1);
   const triggerQuery = (): any => queryIdxUpdate(queryIdx + 1);
@@ -166,6 +233,22 @@ export default function CommunityPrograms(props: Props): JSX.Element {
     let onClick;
     if (key === 'save') {
       onClick = (): any => loadExternalTemplate(template);
+    }
+    if (key === 'delete from server') {
+      onClick = (): any => {
+        const queryParms = toQueryParams({
+          templateName: template.templateName,
+          templateAuthor: template.templateAuthor,
+          userName: userName,
+        });
+        deleteQuery({url: `${serverPrefix()}/remove${queryParms}`, triggerRepaint}).then(() => {
+          runQuery(
+            `${serverPrefix()}/${nameToUrl[mode]}${toQueryParams(searchObject)}`,
+            loadTemplates,
+            triggerRepaint,
+          );
+        });
+      };
     }
     return {onClick, name: key};
   };
@@ -232,6 +315,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
               </div>
               <div className="flex">
                 <h3>{`Your user name: ${userName}`} </h3>
+                <UserNamePopover userName={userName} setUserName={setUserName} />
               </div>
             </div>
             {/* <div>
@@ -263,32 +347,78 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                 </div>
               )}
               {mode === BY_TIME &&
-                RecentPrograms(
+                RecentPrograms({
                   loadedTemplates,
                   loadTemplates,
                   makeButtonObject,
-                  templates,
+                  localTemplates: templates,
                   setSearchObject,
                   searchObject,
                   triggerQuery,
                   userName,
-                )}
+                  loadExternalTemplate,
+                  setEncodingMode,
+                  setModalState,
+                })}
               {mode === BY_STRING &&
-                SearchForPrograms(
+                SearchForPrograms({
                   loadedTemplates,
                   loadTemplates,
                   makeButtonObject,
-                  templates,
+                  localTemplates: templates,
                   setSearchObject,
                   searchObject,
                   triggerQuery,
                   userName,
-                )}
+                  loadExternalTemplate,
+                  setEncodingMode,
+                  setModalState,
+                })}
               {mode === BY_DATA && <div>WIP</div>}
             </div>
           </div>
         </div>
       </div>
     </Modal>
+  );
+}
+
+interface UserNamePopover {
+  userName: string;
+  setUserName: GenericAction<string>;
+}
+
+function UserNamePopover(props: UserNamePopover): JSX.Element {
+  const {userName, setUserName} = props;
+  const [localName, setName] = useState(userName);
+
+  return (
+    <Tooltip
+      placement="top"
+      trigger="click"
+      overlay={
+        <div className="tooltip-internal flex-down">
+          <h3>Change your user name</h3>
+          <input
+            value={localName}
+            onChange={(e): void => {
+              setName(e.target.value);
+            }}
+          />
+          <button
+            onClick={(): void => {
+              writeUserName(localName);
+              setUserName(localName);
+            }}
+          >
+            Change
+          </button>
+        </div>
+      }
+    >
+      <span className="cursor-pointer">
+        <TiEdit />
+      </span>
+    </Tooltip>
   );
 }
