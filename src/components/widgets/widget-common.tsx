@@ -84,7 +84,7 @@ export function Reset(props: ResetProps): JSX.Element {
         </span>
       }
     >
-      <div className="delete-option-button" onClick={onClick}>
+      <div className="delete-option-button cursor-pointer" onClick={onClick}>
         <TiDeleteOutline />
       </div>
     </Tooltip>

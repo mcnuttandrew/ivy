@@ -31,7 +31,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
               tooltipLabel={'Remove this option from the list'}
               direction="left"
               onClick={(): void => {
-                const updated = [...widget.config.allowedValues].filter((_, jdx) => jdx !== idx);
+                const updated = [...widget.config.allowedValues].filter((_, kdx) => kdx !== jdx);
                 setWidgetValue('allowedValues', updated, idx);
               }}
             />

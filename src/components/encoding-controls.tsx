@@ -203,8 +203,9 @@ export default function EncodingControls(props: Props): JSX.Element {
             })}
           </div>
         </div>
+        <h5 className="flex">{template.templateDescription}</h5>
         <div className="flex">
-          <h5 className="flex">Current Template</h5>
+          <h4>{getTemplateName(template)}</h4>
           <Tooltip
             placement="top"
             trigger="click"
@@ -219,7 +220,6 @@ export default function EncodingControls(props: Props): JSX.Element {
             </span>
           </Tooltip>
         </div>
-        <h4>{getTemplateName(template)}</h4>
       </div>
     </div>
   );
