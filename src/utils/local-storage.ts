@@ -10,6 +10,9 @@ export const writeEditorFontSize = (size: any): any => localStorage.setItem('edi
 export const getEditorLineWrap = (): boolean => localStorage.getItem('editorLineWrap') === 'true';
 export const writeEditorLineWrap = (wrap: any): any => localStorage.setItem('editorLineWrap', wrap);
 
+export const getTemplateOrg = (): {[x: string]: string} => JSON.parse(localStorage.getItem('templateOrg'));
+export const writeTemplateOrg = (org: any): any => localStorage.setItem('templateOrg', org);
+
 export const getUserName = (): string => localStorage.getItem('UserName');
 export const writeUserName = (name: any): any => localStorage.setItem('UserName', name);
 

@@ -3,6 +3,7 @@ import {GenericAction} from '../actions/index';
 import {Template, ColumnHeader} from '../types';
 import ProgramPreview from './program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../utils';
+// import {getTemplateOrg, writeTemplateOrg} from '../utils/local-storage';
 import GALLERY from '../templates/gallery';
 import {AUTHORS} from '../constants/index';
 import {saveAs} from 'file-saver';
@@ -80,8 +81,76 @@ function toExportStr(str: string): string {
     .replace(/\s/g, '-');
 }
 
+function filterTemplates(
+  templates: Template[],
+  spec: any,
+  columns: ColumnHeader[],
+  search: string,
+): Template[] {
+  return templates
+    .map(makeSortScore(spec.Sort))
+    .sort((a, b) => {
+      const sortResult =
+        (spec['Reverse Sort'] ? -1 : 1) *
+        (typeof a.score === 'string' && typeof b.score === 'string'
+          ? (a.score as string).localeCompare(b.score as string)
+          : (a.score as number) - (b.score as number));
+      if (!sortResult) {
+        return a.template.templateName.localeCompare(a.template.templateName);
+      }
+      return sortResult;
+    })
+    .reduce((acc, {template}) => {
+      if (template.templateName === GALLERY.templateName) {
+        return acc;
+      }
+      const {canBeUsed, isComplete} = searchDimensionsCanMatch(
+        template,
+        spec.dataTargetSearch as string[],
+        columns,
+      );
+      if (!canBeUsed) {
+        return acc;
+      }
+      const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
+      if (!nameIsValid) {
+        return acc;
+      }
+
+      const {SUM} = buildCounts(template);
+      if (
+        (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
+        (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
+      ) {
+        return acc;
+      }
+
+      return acc.concat(template);
+    }, []);
+}
+// const [templateOrg, setTemplateOrg] = useState(getTemplateOrg());
+// useEffect(() => {
+//   const updatedOrg = templatesToKey(templates).reduce((acc, row: string) => {
+//     if (!acc[row]) {
+//       acc[row] = 'unsorted';
+//     }
+//     return acc;
+//   }, templateOrg || {});
+//   writeTemplateOrg(JSON.stringify(updatedOrg));
+//   setTemplateOrg(updatedOrg);
+// }, [templatesToKey(templates)]);
+
+// const groups = Object.entries(templateOrg).reduce((acc, [group, key]: [string, string]) => {
+//   acc[key] = (acc[key] || []).concat(group);
+//   return acc;
+// }, {} as {[x: string]: string[]});
+// console.log(groups);
+
+// const templatesToKey = (templates: Template[]): string[] =>
+//   templates.map(d => `${d.templateName}-${d.templateAuthor}`);
 export default function DataSearchMode(props: Props): JSX.Element {
   const {columns, deleteTemplate, setEncodingMode, spec, templates, userName} = props;
+
   const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
     let onClick;
     if (key === 'Delete') {
@@ -109,62 +178,28 @@ export default function DataSearchMode(props: Props): JSX.Element {
   };
 
   const search = trim(spec.SearchKey as string);
-  const programs = templates
-    .map(makeSortScore(spec.Sort))
-    .sort((a, b) => {
-      const sortResult =
-        (spec['Reverse Sort'] ? -1 : 1) *
-        (typeof a.score === 'string' && typeof b.score === 'string'
-          ? (a.score as string).localeCompare(b.score as string)
-          : (a.score as number) - (b.score as number));
-      if (!sortResult) {
-        return a.template.templateName.localeCompare(a.template.templateName);
-      }
-      return sortResult;
-    })
-    .reduce((acc, {template}, idx) => {
-      if (template.templateName === GALLERY.templateName) {
-        return acc;
-      }
-      const {canBeUsed, isComplete} = searchDimensionsCanMatch(
-        template,
-        spec.dataTargetSearch as string[],
-        columns,
-      );
-      if (!canBeUsed) {
-        return acc;
-      }
-      const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
-      if (!nameIsValid) {
-        return acc;
-      }
-      const madeByUser = template.templateAuthor === userName;
-      const builtIn = template.templateAuthor === AUTHORS;
-      const buttons = madeByUser
-        ? ['Publish', 'Delete', 'Use', 'Save to Disc']
-        : builtIn
-        ? ['Use', 'Save to Disc']
-        : ['Delete', 'Use', 'Save to Disc'];
-      const counts = buildCounts(template);
-      const {SUM} = counts;
-      if (
-        (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
-        (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
-      ) {
-        return acc;
-      }
-      const newProg = (
-        <ProgramPreview
-          buttons={buttons.map(makeButtonObject(template.templateName))}
-          isComplete={isComplete}
-          key={`${template.templateName}-${idx}`}
-          setEncodingMode={setEncodingMode}
-          template={template}
-          userName={userName}
-        />
-      );
-      return acc.concat(newProg);
-    }, []);
+  const filteredTemplates = filterTemplates(templates, spec, columns, search);
+  const programs = filteredTemplates.map((template, idx) => {
+    const {isComplete} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
+    const madeByUser = template.templateAuthor === userName;
+    const builtIn = template.templateAuthor === AUTHORS;
+    const buttons = madeByUser
+      ? ['Publish', 'Delete', 'Use', 'Save to Disc']
+      : builtIn
+      ? ['Use', 'Save to Disc']
+      : ['Delete', 'Use', 'Save to Disc'];
+
+    return (
+      <ProgramPreview
+        buttons={buttons.map(makeButtonObject(template.templateName))}
+        isComplete={isComplete}
+        key={`${template.templateName}-${idx}`}
+        setEncodingMode={setEncodingMode}
+        template={template}
+        userName={userName}
+      />
+    );
+  });
   return (
     <div className="data-search-mode">
       <div className="program-containers">
