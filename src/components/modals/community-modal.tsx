@@ -102,7 +102,6 @@ function DisplayLoadedPrograms(
         .filter(d => d)
         .map((template, idx) => {
           const isLoaded = loadedPrograms.has(template.templateName);
-          console.log(template);
           return (
             <ProgramPreview
               buttons={['save', template.templateAuthor === userName && 'delete from server']
