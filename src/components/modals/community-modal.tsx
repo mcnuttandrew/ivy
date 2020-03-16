@@ -39,38 +39,47 @@ interface QueryBuildParam {
 }
 
 type QueryBuild = (props: QueryBuildParam) => JSX.Element;
-
+const FETCH_PARMS = {
+  mode: 'cors', // no-cors, *cors, same-origin
+  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+  credentials: 'same-origin', // include, *same-origin, omit
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+  },
+  redirect: 'follow', // manual, *follow, error
+  referrerPolicy: 'no-referrer', // no-referrer, *client
+};
 const URL_CACHE: any = {};
-function fetchWithCache(url: string): Promise<any> {
-  return new Promise(resolve => {
-    if (URL_CACHE[url]) {
-      resolve(URL_CACHE[url]);
-    } else {
-      fetch(url, {
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
-      })
-        .then(x => x.json())
-        .then(x => {
-          URL_CACHE[url] = x;
-          return resolve(x);
-        });
-    }
-  });
-}
 
 function runQuery(url: string, loadTemplates: any, triggerRepaint: any): void {
-  fetchWithCache(url).then(result => {
-    loadTemplates(result.map((x: any) => x.template));
+  if (URL_CACHE[url]) {
+    loadTemplates(URL_CACHE[url].map((x: any) => x.template));
     setTimeout(triggerRepaint, 1000);
-  });
+  }
+  fetch(url, FETCH_PARMS as any)
+    .then(x => x.json())
+    .then(x => {
+      URL_CACHE[url] = x;
+      loadTemplates(URL_CACHE[url].map((x: any) => x.template));
+      setTimeout(triggerRepaint, 1000);
+    })
+    .catch(e => console.log(e));
+}
+interface DeleteQueryProps {
+  url: string;
+  triggerRepaint: any;
+}
+function deleteQuery(props: DeleteQueryProps): Promise<any> {
+  const {url, triggerRepaint} = props;
+  return fetch(url, FETCH_PARMS as any)
+    .then(result => {
+      console.log(result);
+      setTimeout(triggerRepaint, 1000);
+    })
+    .catch(e => {
+      console.log(e);
+    });
 }
 
 const BY_TIME = 'Recent';
@@ -94,32 +103,36 @@ function DisplayLoadedPrograms(
   const loadedPrograms = localTemplates.reduce((acc, x) => acc.add(x.templateName), new Set());
   return (
     <div className="program-containers">
-      {loadedTemplates.map((template, idx) => {
-        const isLoaded = loadedPrograms.has(template.templateName);
-        return (
-          <ProgramPreview
-            buttons={['save'].map(makeButtonObject(template))}
-            key={`${template.templateName}-preview-${idx}`}
-            template={template}
-            alreadyPresent={isLoaded}
-            userName={userName}
-            hideMatches={true}
-            setEncodingMode={() => {
-              const setAndClose = () => {
-                setEncodingMode(template.templateName);
-                setModalState(null);
-              };
-              if (!isLoaded) {
-                loadExternalTemplate(template);
-                setTimeout(setAndClose, 750);
-              } else {
-                setAndClose();
-              }
-              console.log(template.templateName);
-            }}
-          />
-        );
-      })}
+      {loadedTemplates
+        .filter(d => d)
+        .map((template, idx) => {
+          const isLoaded = loadedPrograms.has(template.templateName);
+          console.log(template);
+          return (
+            <ProgramPreview
+              buttons={['save', template.templateAuthor === userName && 'delete from server']
+                .filter(d => d)
+                .map(makeButtonObject(template))}
+              key={`${template.templateName}-preview-${idx}`}
+              template={template}
+              alreadyPresent={isLoaded}
+              userName={userName}
+              hideMatches={true}
+              setEncodingMode={(): void => {
+                const setAndClose = (): void => {
+                  setEncodingMode(template.templateName);
+                  setModalState(null);
+                };
+                if (!isLoaded) {
+                  loadExternalTemplate(template);
+                  setTimeout(setAndClose, 750);
+                } else {
+                  setAndClose();
+                }
+              }}
+            />
+          );
+        })}
     </div>
   );
 }
@@ -220,6 +233,22 @@ export default function CommunityPrograms(props: Props): JSX.Element {
     let onClick;
     if (key === 'save') {
       onClick = (): any => loadExternalTemplate(template);
+    }
+    if (key === 'delete from server') {
+      onClick = (): any => {
+        const queryParms = toQueryParams({
+          templateName: template.templateName,
+          templateAuthor: template.templateAuthor,
+          userName: userName,
+        });
+        deleteQuery({url: `${serverPrefix()}/remove${queryParms}`, triggerRepaint}).then(() => {
+          runQuery(
+            `${serverPrefix()}/${nameToUrl[mode]}${toQueryParams(searchObject)}`,
+            loadTemplates,
+            triggerRepaint,
+          );
+        });
+      };
     }
     return {onClick, name: key};
   };
