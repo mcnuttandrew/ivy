@@ -1,7 +1,6 @@
 // WIP THIS ONE IS HARD
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
-import {toList} from '../utils';
 import {AUTHORS} from '../constants/index';
 const RADAR: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',

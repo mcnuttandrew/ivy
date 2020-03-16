@@ -104,11 +104,7 @@ function filterTemplates(
       if (template.templateName === GALLERY.templateName) {
         return acc;
       }
-      const {canBeUsed, isComplete} = searchDimensionsCanMatch(
-        template,
-        spec.dataTargetSearch as string[],
-        columns,
-      );
+      const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
       if (!canBeUsed) {
         return acc;
       }
