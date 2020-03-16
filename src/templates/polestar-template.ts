@@ -26,7 +26,7 @@ const META_COL_ROW = 'row';
 const META_COL_COL = 'column';
 const paramsInclude = (key: string): string => `Object.values(parameters).includes('\\"${key}\\"')`;
 const eitherMeta = `${paramsInclude(META_COL_ROW)} || ${paramsInclude(META_COL_COL)}`;
-const USING_META_COLS_VALIDATION: Condition = {queryResult: 'show', query: eitherMeta};
+const USING_META_COLS_CONDITION: Condition = {queryResult: 'show', query: eitherMeta};
 
 function aggregateConditional(key: string): JsonMap {
   // old version of the query left around
@@ -142,8 +142,8 @@ const Polestar: Template = {
   ],
   code: stringify(PolestarBody),
   widgets: [
-    makeSection('Meta Columns Section', [USING_META_COLS_VALIDATION]),
-    makeText('Meta Columns', [USING_META_COLS_VALIDATION]),
+    makeSection('Meta Columns Section', [USING_META_COLS_CONDITION]),
+    makeText('Meta Columns', [USING_META_COLS_CONDITION]),
     makeMultiTarget({
       dim: META_COL_ROW,
       conditions: [{queryResult: 'show', query: paramsInclude(META_COL_ROW)}],

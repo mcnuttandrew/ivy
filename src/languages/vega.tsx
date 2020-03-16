@@ -18,7 +18,14 @@ function VegaRenderer(props: RendererProps): JSX.Element {
   });
 
   return (
-    <Vega actions={false} onError={onError} spec={finalSpec} mode="vega" tooltip={new Handler({}).call} />
+    <Vega
+      actions={false}
+      renderer="svg"
+      onError={onError}
+      spec={finalSpec}
+      mode="vega"
+      tooltip={new Handler({}).call}
+    />
   );
 }
 

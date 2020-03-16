@@ -285,7 +285,7 @@ const ParallelCoordinates: Template = {
       type: 'Text',
       name: 'repeat warning',
       config: {text: 'This template requires each column be unique'},
-      validations: [
+      conditions: [
         {
           query: `${cols
             .map((d, idx) =>
@@ -321,7 +321,7 @@ const ParallelCoordinates: Template = {
       name: `Single Color`,
       type: 'List',
       config: {allowedValues: toList(namedColors), defaultValue: `"CadetBlue"`},
-      validations: [{query: 'parameters.ColorBy', queryResult: 'hide'}],
+      conditions: [{query: 'parameters.ColorBy', queryResult: 'hide'}],
     },
   ],
   code: stringify(PARALLEL_COORS),

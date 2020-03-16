@@ -4,6 +4,7 @@ exports[`#fillTemplateMapWithDefaults 1`] = `
 Object {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {
+    "color": null,
     "x": Object {
       "field": null,
       "scale": Object {

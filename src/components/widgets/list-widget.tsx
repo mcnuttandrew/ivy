@@ -31,7 +31,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
               tooltipLabel={'Remove this option from the list'}
               direction="left"
               onClick={(): void => {
-                const updated = [...widget.config.allowedValues].filter((_, jdx) => jdx !== idx);
+                const updated = [...widget.config.allowedValues].filter((_, kdx) => kdx !== jdx);
                 setWidgetValue('allowedValues', updated, idx);
               }}
             />
@@ -82,7 +82,12 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
         <Reset
           tooltipLabel={`Reset to list to the default value: ${widget.config.defaultValue}`}
           className="clear-option cursor-pointer"
-          onClick={(): any => setTemplateValue({field: widget.name, text: config.defaultValue})}
+          onClick={(): any =>
+            setTemplateValue({
+              field: widget.name,
+              text: config.defaultValue || config.allowedValues[0].value,
+            })
+          }
         />
       </div>
     </div>

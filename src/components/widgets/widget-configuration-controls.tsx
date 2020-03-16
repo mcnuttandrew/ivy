@@ -6,7 +6,7 @@ import {TemplateMap, GenWidget, Condition} from '../../types';
 import {ColumnHeader} from '../../types';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction, SetTemplateValuePayload} from '../../actions';
-import {AddLabelToWidget} from './widget-common';
+import {AddLabelToWidget, Reset} from './widget-common';
 
 interface PlacementControlsProps {
   allowedWidgets: Set<string>;
@@ -51,7 +51,7 @@ function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
       <h5>(Logic for showing/hiding this widget)</h5>
       {conditions.map((condition, jdx) => {
         return (
-          <div className="flex" key={`condition-${jdx}`}>
+          <div className="flex space-between" key={`condition-${jdx}`}>
             <AddLabelToWidget label="Query Result">
               <Selector
                 options={['show', 'hide'].map(key => ({display: key, value: key}))}
@@ -69,6 +69,16 @@ function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
                 />
               </IgnoreKeys>
             </AddLabelToWidget>
+            <Reset
+              tooltipLabel="remove this condition"
+              onClick={(): void => {
+                setWidgetValue(
+                  'conditions',
+                  conditions.filter((_, kdx) => jdx !== kdx),
+                  idx,
+                );
+              }}
+            />
           </div>
         );
       })}

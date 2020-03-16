@@ -140,9 +140,9 @@ Stacked Area Display the trend of the contribution of each value over time or ca
 SCATTER
 // name only
 Scatter with only Markers
+Scatter with Smooth Lines and Markers
 Scatter with Smooth Lines
-Scatter with Smooth Lines
-Scatter with Straight Lines
+Scatter with Straight Lines and Markers
 Scatter with Straight Lines
 
 // description only
