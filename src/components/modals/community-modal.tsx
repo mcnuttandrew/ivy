@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, {useState, useEffect} from 'react';
 import {GenericAction} from '../../actions/index';
 import {Template} from '../../types';
@@ -5,10 +6,12 @@ import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, toExportStr} from '../../utils';
-import {TiUploadOutline} from 'react-icons/ti';
+import {TiUploadOutline, TiEdit} from 'react-icons/ti';
+import Tooltip from 'rc-tooltip';
 import {AUTHORS} from '../../constants';
 import JSZip from 'jszip';
 import {saveAs} from 'file-saver';
+import {writeUserName} from '../../utils/local-storage';
 
 interface Props {
   loadExternalTemplate: GenericAction<Template>;
@@ -17,18 +20,21 @@ interface Props {
   setModalState: GenericAction<string | null>;
   userName: string;
   recieveTemplates: GenericAction<Template[]>;
+  setUserName: GenericAction<string>;
 }
 
-type QueryBuild = (
-  loadedTemplates: Template[],
-  loadTemplates: any,
-  makeButtonObject: any,
-  localTemplates: Template[],
-  setSearchObject: any,
-  searchObject: any,
-  triggerQuery: any,
-  userName: string,
-) => JSX.Element;
+interface QueryBuildParam {
+  loadedTemplates: Template[];
+  loadTemplates: any;
+  makeButtonObject: any;
+  localTemplates: Template[];
+  setSearchObject: any;
+  searchObject: any;
+  triggerQuery: any;
+  userName: string;
+}
+
+type QueryBuild = (props: QueryBuildParam) => JSX.Element;
 
 const URL_CACHE: any = {};
 function fetchWithCache(url: string): Promise<any> {
@@ -95,16 +101,7 @@ function DisplayLoadedPrograms(
   );
 }
 
-const RecentPrograms: QueryBuild = (
-  loadedTemplates,
-  loadTemplates,
-  makeButtonObject,
-  localTemplates,
-  setSearchObject,
-  searchObject,
-  triggerQuery,
-  userName,
-) => {
+const RecentPrograms: QueryBuild = ({loadedTemplates, makeButtonObject, localTemplates, userName}) => {
   return (
     <div className="flex-down">
       {DisplayLoadedPrograms(loadedTemplates, localTemplates, makeButtonObject, userName)}
@@ -112,16 +109,14 @@ const RecentPrograms: QueryBuild = (
   );
 };
 
-const SearchForPrograms: QueryBuild = (
+const SearchForPrograms: QueryBuild = ({
   loadedTemplates,
-  loadTemplates,
   makeButtonObject,
   localTemplates,
   setSearchObject,
-  searchObject,
   triggerQuery,
   userName,
-) => {
+}) => {
   return (
     <div className="flex-down">
       <div className="flex-down">
@@ -147,7 +142,15 @@ function toQueryParams(obj: {[x: string]: any}): string {
 }
 
 export default function CommunityPrograms(props: Props): JSX.Element {
-  const {loadExternalTemplate, setModalState, triggerRepaint, templates, userName, recieveTemplates} = props;
+  const {
+    loadExternalTemplate,
+    setModalState,
+    triggerRepaint,
+    templates,
+    userName,
+    recieveTemplates,
+    setUserName,
+  } = props;
   const [mode] = useState(BY_TIME);
   const [queryIdx, queryIdxUpdate] = useState(1);
   const triggerQuery = (): any => queryIdxUpdate(queryIdx + 1);
@@ -232,6 +235,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
               </div>
               <div className="flex">
                 <h3>{`Your user name: ${userName}`} </h3>
+                <UserNamePopover userName={userName} setUserName={setUserName} />
               </div>
             </div>
             {/* <div>
@@ -263,32 +267,72 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                 </div>
               )}
               {mode === BY_TIME &&
-                RecentPrograms(
+                RecentPrograms({
                   loadedTemplates,
                   loadTemplates,
                   makeButtonObject,
-                  templates,
+                  localTemplates: templates,
                   setSearchObject,
                   searchObject,
                   triggerQuery,
                   userName,
-                )}
+                })}
               {mode === BY_STRING &&
-                SearchForPrograms(
+                SearchForPrograms({
                   loadedTemplates,
                   loadTemplates,
                   makeButtonObject,
-                  templates,
+                  localTemplates: templates,
                   setSearchObject,
                   searchObject,
                   triggerQuery,
                   userName,
-                )}
+                })}
               {mode === BY_DATA && <div>WIP</div>}
             </div>
           </div>
         </div>
       </div>
     </Modal>
+  );
+}
+
+interface UserNamePopover {
+  userName: string;
+  setUserName: GenericAction<string>;
+}
+
+function UserNamePopover(props: UserNamePopover): JSX.Element {
+  const {userName, setUserName} = props;
+  const [localName, setName] = useState(userName);
+
+  return (
+    <Tooltip
+      placement="top"
+      trigger="click"
+      overlay={
+        <div className="tooltip-internal flex-down">
+          <h3>Change your user name</h3>
+          <input
+            value={localName}
+            onChange={(e): void => {
+              setName(e.target.value);
+            }}
+          />
+          <button
+            onClick={(): void => {
+              writeUserName(localName);
+              setUserName(localName);
+            }}
+          >
+            Change
+          </button>
+        </div>
+      }
+    >
+      <span className="cursor-pointer">
+        <TiEdit />
+      </span>
+    </Tooltip>
   );
 }

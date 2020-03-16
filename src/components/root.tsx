@@ -370,6 +370,7 @@ class RootComponent extends React.Component<RootProps, State> {
             templates={this.props.templates}
             userName={this.props.userName}
             recieveTemplates={this.props.recieveTemplates}
+            setUserName={this.props.setUserName}
           />
         )}
         <Header
