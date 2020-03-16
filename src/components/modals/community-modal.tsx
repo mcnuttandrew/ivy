@@ -73,13 +73,8 @@ interface DeleteQueryProps {
 function deleteQuery(props: DeleteQueryProps): Promise<any> {
   const {url, triggerRepaint} = props;
   return fetch(url, FETCH_PARMS as any)
-    .then(result => {
-      console.log(result);
-      setTimeout(triggerRepaint, 1000);
-    })
-    .catch(e => {
-      console.log(e);
-    });
+    .then(() => setTimeout(triggerRepaint, 1000))
+    .catch(e => console.log(e));
 }
 
 const BY_TIME = 'Recent';
