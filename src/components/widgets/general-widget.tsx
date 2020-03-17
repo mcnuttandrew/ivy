@@ -38,8 +38,7 @@ export interface GeneralWidget<T> {
   widget: Widget<T>;
 }
 
-// TODO: this is a bad type name
-interface Props {
+interface GeneralWidgetComponentProps {
   allowedWidgets: Set<string>;
   code: string;
   columns: ColumnHeader[];
@@ -52,6 +51,7 @@ interface Props {
   setMaterialization: GenericAction<ViewsToMaterialize>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: any;
+  saveWidgetAsTemplate: (widget: GenWidget) => void;
   template: Template;
   templateMap: TemplateMap;
   widget: GenWidget;
@@ -59,7 +59,7 @@ interface Props {
 
 export type WidgetBuilder = (
   widget: GenWidget,
-  common: Props,
+  common: GeneralWidgetComponentProps,
 ) => {
   controls: any;
   uiElement: any;
@@ -179,7 +179,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
 
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
-export default function GeneralWidgetComponent(props: Props): JSX.Element {
+export default function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element {
   const {
     columns,
     editMode,

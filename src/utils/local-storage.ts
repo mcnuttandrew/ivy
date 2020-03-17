@@ -1,3 +1,9 @@
+import {GenWidget} from '../types';
+import {get, set} from 'idb-keyval';
+
+export const getWidgetTemplates = (): Promise<GenWidget[]> => get('template-widgets');
+export const setWidgetTemplates = (widgets: GenWidget[]): Promise<void> => set('template-widgets', widgets);
+
 export const getHeight = (): number => Number(localStorage.getItem('splitPosHeight'));
 export const writeHeight = (size: any): any => localStorage.setItem('splitPosHeight', size);
 

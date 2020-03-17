@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {IgnoreKeys} from 'react-hotkeys';
 import Switch from 'react-switch';
 import {
@@ -21,11 +21,12 @@ import {switchCommon} from '../constants';
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../ivy-lang';
 import {updateThumbnail} from '../utils';
-import {AddLabelToWidget} from './widgets/widget-common';
+import {AddLabelToWidget, Reset} from './widgets/widget-common';
 import Selector from './selector';
 import Tooltip from 'rc-tooltip';
 import {TiPlus, TiChevronRight} from 'react-icons/ti';
 import {widgetFactoryByGroups, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
+import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
 
 interface EncodingColumnProps {
   addWidget: GenericAction<GenWidget>;
@@ -48,39 +49,68 @@ interface EncodingColumnProps {
 interface AddWidgetButtonProps {
   addWidget: GenericAction<GenWidget>;
   widgets: GenWidget[];
+  widgetTemplates: GenWidget[];
+  removeWidgetFromTemplates: (widget: GenWidget) => void;
 }
 
-function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
-  const {addWidget, widgets} = props;
-
-  const renderOption = (row: [string, WidgetFactoryFunc]): JSX.Element => {
-    const [key, widget] = row;
-    // eslint-disable-next-line react/prop-types
-    const newWidget = widget(widgets.length);
-    return (
-      <div key={key} onClick={(): any => addWidget(newWidget)} className="cursor-pointer">
+const renderOption = (
+  widgets: GenWidget[],
+  addWidget: GenericAction<GenWidget>,
+  removeWidgetFromTemplates?: (widget: GenWidget) => void,
+) => ([key, widgetFactory]: [string, WidgetFactoryFunc]): JSX.Element => {
+  const newWidget = widgetFactory(widgets.length);
+  return (
+    <div key={key} className="cursor-pointer flex add-widget-row space-between">
+      <div onClick={(): any => addWidget(newWidget)}>
         <TiChevronRight />
         <span>New {key}</span>
       </div>
-    );
-  };
+      {removeWidgetFromTemplates && (
+        <Reset
+          className="margin-left"
+          tooltipLabel="Delete this saved template from the local cache"
+          onClick={(): any => removeWidgetFromTemplates({...newWidget, name: key})}
+        />
+      )}
+    </div>
+  );
+};
+
+function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
+  const {addWidget, widgets, widgetTemplates, removeWidgetFromTemplates} = props;
+
   return (
     <Tooltip
       placement="bottom"
       trigger="click"
       overlay={
         <div className="add-widget-tooltip">
-          <h3>Add New Widget</h3>
+          <h1>Add New Widget</h1>
           {Object.entries(widgetFactoryByGroups).map(([group, obj]) => {
             return (
               <React.Fragment key={group}>
                 <h5>{group}</h5>
-                {Object.entries(obj).map(renderOption)}
+                {Object.entries(obj).map(renderOption(widgets, addWidget))}
               </React.Fragment>
             );
           })}
-          <h5>More complex</h5>
-          <div className="flex flex-wrap">{Object.entries(preconfiguredWidgets).map(renderOption)}</div>
+          <h3>More Specific</h3>
+          <div className="flex flex-wrap">
+            {Object.entries(preconfiguredWidgets).map(renderOption(widgets, addWidget))}
+          </div>
+          <h3>User Defined</h3>
+          <div className="flex flex-wrap">
+            {widgetTemplates.length ? (
+              widgetTemplates
+                .map(widget => {
+                  const factory = (idx: number): GenWidget => ({...widget, name: `${widget.name}-${idx}`});
+                  return [widget.name, factory];
+                })
+                .map(renderOption(widgets, addWidget, removeWidgetFromTemplates))
+            ) : (
+              <p>Save widgets for future use</p>
+            )}
+          </div>
         </div>
       }
     >
@@ -131,8 +161,31 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
     template,
     templateMap,
   } = props;
-  // TODO, this should maybe move off of the main path?
-  const allowedWidgets = toSet(applyQueries(template, templateMap));
+  // cache the query validations
+  const [allowedWidgets, setWidgets] = useState(new Set() as Set<string>);
+  useEffect(() => {
+    setWidgets(toSet(applyQueries(template, templateMap)));
+  }, [template, templateMap]);
+
+  // cache and get the template widgets
+  const [widgetTemplates, setWidgetTemplatesState] = useState([]);
+  useEffect(() => {
+    getWidgetTemplates().then(d => setWidgetTemplatesState(d || []));
+  }, []);
+  const updateTemplateWidgets = (addToTail: boolean) => (widget: GenWidget): void => {
+    const updatedWidgets = widgetTemplates
+      .filter(d => {
+        console.log(d.name, widget.name);
+        return d.name !== widget.name;
+      })
+      .concat(addToTail ? widget : []);
+    console.log(updatedWidgets, widget.name, addToTail);
+    setWidgetTemplates(updatedWidgets);
+    setWidgetTemplatesState(updatedWidgets);
+  };
+  const saveWidgetAsTemplate = updateTemplateWidgets(true);
+  const removeWidgetFromTemplates = updateTemplateWidgets(false);
+
   const makeWidget = (widget: GenWidget, idx: number): JSX.Element => (
     <GeneralWidget
       allowedWidgets={allowedWidgets}
@@ -151,6 +204,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
       templateMap={templateMap}
       template={template}
       setMaterialization={setMaterialization}
+      saveWidgetAsTemplate={saveWidgetAsTemplate}
       widget={widget}
     />
   );
@@ -262,7 +316,12 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
       )}
       {editMode && (
         <div className="flex">
-          <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />
+          <AddWidgetButton
+            widgets={template.widgets}
+            addWidget={addWidget}
+            widgetTemplates={widgetTemplates}
+            removeWidgetFromTemplates={removeWidgetFromTemplates}
+          />
           <button onClick={(): any => updateThumbnail(template.templateName, template.templateAuthor)}>
             Update Thumbnail
           </button>

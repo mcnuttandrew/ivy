@@ -102,6 +102,10 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-right: 5px;
 }
 
+.margin-left {
+  margin-left: 5px;
+}
+
 .space-around {
   justify-content: space-around;
 }
@@ -1413,7 +1417,17 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .add-widget-tooltip {
+  max-height: 400px;
+  overflow-y: scroll;
   width: 220px;
+}
+
+.add-widget-tooltip h3 {
+  margin-top: 5px;
+}
+
+.add-widget-row {
+  width: 100%;
 }
 
 .query-configuration-block {
