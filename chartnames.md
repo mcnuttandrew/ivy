@@ -1,4 +1,5 @@
 Google sheets collected 3/12/20
+a good follow up link if you want to harvest their descriptions https://support.google.com/docs/answer/190718?hl=en&ref_topic=1361474
 
 LINE
 Line chart
@@ -295,3 +296,22 @@ Table
 
 Apache Superset (Harvested from https://demo.superset.cloud/superset/welcome, username demo password demo)
 TODO
+
+
+RUSSELS CHART TYPE COUNTS
+line graph, 534.7754654983571
+histogram, 264.6768893756846
+table, 209.9671412924425
+arc/node graph, 114.34830230010957
+pie, 50.273822562979184
+map, 24.151150054764525
+SessionView, 24.151150054764525
+stack histogram, 19.222343921139085
+timeline, 13.800657174151132
+boxplot, 13.800657174151132
+scatterplot, 14.293537787513692
+heatmap, 9.364731653888274
+Sankey, 9.364731653888274
+sunburst, 9.364731653888274
+force vector, 4.435925520262877
+

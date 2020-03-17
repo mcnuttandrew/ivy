@@ -1,5 +1,5 @@
 import React from 'react';
-import {TiDelete, TiCog, TiExportOutline} from 'react-icons/ti';
+import {TiDelete, TiCog, TiExportOutline, TiBookmark} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
 import {TemplateMap, GenWidget, Condition} from '../../types';
@@ -20,6 +20,7 @@ interface PlacementControlsProps {
   duplicateWidget: any;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  saveWidgetAsTemplate: (widget: GenWidget) => void;
   setWidgetValue: any;
   templateMap: TemplateMap;
   widget: GenWidget;
@@ -103,12 +104,13 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
     allowedWidgets,
     code,
     controls,
-    editMode,
-    removeWidget,
     duplicateWidget,
-    widget,
-    setWidgetValue,
+    editMode,
     idx,
+    removeWidget,
+    saveWidgetAsTemplate,
+    setWidgetValue,
+    widget,
   } = props;
   if (!editMode) {
     return <div />;
@@ -133,6 +135,9 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
               </button>
               <button onClick={removeWidget}>
                 Delete Widget <TiDelete />
+              </button>
+              <button onClick={(): any => saveWidgetAsTemplate(widget)}>
+                Save widget for later use <TiBookmark />
               </button>
             </div>
           </div>
