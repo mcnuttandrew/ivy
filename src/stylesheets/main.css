@@ -1010,16 +1010,7 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: 15px;
 }
 
-.error-bar {
-  align-items: center;
-  background: red;
-  color: white;
-  display: flex;
-  height: 30px;
-  justify-content: center;
-  position: absolute;
-  width: 100%;
-}
+
 
 .related-templates {
   align-items: center;
@@ -1040,30 +1031,17 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* ERROR BAR IN CODE EDITOR */
-.code-container .error-bar {
-  display: none;
-  top: -60px;
-  transition: top 1s, opacity 1s;
-  opacity: 0;
-}
-
-.code-container .error-bar.has-error {
+.error-bar {
+  align-items: center;
+  background: red;
+  color: white;
   display: flex;
-  opacity: 1;
-  top: -30px;
-  z-index: 1;
+  height: 20px;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
 }
 
-/* ERROR BAR IN TEMPLATE BUILDER */
-.code-wrapper .error-bar {
-  bottom: -5000px;
-  transition: bottom 1s;
-}
-
-.code-wrapper .error-bar.has-error {
-  bottom: 30px;
-  z-index: 1;
-}
 
 .data-selection {
   margin: 5px 0;

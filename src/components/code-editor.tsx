@@ -75,7 +75,7 @@ export default class CodeEditor extends React.Component<Props> {
   }
 
   render(): JSX.Element {
-    const {codeMode, editMode, showProgrammaticMode, template} = this.props;
+    const {codeMode, editMode, showProgrammaticMode, template, editorError} = this.props;
     const currentCode = this.getCurrentCode();
     return (
       <div
@@ -102,7 +102,7 @@ export default class CodeEditor extends React.Component<Props> {
                 currentView={this.props.currentView}
                 currentCode={currentCode}
                 editMode={this.props.editMode}
-                editorError={this.props.editorError}
+                editorError={editorError}
                 editorFontSize={this.props.editorFontSize}
                 editorLineWrap={this.props.editorLineWrap}
                 readInTemplate={this.props.readInTemplate}
@@ -119,6 +119,7 @@ export default class CodeEditor extends React.Component<Props> {
                 templateMap={this.props.templateMap}
               />
               <div className="flex-down full-height full-width">
+                {editorError && <div className="error-bar">JSON ERROR</div>}
                 {editMode && codeMode === TEMPLATE_BODY && (
                   <SuggestionBox
                     addWidget={this.props.addWidget}
