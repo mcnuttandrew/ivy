@@ -1014,8 +1014,6 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: 15px;
 }
 
-
-
 .related-templates {
   align-items: center;
   border-top: thin solid black;
@@ -1045,7 +1043,6 @@ input[type="number"]::-webkit-outer-spin-button {
   position: absolute;
   width: 100%;
 }
-
 
 .data-selection {
   margin: 5px 0;

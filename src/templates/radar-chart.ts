@@ -4,25 +4,6 @@ import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
 const cols = [0, 1, 2, 3, 4, 5];
 
-// {
-//   name: 'table2',
-//   values: [
-//     {key: 'key-0', value: 19, category: 0},
-//     {key: 'key-1', value: 22, category: 0},
-//     {key: 'key-2', value: 14, category: 0},
-//     {key: 'key-3', value: 38, category: 0},
-//     {key: 'key-4', value: 23, category: 0},
-//     {key: 'key-5', value: 5, category: 0},
-//     {key: 'key-6', value: 27, category: 0},
-//     {key: 'key-0', value: 13, category: 1},
-//     {key: 'key-1', value: 12, category: 1},
-//     {key: 'key-2', value: 42, category: 1},
-//     {key: 'key-3', value: 13, category: 1},
-//     {key: 'key-4', value: 6, category: 1},
-//     {key: 'key-5', value: 15, category: 1},
-//     {key: 'key-6', value: 8, category: 1},
-//   ],
-// },
 const RADAR: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
   description: 'A radar chart example, showing multiple dimensions in a radial layout.',
