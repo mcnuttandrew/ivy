@@ -25,7 +25,7 @@ import SCATTERPLOT_TEMPLATE from './scatterplot';
 import SHELF from './polestar-template';
 import UNITVIS from './atom-example';
 import PARALLEL_COORDINATES from './parallel-coordinates';
-// import RADAR from './radar-chart';
+import RADAR from './radar-chart';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 export type WidgetFactoryFunc = (idx: number) => GenWidget;
@@ -129,6 +129,6 @@ export const DEFAULT_TEMPLATES: Template[] = [
   GALLERY,
   UNITVIS,
   PARALLEL_COORDINATES,
-  // RADAR,
+  RADAR,
   // SIMPLE_SCATTER,
 ];
