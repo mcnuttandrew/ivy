@@ -10,7 +10,7 @@ const RADAR: any = {
   width: '[ChartSize]',
   height: '[ChartSize]',
   padding: {
-    left: 50,
+    left: 75,
     right: 100,
     top: 50,
     bottom: 50,
@@ -28,11 +28,11 @@ const RADAR: any = {
           fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
           groupby: ['Origin'],
           ops: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}Agg]`}})),
-          as: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `Col${idx}`}})),
+          as: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
         },
         {
           type: 'fold',
-          fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `Col${idx}`}})),
+          fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
         },
       ],
     },
@@ -65,7 +65,7 @@ const RADAR: any = {
       $cond: {
         query: `parameters.Col${idx}`,
         true: {
-          name: `Col${idx}`,
+          name: `[Col${idx}]`,
           type: 'linear',
           range: {signal: '[0, radius]'},
           zero: true,
@@ -97,32 +97,74 @@ const RADAR: any = {
           encode: {
             enter: {
               interpolate: {value: 'linear-closed'},
-              x: {signal: "scale(datum.key, datum.value) * cos(scale('angular', datum.key)) + radius"},
-              y: {signal: "scale(datum.key, datum.value) * sin(scale('angular', datum.key)) + radius"},
+              x: {
+                signal:
+                  "scale(datum.key, datum.value) * cos(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+              },
+              y: {
+                signal:
+                  "scale(datum.key, datum.value) * sin(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+              },
               stroke: {scale: 'color', field: '[ColorBy]'},
               strokeWidth: {value: 1},
+              strokeOpacity: {
+                value: {$cond: {query: 'parameters.showLines.includes("true")', true: 1, false: 0}},
+              },
               fill: {scale: 'color', field: '[ColorBy]'},
-              fillOpacity: {value: 0.1},
+              fillOpacity: {
+                value: {$cond: {query: 'parameters.showLines.includes("true")', true: 0.1, false: 0}},
+              },
             },
           },
         },
         {
-          type: 'text',
-          name: 'value-text',
-          from: {data: 'category-line'},
-          encode: {
-            enter: {
-              x: {signal: 'datum.x'},
-              y: {signal: 'datum.y'},
-              text: {signal: 'format(datum.datum.value, ".2f")'},
-              align: {value: 'center'},
-              baseline: {value: 'middle'},
-              fill: {value: 'black'},
+          $cond: {
+            query: 'parameters.showDots.includes("true")',
+            true: {
+              type: 'symbol',
+              name: 'value-dot',
+              from: {data: 'category-line'},
+              encode: {
+                enter: {
+                  x: {signal: 'datum.x'},
+                  y: {signal: 'datum.y'},
+                  fill: {value: 'black'},
+                  size: {value: 30},
+                  tooltip: {field: 'datum'},
+                },
+                update: {
+                  stroke: {value: 'white'},
+                  strokeWidth: {value: 1},
+                  zindex: {value: 0},
+                },
+                hover: {stroke: {value: 'purple'}, strokeWidth: {value: 3}, zindex: {value: 1}},
+              },
+            },
+          },
+        },
+        {
+          $cond: {
+            query: 'parameters.showText.includes("true")',
+            true: {
+              type: 'text',
+              name: 'value-text',
+              from: {data: 'category-line'},
+              encode: {
+                enter: {
+                  x: {signal: 'datum.x'},
+                  y: {signal: 'datum.y'},
+                  text: {signal: 'format(datum.datum.value, ".2f")'},
+                  align: {value: 'center'},
+                  baseline: {value: 'middle'},
+                  fill: {value: 'black'},
+                },
+              },
             },
           },
         },
       ],
     },
+    // this section is the axes
     {
       type: 'rule',
       name: 'radial-grid',
@@ -132,14 +174,13 @@ const RADAR: any = {
         enter: {
           x: {signal: 'radius'},
           y: {signal: 'radius'},
-          x2: {signal: "radius * cos(scale('angular', datum.key)) + radius"},
-          y2: {signal: "radius * sin(scale('angular', datum.key)) + radius"},
+          x2: {signal: "radius * cos(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius"},
+          y2: {signal: "radius * sin(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius"},
           stroke: {value: 'lightgray'},
           strokeWidth: {value: 1},
         },
       },
     },
-    // todo set text to be conditinoal
     {
       type: 'text',
       name: 'key-label',
@@ -147,10 +188,17 @@ const RADAR: any = {
       zindex: 1,
       encode: {
         enter: {
-          x: {signal: "(radius + 5) * cos(scale('angular', datum.key)) + radius"},
-          y: {signal: "(radius + 5) * sin(scale('angular', datum.key)) + radius"},
+          x: {
+            signal: "(radius + 5) * cos(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+          },
+          y: {
+            signal: "(radius + 5) * sin(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+          },
           text: {field: 'key', format: '%2f'},
-          align: [{test: "abs(scale('angular', datum.key)) > PI / 2", value: 'right'}, {value: 'left'}],
+          align: [
+            {test: "abs(scale('angular', datum.key) + ([chartAngle] / 360) * PI) > PI / 2", value: 'right'},
+            {value: 'left'},
+          ],
           baseline: [
             {test: "scale('angular', datum.key) > 0", value: 'top'},
             {test: "scale('angular', datum.key) == 0", value: 'middle'},
@@ -215,6 +263,27 @@ const RadarChart: Template = {
       displayName: 'Chart Size',
       type: 'Slider',
       config: {minVal: 300, maxVal: 800, step: 1, defaultValue: 500},
+    },
+    {
+      name: 'chartAngle',
+      displayName: 'Chart Angle',
+      type: 'Slider',
+      config: {minVal: 0, maxVal: 360, step: 1, defaultValue: 1},
+    },
+    {
+      name: 'showLines',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
+    },
+    {
+      name: 'showText',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: false},
+    },
+    {
+      name: 'showDots',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
     },
     ...cols.reduce((acc, idx) => {
       acc.push({name: `Col${idx}`, type: 'DataTarget', config: {allowedTypes: ['MEASURE'], required: !idx}});

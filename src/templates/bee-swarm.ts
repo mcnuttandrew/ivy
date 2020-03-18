@@ -57,11 +57,7 @@ const BEESWARM_EXAMPLE: any = {
           strokeWidth: {value: 1},
           zindex: {value: 0},
         },
-        hover: {
-          stroke: {value: 'purple'},
-          strokeWidth: {value: 3},
-          zindex: {value: 1},
-        },
+        hover: {stroke: {value: 'purple'}, strokeWidth: {value: 3}, zindex: {value: 1}},
       },
       transform: [
         {
@@ -69,11 +65,7 @@ const BEESWARM_EXAMPLE: any = {
           iterations: 300,
           static: {signal: 'static'},
           forces: [
-            {
-              force: 'collide',
-              iterations: {signal: 'collide'},
-              radius: {signal: 'radius'},
-            },
+            {force: 'collide', iterations: {signal: 'collide'}, radius: {signal: 'radius'}},
             {force: 'x', x: 'xfocus', strength: {signal: 'gravityX'}},
             {force: 'y', y: 'yfocus', strength: {signal: 'gravityY'}},
           ],
