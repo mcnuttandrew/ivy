@@ -9,19 +9,16 @@ import {TemplateMap} from '../src/types';
 import Scatterplot from '../src/templates/scatterplot';
 import GALLERY from '../src/templates/gallery';
 import produce from 'immer';
-
+const blankSystemValues = {systemValues: {viewsToMaterialize: {}, dataTransforms: [] as any[]}};
 test('#applyConditionals', () => {
   const PARSED_CODE = JSON.parse(Scatterplot.code);
 
-  const exampleTemplateMap1: TemplateMap = {
-    paramValues: {Color: null},
-    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
-  };
+  const exampleTemplateMap1: TemplateMap = {paramValues: {Color: null}, ...blankSystemValues};
   expect(applyConditionals(exampleTemplateMap1)(PARSED_CODE)).toMatchSnapshot();
 
   const exampleTemplateMap2: TemplateMap = {
     paramValues: {Color: 'Wowza good dimension'},
-    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+    ...blankSystemValues,
   };
   expect(applyConditionals(exampleTemplateMap2)(PARSED_CODE)).toMatchSnapshot();
 });
@@ -45,11 +42,8 @@ test('evaluateIvyProgram polestar template', () => {
 
   expect(
     evaluateIvyProgram(GALLERY, {
-      paramValues: {
-        dataTargetSearch: [],
-        SearchKey: '"should result"',
-      },
-      systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+      paramValues: {dataTargetSearch: [], SearchKey: '"should result"'},
+      ...blankSystemValues,
     }),
   ).toMatchSnapshot();
 });

@@ -23,9 +23,19 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
           <div className="flex">
             {DATA_TYPES.map(type => {
               const checked = allowedTypesSet.has(type);
+              const toggleValue = (): void => {
+                if (checked) {
+                  allowedTypesSet.delete(type);
+                } else {
+                  allowedTypesSet.add(type);
+                }
+
+                setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
+              };
               return (
                 <div className="flex" key={type} style={{marginRight: '10px'}}>
                   <div
+                    onClick={toggleValue}
                     className={classnames({
                       flex: true,
                       'program-option-type-pill': true,
@@ -38,15 +48,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
                     aria-label={`Allow ${type} in multidatatarget`}
                     type="checkbox"
                     checked={checked}
-                    onChange={(): void => {
-                      if (checked) {
-                        allowedTypesSet.delete(type);
-                      } else {
-                        allowedTypesSet.add(type);
-                      }
-
-                      setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
-                    }}
+                    onChange={toggleValue}
                   />
                 </div>
               );

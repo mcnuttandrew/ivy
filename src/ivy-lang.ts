@@ -148,15 +148,15 @@ export function applyQueries(template: Template, templateMap: TemplateMap): Widg
 export const setTemplateValues = (code: string, templateMap: TemplateMap): string => {
   const filledInSpec = Object.entries(templateMap.paramValues).reduce(
     (acc: string, [key, value]: [string, string | null]) => {
+      const reWith = new RegExp(`"\\[${key}\\]"`, 'g');
+      const reWithout = new RegExp(`\\[${key}\\]`, 'g');
       if (trim(value) !== value) {
         // this supports the weird HACK required to make the interpolateion system
         // not make everything a string
-        return acc
-          .replace(new RegExp(`"\\[${key}\\]"`, 'g'), value || 'null')
-          .replace(new RegExp(`\\[${key}\\]`, 'g'), trim(value) || 'null');
+        return acc.replace(reWith, value || 'null').replace(reWithout, trim(value) || 'null');
       }
-      const reg = new RegExp(`"\\[${key}\\]"`, 'g');
-      return acc.replace(reg, (Array.isArray(value) && JSON.stringify(value)) || value || 'null');
+      const setVal = (Array.isArray(value) && JSON.stringify(value)) || value || 'null';
+      return acc.replace(reWith, setVal).replace(reWithout, setVal);
     },
     code,
   );

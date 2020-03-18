@@ -2,145 +2,222 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
+const cols = [0, 1, 2, 3, 4, 5];
+
 const RADAR: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
-  width: 700,
-  height: 400,
-  padding: 5,
-
-  signals: [{name: 'radius', update: 'width / 2'}],
-  config: {
-    axisY: {
-      titleX: -2,
-      titleY: 410,
-      titleAngle: 0,
-      titleAlign: 'right',
-      titleBaseline: 'top',
-    },
+  description: 'A radar chart example, showing multiple dimensions in a radial layout.',
+  width: '[ChartSize]',
+  height: '[ChartSize]',
+  padding: {
+    left: 75,
+    right: 100,
+    top: 50,
+    bottom: 50,
   },
-
+  autosize: {type: 'none', contains: 'padding'},
+  signals: [{name: 'radius', update: 'width / 2'}],
   data: [
+    {name: 'inputCopy', values: 'myData'},
     {
       name: 'table',
       values: 'myData',
-    },
-    {
-      name: 'fields',
-      values: [
-        ...[0, 1, 2, 3, 4, 5].map(idx => {
-          return {
-            $cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`},
-          };
-        }),
+      transform: [
+        {
+          type: 'aggregate',
+          fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
+          groupby: ['Origin'],
+          ops: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}Agg]`}})),
+          as: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
+        },
+        {
+          type: 'fold',
+          fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
+        },
       ],
     },
-  ],
 
+    {
+      name: 'keys',
+      source: 'table',
+      transform: [{type: 'aggregate', groupby: ['[ColorBy]']}],
+    },
+  ],
+  legends: [{fill: 'color', symbolType: 'circle', title: '[ColorBy]', orient: 'right'}],
   scales: [
     {
       name: 'angular',
       type: 'point',
       range: {signal: '[-PI, PI]'},
-      round: true,
       padding: 0.5,
-      domain: {data: 'fields', field: 'data'},
+      domain: {data: 'table', field: 'key'},
     },
-    ...[0, 1, 2, 3, 4, 5].map(idx => {
-      return {
-        $cond: {
-          query: `parameters.Col${idx}`,
-          true: {
-            name: `[Col${idx}]`,
-            type: 'linear',
-            range: {signal: '[0, radius]'},
-            zero: `[Col${idx}Zero]`,
-            nice: false,
-            domain: {data: 'table', field: `[Col${idx}]`},
-            domainMin: 0,
-          },
-        },
-      };
-    }),
     {
+      name: 'radial',
+      type: 'linear',
+      range: {signal: '[0, radius]'},
+      zero: true,
+      nice: false,
+      domain: {data: 'table', field: 'value'},
+      domainMin: 0,
+    },
+    ...cols.map(idx => ({
       $cond: {
-        query: 'parameters.ColorBy',
+        query: `parameters.Col${idx}`,
         true: {
-          name: 'color',
-          type: 'ordinal',
-          domain: {data: 'table', field: '[ColorBy]', sort: true},
-          range: 'category',
+          name: `[Col${idx}]`,
+          type: 'linear',
+          range: {signal: '[0, radius]'},
+          zero: true,
+          nice: false,
+          domain: {data: 'inputCopy', field: `[Col${idx}]`},
+          domainMin: 0,
         },
       },
+    })),
+    {
+      name: 'color',
+      type: 'ordinal',
+      domain: {data: 'table', field: '[ColorBy]'},
+      range: {scheme: '[ColorScheme]'},
     },
   ],
-
-  axes: [
-    // ...[0, 1, 2, 3, 4, 5].map(idx => {
-    //   return {
-    //     $cond: {
-    //       query: `parameters.Col${idx}`,
-    //       true: {
-    //         orient: 'left',
-    //         zindex: 1,
-    //         scale: `[Col${idx}]`,
-    //         title: `[Col${idx}]`,
-    //         offset: {scale: 'ord', value: `[Col${idx}]`, mult: -1},
-    //       },
-    //     },
-    //   };
-    // }),
-  ],
-  legends: [{stroke: 'color', title: '[ColorBy]'}],
+  encode: {enter: {x: {signal: '0'}, y: {signal: '0'}}},
   marks: [
     {
       type: 'group',
-      from: {data: 'table'},
+      name: 'categories',
+      zindex: 1,
+      from: {facet: {data: 'table', name: 'facet', groupby: ['[ColorBy]']}},
       marks: [
         {
           type: 'line',
           name: 'category-line',
-          from: {data: 'fields'},
+          from: {data: 'facet'},
           encode: {
             enter: {
-              x: {scale: 'angular', field: 'data'},
-              y: {scale: {datum: 'data'}, field: {parent: {datum: 'data'}}},
-              stroke: {value: 'steelblue'},
-              strokeWidth: {value: 1.01},
-              strokeOpacity: {value: 0.3},
-              //   stroke: {
-              //     $cond: {
-              //       query: 'parameters.ColorBy',
-              //       true: {field: {parent: '[ColorBy]'}, scale: 'color'},
-              //       false: {value: '[Single Color]'},
-              //     },
-              //   },
+              interpolate: {value: 'linear-closed'},
+              x: {
+                signal:
+                  "scale(datum.key, datum.value) * cos(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+              },
+              y: {
+                signal:
+                  "scale(datum.key, datum.value) * sin(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+              },
+              stroke: {scale: 'color', field: '[ColorBy]'},
+              strokeWidth: {value: 1},
+              strokeOpacity: {
+                value: {$cond: {query: 'parameters.showLines.includes("true")', true: 1, false: 0}},
+              },
+              fill: {scale: 'color', field: '[ColorBy]'},
+              fillOpacity: {
+                value: {$cond: {query: 'parameters.showLines.includes("true")', true: 0.1, false: 0}},
+              },
             },
-            // enter: {
-            //   interpolate: {value: 'linear-closed'},
-            //   x: {signal: "scale(datum.data, datum.value) * cos(scale('angular', datum.data))"},
-            //   y: {signal: "scale(datum.data, datum.value) * sin(scale('angular', datum.data))"},
-            //   //   stroke: {scale: 'color', field: 'category'},
-            //   strokeWidth: {value: 1},
-            //   //   fill: {scale: 'color', field: 'category'},
-            //   fill: {value: 'red'},
-            //   fillOpacity: {value: 0.1},
-            // },
+          },
+        },
+        {
+          $cond: {
+            query: 'parameters.showDots.includes("true")',
+            true: {
+              type: 'symbol',
+              name: 'value-dot',
+              from: {data: 'category-line'},
+              encode: {
+                enter: {
+                  x: {signal: 'datum.x'},
+                  y: {signal: 'datum.y'},
+                  fill: {value: 'black'},
+                  size: {value: 30},
+                  tooltip: {field: 'datum'},
+                },
+                update: {
+                  stroke: {value: 'white'},
+                  strokeWidth: {value: 1},
+                  zindex: {value: 0},
+                },
+                hover: {stroke: {value: 'purple'}, strokeWidth: {value: 3}, zindex: {value: 1}},
+              },
+            },
+          },
+        },
+        {
+          $cond: {
+            query: 'parameters.showText.includes("true")',
+            true: {
+              type: 'text',
+              name: 'value-text',
+              from: {data: 'category-line'},
+              encode: {
+                enter: {
+                  x: {signal: 'datum.x'},
+                  y: {signal: 'datum.y'},
+                  text: {signal: 'format(datum.datum.value, ".2f")'},
+                  align: {value: 'center'},
+                  baseline: {value: 'middle'},
+                  fill: {value: 'black'},
+                },
+              },
+            },
           },
         },
       ],
     },
-
+    // this section is the axes
     {
       type: 'rule',
       name: 'radial-grid',
-      from: {data: 'fields'},
+      from: {data: 'table'},
       zindex: 0,
       encode: {
         enter: {
-          x: {value: 0},
-          y: {value: 0},
-          x2: {signal: "radius * cos(scale('angular', datum.key))"},
-          y2: {signal: "radius * sin(scale('angular', datum.key))"},
+          x: {signal: 'radius'},
+          y: {signal: 'radius'},
+          x2: {signal: "radius * cos(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius"},
+          y2: {signal: "radius * sin(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius"},
+          stroke: {value: 'lightgray'},
+          strokeWidth: {value: 1},
+        },
+      },
+    },
+    {
+      type: 'text',
+      name: 'key-label',
+      from: {data: 'table'},
+      zindex: 1,
+      encode: {
+        enter: {
+          x: {
+            signal: "(radius + 5) * cos(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+          },
+          y: {
+            signal: "(radius + 5) * sin(scale('angular', datum.key) + ([chartAngle] / 360) * PI) + radius",
+          },
+          text: {field: 'key', format: '%2f'},
+          align: [
+            {test: "abs(scale('angular', datum.key) + ([chartAngle] / 360) * PI) > PI / 2", value: 'right'},
+            {value: 'left'},
+          ],
+          baseline: [
+            {test: "scale('angular', datum.key) > 0", value: 'top'},
+            {test: "scale('angular', datum.key) == 0", value: 'middle'},
+            {value: 'bottom'},
+          ],
+          fill: {value: 'black'},
+          fontWeight: {value: 'bold'},
+        },
+      },
+    },
+    {
+      type: 'line',
+      name: 'outer-line',
+      from: {data: 'radial-grid'},
+      encode: {
+        enter: {
+          interpolate: {value: 'linear-closed'},
+          x: {signal: 'datum.x2 '},
+          y: {signal: 'datum.y2 '},
           stroke: {value: 'lightgray'},
           strokeWidth: {value: 1},
         },
@@ -149,43 +226,75 @@ const RADAR: any = {
   ],
 };
 
-const cols = [0, 1, 2, 3, 4, 5];
+const toDisplay = (x: string): {display: string; value: string} => ({display: x, value: `"${x}"`});
 const RadarChart: Template = {
   templateName: 'Radar Chart',
-  templateDescription: 'A way to visualize the relationships between a variety of measure varables in radial',
+  templateDescription:
+    'Display values relative to a center point. Use it when the categories are not directly comparable.',
   templateAuthor: AUTHORS,
   templateLanguage: 'vega',
   disallowFanOut: true,
   widgets: [
-    {type: 'Section', name: 'warning header'},
+    {name: `ColorBy`, type: 'DataTarget', config: {allowedTypes: ['DIMENSION'], required: true}},
     {
-      type: 'Text',
-      name: 'repeat warning',
-      config: {text: 'This template requires each column be unique'},
-      conditions: [
-        {
-          query: `${cols
-            .map((d, idx) =>
-              cols
-                .filter((x, jdx) => idx !== jdx)
-                .map(x => `(parameters.Col${d} && (parameters.Col${x} === parameters.Col${d}))`)
-                .join(' || '),
-            )
-            .join(' || ')}`,
-          queryResult: 'show',
-        },
-      ],
+      name: 'ColorScheme',
+      type: 'List',
+      config: {
+        allowedValues: [
+          'set2',
+          'accent',
+          'category10',
+          'category20',
+          'category20b',
+          'category20c',
+          'dark2',
+          'paired',
+          'pastel1',
+          'pastel2',
+          'set1',
+          'set3',
+          'tableau10',
+          'tableau20',
+        ].map(toDisplay),
+      },
     },
     {
-      name: `ColorBy`,
-      type: 'DataTarget',
-      config: {allowedTypes: ['DIMENSION'], required: true},
+      name: 'ChartSize',
+      displayName: 'Chart Size',
+      type: 'Slider',
+      config: {minVal: 300, maxVal: 800, step: 1, defaultValue: 500},
+    },
+    {
+      name: 'chartAngle',
+      displayName: 'Chart Angle',
+      type: 'Slider',
+      config: {minVal: 0, maxVal: 360, step: 1, defaultValue: 1},
+    },
+    {
+      name: 'showLines',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
+    },
+    {
+      name: 'showText',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: false},
+    },
+    {
+      name: 'showDots',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
     },
     ...cols.reduce((acc, idx) => {
+      acc.push({name: `Col${idx}`, type: 'DataTarget', config: {allowedTypes: ['MEASURE'], required: !idx}});
       acc.push({
-        name: `Col${idx}`,
-        type: 'DataTarget',
-        config: {allowedTypes: ['MEASURE'], required: !idx},
+        name: `Col${idx}Agg`,
+        type: 'List',
+        config: {
+          allowedValues: ['mean', 'median', 'min', 'count', 'max'].map(toDisplay),
+          defaultValue: '"mean"',
+        },
+        displayName: 'Aggregate',
       });
       return acc;
     }, []),
