@@ -1,5 +1,5 @@
 import {Dispatch} from 'redux';
-import {csvParse} from 'd3-dsv';
+import {csvParse, tsvParse} from 'd3-dsv';
 import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
 import {DEFAULT_TEMPLATES} from '../templates';
@@ -139,14 +139,18 @@ export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[
 };
 
 type Reader = (x: string) => DataRow[];
-const csvReader = (data: string): DataRow[] => csvParse(data);
-const jsonReader = (data: string): DataRow[] => JSON.parse(data);
+const csvReader: Reader = data => csvParse(data);
+const jsonReader: Reader = data => JSON.parse(data);
+const tsvReader: Reader = data => tsvParse(data);
 const getReader = (fileName: string): Reader => {
   if (fileName.includes('.csv')) {
     return csvReader;
   }
   if (fileName.includes('.json')) {
     return jsonReader;
+  }
+  if (fileName.includes('.tsv')) {
+    return tsvReader;
   }
   return (): DataRow[] => [];
 };

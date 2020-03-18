@@ -1,10 +1,3 @@
-type datasetMeta = {
-  file: string;
-  length: number;
-  DIMENSION?: number;
-  MEASURE?: number;
-  TIME?: number;
-};
 const metaData: any = {
   'anscombe.json': {
     file: 'anscombe.json',
@@ -360,7 +353,8 @@ const metaData: any = {
   },
   'unemployment.tsv': {
     file: 'unemployment.tsv',
-    length: 0,
+    length: 3218,
+    MEASURE: 2,
   },
   'flights-200k.arrow': {
     file: 'flights-200k.arrow',

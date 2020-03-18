@@ -119,7 +119,9 @@ export default class DataModal extends React.Component<Props, State> {
         </div>
         <div className="custom-data">
           <h3>Upload a Custom Dataset</h3>
-          <h5>We support JSON and CSV formatted data</h5>
+          <h5>
+            We support JSON, CSV, TSV formatted data. We do not support non-tabular data (such as GeoJSON)
+          </h5>
           <input type="file" onChange={this.handleSubmit} />
         </div>
       </Modal>

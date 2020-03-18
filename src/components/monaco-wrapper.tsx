@@ -1,6 +1,7 @@
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import {IgnoreKeys} from 'react-hotkeys';
+import {debounce} from 'vega';
 
 import {EDITOR_OPTIONS, JSON_OUTPUT, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
@@ -69,7 +70,7 @@ export default class CodeEditor extends React.Component<Props> {
             fontSize: editorFontSize,
             wordWrap: editorLineWrap ? 'on' : 'off',
           }}
-          onChange={(code: string): void => {
+          onChange={debounce(700, (code: string): void => {
             if (!editMode) {
               setEditMode(true);
             }
@@ -79,7 +80,7 @@ export default class CodeEditor extends React.Component<Props> {
             }
 
             handleCodeUpdate(code);
-          }}
+          })}
           editorDidMount={this.editorDidMount}
         />
       </IgnoreKeys>

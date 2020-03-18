@@ -1,12 +1,15 @@
 const {getFile, writeFile} = require('hoopoe');
 const {Analyzer} = require('type-analyzer');
-const {csvParse} = require('d3-dsv');
+const {csvParse, tsvParse} = require('d3-dsv');
 const {computeColMeta} = Analyzer;
 const vegaDataSet = require('vega-datasets');
 
 const csvReader = data => csvParse(data);
 const jsonReader = data => JSON.parse(data);
 const getReader = fileName => {
+  if (fileName.includes('.tsv')) {
+    return tsvParse;
+  }
   if (fileName.includes('.csv')) {
     return csvReader;
   }
