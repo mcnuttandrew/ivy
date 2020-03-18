@@ -4,39 +4,39 @@ import {DEFAULT_TEMPLATES} from '../src/templates';
 import SCATTERPLOT_TEMPLATE from '../src/templates/scatterplot';
 import PIECHART_TEMPLATE from '../src/templates/pie-chart';
 import TABLE from '../src/templates/table';
+import {WAFFLE_ISO} from './text-examples';
 
 import {DEFAULT_STATE} from '../src/reducers';
 import {setEncodingMode} from '../src/reducers/gui-actions';
 import {evaluateIvyProgram} from '../src/ivy-lang';
 import {serializeTemplate, deserializeTemplate} from '../src/utils/index';
 
+const blankSystemValues = {systemValues: {viewsToMaterialize: {}, dataTransforms: [] as any[]}};
+
 test('#setTemplateValues', () => {
   const filledOutPieTemplate = setTemplateValues(PIECHART_TEMPLATE.code, {
-    paramValues: {
-      category: '"CATEGORY_TEST"',
-      value: '"VALUE_TEST"',
-      sortValues: 'true',
-    },
-    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+    paramValues: {category: '"CATEGORY_TEST"', value: '"VALUE_TEST"', sortValues: 'true'},
+    ...blankSystemValues,
   });
   expect(filledOutPieTemplate).toMatchSnapshot();
 
   const filledOutScatterTemplate = setTemplateValues(SCATTERPLOT_TEMPLATE.code, {
-    paramValues: {
-      xDim: '"xDim_TEST"',
-      yDim: '"yDim_TEST"',
-    },
-    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+    paramValues: {xDim: '"xDim_TEST"', yDim: '"yDim_TEST"'},
+    ...blankSystemValues,
   });
   expect(filledOutScatterTemplate).toMatchSnapshot();
 
   const filledOutTableTemplate = setTemplateValues(TABLE.code, {
-    paramValues: {
-      columns: ['"xDim_TEST"', '"yDim_TEST"'],
-    },
-    systemValues: {viewsToMaterialize: {}, dataTransforms: []},
+    paramValues: {columns: ['"xDim_TEST"', '"yDim_TEST"']},
+    ...blankSystemValues,
   });
   expect(filledOutTableTemplate).toMatchSnapshot();
+
+  const filledOutTemplatenext = setTemplateValues(WAFFLE_ISO, {
+    paramValues: {ChartSize: '400', Color: 'Example', columnSize: '5', Scheme: '"set1"', size: '60'},
+    ...blankSystemValues,
+  });
+  expect(filledOutTemplatenext).toMatchSnapshot();
 });
 
 test('#fillTemplateMapWithDefaults', () => {
