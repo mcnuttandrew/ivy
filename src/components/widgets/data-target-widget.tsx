@@ -24,9 +24,18 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
           <div className="flex">
             {DATA_TYPES.map(type => {
               const checked = allowedTypesSet.has(type);
+              const toggleType = (): void => {
+                if (checked) {
+                  allowedTypesSet.delete(type);
+                } else {
+                  allowedTypesSet.add(type);
+                }
+                setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
+              };
               return (
                 <div className="flex" key={type} style={{marginRight: '10px'}}>
                   <div
+                    onClick={toggleType}
                     className={classnames({
                       flex: true,
                       'program-option-type-pill': true,
@@ -39,14 +48,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
                     aria-label={`Allowed checkbox for ${type}`}
                     type="checkbox"
                     checked={checked}
-                    onChange={(): void => {
-                      if (checked) {
-                        allowedTypesSet.delete(type);
-                      } else {
-                        allowedTypesSet.add(type);
-                      }
-                      setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
-                    }}
+                    onChange={toggleType}
                   />
                 </div>
               );

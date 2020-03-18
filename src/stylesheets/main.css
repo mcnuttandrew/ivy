@@ -313,6 +313,12 @@ input[type="number"]::-webkit-outer-spin-button {
   padding-right: 20px;
 }
 
+.encoding-control-buttons button {
+  border: thin solid black;
+  padding: 5px;
+  text-decoration: none;
+}
+
 .template-column {
   width: 100%;
 }
@@ -447,12 +453,10 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .measure-pill {
-  /* background: mediumseagreen; */
   background: mediumaquamarine;
 }
 
 .dimension-pill {
-  /* background: lightseagreen; */
   background: lightskyblue;
 }
 
@@ -746,7 +750,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .program-option-type-pill--measure::before,
 .coerce-data-type-to--MEASURE::before {
-  color: mediumseagreen;
+  color: mediumaquamarine;
 }
 
 .program-option-type-pill--dimension::before,

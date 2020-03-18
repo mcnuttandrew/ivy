@@ -315,7 +315,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
         </div>
       )}
       {editMode && (
-        <div className="flex">
+        <div className="flex encoding-control-buttons">
           <AddWidgetButton
             widgets={template.widgets}
             addWidget={addWidget}
