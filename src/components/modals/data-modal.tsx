@@ -105,10 +105,9 @@ export default class DataModal extends React.Component<Props, State> {
               if (sortMode === 'ALPHA') {
                 return a.localeCompare(b);
               }
-              console.log(a, b, Number(VegaDatasetMeta[a][sortMode]), Number(VegaDatasetMeta[b][sortMode]));
-              return (
-                (Number(VegaDatasetMeta[a][sortMode]) || 0) - (Number(VegaDatasetMeta[b][sortMode]) || 0)
-              );
+              const aVal = Number(VegaDatasetMeta[a][sortMode]) || 0;
+              const bVal = Number(VegaDatasetMeta[b][sortMode]) || 0;
+              return aVal - bVal;
             })
             .map(datasetName => {
               const datasetMeta = VegaDatasetMeta[datasetName];
