@@ -20,9 +20,14 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
   const finalSpec = JSON.parse(JSON.stringify(spec));
 
-  if (!get(finalSpec, ['data', 'values']) && !get(finalSpec, ['data', 'sequence'])) {
+  if (
+    !get(finalSpec, ['data', 'values']) &&
+    !get(finalSpec, ['data', 'url']) &&
+    !get(finalSpec, ['data', 'sequence'])
+  ) {
     finalSpec.data = {values: data};
   }
+  console.log(finalSpec);
   return (
     <Vega
       actions={false}

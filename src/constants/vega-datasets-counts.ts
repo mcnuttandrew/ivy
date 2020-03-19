@@ -1,10 +1,3 @@
-type datasetMeta = {
-  file: string;
-  length: number;
-  DIMENSION?: number;
-  MEASURE?: number;
-  TIME?: number;
-};
 const metaData: any = {
   'anscombe.json': {
     file: 'anscombe.json',
@@ -84,25 +77,25 @@ const metaData: any = {
     MEASURE: 1,
     DIMENSION: 1,
   },
-  'flights-10k.json': {
-    file: 'flights-10k.json',
-    length: 10000,
-    TIME: 1,
-    MEASURE: 2,
-    DIMENSION: 2,
-  },
-  'flights-200k.json': {
-    file: 'flights-200k.json',
-    length: 231083,
-    MEASURE: 3,
-  },
-  'flights-20k.json': {
-    file: 'flights-20k.json',
-    length: 20000,
-    TIME: 1,
-    MEASURE: 2,
-    DIMENSION: 2,
-  },
+  // 'flights-10k.json': {
+  //   file: 'flights-10k.json',
+  //   length: 10000,
+  //   TIME: 1,
+  //   MEASURE: 2,
+  //   DIMENSION: 2,
+  // },
+  // 'flights-200k.json': {
+  //   file: 'flights-200k.json',
+  //   length: 231083,
+  //   MEASURE: 3,
+  // },
+  // 'flights-20k.json': {
+  //   file: 'flights-20k.json',
+  //   length: 20000,
+  //   TIME: 1,
+  //   MEASURE: 2,
+  //   DIMENSION: 2,
+  // },
   'flights-2k.json': {
     file: 'flights-2k.json',
     length: 2000,
@@ -247,12 +240,12 @@ const metaData: any = {
     DIMENSION: 1,
     MEASURE: 2,
   },
-  'flights-3m.csv': {
-    file: 'flights-3m.csv',
-    length: 231083,
-    MEASURE: 3,
-    DIMENSION: 2,
-  },
+  // 'flights-3m.csv': {
+  //   file: 'flights-3m.csv',
+  //   length: 231083,
+  //   MEASURE: 3,
+  //   DIMENSION: 2,
+  // },
   'flights-airport.csv': {
     file: 'flights-airport.csv',
     length: 5366,
@@ -352,19 +345,16 @@ const metaData: any = {
     length: 4800,
     MEASURE: 5,
   },
-  'zipcodes.csv': {
-    file: 'zipcodes.csv',
-    length: 42049,
-    MEASURE: 3,
-    DIMENSION: 3,
-  },
+  // 'zipcodes.csv': {
+  //   file: 'zipcodes.csv',
+  //   length: 42049,
+  //   MEASURE: 3,
+  //   DIMENSION: 3,
+  // },
   'unemployment.tsv': {
     file: 'unemployment.tsv',
-    length: 0,
-  },
-  'flights-200k.arrow': {
-    file: 'flights-200k.arrow',
-    length: 0,
+    length: 3218,
+    MEASURE: 2,
   },
 };
 

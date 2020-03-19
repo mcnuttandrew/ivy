@@ -353,7 +353,8 @@
   },
   "unemployment.tsv": {
     "file": "unemployment.tsv",
-    "length": 0
+    "length": 3218,
+    "MEASURE": 2
   },
   "flights-200k.arrow": {
     "file": "flights-200k.arrow",

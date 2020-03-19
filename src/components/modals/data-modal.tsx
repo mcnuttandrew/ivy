@@ -5,8 +5,9 @@ import VegaDatasetMeta from '../../constants/vega-datasets-counts';
 import GALLERY from '../../templates/gallery';
 import {DataType} from '../../types';
 import Modal from './modal';
-import {classnames} from '../../utils/index';
+import {countSymbol} from '../program-preview';
 import {HoverTooltip} from '../tooltips';
+import {classnames} from '../../utils';
 
 interface Props {
   changeSelectedFile: GenericAction<string>;
@@ -18,6 +19,7 @@ interface Props {
 
 interface State {
   searchTerm?: string;
+  sortMode: string;
 }
 
 export default class DataModal extends React.Component<Props, State> {
@@ -25,6 +27,7 @@ export default class DataModal extends React.Component<Props, State> {
     super(props);
     this.state = {
       searchTerm: null,
+      sortMode: 'ALPHA',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -43,7 +46,7 @@ export default class DataModal extends React.Component<Props, State> {
   }
   render(): JSX.Element {
     const {changeSelectedFile, setModalState, chainActions, setEncodingMode} = this.props;
-    const {searchTerm} = this.state;
+    const {searchTerm, sortMode} = this.state;
 
     return (
       <Modal
@@ -67,13 +70,45 @@ export default class DataModal extends React.Component<Props, State> {
             </IgnoreKeys>
           </div>
         </div>
-
+        <div className="flex">
+          <span>Sort by:</span>
+          <div className="flex">
+            {[
+              {value: 'ALPHA', display: 'Alphabetically'},
+              {value: 'length', display: 'Dataset Size'},
+              {value: 'DIMENSION', display: 'Dimensions'},
+              {value: 'MEASURE', display: 'Measures'},
+              {value: 'TIME', display: 'Times'},
+            ].map((d, idx) => {
+              return (
+                <button
+                  className={classnames({
+                    selected: d.value === sortMode,
+                    flex: true,
+                    center: true,
+                  })}
+                  type="button"
+                  key={d.value}
+                  onClick={(): any => this.setState({sortMode: d.value})}
+                >
+                  {idx >= 2 && countSymbol(d.value)}
+                  {d.display}
+                </button>
+              );
+            })}
+          </div>
+        </div>
         <div className="dataset-list">
           {Object.keys(VegaDatasetMeta)
-            .filter((key: string) => {
-              return key.includes(searchTerm || '');
+            .filter(key => key.includes(searchTerm || ''))
+            .sort((a, b) => {
+              if (sortMode === 'ALPHA') {
+                return a.localeCompare(b);
+              }
+              const aVal = Number(VegaDatasetMeta[a][sortMode]) || 0;
+              const bVal = Number(VegaDatasetMeta[b][sortMode]) || 0;
+              return aVal - bVal;
             })
-            .sort()
             .map(datasetName => {
               const datasetMeta = VegaDatasetMeta[datasetName];
               return (
@@ -100,13 +135,7 @@ export default class DataModal extends React.Component<Props, State> {
                           <HoverTooltip
                             message={`This data set has ${count} data columns with inferred type ${dataType}`}
                           >
-                            <div
-                              className={classnames({
-                                flex: true,
-                                'program-option-type-pill': true,
-                                [`program-option-type-pill--${dataType.toLowerCase()}`]: true,
-                              })}
-                            ></div>
+                            {countSymbol(dataType)}
                           </HoverTooltip>
                           {count}
                         </div>
@@ -119,7 +148,9 @@ export default class DataModal extends React.Component<Props, State> {
         </div>
         <div className="custom-data">
           <h3>Upload a Custom Dataset</h3>
-          <h5>We support JSON and CSV formatted data</h5>
+          <h5>
+            We support JSON, CSV, TSV formatted data. We do not support non-tabular data (such as GeoJSON)
+          </h5>
           <input type="file" onChange={this.handleSubmit} />
         </div>
       </Modal>
