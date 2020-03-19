@@ -17,24 +17,24 @@ interface Props {
   userName: string;
 }
 
-function partialMatch(): JSX.Element {
-  return (
-    <Tooltip
-      placement="right"
-      trigger="click"
-      overlay={
-        <div className="tooltip-internal">
-          The search you have supplied on the left partially matches this template. It does not conflict, but
-          if you will need to supply extra fields to get a visualization.
-        </div>
-      }
-    >
-      <span className="tooltip-icon">
-        <TiInfoLarge />
-      </span>
-    </Tooltip>
-  );
-}
+// function partialMatch(): JSX.Element {
+//   return (
+//     <Tooltip
+//       placement="right"
+//       trigger="click"
+//       overlay={
+//         <div className="tooltip-internal">
+//           The search you have supplied on the left partially matches this template. It does not conflict, but
+//           if you will need to supply extra fields to get a visualization.
+//         </div>
+//       }
+//     >
+//       <span className="tooltip-icon">
+//         <TiInfoLarge />
+//       </span>
+//     </Tooltip>
+//   );
+// }
 
 function fullMatch(): JSX.Element {
   return (
@@ -88,19 +88,45 @@ function CardControls(props: CardControlsProps): JSX.Element {
   );
 }
 
+export function countSymbol(symbol: string): JSX.Element {
+  return (
+    <div className="count-symbol">
+      {symbol.split('-').map((key, idx, arr) => {
+        const circType = arr.length === 1 ? 'full' : arr.length === 2 ? 'half' : 'third';
+        return (
+          <div
+            key={key}
+            className={classnames({
+              [`${circType}-circle`]: true,
+              [`program-option-type-pill--${key.toLowerCase()}`]: true,
+            })}
+          ></div>
+        );
+      })}
+    </div>
+  );
+}
+
+const combos = [
+  'DIMENSION-MEASURE-TIME',
+  'DIMENSION-MEASURE',
+  'DIMENSION-TIME',
+  'MEASURE-TIME',
+  'DIMENSION',
+  'MEASURE',
+  'TIME',
+];
 function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
-  const messages = ['DIMENSION', 'MEASURE', 'TIME']
+  const messages = combos
     .filter(d => typeCounts[d] > 0)
     .map((key: string) => {
       return (
-        <HoverTooltip message={`The minimum number of required ${key} columns to render`} key={key}>
-          <div
-            className={classnames({
-              flex: true,
-              'program-option-type-pill': true,
-              [`program-option-type-pill--${key.toLowerCase()}`]: true,
-            })}
-          >
+        <HoverTooltip
+          message={`The minimum number of required ${key.split('-').join(' or ')} columns to render`}
+          key={key}
+        >
+          <div className={classnames({flex: true, 'cursor-pointer': true})}>
+            {countSymbol(key)}
             <span>{typeCounts[key]}</span>
           </div>
         </HoverTooltip>
@@ -152,11 +178,10 @@ export default function ProgramPreview(props: Props): JSX.Element {
               {templateDescription}
             </div>
             {typeCounts && RenderTypeCounts(typeCounts)}
-            {!hideMatches && (
+            {!hideMatches && false && (
               <div className="program-option-search-match flex">
-                <span>{isComplete ? 'Full Match' : 'Partial Match'} </span>
+                {isComplete && <span> Full Match</span>}
                 {isComplete && fullMatch()}
-                {!isComplete && partialMatch()}
               </div>
             )}
           </div>

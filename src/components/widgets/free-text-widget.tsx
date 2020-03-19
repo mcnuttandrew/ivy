@@ -1,6 +1,5 @@
 import React from 'react';
 import {FreeTextWidget, Widget} from '../../types';
-import {debounce} from 'vega';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, Reset, widgetName, AddLabelToWidget} from './widget-common';
 import {trim} from '../../utils';

@@ -184,25 +184,21 @@ export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHea
     return acc;
   }, {});
 
-export function buildCounts(
-  template: Template,
-): {DIMENSION: number; MEASURE: number; TIME: number; SUM: number} {
-  let SUM = 0;
-  const counts = template.widgets.reduce(
+const toKey = (arr: string[]): string =>
+  arr
+    .slice()
+    .sort()
+    .join('-');
+export function buildCounts(template: Template): {[x: string]: number; SUM: number} {
+  return template.widgets.reduce(
     (acc: any, row: GenWidget) => {
       if (row.type === 'DataTarget') {
         const {allowedTypes, required} = row.config as DataTargetWidget;
-        SUM += 1;
-        if (!required) {
-          return acc;
+        const comboKey = toKey(allowedTypes);
+        acc.SUM += 1;
+        if (required) {
+          acc[comboKey] = (acc[comboKey] || 0) + 1;
         }
-
-        allowedTypes.forEach((type: string) => {
-          acc[type] += 1;
-          if (allowedTypes.length > 1) {
-            acc.mixingOn = acc.mixingOn.add(type);
-          }
-        });
       }
       if (row.type === 'MultiDataTarget') {
         const {
@@ -211,22 +207,16 @@ export function buildCounts(
           maxNumberOfTargets,
           required,
         } = row.config as MultiDataTargetWidget;
-        SUM += Number(maxNumberOfTargets) || 0;
-        if (!required) {
-          return acc;
+        acc.SUM += Number(maxNumberOfTargets) || 0;
+        const comboKey = toKey(allowedTypes);
+        if (required) {
+          acc[comboKey] = (acc[comboKey] || 0) + minNumberOfTargets;
         }
-        allowedTypes.forEach((type: string) => {
-          acc[type] += Number(minNumberOfTargets) || 0;
-          if (allowedTypes.length > 1) {
-            acc.mixingOn = acc.mixingOn.add(type);
-          }
-        });
       }
       return acc;
     },
-    {DIMENSION: 0, MEASURE: 0, TIME: 0, mixingOn: new Set()},
+    {SUM: 0},
   );
-  return {DIMENSION: counts.DIMENSION, MEASURE: counts.MEASURE, TIME: counts.TIME, SUM};
 }
 
 export function searchDimensionsCanMatch(
