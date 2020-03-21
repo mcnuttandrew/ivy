@@ -7,46 +7,27 @@ interface ThumbnailProps {
   templateAuthor: string;
 }
 
-function thumbnailLocation(
-  templateName: string | null,
-  templateAuthor: string | null,
-): {url: string; local: boolean} {
+function thumbnailLocation(templateName: string | null, templateAuthor: string | null): string {
   if (!templateName || templateName === 'BLANK TEMPLATE') {
-    return {url: 'logo.png', local: true};
+    return 'logo.png';
   }
   if (templateName === 'Polestar') {
-    return {url: 'assets/polestar-logo.png', local: true};
+    return 'assets/polestar-logo.png';
   }
   if (templateName === 'AtomExplore') {
-    return {url: 'assets/atom-logo.png', local: true};
+    return 'assets/atom-logo.png';
   }
   if (templateName === GALLERY.templateName) {
-    return {url: 'assets/chart-gallery-logo.png', local: true};
+    return 'assets/chart-gallery-logo.png';
   }
-  return {url: `${serverPrefix()}/thumbnail?author=${templateAuthor}&template=${templateName}`, local: false};
+  return `${serverPrefix()}/thumbnail/${templateAuthor}/${templateName}`;
 }
 
-const stupidCache: {[x: string]: string} = {};
 function Thumbnail(props: ThumbnailProps): JSX.Element {
   const {templateName, templateAuthor} = props;
   const [src, setSrc] = useState('logo.png');
   useEffect(() => {
-    const {url, local} = thumbnailLocation(templateName, templateAuthor);
-    if (local) {
-      setSrc(url);
-      return;
-    }
-    // check to see if the cache has this value stored, if so set it
-    if (stupidCache[url]) {
-      setSrc(stupidCache[url]);
-    }
-    // regardless of whether or not it does, go to the server and grab a copy
-    fetch(url)
-      .then(x => x.text())
-      .then(x => {
-        stupidCache[url] = x;
-        return setSrc(x);
-      });
+    setSrc(thumbnailLocation(templateName, templateAuthor));
   }, [templateName, templateAuthor]);
   return (
     <img
