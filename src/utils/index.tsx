@@ -104,7 +104,7 @@ export function serializeTemplate(template: Template): string {
       // params: template.widgets,
       // body: JSON.parse(template.code),
     },
-    {maxLength: 110},
+    {maxLength: 130},
   );
 }
 

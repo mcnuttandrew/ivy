@@ -45,7 +45,7 @@ export interface MultiDataTargetWidget {
   required: boolean;
 }
 export interface ListWidget {
-  allowedValues: {display: string; value: string}[];
+  allowedValues: ({display: string; value: string} | string)[];
   defaultValue?: string;
 }
 export interface SwitchWidget {

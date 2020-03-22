@@ -31,13 +31,13 @@ const Gallery: Template = {
       type: 'List',
       config: {
         allowedValues: SORTS.map(display => ({display, value: `"${display}"`})),
-        defaultValue: `"complexity"`,
+        defaultValue: `"template name"`,
       },
     },
     {
       name: 'Reverse Sort',
       type: 'Switch',
-      config: {active: 'true', inactive: 'false', defaultsToActive: true},
+      config: {active: 'true', inactive: 'false', defaultsToActive: false},
       conditions: [{query: '!parameters.Sort === "null"', queryResult: 'hide'}],
     },
     {

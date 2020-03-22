@@ -167,7 +167,8 @@ export default function DataSearchMode(props: Props): JSX.Element {
       onClick = (): any => {
         const template = templates.find(d => d.templateName === templateName);
         const fileName = `${toExportStr(templateName)}.${toExportStr(template.templateAuthor)}.ivy.json`;
-        saveAs(JSON.stringify(template, null, 2), fileName);
+        const outputFile = new Blob([JSON.stringify(template, null, 2)], {type: 'text/plain;charset=utf-8'});
+        saveAs(outputFile, fileName);
       };
     }
     return {onClick, name: key};
