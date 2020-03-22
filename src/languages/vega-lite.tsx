@@ -39,6 +39,9 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
   );
 }
 
+function listFind(val: string): (d: {display: string; value: string} | string) => boolean {
+  return (d): boolean => (typeof d === 'string' ? d : d.display) === val;
+}
 /**
  * Templates that use vega-lite often follow a specific pattern which we can usually guess some pieces of
  * This function checks the type a column thats being inserted and trys to intelligently set the type
@@ -64,15 +67,15 @@ export function tryToGuessTheTypeForVegaLite(
   const column = columns.find(col => col.field === trim(payload.text as string));
   const dims = (typeWidget.config as ListWidget).allowedValues;
 
-  if (column && column.type === 'DIMENSION' && dims.find(d => d.display === 'nominal')) {
+  if (column && column.type === 'DIMENSION' && dims.find(listFind('nominal'))) {
     templateMap.paramValues[`${payload.field}Type`] = '"nominal"';
   }
 
-  if (column && column.type === 'MEASURE' && dims.find(d => d.display === 'quantitative')) {
+  if (column && column.type === 'MEASURE' && dims.find(listFind('quantitative'))) {
     templateMap.paramValues[`${payload.field}Type`] = '"quantitative"';
   }
 
-  if (column && column.type === 'TIME' && dims.find(d => d.display === 'temporal')) {
+  if (column && column.type === 'TIME' && dims.find(listFind('temporal'))) {
     templateMap.paramValues[`${payload.field}Type`] = '"temporal"';
   }
 }

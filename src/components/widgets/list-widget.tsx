@@ -7,9 +7,20 @@ import {trim} from '../../utils/index';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, Reset, widgetName} from './widget-common';
 
+type DisplayRow = {display: string; value: string};
+function toDisplayVal(vals: (DisplayRow | string)[]): DisplayRow[] {
+  return vals.map((row: string | {display: string; value: string}) => {
+    if (typeof row === 'string') {
+      return {display: row, value: row};
+    }
+    return row;
+  });
+}
+
 export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
   const config = widget.config;
+  const vals = toDisplayVal(config.allowedValues);
   return (
     <div className="flex-down">
       <div className="flex">
@@ -17,21 +28,21 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
         <EditDisplayName widget={widget} idx={idx} setWidgetValue={setWidgetValue} />
         <AddLabelToWidget label={'Default value'}>
           <Selector
-            options={config.allowedValues}
+            options={vals}
             selectedValue={config.defaultValue || ''}
             onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
           />
         </AddLabelToWidget>
       </div>
       <h3>List Options</h3>
-      {widget.config.allowedValues.map((value, jdx) => {
+      {vals.map((value, jdx) => {
         return (
           <div key={jdx} className="flex">
             <Reset
               tooltipLabel={'Remove this option from the list'}
               direction="left"
               onClick={(): void => {
-                const updated = [...widget.config.allowedValues].filter((_, kdx) => kdx !== jdx);
+                const updated = [...vals].filter((_, kdx) => kdx !== jdx);
                 setWidgetValue('allowedValues', updated, idx);
               }}
             />
@@ -43,7 +54,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
                   type="text"
                   onChange={(event): any => {
                     const newVal = event.target.value;
-                    const updatedWidgets = widget.config.allowedValues.map((d, indx) =>
+                    const updatedWidgets = vals.map((d, indx) =>
                       indx === jdx ? {display: newVal, value: newVal} : {...d},
                     );
                     setWidgetValue('allowedValues', updatedWidgets, idx);
@@ -57,7 +68,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
       <button
         type="button"
         onClick={(): void => {
-          const updated = [...widget.config.allowedValues, {display: 'X', value: 'X'}];
+          const updated = [...vals, {display: 'X', value: 'X'}];
           setWidgetValue('allowedValues', updated, idx);
         }}
       >
@@ -70,12 +81,14 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
 function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
   const {widget, templateMap, setTemplateValue, editMode} = props;
   const config = widget.config;
+  const firstVal = config.allowedValues[0];
+  const vals = toDisplayVal(widget.config.allowedValues);
   return (
     <div className="list-widget">
       <div className="flex">
         <div className="widget-title">{widgetName(widget, editMode)}</div>
         <Selector
-          options={widget.config.allowedValues}
+          options={vals}
           selectedValue={templateMap.paramValues[widget.name] || ''}
           onChange={(value: any): any => setTemplateValue({field: widget.name, text: value})}
         />
@@ -85,7 +98,7 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
           onClick={(): any =>
             setTemplateValue({
               field: widget.name,
-              text: config.defaultValue || config.allowedValues[0].value,
+              text: config.defaultValue || (typeof firstVal === 'string' ? firstVal : firstVal.value),
             })
           }
         />
@@ -99,8 +112,10 @@ const ListBuilder: WidgetBuilder = (widget, common) => {
   return {
     controls: <ListWidgetConfiguration {...common} widget={widg} />,
     uiElement: <ListWidgetComponent {...common} widget={widg} />,
-    materializationOptions: (): {name: string; group?: string}[] =>
-      (widget as Widget<ListWidget>).config.allowedValues.map(d => ({name: `"${trim(d.display)}"`})),
+    materializationOptions: (): {name: string; group?: string}[] => {
+      const vals = toDisplayVal((widget as Widget<ListWidget>).config.allowedValues);
+      return vals.map(d => ({name: `"${trim(d.display)}"`}));
+    },
   };
 };
 

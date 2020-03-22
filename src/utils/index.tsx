@@ -88,8 +88,24 @@ export const toList = (list: string[]): {display: string; value: string}[] =>
     value: `"${display}"`,
   }));
 
+const PREP_FOR_SCREENSHOT = false;
+
 export function serializeTemplate(template: Template): string {
   // the commented out chunks of this are for preparring the code annotation figure
+  if (PREP_FOR_SCREENSHOT) {
+    return stringify(
+      {
+        $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.0.0.1.json',
+        templateName: template.templateName,
+        templateDescription: template.templateDescription,
+        templateAuthor: template.templateAuthor,
+        templateLanguage: template.templateLanguage,
+        params: template.widgets,
+        body: JSON.parse(template.code),
+      },
+      {maxLength: 130},
+    );
+  }
   return stringify(
     {
       $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.0.0.1.json',
@@ -101,8 +117,6 @@ export function serializeTemplate(template: Template): string {
       customCards: template.customCards,
       widgets: template.widgets,
       code: 'SEE BODY',
-      // params: template.widgets,
-      // body: JSON.parse(template.code),
     },
     {maxLength: 110},
   );

@@ -198,8 +198,12 @@ export function getDefaultValueForWidget(widget: GenWidget): any {
     return null;
   }
   if (widget.type === 'List') {
-    const localW = widget as Widget<ListWidget>;
-    return localW.config.defaultValue || get(localW, ['config', 'allowedValues', 0, 'value']);
+    const config = (widget as Widget<ListWidget>).config;
+    if (config.defaultValue) {
+      return config.defaultValue;
+    }
+    const firstValue = config.allowedValues[0];
+    return typeof firstValue === 'string' ? firstValue : firstValue.value;
   }
   if (widget.type === 'Switch') {
     const localW = widget as Widget<SwitchWidget>;
