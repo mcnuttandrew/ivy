@@ -97,7 +97,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
     {Recomended: [], 'Not Recomended': []} as {[x: string]: {group?: string; name: string}[]},
   );
   const foundButtons = Object.entries(groups)
-    .filter(([key]) => key.length)
+    .filter(([key, vals]) => key.length && vals.length)
     .map(([key, group]) => {
       return (
         <button
@@ -118,37 +118,39 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
 
   return (
     <div>
-      {Object.entries(groups).map(([key, group]) => {
-        const rows = group.map(({name}, idx) => {
-          const checked = (templateMap.systemValues.viewsToMaterialize[widget.name] || []).includes(name);
+      {Object.entries(groups)
+        .filter(row => row[1].length)
+        .map(([key, group]) => {
+          const rows = group.map(({name}, idx) => {
+            const checked = (templateMap.systemValues.viewsToMaterialize[widget.name] || []).includes(name);
+            return (
+              <div key={idx} className="flex space-between">
+                <span>{name}</span>
+                <Switch
+                  {...switchCommon}
+                  checked={checked}
+                  onChange={(): any => {
+                    const newVals = checked ? currentView.filter(d => d !== name) : currentView.concat(name);
+                    setMaterialization({
+                      ...templateMap.systemValues.viewsToMaterialize,
+                      [widget.name]: newVals,
+                    });
+                    setTemplateValue({
+                      field: widget.name,
+                      text: newVals.length ? `"${MATERIALIZING}"` : getDefaultValueForWidget(widget),
+                    });
+                  }}
+                />
+              </div>
+            );
+          });
           return (
-            <div key={idx} className="flex space-between">
-              <span>{name}</span>
-              <Switch
-                {...switchCommon}
-                checked={checked}
-                onChange={(): any => {
-                  const newVals = checked ? currentView.filter(d => d !== name) : currentView.concat(name);
-                  setMaterialization({
-                    ...templateMap.systemValues.viewsToMaterialize,
-                    [widget.name]: newVals,
-                  });
-                  setTemplateValue({
-                    field: widget.name,
-                    text: newVals.length ? `"${MATERIALIZING}"` : getDefaultValueForWidget(widget),
-                  });
-                }}
-              />
+            <div className="flex-down margin-top" key={key}>
+              <h5>{key}</h5>
+              {rows}
             </div>
           );
-        });
-        return (
-          <div className="flex-down margin-top" key={key}>
-            <h5>{key}</h5>
-            {rows}
-          </div>
-        );
-      })}
+        })}
       <div className="flex margin-top">
         {foundButtons}
         <button
