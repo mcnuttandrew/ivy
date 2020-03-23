@@ -931,6 +931,13 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 12px;
 }
 
+.list-widget-row-button {
+  align-items: center;
+  display: flex;
+  font-size: 15px;
+  justify-content: center;
+}
+
 .switch-widget {
   display: flex;
   font-size: 12px;

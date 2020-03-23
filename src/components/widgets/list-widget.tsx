@@ -1,7 +1,9 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import {ListWidget, Widget} from '../../types';
 import Selector from '../selector';
 import {IgnoreKeys} from 'react-hotkeys';
+import {TiArrowDown, TiArrowUp} from 'react-icons/ti';
 import {trim} from '../../utils/index';
 
 import {GeneralWidget, WidgetBuilder} from './general-widget';
@@ -16,11 +18,88 @@ function toDisplayVal(vals: (DisplayRow | string)[]): DisplayRow[] {
     return row;
   });
 }
+function updateValue(arr: any[], newVal: any, idx: number): any[] {
+  const updatedArr = [...arr];
+  updatedArr[idx] = newVal;
+  return updatedArr;
+}
+function optionRow(
+  configVals: (DisplayRow | string)[],
+  setWidgetValue: any,
+  idx: number,
+): (val: DisplayRow, jdx: number) => JSX.Element {
+  // const vals = toDisplayVal(configVals);
+  const usingDisplayValueFormat = !(typeof configVals[0] === 'string');
+  const update = (currentIndex: number, newIndex: number) => (): void => {
+    const newVals = [...configVals];
+    const oldVal = configVals[newIndex];
+    newVals[newIndex] = configVals[currentIndex];
+    newVals[currentIndex] = oldVal;
+    setWidgetValue('allowedValues', newVals, idx);
+  };
+  return (value: DisplayRow, jdx: number): JSX.Element => {
+    return (
+      <div key={jdx} className="flex">
+        <div
+          className="cursor-pointer list-widget-row-button"
+          onClick={update(jdx, Math.min(jdx + 1, configVals.length - 1))}
+        >
+          <TiArrowDown />
+        </div>
+        <div className="cursor-pointer list-widget-row-button" onClick={update(jdx, Math.max(jdx - 1, 0))}>
+          <TiArrowUp />
+        </div>
+        <div className="flex">
+          <AddLabelToWidget label="Option Value">
+            <IgnoreKeys style={{height: '100%'}}>
+              <input
+                aria-label={`allow value set`}
+                value={value.value}
+                type="text"
+                onChange={(event: {target: {value: any}}): any => {
+                  const newVal = event.target.value;
+                  const newRow = usingDisplayValueFormat ? {display: newVal, value: newVal} : `${newVal}`;
+                  setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
+                }}
+              />
+            </IgnoreKeys>
+          </AddLabelToWidget>
+          {usingDisplayValueFormat && (
+            <AddLabelToWidget label="Option Display Name">
+              <IgnoreKeys style={{height: '100%'}}>
+                <input
+                  aria-label={`allow value set`}
+                  value={value.display}
+                  type="text"
+                  onChange={(event): any => {
+                    const newRow = {...value, display: event.target.value};
+                    setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
+                  }}
+                />
+              </IgnoreKeys>
+            </AddLabelToWidget>
+          )}
+        </div>
+        <Reset
+          tooltipLabel={'Remove this option from the list'}
+          direction="left"
+          buttonClassName="list-widget-row-button"
+          onClick={(): void => {
+            const updated = [...configVals].filter((_, kdx) => kdx !== jdx);
+            setWidgetValue('allowedValues', updated, idx);
+          }}
+        />
+      </div>
+    );
+  };
+}
 
 export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
   const config = widget.config;
   const vals = toDisplayVal(config.allowedValues);
+  const usingDisplayValueFormat = !(typeof config.allowedValues[0] === 'string');
+  const updateList = (value: any): any => setWidgetValue('allowedValues', value, idx);
   return (
     <div className="flex-down">
       <div className="flex">
@@ -35,45 +114,23 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
         </AddLabelToWidget>
       </div>
       <h3>List Options</h3>
-      {vals.map((value, jdx) => {
-        return (
-          <div key={jdx} className="flex">
-            <Reset
-              tooltipLabel={'Remove this option from the list'}
-              direction="left"
-              onClick={(): void => {
-                const updated = [...vals].filter((_, kdx) => kdx !== jdx);
-                setWidgetValue('allowedValues', updated, idx);
-              }}
-            />
-            <div className="flex-down">
-              <IgnoreKeys style={{height: '100%'}}>
-                <input
-                  aria-label={`allow value set`}
-                  value={value.value}
-                  type="text"
-                  onChange={(event): any => {
-                    const newVal = event.target.value;
-                    const updatedWidgets = vals.map((d, indx) =>
-                      indx === jdx ? {display: newVal, value: newVal} : {...d},
-                    );
-                    setWidgetValue('allowedValues', updatedWidgets, idx);
-                  }}
-                />
-              </IgnoreKeys>
-            </div>
-          </div>
-        );
-      })}
-      <button
-        type="button"
-        onClick={(): void => {
-          const updated = [...vals, {display: 'X', value: 'X'}];
-          setWidgetValue('allowedValues', updated, idx);
-        }}
-      >
-        Add option
-      </button>
+      {vals.map(optionRow(config.allowedValues, setWidgetValue, idx))}
+      <div className="flex">
+        <button type="button" onClick={(): any => updateList([...vals, {display: 'X', value: 'X'}])}>
+          Add option
+        </button>
+
+        {!usingDisplayValueFormat && (
+          <button type="button" onClick={(): any => updateList(vals)}>
+            Expose Display Name
+          </button>
+        )}
+        {usingDisplayValueFormat && (
+          <button type="button" onClick={(): any => updateList(vals.map(d => d.value))}>
+            Just Use Values
+          </button>
+        )}
+      </div>
     </div>
   );
 }
