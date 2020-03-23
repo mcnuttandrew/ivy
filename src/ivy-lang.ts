@@ -203,6 +203,9 @@ export function getDefaultValueForWidget(widget: GenWidget): any {
       return config.defaultValue;
     }
     const firstValue = config.allowedValues[0];
+    if (!firstValue) {
+      return null;
+    }
     return typeof firstValue === 'string' ? firstValue : firstValue.value;
   }
   if (widget.type === 'Switch') {

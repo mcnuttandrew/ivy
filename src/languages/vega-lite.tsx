@@ -27,7 +27,6 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
   ) {
     finalSpec.data = {values: data};
   }
-  console.log(finalSpec);
   return (
     <Vega
       actions={false}

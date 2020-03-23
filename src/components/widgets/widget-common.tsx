@@ -65,9 +65,10 @@ interface ResetProps {
   tooltipLabel: string;
   className?: string;
   direction?: string;
+  buttonClassName?: string;
 }
 export function Reset(props: ResetProps): JSX.Element {
-  const {onClick, tooltipLabel, className, direction = 'right'} = props;
+  const {onClick, tooltipLabel, className, direction = 'right', buttonClassName} = props;
   return (
     <Tooltip
       placement={direction}
@@ -84,7 +85,14 @@ export function Reset(props: ResetProps): JSX.Element {
         </span>
       }
     >
-      <div className="delete-option-button cursor-pointer" onClick={onClick}>
+      <div
+        className={classnames({
+          'delete-option-button': true,
+          'cursor-pointer': true,
+          [buttonClassName]: true,
+        })}
+        onClick={onClick}
+      >
         <TiDeleteOutline />
       </div>
     </Tooltip>

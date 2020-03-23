@@ -224,7 +224,7 @@ export function buildCounts(template: Template): {[x: string]: number; SUM: numb
         acc.SUM += Number(maxNumberOfTargets) || 0;
         const comboKey = toKey(allowedTypes);
         if (required) {
-          acc[comboKey] = (acc[comboKey] || 0) + minNumberOfTargets;
+          acc[comboKey] = Number(acc[comboKey] || 0) + Number(minNumberOfTargets);
         }
       }
       return acc;
