@@ -11,6 +11,8 @@ const createStackItem = (state: AppState): UndoRedoStackItem => {
     viewCatalog: state.viewCatalog,
     columns: state.columns,
     codeMode: state.codeMode,
+    editMode: state.editMode,
+    showProgrammaticMode: state.showProgrammaticMode,
   };
 };
 
@@ -24,11 +26,16 @@ const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
     draftState.currentTemplateInstance = stackItem.currentTemplateInstance;
     draftState.columns = stackItem.columns;
     draftState.codeMode = stackItem.codeMode;
+    draftState.editMode = stackItem.editMode;
+    draftState.showProgrammaticMode = stackItem.showProgrammaticMode;
   });
 };
 // takes in an old state (via a wrapping function) and an updated state and push the contents
 // of the old state into the undo stack
 export function pushToUndoStack(oldState: AppState, newState: AppState): AppState {
+  if (newState.atomicLock) {
+    return newState;
+  }
   return produce(newState, draftState => {
     draftState.undoStack.push(createStackItem(oldState));
     draftState.redoStack = [];
@@ -48,5 +55,17 @@ export const triggerUndo: ActionResponse<void> = state => {
   return produce(applyStackItemToState(state, undoStack[undoStack.length - 1]), draftState => {
     draftState.undoStack.pop();
     draftState.redoStack.push(createStackItem(state));
+  });
+};
+
+export const startAtomicChain: ActionResponse<void> = state => {
+  return produce(state, draftState => {
+    draftState.atomicLock = true;
+  });
+};
+
+export const endAtomicChain: ActionResponse<void> = state => {
+  return produce(state, draftState => {
+    draftState.atomicLock = false;
   });
 };

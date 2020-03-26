@@ -112,9 +112,11 @@ export const setMaterialization = createAction<ViewsToMaterialize>(actionTypes.S
 
 export const chainActions = (actions: GenericAction<any>[]) => (dispatch: Dispatch): void => {
   executePromisesInSeries(
-    actions.map((action: GenericAction<any>) => {
-      return (): Promise<any> => Promise.resolve().then(() => action(dispatch));
-    }),
+    [
+      (disp: Dispatch): any => disp({type: actionTypes.START_ATOMIC_CHAIN}),
+      ...actions,
+      (disp: Dispatch): any => disp({type: actionTypes.END_ATOMIC_CHAIN}),
+    ].map((action: GenericAction<any>) => (): Promise<any> => Promise.resolve().then(() => action(dispatch))),
   );
 };
 

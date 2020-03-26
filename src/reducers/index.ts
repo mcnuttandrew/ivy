@@ -6,7 +6,7 @@ import {AppState, ActionResponse, DataReducerState} from '../types';
 import GALLERY from '../templates/gallery';
 import {JSON_OUTPUT} from '../constants/index';
 
-import {pushToUndoStack, triggerRedo, triggerUndo} from './undo-actions';
+import {pushToUndoStack, triggerRedo, triggerUndo, startAtomicChain, endAtomicChain} from './undo-actions';
 
 import {addToNextOpenSlot} from './apt-actions';
 
@@ -71,6 +71,7 @@ export const DEFAULT_STATE: AppState = {
   userName: '',
 
   // undo redo
+  atomicLock: false,
   undoStack: [],
   redoStack: [],
 
@@ -108,6 +109,8 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
 
   [actionTypes.TRIGGER_REDO]: triggerRedo,
   [actionTypes.TRIGGER_UNDO]: triggerUndo,
+  [actionTypes.START_ATOMIC_CHAIN]: startAtomicChain,
+  [actionTypes.END_ATOMIC_CHAIN]: addUndo(endAtomicChain),
 
   // filter modifications (HIDDEN UNTIL THE WRNAGLING STORY COMES)
   [actionTypes.CREATE_FILTER]: addUndo(createFilter),
