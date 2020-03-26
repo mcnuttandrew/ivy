@@ -110,8 +110,6 @@ export const recieveTemplates = createAction<Template[]>(actionTypes.RECIEVE_TEM
 
 export const setMaterialization = createAction<ViewsToMaterialize>(actionTypes.SET_MATERIALIZATION);
 
-// const startAtomicChain = createAction<void>(actionTypes.START_ATOMIC_CHAIN);
-// const endAtomicChain = createAction<void>(actionTypes.END_ATOMIC_CHAIN);
 export const chainActions = (actions: GenericAction<any>[]) => (dispatch: Dispatch): void => {
   executePromisesInSeries(
     [

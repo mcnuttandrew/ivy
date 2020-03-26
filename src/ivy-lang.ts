@@ -292,6 +292,10 @@ export function generateFullTemplateMap(widgets: GenWidget[]): TemplateMap {
   };
 }
 
+/////////////////
+///////////////// The following section is VERY cursed, be weary
+/////////////////
+
 const buildConditionalValidation = (type: any, defKey: string): any => {
   return {
     type: 'object',
@@ -316,12 +320,13 @@ const buildConditionalValidation = (type: any, defKey: string): any => {
   };
 };
 const buildInterpolantType = (old: any): any => {
+  const escapeType = {type: 'string', pattern: '\\[.*\\]'};
   if (old.anyOf) {
-    return {anyOf: [{type: 'string', pattern: '\\[.*\\]'}, ...old.anyOf]};
+    return {anyOf: [escapeType, ...old.anyOf]};
   } else if (old.type) {
-    return {anyOf: [{type: 'string', pattern: '\\[.*\\]'}, {...old}]};
+    return {anyOf: [escapeType, {...old}]};
   } else {
-    return {type: 'string', pattern: '\\[.*\\]'};
+    return escapeType;
   }
 };
 
