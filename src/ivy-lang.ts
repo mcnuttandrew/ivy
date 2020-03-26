@@ -305,7 +305,7 @@ const buildConditionalValidation = (type: any, defKey: string): any => {
           query: {
             type: 'string',
             description:
-              'javascript predicate to be evaluated to determine result of predicate. must return a boolean',
+              'Javascript predicate to be evaluated to determine result of predicate, must return a boolean. Some tips:\n\n 1. The current settings can be accessed by using the parameters object\n 2. The values held by values in the parameters object are strings.\n\n\n For example if you wanted to checked if boolean parameter setting was currently set to true, a reasonable way to do that would be:\n\n `parameters.switchVal === "true"` \n\n NOT `parameters.switchVal`\n\n The latter will always evaluated to true (because strings in JS are truthy).',
           },
           true: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
           false: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
@@ -316,15 +316,13 @@ const buildConditionalValidation = (type: any, defKey: string): any => {
   };
 };
 const buildInterpolantType = (old: any): any => {
-  let newType: any = {};
   if (old.anyOf) {
-    newType.anyOf = [{type: 'string', pattern: '\\[.*\\]'}, ...old.anyOf];
+    return {anyOf: [{type: 'string', pattern: '\\[.*\\]'}, ...old.anyOf]};
   } else if (old.type) {
-    newType.anyOf = [{type: 'string', pattern: '\\[.*\\]'}, {...old}];
+    return {anyOf: [{type: 'string', pattern: '\\[.*\\]'}, {...old}]};
   } else {
-    newType = {type: 'string', pattern: '\\[.*\\]'};
+    return {type: 'string', pattern: '\\[.*\\]'};
   }
-  return newType;
 };
 
 export function modifyJSONSchema(jsonSchema: any): any {

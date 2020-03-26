@@ -13,6 +13,8 @@ dist/background-bundle.js
 dist/
 stats.json
 
+assets/schema-mod.json
+
 *.blg
 *.log
 *.aux
