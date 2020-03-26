@@ -26,7 +26,7 @@ function addMarkdownProps(value: any): any {
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const vegaLiteSchema = modifyJSONSchema(require('vega-lite/build/vega-lite-schema.json'));
-const vegaSchema = require('vega/build/vega-schema.json');
+const vegaSchema = modifyJSONSchema(require('vega/build/vega-schema.json'));
 const ivySchema = require('../../assets/ivy.json');
 const unitVisSchema = require('unit-vis/unit-vis-schema.json');
 /* eslint-enable @typescript-eslint/no-var-requires */

@@ -59,6 +59,7 @@
     "tape": "^4.11.0",
     "ts-jest": "^24.2.0",
     "ts-loader": "^6.2.0",
+    "ts-node": "^8.8.1",
     "typescript": "^3.6.4",
     "typescript-json-schema": "^0.41.0",
     "vega-typings": "^0.10.2",
@@ -114,7 +115,8 @@
     "test": "NODE_ENV=test && jest",
     "coverage": "yarn test  --collect-coverage",
     "prettify": "prettier --write 'src/**/*.{ts,tsx}'",
-    "analyze": "NODE_ENV=analysis webpack --profile > stats.json"
+    "analyze": "NODE_ENV=analysis webpack --profile > stats.json",
+    "schema-mod": "ts-node scripts/generate-schema-mod.ts"
   },
   "jest": {
     "setupFilesAfterEnv": [

@@ -292,82 +292,49 @@ export function generateFullTemplateMap(widgets: GenWidget[]): TemplateMap {
   };
 }
 
-const buildConditionalValidation = (type: any, desc?: string): any => ({
-  description: desc ? desc : 'IVY CONDITIONAL',
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    $cond: {
-      description:
-        'In conditional arguments, requires a query ( which is a js predicate), a true branch, and a false branch',
-      type: 'object',
-      properties: {
-        query: {
-          type: 'string',
-          description:
-            'javascript predicate to be evaluated to determine result of predicate. must return a boolean',
-        },
-        true: type
-          ? {
-              $ref: `#/definitions/${type}`,
-              description: 'the result is swapped in',
-            }
-          : {type: 'string', description: 'unsure what type was supposed to be, assuming string'},
-        false: type
-          ? {
-              $ref: `#/definitions/${type}`,
-              description: 'the result is swapped in',
-            }
-          : {type: 'string', description: 'unsure what type was supposed to be, assuming string'},
-        //   false: {
-        //   // type: 'string',
-        //   $ref: `#/definitions/${type}`,
-        //   description: 'the result is swapped in',
-        // },
-        // deleteKeyOnFalse: {
-        //   type: 'boolean',
-        //   description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
-        // },
-        // deleteKeyOnTrue: {
-        //   type: 'boolean',
-        //   description: 'delete the parent key if the query resturns false. MORE EXPLANATION',
-        // },
-      },
-      required: ['query'],
-    },
-    // required: ['CONDITIONAL'],
-  },
-});
-const buildInterpolantType = (old: any): any => {
-  console.log(old);
-  // const newType: any = {description: `IVy-FIED ${old.description}`};
-  // if (old.anyOf) {
-  //   newType.anyOf = [{type: 'string', pattern: '\\[.*\\]'}, ...old.anyOf];
-  // }
-  // if (old.type) {
-  //   newType.anyOf = [{type: 'string', pattern: '\\[.*\\]'}, {type:}];
-  // }
-  // return newType;
+const buildConditionalValidation = (type: any, defKey: string): any => {
   return {
-    description: old.description
-      ? `Ivy reinterpolation for value. Normal type is: ${old.description}. XXX: ${JSON.stringify(old.type)}`
-      : `Ivy reinterpolation for value. ${JSON.stringify(old)}.`,
-    type: 'string',
-    pattern: '\\[.*\\]',
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      $cond: {
+        description:
+          'In conditional arguments, requires a query ( which is a js predicate), a true branch, and a false branch',
+        type: 'object',
+        properties: {
+          query: {
+            type: 'string',
+            description:
+              'javascript predicate to be evaluated to determine result of predicate. must return a boolean',
+          },
+          true: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
+          false: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
+        },
+        required: ['query'],
+      },
+    },
   };
 };
-export function modifyJSONSchema(jsonSchema: any): any {
-  // add [string] to all enums?
-  // https://json-schema.org/understanding-json-schema/reference/string.html#regular-expressions
+const buildInterpolantType = (old: any): any => {
+  let newType: any = {};
+  if (old.anyOf) {
+    newType.anyOf = [{type: 'string', pattern: '\\[.*\\]'}, ...old.anyOf];
+  } else if (old.type) {
+    newType.anyOf = [{type: 'string', pattern: '\\[.*\\]'}, {...old}];
+  } else {
+    newType = {type: 'string', pattern: '\\[.*\\]'};
+  }
+  return newType;
+};
 
-  // // add CONDITIONAL to all anyOf
-  const conditionalItem = {$ref: '#/definitions/IvyConditional'};
+export function modifyJSONSchema(jsonSchema: any): any {
+  const defKey = jsonSchema.$schema === 'http://json-schema.org/draft-06/schema#' ? 'defs' : 'definitions';
+  const conditionalItem = {$ref: `#/${defKey}/IvyConditional`};
 
   function schemaWalk(spec: any): any {
     if (!spec) {
       return spec;
     }
-    // console.log(spec);
     // if it's array interate across void
     if (Array.isArray(spec)) {
       return spec.map(child => schemaWalk(child));
@@ -376,9 +343,7 @@ export function modifyJSONSchema(jsonSchema: any): any {
     if (typeof spec !== 'object') {
       return spec;
     }
-    // if (!(typeof spec === 'object' && spec !== null)) {
-    //   return spec;
-    // }
+
     if (spec.type && spec.type !== 'object' && typeof spec.type !== 'object') {
       const nodeClone = JSON.parse(JSON.stringify(spec));
       delete nodeClone.type;
@@ -387,130 +352,37 @@ export function modifyJSONSchema(jsonSchema: any): any {
       if (spec.enum) {
         typeCopy.enum = spec.enum;
       }
-      nodeClone.anyOf = [
-        buildInterpolantType(spec),
-        conditionalItem,
-        typeCopy,
-        //
-      ];
-      return nodeClone;
-    }
-    if (spec.type && typeof spec.type === 'object' && !Array.isArray(spec.type)) {
-      const nodeClone = JSON.parse(JSON.stringify(spec));
-      nodeClone.type = {...spec.type, anyOf: [buildInterpolantType(spec.type), {$ref: spec.type.$ref}]};
-      delete nodeClone.type.$ref;
+      nodeClone.anyOf = [conditionalItem, typeCopy, buildInterpolantType(spec)];
       return nodeClone;
     }
     if (spec.anyOf) {
       const nodeClone = JSON.parse(JSON.stringify(spec));
-      nodeClone.anyOf = [
-        buildInterpolantType(spec),
-        //
-        conditionalItem,
-      ].concat(nodeClone.anyOf);
+      nodeClone.anyOf = nodeClone.anyOf
+        .filter((d: any) => d.type !== 'null')
+        .map((d: any) => buildInterpolantType(d))
+        .concat(nodeClone.anyOf);
       return nodeClone;
     }
 
     // otherwise looks through its children
     return Object.entries(spec).reduce((acc: any, [key, value]: any) => {
-      // actually i don't think this is necessary if the validation is recursive
-      // if (key === '$ref' && !value.includes('-core-props')) {
-      //   console.log(key, value);
-      //   acc[key] = `${value}-core-props`;
-      //   return acc;
-      // }
       acc[key] = schemaWalk(value);
       return acc;
     }, {});
   }
   const newSchema = schemaWalk(jsonSchema);
-  newSchema.definitions = Object.entries(newSchema.definitions).reduce((acc: any, [key, value]: any) => {
+  newSchema[defKey] = Object.entries(newSchema[defKey]).reduce((acc: any, [key, value]: any) => {
     acc[`${key}-core-props`] = value;
     acc[key] = {
       anyOf: [
-        {$ref: `#/definitions/${key}-core-props`},
-        buildConditionalValidation(`${key}-core-props`, value.description),
+        {$ref: `#/${defKey}/${key}-core-props`},
+        buildConditionalValidation(`${key}-core-props`, defKey),
       ],
     };
     return acc;
   }, {});
   newSchema[jsonSchema.$ref] = jsonSchema[jsonSchema.$ref];
 
-  newSchema.definitions.IvyConditional = buildConditionalValidation(false);
-  // newSchema.definitions.IvyConditionalProps = CONDITIONAL_PROPS_DEF;
+  newSchema[defKey].IvyConditional = buildConditionalValidation(false, defKey);
   return newSchema;
 }
-
-// type InterpolantEffect<T> = {predicate: (x: T) => boolean; effect: (x: T) => Json};
-// interface JsonInterpolatorProps {
-//   leafEffects: InterpolantEffect<Json>[];
-//   arrayEffect: InterpolantEffect<Json>[];
-//   objectEffects: InterpolantEffect<[string, Json]>[];
-// }
-// function jsonInterpolator(props: JsonInterpolatorProps): (spec: Json) => Json {
-//   const {leafEffects, arrayEffect, objectEffects} = props;
-//   return function walker(spec: Json): Json {
-//     // effect for particular predicates
-//     for (let i = 0; i < leafEffects.length; i++) {
-//       const {predicate, effect} = leafEffects[i];
-//       if (predicate(spec)) {
-//         return effect(spec);
-//       }
-//     }
-
-//     // if it's array interate across it
-//     if (Array.isArray(spec)) {
-//       return spec.reduce((acc: JsonArray, child) => {
-//         // effect for array members
-//         for (let i = 0; i < arrayEffect.length; i++) {
-//           const {predicate, effect} = arrayEffect[i];
-//           if (predicate(child)) {
-//             return effect(child);
-//           }
-//         }
-//         return acc.concat(walker(child));
-//       }, []);
-//     }
-//     // check if it's null or not an object return
-//     if (!(typeof spec === 'object' && spec !== null)) {
-//       // Leaf effects
-//       return spec;
-//     }
-
-//     // otherwise looks through its children
-//     return Object.entries(spec).reduce((acc: JsonMap, [key, value]: [string, Json]) => {
-//       // effect for objects
-//       for (let i = 0; i < objectEffects.length; i++) {
-//         const {predicate, effect} = objectEffects[i];
-//         if (predicate([key, value])) {
-//           acc[key] = effect([key, value]);
-//           return;
-//         }
-//       }
-//       acc[key] = walker(value);
-//       return acc;
-//     }, {});
-//   };
-// }
-
-// /**
-//  *
-//  * @param template
-//  * @param templateMap - the specification/variable values defined by the gui
-//  */
-// export function backpropIvyProgram(
-//   template: Template,
-//   templateMap: TemplateMap,
-//   newoutput: string,
-// ): {template: Template; templateMap: TemplateMap} {
-//   // recursively walk from the top node forward, if that node is different in the new output then change it
-//   let parsedJson = null;
-//   try {
-//     parsedJson = JSON.parse(newoutput);
-//   } catch (e) {
-//     return {template, templateMap};
-//   }
-
-//   // recursively walk from the top node forward, if that node is different in the new output then change it
-//   return {template, templateMap};
-// }

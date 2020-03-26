@@ -100,3 +100,77 @@ test('evaluateIvyProgram polestar template', () => {
 //   expect(JSON.parse(result3.template.code)).toEqual(JSON.parse(withHeight));
 //   expect(result3.templateMap).toEqual({...templateMap, yDim: 'Cylinders'});
 // });
+
+// type InterpolantEffect<T> = {predicate: (x: T) => boolean; effect: (x: T) => Json};
+// interface JsonInterpolatorProps {
+//   leafEffects: InterpolantEffect<Json>[];
+//   arrayEffect: InterpolantEffect<Json>[];
+//   objectEffects: InterpolantEffect<[string, Json]>[];
+// }
+// function jsonInterpolator(props: JsonInterpolatorProps): (spec: Json) => Json {
+//   const {leafEffects, arrayEffect, objectEffects} = props;
+//   return function walker(spec: Json): Json {
+//     // effect for particular predicates
+//     for (let i = 0; i < leafEffects.length; i++) {
+//       const {predicate, effect} = leafEffects[i];
+//       if (predicate(spec)) {
+//         return effect(spec);
+//       }
+//     }
+
+//     // if it's array interate across it
+//     if (Array.isArray(spec)) {
+//       return spec.reduce((acc: JsonArray, child) => {
+//         // effect for array members
+//         for (let i = 0; i < arrayEffect.length; i++) {
+//           const {predicate, effect} = arrayEffect[i];
+//           if (predicate(child)) {
+//             return effect(child);
+//           }
+//         }
+//         return acc.concat(walker(child));
+//       }, []);
+//     }
+//     // check if it's null or not an object return
+//     if (!(typeof spec === 'object' && spec !== null)) {
+//       // Leaf effects
+//       return spec;
+//     }
+
+//     // otherwise looks through its children
+//     return Object.entries(spec).reduce((acc: JsonMap, [key, value]: [string, Json]) => {
+//       // effect for objects
+//       for (let i = 0; i < objectEffects.length; i++) {
+//         const {predicate, effect} = objectEffects[i];
+//         if (predicate([key, value])) {
+//           acc[key] = effect([key, value]);
+//           return;
+//         }
+//       }
+//       acc[key] = walker(value);
+//       return acc;
+//     }, {});
+//   };
+// }
+
+// /**
+//  *
+//  * @param template
+//  * @param templateMap - the specification/variable values defined by the gui
+//  */
+// export function backpropIvyProgram(
+//   template: Template,
+//   templateMap: TemplateMap,
+//   newoutput: string,
+// ): {template: Template; templateMap: TemplateMap} {
+//   // recursively walk from the top node forward, if that node is different in the new output then change it
+//   let parsedJson = null;
+//   try {
+//     parsedJson = JSON.parse(newoutput);
+//   } catch (e) {
+//     return {template, templateMap};
+//   }
+
+//   // recursively walk from the top node forward, if that node is different in the new output then change it
+//   return {template, templateMap};
+// }
