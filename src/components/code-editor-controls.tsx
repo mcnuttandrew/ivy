@@ -251,7 +251,18 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
                         'selected-tab': key === codeMode,
                       })}
                     >
-                      <span onClick={(): any => setCodeMode(key)}>{key}</span>
+                      <span
+                        onClick={(): any =>
+                          chainActions(
+                            [
+                              (): any => setCodeMode(key),
+                              !editMode && label === templateName && ((): any => setEditMode(true)),
+                            ].filter(d => d),
+                          )
+                        }
+                      >
+                        {key}
+                      </span>
                       <SimpleTooltip message={description} />
                     </div>
                   );

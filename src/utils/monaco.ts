@@ -2,6 +2,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {mergeDeep} from 'vega-lite/build/src/util';
+import {modifyJSONSchema} from '../ivy-lang';
 
 /**
  * Adds markdownDescription props to a schema. See https://github.com/Microsoft/monaco-editor/issues/885
@@ -24,7 +25,7 @@ function addMarkdownProps(value: any): any {
 }
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
+const vegaLiteSchema = modifyJSONSchema(require('vega-lite/build/vega-lite-schema.json'));
 const vegaSchema = require('vega/build/vega-schema.json');
 const ivySchema = require('../../assets/ivy.json');
 const unitVisSchema = require('unit-vis/unit-vis-schema.json');

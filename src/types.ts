@@ -41,6 +41,8 @@ export interface UndoRedoStackItem {
   currentView: string;
   encodingMode: string;
   codeMode: string;
+  editMode: boolean;
+  showProgrammaticMode: boolean;
   templateMap: TemplateMap;
   viewCatalog: ViewCatalog;
   views: string[];
@@ -69,6 +71,7 @@ export interface AppState {
   // undo redo
   redoStack: UndoRedoStackItem[];
   undoStack: UndoRedoStackItem[];
+  atomicLock: boolean;
 
   // view stuff
   currentView: string;

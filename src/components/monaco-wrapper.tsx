@@ -69,6 +69,8 @@ export default class CodeEditor extends React.Component<Props> {
             ...EDITOR_OPTIONS,
             fontSize: editorFontSize,
             wordWrap: editorLineWrap ? 'on' : 'off',
+            colorDecorators: true,
+            dragAndDrop: true,
           }}
           onChange={debounce(700, (code: string): void => {
             if (!editMode) {
