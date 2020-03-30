@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {SliderWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName, Reset} from './widget-common';
-// import {debounce} from 'vega';
 import debounce from 'lodash.debounce';
 
 function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Element {

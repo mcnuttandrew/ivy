@@ -3,29 +3,43 @@
 exports[`#fillTemplateMapWithDefaults 1`] = `
 Object {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "encoding": Object {
-    "color": null,
-    "x": Object {
-      "field": null,
-      "scale": Object {
-        "zero": true,
-      },
-      "type": "quantitative",
-    },
-    "y": Object {
-      "field": null,
-      "scale": Object {
-        "zero": true,
-      },
-      "type": "quantitative",
+  "config": Object {
+    "mark": Object {
+      "invalid": null,
     },
   },
-  "mark": Object {
-    "color": "steelblue",
-    "size": 15,
-    "tooltip": true,
-    "type": "point",
-  },
+  "layer": Array [
+    Object {
+      "encoding": Object {
+        "color": Object {
+          "condition": Object {
+            "test": "datum.null === null || datum.null === null",
+            "value": "#aaa",
+          },
+        },
+        "x": Object {
+          "field": null,
+          "scale": Object {
+            "zero": true,
+          },
+          "type": "quantitative",
+        },
+        "y": Object {
+          "field": null,
+          "scale": Object {
+            "zero": true,
+          },
+          "type": "quantitative",
+        },
+      },
+      "mark": Object {
+        "color": "steelblue",
+        "size": 15,
+        "tooltip": true,
+        "type": "point",
+      },
+    },
+  ],
 }
 `;
 
@@ -37,6 +51,8 @@ Object {
     "Single Color": "\\"steelblue\\"",
     "Zeroes": "true",
     "colorType": "\\"ordinal\\"",
+    "showBand": "false",
+    "showNulls": "true",
     "xDim": null,
     "xType": "\\"quantitative\\"",
     "yDim": null,
@@ -141,7 +157,7 @@ Object {
             "value": "#000",
           },
           "radius": Object {
-            "scale": "r",
+            "scale": "placement",
             "value": 1.3,
           },
           "text": Object {
@@ -190,7 +206,20 @@ Object {
       ],
       "name": "r",
       "range": Array [
-        90,
+        20,
+        100,
+      ],
+      "type": "sqrt",
+      "zero": false,
+    },
+    Object {
+      "domain": Array [
+        0,
+        1,
+      ],
+      "name": "placement",
+      "range": Array [
+        20,
         100,
       ],
       "type": "sqrt",
@@ -209,6 +238,8 @@ Object {
     "aggregate": "\\"mean\\"",
     "category": null,
     "colorScheme": "\\"category20\\"",
+    "radialAggregate": "\\"mean\\"",
+    "radialValue": null,
     "value": null,
   },
   "systemValues": Object {
@@ -252,9 +283,28 @@ exports[`#setTemplateValues 1`] = `
         {
           \\"type\\": \\"aggregate\\",
           \\"groupby\\": [\\"CATEGORY_TEST\\"],
-          \\"fields\\": [\\"VALUE_TEST\\"],
-          \\"ops\\": [\\"[aggregate]\\"],
-          \\"as\\": [\\"pieAg\\"]
+          \\"fields\\": [
+            \\"VALUE_TEST\\",
+            {
+              \\"$cond\\": {
+                \\"query\\": \\"parameters.radialValue\\",
+                \\"true\\": \\"[radialValue]\\"
+              }
+            }
+          ],
+          \\"ops\\": [
+            \\"[aggregate]\\",
+            {
+              \\"$cond\\": {
+                \\"query\\": \\"parameters.radialValue\\",
+                \\"true\\": \\"[radialAggregate]\\"
+              }
+            }
+          ],
+          \\"as\\": [
+            \\"pieAg\\",
+            {\\"$cond\\": {\\"query\\": \\"parameters.radialValue\\", \\"true\\": \\"radAgg\\"}}
+          ]
         },
         {
           \\"type\\": \\"pie\\",
@@ -265,7 +315,13 @@ exports[`#setTemplateValues 1`] = `
         },
         {
           \\"type\\": \\"formula\\",
-          \\"expr\\": \\"datum.CATEGORY_TEST + ': ' + datum.pieAg\\",
+          \\"expr\\": {
+            \\"$cond\\": {
+              \\"query\\": \\"parameters.radialValue\\",
+              \\"true\\": \\"{'CATEGORY_TEST': datum.CATEGORY_TEST, 'VALUE_TEST': datum.pieAg, '[radialValue]': datum.radAgg}\\",
+              \\"false\\": \\"datum.CATEGORY_TEST + ': ' + datum.pieAg\\"
+            }
+          },
           \\"as\\": \\"tooltip\\"
         }
       ]
@@ -281,9 +337,22 @@ exports[`#setTemplateValues 1`] = `
     {
       \\"name\\": \\"r\\",
       \\"type\\": \\"sqrt\\",
+      \\"domain\\": {
+        \\"$cond\\": {
+          \\"query\\": \\"parameters.radialValue\\",
+          \\"true\\": {\\"data\\": \\"table\\", \\"field\\": \\"radAgg\\"},
+          \\"false\\": [0, 1]
+        }
+      },
+      \\"zero\\": false,
+      \\"range\\": [20, 100]
+    },
+    {
+      \\"name\\": \\"placement\\",
+      \\"type\\": \\"sqrt\\",
       \\"domain\\": [0, 1],
       \\"zero\\": false,
-      \\"range\\": [90, 100]
+      \\"range\\": [20, 100]
     }
   ],
   \\"marks\\": [
@@ -298,7 +367,13 @@ exports[`#setTemplateValues 1`] = `
           \\"startAngle\\": {\\"field\\": \\"startAngle\\"},
           \\"endAngle\\": {\\"field\\": \\"endAngle\\"},
           \\"innerRadius\\": {\\"value\\": \\"[DonutChart]\\"},
-          \\"outerRadius\\": {\\"signal\\": \\"width / 2\\"},
+          \\"outerRadius\\": {
+            \\"$cond\\": {
+              \\"query\\": \\"parameters.radialValue\\",
+              \\"true\\": {\\"scale\\": \\"r\\", \\"field\\": \\"radAgg\\"},
+              \\"false\\": {\\"signal\\": \\"width / 2\\"}
+            }
+          },
           \\"cornerRadius\\": {\\"value\\": 0},
           \\"tooltip\\": {\\"field\\": \\"tooltip\\"}
         }
@@ -311,7 +386,7 @@ exports[`#setTemplateValues 1`] = `
         \\"enter\\": {
           \\"x\\": {\\"field\\": {\\"group\\": \\"width\\"}, \\"mult\\": 0.5},
           \\"y\\": {\\"field\\": {\\"group\\": \\"height\\"}, \\"mult\\": 0.5},
-          \\"radius\\": {\\"scale\\": \\"r\\", \\"value\\": 1.3},
+          \\"radius\\": {\\"scale\\": \\"placement\\", \\"value\\": 1.3},
           \\"theta\\": {\\"signal\\": \\"(datum.startAngle + datum.endAngle)/2\\"},
           \\"fill\\": {\\"value\\": \\"#000\\"},
           \\"align\\": {\\"value\\": \\"center\\"},
@@ -327,27 +402,72 @@ exports[`#setTemplateValues 1`] = `
 exports[`#setTemplateValues 2`] = `
 "{
   \\"$schema\\": \\"https://vega.github.io/schema/vega-lite/v4.json\\",
-  \\"mark\\": {
-    \\"type\\": \\"point\\",
-    \\"tooltip\\": true,
-    \\"size\\": \\"[Radius]\\",
-    \\"color\\": {
+  \\"layer\\": [
+    {
       \\"$cond\\": {
-        \\"true\\": \\"[Single Color]\\",
-        \\"false\\": null,
-        \\"query\\": \\"!parameters.Color\\"
+        \\"query\\": \\"parameters.showBand.includes(\\\\\\"true\\\\\\")\\",
+        \\"true\\": {
+          \\"mark\\": {\\"type\\": \\"errorband\\", \\"extent\\": \\"stdev\\", \\"opacity\\": 0.2},
+          \\"encoding\\": {\\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"quantitative\\"}}
+        }
+      }
+    },
+    {
+      \\"$cond\\": {
+        \\"query\\": \\"parameters.showBand.includes(\\\\\\"true\\\\\\")\\",
+        \\"true\\": {
+          \\"mark\\": \\"rule\\",
+          \\"encoding\\": {
+            \\"y\\": {
+              \\"field\\": \\"yDim_TEST\\",
+              \\"type\\": \\"quantitative\\",
+              \\"aggregate\\": \\"mean\\"
+            }
+          }
+        }
+      }
+    },
+    {
+      \\"mark\\": {
+        \\"type\\": \\"point\\",
+        \\"tooltip\\": true,
+        \\"size\\": \\"[Radius]\\",
+        \\"color\\": {
+          \\"$cond\\": {
+            \\"true\\": \\"[Single Color]\\",
+            \\"false\\": null,
+            \\"query\\": \\"!parameters.Color\\"
+          }
+        }
+      },
+      \\"encoding\\": {
+        \\"x\\": {
+          \\"field\\": \\"xDim_TEST\\",
+          \\"type\\": \\"[xType]\\",
+          \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}
+        },
+        \\"y\\": {
+          \\"field\\": \\"yDim_TEST\\",
+          \\"type\\": \\"[yType]\\",
+          \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}
+        },
+        \\"color\\": {
+          \\"condition\\": {
+            \\"test\\": \\"datum.xDim_TEST === null || datum.yDim_TEST === null\\",
+            \\"value\\": \\"#aaa\\"
+          },
+          \\"field\\": {\\"$cond\\": {\\"query\\": \\"parameters.Color\\", \\"true\\": \\"[Color]\\"}},
+          \\"type\\": {
+            \\"$cond\\": {\\"query\\": \\"parameters.Color\\", \\"true\\": \\"[colorType]\\"}
+          }
+        }
       }
     }
-  },
-  \\"encoding\\": {
-    \\"x\\": {\\"field\\": \\"xDim_TEST\\", \\"type\\": \\"[xType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
-    \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"[yType]\\", \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}},
-    \\"color\\": {
-      \\"$cond\\": {
-        \\"query\\": \\"parameters.Color\\",
-        \\"true\\": {\\"field\\": \\"[Color]\\", \\"type\\": \\"[colorType]\\"},
-        \\"false\\": null
-      }
+  ],
+  \\"config\\": {
+    \\"$cond\\": {
+      \\"query\\": \\"parameters.showNulls.includes(\\\\\\"true\\\\\\")\\",
+      \\"true\\": {\\"mark\\": {\\"invalid\\": null}}
     }
   }
 }"
@@ -411,6 +531,25 @@ exports[`serialize/deserialize template 1`] = `
     {\\"name\\": \\"value\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"MEASURE\\"], \\"required\\": true}},
     {
       \\"name\\": \\"aggregate\\",
+      \\"type\\": \\"List\\",
+      \\"config\\": {
+        \\"allowedValues\\": [
+          {\\"display\\": \\"count\\", \\"value\\": \\"\\\\\\"count\\\\\\"\\"},
+          {\\"display\\": \\"missing\\", \\"value\\": \\"\\\\\\"missing\\\\\\"\\"},
+          {\\"display\\": \\"distinct\\", \\"value\\": \\"\\\\\\"distinct\\\\\\"\\"},
+          {\\"display\\": \\"sum\\", \\"value\\": \\"\\\\\\"sum\\\\\\"\\"},
+          {\\"display\\": \\"mean\\", \\"value\\": \\"\\\\\\"mean\\\\\\"\\"},
+          {\\"display\\": \\"median\\", \\"value\\": \\"\\\\\\"median\\\\\\"\\"},
+          {\\"display\\": \\"min\\", \\"value\\": \\"\\\\\\"min\\\\\\"\\"},
+          {\\"display\\": \\"max\\", \\"value\\": \\"\\\\\\"max\\\\\\"\\"}
+        ],
+        \\"defaultValue\\": \\"\\\\\\"mean\\\\\\"\\"
+      }
+    },
+    {\\"name\\": \\"radialValue\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"MEASURE\\"], \\"required\\": false}},
+    {
+      \\"name\\": \\"radialAggregate\\",
+      \\"displayName\\": \\"aggregate\\",
       \\"type\\": \\"List\\",
       \\"config\\": {
         \\"allowedValues\\": [
@@ -538,6 +677,58 @@ Object {
         "defaultValue": "\\"mean\\"",
       },
       "name": "aggregate",
+      "type": "List",
+    },
+    Object {
+      "config": Object {
+        "allowedTypes": Array [
+          "MEASURE",
+        ],
+        "required": false,
+      },
+      "name": "radialValue",
+      "type": "DataTarget",
+    },
+    Object {
+      "config": Object {
+        "allowedValues": Array [
+          Object {
+            "display": "count",
+            "value": "\\"count\\"",
+          },
+          Object {
+            "display": "missing",
+            "value": "\\"missing\\"",
+          },
+          Object {
+            "display": "distinct",
+            "value": "\\"distinct\\"",
+          },
+          Object {
+            "display": "sum",
+            "value": "\\"sum\\"",
+          },
+          Object {
+            "display": "mean",
+            "value": "\\"mean\\"",
+          },
+          Object {
+            "display": "median",
+            "value": "\\"median\\"",
+          },
+          Object {
+            "display": "min",
+            "value": "\\"min\\"",
+          },
+          Object {
+            "display": "max",
+            "value": "\\"max\\"",
+          },
+        ],
+        "defaultValue": "\\"mean\\"",
+      },
+      "displayName": "aggregate",
+      "name": "radialAggregate",
       "type": "List",
     },
     Object {

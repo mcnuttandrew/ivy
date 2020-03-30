@@ -35,7 +35,7 @@ import {
   setAllTemplateValues,
   setBlankTemplate,
   setMaterialization,
-  setNewSpecCode,
+  setSpecCode,
   setTemplateValue,
   setWidgetValue,
 } from './template-actions';
@@ -119,7 +119,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   // code edits
   [actionTypes.READ_IN_TEMPLATE]: readInTemplate,
   [actionTypes.READ_IN_TEMPLATE_MAP]: readInTemplateMap,
-  [actionTypes.SET_NEW_ENCODING_CODE]: setNewSpecCode,
+  [actionTypes.SET_SPEC_CODE]: setSpecCode,
 
   // gui modifications
   [actionTypes.SET_CODE_MODE]: addUndo(setCodeMode),

@@ -141,7 +141,7 @@ export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload>
 };
 
 // set the spec code
-export const setNewSpecCode: ActionResponse<HandleCodePayload> = (state, payload) => {
+export const setSpecCode: ActionResponse<HandleCodePayload> = (state, payload) => {
   const {code, inError} = payload;
   return produce(state, draftState => {
     draftState.currentTemplateInstance.code = code;

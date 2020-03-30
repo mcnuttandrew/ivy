@@ -60,11 +60,11 @@ interface EditorControlsConfigProps {
   editorLineWrap: boolean;
   setEditorFontSize: any;
   setEditorLineWrap: any;
-  setNewSpecCode: GenericAction<HandleCodePayload>;
+  setSpecCode: GenericAction<HandleCodePayload>;
 }
 function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
   const {
-    setNewSpecCode,
+    setSpecCode,
     codeMode,
     editorFontSize,
     setEditorFontSize,
@@ -109,7 +109,7 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
               if (codeMode !== TEMPLATE_BODY) {
                 return;
               }
-              setNewSpecCode({
+              setSpecCode({
                 code: stringify(action(JSON.parse(currentCode))),
                 inError: false,
               });
@@ -168,7 +168,7 @@ interface CodeEditorControlsProps {
   setEditMode: GenericAction<boolean>;
   setEditorFontSize: any;
   setEditorLineWrap: any;
-  setNewSpecCode: GenericAction<HandleCodePayload>;
+  setSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<boolean>;
   showProgrammaticMode: boolean;
   spec: any;
@@ -188,7 +188,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
     setEditMode,
     setEditorFontSize,
     setEditorLineWrap,
-    setNewSpecCode,
+    setSpecCode,
     setProgrammaticView,
     showProgrammaticMode,
     template,
@@ -308,7 +308,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
                 editorLineWrap={editorLineWrap}
                 setEditorFontSize={setEditorFontSize}
                 setEditorLineWrap={setEditorLineWrap}
-                setNewSpecCode={setNewSpecCode}
+                setSpecCode={setSpecCode}
               />
             }
           >
