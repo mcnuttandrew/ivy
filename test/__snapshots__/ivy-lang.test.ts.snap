@@ -3,61 +3,134 @@
 exports[`#applyConditionals 1`] = `
 Object {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "encoding": Object {
-    "color": null,
-    "x": Object {
-      "field": "[xDim]",
-      "scale": Object {
-        "zero": "[Zeroes]",
-      },
-      "type": "[xType]",
-    },
-    "y": Object {
-      "field": "[yDim]",
-      "scale": Object {
-        "zero": "[Zeroes]",
-      },
-      "type": "[yType]",
+  "config": Object {
+    "mark": Object {
+      "invalid": null,
     },
   },
-  "mark": Object {
-    "color": "[Single Color]",
-    "size": "[Radius]",
-    "tooltip": true,
-    "type": "point",
-  },
+  "layer": Array [
+    Object {
+      "encoding": Object {
+        "y": Object {
+          "field": "[yDim]",
+          "type": "quantitative",
+        },
+      },
+      "mark": Object {
+        "extent": "stdev",
+        "opacity": 0.2,
+        "type": "errorband",
+      },
+    },
+    Object {
+      "encoding": Object {
+        "y": Object {
+          "aggregate": "mean",
+          "field": "[yDim]",
+          "type": "quantitative",
+        },
+      },
+      "mark": "rule",
+    },
+    Object {
+      "encoding": Object {
+        "color": Object {
+          "condition": Object {
+            "test": "datum.[xDim] === null || datum.[yDim] === null",
+            "value": "#aaa",
+          },
+        },
+        "x": Object {
+          "field": "[xDim]",
+          "scale": Object {
+            "zero": "[Zeroes]",
+          },
+          "type": "[xType]",
+        },
+        "y": Object {
+          "field": "[yDim]",
+          "scale": Object {
+            "zero": "[Zeroes]",
+          },
+          "type": "[yType]",
+        },
+      },
+      "mark": Object {
+        "color": "[Single Color]",
+        "size": "[Radius]",
+        "tooltip": true,
+        "type": "point",
+      },
+    },
+  ],
 }
 `;
 
 exports[`#applyConditionals 2`] = `
 Object {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "encoding": Object {
-    "color": Object {
-      "field": "[Color]",
-      "type": "[colorType]",
-    },
-    "x": Object {
-      "field": "[xDim]",
-      "scale": Object {
-        "zero": "[Zeroes]",
-      },
-      "type": "[xType]",
-    },
-    "y": Object {
-      "field": "[yDim]",
-      "scale": Object {
-        "zero": "[Zeroes]",
-      },
-      "type": "[yType]",
+  "config": Object {
+    "mark": Object {
+      "invalid": null,
     },
   },
-  "mark": Object {
-    "color": null,
-    "size": "[Radius]",
-    "tooltip": true,
-    "type": "point",
-  },
+  "layer": Array [
+    Object {
+      "encoding": Object {
+        "y": Object {
+          "field": "[yDim]",
+          "type": "quantitative",
+        },
+      },
+      "mark": Object {
+        "extent": "stdev",
+        "opacity": 0.2,
+        "type": "errorband",
+      },
+    },
+    Object {
+      "encoding": Object {
+        "y": Object {
+          "aggregate": "mean",
+          "field": "[yDim]",
+          "type": "quantitative",
+        },
+      },
+      "mark": "rule",
+    },
+    Object {
+      "encoding": Object {
+        "color": Object {
+          "condition": Object {
+            "test": "datum.[xDim] === null || datum.[yDim] === null",
+            "value": "#aaa",
+          },
+          "field": "[Color]",
+          "type": "[colorType]",
+        },
+        "x": Object {
+          "field": "[xDim]",
+          "scale": Object {
+            "zero": "[Zeroes]",
+          },
+          "type": "[xType]",
+        },
+        "y": Object {
+          "field": "[yDim]",
+          "scale": Object {
+            "zero": "[Zeroes]",
+          },
+          "type": "[yType]",
+        },
+      },
+      "mark": Object {
+        "color": null,
+        "size": "[Radius]",
+        "tooltip": true,
+        "type": "point",
+      },
+    },
+  ],
 }
 `;
 

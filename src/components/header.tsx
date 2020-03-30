@@ -1,5 +1,5 @@
 import React from 'react';
-import {TiArrowBack, TiArrowForward, TiThSmall, TiHome} from 'react-icons/ti';
+import {TiArrowBack, TiArrowForward, TiThSmall, TiHome, TiSocialGithub} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
@@ -67,6 +67,15 @@ export default function Header(props: HeaderProps): JSX.Element {
               </div>
             </HoverTooltip>
           </div>
+          <a
+            className="flex state-action-button"
+            href="https://github.com/mcnuttandrew/hydra/issues/new"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <TiSocialGithub />
+            <span>Report a bug</span>
+          </a>
         </div>
       </div>
       <Tooltip
@@ -89,7 +98,7 @@ export default function Header(props: HeaderProps): JSX.Element {
           </div>
         }
       >
-        <div className="about-bar">Template + Settings = Visualization (Learn More)</div>
+        <div className="about-bar ">Template + Settings = Visualization (Learn More)</div>
       </Tooltip>
     </div>
   );

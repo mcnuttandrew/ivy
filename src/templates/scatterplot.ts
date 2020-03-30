@@ -4,17 +4,53 @@ import {toList} from '../utils';
 import {AUTHORS} from '../constants/index';
 const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  mark: {
-    type: 'point',
-    tooltip: true,
-    size: '[Radius]',
-    color: {$cond: {true: '[Single Color]', false: null, query: '!parameters.Color'}},
-  },
-  encoding: {
-    x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
-    y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
-    color: {
-      $cond: {query: 'parameters.Color', true: {field: '[Color]', type: '[colorType]'}, false: null},
+  layer: [
+    {
+      $cond: {
+        query: 'parameters.showBand.includes("true")',
+        true: {
+          mark: {type: 'errorband', extent: 'stdev', opacity: 0.2},
+          encoding: {y: {field: '[yDim]', type: 'quantitative'}},
+        },
+      },
+    },
+    {
+      $cond: {
+        query: 'parameters.showBand.includes("true")',
+        true: {
+          mark: 'rule',
+          encoding: {y: {field: '[yDim]', type: 'quantitative', aggregate: 'mean'}},
+        },
+      },
+    },
+
+    {
+      mark: {
+        type: 'point',
+        tooltip: true,
+        size: '[Radius]',
+        color: {$cond: {true: '[Single Color]', false: null, query: '!parameters.Color'}},
+      },
+      encoding: {
+        x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
+        y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
+        color: {
+          condition: {
+            test: 'datum.[xDim] === null || datum.[yDim] === null',
+            value: '#aaa',
+          },
+          field: {$cond: {query: 'parameters.Color', true: '[Color]'}},
+          type: {$cond: {query: 'parameters.Color', true: '[colorType]'}},
+        },
+      },
+    },
+  ],
+  config: {
+    $cond: {
+      query: 'parameters.showNulls.includes("true")',
+      true: {
+        mark: {invalid: null},
+      },
     },
   },
 };
@@ -58,6 +94,18 @@ const SCATTERPLOT: Template = {
       name: 'Zeroes',
       type: 'Switch',
       config: {active: 'true', inactive: 'false', defaultsToActive: true},
+    },
+    {
+      name: 'showNulls',
+      displayName: 'Show Nulls Along Axes',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: true},
+    },
+    {
+      name: 'showBand',
+      displayName: 'Show Average Band',
+      type: 'Switch',
+      config: {active: 'true', inactive: 'false', defaultsToActive: false},
     },
     {name: `Radius`, type: 'Slider', config: {minVal: 10, maxVal: 60, step: 1, defaultValue: 15}},
   ],

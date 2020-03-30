@@ -4,6 +4,7 @@ import {VEGA_CATEGORICAL_COLOR_SCHEMES, AGGREGATES} from './vega-common';
 import {toList} from '../utils';
 import {AUTHORS} from '../constants/index';
 // https://observablehq.com/@simon-lang/simple-vega-pie-chart
+const radQuery = {query: 'parameters.radialValue'};
 const PIECHART_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
   width: 200,
@@ -19,9 +20,9 @@ const PIECHART_EXAMPLE: any = {
         {
           type: 'aggregate',
           groupby: ['[category]'],
-          fields: ['[value]'],
-          ops: ['[aggregate]'],
-          as: ['pieAg'],
+          fields: ['[value]', {$cond: {...radQuery, true: '[radialValue]'}}],
+          ops: ['[aggregate]', {$cond: {...radQuery, true: '[radialAggregate]'}}],
+          as: ['pieAg', {$cond: {...radQuery, true: 'radAgg'}}],
         },
 
         {
@@ -33,7 +34,13 @@ const PIECHART_EXAMPLE: any = {
         },
         {
           type: 'formula',
-          expr: "datum.[category] + ': ' + datum.pieAg",
+          expr: {
+            $cond: {
+              ...radQuery,
+              true: "{'[category]': datum.[category], '[value]': datum.pieAg, '[radialValue]': datum.radAgg}",
+              false: "datum.[category] + ': ' + datum.pieAg",
+            },
+          },
           as: 'tooltip',
         },
       ],
@@ -50,9 +57,18 @@ const PIECHART_EXAMPLE: any = {
     {
       name: 'r',
       type: 'sqrt',
+      domain: {
+        $cond: {...radQuery, true: {data: 'table', field: 'radAgg'}, false: [0, 1]},
+      },
+      zero: false,
+      range: [20, 100],
+    },
+    {
+      name: 'placement',
+      type: 'sqrt',
       domain: [0, 1],
       zero: false,
-      range: [90, 100],
+      range: [20, 100],
     },
   ],
 
@@ -68,7 +84,9 @@ const PIECHART_EXAMPLE: any = {
           startAngle: {field: 'startAngle'},
           endAngle: {field: 'endAngle'},
           innerRadius: {value: '[DonutChart]'},
-          outerRadius: {signal: 'width / 2'},
+          outerRadius: {
+            $cond: {...radQuery, true: {scale: 'r', field: 'radAgg'}, false: {signal: 'width / 2'}},
+          },
           cornerRadius: {value: 0},
           tooltip: {field: 'tooltip'},
         },
@@ -81,7 +99,7 @@ const PIECHART_EXAMPLE: any = {
         enter: {
           x: {field: {group: 'width'}, mult: 0.5},
           y: {field: {group: 'height'}, mult: 0.5},
-          radius: {scale: 'r', value: 1.3},
+          radius: {scale: 'placement', value: 1.3},
           theta: {signal: '(datum.startAngle + datum.endAngle)/2'},
           fill: {value: '#000'},
           align: {value: 'center'},
@@ -92,7 +110,7 @@ const PIECHART_EXAMPLE: any = {
     },
   ],
 };
-
+const aggs = {config: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'}};
 const PieChart: Template = {
   templateName: 'pie chart',
   templateDescription:
@@ -107,7 +125,9 @@ const PieChart: Template = {
       config: {active: 'true', inactive: 'false', defaultsToActive: true},
     },
     {name: 'value', type: 'DataTarget', config: {allowedTypes: ['MEASURE'], required: true}},
-    {name: 'aggregate', type: 'List', config: {allowedValues: toList(AGGREGATES), defaultValue: '"mean"'}},
+    {name: 'aggregate', type: 'List', ...aggs},
+    {name: 'radialValue', type: 'DataTarget', config: {allowedTypes: ['MEASURE'], required: false}},
+    {name: 'radialAggregate', displayName: 'aggregate', type: 'List', ...aggs},
     {name: 'OtherSettingsSection', type: 'Section', config: null},
     {
       name: 'colorScheme',

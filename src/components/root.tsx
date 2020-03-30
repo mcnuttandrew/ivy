@@ -138,7 +138,7 @@ interface RootProps {
   setGuiView: GenericAction<boolean>;
   setMaterialization: GenericAction<ViewsToMaterialize>;
   setModalState: GenericAction<string | null>;
-  setNewSpecCode: GenericAction<HandleCodePayload>;
+  setSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<boolean>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setUserName: GenericAction<string>;
@@ -290,7 +290,7 @@ class RootComponent extends React.Component<RootProps, State> {
         readInTemplateMap={this.props.readInTemplateMap}
         setCodeMode={this.props.setCodeMode}
         setEditMode={this.props.setEditMode}
-        setNewSpecCode={this.props.setNewSpecCode}
+        setSpecCode={this.props.setSpecCode}
         setEditorFontSize={(size: number): void => {
           writeEditorFontSize(size);
           this.triggerRepaint();

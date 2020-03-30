@@ -13,11 +13,14 @@ const blankSystemValues = {systemValues: {viewsToMaterialize: {}, dataTransforms
 test('#applyConditionals', () => {
   const PARSED_CODE = JSON.parse(Scatterplot.code);
 
-  const exampleTemplateMap1: TemplateMap = {paramValues: {Color: null}, ...blankSystemValues};
+  const exampleTemplateMap1: TemplateMap = {
+    paramValues: {Color: null, showBand: 'true', showNulls: 'true'},
+    ...blankSystemValues,
+  };
   expect(applyConditionals(exampleTemplateMap1)(PARSED_CODE)).toMatchSnapshot();
 
   const exampleTemplateMap2: TemplateMap = {
-    paramValues: {Color: 'Wowza good dimension'},
+    paramValues: {Color: 'Wowza good dimension', showBand: 'true', showNulls: 'true'},
     ...blankSystemValues,
   };
   expect(applyConditionals(exampleTemplateMap2)(PARSED_CODE)).toMatchSnapshot();

@@ -61,6 +61,7 @@ export default class CodeEditor extends React.Component<Props> {
       <IgnoreKeys style={{height: '100%'}}>
         <MonacoEditor
           ref="monaco"
+          key={codeMode}
           language="json"
           theme="monokai"
           height="100%"
