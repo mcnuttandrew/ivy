@@ -1231,6 +1231,11 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
 }
 
+.slide-widget .delete-option-button {
+  font-size: 15px;
+  margin-left: 20px;
+}
+
 .edit-mode .slide-widget {
   width: 90%;
 }

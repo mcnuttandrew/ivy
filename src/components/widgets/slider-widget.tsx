@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {SliderWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
-import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName} from './widget-common';
+import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName, Reset} from './widget-common';
+// import {debounce} from 'vega';
+import debounce from 'lodash.debounce';
 
 function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -54,7 +56,10 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
 function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element {
   const {widget, templateMap, setTemplateValue, editMode} = props;
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
-  const setVal = (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`});
+  const setVal = debounce(
+    (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`}),
+    75,
+  );
   return (
     <div className="slide-widget">
       <div className="widget-title">{widgetName(widget, editMode)}</div>
@@ -73,7 +78,7 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
             min={widget.config.minVal}
             max={widget.config.maxVal}
             value={templateMap.paramValues[widget.name]}
-            onChange={(event): any => setVal(event.target.value)}
+            onChange={({target: {value}}): any => setVal(value)}
             step={widget.config.step}
             className="slider"
           />
@@ -82,6 +87,11 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
             <span>{widget.config.maxVal}</span>
           </div>
         </div>
+        <Reset
+          tooltipLabel={'Reset to default value'}
+          direction="left"
+          onClick={(): any => setVal(widget.config.defaultValue)}
+        />
       </div>
     </div>
   );
