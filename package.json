@@ -95,14 +95,14 @@
     "react-redux": "^6.0.1",
     "react-split-pane": "^0.1.89",
     "react-switch": "^5.0.1",
-    "react-vega": "^7",
+    "react-vega": "^7.3.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.2.0",
     "type-analyzer": "^0.2.3",
     "unit-vis": "^0.0.4",
-    "vega": "^5.9.0",
+    "vega": "^5.10.1",
     "vega-datasets": "^1.30.2",
-    "vega-lite": "^4.0.2",
+    "vega-lite": "^4.8.1",
     "vega-tooltip": "^0.19.1"
   },
   "scripts": {
