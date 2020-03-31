@@ -3,7 +3,6 @@ import {GenericAction} from '../actions/index';
 import {Template, ColumnHeader} from '../types';
 import ProgramPreview from './program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../utils';
-// import {getTemplateOrg, writeTemplateOrg} from '../utils/local-storage';
 import GALLERY from '../templates/gallery';
 import {AUTHORS} from '../constants/index';
 import {saveAs} from 'file-saver';
@@ -16,63 +15,23 @@ interface Props {
   userName: string;
 }
 
-export const SORTS = [
-  'template name',
-  'min required measures',
-  'min required dimensions',
-  'min required times',
-  'max allowed fields',
-  'complexity',
-];
+export const SECTIONS = ['alphabetical', 'author', 'language', 'vis key word', 'none'];
 
-function publish(templateName: string, template: Template): void {
+function publish(template: Template): void {
   fetch(`${serverPrefix()}/publish`, {
     method: 'POST',
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'same-origin', // include, *same-origin, omit
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *client
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
     body: JSON.stringify({template, creator: template.templateAuthor}),
   }).then(x => {
+    // TODO do something?
     console.log(x);
   });
 }
-
-type MakeSortScoreType = (
-  Sort: string,
-) => (template: Template) => {score: number | string; template: Template};
-const makeSortScore: MakeSortScoreType = (Sort: string) => (template): any => {
-  const counts = buildCounts(template);
-  let score = null;
-  if (Sort === 'template name') {
-    score = template.templateName;
-  }
-  if (Sort === 'null') {
-    score = 0;
-  }
-  if (Sort === 'min required measures') {
-    score = counts.MEASURE;
-  }
-  if (Sort === 'min required dimensions') {
-    score = counts.DIMENSION;
-  }
-  if (Sort === 'min required times') {
-    score = counts.TIME;
-  }
-  if (Sort === 'max allowed fields') {
-    score = counts.SUM;
-  }
-  if (Sort === 'complexity') {
-    score = (template.code.match(/\$cond/g) || []).length;
-  }
-  return {template, score};
-};
 
 function toExportStr(str: string): string {
   return str
@@ -87,64 +46,80 @@ function filterTemplates(
   columns: ColumnHeader[],
   search: string,
 ): Template[] {
-  return templates
-    .map(makeSortScore(spec.Sort))
-    .sort((a, b) => {
-      const sortResult =
-        (spec['Reverse Sort'] ? -1 : 1) *
-        (typeof a.score === 'string' && typeof b.score === 'string'
-          ? (a.score as string).localeCompare(b.score as string)
-          : (a.score as number) - (b.score as number));
-      if (!sortResult) {
-        return a.template.templateName.localeCompare(a.template.templateName);
-      }
-      return sortResult;
-    })
-    .reduce((acc, {template}) => {
-      if (template.templateName === GALLERY.templateName) {
-        return acc;
-      }
-      const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
-      if (!canBeUsed) {
-        return acc;
-      }
-      const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
-      if (!nameIsValid) {
-        return acc;
-      }
+  return templates.filter(template => {
+    if (template.templateName === GALLERY.templateName) {
+      return false;
+    }
+    const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
+    if (!canBeUsed) {
+      return false;
+    }
+    const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
+    if (!nameIsValid) {
+      return false;
+    }
 
-      const {SUM} = buildCounts(template);
-      if (
-        (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
-        (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
-      ) {
-        return acc;
-      }
+    const {SUM} = buildCounts(template);
+    if (
+      (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
+      (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
+    ) {
+      return false;
+    }
 
-      return acc.concat(template);
-    }, []);
+    return true;
+  }, []);
 }
-// const [templateOrg, setTemplateOrg] = useState(getTemplateOrg());
-// useEffect(() => {
-//   const updatedOrg = templatesToKey(templates).reduce((acc, row: string) => {
-//     if (!acc[row]) {
-//       acc[row] = 'unsorted';
-//     }
-//     return acc;
-//   }, templateOrg || {});
-//   writeTemplateOrg(JSON.stringify(updatedOrg));
-//   setTemplateOrg(updatedOrg);
-// }, [templatesToKey(templates)]);
 
-// const groups = Object.entries(templateOrg).reduce((acc, [group, key]: [string, string]) => {
-//   acc[key] = (acc[key] || []).concat(group);
-//   return acc;
-// }, {} as {[x: string]: string[]});
-// console.log(groups);
+type TemplateGroup = {[x: string]: Template[]};
+function groupBy(templates: Template[], accessor: (x: Template) => string): TemplateGroup {
+  return templates.reduce((acc, row) => {
+    const groupKey = accessor(row);
+    acc[groupKey] = (acc[groupKey] || []).concat(row);
+    return acc;
+  }, {} as TemplateGroup);
+}
 
-// const templatesToKey = (templates: Template[]): string[] =>
-//   templates.map(d => `${d.templateName}-${d.templateAuthor}`);
-export default function DataSearchMode(props: Props): JSX.Element {
+const visNameCombos = [
+  {key: 'exotic', synonyms: ['3d', 'cloud', 'gauge', 'mosaic', 'treemap', 'joy']},
+  {key: 'explore', synonyms: ['explor', 'multi-dimensional']},
+  {key: 'distribution', synonyms: ['dot', 'univariate', 'unit']},
+  {key: 'area', synonyms: []},
+  {key: 'trend', synonyms: []},
+  {key: 'bar', synonyms: ['histogram']},
+  {key: 'scatter', synonyms: []},
+  {key: 'radial', synonyms: ['pie', 'radar']},
+  {key: 'simple', synonyms: ['data table', 'bignumber']},
+];
+function checkName(template: Template, key: string): boolean {
+  const nameIncludes = template.templateName.toLowerCase().includes(key);
+  const descIncludes = template.templateDescription.toLowerCase().includes(key);
+  return nameIncludes || descIncludes;
+}
+
+const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
+  alphabetical: d => d.templateName[0].toUpperCase(),
+  author: d => d.templateAuthor,
+  language: d => d.templateLanguage,
+  'vis key word': d => {
+    const match = visNameCombos.find(({key, synonyms}) =>
+      [key, ...synonyms].some((str: string) => checkName(d, str)),
+    );
+    return (match && match.key) || 'other';
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  none: d => null,
+};
+function toSection(templates: Template[], sectionStratagey: string): TemplateGroup {
+  return Object.entries(groupBy(templates, sectionFunctionMap[sectionStratagey]))
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .reduce((acc, [key, temps]) => {
+      acc[key] = temps.sort((a, b) => a.templateName.localeCompare(b.templateName));
+      return acc;
+    }, {} as TemplateGroup);
+}
+
+export default function Gallery(props: Props): JSX.Element {
   const {columns, deleteTemplate, setEncodingMode, spec, templates, userName} = props;
 
   const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
@@ -153,15 +128,10 @@ export default function DataSearchMode(props: Props): JSX.Element {
       onClick = (): any => deleteTemplate(templateName);
     }
     if (key === 'Publish') {
-      onClick = (): any => {
-        const template = templates.find(template => template.templateName === templateName);
-        publish(templateName, template);
-      };
+      onClick = (): any => publish(templates.find(template => template.templateName === templateName));
     }
     if (key === 'Use') {
-      onClick = (): any => {
-        setEncodingMode(templateName);
-      };
+      onClick = (): any => setEncodingMode(templateName);
     }
     if (key === 'Save to Disc') {
       onClick = (): any => {
@@ -173,10 +143,7 @@ export default function DataSearchMode(props: Props): JSX.Element {
     }
     return {onClick, name: key};
   };
-
-  const search = trim(spec.SearchKey as string);
-  const filteredTemplates = filterTemplates(templates, spec, columns, search);
-  const programs = filteredTemplates.map((template, idx) => {
+  const produceTemplateCard = (template: Template, idx: number): JSX.Element => {
     const {isComplete} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
     const madeByUser = template.templateAuthor === userName;
     const builtIn = template.templateAuthor === AUTHORS;
@@ -190,20 +157,27 @@ export default function DataSearchMode(props: Props): JSX.Element {
       <ProgramPreview
         buttons={buttons.map(makeButtonObject(template.templateName))}
         isComplete={isComplete}
-        key={`${template.templateName}-${idx}`}
+        key={`${template.templateName}-${template.templateAuthor}-${idx}`}
         setEncodingMode={setEncodingMode}
         template={template}
         hideMatches={false}
         userName={userName}
       />
     );
-  });
+  };
+
+  const filteredTemplates = filterTemplates(templates, spec, columns, trim(spec.SearchKey as string));
   return (
-    <div className="data-search-mode">
-      <div className="program-containers">
-        {!programs.length && <div>No templates match your query</div>}
-        {programs}
-      </div>
+    <div className="gallery">
+      {!filteredTemplates.length && <div>No templates match your query</div>}
+      {Object.entries(toSection(filteredTemplates, spec.sectionStratagey)).map(([name, temps]) => {
+        return (
+          <div className="flex-down" key={`${name}-row`}>
+            {name !== `null` && <h1>{name}</h1>}
+            <div className="template-card-sub-containers">{temps.map(produceTemplateCard)}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }

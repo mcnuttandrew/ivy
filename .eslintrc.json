@@ -17,7 +17,9 @@
     "prettier/prettier": ["error", { "singleQuote": true }],
     "@typescript-eslint/no-explicit-any": 0 ,
     "@typescript-eslint/camelcase": 0,
-    "@typescript-eslint/ban-ts-ignore": 0
+    "@typescript-eslint/ban-ts-ignore": 0,
+    "no-case-declarations": 0,
+    "react/prop-types": 0
   },
   "settings": {
     "react": {
