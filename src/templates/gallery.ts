@@ -1,6 +1,7 @@
 import {Template} from '../types';
 import {SECTIONS} from '../components/gallery';
 import {AUTHORS} from '../constants/index';
+import {getGallerySectionPref} from '../utils/local-storage';
 
 const toList = (arr: string[]): {display: string; value: string}[] =>
   arr.map(display => ({display, value: `"${display}"`}));
@@ -9,6 +10,7 @@ const FIRST_TEXT =
 const SECOND_TEXT =
   '\n\n\n or by search for templates that match the data you are interested in visualizing, which you can do using this widget\n\n\n';
 const THIRD_TEXT = '\n\n\n You can organize the gallery using various section organizations: \n\n\n';
+
 const Gallery: Template = {
   templateName: '____gallery____',
   templateDescription: 'The home gallery of the application.',
@@ -32,19 +34,7 @@ const Gallery: Template = {
       name: 'sectionStratagey',
       displayName: 'Organize by',
       type: 'List',
-      config: {allowedValues: toList(SECTIONS), defaultValue: `"none"`},
-    },
-    {
-      name: 'minRequiredTargets',
-      type: 'Slider',
-      config: {minVal: 0, maxVal: 20, step: 1, defaultValue: 0},
-      conditions: [{query: 'false', queryResult: 'show'}],
-    },
-    {
-      name: 'maxRequiredTargets',
-      type: 'Slider',
-      config: {minVal: 0, maxVal: 20, step: 1, defaultValue: 0},
-      conditions: [{query: 'false', queryResult: 'show'}],
+      config: {allowedValues: toList(SECTIONS), defaultValue: getGallerySectionPref() || `"none"`},
     },
   ],
   code: JSON.stringify({

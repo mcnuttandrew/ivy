@@ -251,6 +251,7 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx][key] = value;
     } else {
+      console.log(key, value);
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx].config[key] = value;
     }

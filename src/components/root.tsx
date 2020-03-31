@@ -179,6 +179,7 @@ class RootComponent extends React.Component<RootProps, State> {
   chartArea(): JSX.Element {
     return (
       <ChartArea
+        chainActions={this.props.chainActions}
         changeViewName={this.props.changeViewName}
         cloneView={this.props.cloneView}
         columns={this.props.columns}
@@ -190,10 +191,12 @@ class RootComponent extends React.Component<RootProps, State> {
         encodingMode={this.props.encodingMode}
         languages={this.props.languages}
         missingFields={this.props.missingFields}
+        saveCurrentTemplate={this.props.saveCurrentTemplate}
         setEncodingMode={this.props.setEncodingMode}
         setTemplateValue={this.props.setTemplateValue}
         setAllTemplateValues={this.props.setAllTemplateValues}
         setMaterialization={this.props.setMaterialization}
+        setWidgetValue={this.props.setWidgetValue}
         spec={this.props.spec as Json}
         switchView={this.props.switchView}
         template={this.props.template}

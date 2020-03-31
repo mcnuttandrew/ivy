@@ -12,7 +12,7 @@ import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
 import ViewControls from './view-controls';
-import {GenericAction, DataRow, SetTemplateValuePayload} from '../actions';
+import {GenericAction, DataRow, SetTemplateValuePayload, SetWidgetValuePayload} from '../actions';
 import Gallery from './gallery';
 import GALLERY from '../templates/gallery';
 import {evaluateIvyProgram} from '../ivy-lang';
@@ -21,6 +21,7 @@ import {wrangle} from '../utils/wrangle';
 
 interface ChartAreaProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
+  chainActions: GenericAction<any>;
   cloneView: GenericAction<void>;
   columns: ColumnHeader[];
   createNewView: GenericAction<void>;
@@ -31,10 +32,12 @@ interface ChartAreaProps {
   encodingMode: string;
   languages: {[x: string]: LanguageExtension};
   missingFields: string[];
+  saveCurrentTemplate: GenericAction<void>;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setEncodingMode: GenericAction<string>;
   setMaterialization: GenericAction<ViewsToMaterialize>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
   spec: Json;
   switchView: GenericAction<string>;
   template: Template;
@@ -205,6 +208,7 @@ const MemoizeRender = React.memo(
 export default function ChartArea(props: ChartAreaProps): JSX.Element {
   const {
     changeViewName,
+    chainActions,
     cloneView,
     columns,
     createNewView,
@@ -215,9 +219,11 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     encodingMode,
     languages,
     missingFields,
+    saveCurrentTemplate,
     setAllTemplateValues,
     setEncodingMode,
     setMaterialization,
+    setWidgetValue,
     spec,
     switchView,
     template,
@@ -264,10 +270,14 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         {templateGallery && (
           <Gallery
             columns={columns}
+            chainActions={chainActions}
             deleteTemplate={deleteTemplate}
+            saveCurrentTemplate={saveCurrentTemplate}
             setEncodingMode={setEncodingMode}
+            setWidgetValue={setWidgetValue}
             spec={spec}
             templates={templates}
+            templateMap={templateMap}
             userName={userName}
           />
         )}

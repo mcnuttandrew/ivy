@@ -1,16 +1,21 @@
-import React from 'react';
-import {GenericAction} from '../actions/index';
-import {Template, ColumnHeader} from '../types';
+import React, {useEffect} from 'react';
+import {GenericAction, SetWidgetValuePayload} from '../actions/index';
+import {Template, TemplateMap, ColumnHeader} from '../types';
 import ProgramPreview from './program-preview';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../utils';
+import {writeGallerySectionPref, getGallerySectionPref} from '../utils/local-storage';
 import GALLERY from '../templates/gallery';
 import {AUTHORS} from '../constants/index';
 import {saveAs} from 'file-saver';
 interface Props {
   columns: ColumnHeader[];
+  chainActions: GenericAction<any>;
   deleteTemplate: GenericAction<string>;
+  saveCurrentTemplate: GenericAction<void>;
   setEncodingMode: GenericAction<string>;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
   spec: any;
+  templateMap: TemplateMap;
   templates: Template[];
   userName: string;
 }
@@ -120,7 +125,30 @@ function toSection(templates: Template[], sectionStratagey: string): TemplateGro
 }
 
 export default function Gallery(props: Props): JSX.Element {
-  const {columns, deleteTemplate, setEncodingMode, spec, templates, userName} = props;
+  const {
+    columns,
+    chainActions,
+    deleteTemplate,
+    setEncodingMode,
+    spec,
+    templates,
+    userName,
+    templateMap,
+    setWidgetValue,
+    saveCurrentTemplate,
+  } = props;
+  useEffect(() => {
+    const secStrat = templateMap.paramValues.sectionStratagey;
+    if (secStrat && secStrat !== getGallerySectionPref()) {
+      writeGallerySectionPref(`${secStrat}`);
+      const idx = GALLERY.widgets.findIndex(d => d.name === 'sectionStratagey');
+      chainActions([
+        (): any => setWidgetValue({key: 'defaultValue', value: secStrat, idx}),
+        (): any => saveCurrentTemplate(),
+      ]);
+    }
+    // and then update value in template?????
+  }, [templateMap.paramValues.sectionStratagey]);
 
   const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
     let onClick;

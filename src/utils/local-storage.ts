@@ -19,6 +19,9 @@ export const writeEditorLineWrap = (wrap: any): any => localStorage.setItem('edi
 export const getUserName = (): string => localStorage.getItem('UserName');
 export const writeUserName = (name: any): any => localStorage.setItem('UserName', name);
 
+export const getGallerySectionPref = (): string => localStorage.getItem('GallerySectionPref');
+export const writeGallerySectionPref = (name: any): any => localStorage.setItem('GallerySectionPref', name);
+
 const names = [
   'Andromeda',
   'Antlia',
