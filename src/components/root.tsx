@@ -10,7 +10,7 @@ import {getUserName} from '../utils/local-storage';
 
 import {HOT_KEYS} from '../constants/index';
 import * as actionCreators from '../actions/index';
-// import {Filter} from '../actions/index';
+
 import {
   CoerceTypePayload,
   GenericAction,
@@ -23,7 +23,7 @@ import {
   UpdateFilterPayload,
   DataRow,
 } from '../actions/index';
-import {getTemplateSaveState, computeValidAddNexts, classnames} from '../utils';
+import {getTemplateSaveState, computeValidAddNexts, classnames, log} from '../utils';
 import {
   getHeight,
   writeHeight,
@@ -169,7 +169,7 @@ class RootComponent extends React.Component<RootProps, State> {
   }
 
   componentDidCatch(error: any, errorInfo: any): void {
-    console.error('ERRPR', error, errorInfo);
+    log('ERRPR', error, errorInfo);
   }
 
   triggerRepaint(): void {
@@ -328,7 +328,7 @@ class RootComponent extends React.Component<RootProps, State> {
     } = this.props;
     const onGallery = template.templateName === GALLERY.templateName;
     const withSay = (func: any, name: string) => (): any => {
-      console.log('hotkey', name);
+      log('hotkey', name);
       func();
     };
     return (

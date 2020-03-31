@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {LanguageExtension, RendererProps, Template, Suggestion} from '../types';
+import {log} from '../utils';
 import {walkTreeAndLookForFields, buildSynthesizer} from './suggestion-utils';
 import UnitVis from 'unit-vis';
 
@@ -12,7 +13,7 @@ function UnitVisRenderer(props: RendererProps): JSX.Element {
     try {
       specCopy = JSON.parse(specString);
     } catch (error) {
-      console.log(error);
+      log(error);
       return;
     }
     if (specString === '{}') {
@@ -28,7 +29,7 @@ function UnitVisRenderer(props: RendererProps): JSX.Element {
         // @ts-ignore
         UnitVis(QUERY_KEY, specCopy);
       } catch (e) {
-        console.log('UnitVis Crash', e);
+        log('UnitVis Crash', e);
       }
     }
   }, [specString]);

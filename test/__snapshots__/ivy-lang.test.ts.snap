@@ -188,11 +188,10 @@ Object {
 exports[`evaluateIvyProgram polestar template 4`] = `
 Object {
   "$schema": "galleryLang",
-  "Reverse Sort": "[Reverse Sort]",
   "SearchKey": "should result",
-  "Sort": "[Sort]",
   "dataTargetSearch": Array [],
   "maxRequiredTargets": "[maxRequiredTargets]",
   "minRequiredTargets": "[minRequiredTargets]",
+  "sectionStratagey": "[sectionStratagey]",
 }
 `;

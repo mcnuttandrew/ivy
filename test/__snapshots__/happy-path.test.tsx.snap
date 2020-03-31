@@ -13,10 +13,10 @@ Search for template
 Data target searchdrop a field hereClearSelect a valueAcceleration 123Cylinders 123Displacement 123Horsepower 123Miles_per_Gallon 123Weight_in_lbs 123Name ABCOrigin ABCYear 🕑
 
 
- You can also facilitate browsing by sorting: 
+ You can organize the gallery using various section organizations: 
 
 
-Sorttemplate namemin required measuresmin required dimensionsmin required timesmax allowed fieldscomplexityReverse SortSearch ShortcutsUnivariatesExplorationReset"
+Organize byalphabeticalauthorlanguagevis key wordnone"
 `;
 
 exports[`Happy path 2`] = `"Data cars.jsonCHANGEdimension (2)hideNameOriginmeasure (6)hideAccelerationCylindersDisplacementHorsepowerMiles_per_GallonWeight_in_lbstime (1)hideYear Filter drop a field here"`;

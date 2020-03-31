@@ -8,7 +8,7 @@ import {
   TemplateMap,
   RendererProps,
 } from '../types';
-import {classnames} from '../utils';
+import {classnames, log} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
 import ViewControls from './view-controls';
@@ -175,7 +175,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
               data,
               spec,
               onError: (e: any): void => {
-                console.log('upper error', e);
+                log('upper error', e);
               },
             })}
           </div>
@@ -287,7 +287,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
             data={preparedData}
             spec={spec}
             onError={(e): void => {
-              console.log('upper error', e);
+              log('upper error', e);
             }}
           />
         )}

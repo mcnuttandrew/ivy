@@ -32,9 +32,8 @@ function publish(template: Template): void {
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
     body: JSON.stringify({template, creator: template.templateAuthor}),
-  }).then(x => {
+  }).then(() => {
     // TODO do something?
-    console.log(x);
   });
 }
 

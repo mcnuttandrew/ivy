@@ -5,6 +5,7 @@ import * as actionTypes from '../actions/action-types';
 import {AppState, ActionResponse, DataReducerState} from '../types';
 import GALLERY from '../templates/gallery';
 import {JSON_OUTPUT} from '../constants/index';
+import {log} from '../utils';
 
 import {pushToUndoStack, triggerRedo, triggerUndo, startAtomicChain, endAtomicChain} from './undo-actions';
 
@@ -161,7 +162,7 @@ const reducers = {
   base: (state: AppState = DEFAULT_STATE, {type, payload}: {type: string; payload: any}): AppState => {
     // eslint-disable-next-line no-undef
     if (process.env.NODE_ENV !== 'test') {
-      console.log(type);
+      log(type);
     }
     return (actionFuncMap[type] || NULL_ACTION)(state, payload);
   },
