@@ -10,7 +10,8 @@ const FIRST_TEXT =
 const SECOND_TEXT =
   '\n\n\n or by search for templates that match the data you are interested in visualizing, which you can do using this widget\n\n\n';
 const THIRD_TEXT = '\n\n\n You can organize the gallery using various section organizations: \n\n\n';
-
+console.log(getGallerySectionPref());
+const persistedDefault = getGallerySectionPref();
 const Gallery: Template = {
   templateName: '____gallery____',
   templateDescription: 'The home gallery of the application.',
@@ -34,7 +35,11 @@ const Gallery: Template = {
       name: 'sectionStratagey',
       displayName: 'Organize by',
       type: 'List',
-      config: {allowedValues: toList(SECTIONS), defaultValue: getGallerySectionPref() || `"none"`},
+      config: {
+        allowedValues: toList(SECTIONS),
+        defaultValue:
+          persistedDefault && !persistedDefault.includes('undefined') ? persistedDefault : `"none"`,
+      },
     },
   ],
   code: JSON.stringify({
