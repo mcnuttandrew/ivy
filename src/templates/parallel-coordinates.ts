@@ -275,7 +275,7 @@ const namedColors = [
 const cols = [0, 1, 2, 3, 4, 5];
 const ParallelCoordinates: Template = {
   templateName: 'parallel coordinates',
-  templateDescription: 'A way to visualize the relationships between a variety of measure varables',
+  templateDescription: 'Visualize the relationships and trends across a set of quantitative varables',
   templateAuthor: AUTHORS,
   templateLanguage: 'vega',
   disallowFanOut: true,

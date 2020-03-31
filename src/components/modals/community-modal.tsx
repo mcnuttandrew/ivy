@@ -5,7 +5,7 @@ import {Template} from '../../types';
 import Modal from './modal';
 import ProgramPreview from '../program-preview';
 import {IgnoreKeys} from 'react-hotkeys';
-import {serverPrefix, toExportStr} from '../../utils';
+import {serverPrefix, toExportStr, log} from '../../utils';
 import {TiUploadOutline, TiEdit} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {AUTHORS} from '../../constants';
@@ -64,7 +64,7 @@ function runQuery(url: string, loadTemplates: any, triggerRepaint: any): void {
       loadTemplates(URL_CACHE[url].map((x: any) => x.template));
       setTimeout(triggerRepaint, 1000);
     })
-    .catch(e => console.log(e));
+    .catch(e => log(e));
 }
 interface DeleteQueryProps {
   url: string;
@@ -74,7 +74,7 @@ function deleteQuery(props: DeleteQueryProps): Promise<any> {
   const {url, triggerRepaint} = props;
   return fetch(url, FETCH_PARMS as any)
     .then(() => setTimeout(triggerRepaint, 1000))
-    .catch(e => console.log(e));
+    .catch(e => log(e));
 }
 
 const BY_TIME = 'Recent';

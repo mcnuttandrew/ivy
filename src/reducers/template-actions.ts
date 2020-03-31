@@ -240,7 +240,6 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
         ...(draftState.templateMap.systemValues.viewsToMaterialize[oldName] || []),
       ];
       delete draftState.templateMap.systemValues.viewsToMaterialize[oldName];
-      console.log(draftState.templateMap.systemValues.viewsToMaterialize[value]);
       // update any filters
       draftState.templateMap.systemValues.dataTransforms = draftState.templateMap.systemValues.dataTransforms.map(
         transform => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import {log} from '../utils';
 interface Props {
   children: JSX.Element;
 }
@@ -18,7 +19,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: any, errorInfo: any): void {
     // You can also log the error to an error reporting service
-    console.error(error, errorInfo);
+    log(error, errorInfo);
   }
 
   render(): JSX.Element {

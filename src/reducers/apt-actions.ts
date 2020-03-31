@@ -52,7 +52,6 @@ export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payloa
     .sort((a, b) => widgetIndex[a.name] - widgetIndex[b.name]);
 
   if (!targets.length) {
-    console.log('no targets');
     // TODO add messaging about this
     return state;
   }

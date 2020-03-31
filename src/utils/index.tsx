@@ -14,9 +14,12 @@ import {TEXT_TYPE, MATERIALIZING} from '../constants/index';
 import GALLERY from '../templates/gallery';
 import {AppState, ColumnHeader} from '../types';
 
-/* eslint-disable @typescript-eslint/no-empty-function*/
+// eslint-disable-next-line no-console
+export const log = console.log;
+// eslint-disable-next-line no-console
+export const logError = console.error;
+
 export const NULL = (): void => {};
-/* eslint-enable @typescript-eslint/no-empty-function*/
 
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
@@ -362,8 +365,8 @@ export function updateThumbnail(templateName: string, authorKey: string): Promis
       referrerPolicy: 'no-referrer', // no-referrer, *client
       body: JSON.stringify({templateName, authorKey, templateImg}), // body data type must match "Content-Type" header
     }).then(x => {
-      console.log('finish pub');
-      console.log(x);
+      log('finish pub');
+      log(x);
     });
   });
 }

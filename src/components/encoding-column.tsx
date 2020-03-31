@@ -174,12 +174,8 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   }, []);
   const updateTemplateWidgets = (addToTail: boolean) => (widget: GenWidget): void => {
     const updatedWidgets = widgetTemplates
-      .filter(d => {
-        console.log(d.name, widget.name);
-        return d.name !== widget.name;
-      })
+      .filter(d => d.name !== widget.name)
       .concat(addToTail ? widget : []);
-    console.log(updatedWidgets, widget.name, addToTail);
     setWidgetTemplates(updatedWidgets);
     setWidgetTemplatesState(updatedWidgets);
   };

@@ -10,7 +10,7 @@ import {
   SwitchWidget,
   SliderWidget,
 } from './types';
-import {trim, get} from './utils';
+import {trim, get, log, logError} from './utils';
 import {JsonMap, Json, JsonArray} from './types';
 
 interface ConditionalArgs {
@@ -34,7 +34,7 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
     const generatedContent = new Function('parameters', `return ${query}`);
     result = Boolean(generatedContent(templateMap.paramValues));
   } catch (e) {
-    console.log('Query Evalution Error', e, query, templateMap.paramValues);
+    log('Query Evalution Error', e, query, templateMap.paramValues);
   }
   return result;
 }
@@ -45,7 +45,7 @@ export function evaluateShortcut(shortcut: Shortcut, templateMap: TemplateMap): 
     const generatedContent = new Function('parameters', `return ${shortcut.shortcutFunction}`);
     newMap = generatedContent(templateMap.paramValues);
   } catch (e) {
-    console.log('Short cut error', e, shortcut.shortcutFunction, shortcut.label);
+    log('Short cut error', e, shortcut.shortcutFunction, shortcut.label);
   }
   return newMap;
 }
@@ -251,8 +251,8 @@ export function evaluateIvyProgram(template: Template, templateMap: TemplateMap)
   try {
     parsedJson = JSON.parse(interpolatedVals);
   } catch (e) {
-    console.error('crash', e);
-    console.error('crashed on ', interpolatedVals);
+    logError('crash', e);
+    logError('crashed on ', interpolatedVals);
     parsedJson = {};
   }
   // 3. evaluate inline conditionals
