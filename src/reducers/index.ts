@@ -4,7 +4,7 @@ import * as actionTypes from '../actions/action-types';
 
 import {AppState, ActionResponse, DataReducerState} from '../types';
 import GALLERY from '../templates/gallery';
-import {JSON_OUTPUT} from '../constants/index';
+import {JSON_OUTPUT, SHOW_DATA_SELECTION_ON_LOAD} from '../constants/index';
 import {log} from '../utils';
 
 import {pushToUndoStack, triggerRedo, triggerUndo, startAtomicChain, endAtomicChain} from './undo-actions';
@@ -64,7 +64,7 @@ export const DEFAULT_STATE: AppState = {
 
   // GUI
   currentTemplateInstance: GALLERY,
-  openModal: null,
+  openModal: SHOW_DATA_SELECTION_ON_LOAD ? 'data' : null,
   encodingMode: GALLERY.templateName,
   showProgrammaticMode: false,
   showGUIView: true,

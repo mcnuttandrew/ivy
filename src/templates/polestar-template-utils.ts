@@ -18,9 +18,9 @@ const justCountAgg = toList(['none', 'count']);
 justCountAgg[0].value = undefined;
 const spatialAggs = [...justCountAgg, ...toList(['min', 'max', 'sum', 'mean', 'median', 'mode'])];
 
-export const used = (x: string): ConditionQuery => `parameters.${x}`;
+export const used = (x: string): ConditionQuery => `Boolean(parameters.${x})`;
 export const unused = (x: string): ConditionQuery => `!parameters.${x}`;
-export const notCount = (key: string): ConditionQuery => `parameters.${key} !== "\\"COUNT\\""`;
+export const notCount = (key: string): ConditionQuery => `!parameters.${key}.includes('COUNT')`;
 
 /**
  * build a simple condition
@@ -97,7 +97,7 @@ export const makeAgg = (key: string): Widget<ListWidget> =>
     conditions: [
       {
         queryResult: 'show',
-        query: `${used(key)} && ${notCount(key)} && parameters.${key}Type === "\\"quantitative\\""`,
+        query: `${used(key)} && ${notCount(key)} && parameters.${key}Type.includes('quantitative')`,
       },
     ],
   });

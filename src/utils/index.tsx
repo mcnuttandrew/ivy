@@ -10,7 +10,7 @@ import {
   CustomCard,
   Suggestion,
 } from '../types';
-import {TEXT_TYPE, MATERIALIZING} from '../constants/index';
+import {MATERIALIZING} from '../constants/index';
 import GALLERY from '../templates/gallery';
 import {AppState, ColumnHeader} from '../types';
 
@@ -333,7 +333,7 @@ export function makeOptionsForDropdown(
   ].concat(
     columns
       .map(column => ({
-        display: `${column.field} ${TEXT_TYPE[column.type]}`,
+        display: `${column.field} ${column.type}`,
         value: column.field,
         group: useGroupsAsTypes
           ? column.type
