@@ -50,29 +50,33 @@ function filterTemplates(
   columns: ColumnHeader[],
   search: string,
 ): MarkedTemplate[] {
-  return templates.map(template => {
-    if (template.templateName === GALLERY.templateName) {
-      return {include: false, template};
-    }
-    const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
-    if (!canBeUsed) {
-      return {include: false, template};
-    }
-    const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
-    if (!nameIsValid) {
-      return {include: false, template};
-    }
+  return templates
+    .filter(template => {
+      if (template.templateName === GALLERY.templateName) {
+        return false;
+      }
+      return true;
+    })
+    .map(template => {
+      const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
+      if (!canBeUsed) {
+        return {include: false, template};
+      }
+      const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
+      if (!nameIsValid) {
+        return {include: false, template};
+      }
 
-    const {SUM} = buildCounts(template);
-    if (
-      (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
-      (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
-    ) {
-      return {include: false, template};
-    }
+      const {SUM} = buildCounts(template);
+      if (
+        (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
+        (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
+      ) {
+        return {include: false, template};
+      }
 
-    return {include: true, template};
-  });
+      return {include: true, template};
+    });
 }
 
 type TemplateGroup = {[x: string]: MarkedTemplate[]};
@@ -182,11 +186,13 @@ export default function Gallery(props: Props): JSX.Element {
       : ['Delete', 'Use', 'Save to Disc'];
 
     return (
-      <div style={{opacity: include ? 1 : 0.2}}>
+      <div
+        style={{opacity: include ? 1 : 0.2}}
+        key={`${template.templateName}-${template.templateAuthor}-${idx}`}
+      >
         <ProgramPreview
           buttons={buttons.map(makeButtonObject(template.templateName))}
           isComplete={isComplete}
-          key={`${template.templateName}-${template.templateAuthor}-${idx}`}
           setEncodingMode={setEncodingMode}
           template={template}
           hideMatches={false}
@@ -200,9 +206,9 @@ export default function Gallery(props: Props): JSX.Element {
   return (
     <div className="gallery">
       {!filteredTemplates.length && <div>No templates match your query</div>}
-      {Object.entries(toSection(filteredTemplates, spec.sectionStratagey)).map(([name, temps]) => {
+      {Object.entries(toSection(filteredTemplates, spec.sectionStratagey)).map(([name, temps], idx) => {
         return (
-          <div className="flex-down" key={`${name}-row`}>
+          <div className="flex-down" key={`${name}-row-${idx}`}>
             {name !== `null` && <h1>{name}</h1>}
             <div className="template-card-sub-containers">{temps.map(produceTemplateCard)}</div>
           </div>

@@ -10,7 +10,7 @@ Search for template
  or by search for templates that match the data you are interested in visualizing, which you can do using this widget
 
 
-Data target searchdrop a field hereClearSelect a valueAcceleration 123Cylinders 123Displacement 123Horsepower 123Miles_per_Gallon 123Weight_in_lbs 123Name ABCOrigin ABCYear 🕑
+Data target searchdrop a field hereClearSelect a valueAcceleration MEASURECylinders MEASUREDisplacement MEASUREHorsepower MEASUREMiles_per_Gallon MEASUREWeight_in_lbs MEASUREName DIMENSIONOrigin DIMENSIONYear TIME
 
 
  You can organize the gallery using various section organizations: 
