@@ -7,13 +7,7 @@ import {classnames} from '../utils';
 import {ColumnHeader, Template, TemplateMap} from '../types';
 import RelatedViews from './related-views';
 
-interface NewViewProps {
-  cloneView: GenericAction<void>;
-  createNewView: GenericAction<void>;
-}
-
-function newViewButton(props: NewViewProps): JSX.Element {
-  const {createNewView} = props;
+function newViewButton(createNewView: GenericAction<void>): JSX.Element {
   return (
     <div className="view-control new-view" onClick={(): any => createNewView()}>
       <TiDocumentAdd />
@@ -23,6 +17,7 @@ function newViewButton(props: NewViewProps): JSX.Element {
 
 interface ViewOptionProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
+  cloneView: GenericAction<void>;
   currentView: string;
   deleteView: GenericAction<string>;
   idx: number;
@@ -31,7 +26,7 @@ interface ViewOptionProps {
 }
 
 function viewOption(props: ViewOptionProps): JSX.Element {
-  const {idx, view, currentView, changeViewName, switchView, deleteView} = props;
+  const {changeViewName, cloneView, currentView, deleteView, idx, switchView, view} = props;
   return (
     <div
       key={idx}
@@ -62,6 +57,9 @@ function viewOption(props: ViewOptionProps): JSX.Element {
             </IgnoreKeys>
             <button type="button" onClick={(): any => deleteView(view)}>
               delete view
+            </button>
+            <button type="button" onClick={(): any => cloneView()}>
+              clone view
             </button>
           </div>
         }
@@ -118,9 +116,9 @@ export default function ViewControls(props: Props): JSX.Element {
       />
       <div className="view-container">
         {views.map((view, idx) =>
-          viewOption({idx, view, currentView, changeViewName, switchView, deleteView}),
+          viewOption({idx, view, currentView, changeViewName, switchView, deleteView, cloneView}),
         )}
-        {newViewButton({createNewView, cloneView})}
+        {newViewButton(createNewView)}
       </div>
     </div>
   );

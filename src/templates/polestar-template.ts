@@ -72,6 +72,23 @@ function zeroConditional(key: string): JsonMap {
   };
 }
 
+function timeUnitCond(key: string): any {
+  const isTemporal = `parameters.${key}Type.includes('temporal')`;
+  const isNotNull = `!parameters.${key}TimeUnit.includes('null')`;
+  return {
+    $cond: {query: `${used(key)} && ${isTemporal} && ${isNotNull}`, true: `[${key}TimeUnit]`},
+  };
+}
+
+function typeCond(key: string): any {
+  return {
+    $cond: {
+      query: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
+      true: `[${key}ScaleType]`,
+    },
+  };
+}
+
 const renderObjectIf = (object: Json, query: string, fieldName: string): JsonMap => ({
   [fieldName]: {$cond: {query, true: object}},
 });
@@ -81,20 +98,8 @@ const encoding = {
       field: conditionalFieldName(key),
       type: `[${key}Type]`,
       aggregate: aggregateConditional(key),
-      scale: {
-        $cond: {
-          query: notCount(key),
-          true: {
-            zero: zeroConditional(key),
-            type: {
-              $cond: {
-                query: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
-                true: `[${key}ScaleType]`,
-              },
-            },
-          },
-        },
-      },
+      timeUnit: timeUnitCond(key),
+      scale: {$cond: {query: notCount(key), true: {zero: zeroConditional(key), type: typeCond(key)}}},
     };
     return {
       ...acc,
@@ -176,6 +181,22 @@ const Polestar: Template = {
             },
           ],
         }),
+        {
+          name: `${key}TimeUnit`,
+          type: 'List',
+          displayName: 'Scale type',
+          config: {
+            allowedValues: ['yearmonth', 'year', 'month', 'day', 'hour', 'minute', 'null'].map(toQuote),
+            defaultValue: toQuote('null'),
+          },
+          conditions: [
+            simpleCondition(key),
+            {
+              queryResult: 'show' as any,
+              query: `parameters.${key} && parameters.${key}Type.includes('temporal')`,
+            },
+          ],
+        },
         simpleSwitch({
           name: `${key}IncludeZero`,
           displayName: 'Include Zero',
