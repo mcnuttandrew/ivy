@@ -176,7 +176,7 @@ class RootComponent extends React.Component<RootProps, State> {
     this.setState({repaintIdx: this.state.repaintIdx + 1});
   }
 
-  chartArea(): JSX.Element {
+  chartArea(width: number): JSX.Element {
     return (
       <ChartArea
         chainActions={this.props.chainActions}
@@ -205,6 +205,7 @@ class RootComponent extends React.Component<RootProps, State> {
         templates={this.props.templates}
         views={this.props.views}
         userName={this.props.userName}
+        width={width}
       />
     );
   }
@@ -353,6 +354,7 @@ class RootComponent extends React.Component<RootProps, State> {
 
   render(): JSX.Element {
     const {showProgrammaticMode} = this.props;
+    const width = getWidth() || 610;
     return (
       <div className="flex-down full-width full-height">
         {this.hotKeyProvider()}
@@ -392,8 +394,11 @@ class RootComponent extends React.Component<RootProps, State> {
               split="vertical"
               minSize={610}
               style={{overflow: 'unset', position: 'relative'}}
-              defaultSize={getWidth() || 610}
-              onChange={writeWidth}
+              defaultSize={width}
+              onChange={(x): void => {
+                writeWidth(x);
+                this.triggerRepaint();
+              }}
             >
               <Wrapper showProgrammaticMode={showProgrammaticMode} showGUIView={true}>
                 <div
@@ -409,7 +414,7 @@ class RootComponent extends React.Component<RootProps, State> {
                 </div>
                 {this.codeEditor()}
               </Wrapper>
-              {this.chartArea()}
+              {this.chartArea(width)}
             </SplitPane>
           </DndProvider>
         </div>

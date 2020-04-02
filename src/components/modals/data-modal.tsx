@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../../constants/vega-datasets-counts';
@@ -17,143 +17,125 @@ interface Props {
   setEncodingMode?: GenericAction<string>;
 }
 
-interface State {
-  searchTerm?: string;
-  sortMode: string;
-}
+export default function DataModal(props: Props): JSX.Element {
+  const {changeSelectedFile, chainActions, setEncodingMode, loadCustomDataset, setModalState} = props;
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [sortMode, setSortMode] = useState('ALPHA');
 
-export default class DataModal extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      searchTerm: null,
-      sortMode: 'ALPHA',
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit(event: any): void {
-    const {loadCustomDataset, setModalState} = this.props;
-    const file = event.target.files[0];
+  const handleSubmit = (useData: boolean) => (d: any): void => {
+    const file = useData ? d.dataTransfer.items[0].getAsFile() : d.target.files[0];
     const reader = new FileReader();
     reader.onload = (event): void => {
-      // @ts-ignore
-      loadCustomDataset({fileName: file.name, data: event.target.result});
+      loadCustomDataset({fileName: file.name, data: event.target.result as any});
       setModalState(null);
     };
 
     reader.readAsText(file);
-  }
-  render(): JSX.Element {
-    const {changeSelectedFile, setModalState, chainActions, setEncodingMode} = this.props;
-    const {searchTerm, sortMode} = this.state;
+  };
 
-    return (
-      <Modal
-        modalToggle={(): any => setModalState(null)}
-        className="data-modal"
-        modalTitle="Select Dataset"
-        bodyDirectionDown={true}
-      >
-        <div className="flex space-between">
-          <h3>Predefined Datasets</h3>
-          <div>
-            <IgnoreKeys style={{height: '100%'}}>
-              <input
-                type="text"
-                value={searchTerm || ''}
-                onChange={(event): void => {
-                  this.setState({searchTerm: event.target.value});
-                }}
-                placeholder="Search for dataset"
-              />
-            </IgnoreKeys>
-          </div>
+  return (
+    <Modal
+      modalToggle={(): any => setModalState(null)}
+      className="data-modal"
+      modalTitle="Select Dataset"
+      bodyDirectionDown={true}
+    >
+      <div className="flex space-between">
+        <h3>Predefined Datasets</h3>
+        <div>
+          <IgnoreKeys style={{height: '100%'}}>
+            <input
+              type="text"
+              value={searchTerm || ''}
+              onChange={(event): any => setSearchTerm(event.target.value)}
+              placeholder="Search for dataset"
+            />
+          </IgnoreKeys>
         </div>
+      </div>
+      <div className="flex">
+        <span>Sort by:</span>
         <div className="flex">
-          <span>Sort by:</span>
-          <div className="flex">
-            {[
-              {value: 'ALPHA', display: 'Alphabetically'},
-              {value: 'length', display: 'Dataset Size'},
-              {value: 'DIMENSION', display: 'Dimensions'},
-              {value: 'MEASURE', display: 'Measures'},
-              {value: 'TIME', display: 'Times'},
-            ].map((d, idx) => {
-              return (
-                <button
-                  className={classnames({
-                    selected: d.value === sortMode,
-                    flex: true,
-                    center: true,
-                  })}
-                  type="button"
-                  key={d.value}
-                  onClick={(): any => this.setState({sortMode: d.value})}
-                >
-                  {idx >= 2 && countSymbol(d.value)}
-                  {d.display}
-                </button>
-              );
-            })}
-          </div>
+          {[
+            {value: 'ALPHA', display: 'Alphabetically'},
+            {value: 'length', display: 'Dataset Size'},
+            {value: 'DIMENSION', display: 'Dimensions'},
+            {value: 'MEASURE', display: 'Measures'},
+            {value: 'TIME', display: 'Times'},
+          ].map((d, idx) => {
+            return (
+              <button
+                className={classnames({
+                  selected: d.value === sortMode,
+                  flex: true,
+                  center: true,
+                })}
+                type="button"
+                key={d.value}
+                onClick={(): any => setSortMode(d.value)}
+              >
+                {idx >= 2 && countSymbol(d.value)}
+                {d.display}
+              </button>
+            );
+          })}
         </div>
-        <div className="dataset-list">
-          {Object.keys(VegaDatasetMeta)
-            .filter(key => key.includes(searchTerm || ''))
-            .sort((a, b) => {
-              if (sortMode === 'ALPHA') {
-                return a.localeCompare(b);
-              }
-              const aVal = Number(VegaDatasetMeta[a][sortMode]) || 0;
-              const bVal = Number(VegaDatasetMeta[b][sortMode]) || 0;
-              return aVal - bVal;
-            })
-            .map(datasetName => {
-              const datasetMeta = VegaDatasetMeta[datasetName];
-              return (
-                <div
-                  onClick={(): any =>
-                    chainActions([
-                      (): any => changeSelectedFile(datasetName),
-                      (): any => setModalState(null),
-                      (): any => setEncodingMode(GALLERY.templateName),
-                    ])
-                  }
-                  className="flex dataset-list-item space-between"
-                  key={datasetName}
-                >
-                  <div className="flex">
-                    <h5>{datasetName}</h5>
-                  </div>
-                  <div className="flex">
-                    <div className="icon-container">{datasetMeta.length} rows</div>
-                    {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
-                      const count = datasetMeta[dataType] || 0;
-                      return (
-                        <div key={`${datasetName}-${dataType}`} className="flex icon-container">
-                          <HoverTooltip
-                            message={`This data set has ${count} data columns with inferred type ${dataType}`}
-                          >
-                            {countSymbol(dataType)}
-                          </HoverTooltip>
-                          {count}
-                        </div>
-                      );
-                    })}
-                  </div>
+      </div>
+      <div className="dataset-list">
+        {Object.keys(VegaDatasetMeta)
+          .filter(key => key.includes(searchTerm || ''))
+          .sort((a, b) => {
+            if (sortMode === 'ALPHA') {
+              return a.localeCompare(b);
+            }
+            const aVal = Number(VegaDatasetMeta[a][sortMode]) || 0;
+            const bVal = Number(VegaDatasetMeta[b][sortMode]) || 0;
+            return aVal - bVal;
+          })
+          .map(datasetName => {
+            const datasetMeta = VegaDatasetMeta[datasetName];
+            return (
+              <div
+                onClick={(): any =>
+                  chainActions([
+                    (): any => changeSelectedFile(datasetName),
+                    (): any => setModalState(null),
+                    (): any => setEncodingMode(GALLERY.templateName),
+                  ])
+                }
+                className="flex dataset-list-item space-between"
+                key={datasetName}
+              >
+                <div className="flex">
+                  <h5>{datasetName}</h5>
                 </div>
-              );
-            })}
-        </div>
-        <div className="custom-data">
-          <h3>Upload a Custom Dataset</h3>
-          <h5>
-            We support JSON, CSV, TSV formatted data. We do not support non-tabular data (such as GeoJSON)
-          </h5>
-          <input type="file" onChange={this.handleSubmit} />
-        </div>
-      </Modal>
-    );
-  }
+                <div className="flex">
+                  <div className="icon-container">{datasetMeta.length} rows</div>
+                  {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
+                    const count = datasetMeta[dataType] || 0;
+                    return (
+                      <div key={`${datasetName}-${dataType}`} className="flex icon-container">
+                        <HoverTooltip
+                          message={`This data set has ${count} data columns with inferred type ${dataType}`}
+                        >
+                          {countSymbol(dataType)}
+                        </HoverTooltip>
+                        {count}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+      </div>
+      <div className="custom-data">
+        <h3>Upload a Custom Dataset</h3>
+        <h5>
+          We support JSON, CSV, TSV formatted data. We do not support non-tabular data (such as GeoJSON)
+        </h5>
+        <input type="file" onDrop={handleSubmit(true)} onChange={handleSubmit(false)} />
+      </div>
+    </Modal>
+  );
 }

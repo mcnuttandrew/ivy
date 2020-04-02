@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Template,
   ColumnHeader,
@@ -46,6 +46,7 @@ interface ChartAreaProps {
   templates: Template[];
   userName: string;
   views: string[];
+  width: number;
 }
 
 function* cartesian(head?: any, ...tail: any): any {
@@ -81,6 +82,35 @@ function prepareUpdate(
       ),
     },
   };
+}
+
+type windowSize = {width: number; height: number};
+function useWindowSize(): windowSize {
+  const isClient = typeof window === 'object';
+
+  function getSize(): windowSize {
+    return {
+      width: isClient ? window.innerWidth : undefined,
+      height: isClient ? window.innerHeight : undefined,
+    };
+  }
+
+  const [windowSize, setWindowSize] = useState(getSize);
+
+  useEffect(() => {
+    if (!isClient) {
+      return;
+    }
+
+    function handleResize(): void {
+      setWindowSize(getSize());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return (): any => window.removeEventListener('resize', handleResize);
+  }, []); // Empty array ensures that effect is only run on mount and unmount
+
+  return windowSize;
 }
 
 function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
@@ -216,7 +246,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     data,
     deleteTemplate,
     deleteView,
-    encodingMode,
     languages,
     missingFields,
     saveCurrentTemplate,
@@ -232,7 +261,10 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     templates,
     userName,
     views,
+    width,
   } = props;
+  const windowSize = useWindowSize();
+
   // TODO memoize
   const preparedData = wrangle(data, templateMap.systemValues.dataTransforms);
 
@@ -251,20 +283,13 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
 
   return (
     <div
-      style={{overflow: 'hidden'}}
-      className={classnames({
-        'flex-down': true,
-        'full-width': true,
-        'full-height': true,
-      })}
+      style={{overflow: 'hidden', width: windowSize.width - width}}
+      className={classnames({'flex-down': true, 'full-height': true})}
     >
       <div
         className={classnames({
           'chart-container': true,
           'multi-view-container': materializedViews.length > 0,
-          center: true,
-          'full-width': encodingMode !== GALLERY.templateName,
-          'full-height': true,
         })}
       >
         {templateGallery && (
