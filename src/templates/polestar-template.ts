@@ -32,9 +32,9 @@ function aggregateConditional(key: string): JsonMap {
   // old version of the query left around
   // handling aggregate none case to reduce vega-lite errors proves to be pretty troublesome
   // const isNone = `parameters.${key}Agg === "\\"none\\""`;
-  const isCount = `parameters.${key} === "\\"COUNT\\""`;
+  const isCount = `parameters.${key}.includes('COUNT')`;
   const filledIn = `parameters.${key}`;
-  const isQuantitative = `parameters.${key}Type === "\\"quantitative\\""`;
+  const isQuantitative = `parameters.${key}Type.includes('quantitative')`;
 
   return {
     $cond: {
@@ -51,7 +51,7 @@ function conditionalFieldName(key: string): JsonMap {
       query: `${used(key)} && ${notCount(key)}`,
       true: {
         $cond: {
-          query: `(parameters.${key} === '\\"${META_COL_ROW}\\"') || (parameters.${key} === '\\"${META_COL_COL}\\"')`,
+          query: `(parameters.${key}.includes('${META_COL_ROW}')) || (parameters.${key}.includes('${META_COL_COL}'))`,
           true: {repeat: `[${key}]`},
           false: `[${key}]`,
         },
@@ -61,10 +61,30 @@ function conditionalFieldName(key: string): JsonMap {
 }
 
 function zeroConditional(key: string): JsonMap {
+  const notZero = `!parameters.${key}IncludeZero.includes('true')`;
+  const isQuant = `parameters.${key}Type.includes('quantitative')`;
   return {
     $cond: {
-      query: `${used(key)} && parameters.${key}IncludeZero && parameters.${key}Agg === "\\"quantitative\\""`,
+      query: `${used(key)} && ${notZero} &&${isQuant}`,
+      // query: `${used(key)} && ${includeZero} && ${isQuant}`,
       true: `[${key}IncludeZero]`,
+    },
+  };
+}
+
+function timeUnitCond(key: string): any {
+  const isTemporal = `parameters.${key}Type.includes('temporal')`;
+  const isNotNull = `!parameters.${key}TimeUnit.includes('null')`;
+  return {
+    $cond: {query: `${used(key)} && ${isTemporal} && ${isNotNull}`, true: `[${key}TimeUnit]`},
+  };
+}
+
+function typeCond(key: string): any {
+  return {
+    $cond: {
+      query: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
+      true: `[${key}ScaleType]`,
     },
   };
 }
@@ -78,20 +98,8 @@ const encoding = {
       field: conditionalFieldName(key),
       type: `[${key}Type]`,
       aggregate: aggregateConditional(key),
-      scale: {
-        $cond: {
-          query: notCount(key),
-          true: {
-            zero: zeroConditional(key),
-            type: {
-              $cond: {
-                query: `${used(key)} && parameters.${key}Type ===  "\\"quantitative\\""`,
-                true: `[${key}ScaleType]`,
-              },
-            },
-          },
-        },
-      },
+      timeUnit: timeUnitCond(key),
+      scale: {$cond: {query: notCount(key), true: {zero: zeroConditional(key), type: typeCond(key)}}},
     };
     return {
       ...acc,
@@ -169,10 +177,26 @@ const Polestar: Template = {
             simpleCondition(key),
             {
               queryResult: 'show',
-              query: `parameters.${key} && parameters.${key}Type === "\\"quantitative\\""`,
+              query: `parameters.${key} && parameters.${key}Type.includes('quantitative')`,
             },
           ],
         }),
+        {
+          name: `${key}TimeUnit`,
+          type: 'List',
+          displayName: 'Scale type',
+          config: {
+            allowedValues: ['yearmonth', 'year', 'month', 'day', 'hour', 'minute', 'null'].map(toQuote),
+            defaultValue: toQuote('null'),
+          },
+          conditions: [
+            simpleCondition(key),
+            {
+              queryResult: 'show' as any,
+              query: `parameters.${key} && parameters.${key}Type.includes('temporal')`,
+            },
+          ],
+        },
         simpleSwitch({
           name: `${key}IncludeZero`,
           displayName: 'Include Zero',

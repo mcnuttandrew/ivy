@@ -43,42 +43,46 @@ function toExportStr(str: string): string {
     .toLowerCase()
     .replace(/\s/g, '-');
 }
-
+type MarkedTemplate = {template: Template; include: boolean};
 function filterTemplates(
   templates: Template[],
   spec: any,
   columns: ColumnHeader[],
   search: string,
-): Template[] {
-  return templates.filter(template => {
-    if (template.templateName === GALLERY.templateName) {
-      return false;
-    }
-    const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
-    if (!canBeUsed) {
-      return false;
-    }
-    const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
-    if (!nameIsValid) {
-      return false;
-    }
+): MarkedTemplate[] {
+  return templates
+    .filter(template => {
+      if (template.templateName === GALLERY.templateName) {
+        return false;
+      }
+      return true;
+    })
+    .map(template => {
+      const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
+      if (!canBeUsed) {
+        return {include: false, template};
+      }
+      const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
+      if (!nameIsValid) {
+        return {include: false, template};
+      }
 
-    const {SUM} = buildCounts(template);
-    if (
-      (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
-      (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
-    ) {
-      return false;
-    }
+      const {SUM} = buildCounts(template);
+      if (
+        (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
+        (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
+      ) {
+        return {include: false, template};
+      }
 
-    return true;
-  }, []);
+      return {include: true, template};
+    });
 }
 
-type TemplateGroup = {[x: string]: Template[]};
-function groupBy(templates: Template[], accessor: (x: Template) => string): TemplateGroup {
+type TemplateGroup = {[x: string]: MarkedTemplate[]};
+function groupBy(templates: MarkedTemplate[], accessor: (x: Template) => string): TemplateGroup {
   return templates.reduce((acc, row) => {
-    const groupKey = accessor(row);
+    const groupKey = accessor(row.template);
     acc[groupKey] = (acc[groupKey] || []).concat(row);
     return acc;
   }, {} as TemplateGroup);
@@ -114,11 +118,11 @@ const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   none: d => null,
 };
-function toSection(templates: Template[], sectionStratagey: string): TemplateGroup {
+function toSection(templates: MarkedTemplate[], sectionStratagey: string): TemplateGroup {
   return Object.entries(groupBy(templates, sectionFunctionMap[sectionStratagey]))
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce((acc, [key, temps]) => {
-      acc[key] = temps.sort((a, b) => a.templateName.localeCompare(b.templateName));
+      acc[key] = temps.sort((a, b) => a.template.templateName.localeCompare(b.template.templateName));
       return acc;
     }, {} as TemplateGroup);
 }
@@ -170,7 +174,8 @@ export default function Gallery(props: Props): JSX.Element {
     }
     return {onClick, name: key};
   };
-  const produceTemplateCard = (template: Template, idx: number): JSX.Element => {
+  const produceTemplateCard = (markedTemplate: MarkedTemplate, idx: number): JSX.Element => {
+    const {template, include} = markedTemplate;
     const {isComplete} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
     const madeByUser = template.templateAuthor === userName;
     const builtIn = template.templateAuthor === AUTHORS;
@@ -181,15 +186,19 @@ export default function Gallery(props: Props): JSX.Element {
       : ['Delete', 'Use', 'Save to Disc'];
 
     return (
-      <ProgramPreview
-        buttons={buttons.map(makeButtonObject(template.templateName))}
-        isComplete={isComplete}
+      <div
+        style={{opacity: include ? 1 : 0.2}}
         key={`${template.templateName}-${template.templateAuthor}-${idx}`}
-        setEncodingMode={setEncodingMode}
-        template={template}
-        hideMatches={false}
-        userName={userName}
-      />
+      >
+        <ProgramPreview
+          buttons={buttons.map(makeButtonObject(template.templateName))}
+          isComplete={isComplete}
+          setEncodingMode={setEncodingMode}
+          template={template}
+          hideMatches={false}
+          userName={userName}
+        />
+      </div>
     );
   };
 
@@ -197,9 +206,9 @@ export default function Gallery(props: Props): JSX.Element {
   return (
     <div className="gallery">
       {!filteredTemplates.length && <div>No templates match your query</div>}
-      {Object.entries(toSection(filteredTemplates, spec.sectionStratagey)).map(([name, temps]) => {
+      {Object.entries(toSection(filteredTemplates, spec.sectionStratagey)).map(([name, temps], idx) => {
         return (
-          <div className="flex-down" key={`${name}-row`}>
+          <div className="flex-down" key={`${name}-row-${idx}`}>
             {name !== `null` && <h1>{name}</h1>}
             <div className="template-card-sub-containers">{temps.map(produceTemplateCard)}</div>
           </div>

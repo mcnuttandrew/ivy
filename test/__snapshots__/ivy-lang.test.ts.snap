@@ -155,6 +155,7 @@ Object {
       "field": "GooD Dimension",
       "scale": Object {
         "type": "linear",
+        "zero": false,
       },
       "type": "quantitative",
     },

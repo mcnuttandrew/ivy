@@ -100,6 +100,7 @@ function DisplayLoadedPrograms(
     <div className="program-containers">
       {loadedTemplates
         .filter(d => d)
+        .sort((a, b) => a.templateName.localeCompare(b.templateName))
         .map((template, idx) => {
           const isLoaded = loadedPrograms.has(template.templateName);
           return (
