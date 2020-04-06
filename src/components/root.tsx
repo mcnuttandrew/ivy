@@ -42,11 +42,13 @@ import {
   ColumnHeader,
   DataReducerState,
   GenWidget,
-  LanguageExtension,
   Json,
+  LanguageExtension,
   Template,
   TemplateMap,
+  ViewCatalog,
   ViewsToMaterialize,
+  Workbook,
 } from '../types';
 
 import ChartArea from './chart-area';
@@ -103,6 +105,7 @@ interface RootProps {
   templates: Template[];
   userName: string;
   views: string[];
+  viewCatalog: ViewCatalog;
 
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   addWidget: GenericAction<GenWidget>;
@@ -122,6 +125,7 @@ interface RootProps {
   loadDataFromPredefinedDatasets: GenericAction<string>;
   loadExternalTemplate: GenericAction<Template>;
   loadTemplates: GenericAction<void>;
+  loadWorkbook: GenericAction<Workbook>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
   readInTemplate: GenericAction<HandleCodePayload>;
@@ -158,6 +162,7 @@ class RootComponent extends React.Component<RootProps, State> {
     super(props);
     // this.createFilter = this.createFilter.bind(this);
     this.triggerRepaint = this.triggerRepaint.bind(this);
+    this.generateWorkbook = this.generateWorkbook.bind(this);
     this.state = {repaintIdx: 0};
   }
   componentDidMount(): void {
@@ -174,6 +179,24 @@ class RootComponent extends React.Component<RootProps, State> {
 
   triggerRepaint(): void {
     this.setState({repaintIdx: this.state.repaintIdx + 1});
+  }
+
+  generateWorkbook(): Workbook {
+    return {
+      // data part
+      data: this.props.data,
+      // undo stack part
+      columns: this.props.columns,
+      currentTemplateInstance: this.props.template,
+      currentView: this.props.currentView,
+      encodingMode: this.props.encodingMode,
+      codeMode: this.props.codeMode,
+      editMode: this.props.editMode,
+      showProgrammaticMode: this.props.showProgrammaticMode,
+      templateMap: this.props.templateMap,
+      viewCatalog: this.props.viewCatalog,
+      views: this.props.views,
+    } as Workbook;
   }
 
   chartArea(width: number): JSX.Element {
@@ -382,11 +405,14 @@ class RootComponent extends React.Component<RootProps, State> {
         <Header
           canRedo={this.props.canRedo}
           canUndo={this.props.canUndo}
-          triggerRedo={this.props.triggerRedo}
-          triggerUndo={this.props.triggerUndo}
+          generateWorkbook={this.generateWorkbook}
+          encodingMode={this.props.encodingMode}
+          loadWorkbook={this.props.loadWorkbook}
           setEncodingMode={this.props.setEncodingMode}
           setModalState={this.props.setModalState}
-          encodingMode={this.props.encodingMode}
+          triggerRedo={this.props.triggerRedo}
+          triggerUndo={this.props.triggerUndo}
+          template={this.props.template}
         />
         <div className="flex main-content-container relative">
           <DndProvider backend={HTML5Backend}>
@@ -453,6 +479,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     templates: base.templates,
     userName: base.userName,
     views: base.views,
+    viewCatalog: base.viewCatalog,
   };
 }
 

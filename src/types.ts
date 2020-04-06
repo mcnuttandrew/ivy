@@ -48,6 +48,22 @@ export interface UndoRedoStackItem {
   views: string[];
 }
 
+export type Workbook = {
+  // data part
+  data: DataRow[];
+  // undo stack part
+  columns: ColumnHeader[];
+  currentTemplateInstance: LangType.Template;
+  currentView: string;
+  encodingMode: string;
+  codeMode: string;
+  editMode: boolean;
+  showProgrammaticMode: boolean;
+  templateMap: TemplateMap;
+  viewCatalog: ViewCatalog;
+  views: string[];
+};
+
 export interface AppState {
   // meta-data
   columns: ColumnHeader[];

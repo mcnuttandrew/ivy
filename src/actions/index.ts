@@ -78,6 +78,7 @@ export const deleteTemplate = createAction<string>(actionTypes.DELETE_TEMPLATE);
 export const deleteView = createAction<string>(actionTypes.DELETE_VIEW);
 export const duplicateWidget = createAction<number>(actionTypes.DUPLICATE_WIDGET);
 export const loadExternalTemplate = createAction<Template>(actionTypes.LOAD_EXTERNAL_TEMPLATE);
+export const loadWorkbook = createAction<Template>(actionTypes.LOAD_WORKBOOK);
 export const modifyValueOnTemplate = createAction<ModifyValueOnTemplatePayload>(
   actionTypes.MODIFY_VALUE_ON_TEMPLATE,
 );
