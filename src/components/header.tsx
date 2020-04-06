@@ -2,33 +2,93 @@ import React from 'react';
 import {TiArrowBack, TiArrowForward, TiThSmall, TiHome, TiSocialGithub} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
-import {classnames, NULL} from '../utils';
+import {classnames, NULL, toExportStr} from '../utils';
 import GALLERY from '../templates/gallery';
 import {HoverTooltip} from './tooltips';
 import {HOT_KEYS, HOT_KEY_DESCRIPTIONS} from '../constants/index';
+import {saveAs} from 'file-saver';
+import {Template, Workbook} from '../types';
 
 interface HeaderProps {
-  triggerUndo: GenericAction<void>;
-  triggerRedo: GenericAction<void>;
   canRedo: boolean;
   canUndo: boolean;
+  encodingMode: string;
+  generateWorkbook: () => Workbook;
+  loadWorkbook: GenericAction<Workbook>;
   setEncodingMode: GenericAction<string>;
   setModalState: GenericAction<string | null>;
-  encodingMode: string;
+  template: Template;
+  triggerRedo: GenericAction<void>;
+  triggerUndo: GenericAction<void>;
 }
 
+const toBlob = (x: string): any => new Blob([x], {type: 'text/plain;charset=utf-8'});
+
 export default function Header(props: HeaderProps): JSX.Element {
-  const {triggerUndo, triggerRedo, canRedo, canUndo, setEncodingMode, setModalState, encodingMode} = props;
+  const {
+    canRedo,
+    canUndo,
+    encodingMode,
+    loadWorkbook,
+    setEncodingMode,
+    setModalState,
+    template,
+    generateWorkbook,
+    triggerRedo,
+    triggerUndo,
+  } = props;
+  const handleSubmit = (useData: boolean) => (d: any): void => {
+    const file = useData ? d.dataTransfer.items[0].getAsFile() : d.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event): void => {
+      loadWorkbook(JSON.parse(event.target.result as any) as Workbook);
+    };
+
+    reader.readAsText(file);
+  };
   return (
     <div className="header flex background-1">
       <div className="flex center">
-        <div
-          className="flex cursor-pointer center"
-          onClick={(): any => setEncodingMode(GALLERY.templateName)}
+        <Tooltip
+          placement="bottom"
+          trigger="click"
+          overlay={
+            <div className="flex-down">
+              <button
+                onClick={(): void => {
+                  const fileName = `${toExportStr(template.templateName)}.${toExportStr(
+                    template.templateAuthor,
+                  )}.ivy.json`;
+                  saveAs(toBlob(JSON.stringify(template, null, 2)), fileName);
+                }}
+              >
+                Save current template
+              </button>
+              <button
+                onClick={(): void => {
+                  const fileName = window.prompt();
+                  saveAs(
+                    toBlob(JSON.stringify(generateWorkbook(), null, 2)),
+                    `${fileName}.ivy-workbook.json`,
+                  );
+                }}
+              >
+                Save current workbook
+              </button>
+
+              <label className="workbook-upload">
+                <input type="file" onChange={handleSubmit(false)} />
+                <label>Load workbook</label>
+              </label>
+            </div>
+          }
         >
-          <img alt="ivy logo" src="logo.png" />
-          <div>Ivy</div>
-        </div>
+          <div className="flex cursor-pointer center">
+            <img alt="ivy logo" src="logo.png" />
+            <div>Ivy</div>
+          </div>
+        </Tooltip>
+
         <div className="flex state-action-controls">
           <div
             className={classnames({

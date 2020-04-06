@@ -2,7 +2,14 @@ import React, {useEffect} from 'react';
 import {GenericAction, SetWidgetValuePayload} from '../actions/index';
 import {Template, TemplateMap, ColumnHeader} from '../types';
 import ProgramPreview from './program-preview';
-import {searchDimensionsCanMatch, buildCounts, searchPredicate, serverPrefix, trim} from '../utils';
+import {
+  searchDimensionsCanMatch,
+  buildCounts,
+  searchPredicate,
+  serverPrefix,
+  trim,
+  toExportStr,
+} from '../utils';
 import {writeGallerySectionPref, getGallerySectionPref} from '../utils/local-storage';
 import GALLERY from '../templates/gallery';
 import {AUTHORS} from '../constants/index';
@@ -37,12 +44,6 @@ function publish(template: Template): void {
   });
 }
 
-function toExportStr(str: string): string {
-  return str
-    .trim()
-    .toLowerCase()
-    .replace(/\s/g, '-');
-}
 type MarkedTemplate = {template: Template; include: boolean};
 function filterTemplates(
   templates: Template[],

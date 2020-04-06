@@ -1,8 +1,9 @@
+import produce from 'immer';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import * as actionTypes from '../actions/action-types';
 
-import {AppState, ActionResponse, DataReducerState} from '../types';
+import {AppState, ActionResponse, DataReducerState, Workbook} from '../types';
 import GALLERY from '../templates/gallery';
 import {JSON_OUTPUT, SHOW_DATA_SELECTION_ON_LOAD} from '../constants/index';
 import {log} from '../utils';
@@ -93,6 +94,21 @@ export const DEFAULT_STATE: AppState = {
   },
 };
 
+const loadWorkbook: ActionResponse<Workbook> = (state, payload) => {
+  return produce(state, draftState => {
+    draftState.columns = payload.columns;
+    draftState.currentTemplateInstance = payload.currentTemplateInstance;
+    draftState.currentView = payload.currentView;
+    draftState.encodingMode = payload.encodingMode;
+    draftState.codeMode = payload.codeMode;
+    draftState.editMode = payload.editMode;
+    draftState.showProgrammaticMode = payload.showProgrammaticMode;
+    draftState.templateMap = payload.templateMap;
+    draftState.viewCatalog = payload.viewCatalog;
+    draftState.views = payload.views;
+  });
+};
+
 // second order effects
 const wrap = (func: ActionResponse<any>, wrapper: any): ActionResponse<any> => (state, payload): AppState =>
   wrapper(state, func(state, payload));
@@ -132,6 +148,8 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
 
   [actionTypes.RECIEVE_LANGUAGES]: recieveLanguages,
+
+  [actionTypes.LOAD_WORKBOOK]: loadWorkbook,
 
   // template
   [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
@@ -173,6 +191,9 @@ const reducers = {
     // not that this reducer is NOT immutable.
     if (type === actionTypes.RECIEVE_DATA) {
       return recieveDataForDataReducer(state, payload);
+    }
+    if (type === actionTypes.LOAD_WORKBOOK) {
+      return recieveDataForDataReducer(state, payload.data);
     }
     return state;
   },
