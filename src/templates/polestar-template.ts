@@ -1,5 +1,5 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, GenWidget, Condition} from '../types';
+import {Template, GenWidget, Condition, Widget, SliderWidget} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
 
@@ -106,7 +106,21 @@ const encoding = {
       ...renderObjectIf(output, used(key), key.toLowerCase()),
     };
   }, {}),
-  ...['Size', 'Color', 'Shape', 'Text', 'Detail'].reduce((acc: JsonMap, key: string) => {
+  ...['Size', 'Color'].reduce((acc: JsonMap, key: string) => {
+    const output = {
+      field: conditionalFieldName(key),
+      type: `[${key}Type]`,
+      aggregate: aggregateConditional(key),
+      bin: {
+        $cond: {
+          query: `parameters.${key}Bin.includes('true') && parameters.${key}Type.includes('quantitative')`,
+          true: true,
+        },
+      },
+    };
+    return {...acc, ...renderObjectIf(output, used(key), key.toLowerCase())};
+  }, {}),
+  ...['Shape', 'Text', 'Detail'].reduce((acc: JsonMap, key: string) => {
     const output = {
       field: conditionalFieldName(key),
       type: `[${key}Type]`,
@@ -119,7 +133,7 @@ const encoding = {
     return {...acc, ...newObj};
   }, {}),
 };
-const mark = {type: '[markType]', tooltip: true};
+const mark = {type: '[markType]', tooltip: true, opacity: '[opacity]'};
 const PolestarBody: Json = {
   $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
   transform: [] as JsonMap[],
@@ -202,18 +216,13 @@ const Polestar: Template = {
           displayName: 'Include Zero',
           conditions: [simpleCondition(key)],
         }),
-        simpleSwitch({
-          name: `${key}bin`,
-          displayName: 'Bin',
-          conditions: [simpleCondition(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
-        }),
         makeAgg(key),
       ]);
     }, []),
 
     // Mark type
     makeSection('MarkDivider', []),
-    simpleList({name: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('circle')}),
+    simpleList({name: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('point')}),
     {
       type: 'Shortcut',
       name: 'main-shortcuts',
@@ -229,19 +238,33 @@ const Polestar: Template = {
     },
 
     // size & color dimensions
-    ...['Color', 'Size'].reduce((acc: GenWidget[], key: string) => {
-      return acc.concat([
+    ...['Color', 'Size'].reduce((acc, key: string) => {
+      const typeIsQuant = `parameters.${key}Type.includes('quantitative')`;
+      const widgets = [
         makeDataTarget(key),
         makeTypeSelect(key, 'ordinal'),
         simpleSwitch({
-          name: `${key}bin`,
-          conditions: [simpleCondition(key), {queryResult: 'hide', query: `!${notCount(key)}`}],
+          name: `${key}Bin`,
+          conditions: [
+            simpleCondition(key),
+            {queryResult: 'show', query: `${notCount(key)} && ${typeIsQuant}`},
+          ],
         }),
         makeAgg(key),
-      ]);
-    }, []),
+      ];
+      if (key === 'Color') {
+        widgets.push({
+          name: 'opacity',
+          type: 'Slider',
+          config: {minVal: 0, maxVal: 1, step: 0.1, defaultValue: 0.8},
+        } as any);
+      }
+      // TODO: allow setting schemes
+      return acc.concat(widgets);
+    }, [] as GenWidget[]),
 
     // size & color dimensions
+    // TODO: shape should go away when mark not set to point
     ...['Shape', 'Detail'].reduce((acc: GenWidget[], key: string) => {
       return acc.concat([makeDataTarget(key), makeTypeSelect(key, 'nominal')]);
     }, []),
@@ -251,9 +274,12 @@ const Polestar: Template = {
     makeAgg('Text'),
 
     // row / column
+    // TODO: all of this should go away when row and column cards anre engaged
     makeSection('Facet Divider', []),
     makeText('Repeat Small Multiply', []),
     ...['Row', 'Column'].reduce((acc: GenWidget[], key: string) => acc.concat([makeDataTarget(key)]), []),
+
+    // TODO allow an optional height / width configuration section
   ],
 };
 export default Polestar;

@@ -6,7 +6,9 @@ import produce from 'immer';
 export const createFilter: ActionResponse<ColumnHeader> = (state, payload) => {
   return produce(state, draftState => {
     const isDim = payload.type === 'DIMENSION';
-    const range = isDim ? Object.keys(payload.summary.unique) : [payload.summary.min, payload.summary.max];
+    const range = isDim
+      ? Object.keys(payload.summary.unique)
+      : state.columns.find(d => d.field === payload.field).domain;
     draftState.templateMap.systemValues.dataTransforms.push({
       filter: {field: payload.field, [isDim ? 'oneOf' : 'range']: range},
     });
