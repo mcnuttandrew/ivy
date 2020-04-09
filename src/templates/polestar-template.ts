@@ -1,5 +1,5 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, GenWidget, Condition, Widget, SliderWidget} from '../types';
+import {Template, GenWidget, Condition} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
 
