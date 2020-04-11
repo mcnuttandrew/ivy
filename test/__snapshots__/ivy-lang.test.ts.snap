@@ -139,8 +139,9 @@ Object {
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
   "encoding": Object {},
   "mark": Object {
+    "opacity": 0.8,
     "tooltip": true,
-    "type": "circle",
+    "type": "point",
   },
   "transform": Array [],
 }
@@ -161,8 +162,9 @@ Object {
     },
   },
   "mark": Object {
+    "opacity": 0.8,
     "tooltip": true,
-    "type": "circle",
+    "type": "point",
   },
   "transform": Array [],
 }
@@ -179,8 +181,9 @@ Object {
     },
   },
   "mark": Object {
+    "opacity": 0.8,
     "tooltip": true,
-    "type": "circle",
+    "type": "point",
   },
   "transform": Array [],
 }
