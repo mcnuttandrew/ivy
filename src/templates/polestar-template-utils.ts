@@ -115,11 +115,17 @@ interface SimpleSwitchType {
   name: string;
   displayName?: string;
   conditions?: Condition[];
+  defaultsToActive?: boolean;
 }
-export const simpleSwitch = ({name, displayName, conditions}: SimpleSwitchType): Widget<SwitchWidget> => ({
+export const simpleSwitch = ({
+  name,
+  displayName,
+  conditions,
+  defaultsToActive = true,
+}: SimpleSwitchType): Widget<SwitchWidget> => ({
   name,
   type: 'Switch',
   displayName: displayName || null,
-  config: {active: 'true', inactive: 'false', defaultsToActive: true},
+  config: {active: 'true', inactive: 'false', defaultsToActive},
   conditions: conditions || [],
 });
