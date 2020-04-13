@@ -127,15 +127,15 @@ export default function Header(props: HeaderProps): JSX.Element {
               </div>
             </HoverTooltip>
           </div>
-          <a
+          {/* <a
             className="flex state-action-button"
-            href="https://github.com/mcnuttandrew/hydra/issues/new"
+            href="HIDDEN FOR REVIEW"
             target="_blank"
             rel="noopener noreferrer"
           >
             <TiSocialGithub />
             <span>Report a bug</span>
-          </a>
+          </a> */}
         </div>
       </div>
       <Tooltip

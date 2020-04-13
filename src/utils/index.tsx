@@ -206,14 +206,15 @@ const toKey = (arr: string[]): string =>
     .slice()
     .sort()
     .join('-');
-export function buildCounts(template: Template): {[x: string]: number; SUM: number} {
+
+export function buildCounts(template: Template, useTotal?: boolean): {[x: string]: number; SUM: number} {
   return template.widgets.reduce(
     (acc: any, row: GenWidget) => {
       if (row.type === 'DataTarget') {
         const {allowedTypes, required} = row.config as DataTargetWidget;
         const comboKey = toKey(allowedTypes);
         acc.SUM += 1;
-        if (required) {
+        if (useTotal || required) {
           acc[comboKey] = (acc[comboKey] || 0) + 1;
         }
       }
@@ -226,7 +227,7 @@ export function buildCounts(template: Template): {[x: string]: number; SUM: numb
         } = row.config as MultiDataTargetWidget;
         acc.SUM += Number(maxNumberOfTargets) || 0;
         const comboKey = toKey(allowedTypes);
-        if (required) {
+        if (useTotal || required) {
           acc[comboKey] = Number(acc[comboKey] || 0) + Number(minNumberOfTargets);
         }
       }
