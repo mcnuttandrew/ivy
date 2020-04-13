@@ -1,11 +1,12 @@
 import React from 'react';
 import Thumbnail from './thumbnail';
-import {classnames, buildCounts} from '../utils';
+import {classnames, buildCounts, serializeTemplate} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiCog, TiInfoLarge} from 'react-icons/ti';
 import {HoverTooltip} from './tooltips';
 import {Template} from '../types';
 
+const FOR_DISPLAY = false;
 type TypeCounts = {[x: string]: number};
 interface Props {
   alreadyPresent?: boolean;
@@ -16,25 +17,6 @@ interface Props {
   template: Template;
   userName: string;
 }
-
-// function partialMatch(): JSX.Element {
-//   return (
-//     <Tooltip
-//       placement="right"
-//       trigger="click"
-//       overlay={
-//         <div className="tooltip-internal">
-//           The search you have supplied on the left partially matches this template. It does not conflict, but
-//           if you will need to supply extra fields to get a visualization.
-//         </div>
-//       }
-//     >
-//       <span className="tooltip-icon">
-//         <TiInfoLarge />
-//       </span>
-//     </Tooltip>
-//   );
-// }
 
 function fullMatch(): JSX.Element {
   return (
@@ -116,8 +98,9 @@ const combos = [
   'MEASURE',
   'TIME',
 ];
-function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
-  const messages = combos
+
+function combosToMessages(typeCounts: TypeCounts): JSX.Element[] {
+  return combos
     .filter(d => typeCounts[d] > 0)
     .map((key: string) => {
       return (
@@ -132,10 +115,41 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
         </HoverTooltip>
       );
     });
+}
+function computeLinesOfCode(template: Template): number {
+  const bodyLines = template.code.trim().split('\n').length;
+  const templateWithoutBodyLines =
+    serializeTemplate(template)
+      .trim()
+      .split('\n').length - 1;
+  return bodyLines + templateWithoutBodyLines;
+}
+function RenderTypeCounts(template: Template): JSX.Element {
+  const messages = combosToMessages(buildCounts(template));
+  const maxMessages = combosToMessages(buildCounts(template, true));
   return (
-    <div className="flex">
-      <div>{messages.length ? 'Requires' : 'No Fields Required'}</div>
-      <div className="flex flex-wrap">{messages}</div>
+    <div className="flex flex-wrap">
+      <div className="flex">
+        <div>{messages.length ? 'Requires' : 'No Fields Required'}</div>
+        <div className="flex flex-wrap">{messages}</div>
+      </div>
+      {FOR_DISPLAY && (
+        <div className="flex margin-left">
+          <div>Max Allowed</div>
+          {maxMessages.length > 0 && (
+            <div className="flex flex-wrap">{combosToMessages(buildCounts(template, true))}</div>
+          )}
+          {!maxMessages.length && (
+            <div className="margin-left">
+              {template.widgets.find(d => new Set(['DataTarget', 'MultiDataTarget']).has(d.type))
+                ? '∞'
+                : 'None'}
+            </div>
+          )}
+        </div>
+      )}
+      {FOR_DISPLAY && <div className="flex">{`Lines of code: ${computeLinesOfCode(template)}`}</div>}
+      {FOR_DISPLAY && <div className="flex margin-left">{`Language: ${template.templateLanguage}`}</div>}
     </div>
   );
 }
@@ -143,7 +157,7 @@ function RenderTypeCounts(typeCounts: TypeCounts): JSX.Element {
 export default function ProgramPreview(props: Props): JSX.Element {
   const {alreadyPresent, buttons, isComplete, setEncodingMode, template, userName, hideMatches} = props;
   const {templateAuthor, templateDescription, templateName} = template;
-  const typeCounts = buildCounts(template);
+
   return (
     <div
       className={classnames({
@@ -156,9 +170,11 @@ export default function ProgramPreview(props: Props): JSX.Element {
           <div className="program-option-img-container" onClick={(): any => setEncodingMode(templateName)}>
             <Thumbnail templateName={templateName} templateAuthor={templateAuthor} />
           </div>
-          <button type="button" className="use-button" onClick={(): any => setEncodingMode(templateName)}>
-            USE
-          </button>
+          {!FOR_DISPLAY && (
+            <button type="button" className="use-button" onClick={(): any => setEncodingMode(templateName)}>
+              USE
+            </button>
+          )}
         </div>
         <div className="flex-down full-width">
           <div className="program-option-title">
@@ -168,7 +184,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
             >
               {templateName}
             </h3>
-            {CardControls({buttons, templateName, templateAuthor, userName})}
+            {!FOR_DISPLAY && CardControls({buttons, templateName, templateAuthor, userName})}
           </div>
           <div className="flex-down">
             <div
@@ -177,7 +193,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
             >
               {templateDescription}
             </div>
-            {typeCounts && RenderTypeCounts(typeCounts)}
+            {!FOR_DISPLAY && RenderTypeCounts(template)}
             {!hideMatches && false && (
               <div className="program-option-search-match flex">
                 {isComplete && <span> Full Match</span>}
@@ -190,6 +206,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
       {alreadyPresent && (
         <div className="program-option-search-match">This template already appears to be loaded</div>
       )}
+      {FOR_DISPLAY && RenderTypeCounts(template)}
     </div>
   );
 }
