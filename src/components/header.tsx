@@ -1,5 +1,5 @@
 import React from 'react';
-import {TiArrowBack, TiArrowForward, TiThSmall, TiHome, TiSocialGithub} from 'react-icons/ti';
+import {TiArrowBack, TiArrowForward, TiThSmall, TiHome} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL, toExportStr} from '../utils';

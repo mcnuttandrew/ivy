@@ -127,15 +127,22 @@
       "properties": {
         "allowedValues": {
           "items": {
-            "properties": {
-              "display": {
-                "type": "string"
+            "anyOf": [
+              {
+                "properties": {
+                  "display": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
               },
-              "value": {
+              {
                 "type": "string"
               }
-            },
-            "type": "object"
+            ]
           },
           "type": "array"
         },
@@ -273,7 +280,7 @@
           "type": "string"
         },
         "templateLanguage": {
-          "description": "The language of the code, determines how the code will be interpreted.\nHydra currently supports vega, vega-lite, and it's own data table system\n\n  __Default value:__ `vega-lite`",
+          "description": "The language of the code, determines how the code will be interpreted.\nIvy currently supports vega, vega-lite, and it's own data table system\n\n  __Default value:__ `vega-lite`",
           "type": "string"
         },
         "templateName": {

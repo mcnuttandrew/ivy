@@ -2,7 +2,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {Template, GenWidget, Condition} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
-import {tableau10, VEGA_CATEGORICAL_COLOR_SCHEMES, VEGA_CONT_COLOR_SCHEMES} from './vega-common';
+// import {tableau10, VEGA_CATEGORICAL_COLOR_SCHEMES, VEGA_CONT_COLOR_SCHEMES} from './vega-common';
 import {toList} from '../utils';
 import {
   makeAgg,
