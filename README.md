@@ -10,4 +10,4 @@ npm install
 npm run start
 ```
 
-Currently netlify runs the deployed version (and remounts automatically on push). It is hosted at https://kind-goldwasser-f3ce26.netlify.com/
+Currently netlify runs the deployed version (and remounts automatically on push). It is hosted at https://ivy-vis.netlify.com/

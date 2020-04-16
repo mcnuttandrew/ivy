@@ -516,7 +516,7 @@ exports[`#setTemplateValues 4`] = `
 
 exports[`serialize/deserialize template 1`] = `
 "{
-  \\"$schema\\": \\"https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.0.0.1.json\\",
+  \\"$schema\\": \\"https://ivy-vis.netlify.com/assets/ivy.0.0.1.json\\",
   \\"templateName\\": \\"pie chart\\",
   \\"templateDescription\\": \\"A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.\\",
   \\"templateAuthor\\": \\"Ivy Authors\\",

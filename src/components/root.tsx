@@ -290,8 +290,8 @@ class RootComponent extends React.Component<RootProps, State> {
           moveWidget={this.props.moveWidget}
           removeWidget={this.props.removeWidget}
           setAllTemplateValues={this.props.setAllTemplateValues}
-          setTemplateValue={this.props.setTemplateValue}
           setMaterialization={this.props.setMaterialization}
+          setTemplateValue={this.props.setTemplateValue}
           setWidgetValue={this.props.setWidgetValue}
           template={this.props.template}
           templateMap={this.props.templateMap}
