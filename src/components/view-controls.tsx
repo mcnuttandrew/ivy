@@ -79,6 +79,7 @@ interface Props {
   createNewView: GenericAction<void>;
   currentView: string;
   deleteView: GenericAction<string>;
+  errors: any;
   setEncodingMode: GenericAction<string>;
   switchView: GenericAction<string>;
   template: Template;
@@ -92,17 +93,18 @@ export default function ViewControls(props: Props): JSX.Element {
   const {
     changeViewName,
     cloneView,
+    columns,
     createNewView,
     currentView,
     deleteView,
-    switchView,
-    views,
-    columns,
-    template,
+    errors,
     setEncodingMode,
+    switchView,
+    template,
     templateMap,
     templates,
     userName,
+    views,
   } = props;
   return (
     <div className="chart-controls full-width flex">
@@ -114,6 +116,22 @@ export default function ViewControls(props: Props): JSX.Element {
         templates={templates}
         userName={userName}
       />
+      {errors && (
+        <div className="charting-error-container">
+          <Tooltip
+            placement="bottom"
+            trigger="click"
+            overlay={
+              <div className="charting-error-message">
+                <div>{errors.message}</div>
+                <div>{errors.stack}</div>
+              </div>
+            }
+          >
+            <div>Charting Error</div>
+          </Tooltip>
+        </div>
+      )}
       <div className="view-container">
         {views.map((view, idx) =>
           viewOption({idx, view, currentView, changeViewName, switchView, deleteView, cloneView}),

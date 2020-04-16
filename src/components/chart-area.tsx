@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Template,
   ColumnHeader,
@@ -30,6 +30,7 @@ interface ChartAreaProps {
   data: DataRow[];
   deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
+  editorError: null | string;
   encodingMode: string;
   languages: {[x: string]: LanguageExtension};
   missingFields: string[];
@@ -56,9 +57,11 @@ function* cartesian(head?: any, ...tail: any): any {
 }
 interface MaterializeWrapperProps {
   data: DataRow[];
+  editorError: null | string;
   materializedViews: TemplateMap[];
   renderer: any;
   setAllTemplateValues: GenericAction<TemplateMap>;
+  setErrors: (x: any) => void;
   setMaterialization: GenericAction<ViewsToMaterialize>;
   spec: any;
   template: Template;
@@ -88,9 +91,11 @@ function prepareUpdate(
 function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   const {
     data,
+    editorError,
     materializedViews,
     renderer,
     setAllTemplateValues,
+    setErrors,
     setMaterialization,
     template,
     templateMap,
@@ -173,13 +178,13 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
               </div>
             </div>
             {/* TODO memoize */}
-            {renderer({
-              data,
-              spec,
-              onError: (e: any): void => {
-                log('upper error', e);
-              },
-            })}
+            <MemoizeRender
+              renderer={renderer}
+              data={data}
+              spec={spec}
+              editorError={editorError}
+              onError={setErrors}
+            />
           </div>
         );
       })}{' '}
@@ -192,11 +197,16 @@ interface MemoizerProps {
   spec: any;
   data: DataRow[];
   onError: (x: any) => any;
+  editorError: null | string;
 }
 
 const MemoizeRender = React.memo(
   function Memoizer(props: MemoizerProps): JSX.Element {
-    const {renderer, onError, data, spec} = props;
+    const {renderer, onError, data, spec, editorError} = props;
+    if (editorError) {
+      return <div />;
+    }
+    onError(null);
     return renderer({data, spec, onError});
   },
   (prevProps, nextProps) => {
@@ -218,6 +228,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     data,
     deleteTemplate,
     deleteView,
+    editorError,
     languages,
     missingFields,
     saveCurrentTemplate,
@@ -236,6 +247,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     width,
   } = props;
   const windowSize = useWindowSize();
+  const [errors, setErrors] = useState(null);
 
   // TODO memoize
   const preparedData = wrangle(data, templateMap.systemValues.dataTransforms);
@@ -283,9 +295,8 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
             renderer={renderer}
             data={preparedData}
             spec={spec}
-            onError={(e): void => {
-              log('upper error', e);
-            }}
+            editorError={editorError}
+            onError={setErrors}
           />
         )}
         {showChart &&
@@ -298,9 +309,11 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
                 paramValues,
               }),
             ),
+            editorError,
             renderer,
             setAllTemplateValues,
             setMaterialization,
+            setErrors,
             spec,
             template,
             templateMap,
@@ -319,6 +332,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         createNewView={createNewView}
         currentView={currentView}
         deleteView={deleteView}
+        errors={errors}
         setEncodingMode={setEncodingMode}
         switchView={switchView}
         template={template}
