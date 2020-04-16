@@ -1,14 +1,15 @@
 import {
-  Template,
-  TemplateMap,
-  Widget,
   ConditionQuery,
   DataTargetWidget,
   GenWidget,
   ListWidget,
+  MultiDataTargetWidget,
   Shortcut,
-  SwitchWidget,
   SliderWidget,
+  SwitchWidget,
+  Template,
+  TemplateMap,
+  Widget,
 } from './types';
 import {trim, get, log, logError} from './utils';
 import {JsonMap, Json, JsonArray} from './types';
@@ -169,15 +170,23 @@ export const setTemplateValues = (code: string, templateMap: TemplateMap): strin
  * @param templateMap - the specification/variable values defined by the gui
  */
 export function getMissingFields(template: Template, templateMap: TemplateMap): string[] {
-  const requiredFields = template.widgets
-    .filter(d => d.type === 'DataTarget' && (d as Widget<DataTargetWidget>).config.required)
-    .map(d => d.name);
-  const missingFileds = requiredFields
-    .map((fieldName: string) => ({fieldName, value: !templateMap.paramValues[fieldName]}))
-    .filter(d => d.value)
-    .map(d => d.fieldName);
+  const params = templateMap.paramValues;
 
-  return missingFileds;
+  // data target
+  const missingFileds = template.widgets
+    .filter(d => d.type === 'DataTarget' && (d as Widget<DataTargetWidget>).config.required)
+    .filter(d => !params[d.name])
+    .map(d => d.name);
+
+  // multi data target
+  const missingMultiFileds = template.widgets
+    .filter(d => d.type === 'MultiDataTarget' && (d as Widget<MultiDataTargetWidget>).config.required)
+    .filter(
+      (widget: Widget<MultiDataTargetWidget>) =>
+        !params[widget.name] || params[widget.name].length < widget.config.minNumberOfTargets,
+    )
+    .map(d => d.name);
+  return missingFileds.concat(missingMultiFileds);
 }
 
 /**

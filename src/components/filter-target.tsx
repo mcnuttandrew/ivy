@@ -5,7 +5,6 @@ import Tooltip from 'rc-tooltip';
 import {ColumnHeader} from '../types';
 
 import {classnames} from '../utils';
-import Selector from './selector';
 
 interface FilterTargetProps {
   columns: ColumnHeader[];
@@ -25,13 +24,8 @@ export default function FilterTarget({onDrop, columns}: FilterTargetProps): JSX.
   return (
     <div ref={drop} className="filter-target flex shelf">
       <div className="pill-dropzone">
-        <div
-          className={classnames({
-            'blank-pill': true,
-            'highlight-drop': isOver || canDrop,
-          })}
-        >
-          {'drop a field here'}
+        <div className={classnames({'blank-pill': true, 'highlight-drop': isOver || canDrop})}>
+          drop a field here
         </div>
       </div>
       <Tooltip
@@ -40,12 +34,13 @@ export default function FilterTarget({onDrop, columns}: FilterTargetProps): JSX.
         overlay={
           <div className="tooltip-internal flex-down">
             <h3>Add a filter</h3>
-            <Selector
-              onChange={(x): void => {
-                onDrop({text: x});
-              }}
-              options={columns.map(d => ({display: d.field, value: d.field}))}
-            />
+            <div>
+              {columns.map(column => (
+                <button key={column.field} onClick={(): void => onDrop({text: column.field})}>
+                  {column.field}
+                </button>
+              ))}
+            </div>
           </div>
         }
       >
