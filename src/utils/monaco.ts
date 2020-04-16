@@ -49,7 +49,7 @@ const schemas = [
   },
   {
     schema: ivySchema,
-    uri: 'https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.json',
+    uri: 'https://ivy-vis.netlify.com/assets/ivy.json',
   },
   {
     schema: mergeDeep({}, vegaLiteSchema, {

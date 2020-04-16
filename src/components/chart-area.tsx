@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   Template,
   ColumnHeader,
@@ -18,6 +18,7 @@ import GALLERY from '../templates/gallery';
 import {evaluateIvyProgram} from '../ivy-lang';
 import {HoverTooltip} from './tooltips';
 import {wrangle} from '../utils/wrangle';
+import {useWindowSize} from '../utils/hooks';
 
 interface ChartAreaProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
@@ -82,35 +83,6 @@ function prepareUpdate(
       ),
     },
   };
-}
-
-type windowSize = {width: number; height: number};
-function useWindowSize(): windowSize {
-  const isClient = typeof window === 'object';
-
-  function getSize(): windowSize {
-    return {
-      width: isClient ? window.innerWidth : undefined,
-      height: isClient ? window.innerHeight : undefined,
-    };
-  }
-
-  const [windowSize, setWindowSize] = useState(getSize);
-
-  useEffect(() => {
-    if (!isClient) {
-      return;
-    }
-
-    function handleResize(): void {
-      setWindowSize(getSize());
-    }
-
-    window.addEventListener('resize', handleResize);
-    return (): any => window.removeEventListener('resize', handleResize);
-  }, []); // Empty array ensures that effect is only run on mount and unmount
-
-  return windowSize;
 }
 
 function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {

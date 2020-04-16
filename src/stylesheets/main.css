@@ -287,6 +287,10 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-right: 5px;
 }
 
+.about-tooltip {
+  width: 400px
+}
+
 .bottom-fill {
   margin-bottom: 100px;
 }
@@ -653,7 +657,7 @@ input[type="number"]::-webkit-outer-spin-button {
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: 1000;
 }
 
 .modal-container .modal-background {

@@ -2,7 +2,7 @@ import stringify from 'json-stringify-pretty-compact';
 import {Template, GenWidget, Condition} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
-
+import {tableau10, VEGA_CATEGORICAL_COLOR_SCHEMES, VEGA_CONT_COLOR_SCHEMES} from './vega-common';
 import {toList} from '../utils';
 import {
   makeAgg,
@@ -27,6 +27,11 @@ const META_COL_COL = 'column';
 const paramsInclude = (key: string): string => `Object.values(parameters).includes('\\"${key}\\"')`;
 const eitherMeta = `${paramsInclude(META_COL_ROW)} || ${paramsInclude(META_COL_COL)}`;
 const USING_META_COLS_CONDITION: Condition = {queryResult: 'show', query: eitherMeta};
+
+const injectCondition = (widget: GenWidget, condition: Condition): GenWidget => ({
+  ...widget,
+  conditions: [...widget.conditions, condition],
+});
 
 function aggregateConditional(key: string): JsonMap {
   // old version of the query left around
@@ -117,7 +122,24 @@ const encoding = {
           true: true,
         },
       },
-    };
+    } as any;
+    if (key === 'Color') {
+      // output['value'] = {$cond: {query: '!parameters.Color', true: '[SingleColor]'}};
+      // output['scale'] = {
+      //   $cond: {
+      //     query: 'parameters.Color',
+      //     true: {
+      //       scheme: {
+      //         $cond: {
+      //           query: 'parameters.ColorType.includes("nominal")',
+      //           true: '[nominalColor]',
+      //           false: '[quantColor]',
+      //         },
+      //       },
+      //     },
+      //   },
+      // };
+    }
     return {...acc, ...renderObjectIf(output, used(key), key.toLowerCase())};
   }, {}),
   ...['Shape', 'Text', 'Detail'].reduce((acc: JsonMap, key: string) => {
@@ -149,6 +171,8 @@ const PolestarBody: Json = {
   encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding}},
   mark: {$cond: {query: `!(${eitherMeta})`, true: mark}},
   spec: {$cond: {query: eitherMeta, true: {encoding, mark}}},
+  height: {$cond: {query: 'parameters.showHeight.includes("true")', true: '[height]'}},
+  width: {$cond: {query: 'parameters.showWidth.includes("true")', true: '[width]'}},
 };
 
 const Polestar: Template = {
@@ -258,28 +282,84 @@ const Polestar: Template = {
           type: 'Slider',
           config: {minVal: 0, maxVal: 1, step: 0.1, defaultValue: 0.8},
         } as any);
+        // widgets.push(
+        //   simpleList({
+        //     name: 'singleColor',
+        //     displayName: 'Color',
+        //     list: tableau10,
+        //     conditions: [{query: 'parameters.Color', queryResult: 'hide'}],
+        //   }),
+        // );
+        // widgets.push(
+        //   simpleList({
+        //     name: 'nominalColor',
+        //     displayName: 'Color Scheme',
+        //     list: VEGA_CATEGORICAL_COLOR_SCHEMES,
+        //     conditions: [
+        //       {query: '!parameters.Color', queryResult: 'hide'},
+        //       {query: 'parameters.Color && !parameters.ColorType.includes("nominal")', queryResult: 'hide'},
+        //     ],
+        //   }),
+        // );
+        // widgets.push(
+        //   simpleList({
+        //     name: 'quantColor',
+        //     displayName: 'Color Scheme',
+        //     list: VEGA_CONT_COLOR_SCHEMES,
+        //     conditions: [
+        //       {query: '!parameters.Color', queryResult: 'hide'},
+        //       {query: 'parameters.Color && parameters.ColorType.includes("nominal")', queryResult: 'hide'},
+        //     ],
+        //   }),
+        // );
       }
       // TODO: allow setting schemes
       return acc.concat(widgets);
     }, [] as GenWidget[]),
 
-    // size & color dimensions
-    // TODO: shape should go away when mark not set to point
-    ...['Shape', 'Detail'].reduce((acc: GenWidget[], key: string) => {
-      return acc.concat([makeDataTarget(key), makeTypeSelect(key, 'nominal')]);
-    }, []),
+    // size & detail dimensions\
+    injectCondition(makeDataTarget('Shape'), {
+      query: '!parameters.markType.includes("point")',
+      queryResult: 'hide',
+    }),
+    injectCondition(makeTypeSelect('Shape', 'nominal'), {
+      query: '!parameters.markType.includes("point")',
+      queryResult: 'hide',
+    }),
+
+    makeDataTarget('Detail'),
+    makeTypeSelect('Detail', 'nominal'),
+
     // text
     makeDataTarget('Text'),
     makeTypeSelect('Text', 'nominal'),
     makeAgg('Text'),
 
     // row / column
-    // TODO: all of this should go away when row and column cards anre engaged
     makeSection('Facet Divider', []),
-    makeText('Repeat Small Multiply', []),
-    ...['Row', 'Column'].reduce((acc: GenWidget[], key: string) => acc.concat([makeDataTarget(key)]), []),
+    injectCondition(makeText('Repeat Small Multiply', []), {query: eitherMeta, queryResult: 'hide'}),
+    ...['Row', 'Column'].reduce(
+      (acc: GenWidget[], key: string) =>
+        acc.concat([injectCondition(makeDataTarget(key), {query: eitherMeta, queryResult: 'hide'})]),
+      [],
+    ),
 
-    // TODO allow an optional height / width configuration section
+    makeSection('View Controls', []),
+    makeText('View Controls', []),
+    simpleSwitch({name: `showHeight`, displayName: 'Specify Height', defaultsToActive: false}),
+    {
+      name: 'height',
+      type: 'Slider',
+      config: {minVal: 20, maxVal: 800, step: 10, defaultValue: 100},
+      conditions: [{query: '!parameters.showHeight.includes("true")', queryResult: 'hide'}],
+    },
+    simpleSwitch({name: `showWidth`, displayName: 'Specify Width', defaultsToActive: false}),
+    {
+      name: 'width',
+      type: 'Slider',
+      config: {minVal: 20, maxVal: 800, step: 10, defaultValue: 100},
+      conditions: [{query: '!parameters.showWidth.includes("true")', queryResult: 'hide'}],
+    },
   ],
 };
 export default Polestar;

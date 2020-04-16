@@ -142,9 +142,14 @@ export default function Header(props: HeaderProps): JSX.Element {
         placement="bottom"
         trigger="click"
         overlay={
-          <div>
+          <div className="about-tooltip">
             <h1>About this application</h1>
             <div>Terminology, etc</div>
+            <h3>Note</h3>
+            <div>
+              This application makes heavy use of client-side caching. Safari deletes local storage after 1
+              week of disuse, if this is an issue for you make sure you save your templates to your computer.
+            </div>
             <h3>Hotkeys</h3>
             <ul>
               {Object.entries(HOT_KEYS).map(([key, value]) => {

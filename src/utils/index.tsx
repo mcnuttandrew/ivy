@@ -98,7 +98,7 @@ export function serializeTemplate(template: Template): string {
   if (PREP_FOR_SCREENSHOT) {
     return stringify(
       {
-        $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.0.0.1.json',
+        $schema: 'https://ivy-vis.netlify.com/assets/ivy.0.0.1.json',
         templateName: template.templateName,
         templateDescription: template.templateDescription,
         templateAuthor: template.templateAuthor,
@@ -111,7 +111,7 @@ export function serializeTemplate(template: Template): string {
   }
   return stringify(
     {
-      $schema: 'https://kind-goldwasser-f3ce26.netlify.com/assets/ivy.0.0.1.json',
+      $schema: 'https://ivy-vis.netlify.com/assets/ivy.0.0.1.json',
       templateName: template.templateName,
       templateDescription: template.templateDescription,
       templateAuthor: template.templateAuthor,
