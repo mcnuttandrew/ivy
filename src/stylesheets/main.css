@@ -239,6 +239,24 @@ input[type="number"]::-webkit-outer-spin-button {
   cursor: not-allowed;
 }
 
+.charting-error-container {
+  align-items: center;
+  background: lightsalmon;
+  border-top: thin solid black;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  height: 100%;
+  padding: 0 10px;
+}
+
+.charting-error-message {
+  height: 400px;
+  width: 300px;
+  overflow-y: auto;
+}
+
 .view-container {
   border-top: thin solid black;
   display: flex;

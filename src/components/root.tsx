@@ -211,6 +211,7 @@ class RootComponent extends React.Component<RootProps, State> {
         data={this.props.data}
         deleteTemplate={this.props.deleteTemplate}
         deleteView={this.props.deleteView}
+        editorError={this.props.editorError}
         encodingMode={this.props.encodingMode}
         languages={this.props.languages}
         missingFields={this.props.missingFields}
