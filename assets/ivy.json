@@ -1,0 +1,441 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Condition": {
+      "properties": {
+        "query": {
+          "description": "A widget Condition query, executed raw javascript. Parameter values (the value of the current ui)\nis accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if\nthere wasn't a current value for the x dimension called xDim you could do \"!parameters.xDim\"",
+          "type": "string"
+        },
+        "queryResult": {
+          "$ref": "#/definitions/QueryResult",
+          "description": "What to do in response to the result of the query, should be either 'hide' or 'show'"
+        }
+      },
+      "type": "object"
+    },
+    "ConditionQuery": {
+      "description": "A widget Condition query, executed raw javascript. Parameter values (the value of the current ui)\nis accessed through parameters.VALUE. E.g. if you wanted to construct a predicate that check if\nthere wasn't a current value for the x dimension called xDim you could do \"!parameters.xDim\"",
+      "type": "string"
+    },
+    "CustomCard": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DataTargetWidget": {
+      "properties": {
+        "allowedTypes": {
+          "items": {
+            "enum": [
+              "CUSTOM",
+              "DIMENSION",
+              "MEASURE",
+              "TIME"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "DataType": {
+      "enum": [
+        "CUSTOM",
+        "DIMENSION",
+        "MEASURE",
+        "TIME"
+      ],
+      "type": "string"
+    },
+    "FreeTextWidget": {
+      "properties": {
+        "useParagraph": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "GenWidget": {
+      "properties": {
+        "conditions": {
+          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          },
+          "type": "array"
+        },
+        "config": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DataTargetWidget"
+            },
+            {
+              "$ref": "#/definitions/MultiDataTargetWidget"
+            },
+            {
+              "$ref": "#/definitions/ListWidget"
+            },
+            {
+              "$ref": "#/definitions/SwitchWidget"
+            },
+            {
+              "$ref": "#/definitions/TextWidget"
+            },
+            {
+              "$ref": "#/definitions/SliderWidget"
+            },
+            {
+              "$ref": "#/definitions/ShortcutsWidget"
+            },
+            {
+              "properties": {
+                "useParagraph": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        "displayName": {
+          "description": "The name to be shown in the GUI, does not have to be unique.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of widget to be used, this name will be swapped into the code string, must be unqiue",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/WidgetType",
+          "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
+        }
+      },
+      "type": "object"
+    },
+    "ListWidget": {
+      "properties": {
+        "allowedValues": {
+          "items": {
+            "anyOf": [
+              {
+                "properties": {
+                  "display": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        "defaultValue": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MultiDataTargetWidget": {
+      "properties": {
+        "allowedTypes": {
+          "items": {
+            "enum": [
+              "CUSTOM",
+              "DIMENSION",
+              "MEASURE",
+              "TIME"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "maxNumberOfTargets": {
+          "type": "number"
+        },
+        "minNumberOfTargets": {
+          "type": "number"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "QueryResult": {
+      "description": "What to do in response to the result of the query, should be either 'hide' or 'show'",
+      "enum": [
+        "hide",
+        "show"
+      ],
+      "type": "string"
+    },
+    "SectionWidget": {
+      "type": "null"
+    },
+    "Shortcut": {
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "shortcutFunction": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ShortcutsWidget": {
+      "properties": {
+        "shortcuts": {
+          "items": {
+            "$ref": "#/definitions/Shortcut"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "SliderWidget": {
+      "properties": {
+        "defaultValue": {
+          "type": "number"
+        },
+        "maxVal": {
+          "type": "number"
+        },
+        "minVal": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "SwitchWidget": {
+      "properties": {
+        "active": {
+          "type": "string"
+        },
+        "defaultsToActive": {
+          "type": "boolean"
+        },
+        "inactive": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "T": {
+      "type": "object"
+    },
+    "Template": {
+      "description": "The main configuration object for templates",
+      "properties": {
+        "code": {
+          "description": "The code to be interpreted by the renderer",
+          "type": "string"
+        },
+        "customCards": {
+          "description": "Advanced tool for providing special extra cards",
+          "items": {
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "disallowFanOut": {
+          "description": "Whether or not to allow view materialization / fan out",
+          "type": "boolean"
+        },
+        "templateAuthor": {
+          "description": "The creator of the template",
+          "type": "string"
+        },
+        "templateDescription": {
+          "description": "The description that users will see in the chart chooser gallery",
+          "type": "string"
+        },
+        "templateLanguage": {
+          "description": "The language of the code, determines how the code will be interpreted.\nIvy currently supports vega, vega-lite, and it's own data table system\n\n  __Default value:__ `vega-lite`",
+          "type": "string"
+        },
+        "templateName": {
+          "description": "The name of the template. Template names must be unique, so this can over-ride other extant templates",
+          "type": "string"
+        },
+        "widgets": {
+          "description": "The mechanism by which users interact with your template",
+          "items": {
+            "$ref": "#/definitions/Widget<WidgetSubType>"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "TextWidget": {
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Widget": {
+      "properties": {
+        "conditions": {
+          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          },
+          "type": "array"
+        },
+        "config": {
+          "$ref": "#/definitions/T"
+        },
+        "displayName": {
+          "description": "The name to be shown in the GUI, does not have to be unique.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of widget to be used, this name will be swapped into the code string, must be unqiue",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/WidgetType",
+          "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
+        }
+      },
+      "type": "object"
+    },
+    "Widget<WidgetSubType>": {
+      "properties": {
+        "conditions": {
+          "description": "Sometimes you want to decative certain values depending on the state of the UI\nThis advanced features allows you to do that",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          },
+          "type": "array"
+        },
+        "config": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DataTargetWidget"
+            },
+            {
+              "$ref": "#/definitions/MultiDataTargetWidget"
+            },
+            {
+              "$ref": "#/definitions/ListWidget"
+            },
+            {
+              "$ref": "#/definitions/SwitchWidget"
+            },
+            {
+              "$ref": "#/definitions/TextWidget"
+            },
+            {
+              "$ref": "#/definitions/SliderWidget"
+            },
+            {
+              "$ref": "#/definitions/ShortcutsWidget"
+            },
+            {
+              "properties": {
+                "useParagraph": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        "displayName": {
+          "description": "The name to be shown in the GUI, does not have to be unique.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of widget to be used, this name will be swapped into the code string, must be unqiue",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/WidgetType",
+          "description": "The type of the widget to be used, this defined the specific gui item that the user interacts with"
+        }
+      },
+      "type": "object"
+    },
+    "WidgetSubType": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/DataTargetWidget"
+        },
+        {
+          "$ref": "#/definitions/MultiDataTargetWidget"
+        },
+        {
+          "$ref": "#/definitions/ListWidget"
+        },
+        {
+          "$ref": "#/definitions/SwitchWidget"
+        },
+        {
+          "$ref": "#/definitions/TextWidget"
+        },
+        {
+          "$ref": "#/definitions/SliderWidget"
+        },
+        {
+          "$ref": "#/definitions/ShortcutsWidget"
+        },
+        {
+          "properties": {
+            "useParagraph": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "WidgetType": {
+      "enum": [
+        "DataTarget",
+        "FreeText",
+        "List",
+        "MultiDataTarget",
+        "Section",
+        "Shortcut",
+        "Slider",
+        "Switch",
+        "Text"
+      ],
+      "type": "string"
+    }
+  },
+  "$ref": "#/definitions/Template"
+}

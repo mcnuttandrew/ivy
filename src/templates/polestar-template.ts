@@ -1,8 +1,8 @@
 import stringify from 'json-stringify-pretty-compact';
-import {Template, GenWidget, Condition} from '../types';
+import {Template, GenWidget, Condition, Widget, ListWidget} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
-// import {tableau10, VEGA_CATEGORICAL_COLOR_SCHEMES, VEGA_CONT_COLOR_SCHEMES} from './vega-common';
+import {VEGA_CATEGORICAL_COLOR_SCHEMES, VEGA_CONT_COLOR_SCHEMES} from './vega-common';
 import {toList} from '../utils';
 import {
   makeAgg,
@@ -124,21 +124,20 @@ const encoding = {
       },
     } as any;
     if (key === 'Color') {
-      // output['value'] = {$cond: {query: '!parameters.Color', true: '[SingleColor]'}};
-      // output['scale'] = {
-      //   $cond: {
-      //     query: 'parameters.Color',
-      //     true: {
-      //       scheme: {
-      //         $cond: {
-      //           query: 'parameters.ColorType.includes("nominal")',
-      //           true: '[nominalColor]',
-      //           false: '[quantColor]',
-      //         },
-      //       },
-      //     },
-      //   },
-      // };
+      output['scale'] = {
+        $cond: {
+          query: 'parameters.Color',
+          true: {
+            scheme: {
+              $cond: {
+                query: 'parameters.ColorType.includes("nominal")',
+                true: '[nominalColor]',
+                false: '[quantColor]',
+              },
+            },
+          },
+        },
+      };
     }
     return {...acc, ...renderObjectIf(output, used(key), key.toLowerCase())};
   }, {}),
@@ -282,36 +281,32 @@ const Polestar: Template = {
           type: 'Slider',
           config: {minVal: 0, maxVal: 1, step: 0.1, defaultValue: 0.8},
         } as any);
-        // widgets.push(
-        //   simpleList({
-        //     name: 'singleColor',
-        //     displayName: 'Color',
-        //     list: tableau10,
-        //     conditions: [{query: 'parameters.Color', queryResult: 'hide'}],
-        //   }),
-        // );
-        // widgets.push(
-        //   simpleList({
-        //     name: 'nominalColor',
-        //     displayName: 'Color Scheme',
-        //     list: VEGA_CATEGORICAL_COLOR_SCHEMES,
-        //     conditions: [
-        //       {query: '!parameters.Color', queryResult: 'hide'},
-        //       {query: 'parameters.Color && !parameters.ColorType.includes("nominal")', queryResult: 'hide'},
-        //     ],
-        //   }),
-        // );
-        // widgets.push(
-        //   simpleList({
-        //     name: 'quantColor',
-        //     displayName: 'Color Scheme',
-        //     list: VEGA_CONT_COLOR_SCHEMES,
-        //     conditions: [
-        //       {query: '!parameters.Color', queryResult: 'hide'},
-        //       {query: 'parameters.Color && parameters.ColorType.includes("nominal")', queryResult: 'hide'},
-        //     ],
-        //   }),
-        // );
+        widgets.push({
+          type: 'List',
+          name: 'nominalColor',
+          displayName: 'Color Scheme',
+          config: {
+            allowedValues: VEGA_CATEGORICAL_COLOR_SCHEMES.map(toQuote),
+            defaultValue: toQuote(VEGA_CATEGORICAL_COLOR_SCHEMES[0]),
+          },
+          conditions: [
+            {query: '!parameters.Color', queryResult: 'hide'},
+            {query: '!parameters.ColorType.includes("nominal")', queryResult: 'hide'},
+          ],
+        } as Widget<ListWidget>);
+        widgets.push({
+          type: 'List',
+          name: 'quantColor',
+          displayName: 'Color Scheme',
+          config: {
+            allowedValues: VEGA_CONT_COLOR_SCHEMES.map(toQuote),
+            defaultValue: toQuote(VEGA_CONT_COLOR_SCHEMES[0]),
+          },
+          conditions: [
+            {query: '!parameters.Color', queryResult: 'hide'},
+            {query: 'parameters.ColorType.includes("nominal")', queryResult: 'hide'},
+          ],
+        } as Widget<ListWidget>);
       }
       // TODO: allow setting schemes
       return acc.concat(widgets);
