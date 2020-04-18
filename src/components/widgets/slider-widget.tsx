@@ -57,7 +57,7 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
   const setVal = debounce(
     (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`}),
-    75,
+    1,
   );
   return (
     <div className="slide-widget">
