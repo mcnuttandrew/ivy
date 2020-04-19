@@ -2,6 +2,9 @@ declare module 'type-analyzer';
 declare module 'datalib';
 declare module 'hoopoe';
 declare module 'enzyme-adapter-react-16';
+
+declare module 'vega-projection-extended';
+
 // TODO i guess
 //  {
 //   // export type Data = {[key: string]: string}[];

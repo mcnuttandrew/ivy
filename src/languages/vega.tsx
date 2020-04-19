@@ -1,5 +1,10 @@
 import {LanguageExtension} from '../types';
 
+import x from 'vega-projection-extended';
+// necessary footwork to force the projections to be imported
+// eslint-disable-next-line
+const yx = x;
+
 import React from 'react';
 import {Vega} from 'react-vega';
 import {RendererProps, Template, Suggestion} from '../types';
