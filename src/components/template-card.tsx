@@ -63,7 +63,7 @@ function CardControls(props: CardControlsProps): JSX.Element {
         </div>
       }
     >
-      <div className="program-option-settings">
+      <div className="template-card-settings">
         <TiCog />
       </div>
     </Tooltip>
@@ -80,7 +80,7 @@ export function countSymbol(symbol: string): JSX.Element {
             key={key}
             className={classnames({
               [`${circType}-circle`]: true,
-              [`program-option-type-pill--${key.toLowerCase()}`]: true,
+              [`template-card-type-pill--${key.toLowerCase()}`]: true,
             })}
           ></div>
         );
@@ -161,13 +161,13 @@ export default function ProgramPreview(props: Props): JSX.Element {
   return (
     <div
       className={classnames({
-        'program-option': true,
+        'template-card': true,
         'flex-down': true,
       })}
     >
       <div className="flex">
-        <div className="flex-down program-option-use-template-container">
-          <div className="program-option-img-container" onClick={(): any => setEncodingMode(templateName)}>
+        <div className="flex-down template-card-use-template-container">
+          <div className="template-card-img-container" onClick={(): any => setEncodingMode(templateName)}>
             <Thumbnail templateName={templateName} templateAuthor={templateAuthor} />
           </div>
           {!FOR_DISPLAY && (
@@ -177,9 +177,9 @@ export default function ProgramPreview(props: Props): JSX.Element {
           )}
         </div>
         <div className="flex-down full-width">
-          <div className="program-option-title">
+          <div className="template-card-title">
             <h3
-              className="program-option-title-label cursor-pointer"
+              className="template-card-title-label cursor-pointer"
               onClick={(): any => setEncodingMode(templateName)}
             >
               {templateName}
@@ -188,14 +188,14 @@ export default function ProgramPreview(props: Props): JSX.Element {
           </div>
           <div className="flex-down">
             <div
-              className="program-option-description cursor-pointer"
+              className="template-card-description cursor-pointer"
               onClick={(): any => setEncodingMode(templateName)}
             >
               {templateDescription}
             </div>
             {!FOR_DISPLAY && RenderTypeCounts(template)}
             {!hideMatches && false && (
-              <div className="program-option-search-match flex">
+              <div className="template-card-search-match flex">
                 {isComplete && <span> Full Match</span>}
                 {isComplete && fullMatch()}
               </div>
@@ -204,7 +204,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
         </div>
       </div>
       {alreadyPresent && (
-        <div className="program-option-search-match">This template already appears to be loaded</div>
+        <div className="template-card-search-match">This template already appears to be loaded</div>
       )}
       {FOR_DISPLAY && RenderTypeCounts(template)}
     </div>

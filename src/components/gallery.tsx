@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {GenericAction, SetWidgetValuePayload} from '../actions/index';
 import {Template, TemplateMap, ColumnHeader} from '../types';
-import ProgramPreview from './program-preview';
+import TemplateCard from './template-card';
 import {
   searchDimensionsCanMatch,
   buildCounts,
@@ -191,7 +191,7 @@ export default function Gallery(props: Props): JSX.Element {
         style={{opacity: include ? 1 : 0.2}}
         key={`${template.templateName}-${template.templateAuthor}-${idx}`}
       >
-        <ProgramPreview
+        <TemplateCard
           buttons={buttons.map(makeButtonObject(template.templateName))}
           isComplete={isComplete}
           setEncodingMode={setEncodingMode}

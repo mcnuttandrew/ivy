@@ -38,8 +38,8 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
                     onClick={toggleValue}
                     className={classnames({
                       flex: true,
-                      'program-option-type-pill': true,
-                      [`program-option-type-pill--${type.toLowerCase()}`]: true,
+                      'template-card-type-pill': true,
+                      [`template-card-type-pill--${type.toLowerCase()}`]: true,
                     })}
                   >
                     {type}

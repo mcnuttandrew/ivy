@@ -5,7 +5,7 @@ import VegaDatasetMeta from '../../constants/vega-datasets-counts';
 import GALLERY from '../../templates/gallery';
 import {DataType} from '../../types';
 import Modal from './modal';
-import {countSymbol} from '../program-preview';
+import {countSymbol} from '../template-card';
 import {HoverTooltip} from '../tooltips';
 import {classnames} from '../../utils';
 

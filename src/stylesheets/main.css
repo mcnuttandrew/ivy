@@ -732,7 +732,7 @@ input[type="number"]::-webkit-outer-spin-button {
   flex-wrap: wrap;
 }
 
-.program-option {
+.template-card {
   /* box-shadow: 5px 5px 0 1px lightgray; */
   border-radius: 5px;
   border: thin solid rgba(0, 0, 0, 0);
@@ -742,43 +742,43 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 225px;
 }
 
-.program-option-title {
+.template-card-title {
   align-items: center;
   display: flex;
   justify-content: space-between;
   position: relative;
 }
 
-.program-option-title h3 {
+.template-card-title h3 {
   font-weight: bolder;
   max-width: 130px;
 }
 
-.program-option-settings {
+.template-card-settings {
   cursor: pointer;
   font-size: 25px;
   position: absolute;
   right: 0;
 }
 
-.program-option-description {
+.template-card-description {
   font-size: 10px;
   min-height: 48px;
   text-overflow: ellipsis;
 }
 
-.program-containers .program-option:last-child {
+.program-containers .template-card:last-child {
   margin-bottom: 200px;
 }
 
-.program-option-use-template-container {
+.template-card-use-template-container {
   justify-content: center;
   border-right: thin solid black;
   padding-right: 5px;
   margin-right: 5px;
 }
 
-.program-option-img-container img {
+.template-card-img-container img {
   align-items: center;
   background-color: white;
   cursor: pointer;
@@ -788,7 +788,7 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 65px;
 }
 
-.program-option-type-pill {
+.template-card-type-pill {
   cursor: pointer;
   margin-right: 2px;
 }
@@ -823,15 +823,15 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 4px;
 }
 
-.program-option-type-pill--measure {
+.template-card-type-pill--measure {
   background: var(--measure);
 }
 
-.program-option-type-pill--dimension {
+.template-card-type-pill--dimension {
   background: var(--dimension);
 }
 
-.program-option-type-pill--time {
+.template-card-type-pill--time {
   background: var(--time);
 }
 
@@ -854,7 +854,7 @@ input[type="number"]::-webkit-outer-spin-button {
   color: var(--time);
 }
 
-.program-option-type-symbol {
+.template-card-type-symbol {
   align-items: flex-start;
   display: flex;
   font-size: 20px;
@@ -862,13 +862,13 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-right: 5px;
 }
 
-.program-option-search-match {
+.template-card-search-match {
   font-size: 12px;
   font-weight: bolder;
   color: forestgreen;
 }
 
-.program-option-bottom {
+.template-card-bottom {
   border-top: thin solid gray;
   margin-top: 5px;
 }

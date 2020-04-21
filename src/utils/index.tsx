@@ -10,7 +10,7 @@ import {
   CustomCard,
   Suggestion,
 } from '../types';
-import {MATERIALIZING} from '../constants/index';
+import {MATERIALIZING, USE_LOCAL} from '../constants/index';
 import GALLERY from '../templates/gallery';
 import {AppState, ColumnHeader} from '../types';
 
@@ -149,7 +149,6 @@ export function getTemplateSaveState(base: AppState): SaveState {
   return associatedUpstreamTemplate === template ? 'EQUAL' : 'DIFFERENT';
 }
 
-const USE_LOCAL = false;
 export function serverPrefix(): string {
   return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
 }

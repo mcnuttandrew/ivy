@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {GenericAction} from '../../actions/index';
 import {Template} from '../../types';
 import Modal from './modal';
-import ProgramPreview from '../program-preview';
+import TemplateCard from '../template-card';
 import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, toExportStr, log} from '../../utils';
 import {TiUploadOutline, TiEdit} from 'react-icons/ti';
@@ -104,7 +104,7 @@ function DisplayLoadedPrograms(
         .map((template, idx) => {
           const isLoaded = loadedPrograms.has(template.templateName);
           return (
-            <ProgramPreview
+            <TemplateCard
               buttons={['save', template.templateAuthor === userName && 'delete from server']
                 .filter(d => d)
                 .map(makeButtonObject(template))}
@@ -281,7 +281,7 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                           });
                         };
                         Promise.all(fileList.map(loaderPromise)).then(newTemplates => {
-                          recieveTemplates(newTemplates);
+                          newTemplates.forEach(template => loadExternalTemplate(template));
                           setModalState(null);
                         });
                       }}
