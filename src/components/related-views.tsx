@@ -5,7 +5,7 @@ import Tooltip from 'rc-tooltip';
 import GALLERY from '../templates/gallery';
 import {ColumnHeader, Template, TemplateMap} from '../types';
 import {searchDimensionsCanMatch} from '../utils';
-import ProgramPreview from './program-preview';
+import TemplateCard from './template-card';
 import {TiThLargeOutline} from 'react-icons/ti';
 
 const targetTypes = new Set(['DataTarget', 'MultiDataTarget']);
@@ -25,7 +25,7 @@ function PopoverContents(props: PopoverContentsProps): JSX.Element {
       </h5>
       {relatedViews.map((view, idx) => {
         return (
-          <ProgramPreview
+          <TemplateCard
             key={idx}
             template={view}
             hideMatches={false}
