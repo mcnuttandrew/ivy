@@ -281,7 +281,9 @@ export default function CommunityPrograms(props: Props): JSX.Element {
                           });
                         };
                         Promise.all(fileList.map(loaderPromise)).then(newTemplates => {
-                          recieveTemplates(newTemplates);
+                          newTemplates.forEach(template => loadExternalTemplate(template));
+                          // loadExternalTemplate;
+                          // recieveTemplates(newTemplates);
                           setModalState(null);
                         });
                       }}
