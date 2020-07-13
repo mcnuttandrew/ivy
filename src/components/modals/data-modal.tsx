@@ -23,21 +23,7 @@ export default function DataModal(props: Props): JSX.Element {
   const [searchTerm, setSearchTerm] = useState(null);
   const [sortMode, setSortMode] = useState('ALPHA');
 
-  // const handleSubmit = (useData: boolean) => (d: any): void => {
-  //   const file = useData ? d.dataTransfer.items[0].getAsFile() : d.target.files[0];
-  //   const reader = new FileReader();
-  //   reader.onload = (event): void => {
-  //     loadCustomDataset({fileName: file.name, data: event.target.result as any});
-  //     setModalState(null);
-  //   };
-
-  //   reader.readAsText(file);
-  // };
   const onDrop = useCallback((acceptedFiles: any) => {
-    // Do something with the files
-    console.log(acceptedFiles);
-    // const file = useData ? d.dataTransfer.items[0].getAsFile() :
-    // const file = d.target.files[0];
     const file = acceptedFiles[0];
     const reader = new FileReader();
     reader.onload = (event): void => {
