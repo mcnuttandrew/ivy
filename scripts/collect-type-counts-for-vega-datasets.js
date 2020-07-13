@@ -27,9 +27,10 @@ Promise.all(
         colMeta.reduce(
           (acc, row) => {
             acc[row.category] = (acc[row.category] || 0) + 1;
+            acc.columns.push(row.key);
             return acc;
           },
-          {file: key, length: file.length},
+          {file: key, length: file.length, columns: []},
         ),
       )
       .catch(e => {

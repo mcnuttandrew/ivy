@@ -2,7 +2,7 @@ import React, {useState, useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
-import VegaDatasetMeta from '../../constants/vega-datasets-counts';
+import VegaDatasetMeta from '../../constants/vega-datasets-counts.json';
 import GALLERY from '../../templates/gallery';
 import {DataType} from '../../types';
 import Modal from './modal';
@@ -49,7 +49,7 @@ export default function DataModal(props: Props): JSX.Element {
             <input
               type="text"
               value={searchTerm || ''}
-              onChange={(event): any => setSearchTerm(event.target.value)}
+              onChange={(event): any => setSearchTerm(event.target.value.toLowerCase())}
               placeholder="Search for dataset"
             />
           </IgnoreKeys>
@@ -85,7 +85,11 @@ export default function DataModal(props: Props): JSX.Element {
       </div>
       <div className="dataset-list">
         {Object.keys(VegaDatasetMeta)
-          .filter(key => key.includes(searchTerm || ''))
+          .filter(
+            key =>
+              key.toLowerCase().includes(searchTerm || '') ||
+              VegaDatasetMeta[key].columns.some((col: any) => col.toLowerCase().includes(searchTerm || '')),
+          )
           .sort((a, b) => {
             if (sortMode === 'ALPHA') {
               return a.localeCompare(b);
@@ -96,6 +100,7 @@ export default function DataModal(props: Props): JSX.Element {
           })
           .map(datasetName => {
             const datasetMeta = VegaDatasetMeta[datasetName];
+            console.log(datasetMeta);
             return (
               <div
                 onClick={(): any =>
@@ -105,28 +110,31 @@ export default function DataModal(props: Props): JSX.Element {
                     (): any => setEncodingMode(GALLERY.templateName),
                   ])
                 }
-                className="flex dataset-list-item space-between"
+                className="dataset-list-item"
                 key={datasetName}
               >
-                <div className="flex">
-                  <h5>{datasetName}</h5>
+                <div className="flex space-between">
+                  <div className="flex">
+                    <h5>{datasetName}</h5>
+                  </div>
+                  <div className="flex">
+                    <div className="icon-container">{datasetMeta.length} rows</div>
+                    {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
+                      const count = datasetMeta[dataType] || 0;
+                      return (
+                        <div key={`${datasetName}-${dataType}`} className="flex icon-container">
+                          <HoverTooltip
+                            message={`This data set has ${count} data columns with inferred type ${dataType}`}
+                          >
+                            {countSymbol(dataType)}
+                          </HoverTooltip>
+                          {count}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="flex">
-                  <div className="icon-container">{datasetMeta.length} rows</div>
-                  {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
-                    const count = datasetMeta[dataType] || 0;
-                    return (
-                      <div key={`${datasetName}-${dataType}`} className="flex icon-container">
-                        <HoverTooltip
-                          message={`This data set has ${count} data columns with inferred type ${dataType}`}
-                        >
-                          {countSymbol(dataType)}
-                        </HoverTooltip>
-                        {count}
-                      </div>
-                    );
-                  })}
-                </div>
+                <div className="flex dataset-list-item-col-names">{datasetMeta.columns.join(', ')}</div>
               </div>
             );
           })}

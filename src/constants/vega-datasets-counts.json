@@ -2,35 +2,144 @@
   "anscombe.json": {
     "file": "anscombe.json",
     "length": 44,
+    "columns": [
+      "Series",
+      "X",
+      "Y"
+    ],
     "DIMENSION": 1,
     "MEASURE": 2
   },
   "barley.json": {
     "file": "barley.json",
     "length": 120,
+    "columns": [
+      "yield",
+      "variety",
+      "year",
+      "site"
+    ],
     "MEASURE": 2,
     "DIMENSION": 2
   },
   "budget.json": {
     "file": "budget.json",
     "length": 237,
+    "columns": [
+      "1962",
+      "1963",
+      "1964",
+      "1965",
+      "1966",
+      "1967",
+      "1968",
+      "1969",
+      "1970",
+      "1971",
+      "1972",
+      "1973",
+      "1974",
+      "1975",
+      "1976",
+      "1977",
+      "1978",
+      "1979",
+      "1980",
+      "1981",
+      "1982",
+      "1983",
+      "1984",
+      "1985",
+      "1986",
+      "1987",
+      "1988",
+      "1989",
+      "1990",
+      "1991",
+      "1992",
+      "1993",
+      "1994",
+      "1995",
+      "1996",
+      "1997",
+      "1998",
+      "1999",
+      "2000",
+      "2001",
+      "2002",
+      "2003",
+      "2004",
+      "2005",
+      "2006",
+      "2007",
+      "2008",
+      "2009",
+      "2010",
+      "2011",
+      "2012",
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "Source Category Code",
+      "Source category name",
+      "Source subcategory",
+      "Source subcategory name",
+      "Agency code",
+      "Agency name",
+      "Bureau code",
+      "Bureau name",
+      "Account code",
+      "Account name",
+      "Treasury Agency code",
+      "On- or off-budget",
+      "TQ"
+    ],
     "MEASURE": 66,
     "DIMENSION": 6
   },
   "budgets.json": {
     "file": "budgets.json",
     "length": 230,
+    "columns": [
+      "budgetYear",
+      "forecastYear",
+      "value"
+    ],
     "MEASURE": 3
   },
   "burtin.json": {
     "file": "burtin.json",
     "length": 16,
+    "columns": [
+      "Bacteria",
+      "Penicillin",
+      "Streptomycin",
+      "Neomycin",
+      "Gram_Staining",
+      "Genus"
+    ],
     "DIMENSION": 3,
     "MEASURE": 3
   },
   "cars.json": {
     "file": "cars.json",
     "length": 406,
+    "columns": [
+      "Name",
+      "Miles_per_Gallon",
+      "Cylinders",
+      "Displacement",
+      "Horsepower",
+      "Weight_in_lbs",
+      "Acceleration",
+      "Year",
+      "Origin"
+    ],
     "DIMENSION": 2,
     "MEASURE": 6,
     "TIME": 1
@@ -38,35 +147,71 @@
   "countries.json": {
     "file": "countries.json",
     "length": 630,
+    "columns": [
+      "_comment",
+      "year",
+      "fertility",
+      "life_expect",
+      "n_fertility",
+      "n_life_expect",
+      "country"
+    ],
     "DIMENSION": 2,
     "MEASURE": 5
   },
   "crimea.json": {
     "file": "crimea.json",
     "length": 24,
+    "columns": [
+      "date",
+      "wounds",
+      "other",
+      "disease"
+    ],
     "TIME": 1,
     "MEASURE": 3
   },
   "driving.json": {
     "file": "driving.json",
     "length": 55,
+    "columns": [
+      "side",
+      "year",
+      "miles",
+      "gas"
+    ],
     "DIMENSION": 1,
     "MEASURE": 3
   },
   "flare-dependencies.json": {
     "file": "flare-dependencies.json",
     "length": 764,
+    "columns": [
+      "source",
+      "target"
+    ],
     "MEASURE": 2
   },
   "flare.json": {
     "file": "flare.json",
     "length": 252,
+    "columns": [
+      "id",
+      "name"
+    ],
     "MEASURE": 1,
     "DIMENSION": 1
   },
   "flights-10k.json": {
     "file": "flights-10k.json",
     "length": 10000,
+    "columns": [
+      "date",
+      "delay",
+      "distance",
+      "origin",
+      "destination"
+    ],
     "TIME": 1,
     "MEASURE": 2,
     "DIMENSION": 2
@@ -74,11 +219,23 @@
   "flights-200k.json": {
     "file": "flights-200k.json",
     "length": 231083,
+    "columns": [
+      "delay",
+      "distance",
+      "time"
+    ],
     "MEASURE": 3
   },
   "flights-20k.json": {
     "file": "flights-20k.json",
     "length": 20000,
+    "columns": [
+      "date",
+      "delay",
+      "distance",
+      "origin",
+      "destination"
+    ],
     "TIME": 1,
     "MEASURE": 2,
     "DIMENSION": 2
@@ -86,6 +243,13 @@
   "flights-2k.json": {
     "file": "flights-2k.json",
     "length": 2000,
+    "columns": [
+      "date",
+      "delay",
+      "distance",
+      "origin",
+      "destination"
+    ],
     "TIME": 1,
     "MEASURE": 2,
     "DIMENSION": 2
@@ -93,6 +257,13 @@
   "flights-5k.json": {
     "file": "flights-5k.json",
     "length": 5000,
+    "columns": [
+      "date",
+      "delay",
+      "distance",
+      "origin",
+      "destination"
+    ],
     "TIME": 1,
     "MEASURE": 2,
     "DIMENSION": 2
@@ -100,6 +271,14 @@
   "football.json": {
     "file": "football.json",
     "length": 6508,
+    "columns": [
+      "date",
+      "division",
+      "home_team",
+      "away_team",
+      "home_score",
+      "away_score"
+    ],
     "TIME": 1,
     "DIMENSION": 3,
     "MEASURE": 2
@@ -107,53 +286,122 @@
   "gapminder.json": {
     "file": "gapminder.json",
     "length": 693,
+    "columns": [
+      "year",
+      "country",
+      "cluster",
+      "pop",
+      "life_expect",
+      "fertility"
+    ],
     "MEASURE": 5,
     "DIMENSION": 1
   },
   "income.json": {
     "file": "income.json",
     "length": 520,
+    "columns": [
+      "name",
+      "region",
+      "id",
+      "pct",
+      "total",
+      "group"
+    ],
     "DIMENSION": 3,
     "MEASURE": 3
   },
   "jobs.json": {
     "file": "jobs.json",
     "length": 7650,
+    "columns": [
+      "job",
+      "sex",
+      "year",
+      "count",
+      "perc"
+    ],
     "DIMENSION": 2,
     "MEASURE": 3
   },
   "londonCentroids.json": {
     "file": "londonCentroids.json",
     "length": 33,
+    "columns": [
+      "name",
+      "cx",
+      "cy"
+    ],
     "DIMENSION": 1,
     "MEASURE": 2
   },
   "monarchs.json": {
     "file": "monarchs.json",
     "length": 12,
+    "columns": [
+      "name",
+      "start",
+      "end",
+      "index"
+    ],
     "DIMENSION": 1,
     "MEASURE": 3
   },
   "movies.json": {
     "file": "movies.json",
     "length": 3201,
+    "columns": [
+      "US Gross",
+      "Worldwide Gross",
+      "US DVD Sales",
+      "Production Budget",
+      "Release Date",
+      "MPAA Rating",
+      "Running Time min",
+      "Distributor",
+      "Source",
+      "Major Genre",
+      "Creative Type",
+      "Director",
+      "Rotten Tomatoes Rating",
+      "IMDB Rating",
+      "IMDB Votes"
+    ],
     "MEASURE": 8,
     "DIMENSION": 7
   },
   "normal-2d.json": {
     "file": "normal-2d.json",
     "length": 500,
+    "columns": [
+      "u",
+      "v"
+    ],
     "MEASURE": 2
   },
   "obesity.json": {
     "file": "obesity.json",
     "length": 50,
+    "columns": [
+      "id",
+      "rate",
+      "state"
+    ],
     "MEASURE": 2,
     "DIMENSION": 1
   },
   "ohlc.json": {
     "file": "ohlc.json",
     "length": 44,
+    "columns": [
+      "date",
+      "open",
+      "high",
+      "low",
+      "close",
+      "signal",
+      "ret"
+    ],
     "TIME": 1,
     "MEASURE": 5,
     "DIMENSION": 1
@@ -161,17 +409,57 @@
   "penguins.json": {
     "file": "penguins.json",
     "length": 344,
+    "columns": [
+      "Species",
+      "Island",
+      "Beak Length (mm)",
+      "Beak Depth (mm)",
+      "Flipper Length (mm)",
+      "Body Mass (g)",
+      "Sex"
+    ],
     "DIMENSION": 3,
     "MEASURE": 4
   },
   "points.json": {
     "file": "points.json",
     "length": 100,
+    "columns": [
+      "x",
+      "y"
+    ],
     "MEASURE": 2
   },
   "political-contributions.json": {
     "file": "political-contributions.json",
     "length": 58,
+    "columns": [
+      "Candidate_Identification",
+      "Candidate_Name",
+      "Incumbent_Challenger_Status",
+      "Party_Code",
+      "Party_Affiliation",
+      "Total_Receipts",
+      "Transfers_from_Authorized_Committees",
+      "Total_Disbursements",
+      "Transfers_to_Authorized_Committees",
+      "Beginning_Cash",
+      "Ending_Cash",
+      "Contributions_from_Candidate",
+      "Loans_from_Candidate",
+      "Other_Loans",
+      "Candidate_Loan_Repayments",
+      "Other_Loan_Repayments",
+      "Debts_Owed_By",
+      "Total_Individual_Contributions",
+      "Candidate_State",
+      "Candidate_District",
+      "Contributions_from_Other_Political_Committees",
+      "Contributions_from_Party_Committees",
+      "Coverage_End_Date",
+      "Refunds_to_Individuals",
+      "Refunds_to_Committees"
+    ],
     "DIMENSION": 5,
     "MEASURE": 19,
     "TIME": 1
@@ -179,17 +467,35 @@
   "population.json": {
     "file": "population.json",
     "length": 570,
+    "columns": [
+      "year",
+      "age",
+      "sex",
+      "people"
+    ],
     "MEASURE": 4
   },
   "udistrict.json": {
     "file": "udistrict.json",
     "length": 182,
+    "columns": [
+      "key",
+      "lat"
+    ],
     "DIMENSION": 1,
     "MEASURE": 1
   },
   "unemployment-across-industries.json": {
     "file": "unemployment-across-industries.json",
     "length": 1708,
+    "columns": [
+      "series",
+      "year",
+      "month",
+      "count",
+      "rate",
+      "date"
+    ],
     "DIMENSION": 1,
     "MEASURE": 4,
     "TIME": 1
@@ -197,34 +503,81 @@
   "uniform-2d.json": {
     "file": "uniform-2d.json",
     "length": 500,
+    "columns": [
+      "u",
+      "v"
+    ],
     "MEASURE": 2
   },
   "us-state-capitals.json": {
     "file": "us-state-capitals.json",
     "length": 50,
+    "columns": [
+      "lon",
+      "lat",
+      "state",
+      "city"
+    ],
     "MEASURE": 2,
     "DIMENSION": 2
   },
   "weather.json": {
     "file": "weather.json",
     "length": 10,
+    "columns": [
+      "day",
+      "record",
+      "normal",
+      "actual",
+      "id"
+    ],
     "DIMENSION": 4,
     "MEASURE": 1
   },
   "wheat.json": {
     "file": "wheat.json",
     "length": 52,
+    "columns": [
+      "year",
+      "wheat",
+      "wages"
+    ],
     "MEASURE": 3
   },
   "airports.csv": {
     "file": "airports.csv",
     "length": 3376,
+    "columns": [
+      "iata",
+      "name",
+      "city",
+      "state",
+      "country",
+      "latitude",
+      "longitude"
+    ],
     "DIMENSION": 5,
     "MEASURE": 2
   },
   "birdstrikes.csv": {
     "file": "birdstrikes.csv",
     "length": 10000,
+    "columns": [
+      "Airport Name",
+      "Aircraft Make Model",
+      "Effect Amount of damage",
+      "Flight Date",
+      "Aircraft Airline Operator",
+      "Origin State",
+      "Phase of flight",
+      "Wildlife Size",
+      "Wildlife Species",
+      "Time of day",
+      "Cost Other",
+      "Cost Repair",
+      "Cost Total $",
+      "Speed IAS in knots"
+    ],
     "DIMENSION": 9,
     "TIME": 1,
     "MEASURE": 4
@@ -232,42 +585,79 @@
   "co2-concentration.csv": {
     "file": "co2-concentration.csv",
     "length": 741,
+    "columns": [
+      "Date",
+      "CO2",
+      "adjusted CO2"
+    ],
     "TIME": 1,
     "MEASURE": 2
   },
   "disasters.csv": {
     "file": "disasters.csv",
     "length": 803,
+    "columns": [
+      "Entity",
+      "Year",
+      "Deaths"
+    ],
     "DIMENSION": 1,
     "MEASURE": 2
   },
   "flights-3m.csv": {
     "file": "flights-3m.csv",
     "length": 231083,
+    "columns": [
+      "date",
+      "delay",
+      "distance",
+      "origin",
+      "destination"
+    ],
     "MEASURE": 3,
     "DIMENSION": 2
   },
   "flights-airport.csv": {
     "file": "flights-airport.csv",
     "length": 5366,
+    "columns": [
+      "origin",
+      "destination",
+      "count"
+    ],
     "DIMENSION": 2,
     "MEASURE": 1
   },
   "gapminder-health-income.csv": {
     "file": "gapminder-health-income.csv",
     "length": 187,
+    "columns": [
+      "country",
+      "income",
+      "health",
+      "population"
+    ],
     "DIMENSION": 1,
     "MEASURE": 3
   },
   "github.csv": {
     "file": "github.csv",
     "length": 955,
+    "columns": [
+      "time",
+      "count"
+    ],
     "TIME": 1,
     "MEASURE": 1
   },
   "iowa-electricity.csv": {
     "file": "iowa-electricity.csv",
     "length": 51,
+    "columns": [
+      "year",
+      "source",
+      "net_generation"
+    ],
     "TIME": 1,
     "DIMENSION": 1,
     "MEASURE": 1
@@ -275,6 +665,19 @@
   "la-riots.csv": {
     "file": "la-riots.csv",
     "length": 63,
+    "columns": [
+      "first_name",
+      "last_name",
+      "age",
+      "gender",
+      "race",
+      "death_date",
+      "address",
+      "neighborhood",
+      "type",
+      "longitude",
+      "latitude"
+    ],
     "DIMENSION": 7,
     "MEASURE": 3,
     "TIME": 1
@@ -282,30 +685,60 @@
   "lookup_groups.csv": {
     "file": "lookup_groups.csv",
     "length": 9,
+    "columns": [
+      "group",
+      "person"
+    ],
     "MEASURE": 1,
     "DIMENSION": 1
   },
   "lookup_people.csv": {
     "file": "lookup_people.csv",
     "length": 9,
+    "columns": [
+      "name",
+      "age",
+      "height"
+    ],
     "DIMENSION": 1,
     "MEASURE": 2
   },
   "population_engineers_hurricanes.csv": {
     "file": "population_engineers_hurricanes.csv",
     "length": 52,
+    "columns": [
+      "state",
+      "id",
+      "population",
+      "engineers",
+      "hurricanes"
+    ],
     "DIMENSION": 1,
     "MEASURE": 4
   },
   "seattle-weather-hourly-normals.csv": {
     "file": "seattle-weather-hourly-normals.csv",
     "length": 8759,
+    "columns": [
+      "date",
+      "pressure",
+      "temperature",
+      "wind"
+    ],
     "TIME": 1,
     "MEASURE": 3
   },
   "seattle-weather.csv": {
     "file": "seattle-weather.csv",
     "length": 1461,
+    "columns": [
+      "date",
+      "precipitation",
+      "temp_max",
+      "temp_min",
+      "wind",
+      "weather"
+    ],
     "TIME": 1,
     "MEASURE": 4,
     "DIMENSION": 1
@@ -313,24 +746,68 @@
   "sp500.csv": {
     "file": "sp500.csv",
     "length": 123,
+    "columns": [
+      "date",
+      "price"
+    ],
     "DIMENSION": 1,
     "MEASURE": 1
   },
   "stocks.csv": {
     "file": "stocks.csv",
     "length": 560,
+    "columns": [
+      "symbol",
+      "date",
+      "price"
+    ],
     "DIMENSION": 2,
     "MEASURE": 1
   },
   "us-employment.csv": {
     "file": "us-employment.csv",
     "length": 120,
+    "columns": [
+      "month",
+      "nonfarm",
+      "private",
+      "goods_producing",
+      "service_providing",
+      "private_service_providing",
+      "mining_and_logging",
+      "construction",
+      "manufacturing",
+      "durable_goods",
+      "nondurable_goods",
+      "trade_transportation_utilties",
+      "wholesale_trade",
+      "retail_trade",
+      "transportation_and_warehousing",
+      "utilities",
+      "information",
+      "financial_activities",
+      "professional_and_business_services",
+      "education_and_health_services",
+      "leisure_and_hospitality",
+      "other_services",
+      "government",
+      "nonfarm_change"
+    ],
     "TIME": 1,
     "MEASURE": 23
   },
   "weather.csv": {
     "file": "weather.csv",
     "length": 2922,
+    "columns": [
+      "location",
+      "date",
+      "precipitation",
+      "temp_max",
+      "temp_min",
+      "wind",
+      "weather"
+    ],
     "DIMENSION": 2,
     "TIME": 1,
     "MEASURE": 4
@@ -338,21 +815,41 @@
   "windvectors.csv": {
     "file": "windvectors.csv",
     "length": 4800,
+    "columns": [
+      "longitude",
+      "latitude",
+      "dir",
+      "dirCat",
+      "speed"
+    ],
     "MEASURE": 5
   },
   "zipcodes.csv": {
     "file": "zipcodes.csv",
     "length": 42049,
+    "columns": [
+      "zip_code",
+      "latitude",
+      "longitude",
+      "city",
+      "state",
+      "county"
+    ],
     "MEASURE": 3,
     "DIMENSION": 3
   },
   "unemployment.tsv": {
     "file": "unemployment.tsv",
     "length": 3218,
+    "columns": [
+      "id",
+      "rate"
+    ],
     "MEASURE": 2
   },
   "flights-200k.arrow": {
     "file": "flights-200k.arrow",
-    "length": 0
+    "length": 0,
+    "columns": []
   }
 }
