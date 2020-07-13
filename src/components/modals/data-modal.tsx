@@ -100,7 +100,6 @@ export default function DataModal(props: Props): JSX.Element {
           })
           .map(datasetName => {
             const datasetMeta = VegaDatasetMeta[datasetName];
-            console.log(datasetMeta);
             return (
               <div
                 onClick={(): any =>
