@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "@types/rc-slider": "^8.6.5",
+    "@types/react-dropzone": "^5.1.0",
     "ajv": "^6.12.0",
     "d3-dsv": "^1.1.1",
     "datalib": "^1.9.2",
@@ -89,6 +90,7 @@
     "react-dnd": "^9.4.0",
     "react-dnd-html5-backend": "^9.4.0",
     "react-dom": "^16.8.6",
+    "react-dropzone": "^11.0.1",
     "react-hotkeys": "^2.0.0",
     "react-icons": "^3.8.0",
     "react-monaco-editor": "^0.32.1",
@@ -101,7 +103,7 @@
     "type-analyzer": "^0.2.3",
     "unit-vis": "^0.0.4",
     "vega": "^5.10.1",
-    "vega-datasets": "^1.30.2",
+    "vega-datasets": "^2.1.0",
     "vega-lite": "^4.10.4",
     "vega-projection-extended": "^2.0.1",
     "vega-tooltip": "^0.19.1"

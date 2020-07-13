@@ -110,10 +110,10 @@ export default function Header(props: HeaderProps): JSX.Element {
             <span>Redo</span>
           </div>
           <div className="state-action-button">
-            <HoverTooltip message="Add more templates">
+            <HoverTooltip message="Add More Templates">
               <div className="flex" onClick={(): any => setModalState('community')}>
                 <TiThSmall />
-                <span className="template-modification-control-label">Add More templates</span>
+                <span className="template-modification-control-label">Add More Templates</span>
               </div>
             </HoverTooltip>
           </div>

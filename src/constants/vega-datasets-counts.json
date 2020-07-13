@@ -11,13 +11,6 @@
     "MEASURE": 2,
     "DIMENSION": 2
   },
-  "birdstrikes.json": {
-    "file": "birdstrikes.json",
-    "length": 10000,
-    "DIMENSION": 9,
-    "TIME": 1,
-    "MEASURE": 4
-  },
   "budget.json": {
     "file": "budget.json",
     "length": 237,
@@ -41,12 +34,6 @@
     "DIMENSION": 2,
     "MEASURE": 6,
     "TIME": 1
-  },
-  "climate.json": {
-    "file": "climate.json",
-    "length": 744,
-    "DIMENSION": 3,
-    "MEASURE": 6
   },
   "countries.json": {
     "file": "countries.json",
@@ -110,6 +97,13 @@
     "MEASURE": 2,
     "DIMENSION": 2
   },
+  "football.json": {
+    "file": "football.json",
+    "length": 6508,
+    "TIME": 1,
+    "DIMENSION": 3,
+    "MEASURE": 2
+  },
   "gapminder.json": {
     "file": "gapminder.json",
     "length": 693,
@@ -121,12 +115,6 @@
     "length": 520,
     "DIMENSION": 3,
     "MEASURE": 3
-  },
-  "iris.json": {
-    "file": "iris.json",
-    "length": 150,
-    "MEASURE": 4,
-    "DIMENSION": 1
   },
   "jobs.json": {
     "file": "jobs.json",
@@ -170,10 +158,23 @@
     "MEASURE": 5,
     "DIMENSION": 1
   },
+  "penguins.json": {
+    "file": "penguins.json",
+    "length": 344,
+    "DIMENSION": 3,
+    "MEASURE": 4
+  },
   "points.json": {
     "file": "points.json",
     "length": 100,
     "MEASURE": 2
+  },
+  "political-contributions.json": {
+    "file": "political-contributions.json",
+    "length": 58,
+    "DIMENSION": 5,
+    "MEASURE": 19,
+    "TIME": 1
   },
   "population.json": {
     "file": "population.json",
@@ -210,13 +211,6 @@
     "DIMENSION": 4,
     "MEASURE": 1
   },
-  "weball26.json": {
-    "file": "weball26.json",
-    "length": 58,
-    "DIMENSION": 5,
-    "MEASURE": 19,
-    "TIME": 1
-  },
   "wheat.json": {
     "file": "wheat.json",
     "length": 52,
@@ -228,11 +222,18 @@
     "DIMENSION": 5,
     "MEASURE": 2
   },
+  "birdstrikes.csv": {
+    "file": "birdstrikes.csv",
+    "length": 10000,
+    "DIMENSION": 9,
+    "TIME": 1,
+    "MEASURE": 4
+  },
   "co2-concentration.csv": {
     "file": "co2-concentration.csv",
-    "length": 713,
+    "length": 741,
     "TIME": 1,
-    "MEASURE": 1
+    "MEASURE": 2
   },
   "disasters.csv": {
     "file": "disasters.csv",
@@ -296,11 +297,11 @@
     "DIMENSION": 1,
     "MEASURE": 4
   },
-  "seattle-temps.csv": {
-    "file": "seattle-temps.csv",
+  "seattle-weather-hourly-normals.csv": {
+    "file": "seattle-weather-hourly-normals.csv",
     "length": 8759,
     "TIME": 1,
-    "MEASURE": 1
+    "MEASURE": 3
   },
   "seattle-weather.csv": {
     "file": "seattle-weather.csv",
@@ -308,12 +309,6 @@
     "TIME": 1,
     "MEASURE": 4,
     "DIMENSION": 1
-  },
-  "sf-temps.csv": {
-    "file": "sf-temps.csv",
-    "length": 8759,
-    "TIME": 1,
-    "MEASURE": 1
   },
   "sp500.csv": {
     "file": "sp500.csv",

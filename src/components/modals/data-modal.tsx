@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
+import {useDropzone} from 'react-dropzone';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../../constants/vega-datasets-counts';
@@ -22,8 +23,22 @@ export default function DataModal(props: Props): JSX.Element {
   const [searchTerm, setSearchTerm] = useState(null);
   const [sortMode, setSortMode] = useState('ALPHA');
 
-  const handleSubmit = (useData: boolean) => (d: any): void => {
-    const file = useData ? d.dataTransfer.items[0].getAsFile() : d.target.files[0];
+  // const handleSubmit = (useData: boolean) => (d: any): void => {
+  //   const file = useData ? d.dataTransfer.items[0].getAsFile() : d.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.onload = (event): void => {
+  //     loadCustomDataset({fileName: file.name, data: event.target.result as any});
+  //     setModalState(null);
+  //   };
+
+  //   reader.readAsText(file);
+  // };
+  const onDrop = useCallback((acceptedFiles: any) => {
+    // Do something with the files
+    console.log(acceptedFiles);
+    // const file = useData ? d.dataTransfer.items[0].getAsFile() :
+    // const file = d.target.files[0];
+    const file = acceptedFiles[0];
     const reader = new FileReader();
     reader.onload = (event): void => {
       loadCustomDataset({fileName: file.name, data: event.target.result as any});
@@ -31,7 +46,8 @@ export default function DataModal(props: Props): JSX.Element {
     };
 
     reader.readAsText(file);
-  };
+  }, []);
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
 
   return (
     <Modal
@@ -129,12 +145,18 @@ export default function DataModal(props: Props): JSX.Element {
             );
           })}
       </div>
-      <div className="custom-data">
+      <div className="custom-data" {...getRootProps()}>
         <h3>Upload a Custom Dataset</h3>
         <h5>
           We support JSON, CSV, TSV formatted data. We do not support non-tabular data (such as GeoJSON)
         </h5>
-        <input type="file" onDrop={handleSubmit(true)} onChange={handleSubmit(false)} />
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <h5>Drop the files here ...</h5>
+        ) : (
+          <h5>Drag and drop some files here, or click to select files</h5>
+        )}
+        {/* <input type="file" onDrop={handleSubmit(true)} onChange={handleSubmit(false)} /> */}
       </div>
     </Modal>
   );
