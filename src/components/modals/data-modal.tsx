@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
+import {useDropzone} from 'react-dropzone';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
-import VegaDatasetMeta from '../../constants/vega-datasets-counts';
+import VegaDatasetMeta from '../../constants/vega-datasets-counts.json';
 import GALLERY from '../../templates/gallery';
 import {DataType} from '../../types';
 import Modal from './modal';
@@ -22,8 +23,8 @@ export default function DataModal(props: Props): JSX.Element {
   const [searchTerm, setSearchTerm] = useState(null);
   const [sortMode, setSortMode] = useState('ALPHA');
 
-  const handleSubmit = (useData: boolean) => (d: any): void => {
-    const file = useData ? d.dataTransfer.items[0].getAsFile() : d.target.files[0];
+  const onDrop = useCallback((acceptedFiles: any) => {
+    const file = acceptedFiles[0];
     const reader = new FileReader();
     reader.onload = (event): void => {
       loadCustomDataset({fileName: file.name, data: event.target.result as any});
@@ -31,7 +32,8 @@ export default function DataModal(props: Props): JSX.Element {
     };
 
     reader.readAsText(file);
-  };
+  }, []);
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
 
   return (
     <Modal
@@ -47,7 +49,7 @@ export default function DataModal(props: Props): JSX.Element {
             <input
               type="text"
               value={searchTerm || ''}
-              onChange={(event): any => setSearchTerm(event.target.value)}
+              onChange={(event): any => setSearchTerm(event.target.value.toLowerCase())}
               placeholder="Search for dataset"
             />
           </IgnoreKeys>
@@ -83,7 +85,11 @@ export default function DataModal(props: Props): JSX.Element {
       </div>
       <div className="dataset-list">
         {Object.keys(VegaDatasetMeta)
-          .filter(key => key.includes(searchTerm || ''))
+          .filter(
+            key =>
+              key.toLowerCase().includes(searchTerm || '') ||
+              VegaDatasetMeta[key].columns.some((col: any) => col.toLowerCase().includes(searchTerm || '')),
+          )
           .sort((a, b) => {
             if (sortMode === 'ALPHA') {
               return a.localeCompare(b);
@@ -103,38 +109,47 @@ export default function DataModal(props: Props): JSX.Element {
                     (): any => setEncodingMode(GALLERY.templateName),
                   ])
                 }
-                className="flex dataset-list-item space-between"
+                className="dataset-list-item"
                 key={datasetName}
               >
-                <div className="flex">
-                  <h5>{datasetName}</h5>
+                <div className="flex space-between">
+                  <div className="flex">
+                    <h5>{datasetName}</h5>
+                  </div>
+                  <div className="flex">
+                    <div className="icon-container">{datasetMeta.length} rows</div>
+                    {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
+                      const count = datasetMeta[dataType] || 0;
+                      return (
+                        <div key={`${datasetName}-${dataType}`} className="flex icon-container">
+                          <HoverTooltip
+                            message={`This data set has ${count} data columns with inferred type ${dataType}`}
+                          >
+                            {countSymbol(dataType)}
+                          </HoverTooltip>
+                          {count}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="flex">
-                  <div className="icon-container">{datasetMeta.length} rows</div>
-                  {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
-                    const count = datasetMeta[dataType] || 0;
-                    return (
-                      <div key={`${datasetName}-${dataType}`} className="flex icon-container">
-                        <HoverTooltip
-                          message={`This data set has ${count} data columns with inferred type ${dataType}`}
-                        >
-                          {countSymbol(dataType)}
-                        </HoverTooltip>
-                        {count}
-                      </div>
-                    );
-                  })}
-                </div>
+                <div className="flex dataset-list-item-col-names">{datasetMeta.columns.join(', ')}</div>
               </div>
             );
           })}
       </div>
-      <div className="custom-data">
+      <div className="custom-data" {...getRootProps()}>
         <h3>Upload a Custom Dataset</h3>
         <h5>
           We support JSON, CSV, TSV formatted data. We do not support non-tabular data (such as GeoJSON)
         </h5>
-        <input type="file" onDrop={handleSubmit(true)} onChange={handleSubmit(false)} />
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <h5>Drop the files here ...</h5>
+        ) : (
+          <h5>Drag and drop some files here, or click to select files</h5>
+        )}
+        {/* <input type="file" onDrop={handleSubmit(true)} onChange={handleSubmit(false)} /> */}
       </div>
     </Modal>
   );

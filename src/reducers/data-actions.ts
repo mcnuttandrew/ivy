@@ -31,6 +31,10 @@ export const recieveTypeInferences = (state: AppState, payload: TypeInference[])
   });
   const groupedColumns = modifiedColumns.reduce(
     (acc: any, row: ColumnHeader) => {
+      if (!acc[row.type]) {
+        acc.DIMENSION = acc.DIMENSION.concat({...row, type: 'DIMENSION'});
+        return acc;
+      }
       acc[row.type] = acc[row.type].concat(row);
       return acc;
     },
