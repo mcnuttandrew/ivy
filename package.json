@@ -108,10 +108,10 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --hot",
     "build": "NODE_ENV=production webpack",
-    "lint": "yarn lint:ts && yarn lint:styles",
+    "lint": "yarn lint:ts",
     "lint:ts": "eslint --ext .ts --ext .tsx src",
     "lint:fix": "eslint './src/**/*.{ts,tsx}'",
-    "lint:styles": "stylelint 'src/stylesheets/main.css'",
+    "lint:styles-abandoned": "stylelint 'src/stylesheets/main.css'",
     "test": "NODE_ENV=test && jest",
     "coverage": "yarn test  --collect-coverage",
     "prettify": "prettier --write 'src/**/*.{ts,tsx}'",
