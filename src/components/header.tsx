@@ -8,6 +8,7 @@ import {HoverTooltip} from './tooltips';
 import {HOT_KEYS, HOT_KEY_DESCRIPTIONS} from '../constants/index';
 import {saveAs} from 'file-saver';
 import {Template, Workbook} from '../types';
+import {Link} from 'react-router-dom';
 
 interface HeaderProps {
   canRedo: boolean;
@@ -49,7 +50,8 @@ export default function Header(props: HeaderProps): JSX.Element {
   return (
     <div className="header flex background-1">
       <div className="flex center">
-        <Tooltip
+        {/* TODO delete */}
+        {/* <Tooltip
           placement="bottom"
           trigger="click"
           overlay={
@@ -87,7 +89,13 @@ export default function Header(props: HeaderProps): JSX.Element {
             <img alt="ivy logo" src="logo.png" />
             <div>Ivy</div>
           </div>
-        </Tooltip>
+        </Tooltip> */}
+        <Link to="/">
+          <div className="flex cursor-pointer center">
+            <img alt="ivy logo" src="logo.png" />
+            <div>Ivy</div>
+          </div>
+        </Link>
 
         <div className="flex state-action-controls">
           <div
@@ -109,15 +117,15 @@ export default function Header(props: HeaderProps): JSX.Element {
             <TiArrowForward />
             <span>Redo</span>
           </div>
-          <div className="state-action-button">
+          {/* <div className="state-action-button">
             <HoverTooltip message="Add More Templates">
               <div className="flex" onClick={(): any => setModalState('community')}>
                 <TiThSmall />
                 <span className="template-modification-control-label">Add More Templates</span>
               </div>
             </HoverTooltip>
-          </div>
-          <div className="state-action-button">
+          </div> */}
+          {/* <div className="state-action-button">
             <HoverTooltip message="Return to the view of the template gallery.">
               <div className="flex" onClick={(): any => setEncodingMode(GALLERY.templateName)}>
                 <TiHome />
@@ -126,7 +134,7 @@ export default function Header(props: HeaderProps): JSX.Element {
                 </span>
               </div>
             </HoverTooltip>
-          </div>
+          </div> */}
           {/* <a
             className="flex state-action-button"
             href="HIDDEN FOR REVIEW"
@@ -145,11 +153,11 @@ export default function Header(props: HeaderProps): JSX.Element {
           <div className="about-tooltip">
             <h1>About this application</h1>
             <div>Terminology, etc</div>
-            <h3>Note</h3>
+            {/* <h3>Note</h3>
             <div>
               This application makes heavy use of client-side caching. Safari deletes local storage after 1
               week of disuse, if this is an issue for you make sure you save your templates to your computer.
-            </div>
+            </div> */}
             <h3>Hotkeys</h3>
             <ul>
               {Object.entries(HOT_KEYS).map(([key, value]) => {

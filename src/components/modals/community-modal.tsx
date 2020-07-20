@@ -8,7 +8,7 @@ import {IgnoreKeys} from 'react-hotkeys';
 import {serverPrefix, toExportStr, log} from '../../utils';
 import {TiUploadOutline, TiEdit} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
-import {AUTHORS} from '../../constants';
+import {AUTHORS, FETCH_PARMS} from '../../constants';
 import JSZip from 'jszip';
 import {saveAs} from 'file-saver';
 import {writeUserName} from '../../utils/local-storage';
@@ -39,17 +39,7 @@ interface QueryBuildParam {
 }
 
 type QueryBuild = (props: QueryBuildParam) => JSX.Element;
-const FETCH_PARMS = {
-  mode: 'cors', // no-cors, *cors, same-origin
-  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-  credentials: 'same-origin', // include, *same-origin, omit
-  headers: {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-  },
-  redirect: 'follow', // manual, *follow, error
-  referrerPolicy: 'no-referrer', // no-referrer, *client
-};
+
 const URL_CACHE: any = {};
 
 function runQuery(url: string, loadTemplates: any, triggerRepaint: any): void {

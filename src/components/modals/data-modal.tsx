@@ -11,7 +11,7 @@ import {HoverTooltip} from '../tooltips';
 import {classnames} from '../../utils';
 
 interface Props {
-  changeSelectedFile: GenericAction<string>;
+  changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}>;
   chainActions: GenericAction<any>;
   loadCustomDataset: GenericAction<LoadDataPayload>;
   setModalState: GenericAction<string | null>;
@@ -104,9 +104,9 @@ export default function DataModal(props: Props): JSX.Element {
               <div
                 onClick={(): any =>
                   chainActions([
-                    (): any => changeSelectedFile(datasetName),
+                    (): any => changeSelectedFile({filename: datasetName, dumpTemplateMap: true}),
                     (): any => setModalState(null),
-                    (): any => setEncodingMode(GALLERY.templateName),
+                    // (): any => setEncodingMode(GALLERY.templateName),
                   ])
                 }
                 className="dataset-list-item"

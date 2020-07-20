@@ -41,7 +41,6 @@ export const HOT_KEYS: {[x: string]: string} = {
   UNDO: 'command+z',
   REDO: 'command+shift+z',
   CLOSE_MODALS: 'Escape',
-  HOME: 'h',
   CLEAR_ENCODING: 'r',
   TOGGLE_EDIT: 'e',
 };
@@ -50,7 +49,18 @@ export const HOT_KEY_DESCRIPTIONS: {[x: string]: string} = {
   UNDO: 'Undo most recent action',
   REDO: 'Redo most recent action',
   CLOSE_MODALS: 'Close any open modals',
-  HOME: 'Return to the gallery',
   CLEAR_ENCODING: 'Reset all current settings to default',
   TOGGLE_EDIT: 'Toggle Edit mode on / off',
+};
+
+export const FETCH_PARMS = {
+  mode: 'cors', // no-cors, *cors, same-origin
+  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+  credentials: 'same-origin', // include, *same-origin, omit
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+  },
+  redirect: 'follow', // manual, *follow, error
+  referrerPolicy: 'no-referrer', // no-referrer, *client
 };

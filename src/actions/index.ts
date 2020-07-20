@@ -10,8 +10,10 @@ import {
   GenWidget,
   LanguageExtension,
   Template,
+  TemplateMap,
   ViewsToMaterialize,
   WidgetType,
+  Workbook,
 } from '../types';
 import * as actionTypes from '../actions/action-types';
 
@@ -100,6 +102,7 @@ export const setSpecCode = createAction<HandleCodePayload>(actionTypes.SET_SPEC_
 export const setProgrammaticView = createAction<boolean>(actionTypes.TOGGLE_PROGRAMMATIC_VIEW);
 export const setUserName = createAction<string>(actionTypes.SET_USER_NAME);
 export const setTemplateValue = createAction<SetTemplateValuePayload>(actionTypes.SET_TEMPLATE_VALUE);
+export const setTemplate = createAction<Template>(actionTypes.SET_TEMPLATE);
 export const setWidgetValue = createAction<SetWidgetValuePayload>(actionTypes.SET_WIDGET_VALUE);
 export const switchView = createAction<string>(actionTypes.SWITCH_VIEW);
 export const setModalState = createAction<string | null>(actionTypes.SET_MODAL_STATE);
@@ -165,26 +168,25 @@ const vegaDatasetAdress =
     : (fileName: string): string =>
         `https://raw.githubusercontent.com/vega/vega-datasets/master/data/${fileName}`;
 
-export const loadDataFromPredefinedDatasets: GenericAction<string> = fileName => (
-  dispatch,
-  arg2,
-  arg3,
-): void => {
+export const loadDataFromPredefinedDatasets: GenericAction<{
+  filename: string;
+  dumpTemplateMap: boolean;
+}> = ({filename, dumpTemplateMap}) => (dispatch, arg2, arg3): void => {
   // infra for tests
   // eslint-disable-next-line no-undef
   if (process.env.NODE_ENV === 'test') {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const data = require(`vega-datasets/data/${fileName}`);
-    dispatch({type: actionTypes.RECIEVE_DATA, payload: data});
+    const data = require(`vega-datasets/data/${filename}`);
+    dispatch({type: actionTypes.RECIEVE_DATA, payload: {data, dumpTemplateMap}});
     generateTypeInferences(data)(dispatch, arg2, arg3);
     return;
   }
   // regular path
-  fetch(vegaDatasetAdress(fileName))
+  fetch(vegaDatasetAdress(filename))
     .then(d => d.text())
-    .then(d => getReader(fileName)(d))
+    .then(d => getReader(filename)(d))
     .then(d => {
-      dispatch({type: actionTypes.RECIEVE_DATA, payload: d});
+      dispatch({type: actionTypes.RECIEVE_DATA, payload: {data: d, dumpTemplateMap}});
       generateTypeInferences(d)(dispatch, arg2, arg3);
     });
 };
@@ -223,10 +225,65 @@ export const loadTemplates: GenericAction<void> = () => (dispatch): void => {
     });
 };
 
-export const changeSelectedFile: GenericAction<string> = fileName => (dispatch, arg2, arg3): void => {
+export const changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}> = payload => (
+  dispatch,
+  arg2,
+  arg3,
+): void => {
   dispatch({
     type: actionTypes.CHANGE_SELECTED_FILE,
-    payload: fileName,
+    payload: payload.filename,
   });
-  loadDataFromPredefinedDatasets(fileName)(dispatch, arg2, arg3);
+  loadDataFromPredefinedDatasets(payload)(dispatch, arg2, arg3);
 };
+
+export interface ActionUser {
+  addToNextOpenSlot: GenericAction<ColumnHeader>;
+  addWidget: GenericAction<GenWidget>;
+  chainActions: GenericAction<any>;
+  changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}>;
+  changeViewName: GenericAction<{idx: number; value: string}>;
+  cloneView: GenericAction<void>;
+  coerceType: GenericAction<CoerceTypePayload>;
+  createFilter: GenericAction<ColumnHeader>;
+  createNewView: GenericAction<void>;
+  deleteFilter: GenericAction<number>;
+  deleteTemplate: GenericAction<string>;
+  deleteView: GenericAction<string>;
+  duplicateWidget: GenericAction<number>;
+  fillTemplateMapWithDefaults: GenericAction<void>;
+  loadCustomDataset: GenericAction<LoadDataPayload>;
+  loadDataFromPredefinedDatasets: GenericAction<{
+    filename: string;
+    dumpTemplateMap: boolean;
+  }>;
+  loadExternalTemplate: GenericAction<Template>;
+  loadTemplates: GenericAction<void>;
+  loadWorkbook: GenericAction<Workbook>;
+  modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
+  moveWidget: GenericAction<MoveWidgetPayload>;
+  readInTemplate: GenericAction<HandleCodePayload>;
+  readInTemplateMap: GenericAction<HandleCodePayload>;
+  recieveLanguages: GenericAction<{[x: string]: LanguageExtension}>;
+  recieveTemplates: GenericAction<Template[]>;
+  removeWidget: GenericAction<number>;
+  saveCurrentTemplate: GenericAction<void>;
+  setAllTemplateValues: GenericAction<TemplateMap>;
+  setBlankTemplate: GenericAction<{fork: string | null; language: string}>;
+  setCodeMode: GenericAction<string>;
+  setEditMode: GenericAction<boolean>;
+  setEncodingMode: GenericAction<string>;
+  setGuiView: GenericAction<boolean>;
+  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setModalState: GenericAction<string | null>;
+  setSpecCode: GenericAction<HandleCodePayload>;
+  setProgrammaticView: GenericAction<boolean>;
+  setTemplateValue: GenericAction<SetTemplateValuePayload>;
+  setTemplate: GenericAction<Template>;
+  setUserName: GenericAction<string>;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
+  switchView: GenericAction<string>;
+  triggerRedo: GenericAction<void>;
+  triggerUndo: GenericAction<void>;
+  updateFilter: GenericAction<UpdateFilterPayload>;
+}

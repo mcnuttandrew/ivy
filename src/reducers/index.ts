@@ -1,6 +1,7 @@
 import produce from 'immer';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
+import {DEFAULT_TEMPLATES} from '../templates';
 import * as actionTypes from '../actions/action-types';
 
 import {AppState, ActionResponse, DataReducerState, Workbook} from '../types';
@@ -39,6 +40,7 @@ import {
   setMaterialization,
   setSpecCode,
   setTemplateValue,
+  setTemplate,
   setWidgetValue,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView, changeViewName} from './view-actions';
@@ -84,7 +86,7 @@ export const DEFAULT_STATE: AppState = {
 
   // template stuff
 
-  templates: [],
+  templates: DEFAULT_TEMPLATES,
   templateMap: {
     paramValues: {},
     systemValues: {
@@ -165,6 +167,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.SET_ALL_TEMPLATE_VALUES]: addUndo(setAllTemplateValues),
   [actionTypes.SET_BLANK_TEMPLATE]: setBlankTemplate,
   [actionTypes.SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
+  [actionTypes.SET_TEMPLATE]: setTemplate,
   [actionTypes.SET_WIDGET_VALUE]: addUndo(setWidgetValue),
   [actionTypes.SET_MATERIALIZATION]: addUndo(setMaterialization),
 

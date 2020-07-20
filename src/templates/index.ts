@@ -19,7 +19,7 @@ import ATOM from './atom';
 import BEESWARM_TEMPLATE from './bee-swarm';
 import DATATABLE from './table';
 import PIECHART_TEMPLATE from './pie-chart';
-import GALLERY from './gallery';
+// import GALLERY from './gallery';
 import SCATTERPLOT_TEMPLATE from './scatterplot';
 // import SIMPLE_SCATTER from './simple-scatterplot';
 import SHELF from './polestar-template';
@@ -126,7 +126,7 @@ export const DEFAULT_TEMPLATES: Template[] = [
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,
   BEESWARM_TEMPLATE,
-  GALLERY,
+  // GALLERY,
   UNITVIS,
   PARALLEL_COORDINATES,
   RADAR,

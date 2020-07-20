@@ -408,3 +408,14 @@ export function toExportStr(str: string): string {
     .toLowerCase()
     .replace(/\s/g, '-');
 }
+
+/**
+ * Convert an object of key values to be url query params
+ * @param obj
+ */
+export function toQueryParams(obj: {[x: string]: any}): string {
+  const query = Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+  return query.length ? `?${query}` : '';
+}

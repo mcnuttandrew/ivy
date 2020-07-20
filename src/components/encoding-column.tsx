@@ -27,10 +27,12 @@ import Tooltip from 'rc-tooltip';
 import {TiPlus, TiChevronRight} from 'react-icons/ti';
 import {widgetFactoryByGroups, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
 import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
+import PublishInstanceTooltip from './publish-instance-tooltip';
 
 interface EncodingColumnProps {
   addWidget: GenericAction<GenWidget>;
   columns: ColumnHeader[];
+  currentlySelectedFile: string;
   duplicateWidget: GenericAction<number>;
   editMode: boolean;
   height?: number;
@@ -147,6 +149,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   const {
     addWidget,
     columns,
+    currentlySelectedFile,
     duplicateWidget,
     editMode,
     height,
@@ -247,6 +250,12 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   });
   return (
     <div className="full-height encoding-column" style={(height && {maxHeight: height}) || {}}>
+      <PublishInstanceTooltip
+        templateAuthor={template.templateAuthor}
+        templateName={template.templateName}
+        templateMap={templateMap}
+        dataset={currentlySelectedFile}
+      />
       {editMode && template && (
         <div className="flex">
           <div className="flex full-width space-between">

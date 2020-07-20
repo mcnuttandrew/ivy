@@ -1,7 +1,7 @@
 import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
-import {TEMPLATE_BODY, MATERIALIZING} from '../constants';
+import {TEMPLATE_BODY, MATERIALIZING, JSON_OUTPUT} from '../constants';
 import {
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
@@ -40,6 +40,20 @@ export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => 
   return produce(state, draftState => {
     draftState.templates = draftState.templates.concat(payload);
   });
+};
+
+export const setTemplate: ActionResponse<Template> = (state, payload) => {
+  return fillTemplateMapWithDefaults(
+    produce(state, draftState => {
+      console.log(payload);
+      draftState.templates = draftState.templates.concat(payload);
+      draftState.editMode = false;
+      draftState.codeMode = JSON_OUTPUT;
+      // TODO fix the encoding mode thing
+      draftState.encodingMode = payload.templateName;
+      draftState.currentTemplateInstance = payload;
+    }),
+  );
 };
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {

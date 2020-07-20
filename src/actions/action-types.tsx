@@ -35,6 +35,7 @@ export const SET_MODAL_STATE = 'set-modal-state';
 export const SET_SPEC_CODE = 'set-spec-code';
 export const SET_REPEATS = 'set-repeats';
 export const SET_TEMPLATE_VALUE = 'set-template-value';
+export const SET_TEMPLATE = 'set-template';
 export const SET_USER_NAME = 'set-user-name';
 export const SET_WIDGET_VALUE = 'set-widget-value';
 export const START_ATOMIC_CHAIN = 'start-atomic-chain';
