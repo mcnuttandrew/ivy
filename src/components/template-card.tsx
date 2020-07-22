@@ -2,7 +2,7 @@ import React from 'react';
 import Thumbnail from './thumbnail';
 import {classnames, buildCounts, serializeTemplate} from '../utils';
 import Tooltip from 'rc-tooltip';
-import {TiCog, TiInfoLarge} from 'react-icons/ti';
+import {TiInfoLarge} from 'react-icons/ti';
 import {HoverTooltip} from './tooltips';
 import {Template} from '../types';
 
@@ -10,12 +10,10 @@ const FOR_DISPLAY = false;
 type TypeCounts = {[x: string]: number};
 interface Props {
   alreadyPresent?: boolean;
-  buttons: {name: string; onClick: any}[];
   isComplete?: boolean;
   hideMatches: boolean;
   setEncodingMode: any;
   template: Template;
-  userName: string;
 }
 
 function fullMatch(): JSX.Element {
@@ -33,39 +31,6 @@ function fullMatch(): JSX.Element {
       <span className="tooltip-icon">
         <TiInfoLarge />
       </span>
-    </Tooltip>
-  );
-}
-
-interface CardControlsProps {
-  buttons: {name: string; onClick: any}[];
-  templateName: string;
-  templateAuthor?: string;
-  userName: string;
-}
-
-function CardControls(props: CardControlsProps): JSX.Element {
-  const {buttons, templateName, templateAuthor, userName} = props;
-  return (
-    <Tooltip
-      placement="bottom"
-      trigger="click"
-      overlay={
-        <div className="flex-down">
-          <span>{`By: ${templateAuthor || 'UNKNOWN'} ${
-            templateAuthor === userName ? '(Thats you!)' : ''
-          }`}</span>
-          {buttons.map(button => (
-            <button onClick={button.onClick} key={`${templateName}-${button.name}`}>
-              {button.name}
-            </button>
-          ))}
-        </div>
-      }
-    >
-      <div className="template-card-settings">
-        <TiCog />
-      </div>
     </Tooltip>
   );
 }
@@ -155,7 +120,7 @@ function RenderTypeCounts(template: Template): JSX.Element {
 }
 
 export default function ProgramPreview(props: Props): JSX.Element {
-  const {alreadyPresent, buttons, isComplete, setEncodingMode, template, userName, hideMatches} = props;
+  const {alreadyPresent, isComplete, setEncodingMode, template, hideMatches} = props;
   const {templateAuthor, templateDescription, templateName} = template;
 
   return (
@@ -184,7 +149,6 @@ export default function ProgramPreview(props: Props): JSX.Element {
             >
               {templateName}
             </h3>
-            {!FOR_DISPLAY && CardControls({buttons, templateName, templateAuthor, userName})}
           </div>
           <div className="flex-down">
             <div

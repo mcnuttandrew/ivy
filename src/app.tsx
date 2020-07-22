@@ -6,6 +6,7 @@ import {PREVENT_ACCIDENTAL_LEAVE} from './constants/index';
 import {randomSetUserNameIfUnset} from './utils/local-storage';
 
 import './stylesheets/main.css';
+import './stylesheets/home.css';
 import './stylesheets/rc-slider.css';
 import 'rc-tooltip/assets/bootstrap_white.css';
 

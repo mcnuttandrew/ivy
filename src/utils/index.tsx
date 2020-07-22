@@ -1,4 +1,4 @@
-import DomToImage from 'dom-to-image';
+// import DomToImage from 'dom-to-image';
 import stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
@@ -348,29 +348,6 @@ export function makeOptionsForDropdown(
 export const toSet = (widgets: GenWidget[]): Set<string> =>
   widgets.reduce((acc, row) => acc.add(row.name), new Set() as Set<string>);
 
-export function updateThumbnail(templateName: string, authorKey: string): Promise<void> {
-  const node = document.querySelector('.chart-container div');
-  return DomToImage.toJpeg(node, {quality: 0.1}).then(templateImg => {
-    return fetch(`${serverPrefix()}/save-thumbnail`, {
-      method: 'POST',
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *client
-      body: JSON.stringify({templateName, authorKey, templateImg}), // body data type must match "Content-Type" header
-    }).then(x => {
-      log('finish pub');
-      log(x);
-    });
-  });
-}
-
 export function removeFirstInstanceOf(a: string[], key: string): string[] {
   let hasFound = false;
   return a
@@ -407,4 +384,62 @@ export function toExportStr(str: string): string {
     .trim()
     .toLowerCase()
     .replace(/\s/g, '-');
+}
+
+/**
+ * Convert an object of key values to be url query params
+ * @param obj
+ */
+export function toQueryParams(obj: {[x: string]: any}): string {
+  const query = Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+  return query.length ? `?${query}` : '';
+}
+
+export const SECTIONS = ['alphabetical', 'author', 'language', 'vis key word', 'none'];
+function checkName(template: Template, key: string): boolean {
+  const nameIncludes = template.templateName.toLowerCase().includes(key);
+  const descIncludes = (template.templateDescription || '').toLowerCase().includes(key);
+  return nameIncludes || descIncludes;
+}
+const visNameCombos = [
+  {key: 'exotic', synonyms: ['3d', 'cloud', 'gauge', 'mosaic', 'treemap', 'joy']},
+  {key: 'explore', synonyms: ['explor', 'multi-dimensional']},
+  {key: 'distribution', synonyms: ['dot', 'univariate', 'unit']},
+  {key: 'area', synonyms: []},
+  {key: 'trend', synonyms: []},
+  {key: 'bar', synonyms: ['histogram']},
+  {key: 'scatter', synonyms: []},
+  {key: 'radial', synonyms: ['pie', 'radar']},
+  {key: 'simple', synonyms: ['data table', 'bignumber']},
+];
+const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
+  alphabetical: d => d.templateName[0].toUpperCase(),
+  author: d => d.templateAuthor,
+  language: d => d.templateLanguage,
+  'vis key word': d => {
+    const match = visNameCombos.find(({key, synonyms}) =>
+      [key, ...synonyms].some((str: string) => checkName(d, str)),
+    );
+    return (match && match.key) || 'other';
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  none: d => null,
+};
+type Group = {[x: string]: any[]};
+function groupBy(templates: any[], accessor: (x: any) => string): Group {
+  return templates.reduce((acc, row) => {
+    const groupKey = accessor(row.template);
+    acc[groupKey] = (acc[groupKey] || []).concat(row);
+    return acc;
+  }, {} as Group);
+}
+export function toSection(templates: any[], sectionStratagey: string): Group {
+  return Object.entries(groupBy(templates, sectionFunctionMap[sectionStratagey]))
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .reduce((acc, [key, temps]) => {
+      acc[key] = temps.sort((a, b) => a.template.templateName.localeCompare(b.template.templateName));
+      return acc;
+    }, {} as Group);
 }

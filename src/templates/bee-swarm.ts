@@ -1,7 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './vega-common';
-import {toList} from '../utils';
+import {toList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';
 
 const BEESWARM_EXAMPLE: any = {

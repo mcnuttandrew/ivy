@@ -12,29 +12,19 @@ const targetTypes = new Set(['DataTarget', 'MultiDataTarget']);
 interface PopoverContentsProps {
   relatedViews: Template[];
   setEncodingMode: GenericAction<string>;
-  userName: string;
 }
 function PopoverContents(props: PopoverContentsProps): JSX.Element {
-  const {relatedViews, setEncodingMode, userName} = props;
+  const {relatedViews, setEncodingMode} = props;
   return (
     <div className="related-templates-popover">
       <h3>Related Templates</h3>
       <h5>
-        These templates accepted the same set of data fields as your current selection and are renderable with
-        that set
+        These templates accept the same set of data fields as your current selection and are renderable with
+        that set.
       </h5>
-      {relatedViews.map((view, idx) => {
-        return (
-          <TemplateCard
-            key={idx}
-            template={view}
-            hideMatches={false}
-            setEncodingMode={setEncodingMode}
-            buttons={[]}
-            userName={userName}
-          />
-        );
-      })}
+      {relatedViews.map((view, idx) => (
+        <TemplateCard key={idx} template={view} hideMatches={false} setEncodingMode={setEncodingMode} />
+      ))}
     </div>
   );
 }
@@ -44,10 +34,9 @@ interface RelatedViewsProps {
   templateMap: TemplateMap;
   template: Template;
   templates: Template[];
-  userName: string;
 }
 export default function RelatedViews(props: RelatedViewsProps): JSX.Element {
-  const {templates, templateMap, columns, template, setEncodingMode, userName} = props;
+  const {templates, templateMap, columns, template, setEncodingMode} = props;
   const viewsOfInterest = template.widgets
     .filter(x => targetTypes.has(x.type))
     .reduce((acc, widget) => {
@@ -69,13 +58,7 @@ export default function RelatedViews(props: RelatedViewsProps): JSX.Element {
       <Tooltip
         placement="top"
         trigger="click"
-        overlay={
-          <PopoverContents
-            relatedViews={relatedViews}
-            setEncodingMode={setEncodingMode}
-            userName={userName}
-          />
-        }
+        overlay={<PopoverContents relatedViews={relatedViews} setEncodingMode={setEncodingMode} />}
       >
         <div className="flex-down">
           <span>Related Templates</span>

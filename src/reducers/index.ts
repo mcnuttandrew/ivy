@@ -1,10 +1,10 @@
-import produce from 'immer';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
+import {DEFAULT_TEMPLATES} from '../templates';
 import * as actionTypes from '../actions/action-types';
 
-import {AppState, ActionResponse, DataReducerState, Workbook} from '../types';
-import GALLERY from '../templates/gallery';
+import {AppState, ActionResponse, DataReducerState} from '../types';
+import LOADING from '../templates/loading';
 import {JSON_OUTPUT, SHOW_DATA_SELECTION_ON_LOAD} from '../constants/index';
 import {log} from '../utils';
 
@@ -26,7 +26,6 @@ import {
   deleteTemplate,
   duplicateWidget,
   fillTemplateMapWithDefaults,
-  loadExternalTemplate,
   modifyValueOnTemplate,
   moveWidget,
   readInTemplate,
@@ -39,6 +38,7 @@ import {
   setMaterialization,
   setSpecCode,
   setTemplateValue,
+  setTemplate,
   setWidgetValue,
 } from './template-actions';
 import {createNewView, deleteView, switchView, cloneView, changeViewName} from './view-actions';
@@ -54,7 +54,7 @@ import {
 
 export const DEFAULT_STATE: AppState = {
   // meta-data
-  currentlySelectedFile: 'cars.json',
+  currentlySelectedFile: null,
   columns: [],
 
   // spec configs
@@ -64,9 +64,10 @@ export const DEFAULT_STATE: AppState = {
   languages: {},
 
   // GUI
-  currentTemplateInstance: GALLERY,
+  currentTemplateInstance: LOADING,
   openModal: SHOW_DATA_SELECTION_ON_LOAD ? 'data' : null,
-  encodingMode: GALLERY.templateName,
+  encodingMode: LOADING.templateName,
+
   showProgrammaticMode: false,
   showGUIView: true,
   codeMode: JSON_OUTPUT,
@@ -84,7 +85,7 @@ export const DEFAULT_STATE: AppState = {
 
   // template stuff
 
-  templates: [],
+  templates: DEFAULT_TEMPLATES,
   templateMap: {
     paramValues: {},
     systemValues: {
@@ -92,21 +93,6 @@ export const DEFAULT_STATE: AppState = {
       dataTransforms: [],
     },
   },
-};
-
-const loadWorkbook: ActionResponse<Workbook> = (state, payload) => {
-  return produce(state, draftState => {
-    draftState.columns = payload.columns;
-    draftState.currentTemplateInstance = payload.currentTemplateInstance;
-    draftState.currentView = payload.currentView;
-    draftState.encodingMode = payload.encodingMode;
-    draftState.codeMode = payload.codeMode;
-    draftState.editMode = payload.editMode;
-    draftState.showProgrammaticMode = payload.showProgrammaticMode;
-    draftState.templateMap = payload.templateMap;
-    draftState.viewCatalog = payload.viewCatalog;
-    draftState.views = payload.views;
-  });
 };
 
 // second order effects
@@ -149,13 +135,10 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
 
   [actionTypes.RECIEVE_LANGUAGES]: recieveLanguages,
 
-  [actionTypes.LOAD_WORKBOOK]: loadWorkbook,
-
   // template
   [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
   [actionTypes.DELETE_TEMPLATE]: deleteTemplate,
   [actionTypes.DUPLICATE_WIDGET]: duplicateWidget,
-  [actionTypes.LOAD_EXTERNAL_TEMPLATE]: loadExternalTemplate,
   [actionTypes.MODIFY_VALUE_ON_TEMPLATE]: modifyValueOnTemplate,
   [actionTypes.MOVE_WIDGET_IN_TEMPLATE]: addUndo(moveWidget),
   [actionTypes.FILL_TEMPLATEMAP_WITH_DEFAULTS]: fillTemplateMapWithDefaults,
@@ -165,6 +148,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.SET_ALL_TEMPLATE_VALUES]: addUndo(setAllTemplateValues),
   [actionTypes.SET_BLANK_TEMPLATE]: setBlankTemplate,
   [actionTypes.SET_TEMPLATE_VALUE]: addUndo(setTemplateValue),
+  [actionTypes.SET_TEMPLATE]: setTemplate,
   [actionTypes.SET_WIDGET_VALUE]: addUndo(setWidgetValue),
   [actionTypes.SET_MATERIALIZATION]: addUndo(setMaterialization),
 
@@ -191,9 +175,6 @@ const reducers = {
     // not that this reducer is NOT immutable.
     if (type === actionTypes.RECIEVE_DATA) {
       return recieveDataForDataReducer(state, payload);
-    }
-    if (type === actionTypes.LOAD_WORKBOOK) {
-      return recieveDataForDataReducer(state, payload.data);
     }
     return state;
   },

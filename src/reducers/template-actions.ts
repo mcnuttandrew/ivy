@@ -1,7 +1,6 @@
-import {get, set} from 'idb-keyval';
 import produce from 'immer';
 import stringify from 'json-stringify-pretty-compact';
-import {TEMPLATE_BODY, MATERIALIZING} from '../constants';
+import {TEMPLATE_BODY, MATERIALIZING, JSON_OUTPUT} from '../constants';
 import {
   ModifyValueOnTemplatePayload,
   MoveWidgetPayload,
@@ -40,6 +39,19 @@ export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => 
   return produce(state, draftState => {
     draftState.templates = draftState.templates.concat(payload);
   });
+};
+
+export const setTemplate: ActionResponse<Template> = (state, payload) => {
+  return fillTemplateMapWithDefaults(
+    produce(state, draftState => {
+      draftState.templates = draftState.templates.concat(payload);
+      draftState.editMode = false;
+      draftState.codeMode = JSON_OUTPUT;
+      // TODO fix the encoding mode thing
+      draftState.encodingMode = payload.templateName;
+      draftState.currentTemplateInstance = payload;
+    }),
+  );
 };
 
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
@@ -95,36 +107,28 @@ export const setAllTemplateValues: ActionResponse<TemplateMap> = (state, payload
 };
 
 // This function is poorly named, i don't know what it does
-function getAndRemoveTemplate(state: AppState, templateName: string): AppState {
+function getAndRemoveTemplate(
+  state: AppState,
+  {templateAuthor, templateName}: {templateAuthor: string; templateName: string},
+): AppState {
   return produce(state, draftState => {
-    draftState.templates = state.templates.filter(
-      (template: Template) => template.templateName !== templateName,
+    draftState.templates = state.templates.filter((template: Template) =>
+      template.templateName === templateName && template.templateAuthor === templateAuthor ? false : true,
     );
   });
 }
 
 const insertTemplateIntoTemplates: ActionResponse<Template> = (state, template) => {
-  // this set and get on the db breaks encapsulation a little bit
-  // update the template catalog / create it
-  get('templates').then((templates: string[]) => {
-    const updatedTemplates = templates || [];
-    if (!updatedTemplates.find((x: string) => x === template.templateName)) {
-      updatedTemplates.push(template.templateName);
-    }
-    set('templates', updatedTemplates);
-  });
-  // blindly insert this template, allows for over-ride
-  set(template.templateName, template);
   return produce(state, draftState => {
-    draftState.templates = getAndRemoveTemplate(state, template.templateName).templates.concat(template);
+    draftState.templates = getAndRemoveTemplate(state, {
+      templateName: template.templateName,
+      templateAuthor: template.templateAuthor,
+    }).templates.concat(template);
   });
 };
 
 export const saveCurrentTemplate: ActionResponse<void> = state =>
   insertTemplateIntoTemplates(state, state.currentTemplateInstance);
-
-export const loadExternalTemplate: ActionResponse<Template> = (state, payload) =>
-  insertTemplateIntoTemplates(state, payload);
 
 export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload> = (state, payload) => {
   const {value, key} = payload;
@@ -202,13 +206,10 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
   );
 };
 
-export const deleteTemplate: ActionResponse<string> = (state, payload) => {
-  // update the template catalog / create it
-  get('templates').then((templates: string[]) => {
-    const updatedTemplates = (templates || []).filter((x: string) => x !== payload);
-    set('templates', updatedTemplates);
-  });
-  set(payload, null);
+export const deleteTemplate: ActionResponse<{templateAuthor: string; templateName: string}> = (
+  state,
+  payload,
+) => {
   // TODO check if current template is the one deleted?
   return produce(state, draftState => {
     draftState.templates = getAndRemoveTemplate(state, payload).templates;

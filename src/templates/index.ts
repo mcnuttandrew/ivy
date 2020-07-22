@@ -19,10 +19,8 @@ import ATOM from './atom';
 import BEESWARM_TEMPLATE from './bee-swarm';
 import DATATABLE from './table';
 import PIECHART_TEMPLATE from './pie-chart';
-import GALLERY from './gallery';
 import SCATTERPLOT_TEMPLATE from './scatterplot';
-// import SIMPLE_SCATTER from './simple-scatterplot';
-import SHELF from './polestar-template';
+import POLESTAR from './polestar-template';
 import UNITVIS from './atom-example';
 import PARALLEL_COORDINATES from './parallel-coordinates';
 import RADAR from './radar-chart';
@@ -120,15 +118,13 @@ export const preconfiguredWidgets: {[type: string]: WidgetFactoryFunc} = {
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [
-  SHELF,
+  POLESTAR,
   ATOM,
   DATATABLE,
   SCATTERPLOT_TEMPLATE,
   PIECHART_TEMPLATE,
   BEESWARM_TEMPLATE,
-  GALLERY,
   UNITVIS,
   PARALLEL_COORDINATES,
   RADAR,
-  // SIMPLE_SCATTER,
 ];

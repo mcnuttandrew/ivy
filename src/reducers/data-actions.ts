@@ -4,18 +4,23 @@ import {TypeInference, DataRow, CoerceTypePayload} from '../actions/index';
 import {DataType} from '../types';
 import {constructDefaultTemplateMap} from '../ivy-lang';
 
-export const recieveData = (state: AppState): AppState => {
+export const recieveData = (state: AppState, payload: {data: any; dumpTemplateMap: boolean}): AppState => {
   return produce(state, draftState => {
     draftState.views = ['view1'];
-    draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
+    if (payload.dumpTemplateMap) {
+      draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
+    }
     draftState.viewCatalog = {};
     draftState.undoStack = [];
     draftState.redoStack = [];
   });
 };
 
-export const recieveDataForDataReducer = (state: DataReducerState, payload: DataRow[]): DataReducerState => {
-  return {data: payload};
+export const recieveDataForDataReducer = (
+  state: DataReducerState,
+  payload: {data: DataRow[]; dumpTemplateMap: boolean},
+): DataReducerState => {
+  return {data: payload.data};
 };
 
 export const recieveTypeInferences = (state: AppState, payload: TypeInference[]): AppState => {

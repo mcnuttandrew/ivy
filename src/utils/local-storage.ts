@@ -1,7 +1,10 @@
 import {GenWidget} from '../types';
 import {get, set} from 'idb-keyval';
 
-export const getWidgetTemplates = (): Promise<GenWidget[]> => get('template-widgets');
+// eslint-disable-next-line no-undef
+const isTest = process.env.NODE_ENV === 'test';
+export const getWidgetTemplates = (): Promise<GenWidget[]> =>
+  isTest ? Promise.resolve([]) : get('template-widgets');
 export const setWidgetTemplates = (widgets: GenWidget[]): Promise<void> => set('template-widgets', widgets);
 
 export const getHeight = (): number => Number(localStorage.getItem('splitPosHeight'));

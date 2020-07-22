@@ -1,24 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Happy path 1`] = `
-"In order visualize your data, you need to pick a template to work in. To begin either select a template from the selection in main pane (to the right), or use this panel to search. Search can either happen through text:
+exports[`Happy path 1`] = `"Ivy: an Integrated Visualization Editor This is the home page of Ivy, an application for exploring data and creating data visualizations. It supports a number of different types of visualization making including the chart choosing (found in tools like Excel), shelf building (found in tools like Tableau), and programmatic manipulation (such as in tools like vega or vega-lite). All of these modalities are linked together through a single interfaces made possible by an abstraction called templates.We support templates in a variety of languages including vega, vega-lite, vega, and a custom data table language. It's okay if you are familar with these languages, it's not strictly necessary to know them in order to make effective usage of our tool.Select a template or template instance (or just go to the editor)Sort byalphabeticalauthorlanguagevis key wordnoneAtomExplore - Ivy AuthorsBeeSwarm chart - Ivy AuthorsData Table - Ivy Authorsparallel coordinates - Ivy Authorspie chart - Ivy AuthorsPolestar - Ivy AuthorsRadar Chart - Ivy AuthorsScatterplot - Ivy AuthorsUnitVis Test - Ivy Authors"`;
 
+exports[`Happy path 2`] = `""`;
 
-Search for template
+exports[`Happy path 3`] = `"Data SELECT FILECHANGEdimension (0)hidemeasure (0)hidetime (0)hide Filter drop a field here"`;
 
-
- or by search for templates that match the data you are interested in visualizing, which you can do using this widget
-
-
-Data target searchdrop a field hereClearSelect a valueAcceleration MEASURECylinders MEASUREDisplacement MEASUREHorsepower MEASUREMiles_per_Gallon MEASUREWeight_in_lbs MEASUREName DIMENSIONOrigin DIMENSIONYear TIME
-
-
- You can organize the gallery using various section organizations: 
-
-
-Organize byalphabeticalauthorlanguagevis key wordnone"
-`;
-
-exports[`Happy path 2`] = `"Data cars.jsonCHANGEdimension (2)hideNameOriginmeasure (6)hideAccelerationCylindersDisplacementHorsepowerMiles_per_GallonWeight_in_lbstime (1)hideYear Filter drop a field here"`;
-
-exports[`Happy path 3`] = `"No templates match your query"`;
+exports[`Happy path 4`] = `" Chart is not yet filled out Select values for the following fields: "`;

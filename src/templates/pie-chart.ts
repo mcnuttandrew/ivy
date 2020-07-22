@@ -1,7 +1,7 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES, AGGREGATES} from './vega-common';
-import {toList} from '../utils';
+import {toList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';
 // https://observablehq.com/@simon-lang/simple-vega-pie-chart
 const radQuery = {query: 'parameters.radialValue'};

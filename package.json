@@ -18,10 +18,11 @@
     "@types/jest": "^24.0.23",
     "@types/jszip": "^3.1.7",
     "@types/lodash.debounce": "^4.0.6",
+    "@types/rc-slider": "^8.6.5",
     "@types/react": "^16.9.9",
     "@types/react-dom": "^16.9.2",
     "@types/react-redux": "^7.1.4",
-    "@types/rc-slider": "^8.6.5",
+    "@types/react-router-dom": "^5.1.5",
     "@typescript-eslint/eslint-plugin": "^2.4.0",
     "@typescript-eslint/parser": "^2.4.0",
     "autoprefixer": "^9.7.3",
@@ -46,6 +47,7 @@
     "eslint-plugin-react-hooks": "^2.4.0",
     "hoopoe": "^1.0.1",
     "jest": "^24.9.0",
+    "jest-fetch-mock": "^3.0.3",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "node-fetch": "^2.6.0",
     "postcss-loader": "^3.0.0",
@@ -92,6 +94,7 @@
     "react-icons": "^3.8.0",
     "react-monaco-editor": "^0.32.1",
     "react-redux": "^6.0.1",
+    "react-router-dom": "^5.2.0",
     "react-split-pane": "^0.1.89",
     "react-switch": "^5.0.1",
     "react-vega": "^7.3.0",
@@ -99,9 +102,9 @@
     "redux-thunk": "^2.2.0",
     "type-analyzer": "^0.2.3",
     "unit-vis": "^0.0.4",
-    "vega": "^5.10.1",
+    "vega": "^5.13.0",
     "vega-datasets": "^2.1.0",
-    "vega-lite": "^4.10.4",
+    "vega-lite": "^4.13.1",
     "vega-projection-extended": "^2.0.1",
     "vega-tooltip": "^0.19.1"
   },
@@ -119,6 +122,7 @@
     "schema-mod": "ts-node scripts/generate-schema-mod.ts"
   },
   "jest": {
+    "automock": false,
     "setupFilesAfterEnv": [
       "./test/setup.ts"
     ],

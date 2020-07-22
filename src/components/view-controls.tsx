@@ -86,7 +86,6 @@ interface Props {
   templateMap: TemplateMap;
   templates: Template[];
   views: string[];
-  userName: string;
 }
 
 export default function ViewControls(props: Props): JSX.Element {
@@ -103,7 +102,6 @@ export default function ViewControls(props: Props): JSX.Element {
     template,
     templateMap,
     templates,
-    userName,
     views,
   } = props;
   return (
@@ -114,7 +112,6 @@ export default function ViewControls(props: Props): JSX.Element {
         template={template}
         templateMap={templateMap}
         templates={templates}
-        userName={userName}
       />
       {errors && (
         <div className="charting-error-container">

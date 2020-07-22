@@ -8,7 +8,7 @@ import {
   TemplateMap,
   RendererProps,
 } from '../types';
-import {classnames, log} from '../utils';
+import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
 import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
 import ViewControls from './view-controls';
@@ -28,7 +28,6 @@ interface ChartAreaProps {
   createNewView: GenericAction<void>;
   currentView: string;
   data: DataRow[];
-  deleteTemplate: GenericAction<string>;
   deleteView: GenericAction<string>;
   editorError: null | string;
   encodingMode: string;
@@ -46,7 +45,6 @@ interface ChartAreaProps {
   templateComplete: boolean;
   templateMap: TemplateMap;
   templates: Template[];
-  userName: string;
   views: string[];
   width: number;
 }
@@ -226,7 +224,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     createNewView,
     currentView,
     data,
-    deleteTemplate,
     deleteView,
     editorError,
     languages,
@@ -242,7 +239,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     templateComplete,
     templateMap,
     templates,
-    userName,
     views,
     width,
   } = props;
@@ -280,14 +276,11 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
           <Gallery
             columns={columns}
             chainActions={chainActions}
-            deleteTemplate={deleteTemplate}
             saveCurrentTemplate={saveCurrentTemplate}
             setEncodingMode={setEncodingMode}
             setWidgetValue={setWidgetValue}
             spec={spec}
-            templates={templates}
             templateMap={templateMap}
-            userName={userName}
           />
         )}
         {showChart && materializedViews.length === 0 && (
@@ -339,7 +332,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         templateMap={templateMap}
         templates={templates}
         views={views}
-        userName={userName}
       />
     </div>
   );

@@ -5,11 +5,19 @@ import GALLERY from '../templates/gallery';
 interface ThumbnailProps {
   templateName: string;
   templateAuthor: string;
+  templateInstance?: string;
 }
 
-function thumbnailLocation(templateName: string | null, templateAuthor: string | null): string {
+function thumbnailLocation(
+  templateName: string | null,
+  templateAuthor: string | null,
+  templateInstance: string | null,
+): string {
   if (!templateName || templateName === 'BLANK TEMPLATE') {
     return 'logo.png';
+  }
+  if (templateInstance) {
+    return `${serverPrefix()}/thumbnail/${templateAuthor}/${templateName}/${templateInstance}`;
   }
   if (templateName === 'Polestar') {
     return 'assets/polestar-logo.png';
@@ -24,10 +32,10 @@ function thumbnailLocation(templateName: string | null, templateAuthor: string |
 }
 
 function Thumbnail(props: ThumbnailProps): JSX.Element {
-  const {templateName, templateAuthor} = props;
+  const {templateName, templateAuthor, templateInstance} = props;
   const [src, setSrc] = useState('logo.png');
   useEffect(() => {
-    setSrc(thumbnailLocation(templateName, templateAuthor));
+    setSrc(thumbnailLocation(templateName, templateAuthor, templateInstance));
   }, [templateName, templateAuthor]);
   return (
     <img

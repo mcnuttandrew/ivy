@@ -13,14 +13,18 @@ export default function ImportDataColumn(props: Props): JSX.Element {
   return (
     <div className="flex-down full-height" style={{maxHeight: 'fit-content'}}>
       <h1 className="section-title">Data</h1>
-      <div className="flex space-between data-selection">
-        <div className="flex center">
-          <TiDatabase />
+      <div className="flex data-selection">
+        <TiDatabase />
+        <div className="flex-down">
           <div className="section-subtitle"> {currentlySelectedFile || 'SELECT FILE'}</div>
+          <button
+            type="button"
+            onClick={(): any => setModalState('data')}
+            style={{textAlign: 'start', padding: 0}}
+          >
+            CHANGE
+          </button>
         </div>
-        <button type="button" onClick={(): any => setModalState('data')}>
-          CHANGE
-        </button>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
-import {toList} from '../utils';
+import {toList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';
 const PARALLEL_COORS: any = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
