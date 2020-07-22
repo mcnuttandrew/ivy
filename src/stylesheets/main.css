@@ -285,6 +285,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   width: calc(100% - 30px);
   justify-content: space-between;
   padding: 0 15px;
+  z-index: 1000;
 }
 
 .header button, .header :visited, .header a {
@@ -381,6 +382,11 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 .template-logo h4 {
   font-weight: 200;
+}
+
+.template-logo p {
+  margin: 0;
+  padding: 0;
 }
 
 .template-column.column.edit-mode>div {
@@ -1503,6 +1509,19 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   height: 100%;
   margin-bottom: 500px;
   overflow: scroll;
+}
+
+.edit-view-toggle {
+  display: flex;
+  justify-content: space-around;
+}
+
+.edit-view-toggle-option {
+  cursor: pointer;
+}
+
+.selected-edit-view-toggle-option {
+  font-weight: bold;
 }
 
 /* SPINNER */

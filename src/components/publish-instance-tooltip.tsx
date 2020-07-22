@@ -3,6 +3,7 @@ import DomToImage from 'dom-to-image';
 import Tooltip from 'rc-tooltip';
 import {TiUpload} from 'react-icons/ti';
 import VegaDatasets from '../constants/vega-datasets-counts.json';
+import {POST_PARAMS} from '../constants';
 const vegaDataSetName = new Set(Object.keys(VegaDatasets));
 
 import {TemplateMap} from '../types';
@@ -38,7 +39,6 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
             to be specified for one of the default datasets.
           </p>
           {error && <h5 style={{color: 'red'}}>{error}</h5>}
-          {/* tODO integrity checks (using one of the canned datasets)*/}
           <div>
             instance name <input ref={instanceNameInput} />
           </div>
@@ -58,13 +58,7 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
               const node = document.querySelector('.chart-container div');
               DomToImage.toJpeg(node, {quality: 0.5}).then(templateImg => {
                 fetch(`${serverPrefix()}/publish-instance`, {
-                  method: 'POST',
-                  mode: 'cors',
-                  cache: 'no-cache',
-                  credentials: 'same-origin',
-                  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                  redirect: 'follow',
-                  referrerPolicy: 'no-referrer',
+                  ...POST_PARAMS,
                   body: JSON.stringify({
                     templateAuthor,
                     templateName,
@@ -73,7 +67,7 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
                     dataset,
                     thumbnail: templateImg,
                   }),
-                }).then(() => {
+                } as any).then(() => {
                   setSaved(true);
                 });
               });

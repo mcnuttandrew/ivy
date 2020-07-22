@@ -78,7 +78,6 @@ export const deleteFilter = createAction<number>(actionTypes.DELETE_FILTER);
 export const deleteTemplate = createAction<string>(actionTypes.DELETE_TEMPLATE);
 export const deleteView = createAction<string>(actionTypes.DELETE_VIEW);
 export const duplicateWidget = createAction<number>(actionTypes.DUPLICATE_WIDGET);
-export const loadExternalTemplate = createAction<Template>(actionTypes.LOAD_EXTERNAL_TEMPLATE);
 export const modifyValueOnTemplate = createAction<ModifyValueOnTemplatePayload>(
   actionTypes.MODIFY_VALUE_ON_TEMPLATE,
 );
@@ -206,21 +205,21 @@ export const loadCustomDataset: GenericAction<LoadDataPayload> = file => (dispat
 };
 
 export const loadTemplates: GenericAction<void> = () => (dispatch): void => {
-  get('templates')
-    .then((templates: string[]) => {
-      return Promise.all((templates || []).map((templateKey: string) => get(templateKey)));
-    })
-    .then((templates: Template[]) => {
-      const seen: any = {};
-      const payload = [...DEFAULT_TEMPLATES, ...Object.values(templates || {})].filter((d: any) => {
-        if (!d || seen[d.templateName]) {
-          return false;
-        }
-        seen[d.templateName] = true;
-        return true;
-      });
-      dispatch({type: actionTypes.RECIEVE_TEMPLATE, payload});
-    });
+  // get('templates')
+  //   .then((templates: string[]) => {
+  //     return Promise.all((templates || []).map((templateKey: string) => get(templateKey)));
+  //   })
+  //   .then((templates: Template[]) => {
+  //     const seen: any = {};
+  //     const payload = [...DEFAULT_TEMPLATES, ...Object.values(templates || {})].filter((d: any) => {
+  //       if (!d || seen[d.templateName]) {
+  //         return false;
+  //       }
+  //       seen[d.templateName] = true;
+  //       return true;
+  //     });
+  //     dispatch({type: actionTypes.RECIEVE_TEMPLATE, payload});
+  //   });
 };
 
 export const changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}> = payload => (
@@ -246,7 +245,7 @@ export interface ActionUser {
   createFilter: GenericAction<ColumnHeader>;
   createNewView: GenericAction<void>;
   deleteFilter: GenericAction<number>;
-  deleteTemplate: GenericAction<string>;
+  deleteTemplate: GenericAction<{templateAuthor: string; templateName: string}>;
   deleteView: GenericAction<string>;
   duplicateWidget: GenericAction<number>;
   fillTemplateMapWithDefaults: GenericAction<void>;
@@ -255,7 +254,6 @@ export interface ActionUser {
     filename: string;
     dumpTemplateMap: boolean;
   }>;
-  loadExternalTemplate: GenericAction<Template>;
   loadTemplates: GenericAction<void>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;

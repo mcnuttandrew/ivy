@@ -156,7 +156,25 @@ function CenterColumn(props: RootProps): JSX.Element {
         templateMap={props.templateMap}
         templateSaveState={props.templateSaveState}
         templates={props.templates}
+        userName={props.userName}
       />
+
+      <div className="edit-view-toggle">
+        {['Edit', 'View'].map((label, idx) => {
+          return (
+            <div
+              key={label}
+              className={classnames({
+                'edit-view-toggle-option': true,
+                'selected-edit-view-toggle-option': idx ? !props.editMode : props.editMode,
+              })}
+              onClick={(): any => props.setEditMode(!idx)}
+            >
+              {label}
+            </div>
+          );
+        })}
+      </div>
 
       <EncodingColumn
         addWidget={props.addWidget}
@@ -254,15 +272,20 @@ function HotKeyProvider(props: RootProps): JSX.Element {
 function EditorContainer(props: RootProps): JSX.Element {
   const [repaintIdx, setRepaintIdx] = useState(0);
   const triggerRepaint = (): any => setRepaintIdx(repaintIdx + 1);
-  const {templateAuthor, templateName, templateInstance} = useParams();
+  const {templateAuthor, templateName, templateInstance, specialRoute} = useParams();
   useEffect(() => {
-    // props.loadTemplates();
     props.setUserName(getUserName());
     props.recieveLanguages(props.languages);
   }, []);
 
   // TODO MAINTAIN STATE ACROSS REFERENCE, ALSO TRY TO CONVERT SELECTION?
   useEffect(() => {
+    if (
+      (specialRoute === 'unpublished' || specialRoute === 'new') &&
+      props.template.templateName !== '____loading____'
+    ) {
+      return;
+    }
     if (!templateInstance && !templateAuthor && !templateName) {
       if (!props.currentlySelectedFile) {
         props.setModalState('data');

@@ -11,13 +11,15 @@ import GALLERY from '../templates/gallery';
 import {HoverTooltip} from './tooltips';
 import {Link} from 'react-router-dom';
 import PublishInstanceTooltip from './publish-instance-tooltip';
+import PublishTemplateTooltip from './publish-template-tooltip';
+import UnpublishTemplateTooltip from './unpublish-template-tooltip';
 
 // TODO clean props
 interface Props {
   chainActions: GenericAction<any>;
   currentlySelectedFile: string;
   fillTemplateMapWithDefaults: GenericAction<void>;
-  deleteTemplate: GenericAction<string>;
+  deleteTemplate: GenericAction<{templateAuthor: string; templateName: string}>;
   editMode: boolean;
   encodingMode: string;
   languages: {[x: string]: LanguageExtension};
@@ -31,6 +33,7 @@ interface Props {
   templateSaveState: string;
   templates: Template[];
   templateMap: TemplateMap;
+  userName: string;
 }
 
 // const UPDATE_TEMPLATE: {[x: string]: boolean} = {
@@ -43,16 +46,18 @@ export default function EncodingControls(props: Props): JSX.Element {
     chainActions,
     currentlySelectedFile,
     fillTemplateMapWithDefaults,
+    deleteTemplate,
     // editMode,
     languages,
-    // saveCurrentTemplate,
+    saveCurrentTemplate,
     setBlankTemplate,
     setCodeMode,
     setEditMode,
     setProgrammaticView,
     template,
     templateMap,
-    // templateSaveState,
+    templateSaveState,
+    userName,
   } = props;
 
   // const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
@@ -101,13 +106,13 @@ export default function EncodingControls(props: Props): JSX.Element {
           <div className="tooltip-internal flex-down">
             <h5>How should we copy the current state?</h5>
             <button type="button" onClick={buildReaction('output')}>
-              <Link to="/editor">Just output</Link>
+              <Link to="/editor/new">Just output</Link>
             </button>
             <button type="button" onClick={buildReaction('body')}>
-              <Link to="/editor">Body but not params</Link>
+              <Link to="/editor/new">Body but not params</Link>
             </button>
             <button type="button" onClick={buildReaction('all')}>
-              <Link to="/editor">Everything</Link>
+              <Link to="/editor/new">Everything</Link>
             </button>
           </div>
         );
@@ -213,8 +218,25 @@ export default function EncodingControls(props: Props): JSX.Element {
               templateMap={templateMap}
               dataset={currentlySelectedFile}
             />
+            {userName === template.templateAuthor && (
+              <UnpublishTemplateTooltip
+                template={template}
+                deleteTemplate={deleteTemplate}
+                userName={userName}
+              />
+            )}
           </div>
         </div>
+        {templateSaveState !== 'EQUAL' && (
+          <h5>
+            <span>Unsaved changes: </span>
+            {userName === template.templateAuthor ? (
+              <PublishTemplateTooltip template={template} saveCurrentTemplate={saveCurrentTemplate} />
+            ) : (
+              <span>fork and save to publish</span>
+            )}
+          </h5>
+        )}
       </div>
     </div>
   );

@@ -31,6 +31,13 @@ export default function AppWrap(): JSX.Element {
                 languages={DEFAULT_LANGUAGES}
               />
             </Route>
+            <Route path="/editor/:specialRoute">
+              <Root
+                {...actionCreators}
+                {...RootMapStateToProps(store.getState())}
+                languages={DEFAULT_LANGUAGES}
+              />
+            </Route>
             <Route path="/editor">
               <Root
                 {...actionCreators}

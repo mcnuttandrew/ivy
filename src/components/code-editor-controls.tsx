@@ -238,8 +238,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
           })}
         </div>
       </div>
-      <div className="flex-down">
-        <CodeCollapse showProgrammaticMode={showProgrammaticMode} setProgrammaticView={setProgrammaticView} />
+      <div className="flex">
         <div className="flex code-controls-buttons">
           <Tooltip
             placement="right"
@@ -261,6 +260,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
             </div>
           </Tooltip>
         </div>
+        <CodeCollapse showProgrammaticMode={showProgrammaticMode} setProgrammaticView={setProgrammaticView} />
       </div>
     </div>
   );

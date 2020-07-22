@@ -64,3 +64,16 @@ export const FETCH_PARMS = {
   redirect: 'follow', // manual, *follow, error
   referrerPolicy: 'no-referrer', // no-referrer, *client
 };
+
+export const POST_PARAMS = {
+  method: 'POST',
+  mode: 'cors',
+  cache: 'no-cache',
+  credentials: 'same-origin',
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+  },
+  redirect: 'follow',
+  referrerPolicy: 'no-referrer',
+};

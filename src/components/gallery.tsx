@@ -10,13 +10,10 @@ import {
   searchPredicate,
   serverPrefix,
   trim,
-  // toExportStr,
   toSection,
 } from '../utils';
 import {writeGallerySectionPref, getGallerySectionPref} from '../utils/local-storage';
 import GALLERY from '../templates/gallery';
-// import {AUTHORS} from '../constants/index';
-// import {saveAs} from 'file-saver';
 interface Props {
   columns: ColumnHeader[];
   chainActions: GenericAction<any>;
