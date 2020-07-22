@@ -124,7 +124,7 @@ export function HomeContainer(): JSX.Element {
           </a>
           ,{' '}
           <a href="https://unit-vis.netlify.app/" target="_blank" rel="noopener noreferrer">
-            vega
+            atom
           </a>
           , and a custom data table language. It&apos;s okay if you are familar with these languages,
           it&apos;s not strictly necessary to know them in order to make effective usage of our tool.

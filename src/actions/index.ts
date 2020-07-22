@@ -1,8 +1,6 @@
 import {Dispatch} from 'redux';
 import {csvParse, tsvParse} from 'd3-dsv';
-import {get} from 'idb-keyval';
 import {getDomain, getUniques, executePromisesInSeries} from '../utils';
-import {DEFAULT_TEMPLATES} from '../templates';
 import {
   AppState,
   ColumnHeader,
