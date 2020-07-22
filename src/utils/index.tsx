@@ -440,10 +440,7 @@ const visNameCombos = [
 const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
   alphabetical: d => d.templateName[0].toUpperCase(),
   author: d => d.templateAuthor,
-  language: d => {
-    console.log(d);
-    return d.templateLanguage;
-  },
+  language: d => d.templateLanguage,
   'vis key word': d => {
     const match = visNameCombos.find(({key, synonyms}) =>
       [key, ...synonyms].some((str: string) => checkName(d, str)),

@@ -16,9 +16,9 @@ export function getTemplate(templateAuthor: string, templateName: string): Promi
       resolve(foundTemplate);
       return;
     }
-    return simpleGetJSON(`${serverPrefix()}/${templateAuthor}/${templateName}`).then(template => {
-      return resolve(template.template);
-    });
+    return simpleGetJSON(`${serverPrefix()}/${templateAuthor}/${templateName}`)
+      .then(template => resolve(template.template))
+      .catch(e => reject(e));
   });
 }
 

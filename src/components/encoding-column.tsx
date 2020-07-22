@@ -31,7 +31,6 @@ import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
 interface EncodingColumnProps {
   addWidget: GenericAction<GenWidget>;
   columns: ColumnHeader[];
-  currentlySelectedFile: string;
   duplicateWidget: GenericAction<number>;
   editMode: boolean;
   height?: number;
@@ -148,7 +147,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   const {
     addWidget,
     columns,
-    currentlySelectedFile,
     duplicateWidget,
     editMode,
     height,

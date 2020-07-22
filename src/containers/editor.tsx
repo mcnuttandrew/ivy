@@ -43,7 +43,6 @@ import ChartArea from '../components/chart-area';
 import CodeEditor from '../components/code-editor';
 import DataColumn from '../components/data-column';
 import DataModal from '../components/modals/data-modal';
-import CommunityProgramSearch from '../components/modals/community-modal';
 import EncodingControls from '../components/encoding-controls';
 import Header from '../components/header';
 import ImportDataColumn from '../components/import-data-column';
@@ -88,7 +87,6 @@ function ChartAreaWrapper(props: RootProps, width: number): JSX.Element {
       createNewView={props.createNewView}
       currentView={props.currentView}
       data={props.data}
-      deleteTemplate={props.deleteTemplate}
       deleteView={props.deleteView}
       editorError={props.editorError}
       encodingMode={props.encodingMode}
@@ -107,7 +105,6 @@ function ChartAreaWrapper(props: RootProps, width: number): JSX.Element {
       templateMap={props.templateMap}
       templates={props.templates}
       views={props.views}
-      userName={props.userName}
       width={width}
     />
   );
@@ -164,7 +161,6 @@ function CenterColumn(props: RootProps): JSX.Element {
       <EncodingColumn
         addWidget={props.addWidget}
         columns={props.columns}
-        currentlySelectedFile={props.currentlySelectedFile}
         duplicateWidget={props.duplicateWidget}
         editMode={props.editMode}
         height={props.showProgrammaticMode && props.showGUIView && getHeight()}
@@ -257,10 +253,10 @@ function HotKeyProvider(props: RootProps): JSX.Element {
 
 function EditorContainer(props: RootProps): JSX.Element {
   const [repaintIdx, setRepaintIdx] = useState(0);
-  const triggerRepaint = () => setRepaintIdx(repaintIdx + 1);
+  const triggerRepaint = (): any => setRepaintIdx(repaintIdx + 1);
   const {templateAuthor, templateName, templateInstance} = useParams();
   useEffect(() => {
-    props.loadTemplates();
+    // props.loadTemplates();
     props.setUserName(getUserName());
     props.recieveLanguages(props.languages);
   }, []);
@@ -313,19 +309,6 @@ function EditorContainer(props: RootProps): JSX.Element {
           changeSelectedFile={props.changeSelectedFile}
           loadCustomDataset={props.loadCustomDataset}
           setModalState={props.setModalState}
-          setEncodingMode={props.setEncodingMode}
-        />
-      )}
-      {props.openModal === 'community' && (
-        <CommunityProgramSearch
-          triggerRepaint={triggerRepaint}
-          loadExternalTemplate={props.loadExternalTemplate}
-          setModalState={props.setModalState}
-          templates={props.templates}
-          userName={props.userName}
-          recieveTemplates={props.recieveTemplates}
-          setUserName={props.setUserName}
-          setEncodingMode={props.setEncodingMode}
         />
       )}
       <Header

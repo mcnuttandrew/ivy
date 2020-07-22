@@ -113,7 +113,6 @@ export default class CodeEditor extends React.Component<Props> {
                 setProgrammaticView={this.props.setProgrammaticView}
                 showProgrammaticMode={this.props.showProgrammaticMode}
                 spec={this.props.spec}
-                template={this.props.template}
                 templateMap={this.props.templateMap}
               />
               <div className="flex-down full-height full-width">

@@ -1,20 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import React from 'react';
-import {
-  TiArrowSync,
-  TiPencil,
-  // TiEdit,
-  TiFlowChildren,
-  // TiLockClosed,
-  // TiLockOpen,
-  // TiInfoLarge,
-} from 'react-icons/ti';
-// import Thumbnail from './thumbnail';
+import {TiArrowSync, TiPencil, TiFlowChildren} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
 import {Template, LanguageExtension, TemplateMap} from '../types';
-import {classnames, NULL, getTemplateName} from '../utils';
+import {classnames, getTemplateName} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
 import GALLERY from '../templates/gallery';
 import {HoverTooltip} from './tooltips';

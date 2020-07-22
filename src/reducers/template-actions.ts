@@ -45,7 +45,6 @@ export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => 
 export const setTemplate: ActionResponse<Template> = (state, payload) => {
   return fillTemplateMapWithDefaults(
     produce(state, draftState => {
-      console.log(payload);
       draftState.templates = draftState.templates.concat(payload);
       draftState.editMode = false;
       draftState.codeMode = JSON_OUTPUT;

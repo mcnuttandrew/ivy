@@ -3,7 +3,6 @@ import {useDropzone} from 'react-dropzone';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../../constants/vega-datasets-counts.json';
-import GALLERY from '../../templates/gallery';
 import {DataType} from '../../types';
 import Modal from './modal';
 import {countSymbol} from '../template-card';
@@ -15,11 +14,10 @@ interface Props {
   chainActions: GenericAction<any>;
   loadCustomDataset: GenericAction<LoadDataPayload>;
   setModalState: GenericAction<string | null>;
-  setEncodingMode?: GenericAction<string>;
 }
 
 export default function DataModal(props: Props): JSX.Element {
-  const {changeSelectedFile, chainActions, setEncodingMode, loadCustomDataset, setModalState} = props;
+  const {changeSelectedFile, chainActions, loadCustomDataset, setModalState} = props;
   const [searchTerm, setSearchTerm] = useState(null);
   const [sortMode, setSortMode] = useState('ALPHA');
 
@@ -106,7 +104,6 @@ export default function DataModal(props: Props): JSX.Element {
                   chainActions([
                     (): any => changeSelectedFile({filename: datasetName, dumpTemplateMap: true}),
                     (): any => setModalState(null),
-                    // (): any => setEncodingMode(GALLERY.templateName),
                   ])
                 }
                 className="dataset-list-item"

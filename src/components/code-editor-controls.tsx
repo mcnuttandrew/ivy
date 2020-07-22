@@ -1,12 +1,12 @@
 import React from 'react';
 import stringify from 'json-stringify-pretty-compact';
-import {TiCog, TiEdit, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
+import {TiCog, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
-import {Template, TemplateMap, GenWidget} from '../types';
-import {classnames, get, getTemplateName} from '../utils';
+import {TemplateMap, GenWidget} from '../types';
+import {classnames, get} from '../utils';
 import {SimpleTooltip} from './tooltips';
 
 const SHORTCUTS = [
@@ -171,7 +171,6 @@ interface CodeEditorControlsProps {
   setProgrammaticView: GenericAction<boolean>;
   showProgrammaticMode: boolean;
   spec: any;
-  template: Template;
   templateMap: TemplateMap;
 }
 export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.Element {
@@ -189,9 +188,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
     setSpecCode,
     setProgrammaticView,
     showProgrammaticMode,
-    template,
   } = props;
-  const templateName = `Template: ${getTemplateName(template)}`;
   const BUTTONS = [
     {
       key: TEMPLATE_BODY,
@@ -230,13 +227,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
               >
                 <span
                   onClick={(): any =>
-                    chainActions(
-                      [
-                        (): any => setCodeMode(key),
-                        // !editMode && label === templateName && ((): any => setEditMode(true)),
-                        !editMode && ((): any => setEditMode(true)),
-                      ].filter(d => d),
-                    )
+                    chainActions([(): any => setCodeMode(key), !editMode && ((): any => setEditMode(true))])
                   }
                 >
                   {key}
@@ -250,28 +241,6 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
       <div className="flex-down">
         <CodeCollapse showProgrammaticMode={showProgrammaticMode} setProgrammaticView={setProgrammaticView} />
         <div className="flex code-controls-buttons">
-          {/* <div className="flex  cursor-pointer">
-            <span
-              className="flex template-modification-control"
-              onClick={(): any =>
-                chainActions([
-                  (): any => setEditMode(!editMode),
-                  (): any => setCodeMode(editMode ? JSON_OUTPUT : TEMPLATE_BODY),
-                ])
-              }
-            >
-              <div className="template-modification-control-icon">
-                <TiEdit />
-              </div>
-              <span className="template-modification-control-label">
-                {editMode ? 'Stop Edit' : 'Start Edit'}
-              </span>
-            </span>
-            <SimpleTooltip
-              message="Change to edit mode, allows you to modify what gui elements are present and how they
-                  visually relate"
-            />
-          </div> */}
           <Tooltip
             placement="right"
             trigger="click"

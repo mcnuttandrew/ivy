@@ -35,13 +35,19 @@ function prepareNesting(templates: any[]): any {
 
 function renderTemplateWithInstances(
   row: {templateName: string; templateAuthor: string; entries: any[]},
-  currentlySelectedFile: string,
+  // currentlySelectedFile: string,
 ): JSX.Element {
   const {templateName, templateAuthor, entries} = row;
   const descriptionItem = entries.find((x: any) => x.template_description);
   const description = descriptionItem && descriptionItem.template_description;
   return (
-    <div key={`${templateName}-${templateAuthor}`} className="margin-bottom">
+    <div
+      key={`${templateName}-${templateAuthor}`}
+      className={`margin-bottom home-template-row ${templateAuthor.replace(
+        /\s+/g,
+        '-',
+      )}-${templateName.replace(/\s+/g, '-')}`}
+    >
       <h4>
         <Link to={`/editor/${templateAuthor}/${templateName}`}>
           {templateName} - {templateAuthor}
@@ -50,9 +56,10 @@ function renderTemplateWithInstances(
       <h5>{description}</h5>
       <div className="flex flex-wrap">
         {entries.map((entry: any, idx: number) => {
-          const {instance_name, dataset} = entry;
-          const changingDataset = dataset === currentlySelectedFile;
-          console.log(changingDataset);
+          // const {instance_name, dataset} = entry;
+          const {instance_name} = entry;
+          // const changingDataset = dataset === currentlySelectedFile;
+          // console.log(changingDataset);
           return (
             <div key={`${templateName}-${templateAuthor}-${idx}`} className="flex-down">
               {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
@@ -75,8 +82,8 @@ function renderTemplateWithInstances(
   );
 }
 
-export function HomeContainer(props: Props): JSX.Element {
-  const {currentlySelectedFile} = props;
+export function HomeContainer(): JSX.Element {
+  // const {currentlySelectedFile} = props;
   const [templates, setTemplates] = useState(prepareNesting(DEFAULT_TEMPLATES));
   const [sortStratagey, setSortStratagey] = useState('none');
   const sections = toSection(
@@ -84,6 +91,10 @@ export function HomeContainer(props: Props): JSX.Element {
     sortStratagey,
   );
   useEffect(() => {
+    // eslint-disable-next-line no-undef
+    if (process.env.NODE_ENV === 'test') {
+      return;
+    }
     fetch(`${serverPrefix()}/recent-names`, FETCH_PARMS as any)
       .then(x => x.json())
       .then(x => {
@@ -115,8 +126,8 @@ export function HomeContainer(props: Props): JSX.Element {
           <a href="https://unit-vis.netlify.app/" target="_blank" rel="noopener noreferrer">
             vega
           </a>
-          , and a custom data table language. It's okay if you are familar with these languages, it's not
-          strictly necessary to know them in order to make effective usage of our tool.
+          , and a custom data table language. It&apos;s okay if you are familar with these languages,
+          it&apos;s not strictly necessary to know them in order to make effective usage of our tool.
         </p>
         <hr />
         <h3>
@@ -125,7 +136,7 @@ export function HomeContainer(props: Props): JSX.Element {
         <div className="flex">
           <b>Sort by</b>
           {SECTIONS.map(strat => (
-            <button type="button" onClick={() => setSortStratagey(strat)} key={strat}>
+            <button type="button" onClick={(): any => setSortStratagey(strat)} key={strat}>
               {strat}
             </button>
           ))}
@@ -135,9 +146,7 @@ export function HomeContainer(props: Props): JSX.Element {
             return (
               <div className="flex-down" key={`${name}-row-${idx}`}>
                 {name !== `null` && <h1>{name}</h1>}
-                <div className="">
-                  {temps.map((row: any) => renderTemplateWithInstances(row.template, currentlySelectedFile))}
-                </div>
+                <div className="">{temps.map((row: any) => renderTemplateWithInstances(row.template))}</div>
               </div>
             );
           })}
@@ -147,7 +156,7 @@ export function HomeContainer(props: Props): JSX.Element {
   );
 }
 
-export function mapStateToProps({base, data}: {base: AppState; data: DataReducerState}): any {
+export function mapStateToProps({base}: {base: AppState; data: DataReducerState}): any {
   return {
     currentlySelectedFile: base.currentlySelectedFile,
   };
