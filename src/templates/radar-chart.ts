@@ -26,7 +26,7 @@ const RADAR: any = {
         {
           type: 'aggregate',
           fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
-          groupby: ['Origin'],
+          groupby: ['[ColorBy]'],
           ops: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}Agg]`}})),
           as: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
         },
@@ -291,7 +291,7 @@ const RadarChart: Template = {
         name: `Col${idx}Agg`,
         type: 'List',
         config: {
-          allowedValues: ['mean', 'median', 'min', 'count', 'max'].map(toDisplay),
+          allowedValues: ['mean', 'sum', 'median', 'min', 'count', 'max'].map(toDisplay),
           defaultValue: '"mean"',
         },
         displayName: 'Aggregate',

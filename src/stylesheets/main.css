@@ -23,7 +23,7 @@ a, a:visited {
   text-decoration: none;
 }
 
-button, .workbook-upload label {
+button {
   background: none;
   border-radius: 5px;
   border: none;
@@ -108,6 +108,10 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 .margin-left {
   margin-left: 5px;
+}
+
+.margin-bottom {
+  margin-bottom: 5px;
 }
 
 .space-around {
@@ -277,13 +281,16 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   align-items: center;
   color: white;
   height: 40px;
+  min-height: 40px;
   width: calc(100% - 30px);
   justify-content: space-between;
   padding: 0 15px;
 }
 
-.header button {
+.header button, .header :visited, .header a {
   color: white;
+  text-decoration: none;
+  ;
 }
 
 .view-control button {
@@ -369,20 +376,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   align-items: center;
   display: flex;
   margin-top: 5px;
-}
-
-.template-logo-img-container {
-  align-items: center;
-  display: flex;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 5px;
-  width: 90px;
-  overflow: hidden;
-}
-
-.template-logo-img-container img {
-  max-height: 50px;
+  padding: 0 10px;
 }
 
 .template-logo h4 {
@@ -1198,6 +1192,9 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   cursor: pointer;
   display: flex;
   font-size: 12px;
+  font-weight: normal;
+  margin-left: 5px;
+  text-decoration: underline;
 }
 
 .template-modification-control.template-modification-control--disabled {
@@ -1419,20 +1416,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   font-size: 25px;
   justify-content: center;
   margin-right: 10px;
-}
-
-label.workbook-upload input[type="file"] {
-  position: absolute;
-  top: -1000px;
-}
-
-.workbook-upload {
-  cursor: pointer;
-  padding: 0 6px;
-}
-
-.workbook-upload label {
-  pointer-events: none;
 }
 
 /* split pane stuff */

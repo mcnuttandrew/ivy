@@ -37,7 +37,6 @@ import {
   Template,
   TemplateMap,
   ViewCatalog,
-  Workbook,
 } from '../types';
 
 import ChartArea from '../components/chart-area';
@@ -144,6 +143,7 @@ function CenterColumn(props: RootProps): JSX.Element {
     <div className="full-height full-width flex-down" style={{minWidth: '360px'}}>
       <EncodingControls
         chainActions={props.chainActions}
+        currentlySelectedFile={props.currentlySelectedFile}
         deleteTemplate={props.deleteTemplate}
         editMode={props.editMode}
         encodingMode={props.encodingMode}
@@ -156,6 +156,7 @@ function CenterColumn(props: RootProps): JSX.Element {
         setEditMode={props.setEditMode}
         setProgrammaticView={props.setProgrammaticView}
         template={props.template}
+        templateMap={props.templateMap}
         templateSaveState={props.templateSaveState}
         templates={props.templates}
       />
@@ -189,7 +190,6 @@ function CodeEditorWrapper(props: RootProps, triggerRepaint: any): JSX.Element {
       codeMode={props.codeMode}
       columns={props.columns}
       chainActions={props.chainActions}
-      currentView={props.currentView}
       editMode={props.editMode}
       editorLineWrap={getEditorLineWrap()}
       editorError={props.editorError}
@@ -265,19 +265,21 @@ function EditorContainer(props: RootProps): JSX.Element {
     props.recieveLanguages(props.languages);
   }, []);
 
+  // TODO MAINTAIN STATE ACROSS REFERENCE, ALSO TRY TO CONVERT SELECTION?
   useEffect(() => {
-    console.log(templateInstance, templateAuthor, templateName);
     if (!templateInstance && !templateAuthor && !templateName) {
-      props.changeSelectedFile({filename: props.currentlySelectedFile, dumpTemplateMap: true});
-      props.fillTemplateMapWithDefaults();
-      props.setModalState('data');
+      if (!props.currentlySelectedFile) {
+        props.setModalState('data');
+      }
       props.setEncodingMode('Polestar');
-      // DEFAULT TO POLESTAR?
+      props.fillTemplateMapWithDefaults();
       return;
     }
     if (!templateInstance) {
       getTemplate(templateAuthor, templateName).then(template => {
-        console.log(template);
+        if (!props.currentlySelectedFile) {
+          props.setModalState('data');
+        }
         props.setTemplate(template);
       });
       return;
@@ -287,7 +289,6 @@ function EditorContainer(props: RootProps): JSX.Element {
         getTemplate(templateAuthor, templateName),
         getTemplateInstance(templateAuthor, templateName, templateInstance),
       ]).then(([template, templateInstance]) => {
-        console.log(templateInstance);
         const dataset = templateInstance.dataset;
         props.chainActions([
           (): any => props.changeSelectedFile({filename: dataset, dumpTemplateMap: false}),
@@ -301,25 +302,6 @@ function EditorContainer(props: RootProps): JSX.Element {
       });
     }
   }, [templateAuthor, templateName, templateInstance]);
-
-  //  TODO DELETE THIS PART
-  function generateWorkbook(): Workbook {
-    return {
-      // data part
-      data: props.data,
-      // undo stack part
-      columns: props.columns,
-      currentTemplateInstance: props.template,
-      currentView: props.currentView,
-      encodingMode: props.encodingMode,
-      codeMode: props.codeMode,
-      editMode: props.editMode,
-      showProgrammaticMode: props.showProgrammaticMode,
-      templateMap: props.templateMap,
-      viewCatalog: props.viewCatalog,
-      views: props.views,
-    } as Workbook;
-  }
 
   const width = getWidth() || 610;
   return (
@@ -349,14 +331,8 @@ function EditorContainer(props: RootProps): JSX.Element {
       <Header
         canRedo={props.canRedo}
         canUndo={props.canUndo}
-        generateWorkbook={generateWorkbook}
-        encodingMode={props.encodingMode}
-        loadWorkbook={props.loadWorkbook}
-        setEncodingMode={props.setEncodingMode}
-        setModalState={props.setModalState}
         triggerRedo={props.triggerRedo}
         triggerUndo={props.triggerUndo}
-        template={props.template}
       />
       <div className="flex main-content-container relative">
         <DndProvider backend={HTML5Backend}>
@@ -396,7 +372,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   const template = base.currentTemplateInstance;
   const templateMap = base.templateMap;
   const missingFields = (template && getMissingFields(template, templateMap)) || [];
-  const isGallery = GALLERY.templateName === template.templateName;
+  const isGallery = template && GALLERY.templateName === template.templateName;
   const spec = evaluateIvyProgram(template, templateMap);
   return {
     canRedo: base.redoStack.length >= 1,

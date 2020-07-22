@@ -1,6 +1,18 @@
 .home-container {
+    align-items: center;
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow-y: auto;
+}
+
+.home-container-contents {
+    max-width: 1000px;
+    height: 100%;
+    width: 100%;
+    padding-top: 30px;
+}
+
+.home-preview img {
+    max-width: 220px;
 }

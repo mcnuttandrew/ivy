@@ -10,7 +10,11 @@ import {
   Condition,
   ConditionQuery,
 } from '../types';
-import {toList} from '../utils';
+export const toList = (list: string[]): {display: string; value: string}[] =>
+  list.map(display => ({
+    display,
+    value: `"${display}"`,
+  }));
 const ALLDATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 const VegaLiteDataTypes = ['nominal', 'ordinal', 'quantitative', 'temporal'];
 export const toQuote = (x: string): string => `"${x}"`;

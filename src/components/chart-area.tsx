@@ -276,7 +276,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
           'multi-view-container': materializedViews.length > 0,
         })}
       >
-        {/* {templateGallery && (
+        {templateGallery && (
           <Gallery
             columns={columns}
             chainActions={chainActions}
@@ -289,8 +289,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
             templateMap={templateMap}
             userName={userName}
           />
-        )} */}
-        {templateGallery && <div> loading</div>}
+        )}
         {showChart && materializedViews.length === 0 && (
           <MemoizeRender
             renderer={renderer}

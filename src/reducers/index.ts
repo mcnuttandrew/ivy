@@ -4,8 +4,8 @@ import thunk from 'redux-thunk';
 import {DEFAULT_TEMPLATES} from '../templates';
 import * as actionTypes from '../actions/action-types';
 
-import {AppState, ActionResponse, DataReducerState, Workbook} from '../types';
-import GALLERY from '../templates/gallery';
+import {AppState, ActionResponse, DataReducerState} from '../types';
+import LOADING from '../templates/loading';
 import {JSON_OUTPUT, SHOW_DATA_SELECTION_ON_LOAD} from '../constants/index';
 import {log} from '../utils';
 
@@ -56,7 +56,7 @@ import {
 
 export const DEFAULT_STATE: AppState = {
   // meta-data
-  currentlySelectedFile: 'cars.json',
+  currentlySelectedFile: null,
   columns: [],
 
   // spec configs
@@ -66,9 +66,10 @@ export const DEFAULT_STATE: AppState = {
   languages: {},
 
   // GUI
-  currentTemplateInstance: GALLERY,
+  currentTemplateInstance: LOADING,
   openModal: SHOW_DATA_SELECTION_ON_LOAD ? 'data' : null,
-  encodingMode: GALLERY.templateName,
+  encodingMode: LOADING.templateName,
+
   showProgrammaticMode: false,
   showGUIView: true,
   codeMode: JSON_OUTPUT,
@@ -94,21 +95,6 @@ export const DEFAULT_STATE: AppState = {
       dataTransforms: [],
     },
   },
-};
-
-const loadWorkbook: ActionResponse<Workbook> = (state, payload) => {
-  return produce(state, draftState => {
-    draftState.columns = payload.columns;
-    draftState.currentTemplateInstance = payload.currentTemplateInstance;
-    draftState.currentView = payload.currentView;
-    draftState.encodingMode = payload.encodingMode;
-    draftState.codeMode = payload.codeMode;
-    draftState.editMode = payload.editMode;
-    draftState.showProgrammaticMode = payload.showProgrammaticMode;
-    draftState.templateMap = payload.templateMap;
-    draftState.viewCatalog = payload.viewCatalog;
-    draftState.views = payload.views;
-  });
 };
 
 // second order effects
@@ -151,8 +137,6 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
 
   [actionTypes.RECIEVE_LANGUAGES]: recieveLanguages,
 
-  [actionTypes.LOAD_WORKBOOK]: loadWorkbook,
-
   // template
   [actionTypes.ADD_TO_WIDGET_TEMPLATE]: addUndo(addWidget),
   [actionTypes.DELETE_TEMPLATE]: deleteTemplate,
@@ -194,9 +178,6 @@ const reducers = {
     // not that this reducer is NOT immutable.
     if (type === actionTypes.RECIEVE_DATA) {
       return recieveDataForDataReducer(state, payload);
-    }
-    if (type === actionTypes.LOAD_WORKBOOK) {
-      return recieveDataForDataReducer(state, payload.data);
     }
     return state;
   },

@@ -20,14 +20,13 @@ import {switchCommon} from '../constants';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../ivy-lang';
-import {updateThumbnail} from '../utils';
+// import {updateThumbnail} from '../utils';
 import {AddLabelToWidget, Reset} from './widgets/widget-common';
 import Selector from './selector';
 import Tooltip from 'rc-tooltip';
 import {TiPlus, TiChevronRight} from 'react-icons/ti';
 import {widgetFactoryByGroups, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
 import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
-import PublishInstanceTooltip from './publish-instance-tooltip';
 
 interface EncodingColumnProps {
   addWidget: GenericAction<GenWidget>;
@@ -250,12 +249,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   });
   return (
     <div className="full-height encoding-column" style={(height && {maxHeight: height}) || {}}>
-      <PublishInstanceTooltip
-        templateAuthor={template.templateAuthor}
-        templateName={template.templateName}
-        templateMap={templateMap}
-        dataset={currentlySelectedFile}
-      />
       {editMode && template && (
         <div className="flex">
           <div className="flex full-width space-between">
@@ -320,17 +313,12 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
         </div>
       )}
       {editMode && (
-        <div className="flex encoding-control-buttons">
-          <AddWidgetButton
-            widgets={template.widgets}
-            addWidget={addWidget}
-            widgetTemplates={widgetTemplates}
-            removeWidgetFromTemplates={removeWidgetFromTemplates}
-          />
-          <button onClick={(): any => updateThumbnail(template.templateName, template.templateAuthor)}>
-            Update Thumbnail
-          </button>
-        </div>
+        <AddWidgetButton
+          widgets={template.widgets}
+          addWidget={addWidget}
+          widgetTemplates={widgetTemplates}
+          removeWidgetFromTemplates={removeWidgetFromTemplates}
+        />
       )}
       <div className={classnames({'template-column': true, 'edit-mode': editMode})}>{sectionedWidgets}</div>
     </div>

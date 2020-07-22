@@ -14,7 +14,8 @@ const THIRD_TEXT = '\n\n\n You can organize the gallery using various section or
 const persistedDefault = getGallerySectionPref();
 const Gallery: Template = {
   templateName: '____gallery____',
-  templateDescription: 'The home gallery of the application.',
+  // templateDescription: 'The home gallery of the application.',
+  templateDescription: '',
   templateAuthor: AUTHORS,
   templateLanguage: 'galleryLang',
   disallowFanOut: true,

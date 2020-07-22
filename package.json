@@ -101,9 +101,9 @@
     "redux-thunk": "^2.2.0",
     "type-analyzer": "^0.2.3",
     "unit-vis": "^0.0.4",
-    "vega": "^5.10.1",
+    "vega": "^5.13.0",
     "vega-datasets": "^2.1.0",
-    "vega-lite": "^4.10.4",
+    "vega-lite": "^4.13.1",
     "vega-projection-extended": "^2.0.1",
     "vega-tooltip": "^0.19.1"
   },

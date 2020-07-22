@@ -13,7 +13,6 @@ import {
   TemplateMap,
   ViewsToMaterialize,
   WidgetType,
-  Workbook,
 } from '../types';
 import * as actionTypes from '../actions/action-types';
 
@@ -80,7 +79,6 @@ export const deleteTemplate = createAction<string>(actionTypes.DELETE_TEMPLATE);
 export const deleteView = createAction<string>(actionTypes.DELETE_VIEW);
 export const duplicateWidget = createAction<number>(actionTypes.DUPLICATE_WIDGET);
 export const loadExternalTemplate = createAction<Template>(actionTypes.LOAD_EXTERNAL_TEMPLATE);
-export const loadWorkbook = createAction<Template>(actionTypes.LOAD_WORKBOOK);
 export const modifyValueOnTemplate = createAction<ModifyValueOnTemplatePayload>(
   actionTypes.MODIFY_VALUE_ON_TEMPLATE,
 );
@@ -202,7 +200,7 @@ export const loadCustomDataset: GenericAction<LoadDataPayload> = file => (dispat
   const liveData = getReader(fileName)(data);
   dispatch({
     type: actionTypes.RECIEVE_DATA,
-    payload: liveData,
+    payload: {data: liveData, dumpTemplateMap: true},
   });
   generateTypeInferences(liveData)(dispatch, arg2, arg3);
 };
@@ -259,7 +257,6 @@ export interface ActionUser {
   }>;
   loadExternalTemplate: GenericAction<Template>;
   loadTemplates: GenericAction<void>;
-  loadWorkbook: GenericAction<Workbook>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
   readInTemplate: GenericAction<HandleCodePayload>;

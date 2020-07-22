@@ -4,23 +4,27 @@ import React from 'react';
 import {
   TiArrowSync,
   TiPencil,
-  TiEdit,
+  // TiEdit,
   TiFlowChildren,
-  TiLockClosed,
-  TiLockOpen,
-  TiInfoLarge,
+  // TiLockClosed,
+  // TiLockOpen,
+  // TiInfoLarge,
 } from 'react-icons/ti';
-import Thumbnail from './thumbnail';
+// import Thumbnail from './thumbnail';
 import Tooltip from 'rc-tooltip';
 import {GenericAction, ModifyValueOnTemplatePayload} from '../actions/index';
-import {Template, LanguageExtension} from '../types';
+import {Template, LanguageExtension, TemplateMap} from '../types';
 import {classnames, NULL, getTemplateName} from '../utils';
 import {TEMPLATE_BODY} from '../constants/index';
 import GALLERY from '../templates/gallery';
 import {HoverTooltip} from './tooltips';
+import {Link} from 'react-router-dom';
+import PublishInstanceTooltip from './publish-instance-tooltip';
 
+// TODO clean props
 interface Props {
   chainActions: GenericAction<any>;
+  currentlySelectedFile: string;
   fillTemplateMapWithDefaults: GenericAction<void>;
   deleteTemplate: GenericAction<string>;
   editMode: boolean;
@@ -35,29 +39,32 @@ interface Props {
   template: Template;
   templateSaveState: string;
   templates: Template[];
+  templateMap: TemplateMap;
 }
 
-const UPDATE_TEMPLATE: {[x: string]: boolean} = {
-  'NOT FOUND': true,
-  DIFFERENT: true,
-};
+// const UPDATE_TEMPLATE: {[x: string]: boolean} = {
+//   'NOT FOUND': true,
+//   DIFFERENT: true,
+// };
 
 export default function EncodingControls(props: Props): JSX.Element {
   const {
     chainActions,
+    currentlySelectedFile,
     fillTemplateMapWithDefaults,
-    editMode,
+    // editMode,
     languages,
-    saveCurrentTemplate,
+    // saveCurrentTemplate,
     setBlankTemplate,
     setCodeMode,
     setEditMode,
     setProgrammaticView,
     template,
-    templateSaveState,
+    templateMap,
+    // templateSaveState,
   } = props;
 
-  const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
+  // const canSave = editMode && UPDATE_TEMPLATE[templateSaveState];
   const onGallery = template.templateName === GALLERY.templateName;
   const FULL_BUTTONS = [
     {
@@ -80,7 +87,9 @@ export default function EncodingControls(props: Props): JSX.Element {
                     (): any => setProgrammaticView(true),
                   ]);
                 }}
-              >{`New ${language} template`}</button>
+              >
+                <Link to="/editor">{`New ${language} template`}</Link>
+              </button>
             );
           })}
         </div>
@@ -101,13 +110,13 @@ export default function EncodingControls(props: Props): JSX.Element {
           <div className="tooltip-internal flex-down">
             <h5>How should we copy the current state?</h5>
             <button type="button" onClick={buildReaction('output')}>
-              Just output
+              <Link to="/editor">Just output</Link>
             </button>
             <button type="button" onClick={buildReaction('body')}>
-              Body but not params
+              <Link to="/editor">Body but not params</Link>
             </button>
             <button type="button" onClick={buildReaction('all')}>
-              Everything
+              <Link to="/editor">Everything</Link>
             </button>
           </div>
         );
@@ -118,28 +127,28 @@ export default function EncodingControls(props: Props): JSX.Element {
         'Create a new template starting from the current value of "Export To JSON" as the basis of the template.',
       delay: 5,
     },
-    {
-      disabled: !canSave,
-      onClick: (): void => {
-        if (!canSave) {
-          return;
-        }
-        chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
-      },
-      icon: !canSave ? <TiLockClosed /> : <TiLockOpen />,
-      label: 'Save',
-      tooltip: !canSave
-        ? 'There have been no changes made to this template and so doesnt need to be saved'
-        : 'Save the current template in to the template store, overwrites anything with the same name.',
-    },
-    {
-      disabled: onGallery,
-      onClick: onGallery ? NULL : (): any => setEditMode(!editMode),
-      icon: <TiEdit />,
-      label: editMode ? 'Stop Edit' : 'Start Edit',
-      tooltip:
-        'Change to edit mode, allows you to modify what gui elements are present and how they visually relate',
-    },
+    // {
+    //   disabled: !canSave,
+    //   onClick: (): void => {
+    //     if (!canSave) {
+    //       return;
+    //     }
+    //     chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
+    //   },
+    //   icon: !canSave ? <TiLockClosed /> : <TiLockOpen />,
+    //   label: 'Save',
+    //   tooltip: !canSave
+    //     ? 'There have been no changes made to this template and so doesnt need to be saved'
+    //     : 'Save the current template in to the template store, overwrites anything with the same name.',
+    // },
+    // {
+    //   disabled: onGallery,
+    //   onClick: onGallery ? NULL : (): any => setEditMode(!editMode),
+    //   icon: <TiEdit />,
+    //   label: editMode ? 'Stop Edit' : 'Start Edit',
+    //   tooltip:
+    //     'Change to edit mode, allows you to modify what gui elements are present and how they visually relate',
+    // },
     {
       disabled: false,
       onClick: fillTemplateMapWithDefaults,
@@ -150,16 +159,21 @@ export default function EncodingControls(props: Props): JSX.Element {
   ];
   return (
     <div className="template-logo">
-      <div className="template-logo-img-container">
-        <Thumbnail
-          templateName={template && template.templateName}
-          templateAuthor={template && template.templateAuthor}
-        />
-      </div>
-
       <div className="flex-down full-width">
+        <h4>
+          <b>Template:</b> {getTemplateName(template)}
+        </h4>
+        <h5>
+          <p>
+            <b>Description: </b>
+            {template.templateDescription}
+          </p>
+        </h5>
         <div className="encoding-mode-selector flex-down">
-          <div className="flex space-between full-width flex-wrap">
+          <div className="flex full-width flex-wrap">
+            <h5>
+              <b>Actions: </b>
+            </h5>
             {FULL_BUTTONS.map(button => {
               const {disabled, onClick, customTooltip, icon, label, tooltip, delay} = button;
               const iconComponent = (
@@ -193,6 +207,7 @@ export default function EncodingControls(props: Props): JSX.Element {
                     'template-modification-control--disabled': disabled,
                   })}
                 >
+                  {/* TODO this should point pull of th */}
                   <HoverTooltip message={tooltip}>
                     <div className="flex" onClick={(): any => onClick()}>
                       {iconComponent}
@@ -201,24 +216,13 @@ export default function EncodingControls(props: Props): JSX.Element {
                 </div>
               );
             })}
+            <PublishInstanceTooltip
+              templateAuthor={template.templateAuthor}
+              templateName={template.templateName}
+              templateMap={templateMap}
+              dataset={currentlySelectedFile}
+            />
           </div>
-        </div>
-        <h5 className="flex">{template.templateDescription}</h5>
-        <div className="flex">
-          <h4>{getTemplateName(template)}</h4>
-          <Tooltip
-            placement="top"
-            trigger="click"
-            overlay={
-              <span className="tooltip-internal">
-                {template.templateDescription} By {template.templateAuthor}
-              </span>
-            }
-          >
-            <span>
-              <TiInfoLarge className="cursor-pointer" />
-            </span>
-          </Tooltip>
         </div>
       </div>
     </div>

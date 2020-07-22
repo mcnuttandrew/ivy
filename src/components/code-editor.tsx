@@ -15,7 +15,6 @@ interface Props {
   chainActions: GenericAction<any>;
   codeMode: string;
   columns: ColumnHeader[];
-  currentView: string;
   editMode: boolean;
   editorError: null | string;
   editorFontSize: number;
@@ -99,7 +98,6 @@ export default class CodeEditor extends React.Component<Props> {
                 addWidget={this.props.addWidget}
                 chainActions={this.props.chainActions}
                 codeMode={codeMode}
-                currentView={this.props.currentView}
                 currentCode={currentCode}
                 editMode={this.props.editMode}
                 editorError={editorError}

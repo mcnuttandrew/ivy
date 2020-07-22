@@ -156,7 +156,6 @@ interface CodeEditorControlsProps {
   addWidget?: GenericAction<GenWidget>;
   chainActions: GenericAction<any>;
   codeMode: string;
-  currentView: string;
   currentCode: string;
   editMode: boolean;
   editorError: null | string;
@@ -179,7 +178,6 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
   const {
     chainActions,
     codeMode,
-    currentView,
     currentCode,
     editMode,
     editorFontSize,
@@ -196,86 +194,63 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
   const templateName = `Template: ${getTemplateName(template)}`;
   const BUTTONS = [
     {
-      label: templateName,
-      buttons: [
-        {
-          key: TEMPLATE_BODY,
-          description:
-            'The templatized visualization program. Written in ivylang, may feature conditionals and variable interpolations.',
-        },
-        {
-          key: WIDGET_CONFIGURATION,
-          description:
-            'The configuration of the GUI elements for this template, modify it to change the configuration and apperance of the widgets.',
-        },
-      ],
+      key: TEMPLATE_BODY,
+      description:
+        'The templatized visualization program. Written in ITL, may feature conditionals and variable interpolations.',
     },
     {
-      label: `View: ${currentView}`,
-      buttons: [
-        {
-          key: WIDGET_VALUES,
-          description:
-            'The current value of the gui widgets, the values here will get combined with the body of the template to produce the out ',
-        },
-        {
-          key: JSON_OUTPUT,
-          description:
-            'The json output of the template, what is shown here will be evaluated by the renderer for each respective language',
-        },
-      ],
+      key: WIDGET_CONFIGURATION,
+      description:
+        'The configuration of the GUI elements for this template, modify it to change the configuration and appearance of the widgets.',
+    },
+    {
+      key: WIDGET_VALUES,
+      description:
+        'The current value of the gui widgets, the values here will get combined with the body of the template to produce the out ',
+    },
+    {
+      key: JSON_OUTPUT,
+      description:
+        'The json output of the template, what is shown here will be evaluated by the renderer for each respective language',
     },
   ];
   return (
     <div className="code-controls flex space-between">
       <div className="flex code-option-tabs">
-        {BUTTONS.map(({label, buttons}) => {
-          return (
-            <div
-              key={label}
-              className={classnames({
-                'code-option-tab-section': true,
-                'flex-down': true,
-                'option-disabled': !editMode && label === templateName,
-              })}
-            >
-              <div className="code-option-section-label">{label}</div>
-              <div className="flex">
-                {buttons.map(({key, description}) => {
-                  return (
-                    <div
-                      key={key}
-                      className={classnames({
-                        'code-option-tab': true,
-                        flex: true,
-                        'selected-tab': key === codeMode,
-                      })}
-                    >
-                      <span
-                        onClick={(): any =>
-                          chainActions(
-                            [
-                              (): any => setCodeMode(key),
-                              !editMode && label === templateName && ((): any => setEditMode(true)),
-                            ].filter(d => d),
-                          )
-                        }
-                      >
-                        {key}
-                      </span>
-                      <SimpleTooltip message={description} />
-                    </div>
-                  );
+        <div className="flex">
+          {BUTTONS.map(({key, description}) => {
+            return (
+              <div
+                key={key}
+                className={classnames({
+                  'code-option-tab': true,
+                  flex: true,
+                  'selected-tab': key === codeMode,
                 })}
+              >
+                <span
+                  onClick={(): any =>
+                    chainActions(
+                      [
+                        (): any => setCodeMode(key),
+                        // !editMode && label === templateName && ((): any => setEditMode(true)),
+                        !editMode && ((): any => setEditMode(true)),
+                      ].filter(d => d),
+                    )
+                  }
+                >
+                  {key}
+                </span>
+                <SimpleTooltip message={description} />
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
       <div className="flex-down">
         <CodeCollapse showProgrammaticMode={showProgrammaticMode} setProgrammaticView={setProgrammaticView} />
         <div className="flex code-controls-buttons">
-          <div className="flex  cursor-pointer">
+          {/* <div className="flex  cursor-pointer">
             <span
               className="flex template-modification-control"
               onClick={(): any =>
@@ -296,7 +271,7 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
               message="Change to edit mode, allows you to modify what gui elements are present and how they
                   visually relate"
             />
-          </div>
+          </div> */}
           <Tooltip
             placement="right"
             trigger="click"

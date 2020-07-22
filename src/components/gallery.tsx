@@ -1,7 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {GenericAction, SetWidgetValuePayload} from '../actions/index';
 import {Template, TemplateMap, ColumnHeader} from '../types';
 import TemplateCard from './template-card';
+import {DEFAULT_TEMPLATES} from '../templates';
+import {FETCH_PARMS} from '../constants';
 import {
   searchDimensionsCanMatch,
   buildCounts,
@@ -51,33 +53,26 @@ function filterTemplates(
   columns: ColumnHeader[],
   search: string,
 ): MarkedTemplate[] {
-  return templates
-    .filter(template => {
-      if (template.templateName === GALLERY.templateName) {
-        return false;
-      }
-      return true;
-    })
-    .map(template => {
-      const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
-      if (!canBeUsed) {
-        return {include: false, template};
-      }
-      const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
-      if (!nameIsValid) {
-        return {include: false, template};
-      }
+  return templates.map(template => {
+    const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
+    if (!canBeUsed) {
+      return {include: false, template};
+    }
+    const nameIsValid = searchPredicate(search, template.templateName, template.templateDescription);
+    if (!nameIsValid) {
+      return {include: false, template};
+    }
 
-      const {SUM} = buildCounts(template);
-      if (
-        (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
-        (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
-      ) {
-        return {include: false, template};
-      }
+    const {SUM} = buildCounts(template);
+    if (
+      (spec.minRequiredTargets && spec.minRequiredTargets > SUM) ||
+      (spec.maxRequiredTargets && spec.maxRequiredTargets < SUM)
+    ) {
+      return {include: false, template};
+    }
 
-      return {include: true, template};
-    });
+    return {include: true, template};
+  });
 }
 
 type TemplateGroup = {[x: string]: MarkedTemplate[]};
@@ -129,13 +124,14 @@ function toSection(templates: MarkedTemplate[], sectionStratagey: string): Templ
 }
 
 export default function Gallery(props: Props): JSX.Element {
+  const [templates, setTemplates] = useState([]);
   const {
     columns,
     chainActions,
     deleteTemplate,
     setEncodingMode,
     spec,
-    templates,
+    // templates,
     userName,
     templateMap,
     setWidgetValue,
@@ -153,6 +149,14 @@ export default function Gallery(props: Props): JSX.Element {
     }
     // and then update value in template?????
   }, [templateMap.paramValues.sectionStratagey]);
+
+  useEffect(() => {
+    fetch(`${serverPrefix()}/recent`, FETCH_PARMS as any)
+      .then(x => x.json())
+      .then(x => {
+        setTemplates(DEFAULT_TEMPLATES.concat(x.map((el: any) => el.template)));
+      });
+  }, []);
 
   const makeButtonObject = (templateName: string) => (key: string): {onClick: any; name: string} => {
     let onClick;

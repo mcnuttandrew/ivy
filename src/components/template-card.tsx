@@ -184,7 +184,7 @@ export default function ProgramPreview(props: Props): JSX.Element {
             >
               {templateName}
             </h3>
-            {!FOR_DISPLAY && CardControls({buttons, templateName, templateAuthor, userName})}
+            {/* {!FOR_DISPLAY && CardControls({buttons, templateName, templateAuthor, userName})} */}
           </div>
           <div className="flex-down">
             <div

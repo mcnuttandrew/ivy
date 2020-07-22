@@ -1,6 +1,6 @@
 import stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
-import {toList} from '../utils';
+import {toList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';
 const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',

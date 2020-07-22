@@ -3,7 +3,7 @@ import {Template, GenWidget, Condition, Widget, ListWidget} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES, VEGA_CONT_COLOR_SCHEMES} from './vega-common';
-import {toList} from '../utils';
+import {toList} from './polestar-template-utils';
 import {
   makeAgg,
   makeDataTarget,

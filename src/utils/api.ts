@@ -4,12 +4,7 @@ import {FETCH_PARMS} from '../constants/index';
 import {serverPrefix} from './index';
 
 function simpleGetJSON(url: string): Promise<any> {
-  return fetch(url, FETCH_PARMS as any)
-    .then(x => {
-      console.log(x);
-      return x;
-    })
-    .then(x => x.json());
+  return fetch(url, FETCH_PARMS as any).then(x => x.json());
 }
 
 export function getTemplate(templateAuthor: string, templateName: string): Promise<Template> {
