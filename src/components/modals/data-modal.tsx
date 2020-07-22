@@ -1,4 +1,5 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
+import {TiStar} from 'react-icons/ti';
 import {useDropzone} from 'react-dropzone';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
@@ -8,6 +9,7 @@ import Modal from './modal';
 import {countSymbol} from '../template-card';
 import {HoverTooltip} from '../tooltips';
 import {classnames} from '../../utils';
+import {getFavoriteDatasets, setFavoriteDatasets} from '../../utils/local-storage';
 
 interface Props {
   changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}>;
@@ -19,7 +21,11 @@ interface Props {
 export default function DataModal(props: Props): JSX.Element {
   const {changeSelectedFile, chainActions, loadCustomDataset, setModalState} = props;
   const [searchTerm, setSearchTerm] = useState(null);
-  const [sortMode, setSortMode] = useState('ALPHA');
+  const [sortMode, setSortMode] = useState('FAVORITES');
+  const [favs, setFavs] = useState(new Set([]));
+  useEffect(() => {
+    getFavoriteDatasets().then(x => setFavs(new Set(x)));
+  }, []);
 
   const onDrop = useCallback((acceptedFiles: any) => {
     const file = acceptedFiles[0];
@@ -57,6 +63,7 @@ export default function DataModal(props: Props): JSX.Element {
         <span>Sort by:</span>
         <div className="flex">
           {[
+            {value: 'FAVORITES', display: 'Favorites'},
             {value: 'ALPHA', display: 'Alphabetically'},
             {value: 'length', display: 'Dataset Size'},
             {value: 'DIMENSION', display: 'Dimensions'},
@@ -92,6 +99,18 @@ export default function DataModal(props: Props): JSX.Element {
             if (sortMode === 'ALPHA') {
               return a.localeCompare(b);
             }
+            if (sortMode === 'FAVORITES') {
+              if ((favs.has(a) && favs.has(b)) || (!favs.has(a) && !favs.has(b))) {
+                return a.localeCompare(b);
+              }
+              if (favs.has(a) && !favs.has(b)) {
+                return -1;
+              }
+              if (favs.has(b) && !favs.has(a)) {
+                return 1;
+              }
+              return 0;
+            }
             const aVal = Number(VegaDatasetMeta[a][sortMode]) || 0;
             const bVal = Number(VegaDatasetMeta[b][sortMode]) || 0;
             return aVal - bVal;
@@ -99,42 +118,60 @@ export default function DataModal(props: Props): JSX.Element {
           .map(datasetName => {
             const datasetMeta = VegaDatasetMeta[datasetName];
             return (
-              <div
-                onClick={(): any =>
-                  chainActions([
-                    (): any => changeSelectedFile({filename: datasetName, dumpTemplateMap: true}),
-                    (): any => setModalState(null),
-                  ])
-                }
-                className="dataset-list-item"
-                key={datasetName}
-              >
-                <div className="flex space-between">
-                  <div className="flex">
-                    <h5>{datasetName}</h5>
-                  </div>
-                  <div className="flex">
-                    <div className="icon-container">{datasetMeta.length} rows</div>
-                    {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
-                      const count = datasetMeta[dataType] || 0;
-                      return (
-                        <div key={`${datasetName}-${dataType}`} className="flex icon-container">
-                          <HoverTooltip
-                            message={`This data set has ${count} data columns with inferred type ${dataType}`}
-                          >
-                            {countSymbol(dataType)}
-                          </HoverTooltip>
-                          {count}
-                        </div>
-                      );
+              <div className="dataset-list-item flex" key={datasetName}>
+                <div className="full-height flex center">
+                  <div
+                    onClick={(): void => {
+                      const newSet = new Set(Array.from(favs));
+                      favs.has(datasetName) ? newSet.delete(datasetName) : newSet.add(datasetName);
+                      setFavs(newSet);
+                      setFavoriteDatasets(Array.from(newSet));
+                    }}
+                    className={classnames({
+                      'dataset-list-favorite': true,
+                      'dataset-list-favorited': favs.has(datasetName),
                     })}
+                  >
+                    <TiStar />
                   </div>
                 </div>
-                <div className="flex dataset-list-item-col-names">{datasetMeta.columns.join(', ')}</div>
+                <div
+                  className="flex-down"
+                  onClick={(): any =>
+                    chainActions([
+                      (): any => changeSelectedFile({filename: datasetName, dumpTemplateMap: true}),
+                      (): any => setModalState(null),
+                    ])
+                  }
+                >
+                  <div className="flex space-between">
+                    <div className="flex">
+                      <h5>{datasetName}</h5>
+                    </div>
+                    <div className="flex">
+                      <div className="icon-container">{datasetMeta.length} rows</div>
+                      {['DIMENSION', 'MEASURE', 'TIME'].map((dataType: DataType) => {
+                        const count = datasetMeta[dataType] || 0;
+                        return (
+                          <div key={`${datasetName}-${dataType}`} className="flex icon-container">
+                            <HoverTooltip
+                              message={`This data set has ${count} data columns with inferred type ${dataType}`}
+                            >
+                              {countSymbol(dataType)}
+                            </HoverTooltip>
+                            {count}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="flex dataset-list-item-col-names">{datasetMeta.columns.join(', ')}</div>
+                </div>
               </div>
             );
           })}
       </div>
+      <hr className="full-width" />
       <div className="custom-data" {...getRootProps()}>
         <h3>Upload a Custom Dataset</h3>
         <h5>
@@ -144,7 +181,9 @@ export default function DataModal(props: Props): JSX.Element {
         {isDragActive ? (
           <h5>Drop the files here ...</h5>
         ) : (
-          <h5>Drag and drop some files here, or click to select files</h5>
+          <h5>
+            <b>Drag and drop</b> some files here, or click to select files
+          </h5>
         )}
         {/* <input type="file" onDrop={handleSubmit(true)} onChange={handleSubmit(false)} /> */}
       </div>

@@ -7,6 +7,11 @@ export const getWidgetTemplates = (): Promise<GenWidget[]> =>
   isTest ? Promise.resolve([]) : get('template-widgets');
 export const setWidgetTemplates = (widgets: GenWidget[]): Promise<void> => set('template-widgets', widgets);
 
+export const getFavoriteDatasets = (): Promise<GenWidget[]> =>
+  isTest ? Promise.resolve([]) : get('favorite-datasets') || Promise.resolve([]);
+export const setFavoriteDatasets = (favorites: string[]): Promise<void> =>
+  set('favorite-datasets', favorites);
+
 export const getHeight = (): number => Number(localStorage.getItem('splitPosHeight'));
 export const writeHeight = (size: any): any => localStorage.setItem('splitPosHeight', size);
 

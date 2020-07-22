@@ -1078,6 +1078,19 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   margin-right: 2px;
 }
 
+.modal-container .dataset-list .dataset-list-favorite {
+  font-size: 18px;
+  opacity: 0;
+}
+
+.modal-container .dataset-list .dataset-list-favorite:hover {
+  opacity: 0.7;
+}
+
+.modal-container .dataset-list .dataset-list-favorited {
+  opacity: 1;
+}
+
 .code-container {
   height: 100%;
   position: relative;
