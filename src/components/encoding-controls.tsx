@@ -36,18 +36,12 @@ interface Props {
   userName: string;
 }
 
-// const UPDATE_TEMPLATE: {[x: string]: boolean} = {
-//   'NOT FOUND': true,
-//   DIFFERENT: true,
-// };
-
 export default function EncodingControls(props: Props): JSX.Element {
   const {
     chainActions,
     currentlySelectedFile,
     fillTemplateMapWithDefaults,
     deleteTemplate,
-    // editMode,
     languages,
     saveCurrentTemplate,
     setBlankTemplate,
@@ -123,28 +117,6 @@ export default function EncodingControls(props: Props): JSX.Element {
         'Create a new template starting from the current value of "Export To JSON" as the basis of the template.',
       delay: 5,
     },
-    // {
-    //   disabled: !canSave,
-    //   onClick: (): void => {
-    //     if (!canSave) {
-    //       return;
-    //     }
-    //     chainActions([(): any => saveCurrentTemplate(), (): any => setEditMode(false)]);
-    //   },
-    //   icon: !canSave ? <TiLockClosed /> : <TiLockOpen />,
-    //   label: 'Save',
-    //   tooltip: !canSave
-    //     ? 'There have been no changes made to this template and so doesnt need to be saved'
-    //     : 'Save the current template in to the template store, overwrites anything with the same name.',
-    // },
-    // {
-    //   disabled: onGallery,
-    //   onClick: onGallery ? NULL : (): any => setEditMode(!editMode),
-    //   icon: <TiEdit />,
-    //   label: editMode ? 'Stop Edit' : 'Start Edit',
-    //   tooltip:
-    //     'Change to edit mode, allows you to modify what gui elements are present and how they visually relate',
-    // },
     {
       disabled: false,
       onClick: fillTemplateMapWithDefaults,

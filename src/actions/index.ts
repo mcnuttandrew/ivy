@@ -204,24 +204,6 @@ export const loadCustomDataset: GenericAction<LoadDataPayload> = file => (dispat
   generateTypeInferences(liveData)(dispatch, arg2, arg3);
 };
 
-export const loadTemplates: GenericAction<void> = () => (dispatch): void => {
-  // get('templates')
-  //   .then((templates: string[]) => {
-  //     return Promise.all((templates || []).map((templateKey: string) => get(templateKey)));
-  //   })
-  //   .then((templates: Template[]) => {
-  //     const seen: any = {};
-  //     const payload = [...DEFAULT_TEMPLATES, ...Object.values(templates || {})].filter((d: any) => {
-  //       if (!d || seen[d.templateName]) {
-  //         return false;
-  //       }
-  //       seen[d.templateName] = true;
-  //       return true;
-  //     });
-  //     dispatch({type: actionTypes.RECIEVE_TEMPLATE, payload});
-  //   });
-};
-
 export const changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}> = payload => (
   dispatch,
   arg2,
@@ -254,7 +236,6 @@ export interface ActionUser {
     filename: string;
     dumpTemplateMap: boolean;
   }>;
-  loadTemplates: GenericAction<void>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
   readInTemplate: GenericAction<HandleCodePayload>;

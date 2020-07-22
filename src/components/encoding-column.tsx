@@ -20,7 +20,6 @@ import {switchCommon} from '../constants';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../ivy-lang';
-// import {updateThumbnail} from '../utils';
 import {AddLabelToWidget, Reset} from './widgets/widget-common';
 import Selector from './selector';
 import Tooltip from 'rc-tooltip';
