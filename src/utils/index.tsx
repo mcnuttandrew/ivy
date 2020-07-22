@@ -419,3 +419,53 @@ export function toQueryParams(obj: {[x: string]: any}): string {
     .join('&');
   return query.length ? `?${query}` : '';
 }
+
+export const SECTIONS = ['alphabetical', 'author', 'language', 'vis key word', 'none'];
+function checkName(template: Template, key: string): boolean {
+  const nameIncludes = template.templateName.toLowerCase().includes(key);
+  const descIncludes = (template.templateDescription || '').toLowerCase().includes(key);
+  return nameIncludes || descIncludes;
+}
+const visNameCombos = [
+  {key: 'exotic', synonyms: ['3d', 'cloud', 'gauge', 'mosaic', 'treemap', 'joy']},
+  {key: 'explore', synonyms: ['explor', 'multi-dimensional']},
+  {key: 'distribution', synonyms: ['dot', 'univariate', 'unit']},
+  {key: 'area', synonyms: []},
+  {key: 'trend', synonyms: []},
+  {key: 'bar', synonyms: ['histogram']},
+  {key: 'scatter', synonyms: []},
+  {key: 'radial', synonyms: ['pie', 'radar']},
+  {key: 'simple', synonyms: ['data table', 'bignumber']},
+];
+const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
+  alphabetical: d => d.templateName[0].toUpperCase(),
+  author: d => d.templateAuthor,
+  language: d => {
+    console.log(d);
+    return d.templateLanguage;
+  },
+  'vis key word': d => {
+    const match = visNameCombos.find(({key, synonyms}) =>
+      [key, ...synonyms].some((str: string) => checkName(d, str)),
+    );
+    return (match && match.key) || 'other';
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  none: d => null,
+};
+type Group = {[x: string]: any[]};
+function groupBy(templates: any[], accessor: (x: any) => string): Group {
+  return templates.reduce((acc, row) => {
+    const groupKey = accessor(row.template);
+    acc[groupKey] = (acc[groupKey] || []).concat(row);
+    return acc;
+  }, {} as Group);
+}
+export function toSection(templates: any[], sectionStratagey: string): Group {
+  return Object.entries(groupBy(templates, sectionFunctionMap[sectionStratagey]))
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .reduce((acc, [key, temps]) => {
+      acc[key] = temps.sort((a, b) => a.template.templateName.localeCompare(b.template.templateName));
+      return acc;
+    }, {} as Group);
+}

@@ -1,7 +1,7 @@
 import {Template} from '../types';
-import {SECTIONS} from '../components/gallery';
-import {AUTHORS} from '../constants/index';
+import {AUTHORS} from '../constants';
 import {getGallerySectionPref} from '../utils/local-storage';
+const SECTIONS = ['alphabetical', 'author', 'language', 'vis key word', 'none'];
 
 const toList = (arr: string[]): {display: string; value: string}[] =>
   arr.map(display => ({display, value: `"${display}"`}));

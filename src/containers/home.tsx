@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import * as actionCreators from '../actions/index';
 import {FETCH_PARMS} from '../constants';
 import {AppState, DataReducerState} from '../types';
-import {serverPrefix} from '../utils';
+import {serverPrefix, toSection, SECTIONS} from '../utils';
 import {ActionUser} from '../actions';
 import {DEFAULT_TEMPLATES} from '../templates';
 import Header from '../components/header';
@@ -33,9 +33,56 @@ function prepareNesting(templates: any[]): any {
   });
 }
 
+function renderTemplateWithInstances(
+  row: {templateName: string; templateAuthor: string; entries: any[]},
+  currentlySelectedFile: string,
+): JSX.Element {
+  const {templateName, templateAuthor, entries} = row;
+  const descriptionItem = entries.find((x: any) => x.template_description);
+  const description = descriptionItem && descriptionItem.template_description;
+  return (
+    <div key={`${templateName}-${templateAuthor}`} className="margin-bottom">
+      <h4>
+        <Link to={`/editor/${templateAuthor}/${templateName}`}>
+          {templateName} - {templateAuthor}
+        </Link>
+      </h4>
+      <h5>{description}</h5>
+      <div className="flex flex-wrap">
+        {entries.map((entry: any, idx: number) => {
+          const {instance_name, dataset} = entry;
+          const changingDataset = dataset === currentlySelectedFile;
+          console.log(changingDataset);
+          return (
+            <div key={`${templateName}-${templateAuthor}-${idx}`} className="flex-down">
+              {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
+              {/* the way to do this is to have this component if it's the same or ndivl and a checker if it's different */}
+              <Link to={`/editor/${templateAuthor}/${templateName}/${instance_name}`}>
+                <div className="home-preview">
+                  <Thumbnail
+                    templateName={templateName}
+                    templateAuthor={templateAuthor}
+                    templateInstance={instance_name}
+                  />
+                </div>
+                {entry.instance_name}
+              </Link>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function HomeContainer(props: Props): JSX.Element {
   const {currentlySelectedFile} = props;
   const [templates, setTemplates] = useState(prepareNesting(DEFAULT_TEMPLATES));
+  const [sortStratagey, setSortStratagey] = useState('none');
+  const sections = toSection(
+    templates.map((x: any) => ({template: x})),
+    sortStratagey,
+  );
   useEffect(() => {
     fetch(`${serverPrefix()}/recent-names`, FETCH_PARMS as any)
       .then(x => x.json())
@@ -75,41 +122,21 @@ export function HomeContainer(props: Props): JSX.Element {
         <h3>
           Select a template or template instance (or just go to <Link to="/editor/">the editor</Link>)
         </h3>
+        <div className="flex">
+          <b>Sort by</b>
+          {SECTIONS.map(strat => (
+            <button type="button" onClick={() => setSortStratagey(strat)} key={strat}>
+              {strat}
+            </button>
+          ))}
+        </div>
         <div className="flex-down">
-          {templates.map((row: any) => {
-            const {templateName, templateAuthor, entries} = row;
-            const descriptionItem = entries.find((x: any) => x.template_description);
-            const description = descriptionItem && descriptionItem.template_description;
+          {Object.entries(sections).map(([name, temps], idx) => {
             return (
-              <div key={`${templateName}-${templateAuthor}`} className="margin-bottom">
-                <h4>
-                  <Link to={`/editor/${templateAuthor}/${templateName}`}>
-                    {templateName} - {templateAuthor}
-                  </Link>
-                </h4>
-                <h5>{description}</h5>
-                <div className="flex flex-wrap">
-                  {entries.map((entry: any, idx: number) => {
-                    const {instance_name, dataset} = entry;
-                    const changingDataset = dataset === currentlySelectedFile;
-                    console.log(changingDataset);
-                    return (
-                      <div key={`${templateName}-${templateAuthor}-${idx}`} className="flex-down">
-                        {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
-                        {/* the way to do this is to have this component if it's the same or ndivl and a checker if it's different */}
-                        <Link to={`/editor/${templateAuthor}/${templateName}/${instance_name}`}>
-                          <div className="home-preview">
-                            <Thumbnail
-                              templateName={templateName}
-                              templateAuthor={templateAuthor}
-                              templateInstance={instance_name}
-                            />
-                          </div>
-                          {entry.instance_name}
-                        </Link>
-                      </div>
-                    );
-                  })}
+              <div className="flex-down" key={`${name}-row-${idx}`}>
+                {name !== `null` && <h1>{name}</h1>}
+                <div className="">
+                  {temps.map((row: any) => renderTemplateWithInstances(row.template, currentlySelectedFile))}
                 </div>
               </div>
             );
