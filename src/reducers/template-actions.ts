@@ -22,6 +22,20 @@ import {evaluateIvyProgram, constructDefaultTemplateMap} from '../ivy-lang';
 
 import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite';
 
+const dedupTemplates: ActionResponse<void> = state => {
+  return produce(state, draftState => {
+    const toKey = (template: Template): string => `${template.templateAuthor} ---- ${template.templateName}`;
+    const seen: {[x: string]: boolean} = {};
+    draftState.templates = state.templates.filter(template => {
+      if (seen[toKey(template)]) {
+        return false;
+      }
+      seen[toKey(template)] = true;
+      return true;
+    });
+  });
+};
+
 export const setMaterialization: ActionResponse<ViewsToMaterialize> = (state, payload) => {
   return produce(state, draftState => {
     draftState.templateMap.systemValues.viewsToMaterialize = payload;
@@ -36,21 +50,25 @@ export function fillTemplateMapWithDefaults(state: AppState): AppState {
 }
 
 export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => {
-  return produce(state, draftState => {
-    draftState.templates = draftState.templates.concat(payload);
-  });
+  return dedupTemplates(
+    produce(state, draftState => {
+      draftState.templates = draftState.templates.concat(payload);
+    }),
+  );
 };
 
 export const setTemplate: ActionResponse<Template> = (state, payload) => {
-  return fillTemplateMapWithDefaults(
-    produce(state, draftState => {
-      draftState.templates = draftState.templates.concat(payload);
-      draftState.editMode = false;
-      draftState.codeMode = JSON_OUTPUT;
-      // TODO fix the encoding mode thing
-      draftState.encodingMode = payload.templateName;
-      draftState.currentTemplateInstance = payload;
-    }),
+  return dedupTemplates(
+    fillTemplateMapWithDefaults(
+      produce(state, draftState => {
+        draftState.templates = draftState.templates.concat(payload);
+        draftState.editMode = false;
+        draftState.codeMode = JSON_OUTPUT;
+        // TODO fix the encoding mode thing
+        draftState.encodingMode = payload.templateName;
+        draftState.currentTemplateInstance = payload;
+      }),
+    ),
   );
 };
 
@@ -111,20 +129,32 @@ function getAndRemoveTemplate(
   state: AppState,
   {templateAuthor, templateName}: {templateAuthor: string; templateName: string},
 ): AppState {
-  return produce(state, draftState => {
-    draftState.templates = state.templates.filter((template: Template) =>
-      template.templateName === templateName && template.templateAuthor === templateAuthor ? false : true,
-    );
-  });
+  return dedupTemplates(
+    produce(state, draftState => {
+      draftState.templates = state.templates.filter((template: Template) =>
+        template.templateName === templateName && template.templateAuthor === templateAuthor ? false : true,
+      );
+    }),
+  );
 }
 
 const insertTemplateIntoTemplates: ActionResponse<Template> = (state, template) => {
-  return produce(state, draftState => {
-    draftState.templates = getAndRemoveTemplate(state, {
-      templateName: template.templateName,
-      templateAuthor: template.templateAuthor,
-    }).templates.concat(template);
-  });
+  return dedupTemplates(
+    produce(state, draftState => {
+      draftState.templates = getAndRemoveTemplate(state, {
+        templateName: template.templateName,
+        templateAuthor: template.templateAuthor,
+      }).templates.concat(template);
+    }),
+  );
+};
+
+export const loadTemplates: ActionResponse<Template[]> = (state, payload) => {
+  return dedupTemplates(
+    produce(state, draftState => {
+      draftState.templates = state.templates.concat(payload);
+    }),
+  );
 };
 
 export const saveCurrentTemplate: ActionResponse<void> = state =>

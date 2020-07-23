@@ -265,7 +265,7 @@ const Polestar: Template = {
       const typeIsQuant = `parameters.${key}Type.includes('quantitative')`;
       const widgets = [
         makeDataTarget(key),
-        makeTypeSelect(key, 'ordinal'),
+        makeTypeSelect(key, key === 'Color' ? 'nominal' : 'ordinal'),
         simpleSwitch({
           name: `${key}Bin`,
           conditions: [
@@ -287,7 +287,7 @@ const Polestar: Template = {
           displayName: 'Color Scheme',
           config: {
             allowedValues: VEGA_CATEGORICAL_COLOR_SCHEMES.map(toQuote),
-            defaultValue: toQuote(VEGA_CATEGORICAL_COLOR_SCHEMES[0]),
+            defaultValue: toQuote(VEGA_CATEGORICAL_COLOR_SCHEMES[10]),
           },
           conditions: [
             {query: '!parameters.Color', queryResult: 'hide'},

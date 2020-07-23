@@ -12,6 +12,7 @@ export const DELETE_VIEW = 'delete-view';
 export const DUPLICATE_WIDGET = 'duplicate-widget';
 export const END_ATOMIC_CHAIN = 'end-atomic-chain';
 export const FILL_TEMPLATEMAP_WITH_DEFAULTS = 'fill-template-map-with-defaults';
+export const LOAD_TEMPLATES = 'load-templates';
 export const MODIFY_VALUE_ON_TEMPLATE = 'modify-value-on-template';
 export const MOVE_WIDGET_IN_TEMPLATE = 'move-widget-in-template';
 export const READ_IN_TEMPLATE = 'read-in-template';

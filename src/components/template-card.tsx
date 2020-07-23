@@ -89,7 +89,7 @@ function computeLinesOfCode(template: Template): number {
       .split('\n').length - 1;
   return bodyLines + templateWithoutBodyLines;
 }
-function RenderTypeCounts(template: Template): JSX.Element {
+export function RenderTypeCounts(template: Template): JSX.Element {
   const messages = combosToMessages(buildCounts(template));
   const maxMessages = combosToMessages(buildCounts(template, true));
   return (

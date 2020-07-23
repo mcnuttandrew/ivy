@@ -78,7 +78,7 @@ export default function Gallery(props: Props): JSX.Element {
   }, [templateMap.paramValues.sectionStratagey]);
 
   useEffect(() => {
-    fetch(`${serverPrefix()}/recent`, FETCH_PARMS as any)
+    fetch(`${serverPrefix()}/templates`, FETCH_PARMS as any)
       .then(x => x.json())
       .then(x => {
         setTemplates(DEFAULT_TEMPLATES.concat(x.map((el: any) => el.template)));
@@ -108,14 +108,16 @@ export default function Gallery(props: Props): JSX.Element {
   return (
     <div className="gallery">
       {!filteredTemplates.length && <div>No templates match your query</div>}
-      {Object.entries(toSection(filteredTemplates, spec.sectionStratagey)).map(([name, temps], idx) => {
-        return (
-          <div className="flex-down" key={`${name}-row-${idx}`}>
-            {name !== `null` && <h1>{name}</h1>}
-            <div className="template-card-sub-containers">{temps.map(produceTemplateCard)}</div>
-          </div>
-        );
-      })}
+      {Object.entries(toSection(filteredTemplates, spec.sectionStratagey, new Set())).map(
+        ([name, temps], idx) => {
+          return (
+            <div className="flex-down" key={`${name}-row-${idx}`}>
+              {name !== `null` && <h1>{name}</h1>}
+              <div className="template-card-sub-containers">{temps.map(produceTemplateCard)}</div>
+            </div>
+          );
+        },
+      )}
     </div>
   );
 }

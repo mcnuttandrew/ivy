@@ -1,106 +1,168 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
+import {TiStar} from 'react-icons/ti';
+import {RenderTypeCounts} from '../components/template-card';
 
+import {getFavoriteTemplates, setFavoriteTemplates} from '../utils/local-storage';
 import * as actionCreators from '../actions/index';
-import {FETCH_PARMS} from '../constants';
-import {AppState, DataReducerState} from '../types';
-import {serverPrefix, toSection, SECTIONS} from '../utils';
+import {FETCH_PARMS, BINDER} from '../constants';
+import {AppState, DataReducerState, Template} from '../types';
+import {serverPrefix, toSection, SECTIONS, classnames} from '../utils';
 import {ActionUser} from '../actions';
 import {DEFAULT_TEMPLATES} from '../templates';
 import Header from '../components/header';
 import Thumbnail from '../components/thumbnail';
 interface Props extends ActionUser {
   currentlySelectedFile: string;
+  templates: Template[];
 }
 import {Link} from 'react-router-dom';
 
 const toAuthorName = (row: any): {templateName: string; templateAuthor: string} => ({
-  templateName: row.name || row.template_name || row.templateName,
+  templateName: row.template_name || row.templateName,
   templateAuthor: row.creator || row.template_creator || row.templateAuthor,
 });
 
-function prepareNesting(templates: any[]): any {
-  const BINDER = '%%%%!@%@%%#%@!%@!%#^&!@^%#^&@!';
-  const groups = templates.reduce((acc, row) => {
-    const {templateName, templateAuthor} = toAuthorName(row);
-    const key = `${templateName}${BINDER}${templateAuthor}`;
+const toKey = (x: any): string => `${x.templateName}${BINDER}${x.templateAuthor}`;
+function prepareNesting(templates: any[], instances: any[]): any {
+  const groups = instances.reduce((acc, row) => {
+    const key = toKey(toAuthorName(row));
     acc[key] = (acc[key] || []).concat(row);
     return acc;
   }, {});
-  return Object.entries(groups).map(([key, entries]) => {
-    const [templateName, templateAuthor] = key.split(BINDER);
-    return {templateName, templateAuthor, entries: (entries as any[]).filter(row => row.instance_name)};
-  });
+  return templates.map(template => ({template, entries: groups[toKey(template)] || []}));
 }
 
-function renderTemplateWithInstances(
-  row: {templateName: string; templateAuthor: string; entries: any[]},
-  // currentlySelectedFile: string,
+function templateInfo(
+  template: Template,
+  favoriteTemplatesConfig: {favs: Set<string>; setFavs: any},
 ): JSX.Element {
-  const {templateName, templateAuthor, entries} = row;
-  const descriptionItem = entries.find((x: any) => x.template_description);
-  const description = descriptionItem && descriptionItem.template_description;
+  const {templateName, templateAuthor, templateDescription} = template;
+  const {favs, setFavs} = favoriteTemplatesConfig;
+  const key = toKey(template);
   return (
-    <div
-      key={`${templateName}-${templateAuthor}`}
-      className={`margin-bottom home-template-row ${templateAuthor.replace(
-        /\s+/g,
-        '-',
-      )}-${templateName.replace(/\s+/g, '-')}`}
-    >
-      <h4>
-        <Link to={`/editor/${templateAuthor}/${templateName}`}>
-          {templateName} - {templateAuthor}
-        </Link>
-      </h4>
-      <h5>{description}</h5>
-      <div className="flex flex-wrap">
-        {entries.map((entry: any, idx: number) => {
-          // const {instance_name, dataset} = entry;
-          const {instance_name} = entry;
-          // const changingDataset = dataset === currentlySelectedFile;
-          // console.log(changingDataset);
-          return (
-            <div key={`${templateName}-${templateAuthor}-${idx}`} className="flex-down">
-              {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
-              {/* the way to do this is to have this component if it's the same or ndivl and a checker if it's different */}
-              <Link to={`/editor/${templateAuthor}/${templateName}/${instance_name}`}>
-                <div className="home-preview">
-                  <Thumbnail
-                    templateName={templateName}
-                    templateAuthor={templateAuthor}
-                    templateInstance={instance_name}
-                  />
-                </div>
-                {entry.instance_name}
-              </Link>
-            </div>
+    <div className="flex template-info-container">
+      <div
+        onClick={(): void => {
+          const newSet = new Set(Array.from(favs));
+          favs.has(key) ? newSet.delete(key) : newSet.add(key);
+          setFavs(newSet);
+          setFavoriteTemplates(
+            Array.from(newSet).map(x => {
+              const [templateName, templateAuthor] = x.split(BINDER);
+              return {templateName, templateAuthor};
+            }),
           );
+        }}
+        className={classnames({
+          'template-list-favorite': true,
+          'template-list-favorited': favs.has(key),
         })}
+      >
+        <TiStar />
+      </div>
+      <div className="flex-down template-info">
+        <h4>
+          <b>Template: </b>
+          <Link to={`/editor/${templateAuthor}/${templateName}`}>{templateName}</Link>
+        </h4>
+        <h5>
+          <b>Author: </b>
+          {templateAuthor}
+        </h5>
+        <h5>
+          <b>Description: </b>
+          {templateDescription}
+        </h5>
+        <h5>{RenderTypeCounts(template)}</h5>
+        <h5>
+          {Object.entries(
+            template.widgets.reduce((acc, row) => {
+              acc[row.type as string] = (acc[row.type as string] || 0) + 1;
+              return acc;
+            }, {} as {[x: string]: number}),
+          )
+            .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
+            .join(', ')}
+        </h5>
       </div>
     </div>
   );
 }
 
-export function HomeContainer(): JSX.Element {
-  // const {currentlySelectedFile} = props;
-  const [templates, setTemplates] = useState(prepareNesting(DEFAULT_TEMPLATES));
-  const [sortStratagey, setSortStratagey] = useState('none');
-  const sections = toSection(
-    templates.map((x: any) => ({template: x})),
-    sortStratagey,
+function renderTemplateWithInstances(
+  row: {template: Template; entries: any[]},
+  favoriteTemplatesConfig: {favs: Set<string>; setFavs: any},
+  // currentlySelectedFile: string,
+): JSX.Element {
+  const {template, entries} = row;
+  const {templateName, templateAuthor} = template;
+
+  const key = `${templateName}${BINDER}${templateAuthor}`;
+  const kabobbedAuthor = templateAuthor.replace(/\s+/g, '-');
+  const kabbobedName = templateName.replace(/\s+/g, '-');
+  return (
+    <div
+      key={key}
+      className={`margin-bottom home-template-row flex flex-wrap ${kabobbedAuthor}-${kabbobedName}`}
+    >
+      {templateInfo(template, favoriteTemplatesConfig)}
+      {entries.map((entry: any, idx: number) => {
+        // const {instance_name, dataset} = entry;
+        const {name} = entry;
+        // const changingDataset = dataset === currentlySelectedFile;
+        // console.log(changingDataset);
+        return (
+          <div key={`${templateName}-${templateAuthor}-${idx}`} className="flex-down">
+            {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
+            {/* the way to do this is to have this component if it's the same or ndivl and a checker if it's different */}
+            <div className="home-preview-container">
+              <Link to={`/editor/${templateAuthor}/${templateName}/${name}`}>
+                <div className="home-preview">
+                  <Thumbnail
+                    templateName={templateName}
+                    templateAuthor={templateAuthor}
+                    templateInstance={name}
+                  />
+                </div>
+                {name}
+              </Link>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
+}
+
+const polestar = DEFAULT_TEMPLATES.find(x => x.templateName === 'Polestar');
+export function HomeContainer(props: Props): JSX.Element {
+  const {loadTemplates, templates} = props;
+  const [favs, setFavs] = useState(new Set([]));
+  const [instances, setInstances] = useState([]);
+  const [sortStratagey, setSortStratagey] = useState('favorites');
+
   useEffect(() => {
     // eslint-disable-next-line no-undef
     if (process.env.NODE_ENV === 'test') {
       return;
     }
-    fetch(`${serverPrefix()}/recent-names`, FETCH_PARMS as any)
+    getFavoriteTemplates().then(x => {
+      const newFavs =
+        x && x.length
+          ? x.map(el => `${el.templateName}${BINDER}${el.templateAuthor}`)
+          : [`${polestar.templateName}${BINDER}${polestar.templateAuthor}`];
+      return setFavs(new Set(newFavs));
+    });
+    fetch(`${serverPrefix()}/templates`, FETCH_PARMS as any)
       .then(x => x.json())
-      .then(x => {
-        setTemplates(prepareNesting(DEFAULT_TEMPLATES.concat(x)));
-      });
+      .then(loadedTemplates => loadTemplates(loadedTemplates.map((x: any) => x.template)));
+    fetch(`${serverPrefix()}/template-instances`, FETCH_PARMS as any)
+      .then(x => x.json())
+      .then(loadedInstances => setInstances(loadedInstances));
   }, []);
+  const nestedTemplates = prepareNesting(templates, instances);
+  const sections = toSection(nestedTemplates, sortStratagey, favs);
   return (
     <div className="home-container">
       <Header />
@@ -135,7 +197,7 @@ export function HomeContainer(): JSX.Element {
         </h3>
         <div className="flex">
           <b>Sort by</b>
-          {SECTIONS.map(strat => (
+          {['favorites', ...SECTIONS].map(strat => (
             <button type="button" onClick={(): any => setSortStratagey(strat)} key={strat}>
               {strat}
             </button>
@@ -146,7 +208,9 @@ export function HomeContainer(): JSX.Element {
             return (
               <div className="flex-down" key={`${name}-row-${idx}`}>
                 {name !== `null` && <h1>{name}</h1>}
-                <div className="">{temps.map((row: any) => renderTemplateWithInstances(row.template))}</div>
+                <div className="">
+                  {temps.map((row: any) => renderTemplateWithInstances(row, {favs, setFavs}))}
+                </div>
               </div>
             );
           })}
@@ -159,6 +223,7 @@ export function HomeContainer(): JSX.Element {
 export function mapStateToProps({base}: {base: AppState; data: DataReducerState}): any {
   return {
     currentlySelectedFile: base.currentlySelectedFile,
+    templates: base.templates,
   };
 }
 
