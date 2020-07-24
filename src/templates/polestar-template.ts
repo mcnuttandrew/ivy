@@ -341,7 +341,11 @@ const Polestar: Template = {
 
     makeSection('View Controls', []),
     makeText('View Controls', []),
-    simpleSwitch({name: `showHeight`, displayName: 'Specify Height', defaultsToActive: false}),
+    simpleSwitch({
+      name: `showHeight`,
+      displayName: 'Specify Height',
+      defaultsToActive: false,
+    }),
     {
       name: 'height',
       type: 'Slider',

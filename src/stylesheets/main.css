@@ -1568,3 +1568,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     transform: rotate(360deg);
   }
 }
+
+.react-datepicker-popper {
+  z-index: 11;
+}

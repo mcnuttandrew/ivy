@@ -3,14 +3,16 @@ import {DataTransform, DataRow} from '../types';
 export function wrangle(data: DataRow[], transforms: DataTransform[]): any {
   const predicates = transforms.map(d => (row: DataRow): boolean => {
     const fieldVal = row[d.filter.field];
-    if (d.filter.oneOf) {
-      return !!d.filter.oneOf.find((key: string) => key === fieldVal);
+    switch (d.filter.type) {
+      case 'DIMENSION':
+        return !!d.filter.range.find((key: string) => key === fieldVal);
+      case 'MEASURE':
+        return Number(fieldVal) >= d.filter.range[0] && Number(fieldVal) <= d.filter.range[1];
+      case 'TIME':
+        return new Date(fieldVal) >= d.filter.range[0] && new Date(fieldVal) <= d.filter.range[1];
+      default:
+        return true;
     }
-    if (d.filter.range) {
-      return Number(fieldVal) >= d.filter.range[0] && Number(fieldVal) <= d.filter.range[1];
-    }
-    return true;
   });
-  const fileredData = data.filter(row => predicates.every(pred => pred(row)));
-  return fileredData;
+  return data.filter(row => predicates.every(pred => pred(row)));
 }

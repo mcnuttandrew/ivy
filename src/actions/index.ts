@@ -1,6 +1,6 @@
 import {Dispatch} from 'redux';
 import {csvParse, tsvParse} from 'd3-dsv';
-import {getDomain, getUniques, executePromisesInSeries} from '../utils';
+import {generateDomain, executePromisesInSeries} from '../utils';
 import {
   AppState,
   ColumnHeader,
@@ -128,14 +128,17 @@ export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[
   }, {} as {[x: string]: any});
   dispatch({
     type: actionTypes.RECIEVE_TYPE_INFERENCES,
-    payload: computeColMeta(data).map((columnMeta: any) => {
-      const isDimension = columnMeta.category === 'DIMENSION';
-      return {
-        ...columnMeta,
-        summary: summaries[columnMeta.key],
-        domain: (isDimension ? getUniques : getDomain)(data, columnMeta.key),
-      };
-    }),
+    payload: computeColMeta(data).map((col: any) => ({
+      ...col,
+      summary: {
+        ...summaries[col.key],
+        coercionTypes: ['MEASURE', 'DIMENSION', 'TIME'].reduce((acc, key) => {
+          acc[key] = generateDomain(data, col.key, key);
+          return acc;
+        }, {} as any),
+      },
+      domain: generateDomain(data, col.key, col.category),
+    })),
   });
 };
 

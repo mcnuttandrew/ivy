@@ -120,6 +120,7 @@ interface SimpleSwitchType {
   displayName?: string;
   conditions?: Condition[];
   defaultsToActive?: boolean;
+  disallowFanOut?: boolean;
 }
 export const simpleSwitch = ({
   name,

@@ -27,28 +27,30 @@ export function classnames(classObject: {[val: string]: boolean}): string {
     .join(' ');
 }
 
-export function getUniques(data: any, field: string): string[] {
-  return Object.keys(
-    data.reduce((acc: {[a: string]: boolean}, row: any) => {
-      acc[row[field]] = true;
-      return acc;
-    }, {}),
-  ).sort();
+export function getUniques(data: any[], field: string): string[] {
+  const set = data.reduce((acc, row) => acc.add(row[field]), new Set());
+  return (Array.from(set) as string[]).sort();
 }
 
-export function getDomain(data: any, field: string): number[] {
-  type domainType = {min: number; max: number};
-  return Object.values(
-    data.reduce(
-      (acc: domainType, row: any) => {
-        return {
-          min: Math.min(acc.min, row[field]),
-          max: Math.max(acc.max, row[field]),
-        };
-      },
-      {min: Infinity, max: -Infinity},
-    ),
-  );
+export function getDomain(data: any[], field: string): number[] {
+  const init = [Infinity, -Infinity] as [number, number];
+  return data.reduce(([min, max], row) => [Math.min(min, row[field]), Math.max(max, row[field])], init);
+}
+
+export function getTimeDomain(data: any[], field: string): Date[] {
+  return getDomain(
+    data.map(x => ({...x, [field]: new Date(x[field]).getTime()})),
+    field,
+  ).map(epochDate => new Date(epochDate));
+}
+
+export function generateDomain(data: any[], field: string, type: string): any[] {
+  const buildDomainFuncs: {[type: string]: any} = {
+    DIMENSION: getUniques,
+    MEASURE: getDomain,
+    TIME: getTimeDomain,
+  };
+  return buildDomainFuncs[type](data, field);
 }
 
 export function executePromisesInSeries(tasks: any): any {
