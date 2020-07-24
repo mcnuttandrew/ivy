@@ -3,7 +3,6 @@ import {TiDeleteOutline} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {Range} from 'rc-slider';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 
 interface Props {
   column: any;
