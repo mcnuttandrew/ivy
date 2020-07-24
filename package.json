@@ -97,7 +97,7 @@
     "react-router-dom": "^5.2.0",
     "react-split-pane": "^0.1.89",
     "react-switch": "^5.0.1",
-    "react-vega": "^7.1",
+    "react-vega": "^7.3",
     "redux": "^4.0.1",
     "redux-thunk": "^2.2.0",
     "type-analyzer": "^0.2.3",

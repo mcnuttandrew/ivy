@@ -136,7 +136,7 @@ function renderTemplateWithInstances(
 
 const polestar = DEFAULT_TEMPLATES.find(x => x.templateName === 'Polestar');
 export function HomeContainer(props: Props): JSX.Element {
-  const {loadTemplates, templates} = props;
+  const {recieveTemplates, templates} = props;
   const [favs, setFavs] = useState(new Set([]));
   const [instances, setInstances] = useState([]);
   const [sortStratagey, setSortStratagey] = useState(location.hash.split('?')[1] || 'favorites');
@@ -155,7 +155,7 @@ export function HomeContainer(props: Props): JSX.Element {
     });
     fetch(`${serverPrefix()}/templates`, FETCH_PARMS as any)
       .then(x => x.json())
-      .then(loadedTemplates => loadTemplates(loadedTemplates.map((x: any) => x.template)));
+      .then(loadedTemplates => recieveTemplates(loadedTemplates.map((x: any) => x.template)));
     fetch(`${serverPrefix()}/template-instances`, FETCH_PARMS as any)
       .then(x => x.json())
       .then(loadedInstances => setInstances(loadedInstances));

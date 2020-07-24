@@ -90,7 +90,6 @@ export const setBlankTemplate = createAction<{fork: string | null; language: str
   actionTypes.SET_BLANK_TEMPLATE,
 );
 export const setCodeMode = createAction<string>(actionTypes.SET_CODE_MODE);
-export const loadTemplates = createAction<Template[]>(actionTypes.LOAD_TEMPLATES);
 export const setEditMode = createAction<boolean>(actionTypes.SET_EDIT_MODE);
 export const setEncodingMode = createAction<string>(actionTypes.SET_ENCODING_MODE);
 export const setGuiView = createAction<boolean>(actionTypes.SET_GUI_VIEW);
@@ -235,7 +234,6 @@ export interface ActionUser {
     filename: string;
     dumpTemplateMap: boolean;
   }>;
-  loadTemplates: GenericAction<Template>;
   modifyValueOnTemplate: GenericAction<ModifyValueOnTemplatePayload>;
   moveWidget: GenericAction<MoveWidgetPayload>;
   readInTemplate: GenericAction<HandleCodePayload>;

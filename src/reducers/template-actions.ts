@@ -149,14 +149,6 @@ const insertTemplateIntoTemplates: ActionResponse<Template> = (state, template) 
   );
 };
 
-export const loadTemplates: ActionResponse<Template[]> = (state, payload) => {
-  return dedupTemplates(
-    produce(state, draftState => {
-      draftState.templates = state.templates.concat(payload);
-    }),
-  );
-};
-
 export const saveCurrentTemplate: ActionResponse<void> = state =>
   insertTemplateIntoTemplates(state, state.currentTemplateInstance);
 

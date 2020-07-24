@@ -9181,7 +9181,7 @@ react-test-renderer@^16.0.0-0, react-test-renderer@^16.12.0:
     react-is "^16.8.6"
     scheduler "^0.18.0"
 
-react-vega@^7.1:
+react-vega@^7.3:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/react-vega/-/react-vega-7.4.0.tgz#e58882685dee38dee219cb43c9e3ace40960edf0"
   integrity sha512-GK3K3e15GcIWMid1N7vZq5ZjL9QrpeOngz+gsocTsJYUFc3LJpEDRj2WgkfKP4h0TUJGa0ahf8LAkr31Cou6fA==
