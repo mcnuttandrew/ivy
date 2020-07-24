@@ -90,6 +90,28 @@ function templateInfo(
   );
 }
 
+function renderInstanceCard(entry: any): JSX.Element {
+  // const {instance_name, dataset} = entry;
+  // const changingDataset = dataset === currentlySelectedFile;
+  const templateAuthor = entry.template_creator;
+  const templateName = entry.template_name;
+  const name = entry.name;
+  return (
+    <div className="flex-down" key={`${templateName}-${templateAuthor}-${name}`}>
+      {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
+      {/* the way to do this is to have this component if it's the same or ndivl and a checker if it's different */}
+      <div className="home-preview-container">
+        <Link to={`/editor/${templateAuthor}/${templateName}/${name}`}>
+          <div className="home-preview">
+            <Thumbnail templateName={templateName} templateAuthor={templateAuthor} templateInstance={name} />
+          </div>
+          {name}
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 function renderTemplateWithInstances(
   row: {template: Template; entries: any[]},
   favoriteTemplatesConfig: {favs: Set<string>; setFavs: any},
@@ -107,30 +129,7 @@ function renderTemplateWithInstances(
       className={`margin-bottom home-template-row flex flex-wrap ${kabobbedAuthor}-${kabbobedName}`}
     >
       {templateInfo(template, favoriteTemplatesConfig)}
-      {entries.map((entry: any, idx: number) => {
-        // const {instance_name, dataset} = entry;
-        const {name} = entry;
-        // const changingDataset = dataset === currentlySelectedFile;
-        // console.log(changingDataset);
-        return (
-          <div key={`${templateName}-${templateAuthor}-${idx}`} className="flex-down">
-            {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
-            {/* the way to do this is to have this component if it's the same or ndivl and a checker if it's different */}
-            <div className="home-preview-container">
-              <Link to={`/editor/${templateAuthor}/${templateName}/${name}`}>
-                <div className="home-preview">
-                  <Thumbnail
-                    templateName={templateName}
-                    templateAuthor={templateAuthor}
-                    templateInstance={name}
-                  />
-                </div>
-                {name}
-              </Link>
-            </div>
-          </div>
-        );
-      })}
+      {entries.map(renderInstanceCard)}
     </div>
   );
 }
@@ -140,7 +139,7 @@ export function HomeContainer(props: Props): JSX.Element {
   const {loadTemplates, templates} = props;
   const [favs, setFavs] = useState(new Set([]));
   const [instances, setInstances] = useState([]);
-  const [sortStratagey, setSortStratagey] = useState('favorites');
+  const [sortStratagey, setSortStratagey] = useState(location.hash.split('?')[1] || 'favorites');
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -162,7 +161,7 @@ export function HomeContainer(props: Props): JSX.Element {
       .then(loadedInstances => setInstances(loadedInstances));
   }, []);
   const nestedTemplates = prepareNesting(templates, instances);
-  const sections = toSection(nestedTemplates, sortStratagey, favs);
+  const sections = sortStratagey !== 'river' && toSection(nestedTemplates, sortStratagey, favs);
   return (
     <div className="home-container">
       <Header />
@@ -197,24 +196,35 @@ export function HomeContainer(props: Props): JSX.Element {
         </h3>
         <div className="flex">
           <b>Sort by</b>
-          {['favorites', ...SECTIONS].map(strat => (
-            <button type="button" onClick={(): any => setSortStratagey(strat)} key={strat}>
-              {strat}
-            </button>
+          {['favorites', 'river', ...SECTIONS].map(strat => (
+            <Link to={`/?${strat}`} key={strat}>
+              <button type="button" onClick={(): any => setSortStratagey(strat)} key={strat}>
+                {strat}
+              </button>
+            </Link>
           ))}
         </div>
-        <div className="flex-down">
-          {Object.entries(sections).map(([name, temps], idx) => {
-            return (
-              <div className="flex-down" key={`${name}-row-${idx}`}>
-                {name !== `null` && <h1>{name}</h1>}
-                <div className="">
-                  {temps.map((row: any) => renderTemplateWithInstances(row, {favs, setFavs}))}
+        {sections && (
+          <div className="flex-down">
+            {Object.entries(sections).map(([name, temps], idx) => {
+              return (
+                <div className="flex-down" key={`${name}-row-${idx}`}>
+                  {name !== `null` && <h1>{name}</h1>}
+                  <div className="">
+                    {temps.map((row: any) => renderTemplateWithInstances(row, {favs, setFavs}))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
+        {!sections && (
+          <div className="flex flex-wrap">
+            {instances
+              .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+              .map(renderInstanceCard)}
+          </div>
+        )}
       </div>
     </div>
   );
