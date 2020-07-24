@@ -71,7 +71,17 @@ export const coerceType: ActionResponse<CoerceTypePayload> = (state, payload) =>
   const {field, type} = payload;
   return produce(state, draftState => {
     const columnIdx = state.columns.findIndex((d: any) => d.field === field);
+    const column = draftState.columns[columnIdx];
     draftState.columns[columnIdx].type = type;
+    draftState.columns[columnIdx].domain = column.summary.coercionTypes[type];
+    draftState.templateMap.systemValues.dataTransforms = draftState.templateMap.systemValues.dataTransforms.filter(
+      transform => {
+        if (transform.filter && transform.filter.field === field) {
+          return false;
+        }
+        return true;
+      },
+    );
   });
 };
 

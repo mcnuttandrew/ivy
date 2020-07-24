@@ -42,7 +42,7 @@ export default function MultiShelf(props: Props): JSX.Element {
   const columnHeaders = shelfValues
     .map(shelfValue => getOrMakeColumn(shelfValue, columns, template))
     .filter(d => d);
-  const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) < columnHeaders.length;
+  const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) <= columnHeaders.length;
   const dropCommon = {field: fieldKey, multiTarget: true};
 
   return (
@@ -93,11 +93,11 @@ export default function MultiShelf(props: Props): JSX.Element {
               {'drop a field here'}
             </div>
           )}
-          {!maxValsHit && (
-            <div className="flex">
-              <button type="button" onClick={(): any => onDrop({field: fieldKey, text: []})}>
-                Clear
-              </button>
+          <div className="flex">
+            <button type="button" onClick={(): any => onDrop({field: fieldKey, text: []})}>
+              Clear
+            </button>
+            {!maxValsHit && (
               <Selector
                 useGroups={true}
                 options={options.filter(d => !shelfValues.includes(d.value))}
@@ -106,8 +106,9 @@ export default function MultiShelf(props: Props): JSX.Element {
                   onDrop({text: shelfValues.concat([`${x}`]), ...dropCommon});
                 }}
               />
-            </div>
-          )}
+            )}
+            {maxValsHit && <div>Maximum number of allowed columns in use</div>}
+          </div>
         </div>
       </div>
     </div>
