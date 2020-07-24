@@ -678,7 +678,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   z-index: 9;
 }
 
-.modal-container .data-modal, .modal-container .program-modal {
+.modal-container .data-modal, .modal-container .user-modal {
   background: #363636;
   border-radius: 10px;
   padding: 10px;
@@ -688,11 +688,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .modal-container .data-modal {
   height: 600px;
   width: 700px;
-}
-
-.modal-container .program-modal {
-  height: 90%;
-  width: 90%;
 }
 
 .program-containers {
