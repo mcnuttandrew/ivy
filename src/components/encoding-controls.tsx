@@ -137,6 +137,12 @@ export default function EncodingControls(props: Props): JSX.Element {
             {template.templateDescription}
           </p>
         </h5>
+        <h5>
+          <p>
+            <b>Author: </b>
+            {template.templateAuthor}
+          </p>
+        </h5>
         <div className="encoding-mode-selector flex-down">
           <div className="flex full-width flex-wrap">
             <h5>

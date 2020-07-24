@@ -43,6 +43,8 @@ import ChartArea from '../components/chart-area';
 import CodeEditor from '../components/code-editor';
 import DataColumn from '../components/data-column';
 import DataModal from '../components/modals/data-modal';
+import UserModal from '../components/modals/user-modal';
+
 import EncodingControls from '../components/encoding-controls';
 import Header from '../components/header';
 import ImportDataColumn from '../components/import-data-column';
@@ -252,7 +254,7 @@ function HotKeyProvider(props: RootProps): JSX.Element {
   };
   return (
     <GlobalHotKeys
-      keyMap={HOT_KEYS}
+      keyMap={{...HOT_KEYS, USER_PANEL: 'u+p'}}
       handlers={{
         TOGGLE_EDIT: withSay(() => !onGallery && setEditMode(!editMode), 'edit'),
         CLEAR_ENCODING: withSay(() => fillTemplateMapWithDefaults(), 'clear'),
@@ -263,6 +265,9 @@ function HotKeyProvider(props: RootProps): JSX.Element {
             setModalState(null);
           }
         }, 'close modals'),
+        USER_PANEL: withSay(() => {
+          setModalState('user');
+        }, 'user panel'),
       }}
       allowChanges={true}
     />
@@ -332,6 +337,13 @@ function EditorContainer(props: RootProps): JSX.Element {
           changeSelectedFile={props.changeSelectedFile}
           loadCustomDataset={props.loadCustomDataset}
           setModalState={props.setModalState}
+        />
+      )}
+      {props.openModal === 'user' && (
+        <UserModal
+          setModalState={props.setModalState}
+          userName={props.userName}
+          setUserName={props.setUserName}
         />
       )}
       <Header
