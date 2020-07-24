@@ -10,7 +10,7 @@ import {
   CustomCard,
   Suggestion,
 } from '../types';
-import {MATERIALIZING, USE_LOCAL} from '../constants/index';
+import {MATERIALIZING, USE_LOCAL, BINDER} from '../constants/index';
 import GALLERY from '../templates/gallery';
 import {AppState, ColumnHeader} from '../types';
 
@@ -414,19 +414,7 @@ const visNameCombos = [
   {key: 'radial', synonyms: ['pie', 'radar']},
   {key: 'simple', synonyms: ['data table', 'bignumber']},
 ];
-const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
-  alphabetical: d => d.templateName[0].toUpperCase(),
-  author: d => d.templateAuthor,
-  language: d => d.templateLanguage,
-  'vis key word': d => {
-    const match = visNameCombos.find(({key, synonyms}) =>
-      [key, ...synonyms].some((str: string) => checkName(d, str)),
-    );
-    return (match && match.key) || 'other';
-  },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  none: d => null,
-};
+
 type Group = {[x: string]: any[]};
 function groupBy(templates: any[], accessor: (x: any) => string): Group {
   return templates.reduce((acc, row) => {
@@ -435,11 +423,30 @@ function groupBy(templates: any[], accessor: (x: any) => string): Group {
     return acc;
   }, {} as Group);
 }
-export function toSection(templates: any[], sectionStratagey: string): Group {
+export function toSection(templates: any[], sectionStratagey: string, favorites: Set<string>): Group {
+  const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
+    alphabetical: d => d.templateName[0].toUpperCase(),
+    author: d => d.templateAuthor,
+    language: d => d.templateLanguage,
+    'vis key word': d => {
+      const match = visNameCombos.find(({key, synonyms}) =>
+        [key, ...synonyms].some((str: string) => checkName(d, str)),
+      );
+      return (match && match.key) || 'other';
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    none: d => null,
+    favorites: d => {
+      const key = `${d.templateName}${BINDER}${d.templateAuthor}`;
+      return favorites.has(key) ? 'Favorites' : 'Other';
+    },
+  };
   return Object.entries(groupBy(templates, sectionFunctionMap[sectionStratagey]))
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce((acc, [key, temps]) => {
-      acc[key] = temps.sort((a, b) => a.template.templateName.localeCompare(b.template.templateName));
+      acc[key] = temps.sort((a, b) => {
+        return a.template.templateName.localeCompare(b.template.templateName);
+      });
       return acc;
     }, {} as Group);
 }

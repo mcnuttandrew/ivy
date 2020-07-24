@@ -12,6 +12,12 @@ export const getFavoriteDatasets = (): Promise<GenWidget[]> =>
 export const setFavoriteDatasets = (favorites: string[]): Promise<void> =>
   set('favorite-datasets', favorites);
 
+export const getFavoriteTemplates = (): Promise<{templateAuthor: string; templateName: string}[]> =>
+  isTest ? Promise.resolve([]) : get('favorite-template') || Promise.resolve([]);
+export const setFavoriteTemplates = (
+  favorites: {templateAuthor: string; templateName: string}[],
+): Promise<void> => set('favorite-template', favorites);
+
 export const getHeight = (): number => Number(localStorage.getItem('splitPosHeight'));
 export const writeHeight = (size: any): any => localStorage.setItem('splitPosHeight', size);
 

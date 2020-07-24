@@ -1,6 +1,7 @@
 import React from 'react';
 import {GenericAction} from '../actions/index';
 import Tooltip from 'rc-tooltip';
+import {Link} from 'react-router-dom';
 
 import GALLERY from '../templates/gallery';
 import {ColumnHeader, Template, TemplateMap} from '../types';
@@ -23,7 +24,9 @@ function PopoverContents(props: PopoverContentsProps): JSX.Element {
         that set.
       </h5>
       {relatedViews.map((view, idx) => (
-        <TemplateCard key={idx} template={view} hideMatches={false} setEncodingMode={setEncodingMode} />
+        <Link to={`/editor/${view.templateAuthor}/${view.templateName}`} key={idx}>
+          <TemplateCard template={view} hideMatches={false} setEncodingMode={setEncodingMode} />
+        </Link>
       ))}
     </div>
   );
