@@ -26,28 +26,30 @@ import PARALLEL_COORDINATES from './parallel-coordinates';
 import RADAR from './radar-chart';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
-export type WidgetFactoryFunc = (idx: number) => GenWidget;
+export type WidgetFactoryFunc = (name: number | string) => GenWidget;
+const makeName = (name: string | number, prefix: string) =>
+  typeof name === 'string' ? name : `${prefix}${name}`;
 export const DataTargetFactory: WidgetFactoryFunc = idx =>
   ({
-    name: `Var${idx}`,
+    name: makeName(idx, 'Var'),
     type: 'DataTarget',
     config: {allowedTypes: DATA_TYPES, required: true},
   } as Widget<DataTargetWidget>);
 export const MultiDataTargetFactory: WidgetFactoryFunc = idx =>
   ({
-    name: `MultiDim${idx}`,
+    name: makeName(idx, 'MultiDim'),
     type: 'MultiDataTarget',
     config: {allowedTypes: DATA_TYPES, required: true, minNumberOfTargets: 0},
   } as Widget<MultiDataTargetWidget>);
 export const ListFactory: WidgetFactoryFunc = idx =>
   ({
-    name: `ListItem${idx}`,
+    name: makeName(idx, 'ListItem'),
     type: 'List',
     config: {allowedValues: [] as {display: string; value: string}[], defaultValue: null},
   } as Widget<ListWidget>);
 export const SwitchFactory: WidgetFactoryFunc = idx =>
   ({
-    name: `Switch${idx}`,
+    name: makeName(idx, 'Switch'),
     type: 'Switch',
     config: {active: 'true', inactive: 'false', defaultsToActive: true},
   } as Widget<SwitchWidget>);
@@ -58,13 +60,15 @@ export const SliderFactory: WidgetFactoryFunc = idx =>
     config: {minVal: 0, maxVal: 10, step: 1, defaultValue: 5},
   } as Widget<SliderWidget>);
 export const SectionFactory: WidgetFactoryFunc = idx =>
-  ({name: `Section${idx}`, type: 'Section', config: null} as Widget<SectionWidget>);
+  ({name: makeName(idx, 'Section'), type: 'Section', config: null} as Widget<SectionWidget>);
 export const ShortcutsFactory: WidgetFactoryFunc = idx =>
-  ({name: `Shortcut${idx}`, type: 'Shortcut', config: {shortcuts: []}} as Widget<ShortcutsWidget>);
+  ({name: makeName(idx, 'Shortcut'), type: 'Shortcut', config: {shortcuts: []}} as Widget<ShortcutsWidget>);
 export const FreeTextFactory: WidgetFactoryFunc = idx =>
-  ({name: `FreeText${idx}`, type: 'FreeText', config: {useParagraph: false}} as Widget<FreeTextWidget>);
+  ({name: makeName(idx, 'FreeText'), type: 'FreeText', config: {useParagraph: false}} as Widget<
+    FreeTextWidget
+  >);
 export const TextFactory: WidgetFactoryFunc = idx =>
-  ({name: `Text${idx}`, type: 'Text', config: {text: ''}} as Widget<TextWidget>);
+  ({name: makeName(idx, 'Text'), type: 'Text', config: {text: ''}} as Widget<TextWidget>);
 
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: DataTargetFactory,

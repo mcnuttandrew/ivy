@@ -24,7 +24,10 @@ export default function DataModal(props: Props): JSX.Element {
   const [sortMode, setSortMode] = useState('FAVORITES');
   const [favs, setFavs] = useState(new Set([]));
   useEffect(() => {
-    getFavoriteDatasets().then(x => setFavs(new Set(x)));
+    getFavoriteDatasets().then(x => {
+      const entries = x && x.length ? x : ['cars.json', 'penguins.json'];
+      setFavs(new Set(entries as string[]));
+    });
   }, []);
 
   const onDrop = useCallback((acceptedFiles: any) => {

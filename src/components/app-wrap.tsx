@@ -3,8 +3,9 @@ import {Provider} from 'react-redux';
 
 import * as actionCreators from '../actions/index';
 import setUpState from '../reducers/index';
-import Root, {mapStateToProps as RootMapStateToProps} from '../containers/editor';
+import Editor, {mapStateToProps as EditorMapStateToProps} from '../containers/editor';
 import Home, {mapStateToProps as HomeMapStateToProps} from '../containers/home';
+import Docs, {mapStateToProps as DocsMapStateToProps} from '../containers/docs';
 import ErrorBoundary from './error-boundary';
 import DEFAULT_LANGUAGES from '../languages';
 import {HashRouter as Router, Route, Switch} from 'react-router-dom';
@@ -18,30 +19,37 @@ export default function AppWrap(): JSX.Element {
         <Provider store={store}>
           <Switch>
             <Route path="/editor/:templateAuthor/:templateName/:templateInstance">
-              <Root
+              <Editor
                 {...actionCreators}
-                {...RootMapStateToProps(store.getState())}
+                {...EditorMapStateToProps(store.getState())}
                 languages={DEFAULT_LANGUAGES}
               />
             </Route>
             <Route path="/editor/:templateAuthor/:templateName">
-              <Root
+              <Editor
                 {...actionCreators}
-                {...RootMapStateToProps(store.getState())}
+                {...EditorMapStateToProps(store.getState())}
                 languages={DEFAULT_LANGUAGES}
               />
             </Route>
             <Route path="/editor/:specialRoute">
-              <Root
+              <Editor
                 {...actionCreators}
-                {...RootMapStateToProps(store.getState())}
+                {...EditorMapStateToProps(store.getState())}
                 languages={DEFAULT_LANGUAGES}
               />
             </Route>
             <Route path="/editor">
-              <Root
+              <Editor
                 {...actionCreators}
-                {...RootMapStateToProps(store.getState())}
+                {...EditorMapStateToProps(store.getState())}
+                languages={DEFAULT_LANGUAGES}
+              />
+            </Route>
+            <Route path="/docs">
+              <Docs
+                {...actionCreators}
+                {...DocsMapStateToProps(store.getState())}
                 languages={DEFAULT_LANGUAGES}
               />
             </Route>

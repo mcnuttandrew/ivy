@@ -4,7 +4,7 @@ import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
 import {HOT_KEYS, HOT_KEY_DESCRIPTIONS} from '../constants/index';
-import {Link} from 'react-router-dom';
+import {Link, Route} from 'react-router-dom';
 
 interface HeaderProps {
   canRedo?: boolean;
@@ -25,8 +25,7 @@ export default function Header(props: HeaderProps): JSX.Element {
             <div>Ivy</div>
           </div>
         </Link>
-
-        {triggerRedo && triggerUndo && (
+        <Route path={['/editor/', '/editor/:x', '/editor/:x/:y', '/editor/:x/:z']}>
           <div className="flex state-action-controls">
             <div
               className={classnames({
@@ -57,30 +56,37 @@ export default function Header(props: HeaderProps): JSX.Element {
             <span>Report a bug</span>
           </a> */}
           </div>
-        )}
+        </Route>
       </div>
-      <Tooltip
-        placement="bottom"
-        trigger="click"
-        overlay={
-          <div className="about-tooltip">
-            <h1>About this application</h1>
-            <div>Terminology, etc</div>
-            <h3>Hotkeys</h3>
-            <ul>
-              {Object.entries(HOT_KEYS).map(([key, value]) => {
-                return (
-                  <li key={key}>
-                    {value}: {HOT_KEY_DESCRIPTIONS[key]}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        }
-      >
-        <div className="about-bar ">Template + Settings = Visualization (Learn More)</div>
-      </Tooltip>
+
+      <div className="about-bar ">
+        <Link to="/editor" className="margin-left">
+          Editor
+        </Link>
+        <Link to="/docs" className="margin-left">
+          Docs
+        </Link>
+        <Route path={['/editor/', '/editor/:x', '/editor/:x/:y', '/editor/:x/:z']}>
+          <Tooltip
+            placement="bottom"
+            trigger="click"
+            overlay={
+              <div className="about-tooltip">
+                <h3>Hotkeys</h3>
+                <ul>
+                  {Object.entries(HOT_KEYS).map(([key, value]) => (
+                    <li key={key}>
+                      {value}: {HOT_KEY_DESCRIPTIONS[key]}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            }
+          >
+            <div>Hotkeys</div>
+          </Tooltip>
+        </Route>
+      </div>
     </div>
   );
 }

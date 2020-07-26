@@ -95,14 +95,20 @@ function inferFieldTransformationSuggestions(
     dropTargets.forEach((to: string) => acc.push(buildSuggest(from, to)));
 
     // suggest creating a new widget
-
-    const suggestedNewWidgetName = `Var${widgets.length + 1}`;
+    const containsFromNameAlready = !widgets.every(widget => widget.name !== from);
+    console.log(
+      'check check',
+      containsFromNameAlready,
+      widgets.map(x => x.name),
+    );
+    const suggestedNewWidgetName = !containsFromNameAlready ? from : `Var${widgets.length + 1}`;
     acc.push({
       from: `"${from}"`,
       to: `"[${suggestedNewWidgetName}]"`,
       comment: `${from} -> ${suggestedNewWidgetName} (CREATE ${suggestedNewWidgetName})`,
       simpleReplace: false,
-      sideEffect: () => DataTargetFactory(widgets.length + 1),
+      sideEffect: () =>
+        DataTargetFactory(containsFromNameAlready ? widgets.length + 1 : suggestedNewWidgetName),
     });
     if (fieldPresentInData) {
       acc.push({
@@ -115,7 +121,7 @@ function inferFieldTransformationSuggestions(
             paramValues: {[suggestedNewWidgetName]: `"${from}"`},
             systemValues: {viewsToMaterialize: {}, dataTransforms: []},
           });
-          return DataTargetFactory(widgets.length + 1);
+          return DataTargetFactory(containsFromNameAlready ? widgets.length + 1 : suggestedNewWidgetName);
         },
       });
     }

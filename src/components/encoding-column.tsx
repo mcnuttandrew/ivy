@@ -23,6 +23,7 @@ import {applyQueries} from '../ivy-lang';
 import {AddLabelToWidget, Reset} from './widgets/widget-common';
 import Selector from './selector';
 import Tooltip from 'rc-tooltip';
+import {SimpleTooltip} from './tooltips';
 import {TiPlus, TiChevronRight} from 'react-icons/ti';
 import {widgetFactoryByGroups, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
 import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
@@ -142,6 +143,28 @@ function buildSections(template: Template): GenWidget[][] {
   return sections.sections.filter(d => d.length).concat([sections.currentSection]);
 }
 
+interface OnBlurInputProps {
+  label: string;
+  initialValue: string;
+  update: (newVal: string) => any;
+}
+function OnBlurInput(props: OnBlurInputProps): JSX.Element {
+  const {label, initialValue, update} = props;
+  const [value, setValue] = useState(initialValue);
+  return (
+    <div className="flex">
+      <input
+        aria-label={label}
+        type="text"
+        value={value}
+        onChange={(event): any => setValue(event.target.value)}
+        onBlur={(): any => update(value)}
+      />
+      <button type="button">update</button>
+    </div>
+  );
+}
+
 export default function EncodingColumn(props: EncodingColumnProps): JSX.Element {
   const {
     addWidget,
@@ -251,26 +274,24 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
           <div className="flex full-width space-between">
             <IgnoreKeys style={{height: '100%'}}>
               <AddLabelToWidget label={'Name'}>
-                <input
-                  aria-label="Template Name"
-                  type="text"
-                  value={template.templateName}
-                  onChange={(event): any =>
+                <OnBlurInput
+                  label="Template Name"
+                  initialValue={template.templateName}
+                  update={value =>
                     modifyValueOnTemplate({
-                      value: event.target.value,
+                      value,
                       key: 'templateName',
                     })
                   }
                 />
               </AddLabelToWidget>
               <AddLabelToWidget label={'Description'}>
-                <input
-                  aria-label="Template Description"
-                  type="text"
-                  value={template.templateDescription}
-                  onChange={(event): any =>
+                <OnBlurInput
+                  label="Template Description"
+                  initialValue={template.templateDescription}
+                  update={value =>
                     modifyValueOnTemplate({
-                      value: event.target.value,
+                      value,
                       key: 'templateDescription',
                     })
                   }
@@ -294,16 +315,23 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
                 />
               </AddLabelToWidget>
               <AddLabelToWidget label={'Disallow Fan Out'}>
-                <Switch
-                  {...switchCommon}
-                  checked={!!template.disallowFanOut}
-                  onChange={(): any =>
-                    modifyValueOnTemplate({
-                      value: !template.disallowFanOut,
-                      key: 'disallowFanOut',
-                    })
-                  }
-                />
+                <span className="flex">
+                  <Switch
+                    {...switchCommon}
+                    checked={!!template.disallowFanOut}
+                    onChange={(): any =>
+                      modifyValueOnTemplate({
+                        value: !template.disallowFanOut,
+                        key: 'disallowFanOut',
+                      })
+                    }
+                  />
+                  <SimpleTooltip
+                    message={
+                      'Decide whether or not you will allow your users to use the fan out feature to explore the space of parameter values.'
+                    }
+                  />
+                </span>
               </AddLabelToWidget>
             </div>
           </div>

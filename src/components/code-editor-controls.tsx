@@ -227,7 +227,11 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
               >
                 <span
                   onClick={(): any =>
-                    chainActions([(): any => setCodeMode(key), !editMode && ((): any => setEditMode(true))])
+                    chainActions(
+                      [(): any => setCodeMode(key), !editMode && ((): any => setEditMode(true))].filter(
+                        d => d,
+                      ),
+                    )
                   }
                 >
                   {key}
