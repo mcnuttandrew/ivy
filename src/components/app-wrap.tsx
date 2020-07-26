@@ -47,11 +47,7 @@ export default function AppWrap(): JSX.Element {
               />
             </Route>
             <Route path="/docs">
-              <Docs
-                {...actionCreators}
-                {...DocsMapStateToProps(store.getState())}
-                languages={DEFAULT_LANGUAGES}
-              />
+              <Docs {...actionCreators} {...DocsMapStateToProps()} languages={DEFAULT_LANGUAGES} />
             </Route>
             <Route path="/">
               <Home {...actionCreators} {...HomeMapStateToProps(store.getState())} />
