@@ -124,7 +124,10 @@ function renderTemplateWithInstances(
   const kabobbedAuthor = templateAuthor.replace(/\s+/g, '-');
   const kabbobedName = templateName.replace(/\s+/g, '-');
   return (
-    <div className={`margin-bottom home-template-row flex flex-wrap ${kabobbedAuthor}-${kabbobedName}`}>
+    <div
+      key={key}
+      className={`margin-bottom home-template-row flex flex-wrap ${kabobbedAuthor}-${kabbobedName}`}
+    >
       {templateInfo(template, favoriteTemplatesConfig)}
       {entries.map(x => renderInstanceCard(x, false))}
     </div>

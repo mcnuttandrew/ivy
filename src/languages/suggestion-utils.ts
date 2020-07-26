@@ -96,11 +96,6 @@ function inferFieldTransformationSuggestions(
 
     // suggest creating a new widget
     const containsFromNameAlready = !widgets.every(widget => widget.name !== from);
-    console.log(
-      'check check',
-      containsFromNameAlready,
-      widgets.map(x => x.name),
-    );
     const suggestedNewWidgetName = !containsFromNameAlready ? from : `Var${widgets.length + 1}`;
     acc.push({
       from: `"${from}"`,

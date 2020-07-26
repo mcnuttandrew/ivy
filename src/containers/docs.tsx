@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 
 import * as actionCreators from '../actions/index';
-import {AppState, DataReducerState} from '../types';
 import {ActionUser} from '../actions';
 import Header from '../components/header';
 type Props = ActionUser;
 
-export function DocsContainer(props: Props): JSX.Element {
+export function DocsContainer(): JSX.Element {
   return (
     <div className="home-container home-container-contents-width-set full-width">
       <Header />
@@ -20,7 +19,7 @@ export function DocsContainer(props: Props): JSX.Element {
   );
 }
 
-export function mapStateToProps({base}: {base: AppState; data: DataReducerState}): any {
+export function mapStateToProps(): any {
   return {};
 }
 

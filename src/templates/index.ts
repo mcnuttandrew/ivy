@@ -27,7 +27,7 @@ import RADAR from './radar-chart';
 
 const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 export type WidgetFactoryFunc = (name: number | string) => GenWidget;
-const makeName = (name: string | number, prefix: string) =>
+const makeName = (name: string | number, prefix: string): string =>
   typeof name === 'string' ? name : `${prefix}${name}`;
 export const DataTargetFactory: WidgetFactoryFunc = idx =>
   ({

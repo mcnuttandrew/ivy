@@ -277,7 +277,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
                 <OnBlurInput
                   label="Template Name"
                   initialValue={template.templateName}
-                  update={value =>
+                  update={(value): any =>
                     modifyValueOnTemplate({
                       value,
                       key: 'templateName',
@@ -289,7 +289,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
                 <OnBlurInput
                   label="Template Description"
                   initialValue={template.templateDescription}
-                  update={value =>
+                  update={(value): any =>
                     modifyValueOnTemplate({
                       value,
                       key: 'templateDescription',
