@@ -7,10 +7,16 @@
 }
 
 .home-container-contents {
-    max-width: 1000px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    width: 100%;
     padding-top: 30px;
+    width: 100%;
+}
+
+.home-container-contents-width-set {
+    max-width: 1000px;
 }
 
 .home-preview-container {
@@ -60,4 +66,10 @@
     min-width: 100%;
     margin-right: 30px;
     /* border-right: thin solid black; */
+}
+
+.home-header {
+    height: 300px;
+    overflow: hidden;
+    min-height: 300px;
 }

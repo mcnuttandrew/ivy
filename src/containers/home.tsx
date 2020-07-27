@@ -90,7 +90,7 @@ function templateInfo(
   );
 }
 
-function renderInstanceCard(entry: any): JSX.Element {
+function renderInstanceCard(entry: any, forPreview: boolean): JSX.Element {
   // const {instance_name, dataset} = entry;
   // const changingDataset = dataset === currentlySelectedFile;
   const templateAuthor = entry.template_creator;
@@ -105,7 +105,7 @@ function renderInstanceCard(entry: any): JSX.Element {
           <div className="home-preview">
             <Thumbnail templateName={templateName} templateAuthor={templateAuthor} templateInstance={name} />
           </div>
-          {name}
+          {!forPreview && name}
         </Link>
       </div>
     </div>
@@ -129,7 +129,7 @@ function renderTemplateWithInstances(
       className={`margin-bottom home-template-row flex flex-wrap ${kabobbedAuthor}-${kabbobedName}`}
     >
       {templateInfo(template, favoriteTemplatesConfig)}
-      {entries.map(renderInstanceCard)}
+      {entries.map(x => renderInstanceCard(x, false))}
     </div>
   );
 }
@@ -166,65 +166,80 @@ export function HomeContainer(props: Props): JSX.Element {
     <div className="home-container">
       <Header />
       <div className="home-container-contents">
-        <h1>Ivy: an Integrated Visualization Editor </h1>
-        <p>
-          This is the home page of Ivy, an application for exploring data and creating data visualizations. It
-          supports a number of different types of visualization making including the chart choosing (found in
-          tools like Excel), shelf building (found in tools like Tableau), and programmatic manipulation (such
-          as in tools like vega or vega-lite). All of these modalities are linked together through a single
-          interfaces made possible by an abstraction called <b>templates</b>.
-        </p>
-        <p>
-          We support templates in a variety of languages including{' '}
-          <a href="https://vega.github.io/vega/" target="_blank" rel="noopener noreferrer">
-            vega
-          </a>
-          ,{' '}
-          <a href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener noreferrer">
-            vega-lite
-          </a>
-          ,{' '}
-          <a href="https://unit-vis.netlify.app/" target="_blank" rel="noopener noreferrer">
-            atom
-          </a>
-          , and a custom data table language. It&apos;s okay if you are familar with these languages,
-          it&apos;s not strictly necessary to know them in order to make effective usage of our tool.
-        </p>
-        <hr />
-        <h3>
-          Select a template or template instance (or just go to <Link to="/editor/">the editor</Link>)
-        </h3>
-        <div className="flex">
-          <b>Sort by</b>
-          {['favorites', 'river', ...SECTIONS].map(strat => (
-            <Link to={`/?${strat}`} key={strat}>
-              <button type="button" onClick={(): any => setSortStratagey(strat)} key={strat}>
-                {strat}
-              </button>
-            </Link>
-          ))}
+        <div className="home-container-contents-width-set full-width">
+          <h1>Ivy: an Integrated Visualization Editor </h1>
         </div>
-        {sections && (
-          <div className="flex-down">
-            {Object.entries(sections).map(([name, temps], idx) => {
-              return (
-                <div className="flex-down" key={`${name}-row-${idx}`}>
-                  {name !== `null` && <h1>{name}</h1>}
-                  <div className="">
-                    {temps.map((row: any) => renderTemplateWithInstances(row, {favs, setFavs}))}
-                  </div>
-                </div>
+        <div className="flex flex-wrap home-header">
+          {instances
+            .concat([...new Array(100 - instances.length)])
+            .sort(() => Math.random() * 2 - 1)
+            .map((instance, idx) => {
+              return renderInstanceCard(
+                instance || {template_creator: `blank-${idx}`, template_name: 'fillter', name: 'filler'},
+                true,
               );
             })}
+        </div>
+        <div className="home-container-contents-width-set">
+          <p>
+            This is the home page of Ivy, an application for exploring data and creating data visualizations.
+            It supports a number of different types of visualization making including the chart choosing
+            (found in tools like Excel), shelf building (found in tools like Tableau), and programmatic
+            manipulation (such as in tools like vega or vega-lite). All of these modalities are linked
+            together through a single interfaces made possible by an abstraction called <b>templates</b>.
+          </p>
+          <p>
+            We support templates in a variety of languages including{' '}
+            <a href="https://vega.github.io/vega/" target="_blank" rel="noopener noreferrer">
+              vega
+            </a>
+            ,{' '}
+            <a href="https://vega.github.io/vega-lite/" target="_blank" rel="noopener noreferrer">
+              vega-lite
+            </a>
+            ,{' '}
+            <a href="https://unit-vis.netlify.app/" target="_blank" rel="noopener noreferrer">
+              atom
+            </a>
+            , and a custom data table language. It&apos;s okay if you are not familiar with these languages,
+            it&apos;s not strictly necessary to know them in order to make effective usage of our tool.
+          </p>
+          <hr />
+          <h3>
+            Select a template or template instance (or just go to <Link to="/editor/">the editor</Link>)
+          </h3>
+          <div className="flex">
+            <b>Sort by</b>
+            {['favorites', 'river', ...SECTIONS].map(strat => (
+              <Link to={`/?${strat}`} key={strat}>
+                <button type="button" onClick={(): any => setSortStratagey(strat)} key={strat}>
+                  {strat}
+                </button>
+              </Link>
+            ))}
           </div>
-        )}
-        {!sections && (
-          <div className="flex flex-wrap">
-            {instances
-              .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-              .map(renderInstanceCard)}
-          </div>
-        )}
+          {sections && (
+            <div className="flex-down">
+              {Object.entries(sections).map(([name, temps], idx) => {
+                return (
+                  <div className="flex-down" key={`${name}-row-${idx}`}>
+                    {name !== `null` && <h1>{name}</h1>}
+                    <div className="">
+                      {temps.map((row: any) => renderTemplateWithInstances(row, {favs, setFavs}))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {!sections && (
+            <div className="flex flex-wrap">
+              {instances
+                .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                .map(x => renderInstanceCard(x, false))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

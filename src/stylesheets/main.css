@@ -1397,6 +1397,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   margin-bottom: 3px;
   margin-top: 3px;
   padding: 0 15px;
+  transition: 0.5s background;
   width: 100%;
 }
 
@@ -1414,8 +1415,24 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 }
 
 .about-bar {
+  align-items: center;
   cursor: pointer;
+  display: flex;
+  justify-content: end;
   font-size: 15px;
+}
+
+.about-bar *::after {
+  content: '⬤';
+  font-size: 5px;
+  top: -4px;
+  position: relative;
+  margin: 0 10px;
+}
+
+.about-bar *:last-child::after {
+  content: '';
+  margin-right: 0;
 }
 
 .save-edit-button {
@@ -1522,13 +1539,23 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .edit-view-toggle {
   display: flex;
   justify-content: space-around;
+  border-bottom: thin solid black;
+  border-top: thin solid black;
+  margin-top: 5px;
 }
 
 .edit-view-toggle-option {
+  display: flex;
   cursor: pointer;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  transition: font-weight 0.5s, background-color 0.5s, color 0.5s;
 }
 
 .selected-edit-view-toggle-option {
+  background-color: black;
+  color: white;
   font-weight: bold;
 }
 
