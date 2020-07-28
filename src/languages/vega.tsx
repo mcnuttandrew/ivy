@@ -15,7 +15,7 @@ import * as vega from 'vega';
 import {parse, View} from 'vega';
 
 function getDataViews(props: RendererProps): Promise<any> {
-  const {spec, data, onError} = props;
+  const {spec, data} = props;
   const finalSpec = JSON.parse(JSON.stringify(spec));
 
   // this stratagey only supports one data set
