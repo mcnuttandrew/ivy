@@ -36,7 +36,7 @@ const SCATTERPLOT_EXAMPLE: any = {
         y: {field: '[yDim]', type: '[yType]', scale: {zero: '[Zeroes]'}},
         color: {
           condition: {
-            test: 'datum.[xDim] === null || datum.[yDim] === null',
+            test: 'datum["[xDim]"] === null || datum["[yDim]"] === null',
             value: '#aaa',
           },
           field: {$cond: {query: 'parameters.Color', true: '[Color]'}},

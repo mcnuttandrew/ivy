@@ -195,6 +195,7 @@ export default function EncodingControls(props: Props): JSX.Element {
               templateName={template.templateName}
               templateMap={templateMap}
               dataset={currentlySelectedFile}
+              userName={userName}
             />
             {userName === template.templateAuthor && (
               <UnpublishTemplateTooltip

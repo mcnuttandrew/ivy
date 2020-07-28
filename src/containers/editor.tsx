@@ -317,11 +317,7 @@ function EditorContainer(props: RootProps): JSX.Element {
         props.chainActions([
           (): any => props.changeSelectedFile({filename: dataset, dumpTemplateMap: false}),
           (): any => props.setTemplate(template),
-          (): any =>
-            props.setAllTemplateValues({
-              paramValues: templateInstance.template_instance,
-              systemValues: props.templateMap.systemValues,
-            }),
+          (): any => props.setAllTemplateValues((templateInstance.template_instance as any) as TemplateMap),
         ]);
       });
     }

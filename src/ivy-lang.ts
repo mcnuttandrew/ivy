@@ -142,7 +142,7 @@ export function applyQueries(template: Template, templateMap: TemplateMap): Widg
 /**
  * Apply values from templatemap (specification) to template
  * Important to do it this way and not via json parse because values might be parts of strings
- * Example {"field": "datum.[VARIABLENAME]"}
+ * Example {"field": "datum["[VARIABLENAME]"]}
  * @param code
  * @param templateMap - the specification/variable values defined by the gui
  */

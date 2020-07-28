@@ -15,12 +15,13 @@ interface Props {
   templateName: string;
   templateMap: TemplateMap;
   dataset: string;
+  userName: string;
 }
 
 export default function PublishInstanceTooltip(props: Props): JSX.Element {
   const [error, setError] = useState(null);
   const [saved, setSaved] = useState(false);
-  const {templateAuthor, templateName, templateMap, dataset} = props;
+  const {templateAuthor, templateName, templateMap, dataset, userName} = props;
   useEffect(() => {
     setError(false);
     setSaved(false);
@@ -62,9 +63,10 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
                   body: JSON.stringify({
                     templateAuthor,
                     templateName,
-                    templateMap: templateMap.paramValues,
+                    templateMap,
                     templateInstance,
                     dataset,
+                    instanceCreator: userName,
                     thumbnail: templateImg,
                   }),
                 } as any).then(() => {
