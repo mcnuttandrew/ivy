@@ -12,9 +12,30 @@ import {buildSynthesizer, walkTreeAndLookForFields, difference} from './suggesti
 
 import React from 'react';
 import {Vega} from 'react-vega';
+import * as vega from 'vega';
 
 import {Handler} from 'vega-tooltip';
 import {get, trim} from '../utils';
+
+import {parse, View} from 'vega';
+import {compile} from 'vega-lite';
+
+function getDataViews(props: RendererProps): Promise<any> {
+  const {spec, data, onError} = props;
+  const finalSpec = JSON.parse(JSON.stringify(spec));
+
+  if (
+    !get(finalSpec, ['data', 'values']) &&
+    !get(finalSpec, ['data', 'url']) &&
+    !get(finalSpec, ['data', 'sequence'])
+  ) {
+    finalSpec.data = {values: data};
+  }
+  const view = new View(parse(compile(finalSpec).spec), {}).initialize();
+  return view
+    .runAsync()
+    .then(() => view.getState({signals: vega.falsy, data: vega.truthy, recurse: true}).data);
+}
 
 function VegaLiteRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
@@ -134,5 +155,6 @@ const VEGA_LITE_CONFIG: LanguageExtension = {
   suggestion: buildSynthesizer(inferPossibleDataTargets, inferRemoveDataSuggestions),
   language: 'vega-lite',
   blankTemplate: BLANK_TEMPLATE,
+  getDataViews,
 };
 export default VEGA_LITE_CONFIG;

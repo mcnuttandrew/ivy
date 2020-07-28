@@ -11,6 +11,30 @@ import {RendererProps, Template, Suggestion} from '../types';
 import {Handler} from 'vega-tooltip';
 import {buildSynthesizer} from './suggestion-utils';
 
+import * as vega from 'vega';
+import {parse, View} from 'vega';
+
+function getDataViews(props: RendererProps): Promise<any> {
+  const {spec, data, onError} = props;
+  const finalSpec = JSON.parse(JSON.stringify(spec));
+
+  // this stratagey only supports one data set
+  (finalSpec.data || []).forEach((row: any, idx: number) => {
+    if (row.values === 'myData') {
+      finalSpec.data[idx].values = data;
+    }
+  });
+  const view = new View(parse(finalSpec, {})).initialize();
+  return view.runAsync().then(
+    () =>
+      view.getState({
+        signals: vega.falsy,
+        data: vega.truthy,
+        recurse: true,
+      }).data,
+  );
+}
+
 function VegaRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
   const finalSpec = JSON.parse(JSON.stringify(spec));
@@ -73,6 +97,7 @@ const VEGA: LanguageExtension = {
   renderer: VegaRenderer,
   suggestion: buildSynthesizer(() => new Set(), inferRemoveDataSuggestions),
   language: 'vega',
+  getDataViews,
   blankTemplate: BLANK_TEMPLATE,
 };
 

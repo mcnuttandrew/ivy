@@ -85,6 +85,7 @@ const UNIT_VIS_CONFIG: LanguageExtension = {
   renderer: UnitVisRenderer,
   suggestion: buildSynthesizer(buildSuggestions, inferRemoveDataSuggestions),
   language: 'unit-vis',
+  getDataViews: () => Promise.resolve([]),
   blankTemplate: BLANK_TEMPLATE,
 };
 

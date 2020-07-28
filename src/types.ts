@@ -136,6 +136,7 @@ export interface LanguageExtension {
   suggestion: (code: string, widgets: LangType.GenWidget[], columns: ColumnHeader[]) => Suggestion[];
   language: string;
   blankTemplate: LangType.Template;
+  getDataViews: (props: RendererProps) => Promise<any>;
 }
 
 export type DataRow = {[x: string]: any};
