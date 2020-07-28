@@ -13,7 +13,7 @@ Object {
       "encoding": Object {
         "color": Object {
           "condition": Object {
-            "test": "datum.null === null || datum.null === null",
+            "test": "datum[\\"null\\"] === null || datum[\\"null\\"] === null",
             "value": "#aaa",
           },
         },
@@ -97,7 +97,7 @@ Object {
         },
         Object {
           "as": "tooltip",
-          "expr": "datum.null + ': ' + datum.pieAg",
+          "expr": "datum['null'] + ': ' + datum.pieAg",
           "type": "formula",
         },
       ],
@@ -318,8 +318,8 @@ exports[`#setTemplateValues 1`] = `
           \\"expr\\": {
             \\"$cond\\": {
               \\"query\\": \\"parameters.radialValue\\",
-              \\"true\\": \\"{'CATEGORY_TEST': datum.CATEGORY_TEST, 'VALUE_TEST': datum.pieAg, '[radialValue]': datum.radAgg}\\",
-              \\"false\\": \\"datum.CATEGORY_TEST + ': ' + datum.pieAg\\"
+              \\"true\\": \\"{'CATEGORY_TEST': datum['CATEGORY_TEST'], 'VALUE_TEST': datum.pieAg, '[radialValue]': datum.radAgg}\\",
+              \\"false\\": \\"datum['CATEGORY_TEST'] + ': ' + datum.pieAg\\"
             }
           },
           \\"as\\": \\"tooltip\\"
@@ -453,7 +453,7 @@ exports[`#setTemplateValues 2`] = `
         },
         \\"color\\": {
           \\"condition\\": {
-            \\"test\\": \\"datum.xDim_TEST === null || datum.yDim_TEST === null\\",
+            \\"test\\": \\"datum[\\\\\\"xDim_TEST\\\\\\"] === null || datum[\\\\\\"yDim_TEST\\\\\\"] === null\\",
             \\"value\\": \\"#aaa\\"
           },
           \\"field\\": {\\"$cond\\": {\\"query\\": \\"parameters.Color\\", \\"true\\": \\"[Color]\\"}},

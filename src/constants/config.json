@@ -1,4 +1,4 @@
 {
-    "USE_LOCAL": true,
+    "USE_LOCAL": false,
     "SHOW_DATA_SELECTION_ON_LOAD": false
 }

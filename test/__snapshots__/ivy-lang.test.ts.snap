@@ -36,7 +36,7 @@ Object {
       "encoding": Object {
         "color": Object {
           "condition": Object {
-            "test": "datum.[xDim] === null || datum.[yDim] === null",
+            "test": "datum[\\"[xDim]\\"] === null || datum[\\"[yDim]\\"] === null",
             "value": "#aaa",
           },
         },
@@ -102,7 +102,7 @@ Object {
       "encoding": Object {
         "color": Object {
           "condition": Object {
-            "test": "datum.[xDim] === null || datum.[yDim] === null",
+            "test": "datum[\\"[xDim]\\"] === null || datum[\\"[yDim]\\"] === null",
             "value": "#aaa",
           },
           "field": "[Color]",

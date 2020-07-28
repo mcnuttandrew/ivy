@@ -37,8 +37,9 @@ const PIECHART_EXAMPLE: any = {
           expr: {
             $cond: {
               ...radQuery,
-              true: "{'[category]': datum.[category], '[value]': datum.pieAg, '[radialValue]': datum.radAgg}",
-              false: "datum.[category] + ': ' + datum.pieAg",
+              true:
+                "{'[category]': datum['[category]'], '[value]': datum.pieAg, '[radialValue]': datum.radAgg}",
+              false: "datum['[category]'] + ': ' + datum.pieAg",
             },
           },
           as: 'tooltip',
