@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import {TiStar} from 'react-icons/ti';
+import {TiStar, TiCog} from 'react-icons/ti';
 import {RenderTypeCounts} from '../components/template-card';
+import UnpublishInstanceTooltip from '../components/unpublish-instance-tooltip';
 
 import {getFavoriteTemplates, setFavoriteTemplates} from '../utils/local-storage';
 import * as actionCreators from '../actions/index';
@@ -15,6 +16,7 @@ import Thumbnail from '../components/thumbnail';
 interface Props extends ActionUser {
   currentlySelectedFile: string;
   templates: Template[];
+  userName: string;
 }
 import {Link} from 'react-router-dom';
 
@@ -89,15 +91,28 @@ function templateInfo(
     </div>
   );
 }
-
-function renderInstanceCard(entry: any, forPreview: boolean): JSX.Element {
+interface Instance {
+  created_at: Date;
+  template_creator: string;
+  template_name: string;
+  name: string;
+  instance_creator: string;
+}
+interface InstanceCardProps {
+  entry: Instance;
+  forPreview: boolean;
+  userName: string;
+  removeInstance?: (templateAuthor: string, templateName: string, instanceName: string) => void;
+}
+function InstanceCard(props: InstanceCardProps): JSX.Element {
+  const {entry, forPreview, userName, removeInstance} = props;
   // const {instance_name, dataset} = entry;
   // const changingDataset = dataset === currentlySelectedFile;
   const templateAuthor = entry.template_creator;
   const templateName = entry.template_name;
   const name = entry.name;
   return (
-    <div className="flex-down" key={`${templateName}-${templateAuthor}-${name}`}>
+    <div className="flex-down">
       {/* TODO ADD AN "ARE YOU SURE IF THE ASSOCIATED DATASET IS DIFFERENT" */}
       {/* the way to do this is to have this component if it's the same or ndivl and a checker if it's different */}
       <div className="home-preview-container">
@@ -107,6 +122,15 @@ function renderInstanceCard(entry: any, forPreview: boolean): JSX.Element {
           </div>
           {!forPreview && name}
         </Link>
+        {!forPreview && userName === entry.instance_creator && removeInstance && (
+          <UnpublishInstanceTooltip
+            templateAuthor={templateAuthor}
+            templateName={templateName}
+            instanceName={name}
+            userName={userName}
+            removeInstance={removeInstance}
+          />
+        )}
       </div>
     </div>
   );
@@ -115,6 +139,8 @@ function renderInstanceCard(entry: any, forPreview: boolean): JSX.Element {
 function renderTemplateWithInstances(
   row: {template: Template; entries: any[]},
   favoriteTemplatesConfig: {favs: Set<string>; setFavs: any},
+  userName: string,
+  removeInstance?: (templateAuthor: string, templateName: string, instanceName: string) => void,
   // currentlySelectedFile: string,
 ): JSX.Element {
   const {template, entries} = row;
@@ -129,16 +155,24 @@ function renderTemplateWithInstances(
       className={`margin-bottom home-template-row flex flex-wrap ${kabobbedAuthor}-${kabbobedName}`}
     >
       {templateInfo(template, favoriteTemplatesConfig)}
-      {entries.map(x => renderInstanceCard(x, false))}
+      {entries.map((entry, idx) => (
+        <InstanceCard
+          entry={entry}
+          forPreview={false}
+          userName={userName}
+          key={`instance-${idx}`}
+          removeInstance={removeInstance}
+        />
+      ))}
     </div>
   );
 }
 
 const polestar = DEFAULT_TEMPLATES.find(x => x.templateName === 'Polestar');
 export function HomeContainer(props: Props): JSX.Element {
-  const {recieveTemplates, templates} = props;
+  const {recieveTemplates, templates, userName} = props;
   const [favs, setFavs] = useState(new Set([]));
-  const [instances, setInstances] = useState([]);
+  const [instances, setInstances] = useState([] as Instance[]);
   const [sortStratagey, setSortStratagey] = useState(location.hash.split('?')[1] || 'favorites');
 
   useEffect(() => {
@@ -160,6 +194,18 @@ export function HomeContainer(props: Props): JSX.Element {
       .then(x => x.json())
       .then(loadedInstances => setInstances(loadedInstances));
   }, []);
+  function removeInstance(templateAuthor: string, templateName: string, instanceName: string): voidw {
+    setInstances(
+      instances.filter(
+        instance =>
+          !(
+            instance.template_name === templateName &&
+            instance.template_creator === templateAuthor &&
+            instance.name === instanceName
+          ),
+      ),
+    );
+  }
   const nestedTemplates = prepareNesting(templates, instances);
   const sections = sortStratagey !== 'river' && toSection(nestedTemplates, sortStratagey, favs);
   return (
@@ -174,9 +220,21 @@ export function HomeContainer(props: Props): JSX.Element {
             .concat([...new Array(100 - instances.length)])
             .sort(() => Math.random() * 2 - 1)
             .map((instance, idx) => {
-              return renderInstanceCard(
-                instance || {template_creator: `blank-${idx}`, template_name: 'fillter', name: 'filler'},
-                true,
+              return (
+                <InstanceCard
+                  key={`blank-${idx}`}
+                  entry={
+                    instance ||
+                    ({
+                      template_creator: `blank-${idx}`,
+                      template_name: 'fillter',
+                      name: 'filler',
+                      instance_creator: 'blank',
+                    } as Instance)
+                  }
+                  forPreview={true}
+                  userName={userName}
+                />
               );
             })}
         </div>
@@ -225,7 +283,9 @@ export function HomeContainer(props: Props): JSX.Element {
                   <div className="flex-down" key={`${name}-row-${idx}`}>
                     {name !== `null` && <h1>{name}</h1>}
                     <div className="">
-                      {temps.map((row: any) => renderTemplateWithInstances(row, {favs, setFavs}))}
+                      {temps.map((row: any) =>
+                        renderTemplateWithInstances(row, {favs, setFavs}, userName, removeInstance),
+                      )}
                     </div>
                   </div>
                 );
@@ -236,7 +296,14 @@ export function HomeContainer(props: Props): JSX.Element {
             <div className="flex flex-wrap">
               {instances
                 .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-                .map(x => renderInstanceCard(x, false))}
+                .map((x, idx) => (
+                  <InstanceCard
+                    entry={x}
+                    forPreview={false}
+                    userName={userName}
+                    key={`river-instance-${idx}`}
+                  />
+                ))}
             </div>
           )}
         </div>
@@ -249,6 +316,7 @@ export function mapStateToProps({base}: {base: AppState; data: DataReducerState}
   return {
     currentlySelectedFile: base.currentlySelectedFile,
     templates: base.templates,
+    userName: base.userName,
   };
 }
 
