@@ -8,7 +8,7 @@ type Props = ActionUser;
 
 export function DocsContainer(): JSX.Element {
   return (
-    <div className="home-container home-container-contents-width-set full-width">
+    <div className="home-container">
       <Header />
       <h1>Docs</h1>
       <p>

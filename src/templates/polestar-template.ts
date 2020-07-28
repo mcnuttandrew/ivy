@@ -40,11 +40,12 @@ function aggregateConditional(key: string): JsonMap {
   const isCount = `parameters.${key}.includes('COUNT')`;
   const filledIn = `parameters.${key}`;
   const isQuantitative = `parameters.${key}Type.includes('quantitative')`;
+  const isNone = `parameters.${key}Agg.includes('none')`;
 
   return {
     $cond: {
       // query: `${isCount} || (${filledIn} && !${isNone})`,
-      query: `${filledIn} && ${isQuantitative}`,
+      query: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
       true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
     },
   };
@@ -68,9 +69,10 @@ function conditionalFieldName(key: string): JsonMap {
 function zeroConditional(key: string): JsonMap {
   const notZero = `!parameters.${key}IncludeZero.includes('true')`;
   const isQuant = `parameters.${key}Type.includes('quantitative')`;
+  const isCount = `parameters.${key}.includes('COUNT')`;
   return {
     $cond: {
-      query: `${used(key)} && ${notZero} &&${isQuant}`,
+      query: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
       // query: `${used(key)} && ${includeZero} && ${isQuant}`,
       true: `[${key}IncludeZero]`,
     },
@@ -101,7 +103,13 @@ const encoding = {
   ...['X', 'Y'].reduce((acc: JsonMap, key) => {
     const output = {
       field: conditionalFieldName(key),
-      type: `[${key}Type]`,
+      type: {
+        $cond: {
+          query: `parameters.${key}.includes('COUNT')`,
+          true: 'quantitative',
+          false: `[${key}Type]`,
+        },
+      },
       aggregate: aggregateConditional(key),
       timeUnit: timeUnitCond(key),
       scale: {$cond: {query: notCount(key), true: {zero: zeroConditional(key), type: typeCond(key)}}},
@@ -114,7 +122,13 @@ const encoding = {
   ...['Size', 'Color'].reduce((acc: JsonMap, key: string) => {
     const output = {
       field: conditionalFieldName(key),
-      type: `[${key}Type]`,
+      type: {
+        $cond: {
+          query: `parameters.${key}.includes('COUNT')`,
+          true: 'quantitative',
+          false: `[${key}Type]`,
+        },
+      },
       aggregate: aggregateConditional(key),
       bin: {
         $cond: {
@@ -130,7 +144,7 @@ const encoding = {
           true: {
             scheme: {
               $cond: {
-                query: 'parameters.ColorType.includes("nominal")',
+                query: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
                 true: '[nominalColor]',
                 false: '[quantColor]',
               },
@@ -246,19 +260,19 @@ const Polestar: Template = {
     // Mark type
     makeSection('MarkDivider', []),
     simpleList({name: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('point')}),
-    {
-      type: 'Shortcut',
-      name: 'main-shortcuts',
-      config: {
-        shortcuts: [
-          {
-            label: 'SWAP X & Y',
-            shortcutFunction:
-              "Object.keys(parameters).reduce((acc, d) => ({...acc, [d[0] === 'X' ? `Y${d.slice(1)}` : d[0] === 'Y' ? `X${d.slice(1)}` : d]: parameters[d]}), {})",
-          },
-        ],
-      },
-    },
+    // {
+    //   type: 'Shortcut',
+    //   name: 'main-shortcuts',
+    //   config: {
+    //     shortcuts: [
+    //       {
+    //         label: 'SWAP X & Y',
+    //         shortcutFunction:
+    //           "Object.keys(parameters).reduce((acc, d) => ({...acc, [d[0] === 'X' ? `Y${d.slice(1)}` : d[0] === 'Y' ? `X${d.slice(1)}` : d]: parameters[d]}), {})",
+    //       },
+    //     ],
+    //   },
+    // },
 
     // size & color dimensions
     ...['Color', 'Size'].reduce((acc, key: string) => {
@@ -291,7 +305,10 @@ const Polestar: Template = {
           },
           conditions: [
             {query: '!parameters.Color', queryResult: 'hide'},
-            {query: '!parameters.ColorType.includes("nominal")', queryResult: 'hide'},
+            {
+              query: '!parameters.ColorType.includes("nominal") || parameters.Color.includes("COUNT")',
+              queryResult: 'hide',
+            },
           ],
         } as Widget<ListWidget>);
         widgets.push({
@@ -304,11 +321,14 @@ const Polestar: Template = {
           },
           conditions: [
             {query: '!parameters.Color', queryResult: 'hide'},
-            {query: 'parameters.ColorType.includes("nominal")', queryResult: 'hide'},
+            {
+              query: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
+              queryResult: 'hide',
+            },
           ],
         } as Widget<ListWidget>);
       }
-      // TODO: allow setting schemes
+
       return acc.concat(widgets);
     }, [] as GenWidget[]),
 
