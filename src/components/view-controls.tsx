@@ -1,5 +1,5 @@
 import React from 'react';
-import {TiCog, TiDocumentAdd} from 'react-icons/ti';
+import {TiCog, TiDocumentAdd, TiBook} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction} from '../actions';
 import Tooltip from 'rc-tooltip';
@@ -86,6 +86,7 @@ interface Props {
   templateMap: TemplateMap;
   templates: Template[];
   views: string[];
+  toggleShowData: () => any;
 }
 
 export default function ViewControls(props: Props): JSX.Element {
@@ -103,6 +104,7 @@ export default function ViewControls(props: Props): JSX.Element {
     templateMap,
     templates,
     views,
+    toggleShowData,
   } = props;
   return (
     <div className="chart-controls full-width flex">
@@ -113,6 +115,10 @@ export default function ViewControls(props: Props): JSX.Element {
         templateMap={templateMap}
         templates={templates}
       />
+      <div className="show-data-toggle" onClick={toggleShowData}>
+        <span>Toggle show data</span>
+        <TiBook className="show-data-toggle-label" />
+      </div>
       {errors && (
         <div className="charting-error-container">
           <Tooltip

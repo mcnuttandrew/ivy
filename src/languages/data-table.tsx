@@ -81,6 +81,7 @@ const DATA_TABLE_CONFIG: LanguageExtension = {
   suggestion: () => [],
   language: 'data-table',
   blankTemplate: BLANK_TEMPLATE,
+  getDataViews: () => Promise.resolve([]),
 };
 
 export default DATA_TABLE_CONFIG;

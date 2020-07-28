@@ -1026,6 +1026,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 }
 
 .modal-container .custom-data {
+  cursor: pointer;
   height: 100px;
 }
 
@@ -1418,7 +1419,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   align-items: center;
   cursor: pointer;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   font-size: 15px;
 }
 
@@ -1598,4 +1599,35 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 .react-datepicker-popper {
   z-index: 11;
+}
+
+.show-data-toggle {
+  align-items: center;
+  border-top: thin solid black;
+  cursor: pointer;
+  justify-content: center;
+  display: flex;
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+.show-data-toggle-label {
+  font-size: 20px;
+}
+
+.show-data-table {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.show-data-table table {
+  margin: 20px;
+}
+
+.show-data-table td {
+  font-size: 10px;
+}
+
+.show-data-table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }

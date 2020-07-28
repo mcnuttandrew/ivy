@@ -19,6 +19,7 @@ import {evaluateIvyProgram} from '../ivy-lang';
 import {HoverTooltip} from './tooltips';
 import {wrangle} from '../utils/wrangle';
 import {useWindowSize} from '../utils/hooks';
+import ShowDataWindow from './show-data';
 
 interface ChartAreaProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
@@ -244,6 +245,7 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
   } = props;
   const windowSize = useWindowSize();
   const [errors, setErrors] = useState(null);
+  const [showData, setShowData] = useState(false);
 
   // TODO memoize
   const preparedData = wrangle(data, templateMap.systemValues.dataTransforms);
@@ -332,7 +334,9 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         templateMap={templateMap}
         templates={templates}
         views={views}
+        toggleShowData={(): any => setShowData(!showData)}
       />
+      {showData && <ShowDataWindow languages={languages} data={data} spec={spec} template={template} />}
     </div>
   );
 }
