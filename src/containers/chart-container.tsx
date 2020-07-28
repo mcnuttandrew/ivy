@@ -1,54 +1,29 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import * as actionCreators from '../actions/index';
+import {ActionUser, GenericAction, DataRow} from '../actions';
 import {
-  Template,
+  AppState,
   ColumnHeader,
-  Json,
+  DataReducerState,
   LanguageExtension,
-  ViewsToMaterialize,
+  Template,
   TemplateMap,
+  ViewCatalog,
+  ViewsToMaterialize,
   RendererProps,
 } from '../types';
-import {classnames} from '../utils';
-import Tooltip from 'rc-tooltip';
 import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
-import ViewControls from './view-controls';
-import {GenericAction, DataRow, SetTemplateValuePayload, SetWidgetValuePayload} from '../actions';
-import Gallery from './gallery';
+import {evaluateIvyProgram, getMissingFields} from '../ivy-lang';
+import Gallery from '../components/gallery';
 import GALLERY from '../templates/gallery';
-import {evaluateIvyProgram} from '../ivy-lang';
-import {HoverTooltip} from './tooltips';
+import {HoverTooltip} from '../components/tooltips';
 import {wrangle} from '../utils/wrangle';
 import {useWindowSize} from '../utils/hooks';
-import ShowDataWindow from './show-data';
-
-interface ChartAreaProps {
-  changeViewName: GenericAction<{idx: number; value: string}>;
-  chainActions: GenericAction<any>;
-  cloneView: GenericAction<void>;
-  columns: ColumnHeader[];
-  createNewView: GenericAction<void>;
-  currentView: string;
-  data: DataRow[];
-  deleteView: GenericAction<string>;
-  editorError: null | string;
-  encodingMode: string;
-  languages: {[x: string]: LanguageExtension};
-  missingFields: string[];
-  saveCurrentTemplate: GenericAction<void>;
-  setAllTemplateValues: GenericAction<TemplateMap>;
-  setEncodingMode: GenericAction<string>;
-  setMaterialization: GenericAction<ViewsToMaterialize>;
-  setTemplateValue: GenericAction<SetTemplateValuePayload>;
-  setWidgetValue: GenericAction<SetWidgetValuePayload>;
-  spec: Json;
-  switchView: GenericAction<string>;
-  template: Template;
-  templateComplete: boolean;
-  templateMap: TemplateMap;
-  templates: Template[];
-  views: string[];
-  width: number;
-}
+import ShowDataWindow from '../components/show-data';
+import ViewControls from '../components/view-controls';
+import {classnames} from '../utils';
+import Tooltip from 'rc-tooltip';
 
 function* cartesian(head?: any, ...tail: any): any {
   const remainder = tail.length > 0 ? cartesian(...tail) : [[]];
@@ -124,7 +99,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   }
   return (
     <React.Fragment>
-      {materializedViews.map((view, idx) => {
+      {materializedViews.map(view => {
         const newTemplateMap: TemplateMap = {
           ...templateMap,
           paramValues: {...templateMap.paramValues, ...view.paramValues},
@@ -134,7 +109,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
           .map(row => row.join(': '))
           .join(' ');
         return (
-          <div key={`view-${idx}-${cardName}`} className="render-wrapper">
+          <div key={`view-${cardName}`} className="render-wrapper">
             <div className="render-wrapper-header">
               <span className="render-wrapper-title">{cardName}</span>
               <div className="flex render-wrapper-controls">
@@ -216,10 +191,29 @@ const MemoizeRender = React.memo(
   },
 );
 
-export default function ChartArea(props: ChartAreaProps): JSX.Element {
+interface ChartContainerProps extends ActionUser {
+  columns: ColumnHeader[];
+  currentView: string;
+  currentlySelectedFile: string;
+  data: DataRow[];
+  editMode: boolean;
+  editorError: null | string;
+  encodingMode: string;
+  languages: {[x: string]: LanguageExtension};
+  missingFields: string[];
+  spec: any;
+  template: Template;
+  templateComplete: boolean;
+  templateMap: TemplateMap;
+  templates: Template[];
+  views: string[];
+  viewCatalog: ViewCatalog;
+  width: number;
+}
+
+function ChartArea(props: ChartContainerProps): JSX.Element {
   const {
     changeViewName,
-    chainActions,
     cloneView,
     columns,
     createNewView,
@@ -277,7 +271,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         {templateGallery && (
           <Gallery
             columns={columns}
-            chainActions={chainActions}
             saveCurrentTemplate={saveCurrentTemplate}
             setEncodingMode={setEncodingMode}
             setWidgetValue={setWidgetValue}
@@ -340,3 +333,29 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
     </div>
   );
 }
+
+export function mapStateToProps({base, data}: {base: AppState; data: DataReducerState}): any {
+  const template = base.currentTemplateInstance;
+  const templateMap = base.templateMap;
+  const missingFields = (template && getMissingFields(template, templateMap)) || [];
+  const spec = evaluateIvyProgram(template, templateMap);
+  return {
+    columns: base.columns,
+    currentView: base.currentView,
+    currentlySelectedFile: base.currentlySelectedFile,
+    data: data.data,
+    editorError: base.editorError,
+    // i think encoding mode might not be necessary
+    encodingMode: base.encodingMode,
+    missingFields,
+    spec,
+    template,
+    templateComplete: !missingFields.length,
+    templateMap,
+    templates: base.templates,
+    views: base.views,
+    viewCatalog: base.viewCatalog,
+  };
+}
+
+export default connect(mapStateToProps, actionCreators)(ChartArea);

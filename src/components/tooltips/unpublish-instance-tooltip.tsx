@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import Tooltip from 'rc-tooltip';
 import {TiTrash} from 'react-icons/ti';
-import {POST_PARAMS} from '../constants';
+import {POST_PARAMS} from '../../constants';
 
-import {serverPrefix} from '../utils';
+import {serverPrefix} from '../../utils';
 
 interface Props {
   templateAuthor: string;

@@ -109,16 +109,6 @@ export const recieveTemplates = createAction<Template[]>(actionTypes.RECIEVE_TEM
 
 export const setMaterialization = createAction<ViewsToMaterialize>(actionTypes.SET_MATERIALIZATION);
 
-export const chainActions = (actions: GenericAction<any>[]) => (dispatch: Dispatch): void => {
-  executePromisesInSeries(
-    [
-      // (disp: Dispatch): any => disp({type: actionTypes.START_ATOMIC_CHAIN}),
-      ...actions,
-      // (disp: Dispatch): any => disp({type: actionTypes.END_ATOMIC_CHAIN}),
-    ].map((action: GenericAction<any>) => (): Promise<any> => Promise.resolve().then(() => action(dispatch))),
-  );
-};
-
 export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[]> => (
   dispatch: Dispatch,
 ): void => {
@@ -220,7 +210,6 @@ export const changeSelectedFile: GenericAction<{filename: string; dumpTemplateMa
 export interface ActionUser {
   addToNextOpenSlot: GenericAction<ColumnHeader>;
   addWidget: GenericAction<GenWidget>;
-  chainActions: GenericAction<any>;
   changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}>;
   changeViewName: GenericAction<{idx: number; value: string}>;
   cloneView: GenericAction<void>;

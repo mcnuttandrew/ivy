@@ -16,7 +16,6 @@ import {writeGallerySectionPref, getGallerySectionPref} from '../utils/local-sto
 import GALLERY from '../templates/gallery';
 interface Props {
   columns: ColumnHeader[];
-  chainActions: GenericAction<any>;
   saveCurrentTemplate: GenericAction<void>;
   setEncodingMode: GenericAction<string>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
@@ -55,24 +54,14 @@ function filterTemplates(
 
 export default function Gallery(props: Props): JSX.Element {
   const [templates, setTemplates] = useState([]);
-  const {
-    columns,
-    chainActions,
-    setEncodingMode,
-    spec,
-    templateMap,
-    setWidgetValue,
-    saveCurrentTemplate,
-  } = props;
+  const {columns, setEncodingMode, spec, templateMap, setWidgetValue, saveCurrentTemplate} = props;
   useEffect(() => {
     const secStrat = templateMap.paramValues.sectionStratagey;
     if (secStrat && secStrat !== getGallerySectionPref()) {
       writeGallerySectionPref(`${secStrat}`);
       const idx = GALLERY.widgets.findIndex(d => d.name === 'sectionStratagey');
-      chainActions([
-        (): any => setWidgetValue({key: 'defaultValue', value: secStrat, idx}),
-        (): any => saveCurrentTemplate(),
-      ]);
+      setWidgetValue({key: 'defaultValue', value: secStrat, idx});
+      saveCurrentTemplate();
     }
     // and then update value in template?????
   }, [templateMap.paramValues.sectionStratagey]);

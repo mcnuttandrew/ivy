@@ -13,13 +13,12 @@ import {getFavoriteDatasets, setFavoriteDatasets} from '../../utils/local-storag
 
 interface Props {
   changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}>;
-  chainActions: GenericAction<any>;
   loadCustomDataset: GenericAction<LoadDataPayload>;
   setModalState: GenericAction<string | null>;
 }
 
 export default function DataModal(props: Props): JSX.Element {
-  const {changeSelectedFile, chainActions, loadCustomDataset, setModalState} = props;
+  const {changeSelectedFile, loadCustomDataset, setModalState} = props;
   const [searchTerm, setSearchTerm] = useState(null);
   const [sortMode, setSortMode] = useState('FAVORITES');
   const [favs, setFavs] = useState(new Set([]));
@@ -140,12 +139,10 @@ export default function DataModal(props: Props): JSX.Element {
                 </div>
                 <div
                   className="flex-down"
-                  onClick={(): any =>
-                    chainActions([
-                      (): any => changeSelectedFile({filename: datasetName, dumpTemplateMap: true}),
-                      (): any => setModalState(null),
-                    ])
-                  }
+                  onClick={(): any => {
+                    changeSelectedFile({filename: datasetName, dumpTemplateMap: true});
+                    setModalState(null);
+                  }}
                 >
                   <div className="flex space-between">
                     <div className="flex">

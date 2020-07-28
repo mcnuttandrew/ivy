@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import Tooltip from 'rc-tooltip';
 import {TiUpload} from 'react-icons/ti';
-import {POST_PARAMS} from '../constants';
+import {POST_PARAMS} from '../../constants';
 
-import {Template} from '../types';
-import {GenericAction} from '../actions/index';
-import {serverPrefix} from '../utils';
+import {Template} from '../../types';
+import {GenericAction} from '../../actions';
+import {serverPrefix} from '../../utils';
 
 interface Props {
   template: Template;
