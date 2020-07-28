@@ -182,3 +182,8 @@ const reducers = {
 export default function setUpState(): any {
   return createStore(combineReducers(reducers), applyMiddleware(thunk));
 }
+
+// just here to trick typescript
+export function fakeSetupState(): any {
+  return {getState: () => ({base: DEFAULT_STATE, data: {data: []} as any})};
+}

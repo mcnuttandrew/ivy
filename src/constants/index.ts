@@ -42,7 +42,6 @@ export const HOT_KEYS: {[x: string]: string} = {
   REDO: 'command+shift+z',
   CLOSE_MODALS: 'Escape',
   CLEAR_ENCODING: 'r',
-  TOGGLE_EDIT: 'e',
 };
 
 export const HOT_KEY_DESCRIPTIONS: {[x: string]: string} = {
@@ -50,7 +49,6 @@ export const HOT_KEY_DESCRIPTIONS: {[x: string]: string} = {
   REDO: 'Redo most recent action',
   CLOSE_MODALS: 'Close any open modals',
   CLEAR_ENCODING: 'Reset all current settings to default',
-  TOGGLE_EDIT: 'Toggle Edit mode on / off',
 };
 
 export const FETCH_PARMS = {
