@@ -185,5 +185,5 @@ export default function setUpState(): any {
 
 // just here to trick typescript
 export function fakeSetupState(): any {
-  return {getState: () => ({base: DEFAULT_STATE, data: {data: []} as any})};
+  return {getState: (): any => ({base: DEFAULT_STATE, data: {data: []} as any})};
 }

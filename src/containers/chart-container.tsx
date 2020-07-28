@@ -39,7 +39,6 @@ interface ChartContainerProps extends ActionUser {
 function ChartAreaWrapper(props: ChartContainerProps): JSX.Element {
   return (
     <ChartArea
-      chainActions={props.chainActions}
       changeViewName={props.changeViewName}
       cloneView={props.cloneView}
       columns={props.columns}

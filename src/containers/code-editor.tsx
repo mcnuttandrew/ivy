@@ -41,7 +41,6 @@ function CodeEditorContainer(props: RootProps): JSX.Element {
       addWidget={props.addWidget}
       codeMode={props.codeMode}
       columns={props.columns}
-      chainActions={props.chainActions}
       editMode={props.editMode}
       editorLineWrap={getEditorLineWrap()}
       editorError={props.editorError}

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 
 import GALLERY from '../templates/gallery';
@@ -32,7 +32,6 @@ function CenterColumn(props: RootProps): JSX.Element {
   return (
     <div className="full-height full-width flex-down" style={{minWidth: '360px'}}>
       <EncodingControls
-        chainActions={props.chainActions}
         currentlySelectedFile={props.currentlySelectedFile}
         deleteTemplate={props.deleteTemplate}
         editMode={props.editMode}

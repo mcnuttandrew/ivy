@@ -14,9 +14,9 @@ import * as actionCreators from '../actions/index';
 
 import ChartAreaContainer, {mapStateToProps as ChartAreaMapStateToProps} from './chart-container';
 import CodeEditor, {mapStateToProps as CodeEditorMapStateToProps} from './code-editor';
-import CenterColumn, {mapStateToProps as CenterColumnMapStateToProps} from './encoding-column';
+import EncodingColumn, {mapStateToProps as EncodingColumnMapStateToProps} from './encoding-column';
 import HotKeyProvider, {mapStateToProps as HotKeyProviderMapStateToProps} from './hot-key-provider';
-import LeftColumn, {mapStateToProps as LeftColumnMapStateToProps} from './data-column';
+import DataColumn, {mapStateToProps as DataColumnMapStateToProps} from './data-column';
 
 import {DataRow, ActionUser} from '../actions/index';
 import {classnames} from '../utils';
@@ -87,11 +87,9 @@ function EditorContainer(props: RootProps): JSX.Element {
         getTemplateInstance(templateAuthor, templateName, templateInstance),
       ]).then(([template, templateInstance]) => {
         const dataset = templateInstance.dataset;
-        props.chainActions([
-          (): any => props.changeSelectedFile({filename: dataset, dumpTemplateMap: false}),
-          (): any => props.setTemplate(template),
-          (): any => props.setAllTemplateValues((templateInstance.template_instance as any) as TemplateMap),
-        ]);
+        props.changeSelectedFile({filename: dataset, dumpTemplateMap: false});
+        props.setTemplate(template);
+        props.setAllTemplateValues((templateInstance.template_instance as any) as TemplateMap);
       });
     }
   }, [templateAuthor, templateName, templateInstance]);
@@ -106,7 +104,6 @@ function EditorContainer(props: RootProps): JSX.Element {
       />
       {props.openModal === 'data' && (
         <DataModal
-          chainActions={props.chainActions}
           changeSelectedFile={props.changeSelectedFile}
           loadCustomDataset={props.loadCustomDataset}
           setModalState={props.setModalState}
@@ -146,14 +143,10 @@ function EditorContainer(props: RootProps): JSX.Element {
                   'special-bump-for-closed-code-container': !props.showProgrammaticMode,
                 })}
               >
-                <LeftColumn
+                <DataColumn {...actionCreators} {...DataColumnMapStateToProps(store.getState())} />
+                <EncodingColumn
                   {...actionCreators}
-                  {...LeftColumnMapStateToProps(store.getState())}
-                  languages={languages}
-                />
-                <CenterColumn
-                  {...actionCreators}
-                  {...CenterColumnMapStateToProps(store.getState())}
+                  {...EncodingColumnMapStateToProps(store.getState())}
                   languages={languages}
                 />
               </div>

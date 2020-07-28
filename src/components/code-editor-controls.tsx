@@ -154,7 +154,6 @@ export function CodeCollapse(props: CodeCollapseProps): JSX.Element {
 
 interface CodeEditorControlsProps {
   addWidget?: GenericAction<GenWidget>;
-  chainActions: GenericAction<any>;
   codeMode: string;
   currentCode: string;
   editMode: boolean;
@@ -175,7 +174,6 @@ interface CodeEditorControlsProps {
 }
 export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.Element {
   const {
-    chainActions,
     codeMode,
     currentCode,
     editMode,
@@ -226,13 +224,12 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
                 })}
               >
                 <span
-                  onClick={(): any =>
-                    chainActions(
-                      [(): any => setCodeMode(key), !editMode && ((): any => setEditMode(true))].filter(
-                        d => d,
-                      ),
-                    )
-                  }
+                  onClick={(): any => {
+                    setCodeMode(key);
+                    if (!editMode) {
+                      setEditMode(true);
+                    }
+                  }}
                 >
                   {key}
                 </span>

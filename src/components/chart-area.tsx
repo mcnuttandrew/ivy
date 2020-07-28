@@ -23,7 +23,6 @@ import ShowDataWindow from './show-data';
 
 interface ChartAreaProps {
   changeViewName: GenericAction<{idx: number; value: string}>;
-  chainActions: GenericAction<any>;
   cloneView: GenericAction<void>;
   columns: ColumnHeader[];
   createNewView: GenericAction<void>;
@@ -219,7 +218,6 @@ const MemoizeRender = React.memo(
 export default function ChartArea(props: ChartAreaProps): JSX.Element {
   const {
     changeViewName,
-    chainActions,
     cloneView,
     columns,
     createNewView,
@@ -277,7 +275,6 @@ export default function ChartArea(props: ChartAreaProps): JSX.Element {
         {templateGallery && (
           <Gallery
             columns={columns}
-            chainActions={chainActions}
             saveCurrentTemplate={saveCurrentTemplate}
             setEncodingMode={setEncodingMode}
             setWidgetValue={setWidgetValue}

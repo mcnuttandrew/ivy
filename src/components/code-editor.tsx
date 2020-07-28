@@ -12,7 +12,6 @@ import GALLERY from '../templates/gallery';
 
 interface Props {
   addWidget?: GenericAction<GenWidget>;
-  chainActions: GenericAction<any>;
   codeMode: string;
   columns: ColumnHeader[];
   editMode: boolean;
@@ -96,7 +95,6 @@ export default class CodeEditor extends React.Component<Props> {
             <div className="full-height full-width flex-down">
               <CodeEditorControls
                 addWidget={this.props.addWidget}
-                chainActions={this.props.chainActions}
                 codeMode={codeMode}
                 currentCode={currentCode}
                 editMode={this.props.editMode}

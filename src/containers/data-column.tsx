@@ -7,7 +7,7 @@ import * as actionCreators from '../actions/index';
 import {DataRow, ActionUser} from '../actions/index';
 import {computeValidAddNexts} from '../utils';
 
-import {AppState, ColumnHeader, LanguageExtension, Template, TemplateMap} from '../types';
+import {AppState, ColumnHeader, Template, TemplateMap} from '../types';
 
 import DataColumn from '../components/data-column';
 import ImportDataColumn from '../components/import-data-column';
@@ -17,7 +17,6 @@ interface DataColumnProps extends ActionUser {
   currentlySelectedFile: string;
   data: DataRow[];
   fillableFields: Set<string>;
-  languages: {[x: string]: LanguageExtension};
   showGUIView: boolean;
   showProgrammaticMode: boolean;
   template: Template;

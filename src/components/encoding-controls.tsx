@@ -16,7 +16,6 @@ import UnpublishTemplateTooltip from './unpublish-template-tooltip';
 
 // TODO clean props
 interface Props {
-  chainActions: GenericAction<any>;
   currentlySelectedFile: string;
   fillTemplateMapWithDefaults: GenericAction<void>;
   deleteTemplate: GenericAction<{templateAuthor: string; templateName: string}>;
@@ -38,7 +37,6 @@ interface Props {
 
 export default function EncodingControls(props: Props): JSX.Element {
   const {
-    chainActions,
     currentlySelectedFile,
     fillTemplateMapWithDefaults,
     deleteTemplate,
@@ -70,12 +68,10 @@ export default function EncodingControls(props: Props): JSX.Element {
                 type="button"
                 key={language}
                 onClick={(): void => {
-                  chainActions([
-                    (): any => setBlankTemplate({fork: null, language}),
-                    (): any => setEditMode(true),
-                    (): any => setCodeMode(TEMPLATE_BODY),
-                    (): any => setProgrammaticView(true),
-                  ]);
+                  setBlankTemplate({fork: null, language});
+                  setEditMode(true);
+                  setCodeMode(TEMPLATE_BODY);
+                  setProgrammaticView(true);
                 }}
               >
                 <Link to="/editor">{`New ${language} template`}</Link>
@@ -91,11 +87,10 @@ export default function EncodingControls(props: Props): JSX.Element {
     {
       disabled: onGallery,
       customTooltip: (): JSX.Element => {
-        const buildReaction = (forkType: string) => (): any =>
-          chainActions([
-            (): any => setBlankTemplate({fork: forkType, language: template.templateLanguage}),
-            (): any => setEditMode(true),
-          ]);
+        const buildReaction = (forkType: string) => (): any => {
+          setBlankTemplate({fork: forkType, language: template.templateLanguage});
+          setEditMode(true);
+        };
         return (
           <div className="tooltip-internal flex-down">
             <h5>How should we copy the current state?</h5>
