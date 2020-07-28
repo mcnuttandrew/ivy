@@ -21,7 +21,7 @@ import {parse, View} from 'vega';
 import {compile} from 'vega-lite';
 
 function getDataViews(props: RendererProps): Promise<any> {
-  const {spec, data, onError} = props;
+  const {spec, data} = props;
   const finalSpec = JSON.parse(JSON.stringify(spec));
 
   if (

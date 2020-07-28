@@ -60,6 +60,9 @@ export default function Header(props: HeaderProps): JSX.Element {
       </div>
 
       <div className="about-bar ">
+        <Link to="/" className="margin-left">
+          Gallery
+        </Link>
         <Link to="/editor" className="margin-left">
           Editor
         </Link>
