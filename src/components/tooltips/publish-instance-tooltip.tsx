@@ -2,13 +2,13 @@ import React, {useRef, useState, useEffect} from 'react';
 import DomToImage from 'dom-to-image';
 import Tooltip from 'rc-tooltip';
 import {TiUpload} from 'react-icons/ti';
-import VegaDatasets from '../constants/vega-datasets-counts.json';
-import {POST_PARAMS} from '../constants';
+import VegaDatasets from '../../constants/vega-datasets-counts.json';
+import {POST_PARAMS} from '../../constants';
 const vegaDataSetName = new Set(Object.keys(VegaDatasets));
 
-import {TemplateMap} from '../types';
+import {TemplateMap} from '../../types';
 
-import {serverPrefix} from '../utils';
+import {serverPrefix} from '../../utils';
 
 interface Props {
   templateAuthor: string;

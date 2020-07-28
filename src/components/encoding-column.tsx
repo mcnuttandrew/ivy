@@ -187,7 +187,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   const [allowedWidgets, setWidgets] = useState(new Set() as Set<string>);
   useEffect(() => {
     setWidgets(toSet(applyQueries(template, templateMap)));
-  }, [template, templateMap]);
+  }, [JSON.stringify(template), JSON.stringify(templateMap)]);
 
   // cache and get the template widgets
   const [widgetTemplates, setWidgetTemplatesState] = useState([]);

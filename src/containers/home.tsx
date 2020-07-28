@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {TiStar} from 'react-icons/ti';
 import {RenderTypeCounts} from '../components/template-card';
-import UnpublishInstanceTooltip from '../components/unpublish-instance-tooltip';
+import UnpublishInstanceTooltip from '../components/tooltips/unpublish-instance-tooltip';
 
 import {getFavoriteTemplates, setFavoriteTemplates} from '../utils/local-storage';
 import * as actionCreators from '../actions/index';
