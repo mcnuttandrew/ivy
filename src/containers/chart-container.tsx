@@ -329,7 +329,15 @@ function ChartArea(props: ChartContainerProps): JSX.Element {
         views={views}
         toggleShowData={(): any => setShowData(!showData)}
       />
-      {showData && <ShowDataWindow languages={languages} data={data} spec={spec} template={template} />}
+      {showData && (
+        <ShowDataWindow
+          languages={languages}
+          data={preparedData}
+          spec={spec}
+          template={template}
+          templateMap={templateMap}
+        />
+      )}
     </div>
   );
 }

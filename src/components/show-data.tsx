@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Template, Json, LanguageExtension} from '../types';
+import {Template, Json, LanguageExtension, TemplateMap} from '../types';
 import {DataRow} from '../actions';
 interface Props {
   data: DataRow[];
   languages: {[x: string]: LanguageExtension};
   template: Template;
   spec: Json;
+  templateMap: TemplateMap;
 }
 
 function serializeCell(cellValue: any): any {
@@ -46,7 +47,7 @@ function showTable(data: any[]): any {
 }
 
 export default function ShowData(props: Props): JSX.Element {
-  const {spec, template, languages, data} = props;
+  const {spec, template, languages, data, templateMap} = props;
   const [loadedData, setLoadedData] = useState({} as {[x: string]: any[]});
   const [selectedData, setSelectedData] = useState(null);
   const [error, catchError] = useState(null);
@@ -62,10 +63,10 @@ export default function ShowData(props: Props): JSX.Element {
         setLoadedData(x);
       })
       .catch(e => catchError(e));
-  }, [JSON.stringify(spec)]);
+  }, [JSON.stringify(spec), JSON.stringify(templateMap)]);
   return (
     <div className="flex-down">
-      <div>
+      <div className="show-data-table-controls">
         <select onChange={(x): any => setSelectedData(x.target.value)}>
           {Object.keys(loadedData).map(key => (
             <option value={key} key={key}>
@@ -73,6 +74,7 @@ export default function ShowData(props: Props): JSX.Element {
             </option>
           ))}
         </select>
+        <div>Showing a sample of the current data</div>
       </div>
       {error && <div>{error}</div>}
       <div className="show-data-table">{showTable((loadedData[selectedData] || []).slice(0, 10))}</div>
