@@ -135,10 +135,12 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
                       <div className="flex-down">
                         <h3>Remove which of the following keys</h3>
                         {Array.from(keySet).map((key: string) => {
-                          return removeButton(
-                            `${key}: ${view.paramValues[key as string]}`,
-                            key,
-                            view.paramValues[key as string] as string,
+                          const shortStr = `${key}: ${view.paramValues[key as string]}`;
+                          return (
+                            <div className="flex" key={shortStr}>
+                              {removeButton(shortStr, key, view.paramValues[key as string] as string)}
+                              <span>{shortStr}</span>
+                            </div>
                           );
                         })}
                       </div>
@@ -329,7 +331,15 @@ function ChartArea(props: ChartContainerProps): JSX.Element {
         views={views}
         toggleShowData={(): any => setShowData(!showData)}
       />
-      {showData && <ShowDataWindow languages={languages} data={data} spec={spec} template={template} />}
+      {showData && (
+        <ShowDataWindow
+          languages={languages}
+          data={preparedData}
+          spec={spec}
+          template={template}
+          templateMap={templateMap}
+        />
+      )}
     </div>
   );
 }

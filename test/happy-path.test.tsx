@@ -9,7 +9,10 @@ test('Happy path', done => {
   // should find the expected number of default templates
   expect($.find('.home-template-row').length).toBe(9);
   // click on the polestar template
-  $.find('.Ivy-Authors-Polestar a').simulate('click', {button: 0});
+  $.find('.Ivy-Authors-Polestar a')
+    .first()
+    .simulate('click', {button: 0});
+
   // setTimeout(() => {
   // console.log($.text());
   // the text of the encoding column should render as expected

@@ -443,7 +443,8 @@ export function toSection(templates: any[], sectionStratagey: string, favorites:
       return favorites.has(key) ? 'Favorites' : 'Other';
     },
   };
-  return Object.entries(groupBy(templates, sectionFunctionMap[sectionStratagey]))
+  const stratName = sectionStratagey.replace(/%20/g, ' ');
+  return Object.entries(groupBy(templates, sectionFunctionMap[stratName]))
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce((acc, [key, temps]) => {
       acc[key] = temps.sort((a, b) => {

@@ -1611,6 +1611,17 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   padding: 0 10px;
 }
 
+.show-data-table-controls {
+  align-items: center;
+  display: flex;
+  font-size: 12px;
+  margin-left: 20px;
+}
+
+.show-data-table-controls * {
+  margin-right: 5px;
+}
+
 .show-data-toggle-label {
   font-size: 20px;
 }
@@ -1622,6 +1633,13 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 .show-data-table table {
   margin: 20px;
+}
+
+.show-data-table th {
+  border-bottom: thin solid black;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: bottom;
 }
 
 .show-data-table td {
