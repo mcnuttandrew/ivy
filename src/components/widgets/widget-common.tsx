@@ -4,6 +4,7 @@ import {GenWidget} from '../../types';
 import {TiDeleteOutline} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {classnames} from '../../utils';
+import OnBlurInput from '../controlled-input';
 
 interface EditParameterNameProps {
   widget: GenWidget;
@@ -15,11 +16,10 @@ export function EditParameterName(props: EditParameterNameProps): JSX.Element {
   return (
     <AddLabelToWidget label={'Parameter Name'}>
       <IgnoreKeys style={{height: '100%'}}>
-        <input
-          aria-label={`Parameter name`}
-          value={widget.name || ''}
-          type="text"
-          onChange={(event): any => setWidgetValue('name', event.target.value, idx)}
+        <OnBlurInput
+          initialValue={widget.name || ''}
+          label={`Parameter name`}
+          update={(value): any => setWidgetValue('name', value, idx)}
         />
       </IgnoreKeys>
     </AddLabelToWidget>
@@ -36,11 +36,10 @@ export function EditDisplayName(props: EditDisplayNameProps): JSX.Element {
   return (
     <AddLabelToWidget label={'Display Name'}>
       <IgnoreKeys style={{height: '100%'}}>
-        <input
-          aria-label={`Display name`}
-          value={widget.displayName || ''}
-          type="text"
-          onChange={(event): any => setWidgetValue('displayName', event.target.value, idx)}
+        <OnBlurInput
+          initialValue={widget.name || ''}
+          label={`Display name`}
+          update={(value): any => setWidgetValue('displayName', value, idx)}
         />
       </IgnoreKeys>
     </AddLabelToWidget>

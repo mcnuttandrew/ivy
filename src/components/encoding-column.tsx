@@ -17,6 +17,7 @@ import {
 } from '../types';
 import {classnames, toSet} from '../utils';
 import {switchCommon} from '../constants';
+import OnBlurInput from './controlled-input';
 
 import GeneralWidget from './widgets/general-widget';
 import {applyQueries} from '../ivy-lang';
@@ -141,28 +142,6 @@ function buildSections(template: Template): GenWidget[][] {
   );
 
   return sections.sections.filter(d => d.length).concat([sections.currentSection]);
-}
-
-interface OnBlurInputProps {
-  label: string;
-  initialValue: string;
-  update: (newVal: string) => any;
-}
-function OnBlurInput(props: OnBlurInputProps): JSX.Element {
-  const {label, initialValue, update} = props;
-  const [value, setValue] = useState(initialValue);
-  return (
-    <div className="flex">
-      <input
-        aria-label={label}
-        type="text"
-        value={value}
-        onChange={(event): any => setValue(event.target.value)}
-        onBlur={(): any => update(value)}
-      />
-      <button type="button">update</button>
-    </div>
-  );
 }
 
 export default function EncodingColumn(props: EncodingColumnProps): JSX.Element {
