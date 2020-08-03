@@ -36,7 +36,6 @@ interface ConditionBuilderProps {
 type TalidationUpdateLens = (d: Condition, val: any) => Condition;
 type TalidationUpdate = (jdx: number, updater: TalidationUpdateLens) => (value: any) => void;
 const fromStr: TalidationUpdateLens = (d, value): any => ({...d, queryResult: value} as Condition);
-// const fromEvent: TalidationUpdateLens = (d, event): any => ({...d, query: event.target.value});
 const fromControledInput: TalidationUpdateLens = (d, query): any => ({...d, query});
 
 function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
