@@ -94,7 +94,7 @@ function templateInfo(
             .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
             .join(', ')}
         </h5>
-        <button style={{textAlign: 'left'}} onClick={() => toggleShowInstances()}>
+        <button style={{textAlign: 'left'}} onClick={(): void => toggleShowInstances()}>
           Toggle Instances ({numEntries} instance{numEntries === 1 ? '' : 's'})
         </button>
       </div>

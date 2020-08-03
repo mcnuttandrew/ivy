@@ -1,6 +1,6 @@
 import {Dispatch} from 'redux';
 import {csvParse, tsvParse} from 'd3-dsv';
-import {generateDomain, executePromisesInSeries} from '../utils';
+import {generateDomain} from '../utils';
 import {
   AppState,
   ColumnHeader,
