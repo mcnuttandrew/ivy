@@ -7,6 +7,8 @@ import {randomSetUserNameIfUnset} from './utils/local-storage';
 
 import './stylesheets/main.css';
 import './stylesheets/home.css';
+import './stylesheets/docs.css';
+import 'github-markdown-css';
 import './stylesheets/rc-slider.css';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import 'react-datepicker/dist/react-datepicker.css';

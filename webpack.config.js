@@ -57,6 +57,10 @@ module.exports = {
           presets: ['es2017'],
         },
       },
+      {
+        test: /\.md$/i,
+        use: 'raw-loader',
+      },
     ],
   },
   devServer: {

@@ -4,6 +4,7 @@ declare module 'hoopoe';
 declare module 'enzyme-adapter-react-16';
 
 declare module 'vega-projection-extended';
+declare module '*.md';
 declare module '*.json' {
   const value: any;
   export default value;
