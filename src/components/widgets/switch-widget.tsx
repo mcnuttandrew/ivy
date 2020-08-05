@@ -22,7 +22,9 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
           <Switch
             {...switchCommon}
             checked={!!config.defaultsToActive}
-            onChange={(): any => setWidgetValue('defaultsToActive', !config.defaultsToActive, idx)}
+            onChange={(): any =>
+              setWidgetValue({key: 'defaultsToActive', value: !config.defaultsToActive, idx})
+            }
           />
         </AddLabelToWidget>
         <AddLabelToWidget label={'Active Value'}>
@@ -31,7 +33,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
               aria-label={`Inactive value`}
               value={config.active}
               type="text"
-              onChange={(event): void => setWidgetValue('active', event.target.value, idx)}
+              onChange={(event): any => setWidgetValue({key: 'active', value: event.target.value, idx})}
             />
           </IgnoreKeys>
         </AddLabelToWidget>
@@ -41,7 +43,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
               aria-label={`Inactive value`}
               value={config.inactive}
               type="text"
-              onChange={(event): void => setWidgetValue('inactive', event.target.value, idx)}
+              onChange={(event): any => setWidgetValue({key: 'inactive', value: event.target.value, idx})}
             />
           </IgnoreKeys>
         </AddLabelToWidget>
@@ -51,9 +53,9 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
 }
 
 function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue, editMode} = props;
+  const {widget, widgetValue, setTemplateValue, editMode} = props;
   const config = widget.config;
-  const isActive = templateMap.paramValues[widget.name] === config.active;
+  const isActive = widgetValue === config.active;
 
   return (
     <div className="flex-down switch-widget">

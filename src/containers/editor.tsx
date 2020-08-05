@@ -103,7 +103,7 @@ function EditorContainer(props: RootProps): JSX.Element {
         {...HotKeyProviderMapStateToProps(store.getState())}
         languages={languages}
       />
-      <TourProvider {...actionCreators} {...HotKeyProviderMapStateToProps(store.getState())} />
+      <TourProvider {...actionCreators} {...TourProviderMapStateToProps(store.getState())} />
       {props.openModal === 'data' && (
         <DataModal
           changeSelectedFile={props.changeSelectedFile}

@@ -30,7 +30,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
                 } else {
                   allowedTypesSet.add(type);
                 }
-                setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
+                setWidgetValue({key: 'allowedTypes', value: Array.from(allowedTypesSet), idx});
               };
               return (
                 <div className="flex" key={type} style={{marginRight: '10px'}}>
@@ -60,7 +60,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
           <input
             type="checkbox"
             aria-label="Widget is required"
-            onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
+            onChange={(): any => setWidgetValue({key: 'required', value: !widget.config.required, idx})}
             checked={!!widget.config.required}
           />
         </div>
@@ -70,17 +70,16 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
 }
 
 function DataTargetWidgetComponent(props: GeneralWidget<DataTargetWidget>): JSX.Element {
-  const {widget, templateMap, columns, setTemplateValue, template} = props;
-  const fieldValue = templateMap.paramValues[widget.name];
+  const {widget, widgetValue, columns, setTemplateValue, customCards} = props;
   return (
     <Shelf
-      shelfValue={trim(fieldValue as string)}
+      shelfValue={trim(widgetValue as string)}
       shelfName={widget.displayName || widget.name}
       fieldKey={widget.name}
       columns={columns}
       onDrop={(x: any): any => setTemplateValue({...x, widgetType: 'DataTarget'})}
       widget={widget}
-      template={template}
+      customCards={customCards}
     />
   );
 }

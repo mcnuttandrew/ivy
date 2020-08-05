@@ -5,12 +5,11 @@ import Filter from '../components/filter';
 import FilterTarget from '../components/filter-target';
 import Pill from '../components/pill';
 import {GenericAction, CoerceTypePayload} from '../actions/index';
-import {AppState, Template, CustomCard, ColumnHeader, TemplateMap} from '../types';
+import {AppState, CustomCard, ColumnHeader, DataTransform} from '../types';
 import {makeCustomType} from '../utils';
 import {SimpleTooltip} from '../components/tooltips';
 import {TiDatabase} from 'react-icons/ti';
 
-import GALLERY from '../templates/gallery';
 import * as actionCreators from '../actions/index';
 
 import {DataRow, ActionUser} from '../actions/index';
@@ -19,13 +18,12 @@ import {computeValidAddNexts} from '../utils';
 interface DataColumnProps extends ActionUser {
   columns: ColumnHeader[];
   currentlySelectedFile: string;
+  customCards: CustomCard[];
   data: DataRow[];
   fillableFields: Set<string>;
   showGUIView: boolean;
-  showProgrammaticMode: boolean;
-  template: Template;
   templateComplete: boolean;
-  templateMap: TemplateMap;
+  dataTransforms: DataTransform[];
 }
 
 interface MakePillProps {
@@ -84,14 +82,14 @@ function DataColumn(props: DataColumnProps): JSX.Element {
     createFilter,
     deleteFilter,
     showGUIView,
-    template,
-    templateMap,
+    customCards,
+    dataTransforms,
     updateFilter,
     currentlySelectedFile,
     setModalState,
   } = props;
 
-  const hasCustomCards = template && template.customCards && template.customCards.length > 0;
+  const hasCustomCards = customCards && customCards.length > 0;
   const columnGroups = columns.reduce(
     (acc, row) => {
       acc[row.type] = (acc[row.type] || []).concat(row);
@@ -126,15 +124,13 @@ function DataColumn(props: DataColumnProps): JSX.Element {
           </h5>
         )}
         {hasCustomCards && (
-          <div className="flex-down">
-            {template.customCards.map(MakePill({...props, checkOptions: false}))}
-          </div>
+          <div className="flex-down">{customCards.map(MakePill({...props, checkOptions: false}))}</div>
         )}
 
         {showGUIView && <h5> Filter </h5>}
         {showGUIView && (
           <div className="flex-down">
-            {templateMap.systemValues.dataTransforms
+            {dataTransforms
               .filter((filter: any) => {
                 // dont try to render filters that we dont know how to render
                 return filter.filter && !filter.filter.and;
@@ -170,17 +166,31 @@ function DataColumn(props: DataColumnProps): JSX.Element {
 export function mapStateToProps({base}: {base: AppState}): any {
   const template = base.currentTemplateInstance;
   const templateMap = base.templateMap;
-  const isGallery = template && GALLERY.templateName === template.templateName;
   return {
     columns: base.columns,
     currentlySelectedFile: base.currentlySelectedFile,
     fillableFields: computeValidAddNexts(template, templateMap),
-    showProgrammaticMode: isGallery ? false : base.showProgrammaticMode,
     showGUIView: base.showGUIView,
-    template,
-    templateMap,
+    dataTransforms: templateMap.systemValues.dataTransforms,
     viewCatalog: base.viewCatalog,
   };
 }
 
-export default connect(mapStateToProps, actionCreators)(DataColumn);
+function eqSet(as: Set<any>, bs: Set<any>): boolean {
+  if (as.size !== bs.size) return false;
+  for (const a of as) if (!bs.has(a)) return false;
+  return true;
+}
+function equalityChecker(prevProps: any, nextProps: any): boolean {
+  return Object.keys(prevProps).every(key => {
+    if (key === 'fillableFields') {
+      return eqSet(prevProps[key], nextProps[key]);
+    }
+    if (key === 'dataTransforms') {
+      return JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key]);
+    }
+    return prevProps[key] === nextProps[key];
+  });
+}
+
+export default connect(mapStateToProps, actionCreators)(React.memo(DataColumn, equalityChecker));

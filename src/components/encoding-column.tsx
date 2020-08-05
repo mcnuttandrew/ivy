@@ -6,15 +6,9 @@ import {
   ModifyValueOnTemplatePayload,
   SetWidgetValuePayload,
   MoveWidgetPayload,
+  SetMaterializationPayload,
 } from '../actions';
-import {
-  Template,
-  GenWidget,
-  TemplateMap,
-  LanguageExtension,
-  ViewsToMaterialize,
-  ColumnHeader,
-} from '../types';
+import {Template, GenWidget, TemplateMap, LanguageExtension, ColumnHeader} from '../types';
 import {classnames, toSet} from '../utils';
 import {switchCommon} from '../constants';
 import OnBlurInput from './controlled-input';
@@ -32,7 +26,6 @@ import {
   WidgetFactoryFunc,
   WidgetDescriptions,
 } from '../templates';
-import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
 
 interface EncodingColumnProps {
   addWidget: GenericAction<GenWidget>;
@@ -45,7 +38,7 @@ interface EncodingColumnProps {
   moveWidget: GenericAction<MoveWidgetPayload>;
   removeWidget: GenericAction<number>;
   setAllTemplateValues: GenericAction<TemplateMap>;
-  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setMaterialization: GenericAction<SetMaterializationPayload>;
   setTemplateValue?: any;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
   template: Template;
@@ -55,8 +48,6 @@ interface EncodingColumnProps {
 interface AddWidgetButtonProps {
   addWidget: GenericAction<GenWidget>;
   widgets: GenWidget[];
-  widgetTemplates: GenWidget[];
-  removeWidgetFromTemplates: (widget: GenWidget) => void;
 }
 
 const renderOption = (
@@ -86,7 +77,7 @@ const renderOption = (
 };
 
 function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
-  const {addWidget, widgets, widgetTemplates, removeWidgetFromTemplates} = props;
+  const {addWidget, widgets} = props;
 
   return (
     <Tooltip
@@ -106,19 +97,6 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
           <h3>More Specific</h3>
           <div className="flex flex-wrap">
             {Object.entries(preconfiguredWidgets).map(renderOption(widgets, addWidget))}
-          </div>
-          <h3>User Defined</h3>
-          <div className="flex flex-wrap">
-            {widgetTemplates.length ? (
-              widgetTemplates
-                .map(widget => {
-                  const factory = (idx: number): GenWidget => ({...widget, name: `${widget.name}-${idx}`});
-                  return [widget.name, factory];
-                })
-                .map(renderOption(widgets, addWidget, removeWidgetFromTemplates))
-            ) : (
-              <p>Save widgets for future use</p>
-            )}
           </div>
         </div>
       }
@@ -176,44 +154,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
     setWidgets(toSet(applyQueries(template, templateMap)));
   }, [JSON.stringify(template), JSON.stringify(templateMap)]);
 
-  // cache and get the template widgets
-  const [widgetTemplates, setWidgetTemplatesState] = useState([]);
-  useEffect(() => {
-    getWidgetTemplates().then(d => setWidgetTemplatesState(d || []));
-  }, []);
-  const updateTemplateWidgets = (addToTail: boolean) => (widget: GenWidget): void => {
-    const updatedWidgets = widgetTemplates
-      .filter(d => d.name !== widget.name)
-      .concat(addToTail ? widget : []);
-    setWidgetTemplates(updatedWidgets);
-    setWidgetTemplatesState(updatedWidgets);
-  };
-  const saveWidgetAsTemplate = updateTemplateWidgets(true);
-  const removeWidgetFromTemplates = updateTemplateWidgets(false);
-
-  const makeWidget = (widget: GenWidget, idx: number): JSX.Element => (
-    <GeneralWidget
-      allowedWidgets={allowedWidgets}
-      // eslint-disable-next-line react/prop-types
-      code={template.code}
-      columns={columns}
-      editMode={editMode}
-      idx={idx}
-      key={idx}
-      moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
-      removeWidget={(): any => removeWidget(idx)}
-      duplicateWidget={(): any => duplicateWidget(idx)}
-      setAllTemplateValues={setAllTemplateValues}
-      setTemplateValue={setTemplateValue}
-      setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
-      templateMap={templateMap}
-      template={template}
-      setMaterialization={setMaterialization}
-      saveWidgetAsTemplate={saveWidgetAsTemplate}
-      widget={widget}
-    />
-  );
-
   let idx = -1;
   const sectionedWidgets = buildSections(template).map((section, jdx) => {
     if (!section.length) {
@@ -234,7 +174,24 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
           })}
           key={`widget-${idx}`}
         >
-          {makeWidget(widget, idx)}
+          <GeneralWidget
+            columns={columns}
+            editMode={editMode}
+            idx={idx}
+            moveWidget={moveWidget}
+            removeWidget={removeWidget}
+            duplicateWidget={duplicateWidget}
+            setAllTemplateValues={setAllTemplateValues}
+            setTemplateValue={setTemplateValue}
+            setWidgetValue={setWidgetValue}
+            disallowFanout={template.disallowFanOut}
+            customCards={template.customCards}
+            setMaterialization={setMaterialization}
+            widgetValue={templateMap.paramValues[widget.name]}
+            materializations={templateMap.systemValues.viewsToMaterialize[widget.name] || []}
+            widget={widget}
+            widgetIsAllowed={allowedWidgets.has(widget.name)}
+          />
         </div>
       );
     });
@@ -324,14 +281,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
           </div>
         </div>
       )}
-      {editMode && (
-        <AddWidgetButton
-          widgets={template.widgets}
-          addWidget={addWidget}
-          widgetTemplates={widgetTemplates}
-          removeWidgetFromTemplates={removeWidgetFromTemplates}
-        />
-      )}
+      {editMode && <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />}
       <div className={classnames({'template-column': true, 'edit-mode': editMode})}>{sectionedWidgets}</div>
     </div>
   );

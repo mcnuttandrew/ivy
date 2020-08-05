@@ -307,20 +307,20 @@ export function makeCustomType(customCard: CustomCard): ColumnHeader {
 export function getOrMakeColumn(
   columnName: string,
   columns: ColumnHeader[],
-  template: Template,
+  customCards: CustomCard[],
 ): ColumnHeader | null {
   const column = columns.find(({field}) => columnName && field === columnName);
   if (column) {
     return column;
   }
-  if ((template.customCards || []).find(x => x.name === columnName) || columnName === `${MATERIALIZING}`) {
+  if ((customCards || []).find(x => x.name === columnName) || columnName === `${MATERIALIZING}`) {
     return makeCustomType({name: columnName, description: ''});
   }
   return null;
 }
 
 interface MakeOptionsForDropdownProps {
-  template: Template;
+  customCards: CustomCard[];
   columns: ColumnHeader[];
   widget: Widget<DataTargetWidget | MultiDataTargetWidget>;
   useGroupsAsTypes?: boolean;
@@ -328,10 +328,10 @@ interface MakeOptionsForDropdownProps {
 export function makeOptionsForDropdown(
   props: MakeOptionsForDropdownProps,
 ): {display: string; value: string; group: string | null}[] {
-  const {template, columns, widget, useGroupsAsTypes} = props;
+  const {customCards, columns, widget, useGroupsAsTypes} = props;
   return [
     {display: 'Select a value', value: null, group: null},
-    ...(template.customCards || []).map(({name}) => ({display: name, value: name, group: 'Template Fields'})),
+    ...(customCards || []).map(({name}) => ({display: name, value: name, group: 'Template Fields'})),
   ].concat(
     columns
       .map(column => ({

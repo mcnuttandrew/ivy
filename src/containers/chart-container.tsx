@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import * as actionCreators from '../actions/index';
-import {ActionUser, GenericAction, DataRow} from '../actions';
+import {ActionUser, GenericAction, DataRow, SetMaterializationPayload} from '../actions';
 import {
   AppState,
   ColumnHeader,
@@ -10,7 +10,6 @@ import {
   Template,
   TemplateMap,
   ViewCatalog,
-  ViewsToMaterialize,
   RendererProps,
 } from '../types';
 import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
@@ -36,7 +35,7 @@ interface MaterializeWrapperProps {
   renderer: any;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setErrors: (x: any) => void;
-  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setMaterialization: GenericAction<SetMaterializationPayload>;
   spec: any;
   template: Template;
   templateMap: TemplateMap;
@@ -83,12 +82,8 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
         className="cursor-pointer"
         key={key}
         onClick={(): void => {
-          setMaterialization({
-            // eslint-disable-next-line react/prop-types
-            ...templateMap.systemValues.viewsToMaterialize,
-            // eslint-disable-next-line react/prop-types
-            [key]: (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value),
-          });
+          const newVals = (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value);
+          setMaterialization({key, value: newVals});
         }}
       >
         <HoverTooltip message="remove this option from the fan out">
@@ -200,7 +195,6 @@ interface ChartContainerProps extends ActionUser {
   data: DataRow[];
   editMode: boolean;
   editorError: null | string;
-  encodingMode: string;
   languages: {[x: string]: LanguageExtension};
   missingFields: string[];
   spec: any;
@@ -354,8 +348,6 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     currentlySelectedFile: base.currentlySelectedFile,
     data: data.data,
     editorError: base.editorError,
-    // i think encoding mode might not be necessary
-    encodingMode: base.encodingMode,
     missingFields,
     spec,
     template,
@@ -367,4 +359,13 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   };
 }
 
-export default connect(mapStateToProps, actionCreators)(ChartArea);
+function equalityChecker(prevProps: any, nextProps: any): boolean {
+  return Object.keys(prevProps).every(key => {
+    if (key === 'spec' || key === 'missingFields') {
+      return JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key]);
+    }
+    return prevProps[key] === nextProps[key];
+  });
+}
+
+export default connect(mapStateToProps, actionCreators)(React.memo(ChartArea, equalityChecker));

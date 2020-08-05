@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SliderWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName, Reset} from './widget-common';
-import debounce from 'lodash.debounce';
 
 function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Element {
   const {widget, idx, setWidgetValue} = props;
@@ -18,7 +17,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Min val`}
             value={widget.config.minVal}
             type="number"
-            onChange={(event): any => setWidgetValue('minVal', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'minVal', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
         <AddLabelToWidget label="max value">
@@ -26,7 +25,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Max val`}
             value={widget.config.maxVal}
             type="number"
-            onChange={(event): any => setWidgetValue('maxVal', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'maxVal', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
       </div>
@@ -36,7 +35,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Step size`}
             value={widget.config.step}
             type="number"
-            onChange={(event): any => setWidgetValue('step', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'step', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
         <AddLabelToWidget label="Default Value">
@@ -44,7 +43,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Default value`}
             value={widget.config.defaultValue}
             type="number"
-            onChange={(event): any => setWidgetValue('defaultValue', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'defaultValue', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
       </div>
@@ -53,20 +52,21 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
 }
 
 function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue, editMode} = props;
+  const {widget, widgetValue, setTemplateValue, editMode} = props;
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
-  const setVal = debounce(
-    (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`}),
-    1,
-  );
+  const [localVal, setLocalVal] = useState(widgetValue);
+  const setVal = (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`});
   return (
     <div className="slide-widget">
-      <div className="widget-title">{widgetName(widget, editMode)}</div>
+      <div className="widget-title">
+        <span>{widgetName(widget, editMode)}</span>
+        {widgetValue !== localVal && <span>{' (release to set) '}</span>}
+      </div>
       <div className="flex">
         <input
           aria-label={`Current value`}
           type="number"
-          value={templateMap.paramValues[widget.name]}
+          value={localVal}
           onChange={({target: {value}}): any => setVal(value)}
           step={widget.config.step}
         />
@@ -76,8 +76,9 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
             type="range"
             min={widget.config.minVal}
             max={widget.config.maxVal}
-            value={templateMap.paramValues[widget.name]}
-            onChange={({target: {value}}): any => setVal(value)}
+            value={localVal}
+            onChange={({target: {value}}): any => setLocalVal(value)}
+            onMouseUp={(): any => setVal(localVal)}
             step={widget.config.step}
             className="slider"
           />

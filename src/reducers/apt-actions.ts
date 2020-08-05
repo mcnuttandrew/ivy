@@ -13,7 +13,7 @@ import {applyQueries} from '../ivy-lang';
 export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payload) => {
   const template = state.currentTemplateInstance;
   const templateMap: TemplateMap = state.templateMap;
-  const column = getOrMakeColumn(payload.field, state.columns, template);
+  const column = getOrMakeColumn(payload.field, state.columns, template.customCards || []);
   const allowedWidgets = toSet(applyQueries(template, templateMap));
   const widgets = template.widgets.filter(widget => allowedWidgets.has(widget.name));
   const openDropTargets = widgets

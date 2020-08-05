@@ -1,14 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
-// import Joyride from 'react-joyride';
 import Tour, {ReactourStep} from 'reactour';
 
 import * as actionCreators from '../actions/index';
 
-import {DataRow, ActionUser} from '../actions/index';
+import {ActionUser} from '../actions/index';
 
-import {AppState, Template, ViewCatalog} from '../types';
-import {TEMPLATE_BODY, WIDGET_CONFIGURATION, JSON_OUTPUT, WIDGET_VALUES} from '../constants';
+import {AppState} from '../types';
+import {TEMPLATE_BODY, WIDGET_CONFIGURATION, WIDGET_VALUES} from '../constants';
 
 interface TourProps extends ActionUser {
   showTour: boolean;

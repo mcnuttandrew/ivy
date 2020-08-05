@@ -4,6 +4,7 @@ import {ListWidget, Widget} from '../../types';
 import Selector from '../selector';
 import {IgnoreKeys} from 'react-hotkeys';
 import {TiArrowDown, TiArrowUp} from 'react-icons/ti';
+import {GenericAction, SetWidgetValuePayload} from '../../actions';
 import {trim} from '../../utils/index';
 
 import {GeneralWidget, WidgetBuilder} from './general-widget';
@@ -25,17 +26,16 @@ function updateValue(arr: any[], newVal: any, idx: number): any[] {
 }
 function optionRow(
   configVals: (DisplayRow | string)[],
-  setWidgetValue: any,
+  setWidgetValue: GenericAction<SetWidgetValuePayload>,
   idx: number,
 ): (val: DisplayRow, jdx: number) => JSX.Element {
-  // const vals = toDisplayVal(configVals);
   const usingDisplayValueFormat = !(typeof configVals[0] === 'string');
   const update = (currentIndex: number, newIndex: number) => (): void => {
     const newVals = [...configVals];
     const oldVal = configVals[newIndex];
     newVals[newIndex] = configVals[currentIndex];
     newVals[currentIndex] = oldVal;
-    setWidgetValue('allowedValues', newVals, idx);
+    setWidgetValue({key: 'allowedTypes', value: newVals, idx});
   };
   return (value: DisplayRow, jdx: number): JSX.Element => {
     return (
@@ -59,7 +59,7 @@ function optionRow(
                 onChange={(event: {target: {value: any}}): any => {
                   const newVal = event.target.value;
                   const newRow = usingDisplayValueFormat ? {display: newVal, value: newVal} : `${newVal}`;
-                  setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
+                  setWidgetValue({key: 'allowedTypes', value: updateValue(configVals, newRow, jdx), idx});
                 }}
               />
             </IgnoreKeys>
@@ -73,7 +73,7 @@ function optionRow(
                   type="text"
                   onChange={(event): any => {
                     const newRow = {...value, display: event.target.value};
-                    setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
+                    setWidgetValue({key: 'allowedTypes', value: updateValue(configVals, newRow, jdx), idx});
                   }}
                 />
               </IgnoreKeys>
@@ -86,7 +86,7 @@ function optionRow(
           buttonClassName="list-widget-row-button"
           onClick={(): void => {
             const updated = [...configVals].filter((_, kdx) => kdx !== jdx);
-            setWidgetValue('allowedValues', updated, idx);
+            setWidgetValue({key: 'allowedTypes', value: updated, idx});
           }}
         />
       </div>
@@ -99,7 +99,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
   const config = widget.config;
   const vals = toDisplayVal(config.allowedValues);
   const usingDisplayValueFormat = !(typeof config.allowedValues[0] === 'string');
-  const updateList = (value: any): any => setWidgetValue('allowedValues', value, idx);
+  const updateList = (value: any): any => setWidgetValue({key: 'allowedTypes', value: value, idx});
   return (
     <div className="flex-down">
       <div className="flex">
@@ -109,7 +109,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
           <Selector
             options={vals}
             selectedValue={config.defaultValue || ''}
-            onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
+            onChange={(value: any): any => setWidgetValue({key: 'defaultValue', value, idx})}
           />
         </AddLabelToWidget>
       </div>
@@ -136,7 +136,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
 }
 
 function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue, editMode} = props;
+  const {widget, widgetValue, setTemplateValue, editMode} = props;
   const config = widget.config;
   const firstVal = config.allowedValues[0];
   const vals = toDisplayVal(widget.config.allowedValues);
@@ -146,7 +146,7 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
         <div className="widget-title">{widgetName(widget, editMode)}</div>
         <Selector
           options={vals}
-          selectedValue={templateMap.paramValues[widget.name] || ''}
+          selectedValue={widgetValue || ''}
           onChange={(value: any): any => setTemplateValue({field: widget.name, text: value})}
         />
         <Reset
