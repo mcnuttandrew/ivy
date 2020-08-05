@@ -59,6 +59,8 @@ export interface AppState {
 
   languages: {[x: string]: LanguageExtension};
 
+  showTour: boolean;
+
   // GUI
   codeMode: string;
   currentTemplateInstance: LangType.Template;

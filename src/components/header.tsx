@@ -11,10 +11,11 @@ interface HeaderProps {
   canUndo?: boolean;
   triggerRedo?: GenericAction<void>;
   triggerUndo?: GenericAction<void>;
+  activateTour?: () => void;
 }
 
 export default function Header(props: HeaderProps): JSX.Element {
-  const {canRedo, canUndo, triggerRedo, triggerUndo} = props;
+  const {canRedo, canUndo, triggerRedo, triggerUndo, activateTour} = props;
 
   return (
     <div className="header flex background-1">
@@ -60,6 +61,10 @@ export default function Header(props: HeaderProps): JSX.Element {
       </div>
 
       <div className="about-bar ">
+        <Route path={['/editor/', '/editor/:x', '/editor/:x/:y', '/editor/:x/:z']}>
+          <a onClick={(): any => activateTour()}>Tour</a>
+        </Route>
+
         <Link to="/" className="margin-left">
           Gallery
         </Link>

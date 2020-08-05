@@ -51,7 +51,11 @@ function CenterColumn(props: RootProps): JSX.Element {
   } = props;
   const onGallery = template.templateName === GALLERY.templateName;
   return (
-    <div className="full-height full-width flex-down" style={{minWidth: '360px'}}>
+    <div
+      className="full-height full-width flex-down"
+      style={{minWidth: '360px'}}
+      id="encoding-column-container"
+    >
       <div className="template-logo">
         <div className="flex-down full-width">
           <h4>
@@ -65,7 +69,7 @@ function CenterColumn(props: RootProps): JSX.Element {
             <b>Author: </b>
             {template.templateAuthor}
           </h5>
-          <div className="encoding-mode-selector flex-down">
+          <div className="template-actions flex-down">
             <div className="flex full-width flex-wrap">
               <h5>
                 <b>Actions: </b>

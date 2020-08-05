@@ -1192,7 +1192,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   opacity: 0.2;
 }
 
-.encoding-mode-selector {
+.template-actions {
   align-items: center;
   font-weight: 900;
   justify-content: center;

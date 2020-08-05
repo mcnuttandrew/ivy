@@ -38,6 +38,7 @@ function addToNext(props: AddToNextProps): JSX.Element {
         className={classnames({
           'fixed-symbol-width': true,
           'fixed-symbol-width-disable': typeNotAddable,
+          'auto-add-pill': true,
         })}
         onClick={(): any => !typeNotAddable && addToNextOpenSlot(column)}
       >
@@ -76,7 +77,7 @@ function addFilter(props: AddFilterProps): JSX.Element {
   return (
     <HoverTooltip message="Create a new filter based on this column">
       <div
-        className="fixed-symbol-width"
+        className="fixed-symbol-width add-filter-from-pill"
         onClick={(): any => {
           if (inEncoding) {
             return;
@@ -153,7 +154,7 @@ function baseBallCard(props: BaseBallCardProps): JSX.Element {
         </div>
       }
     >
-      <div className="fixed-symbol-width">
+      <div className="fixed-symbol-width pill-settings">
         <TiCogOutline />
       </div>
     </Tooltip>

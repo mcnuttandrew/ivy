@@ -100,7 +100,7 @@ function DataColumn(props: DataColumnProps): JSX.Element {
     {DIMENSION: [], MEASURE: [], TIME: []} as {[x: string]: ColumnHeader[]},
   );
   return (
-    <div className="flex-down column background-2">
+    <div className="flex-down column background-2" id="data-column-container">
       <div className="flex-down" style={{maxHeight: 'fit-content'}}>
         <h1 className="section-title">Data</h1>
         <div className="flex data-selection">
