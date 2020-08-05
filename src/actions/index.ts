@@ -9,7 +9,6 @@ import {
   LanguageExtension,
   Template,
   TemplateMap,
-  ViewsToMaterialize,
   WidgetType,
 } from '../types';
 import * as actionTypes from '../actions/action-types';

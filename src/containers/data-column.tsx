@@ -5,12 +5,11 @@ import Filter from '../components/filter';
 import FilterTarget from '../components/filter-target';
 import Pill from '../components/pill';
 import {GenericAction, CoerceTypePayload} from '../actions/index';
-import {AppState, Template, CustomCard, ColumnHeader, TemplateMap, DataTransform} from '../types';
+import {AppState, CustomCard, ColumnHeader, DataTransform} from '../types';
 import {makeCustomType} from '../utils';
 import {SimpleTooltip} from '../components/tooltips';
 import {TiDatabase} from 'react-icons/ti';
 
-import GALLERY from '../templates/gallery';
 import * as actionCreators from '../actions/index';
 
 import {DataRow, ActionUser} from '../actions/index';
