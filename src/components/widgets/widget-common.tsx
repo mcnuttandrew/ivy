@@ -19,7 +19,7 @@ export function EditParameterName(props: EditParameterNameProps): JSX.Element {
           aria-label={`Parameter name`}
           value={widget.name || ''}
           type="text"
-          onChange={(event): any => setWidgetValue('name', event.target.value, idx)}
+          onChange={(event): any => setWidgetValue({key: 'name', value: event.target.value, idx})}
         />
       </IgnoreKeys>
     </AddLabelToWidget>
@@ -40,7 +40,7 @@ export function EditDisplayName(props: EditDisplayNameProps): JSX.Element {
           aria-label={`Display name`}
           value={widget.displayName || ''}
           type="text"
-          onChange={(event): any => setWidgetValue('displayName', event.target.value, idx)}
+          onChange={(event): any => setWidgetValue({key: 'displayName', value: event.target.value, idx})}
         />
       </IgnoreKeys>
     </AddLabelToWidget>

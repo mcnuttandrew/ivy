@@ -18,7 +18,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Min val`}
             value={widget.config.minVal}
             type="number"
-            onChange={(event): any => setWidgetValue('minVal', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'minVal', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
         <AddLabelToWidget label="max value">
@@ -26,7 +26,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Max val`}
             value={widget.config.maxVal}
             type="number"
-            onChange={(event): any => setWidgetValue('maxVal', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'maxVal', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
       </div>
@@ -36,7 +36,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Step size`}
             value={widget.config.step}
             type="number"
-            onChange={(event): any => setWidgetValue('step', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'step', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
         <AddLabelToWidget label="Default Value">
@@ -44,7 +44,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
             aria-label={`Default value`}
             value={widget.config.defaultValue}
             type="number"
-            onChange={(event): any => setWidgetValue('defaultValue', event.target.value, idx)}
+            onChange={(event): any => setWidgetValue({key: 'defaultValue', value: event.target.value, idx})}
           />
         </AddLabelToWidget>
       </div>

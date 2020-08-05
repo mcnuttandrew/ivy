@@ -4,6 +4,7 @@ import {ListWidget, Widget} from '../../types';
 import Selector from '../selector';
 import {IgnoreKeys} from 'react-hotkeys';
 import {TiArrowDown, TiArrowUp} from 'react-icons/ti';
+import {GenericAction, SetWidgetValuePayload} from '../../actions';
 import {trim} from '../../utils/index';
 
 import {GeneralWidget, WidgetBuilder} from './general-widget';
@@ -25,7 +26,7 @@ function updateValue(arr: any[], newVal: any, idx: number): any[] {
 }
 function optionRow(
   configVals: (DisplayRow | string)[],
-  setWidgetValue: any,
+  setWidgetValue: GenericAction<SetWidgetValuePayload>,
   idx: number,
 ): (val: DisplayRow, jdx: number) => JSX.Element {
   // const vals = toDisplayVal(configVals);
@@ -35,7 +36,8 @@ function optionRow(
     const oldVal = configVals[newIndex];
     newVals[newIndex] = configVals[currentIndex];
     newVals[currentIndex] = oldVal;
-    setWidgetValue('allowedValues', newVals, idx);
+    setWidgetValue({key: 'allowedTypes', value: newVals, idx});
+    // setWidgetValue('allowedValues', newVals, idx);
   };
   return (value: DisplayRow, jdx: number): JSX.Element => {
     return (
@@ -59,7 +61,8 @@ function optionRow(
                 onChange={(event: {target: {value: any}}): any => {
                   const newVal = event.target.value;
                   const newRow = usingDisplayValueFormat ? {display: newVal, value: newVal} : `${newVal}`;
-                  setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
+                  setWidgetValue({key: 'allowedTypes', value: updateValue(configVals, newRow, jdx), idx});
+                  // setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
                 }}
               />
             </IgnoreKeys>
@@ -73,7 +76,8 @@ function optionRow(
                   type="text"
                   onChange={(event): any => {
                     const newRow = {...value, display: event.target.value};
-                    setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
+                    setWidgetValue({key: 'allowedTypes', value: updateValue(configVals, newRow, jdx), idx});
+                    // setWidgetValue('allowedValues', updateValue(configVals, newRow, jdx), idx);
                   }}
                 />
               </IgnoreKeys>
@@ -86,7 +90,8 @@ function optionRow(
           buttonClassName="list-widget-row-button"
           onClick={(): void => {
             const updated = [...configVals].filter((_, kdx) => kdx !== jdx);
-            setWidgetValue('allowedValues', updated, idx);
+            setWidgetValue({key: 'allowedTypes', value: updated, idx});
+            // setWidgetValue('allowedValues', updated, idx);
           }}
         />
       </div>
@@ -99,7 +104,8 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
   const config = widget.config;
   const vals = toDisplayVal(config.allowedValues);
   const usingDisplayValueFormat = !(typeof config.allowedValues[0] === 'string');
-  const updateList = (value: any): any => setWidgetValue('allowedValues', value, idx);
+  // const updateList = (value: any): any => setWidgetValue('allowedValues', value, idx);
+  const updateList = (value: any): any => setWidgetValue({key: 'allowedTypes', value: value, idx});
   return (
     <div className="flex-down">
       <div className="flex">
@@ -109,7 +115,8 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
           <Selector
             options={vals}
             selectedValue={config.defaultValue || ''}
-            onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
+            onChange={(value: any): any => setWidgetValue({key: 'defaultValue', value, idx})}
+            // onChange={(value: any): any => setWidgetValue('defaultValue', value, idx)}
           />
         </AddLabelToWidget>
       </div>

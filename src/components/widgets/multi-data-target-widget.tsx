@@ -29,8 +29,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
                 } else {
                   allowedTypesSet.add(type);
                 }
-
-                setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
+                setWidgetValue({key: 'allowedTypes', value: Array.from(allowedTypesSet), idx});
               };
               return (
                 <div className="flex" key={type} style={{marginRight: '10px'}}>
@@ -60,7 +59,8 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
           <input
             aria-label={`Required`}
             type="checkbox"
-            onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
+            // onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
+            onChange={(): any => setWidgetValue({key: 'required', value: !widget.config.required, idx})}
             checked={!!widget.config.required}
           />
         </div>
@@ -72,7 +72,9 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
             aria-label={`Min number of targets`}
             value={widget.config.minNumberOfTargets}
             type="number"
-            onChange={(event): any => setWidgetValue('minNumberOfTargets', event.target.value, idx)}
+            onChange={(event): any =>
+              setWidgetValue({key: 'minNumberOfTargets', value: event.target.value, idx})
+            }
           />
         </div>
         <div className="flex-down">
@@ -81,7 +83,9 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
             aria-label={`Max number of targets`}
             type="number"
             value={widget.config.maxNumberOfTargets}
-            onChange={(event): any => setWidgetValue('maxNumberOfTargets', event.target.value, idx)}
+            onChange={(event): any =>
+              setWidgetValue({key: 'maxNumberOfTargets', value: event.target.value, idx})
+            }
           />
         </div>
       </div>

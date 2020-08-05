@@ -10,7 +10,12 @@ import {switchCommon, MATERIALIZING} from '../../constants';
 
 import {TemplateMap, Widget, GenWidget, Template, ViewsToMaterialize} from '../../types';
 import {ColumnHeader} from '../../types';
-import {GenericAction, SetTemplateValuePayload} from '../../actions';
+import {
+  GenericAction,
+  SetTemplateValuePayload,
+  MoveWidgetPayload,
+  SetWidgetValuePayload,
+} from '../../actions';
 import {classnames} from '../../utils';
 import {getDefaultValueForWidget} from '../../ivy-lang';
 
@@ -32,7 +37,7 @@ export interface GeneralWidget<T> {
   idx: number;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
-  setWidgetValue: any;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
   template: Template;
   templateMap: TemplateMap;
   widget: Widget<T>;
@@ -44,13 +49,13 @@ interface GeneralWidgetComponentProps {
   columns: ColumnHeader[];
   editMode: boolean;
   idx: number;
-  moveWidget: (...args: any[]) => void;
-  duplicateWidget: any;
-  removeWidget: any;
+  moveWidget: GenericAction<MoveWidgetPayload>;
+  duplicateWidget: GenericAction<number>;
+  removeWidget: GenericAction<number>;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setMaterialization: GenericAction<ViewsToMaterialize>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
-  setWidgetValue: any;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
   saveWidgetAsTemplate: (widget: GenWidget) => void;
   template: Template;
   templateMap: TemplateMap;
@@ -242,7 +247,8 @@ export default function GeneralWidgetComponent(props: GeneralWidgetComponentProp
       }
 
       // Time to actually perform the action
-      moveWidget(dragIndex, hoverIndex);
+      // moveWidget(dragIndex, hoverIndex);
+      moveWidget({fromIdx: dragIndex, toIdx: hoverIndex});
 
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,

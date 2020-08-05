@@ -191,29 +191,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
   const saveWidgetAsTemplate = updateTemplateWidgets(true);
   const removeWidgetFromTemplates = updateTemplateWidgets(false);
 
-  const makeWidget = (widget: GenWidget, idx: number): JSX.Element => (
-    <GeneralWidget
-      allowedWidgets={allowedWidgets}
-      // eslint-disable-next-line react/prop-types
-      code={template.code}
-      columns={columns}
-      editMode={editMode}
-      idx={idx}
-      key={idx}
-      moveWidget={(fromIdx, toIdx): any => moveWidget({fromIdx, toIdx})}
-      removeWidget={(): any => removeWidget(idx)}
-      duplicateWidget={(): any => duplicateWidget(idx)}
-      setAllTemplateValues={setAllTemplateValues}
-      setTemplateValue={setTemplateValue}
-      setWidgetValue={(key: string, value: any, idx: number): any => setWidgetValue({key, value, idx})}
-      templateMap={templateMap}
-      template={template}
-      setMaterialization={setMaterialization}
-      saveWidgetAsTemplate={saveWidgetAsTemplate}
-      widget={widget}
-    />
-  );
-
   let idx = -1;
   const sectionedWidgets = buildSections(template).map((section, jdx) => {
     if (!section.length) {
@@ -234,7 +211,25 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
           })}
           key={`widget-${idx}`}
         >
-          {makeWidget(widget, idx)}
+          <GeneralWidget
+            allowedWidgets={allowedWidgets}
+            // eslint-disable-next-line react/prop-types
+            code={template.code}
+            columns={columns}
+            editMode={editMode}
+            idx={idx}
+            moveWidget={moveWidget}
+            removeWidget={removeWidget}
+            duplicateWidget={duplicateWidget}
+            setAllTemplateValues={setAllTemplateValues}
+            setTemplateValue={setTemplateValue}
+            setWidgetValue={setWidgetValue}
+            templateMap={templateMap}
+            template={template}
+            setMaterialization={setMaterialization}
+            saveWidgetAsTemplate={saveWidgetAsTemplate}
+            widget={widget}
+          />
         </div>
       );
     });

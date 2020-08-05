@@ -30,7 +30,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
                 } else {
                   allowedTypesSet.add(type);
                 }
-                setWidgetValue('allowedTypes', Array.from(allowedTypesSet), idx);
+                setWidgetValue({key: 'allowedTypes', value: Array.from(allowedTypesSet), idx});
               };
               return (
                 <div className="flex" key={type} style={{marginRight: '10px'}}>
@@ -60,7 +60,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
           <input
             type="checkbox"
             aria-label="Widget is required"
-            onChange={(): any => setWidgetValue('required', !widget.config.required, idx)}
+            onChange={(): any => setWidgetValue({key: 'required', value: !widget.config.required, idx})}
             checked={!!widget.config.required}
           />
         </div>

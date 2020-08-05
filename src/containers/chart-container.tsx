@@ -200,7 +200,6 @@ interface ChartContainerProps extends ActionUser {
   data: DataRow[];
   editMode: boolean;
   editorError: null | string;
-  encodingMode: string;
   languages: {[x: string]: LanguageExtension};
   missingFields: string[];
   spec: any;
@@ -354,8 +353,6 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     currentlySelectedFile: base.currentlySelectedFile,
     data: data.data,
     editorError: base.editorError,
-    // i think encoding mode might not be necessary
-    encodingMode: base.encodingMode,
     missingFields,
     spec,
     template,
@@ -367,4 +364,13 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
   };
 }
 
-export default connect(mapStateToProps, actionCreators)(ChartArea);
+function equalityChecker(prevProps: any, nextProps: any): boolean {
+  return Object.keys(prevProps).every(key => {
+    if (key === 'spec' || key === 'missingFields') {
+      return JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key]);
+    }
+    return prevProps[key] === nextProps[key];
+  });
+}
+
+export default connect(mapStateToProps, actionCreators)(React.memo(ChartArea, equalityChecker));

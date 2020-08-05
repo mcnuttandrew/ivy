@@ -17,7 +17,7 @@ function FreeTextWidgetConfiguration(props: GeneralWidget<FreeTextWidget>): JSX.
         <Switch
           {...switchCommon}
           checked={!!widget.config.useParagraph}
-          onChange={(): any => setWidgetValue('useParagraph', !widget.config.useParagraph, idx)}
+          onChange={(): any => setWidgetValue({key: 'useParagraph', value: !widget.config.useParagraph, idx})}
         />
       </AddLabelToWidget>
     </div>

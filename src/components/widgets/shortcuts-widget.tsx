@@ -15,11 +15,11 @@ function ShortcutsWidgetConfiguration(props: GeneralWidget<ShortcutsWidget>): JS
       <div className="flex-down">
         {shortcuts.map((shortcut, jdx) => {
           const setValue = (key: string) => (event: any): void => {
-            setWidgetValue(
-              'shortcuts',
-              shortcuts.map((x, kdx) => (kdx === jdx ? {...x, [key]: event.target.value} : x)),
+            setWidgetValue({
+              key: 'shortcuts',
+              value: shortcuts.map((x, kdx) => (kdx === jdx ? {...x, [key]: event.target.value} : x)),
               idx,
-            );
+            });
           };
           return (
             <div key={`${idx}-shortcut`} className="flex">
@@ -49,14 +49,14 @@ function ShortcutsWidgetConfiguration(props: GeneralWidget<ShortcutsWidget>): JS
       </div>
       <button
         onClick={(): void => {
-          setWidgetValue(
-            'shortcuts',
-            shortcuts.concat({
+          setWidgetValue({
+            key: 'shortcuts',
+            value: shortcuts.concat({
               label: 'BLANK_SHORTCUT',
               shortcutFunction: 'return parameters',
             }),
             idx,
-          );
+          });
         }}
       >
         Add another shortcut

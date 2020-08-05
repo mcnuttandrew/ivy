@@ -5,7 +5,7 @@ import Tooltip from 'rc-tooltip';
 import {TemplateMap, GenWidget, Condition} from '../../types';
 import {ColumnHeader} from '../../types';
 import {IgnoreKeys} from 'react-hotkeys';
-import {GenericAction, SetTemplateValuePayload} from '../../actions';
+import {GenericAction, SetTemplateValuePayload, SetWidgetValuePayload} from '../../actions';
 import {AddLabelToWidget, Reset} from './widget-common';
 import OnBlurInput from '../controlled-input';
 
@@ -17,12 +17,12 @@ interface PlacementControlsProps {
   controls: JSX.Element;
   idx: number;
   moveWidget: (...args: any[]) => void;
-  removeWidget: any;
-  duplicateWidget: any;
+  removeWidget: GenericAction<number>;
+  duplicateWidget: GenericAction<number>;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   saveWidgetAsTemplate: (widget: GenWidget) => void;
-  setWidgetValue: any;
+  setWidgetValue: GenericAction<SetWidgetValuePayload>;
   templateMap: TemplateMap;
   widget: GenWidget;
 }
@@ -44,7 +44,7 @@ function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
 
   const conditionUpdate: TalidationUpdate = (jdx, updater) => (val): any => {
     const mapper = (d: Condition, kdx: number): any => (jdx !== kdx ? {...d} : updater(d, val));
-    setWidgetValue('conditions', conditions.map(mapper), idx);
+    setWidgetValue({key: 'conditions', value: conditions.map(mapper), idx});
   };
 
   return (
@@ -73,11 +73,7 @@ function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
             <Reset
               tooltipLabel="remove this condition"
               onClick={(): void => {
-                setWidgetValue(
-                  'conditions',
-                  conditions.filter((_, kdx) => jdx !== kdx),
-                  idx,
-                );
+                setWidgetValue({key: 'conditions', value: conditions.filter((_, kdx) => jdx !== kdx), idx});
               }}
             />
           </div>
@@ -86,7 +82,11 @@ function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
       <button
         type="button"
         onClick={(): void => {
-          setWidgetValue('conditions', conditions.concat({query: 'true', queryResult: 'show'}), idx);
+          setWidgetValue({
+            key: 'conditions',
+            value: conditions.concat({query: 'true', queryResult: 'show'}),
+            idx,
+          });
         }}
       >
         Add a condition
@@ -130,10 +130,10 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
             <ConditionBuilder widget={widget} setWidgetValue={setWidgetValue} idx={idx} />
             <h3>Other Actions</h3>
             <div className="flex">
-              <button onClick={duplicateWidget}>
+              <button onClick={(): any => duplicateWidget(idx)}>
                 Duplicate Widget <TiExportOutline />
               </button>
-              <button onClick={removeWidget}>
+              <button onClick={(): any => removeWidget(idx)}>
                 Delete Widget <TiDelete />
               </button>
               <button onClick={(): any => saveWidgetAsTemplate(widget)}>
