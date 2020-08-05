@@ -1518,17 +1518,28 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 }
 
 .add-widget-tooltip {
-  max-height: 400px;
+  max-height: 420px;
   overflow-y: scroll;
-  width: 220px;
+  width: 260px;
 }
 
 .add-widget-tooltip h3 {
+  font-weight: bolder;
   margin-top: 5px;
+}
+
+.add-widget-tooltip h5 {
+  font-weight: bolder;
+}
+
+.add-widget-row-description {
+  font-size: 10px;
 }
 
 .add-widget-row {
   width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .query-configuration-block {
@@ -1648,4 +1659,11 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 .show-data-table tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+
+.add-widget-button {
+  border: thin solid black;
+  font-size: 18px;
+  margin-top: 5px;
+  text-decoration: none;
 }
