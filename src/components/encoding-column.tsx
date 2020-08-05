@@ -26,7 +26,12 @@ import Selector from './selector';
 import Tooltip from 'rc-tooltip';
 import {SimpleTooltip} from './tooltips';
 import {TiPlus, TiChevronRight} from 'react-icons/ti';
-import {widgetFactoryByGroups, preconfiguredWidgets, WidgetFactoryFunc} from '../templates';
+import {
+  widgetFactoryByGroups,
+  preconfiguredWidgets,
+  WidgetFactoryFunc,
+  WidgetDescriptions,
+} from '../templates';
 import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
 
 interface EncodingColumnProps {
@@ -62,9 +67,12 @@ const renderOption = (
   const newWidget = widgetFactory(widgets.length);
   return (
     <div key={key} className="cursor-pointer flex add-widget-row space-between">
-      <div onClick={(): any => addWidget(newWidget)}>
-        <TiChevronRight />
-        <span>New {key}</span>
+      <div className="flex-down" onClick={(): any => addWidget(newWidget)}>
+        <div className="flex">
+          <TiChevronRight />
+          <span>New {key}</span>
+        </div>
+        <div className="add-widget-row-description">{WidgetDescriptions[newWidget.type as string]}</div>
       </div>
       {removeWidgetFromTemplates && (
         <Reset
@@ -115,7 +123,7 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
         </div>
       }
     >
-      <button type="button">
+      <button type="button" className="add-widget-button">
         Add Widget <TiPlus />
       </button>
     </Tooltip>

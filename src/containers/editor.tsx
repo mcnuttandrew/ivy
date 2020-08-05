@@ -17,6 +17,7 @@ import CodeEditor, {mapStateToProps as CodeEditorMapStateToProps} from './code-e
 import EncodingColumn, {mapStateToProps as EncodingColumnMapStateToProps} from './encoding-column';
 import HotKeyProvider, {mapStateToProps as HotKeyProviderMapStateToProps} from './hot-key-provider';
 import DataColumn, {mapStateToProps as DataColumnMapStateToProps} from './data-column';
+import TourProvider, {mapStateToProps as TourProviderMapStateToProps} from './tour-provider';
 
 import {DataRow, ActionUser} from '../actions/index';
 import {classnames} from '../utils';
@@ -102,6 +103,7 @@ function EditorContainer(props: RootProps): JSX.Element {
         {...HotKeyProviderMapStateToProps(store.getState())}
         languages={languages}
       />
+      <TourProvider {...actionCreators} {...HotKeyProviderMapStateToProps(store.getState())} />
       {props.openModal === 'data' && (
         <DataModal
           changeSelectedFile={props.changeSelectedFile}
@@ -121,6 +123,13 @@ function EditorContainer(props: RootProps): JSX.Element {
         canUndo={props.canUndo}
         triggerRedo={props.triggerRedo}
         triggerUndo={props.triggerUndo}
+        activateTour={(): void => {
+          props.setShowTour(true);
+          if (!props.currentlySelectedFile) {
+            props.loadDataFromPredefinedDatasets({filename: 'penguins.json', dumpTemplateMap: true});
+          }
+          props.setModalState(null);
+        }}
       />
       <div className="flex main-content-container relative">
         <DndProvider backend={HTML5Backend}>

@@ -106,6 +106,7 @@ export const triggerUndo = createAction<void>(actionTypes.TRIGGER_UNDO);
 export const updateFilter = createAction<UpdateFilterPayload>(actionTypes.UPDATE_FILTER);
 export const recieveLanguages = createAction<{[x: string]: LanguageExtension}>(actionTypes.RECIEVE_LANGUAGES);
 export const recieveTemplates = createAction<Template[]>(actionTypes.RECIEVE_TEMPLATE);
+export const setShowTour = createAction<boolean>(actionTypes.SET_SHOW_TOUR);
 
 export const setMaterialization = createAction<ViewsToMaterialize>(actionTypes.SET_MATERIALIZATION);
 
@@ -243,6 +244,7 @@ export interface ActionUser {
   setMaterialization: GenericAction<ViewsToMaterialize>;
   setModalState: GenericAction<string | null>;
   setSpecCode: GenericAction<HandleCodePayload>;
+  setShowTour: GenericAction<boolean>;
   setProgrammaticView: GenericAction<boolean>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setTemplate: GenericAction<Template>;

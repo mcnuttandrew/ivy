@@ -242,7 +242,6 @@ function ChartArea(props: ChartContainerProps): JSX.Element {
   const windowSize = useWindowSize();
   const [errors, setErrors] = useState(null);
   const [showData, setShowData] = useState(false);
-
   // TODO memoize
   const preparedData = wrangle(data, templateMap.systemValues.dataTransforms);
 

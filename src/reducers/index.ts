@@ -50,6 +50,7 @@ import {
   setUserName,
   setProgrammaticView,
   setModalState,
+  setShowTour,
 } from './gui-actions';
 
 export const DEFAULT_STATE: AppState = {
@@ -72,6 +73,7 @@ export const DEFAULT_STATE: AppState = {
   showGUIView: true,
   codeMode: JSON_OUTPUT,
   userName: '',
+  showTour: false,
 
   // undo redo
   atomicLock: false,
@@ -132,6 +134,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.SET_USER_NAME]: setUserName,
   [actionTypes.SET_MODAL_STATE]: setModalState,
   [actionTypes.TOGGLE_PROGRAMMATIC_VIEW]: setProgrammaticView,
+  [actionTypes.SET_SHOW_TOUR]: setShowTour,
 
   [actionTypes.RECIEVE_LANGUAGES]: recieveLanguages,
 

@@ -29,6 +29,16 @@ const DATA_TYPES: DataType[] = ['MEASURE', 'DIMENSION', 'TIME'];
 export type WidgetFactoryFunc = (name: number | string) => GenWidget;
 const makeName = (name: string | number, prefix: string): string =>
   typeof name === 'string' ? name : `${prefix}${name}`;
+export const WidgetDescriptions: {[x: string]: string} = {
+  DataTarget: 'For single fields from the current data set.',
+  MultiDataTarget: 'For arrays of fields from the current data set.',
+  List: 'For selecting one of several specific values.',
+  Switch: 'For toggling between two specific values.',
+  Slider: 'For specifying a particular numeric value.',
+  FreeText: 'For specifying a free text.',
+  Section: 'For organizing widgets into understandable sections.',
+  Text: 'For explaining the purpose of widgets within the UI.',
+};
 export const DataTargetFactory: WidgetFactoryFunc = idx =>
   ({
     name: makeName(idx, 'Var'),
@@ -96,7 +106,7 @@ export const widgetFactoryByGroups: {[type: string]: {[x: string]: WidgetFactory
   'Mark up Widgets': {
     Section: SectionFactory,
     Text: TextFactory,
-    Shortcuts: ShortcutsFactory,
+    // Shortcuts: ShortcutsFactory,
   },
 };
 
