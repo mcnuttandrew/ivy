@@ -8,13 +8,14 @@ import Switch from 'react-switch';
 
 import {switchCommon, MATERIALIZING} from '../../constants';
 
-import {TemplateMap, Widget, GenWidget, Template, ViewsToMaterialize} from '../../types';
+import {TemplateMap, Widget, GenWidget, CustomCard} from '../../types';
 import {ColumnHeader} from '../../types';
 import {
   GenericAction,
   SetTemplateValuePayload,
   MoveWidgetPayload,
   SetWidgetValuePayload,
+  SetMaterializationPayload,
 } from '../../actions';
 import {classnames} from '../../utils';
 import {getDefaultValueForWidget} from '../../ivy-lang';
@@ -26,40 +27,46 @@ import FreeTextBuilder from './free-text-widget';
 import ListBuilder from './list-widget';
 import MultiDataTargetBuilder from './multi-data-target-widget';
 import SectionBuilder from './section-widget';
-import ShortcutBuilder from './shortcuts-widget';
+// import ShortcutBuilder from './shortcuts-widget';
 import SliderBuilder from './slider-widget';
 import SwitchBuilder from './switch-widget';
 import TextBuilder from './text-widget';
 
 export interface GeneralWidget<T> {
   columns: ColumnHeader[];
+  customCards: CustomCard[];
+  disallowFanout: boolean;
   editMode: boolean;
   idx: number;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
-  template: Template;
-  templateMap: TemplateMap;
   widget: Widget<T>;
+  widgetValue: any;
+  materializations: string[];
 }
 
 interface GeneralWidgetComponentProps {
-  allowedWidgets: Set<string>;
-  code: string;
+  // allowedWidgets: Set<string>;
+  // code: string;
   columns: ColumnHeader[];
+  customCards: CustomCard[];
+  disallowFanout: boolean;
   editMode: boolean;
   idx: number;
   moveWidget: GenericAction<MoveWidgetPayload>;
   duplicateWidget: GenericAction<number>;
   removeWidget: GenericAction<number>;
   setAllTemplateValues: GenericAction<TemplateMap>;
-  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setMaterialization: GenericAction<SetMaterializationPayload>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
-  saveWidgetAsTemplate: (widget: GenWidget) => void;
-  template: Template;
-  templateMap: TemplateMap;
+  // saveWidgetAsTemplate: (widget: GenWidget) => void;
+  // template: Template;
+  widgetValue: any;
+  materializations: string[];
   widget: GenWidget;
+  widgetIsAllowed: boolean;
 }
 
 export type WidgetBuilder = (
@@ -77,7 +84,7 @@ const builders = {
   List: ListBuilder,
   MultiDataTarget: MultiDataTargetBuilder,
   Section: SectionBuilder,
-  Shortcut: ShortcutBuilder,
+  // Shortcut: ShortcutBuilder,
   Slider: SliderBuilder,
   Switch: SwitchBuilder,
   Text: TextBuilder,
@@ -85,15 +92,15 @@ const builders = {
 
 interface GenericMaterializationMenuProps {
   allowedValues: {name: string; group?: string}[];
-  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setMaterialization: GenericAction<SetMaterializationPayload>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
-  templateMap: TemplateMap;
+  widgetValue: any;
+  materializations: string[];
   widget: GenWidget;
 }
 
 const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): null | JSX.Element => {
-  const {templateMap, allowedValues, setMaterialization, widget, setTemplateValue} = props;
-  const currentView = templateMap.systemValues.viewsToMaterialize[widget.name] || [];
+  const {allowedValues, setMaterialization, widget, setTemplateValue, materializations} = props;
   const groups = allowedValues.reduce(
     (acc, row) => {
       acc[row.group || ''] = (acc[row.group || ''] || []).concat(row);
@@ -109,10 +116,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
           type="button"
           key={`button-${key}`}
           onClick={(): any => {
-            setMaterialization({
-              ...templateMap.systemValues.viewsToMaterialize,
-              [widget.name]: group.map(({name}) => name),
-            });
+            setMaterialization({key: widget.name, value: group.map(({name}) => name)});
             setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
           }}
         >
@@ -127,7 +131,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
         .filter(row => row[1].length)
         .map(([key, group]) => {
           const rows = group.map(({name}, idx) => {
-            const checked = (templateMap.systemValues.viewsToMaterialize[widget.name] || []).includes(name);
+            const checked = (materializations || []).includes(name);
             return (
               <div key={idx} className="flex space-between">
                 <span>{name}</span>
@@ -135,10 +139,12 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
                   {...switchCommon}
                   checked={checked}
                   onChange={(): any => {
-                    const newVals = checked ? currentView.filter(d => d !== name) : currentView.concat(name);
+                    const newVals = checked
+                      ? materializations.filter(d => d !== name)
+                      : materializations.concat(name);
                     setMaterialization({
-                      ...templateMap.systemValues.viewsToMaterialize,
-                      [widget.name]: newVals,
+                      key: widget.name,
+                      value: newVals,
                     });
                     setTemplateValue({
                       field: widget.name,
@@ -162,8 +168,8 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
           type="button"
           onClick={(): any => {
             setMaterialization({
-              ...templateMap.systemValues.viewsToMaterialize,
-              [widget.name]: allowedValues.map(({name}) => name),
+              key: widget.name,
+              value: allowedValues.map(({name}) => name),
             });
             setTemplateValue({field: widget.name, text: `"${MATERIALIZING}"`});
           }}
@@ -173,7 +179,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
         <button
           type="button"
           onClick={(): any => {
-            setMaterialization({...templateMap.systemValues.viewsToMaterialize, [widget.name]: []});
+            setMaterialization({key: widget.name, value: []});
             setTemplateValue({field: widget.name, text: getDefaultValueForWidget(widget)});
           }}
         >
@@ -186,17 +192,18 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
 
 // dragging functionality cribbed from
 // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple?from-embed
-export default function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element {
+function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element {
   const {
     columns,
+    disallowFanout,
     editMode,
     idx,
+    materializations,
     moveWidget,
     setMaterialization,
     setTemplateValue,
-    template,
-    templateMap,
     widget,
+    widgetValue,
   } = props;
 
   const widgetType = widget.type;
@@ -204,6 +211,7 @@ export default function GeneralWidgetComponent(props: GeneralWidgetComponentProp
   const [, drop] = useDrop({
     accept: 'WIDGET',
     hover(item: any, monitor: DropTargetMonitor) {
+      console.log(item);
       if (!editMode) {
         return;
       }
@@ -247,7 +255,6 @@ export default function GeneralWidgetComponent(props: GeneralWidgetComponentProp
       }
 
       // Time to actually perform the action
-      // moveWidget(dragIndex, hoverIndex);
       moveWidget({fromIdx: dragIndex, toIdx: hoverIndex});
 
       // Note: we're mutating the monitor item here!
@@ -284,7 +291,7 @@ export default function GeneralWidgetComponent(props: GeneralWidgetComponentProp
     >
       <div className="widget-body">{uiElement}</div>
       <WidgetConfigurationControls {...props} controls={controls} />
-      {options.length > 0 && !template.disallowFanOut && !editMode && (
+      {options.length > 0 && !disallowFanout && !editMode && (
         <Tooltip
           placement="top"
           trigger="click"
@@ -296,8 +303,9 @@ export default function GeneralWidgetComponent(props: GeneralWidgetComponentProp
                 allowedValues={options}
                 setMaterialization={setMaterialization}
                 setTemplateValue={setTemplateValue}
-                templateMap={templateMap}
                 widget={widget}
+                widgetValue={widgetValue}
+                materializations={materializations}
               />
             </div>
           }
@@ -305,9 +313,7 @@ export default function GeneralWidgetComponent(props: GeneralWidgetComponentProp
           <div
             className={classnames({
               'materialize-button': true,
-              'materialize-button-active':
-                templateMap.systemValues.viewsToMaterialize[widget.name] &&
-                templateMap.systemValues.viewsToMaterialize[widget.name].length > 0,
+              'materialize-button-active': materializations && materializations.length > 0,
             })}
           >
             <TiFlash />
@@ -317,3 +323,14 @@ export default function GeneralWidgetComponent(props: GeneralWidgetComponentProp
     </div>
   );
 }
+
+function equalityCheck(prevProps: any, nextProps: any): boolean {
+  return Object.keys(prevProps).every(key => {
+    if (key === 'materializations') {
+      return JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key]);
+    }
+    return prevProps[key] === nextProps[key];
+  });
+}
+
+export default React.memo(GeneralWidgetComponent, equalityCheck);

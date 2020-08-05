@@ -3,7 +3,7 @@ import {useDrop} from 'react-dnd';
 
 import Pill from './pill';
 import Selector from './selector';
-import {ColumnHeader, DataTargetWidget, Widget, Template} from '../types';
+import {ColumnHeader, DataTargetWidget, Widget, CustomCard} from '../types';
 import {classnames, getOrMakeColumn, makeOptionsForDropdown} from '../utils';
 import AllowedTypesList from './allowed-types-list';
 
@@ -39,25 +39,22 @@ interface Shelf {
    */
   widget: Widget<DataTargetWidget>;
 
-  /**
-   * The containing template
-   */
-  template: Template;
+  customCards: CustomCard[];
 }
 
 export default function Shelf(props: Shelf): JSX.Element {
-  const {shelfValue, columns, shelfName, onDrop, widget, template, fieldKey} = props;
+  const {shelfValue, columns, shelfName, onDrop, widget, fieldKey, customCards} = props;
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
     drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field: fieldKey}),
     collect: monitor => ({isOver: monitor.isOver(), canDrop: monitor.canDrop()}),
   });
 
-  const columnHeader = getOrMakeColumn(shelfValue, columns, template);
+  const columnHeader = getOrMakeColumn(shelfValue, columns, customCards);
   const fieldSelector = (
     <Selector
       useGroups={true}
-      options={makeOptionsForDropdown({template, widget, columns})}
+      options={makeOptionsForDropdown({customCards, widget, columns})}
       selectedValue={shelfValue || ' '}
       onChange={(text: string): void => {
         onDrop({field: fieldKey, type: 'CARD', text: `"${text}"`, disable: false});

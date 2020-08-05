@@ -108,7 +108,11 @@ export const recieveLanguages = createAction<{[x: string]: LanguageExtension}>(a
 export const recieveTemplates = createAction<Template[]>(actionTypes.RECIEVE_TEMPLATE);
 export const setShowTour = createAction<boolean>(actionTypes.SET_SHOW_TOUR);
 
-export const setMaterialization = createAction<ViewsToMaterialize>(actionTypes.SET_MATERIALIZATION);
+export interface SetMaterializationPayload {
+  key: string;
+  value: string[];
+}
+export const setMaterialization = createAction<SetMaterializationPayload>(actionTypes.SET_MATERIALIZATION);
 
 export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[]> => (
   dispatch: Dispatch,
@@ -241,7 +245,7 @@ export interface ActionUser {
   setEditMode: GenericAction<boolean>;
   setEncodingMode: GenericAction<string>;
   setGuiView: GenericAction<boolean>;
-  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setMaterialization: GenericAction<SetMaterializationPayload>;
   setModalState: GenericAction<string | null>;
   setSpecCode: GenericAction<HandleCodePayload>;
   setShowTour: GenericAction<boolean>;

@@ -25,10 +25,10 @@ function FreeTextWidgetConfiguration(props: GeneralWidget<FreeTextWidget>): JSX.
 }
 
 function FreeTextWidgetComponent(props: GeneralWidget<FreeTextWidget>): JSX.Element {
-  const {widget, setTemplateValue, templateMap, editMode} = props;
+  const {widget, setTemplateValue, widgetValue, editMode} = props;
   const field = widget.name;
   const inputProps = {
-    value: trim((templateMap.paramValues[widget.name] as string) || ''),
+    value: trim(widgetValue || ''),
     type: 'text',
     onChange: (event: any): any => setTemplateValue({field, text: `"${event.target.value}"`}),
   };

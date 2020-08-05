@@ -53,7 +53,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
 }
 
 function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue, editMode} = props;
+  const {widget, widgetValue, setTemplateValue, editMode} = props;
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
   const setVal = debounce(
     (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`}),
@@ -66,7 +66,7 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
         <input
           aria-label={`Current value`}
           type="number"
-          value={templateMap.paramValues[widget.name]}
+          value={widgetValue}
           onChange={({target: {value}}): any => setVal(value)}
           step={widget.config.step}
         />
@@ -76,7 +76,7 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
             type="range"
             min={widget.config.minVal}
             max={widget.config.maxVal}
-            value={templateMap.paramValues[widget.name]}
+            value={widgetValue}
             onChange={({target: {value}}): any => setVal(value)}
             step={widget.config.step}
             className="slider"

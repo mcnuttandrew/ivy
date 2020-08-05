@@ -94,18 +94,17 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
 }
 
 function MultiDataTargetComponent(props: GeneralWidget<MultiDataTargetWidget>): JSX.Element {
-  const {widget, templateMap, columns, setTemplateValue, template} = props;
-  const fieldValue = templateMap.paramValues[widget.name];
+  const {widget, widgetValue, columns, setTemplateValue, customCards} = props;
   return (
     <div className="multi-data-target-widget">
       <MultiShelf
-        shelfValues={(Array.isArray(fieldValue) ? (fieldValue as string[]) : []).map(trim)}
+        shelfValues={(Array.isArray(widgetValue) ? (widgetValue as string[]) : []).map(trim)}
         shelfName={widget.displayName || widget.name}
         fieldKey={widget.name}
         columns={columns}
         onDrop={setTemplateValue}
         widget={widget}
-        template={template}
+        customCards={customCards}
       />
     </div>
   );

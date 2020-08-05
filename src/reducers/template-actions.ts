@@ -7,16 +7,9 @@ import {
   HandleCodePayload,
   SetTemplateValuePayload,
   SetWidgetValuePayload,
+  SetMaterializationPayload,
 } from '../actions/index';
-import {
-  ActionResponse,
-  AppState,
-  Template,
-  Widget,
-  GenWidget,
-  TemplateMap,
-  ViewsToMaterialize,
-} from '../types';
+import {ActionResponse, AppState, Template, Widget, GenWidget, TemplateMap} from '../types';
 import {deserializeTemplate, trim, removeFirstInstanceOf, bagDifference} from '../utils';
 import {evaluateIvyProgram, constructDefaultTemplateMap} from '../ivy-lang';
 
@@ -36,9 +29,10 @@ const dedupTemplates: ActionResponse<void> = state => {
   });
 };
 
-export const setMaterialization: ActionResponse<ViewsToMaterialize> = (state, payload) => {
+export const setMaterialization: ActionResponse<SetMaterializationPayload> = (state, payload) => {
   return produce(state, draftState => {
-    draftState.templateMap.systemValues.viewsToMaterialize = payload;
+    draftState.templateMap.systemValues.viewsToMaterialize[payload.key] = payload.value;
+    // draftState.templateMap.systemValues.viewsToMaterialize = payload;
   });
 };
 

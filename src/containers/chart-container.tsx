@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import * as actionCreators from '../actions/index';
-import {ActionUser, GenericAction, DataRow} from '../actions';
+import {ActionUser, GenericAction, DataRow, SetMaterializationPayload} from '../actions';
 import {
   AppState,
   ColumnHeader,
@@ -10,7 +10,6 @@ import {
   Template,
   TemplateMap,
   ViewCatalog,
-  ViewsToMaterialize,
   RendererProps,
 } from '../types';
 import {TiDeleteOutline, TiInputChecked} from 'react-icons/ti';
@@ -36,7 +35,7 @@ interface MaterializeWrapperProps {
   renderer: any;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setErrors: (x: any) => void;
-  setMaterialization: GenericAction<ViewsToMaterialize>;
+  setMaterialization: GenericAction<SetMaterializationPayload>;
   spec: any;
   template: Template;
   templateMap: TemplateMap;
@@ -84,11 +83,15 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
         key={key}
         onClick={(): void => {
           setMaterialization({
-            // eslint-disable-next-line react/prop-types
-            ...templateMap.systemValues.viewsToMaterialize,
-            // eslint-disable-next-line react/prop-types
-            [key]: (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value),
+            key,
+            value: (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value),
           });
+          // setMaterialization({
+          //   // eslint-disable-next-line react/prop-types
+          //   ...templateMap.systemValues.viewsToMaterialize,
+          //   // eslint-disable-next-line react/prop-types
+          //   [key]: (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value),
+          // });
         }}
       >
         <HoverTooltip message="remove this option from the fan out">

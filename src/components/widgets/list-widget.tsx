@@ -143,7 +143,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
 }
 
 function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
-  const {widget, templateMap, setTemplateValue, editMode} = props;
+  const {widget, widgetValue, setTemplateValue, editMode} = props;
   const config = widget.config;
   const firstVal = config.allowedValues[0];
   const vals = toDisplayVal(widget.config.allowedValues);
@@ -153,7 +153,7 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
         <div className="widget-title">{widgetName(widget, editMode)}</div>
         <Selector
           options={vals}
-          selectedValue={templateMap.paramValues[widget.name] || ''}
+          selectedValue={widgetValue || ''}
           onChange={(value: any): any => setTemplateValue({field: widget.name, text: value})}
         />
         <Reset

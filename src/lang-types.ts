@@ -12,7 +12,7 @@ export type WidgetType =
   | 'Text'
   | 'Slider'
   | 'Section'
-  | 'Shortcut'
+  // | 'Shortcut'
   | 'FreeText';
 export interface Widget<T> {
   /**
@@ -68,9 +68,9 @@ export interface Shortcut {
   label: string;
   shortcutFunction: string;
 }
-export interface ShortcutsWidget {
-  shortcuts: Shortcut[];
-}
+// export interface ShortcutsWidget {
+//   shortcuts: Shortcut[];
+// }
 export type FreeTextWidget = {
   useParagraph: boolean;
 };
@@ -82,7 +82,7 @@ export type WidgetSubType =
   | TextWidget
   | SliderWidget
   | SectionWidget
-  | ShortcutsWidget
+  // | ShortcutsWidget
   | FreeTextWidget;
 
 /**

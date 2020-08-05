@@ -4,7 +4,7 @@ import {useDrop} from 'react-dnd';
 import AllowedTypesList from './allowed-types-list';
 import Pill from './pill';
 import Selector from './selector';
-import {ColumnHeader, MultiDataTargetWidget, Widget, DataType, Template} from '../types';
+import {ColumnHeader, MultiDataTargetWidget, Widget, DataType, CustomCard} from '../types';
 import {classnames, makeOptionsForDropdown, getOrMakeColumn} from '../utils';
 
 interface Props {
@@ -14,11 +14,11 @@ interface Props {
   shelfName: string;
   onDrop: any;
   widget: Widget<MultiDataTargetWidget>;
-  template: Template;
+  customCards: CustomCard[];
 }
 
 export default function MultiShelf(props: Props): JSX.Element {
-  const {shelfValues, columns, shelfName, fieldKey, onDrop, widget, template} = props;
+  const {shelfValues, columns, shelfName, fieldKey, onDrop, widget, customCards} = props;
 
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
@@ -37,10 +37,10 @@ export default function MultiShelf(props: Props): JSX.Element {
   const allowed = widget.config.allowedTypes;
   // if everything is allowed then recomendations dont matter much here
   const useGroupsAsTypes = ['DIMENSION', 'MEASURE', 'TIME'].every((key: DataType) => allowed.includes(key));
-  const options = makeOptionsForDropdown({template, widget, columns, useGroupsAsTypes});
+  const options = makeOptionsForDropdown({customCards, widget, columns, useGroupsAsTypes});
 
   const columnHeaders = shelfValues
-    .map(shelfValue => getOrMakeColumn(shelfValue, columns, template))
+    .map(shelfValue => getOrMakeColumn(shelfValue, columns, customCards))
     .filter(d => d);
   const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) <= columnHeaders.length;
   const dropCommon = {field: fieldKey, multiTarget: true};
