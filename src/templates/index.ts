@@ -6,7 +6,6 @@ import {
   ListWidget,
   MultiDataTargetWidget,
   SectionWidget,
-  // ShortcutsWidget,
   SliderWidget,
   SwitchWidget,
   Template,
@@ -71,8 +70,6 @@ export const SliderFactory: WidgetFactoryFunc = idx =>
   } as Widget<SliderWidget>);
 export const SectionFactory: WidgetFactoryFunc = idx =>
   ({name: makeName(idx, 'Section'), type: 'Section', config: null} as Widget<SectionWidget>);
-// export const ShortcutsFactory: WidgetFactoryFunc = idx =>
-//   ({name: makeName(idx, 'Shortcut'), type: 'Shortcut', config: {shortcuts: []}} as Widget<ShortcutsWidget>);
 export const FreeTextFactory: WidgetFactoryFunc = idx =>
   ({name: makeName(idx, 'FreeText'), type: 'FreeText', config: {useParagraph: false}} as Widget<
     FreeTextWidget
@@ -87,7 +84,6 @@ export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   Switch: SwitchFactory,
   Slider: SliderFactory,
   Section: SectionFactory,
-  // Shortcuts: ShortcutsFactory,
   FreeText: FreeTextFactory,
   Text: TextFactory,
 };

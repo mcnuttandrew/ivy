@@ -40,17 +40,6 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
   return result;
 }
 
-// export function evaluateShortcut(shortcut: Shortcut, templateMap: TemplateMap): TemplateMap {
-//   let newMap = templateMap;
-//   try {
-//     const generatedContent = new Function('parameters', `return ${shortcut.shortcutFunction}`);
-//     newMap = generatedContent(templateMap.paramValues);
-//   } catch (e) {
-//     log('Short cut error', e, shortcut.shortcutFunction, shortcut.label);
-//   }
-//   return newMap;
-// }
-
 function shouldUpdateContainerWithValue(
   queryResult: 'true' | 'false',
   conditional: ConditionalArgs,

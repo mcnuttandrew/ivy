@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SliderWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName, Reset} from './widget-common';
@@ -55,18 +55,19 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
 function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element {
   const {widget, widgetValue, setTemplateValue, editMode} = props;
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
-  const setVal = debounce(
-    (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`}),
-    1,
-  );
+  const [localVal, setLocalVal] = useState(widgetValue);
+  const setVal = (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`});
   return (
     <div className="slide-widget">
-      <div className="widget-title">{widgetName(widget, editMode)}</div>
+      <div className="widget-title">
+        <span>{widgetName(widget, editMode)}</span>
+        {widgetValue !== localVal && <span>{' (release to set) '}</span>}
+      </div>
       <div className="flex">
         <input
           aria-label={`Current value`}
           type="number"
-          value={widgetValue}
+          value={localVal}
           onChange={({target: {value}}): any => setVal(value)}
           step={widget.config.step}
         />
@@ -76,8 +77,9 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
             type="range"
             min={widget.config.minVal}
             max={widget.config.maxVal}
-            value={widgetValue}
-            onChange={({target: {value}}): any => setVal(value)}
+            value={localVal}
+            onChange={({target: {value}}): any => setLocalVal(value)}
+            onMouseUp={(): any => setVal(localVal)}
             step={widget.config.step}
             className="slider"
           />

@@ -68,9 +68,7 @@ export interface Shortcut {
   label: string;
   shortcutFunction: string;
 }
-// export interface ShortcutsWidget {
-//   shortcuts: Shortcut[];
-// }
+
 export type FreeTextWidget = {
   useParagraph: boolean;
 };
@@ -82,7 +80,6 @@ export type WidgetSubType =
   | TextWidget
   | SliderWidget
   | SectionWidget
-  // | ShortcutsWidget
   | FreeTextWidget;
 
 /**

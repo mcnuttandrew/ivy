@@ -26,7 +26,6 @@ import {
   WidgetFactoryFunc,
   WidgetDescriptions,
 } from '../templates';
-// import {getWidgetTemplates, setWidgetTemplates} from '../utils/local-storage';
 
 interface EncodingColumnProps {
   addWidget: GenericAction<GenWidget>;
@@ -49,8 +48,6 @@ interface EncodingColumnProps {
 interface AddWidgetButtonProps {
   addWidget: GenericAction<GenWidget>;
   widgets: GenWidget[];
-  // widgetTemplates: GenWidget[];
-  // removeWidgetFromTemplates: (widget: GenWidget) => void;
 }
 
 const renderOption = (
@@ -80,11 +77,7 @@ const renderOption = (
 };
 
 function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
-  const {
-    addWidget,
-    widgets,
-    // widgetTemplates, removeWidgetFromTemplates
-  } = props;
+  const {addWidget, widgets} = props;
 
   return (
     <Tooltip
@@ -105,19 +98,6 @@ function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
           <div className="flex flex-wrap">
             {Object.entries(preconfiguredWidgets).map(renderOption(widgets, addWidget))}
           </div>
-          {/* <h3>User Defined</h3>
-          <div className="flex flex-wrap">
-            {widgetTemplates.length ? (
-              widgetTemplates
-                .map(widget => {
-                  const factory = (idx: number): GenWidget => ({...widget, name: `${widget.name}-${idx}`});
-                  return [widget.name, factory];
-                })
-                .map(renderOption(widgets, addWidget, removeWidgetFromTemplates))
-            ) : (
-              <p>Save widgets for future use</p>
-            )}
-          </div> */}
         </div>
       }
     >
@@ -174,21 +154,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
     setWidgets(toSet(applyQueries(template, templateMap)));
   }, [JSON.stringify(template), JSON.stringify(templateMap)]);
 
-  // cache and get the template widgets
-  // const [widgetTemplates, setWidgetTemplatesState] = useState([]);
-  // useEffect(() => {
-  //   getWidgetTemplates().then(d => setWidgetTemplatesState(d || []));
-  // }, []);
-  // const updateTemplateWidgets = (addToTail: boolean) => (widget: GenWidget): void => {
-  //   const updatedWidgets = widgetTemplates
-  //     .filter(d => d.name !== widget.name)
-  //     .concat(addToTail ? widget : []);
-  //   setWidgetTemplates(updatedWidgets);
-  //   setWidgetTemplatesState(updatedWidgets);
-  // };
-  // const saveWidgetAsTemplate = updateTemplateWidgets(true);
-  // const removeWidgetFromTemplates = updateTemplateWidgets(false);
-
   let idx = -1;
   const sectionedWidgets = buildSections(template).map((section, jdx) => {
     if (!section.length) {
@@ -210,8 +175,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
           key={`widget-${idx}`}
         >
           <GeneralWidget
-            // allowedWidgets={allowedWidgets}
-            // code={template.code}
             columns={columns}
             editMode={editMode}
             idx={idx}
@@ -226,7 +189,6 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
             setMaterialization={setMaterialization}
             widgetValue={templateMap.paramValues[widget.name]}
             materializations={templateMap.systemValues.viewsToMaterialize[widget.name] || []}
-            // saveWidgetAsTemplate={saveWidgetAsTemplate}
             widget={widget}
             widgetIsAllowed={allowedWidgets.has(widget.name)}
           />
@@ -319,14 +281,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
           </div>
         </div>
       )}
-      {editMode && (
-        <AddWidgetButton
-          widgets={template.widgets}
-          addWidget={addWidget}
-          // widgetTemplates={widgetTemplates}
-          // removeWidgetFromTemplates={removeWidgetFromTemplates}
-        />
-      )}
+      {editMode && <AddWidgetButton widgets={template.widgets} addWidget={addWidget} />}
       <div className={classnames({'template-column': true, 'edit-mode': editMode})}>{sectionedWidgets}</div>
     </div>
   );

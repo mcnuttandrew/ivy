@@ -47,8 +47,6 @@ export interface GeneralWidget<T> {
 }
 
 interface GeneralWidgetComponentProps {
-  // allowedWidgets: Set<string>;
-  // code: string;
   columns: ColumnHeader[];
   customCards: CustomCard[];
   disallowFanout: boolean;
@@ -61,8 +59,6 @@ interface GeneralWidgetComponentProps {
   setMaterialization: GenericAction<SetMaterializationPayload>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
-  // saveWidgetAsTemplate: (widget: GenWidget) => void;
-  // template: Template;
   widgetValue: any;
   materializations: string[];
   widget: GenWidget;
@@ -84,7 +80,6 @@ const builders = {
   List: ListBuilder,
   MultiDataTarget: MultiDataTargetBuilder,
   Section: SectionBuilder,
-  // Shortcut: ShortcutBuilder,
   Slider: SliderBuilder,
   Switch: SwitchBuilder,
   Text: TextBuilder,
@@ -211,7 +206,6 @@ function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element
   const [, drop] = useDrop({
     accept: 'WIDGET',
     hover(item: any, monitor: DropTargetMonitor) {
-      console.log(item);
       if (!editMode) {
         return;
       }

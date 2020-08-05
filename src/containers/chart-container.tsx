@@ -82,16 +82,8 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
         className="cursor-pointer"
         key={key}
         onClick={(): void => {
-          setMaterialization({
-            key,
-            value: (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value),
-          });
-          // setMaterialization({
-          //   // eslint-disable-next-line react/prop-types
-          //   ...templateMap.systemValues.viewsToMaterialize,
-          //   // eslint-disable-next-line react/prop-types
-          //   [key]: (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value),
-          // });
+          const newVals = (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value);
+          setMaterialization({key, value: newVals});
         }}
       >
         <HoverTooltip message="remove this option from the fan out">

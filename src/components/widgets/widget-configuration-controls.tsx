@@ -1,5 +1,5 @@
 import React from 'react';
-import {TiDelete, TiCog, TiExportOutline, TiBookmark} from 'react-icons/ti';
+import {TiDelete, TiCog, TiExportOutline} from 'react-icons/ti';
 import Selector from '../selector';
 import Tooltip from 'rc-tooltip';
 import {TemplateMap, GenWidget, Condition} from '../../types';
@@ -10,8 +10,6 @@ import {AddLabelToWidget, Reset} from './widget-common';
 import OnBlurInput from '../controlled-input';
 
 interface PlacementControlsProps {
-  // allowedWidgets: Set<string>;
-  // code: string;
   columns: ColumnHeader[];
   editMode: boolean;
   controls: JSX.Element;
@@ -21,12 +19,10 @@ interface PlacementControlsProps {
   duplicateWidget: GenericAction<number>;
   setAllTemplateValues: GenericAction<TemplateMap>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
-  // saveWidgetAsTemplate: (widget: GenWidget) => void;
   setWidgetValue: GenericAction<SetWidgetValuePayload>;
   widget: GenWidget;
   widgetIsAllowed: boolean;
 }
-// const dontShowUsedIf = new Set(['Section', 'Text']);
 interface ConditionBuilderProps {
   idx: number;
   setWidgetValue: any;
@@ -95,21 +91,14 @@ function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
   );
 }
 
-// function widgetInUse(code: string, name: string): boolean {
-//   return Boolean(code.match(new RegExp(`\\[${name}\\]`, 'g')));
-// }
-
 export default function WidgetConfigurationControls(props: PlacementControlsProps): JSX.Element {
   const {
-    // allowedWidgets,
     widgetIsAllowed,
-    // code,
     controls,
     duplicateWidget,
     editMode,
     idx,
     removeWidget,
-    // saveWidgetAsTemplate,
     setWidgetValue,
     widget,
   } = props;
@@ -124,9 +113,6 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
         overlay={
           <div className="flex-down widget-config-tooltip">
             <h3>{widget.type}</h3>
-            {/* {!dontShowUsedIf.has(widget.type) && (
-              <h5>{`Widget is currently ${widgetInUse(code, widget.name) ? 'in use' : 'not used'}`}</h5>
-            )} */}
             {controls}
             <ConditionBuilder widget={widget} setWidgetValue={setWidgetValue} idx={idx} />
             <h3>Other Actions</h3>
@@ -137,9 +123,6 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
               <button onClick={(): any => removeWidget(idx)}>
                 Delete Widget <TiDelete />
               </button>
-              {/* <button onClick={(): any => saveWidgetAsTemplate(widget)}>
-                Save widget for later use <TiBookmark />
-              </button> */}
             </div>
           </div>
         }

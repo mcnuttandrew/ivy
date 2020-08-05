@@ -32,7 +32,6 @@ const dedupTemplates: ActionResponse<void> = state => {
 export const setMaterialization: ActionResponse<SetMaterializationPayload> = (state, payload) => {
   return produce(state, draftState => {
     draftState.templateMap.systemValues.viewsToMaterialize[payload.key] = payload.value;
-    // draftState.templateMap.systemValues.viewsToMaterialize = payload;
   });
 };
 
