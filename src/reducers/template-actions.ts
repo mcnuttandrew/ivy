@@ -95,7 +95,7 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
     draftState.templateMap.paramValues[payload.field] = payload.text;
     tryToGuessTheTypeForVegaLite(
       draftState.currentTemplateInstance,
-      payload,
+      {...payload, type: Array.isArray(payload.text) ? payload.type : 'DataTarget'},
       draftState.templateMap,
       state.columns,
     );

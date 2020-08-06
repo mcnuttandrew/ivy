@@ -88,7 +88,6 @@ function DataColumn(props: DataColumnProps): JSX.Element {
     currentlySelectedFile,
     setModalState,
   } = props;
-
   const hasCustomCards = customCards && customCards.length > 0;
   const columnGroups = columns.reduce(
     (acc, row) => {
@@ -168,6 +167,7 @@ export function mapStateToProps({base}: {base: AppState}): any {
   const templateMap = base.templateMap;
   return {
     columns: base.columns,
+    customCards: template.customCards,
     currentlySelectedFile: base.currentlySelectedFile,
     fillableFields: computeValidAddNexts(template, templateMap),
     showGUIView: base.showGUIView,

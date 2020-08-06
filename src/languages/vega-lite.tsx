@@ -81,7 +81,9 @@ export function tryToGuessTheTypeForVegaLite(
     return;
   }
   const typeWidget = template.widgets.find(widget => widget.name === `${payload.field}Type`);
+  console.log('guessing?', typeWidget, payload);
   if (!(typeWidget && payload.type === 'DataTarget')) {
+    console.log('here');
     return;
   }
   const column = columns.find(col => col.field === trim(payload.text as string));
@@ -118,7 +120,8 @@ export const BLANK_TEMPLATE: Template = {
 };
 
 function inferPossibleDataTargets(spec: any): Set<string> {
-  const foundFields = walkTreeAndLookForFields((key: string) => key === 'field')(spec);
+  const possibleFields = new Set(['field', 'row', 'column']);
+  const foundFields = walkTreeAndLookForFields((key: string) => possibleFields.has(key))(spec);
   const generatedFields = walkTreeAndLookForFields((key: string) => key === 'as')(spec);
   return difference(foundFields, generatedFields);
 }
