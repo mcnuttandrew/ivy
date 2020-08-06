@@ -138,7 +138,7 @@ export default function DataModal(props: Props): JSX.Element {
                   </div>
                 </div>
                 <div
-                  className="flex-down"
+                  className="flex-down full-width"
                   onClick={(): any => {
                     changeSelectedFile({filename: datasetName, dumpTemplateMap: true});
                     setModalState(null);

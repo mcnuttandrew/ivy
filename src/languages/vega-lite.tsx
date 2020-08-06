@@ -118,7 +118,8 @@ export const BLANK_TEMPLATE: Template = {
 };
 
 function inferPossibleDataTargets(spec: any): Set<string> {
-  const foundFields = walkTreeAndLookForFields((key: string) => key === 'field')(spec);
+  const possibleFields = new Set(['field', 'row', 'column']);
+  const foundFields = walkTreeAndLookForFields((key: string) => possibleFields.has(key))(spec);
   const generatedFields = walkTreeAndLookForFields((key: string) => key === 'as')(spec);
   return difference(foundFields, generatedFields);
 }
