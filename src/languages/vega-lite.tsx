@@ -81,9 +81,7 @@ export function tryToGuessTheTypeForVegaLite(
     return;
   }
   const typeWidget = template.widgets.find(widget => widget.name === `${payload.field}Type`);
-  console.log('guessing?', typeWidget, payload);
   if (!(typeWidget && payload.type === 'DataTarget')) {
-    console.log('here');
     return;
   }
   const column = columns.find(col => col.field === trim(payload.text as string));
