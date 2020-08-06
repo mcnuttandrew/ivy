@@ -42,7 +42,7 @@ export default function NewTemplateTooltip(props: Props): JSX.Element {
                       setProgrammaticView(true);
                     }}
                   >
-                    <Link to="/editor">{`New ${language} template`}</Link>
+                    <Link to="/editor/new">{`New ${language} template`}</Link>
                   </button>
                 );
               })}

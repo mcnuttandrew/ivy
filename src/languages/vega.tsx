@@ -16,23 +16,30 @@ import {parse, View} from 'vega';
 
 function getDataViews(props: RendererProps): Promise<any> {
   const {spec, data} = props;
-  const finalSpec = JSON.parse(JSON.stringify(spec));
+  return new Promise((resolve, reject) => {
+    const finalSpec = JSON.parse(JSON.stringify(spec));
 
-  // this stratagey only supports one data set
-  (finalSpec.data || []).forEach((row: any, idx: number) => {
-    if (row.values === 'myData') {
-      finalSpec.data[idx].values = data;
+    // this stratagey only supports one data set
+    (finalSpec.data || []).forEach((row: any, idx: number) => {
+      if (row.values === 'myData') {
+        finalSpec.data[idx].values = data;
+      }
+    });
+    try {
+      const view = new View(parse(finalSpec, {})).initialize();
+      view.runAsync().then(() => {
+        resolve(
+          view.getState({
+            signals: vega.falsy,
+            data: vega.truthy,
+            recurse: true,
+          }).data,
+        );
+      });
+    } catch (err) {
+      reject(err);
     }
   });
-  const view = new View(parse(finalSpec, {})).initialize();
-  return view.runAsync().then(
-    () =>
-      view.getState({
-        signals: vega.falsy,
-        data: vega.truthy,
-        recurse: true,
-      }).data,
-  );
 }
 
 function VegaRenderer(props: RendererProps): JSX.Element {
