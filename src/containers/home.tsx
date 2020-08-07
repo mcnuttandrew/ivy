@@ -4,6 +4,7 @@ import {TiStar} from 'react-icons/ti';
 import {RenderTypeCounts} from '../components/template-card';
 import UnpublishInstanceTooltip from '../components/tooltips/unpublish-instance-tooltip';
 
+import Tooltip from 'rc-tooltip';
 import {getFavoriteTemplates, setFavoriteTemplates} from '../utils/local-storage';
 import * as actionCreators from '../actions/index';
 import {FETCH_PARMS, BINDER} from '../constants';
@@ -35,72 +36,6 @@ function prepareNesting(templates: any[], instances: any[]): any {
   return templates.map(template => ({template, entries: groups[toKey(template)] || []}));
 }
 
-function templateInfo(
-  template: Template,
-  favoriteTemplatesConfig: {favs: Set<string>; setFavs: any},
-  toggleShowInstances: any,
-  numEntries: number,
-): JSX.Element {
-  const {templateName, templateAuthor, templateDescription} = template;
-  const {favs, setFavs} = favoriteTemplatesConfig;
-  const key = toKey(template);
-  return (
-    <div className="flex template-info-container">
-      <div className="margin-right">
-        <Link to={`/editor/${templateAuthor}/${templateName}`}>
-          <Thumbnail templateName={templateName} templateAuthor={templateAuthor} />
-        </Link>
-      </div>
-      <div className="flex-down template-info">
-        <h4 className="flex">
-          <div
-            onClick={(): void => {
-              const newSet = new Set(Array.from(favs));
-              favs.has(key) ? newSet.delete(key) : newSet.add(key);
-              setFavs(newSet);
-              setFavoriteTemplates(
-                Array.from(newSet).map(x => {
-                  const [templateName, templateAuthor] = x.split(BINDER);
-                  return {templateName, templateAuthor};
-                }),
-              );
-            }}
-            className={classnames({
-              'template-list-favorite': true,
-              'template-list-favorited': favs.has(key),
-            })}
-          >
-            <TiStar />
-          </div>
-          <b>Template: </b>
-          <Link to={`/editor/${templateAuthor}/${templateName}`}>{templateName}</Link>
-        </h4>
-        <h5>
-          <b>Author: </b>
-          {templateAuthor}
-        </h5>
-        <h5>
-          <b>Description: </b>
-          {templateDescription}
-        </h5>
-        <h5>{RenderTypeCounts(template)}</h5>
-        <h5>
-          {Object.entries(
-            template.widgets.reduce((acc, row) => {
-              acc[row.type as string] = (acc[row.type as string] || 0) + 1;
-              return acc;
-            }, {} as {[x: string]: number}),
-          )
-            .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
-            .join(', ')}
-        </h5>
-        <button style={{textAlign: 'left'}} onClick={(): void => toggleShowInstances()}>
-          Toggle Instances ({numEntries} instance{numEntries === 1 ? '' : 's'})
-        </button>
-      </div>
-    </div>
-  );
-}
 interface Instance {
   created_at: Date;
   template_creator: string;
@@ -116,8 +51,6 @@ interface InstanceCardProps {
 }
 function InstanceCard(props: InstanceCardProps): JSX.Element {
   const {entry, forPreview, userName, removeInstance} = props;
-  // const {instance_name, dataset} = entry;
-  // const changingDataset = dataset === currentlySelectedFile;
   const templateAuthor = entry.template_creator;
   const templateName = entry.template_name;
   const name = entry.name;
@@ -154,28 +87,91 @@ interface RenderTemplateWithInstancesProps {
 }
 function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): JSX.Element {
   const {row, favoriteTemplatesConfig, userName, removeInstance} = props;
-  const [showInstances, setShowInstance] = useState(false);
   const {template, entries} = row;
-  const {templateName, templateAuthor} = template;
 
+  const {templateName, templateAuthor, templateDescription} = template;
   const kabobbedAuthor = templateAuthor.replace(/\s+/g, '-');
   const kabbobedName = templateName.replace(/\s+/g, '-');
+  const {favs, setFavs} = favoriteTemplatesConfig;
+  const key = toKey(template);
   return (
-    <div className={`margin-bottom home-template-row flex-down  ${kabobbedAuthor}-${kabbobedName}`}>
-      {templateInfo(template, favoriteTemplatesConfig, () => setShowInstance(!showInstances), entries.length)}
-      {showInstances && (
-        <div className="flex home-template-row-instances-container">
-          {entries.map((entry, idx) => (
-            <InstanceCard
-              entry={entry}
-              forPreview={false}
-              userName={userName}
-              key={`instance-${idx}`}
-              removeInstance={removeInstance}
-            />
-          ))}
-        </div>
-      )}
+    <div className={`margin-bottom home-template-row flex  ${kabobbedAuthor}-${kabbobedName}`}>
+      <div className="margin-right">
+        <Link to={`/editor/${templateAuthor}/${templateName}`}>
+          <Thumbnail templateName={templateName} templateAuthor={templateAuthor} />
+        </Link>
+      </div>
+      <div className="flex-down template-info">
+        <h4 className="flex">
+          <div
+            onClick={(): void => {
+              const newSet = new Set(Array.from(favs));
+              favs.has(key) ? newSet.delete(key) : newSet.add(key);
+              setFavs(newSet);
+              setFavoriteTemplates(
+                Array.from(newSet).map(x => {
+                  const [templateName, templateAuthor] = x.split(BINDER);
+                  return {templateName, templateAuthor};
+                }),
+              );
+            }}
+            className={classnames({
+              'template-list-favorite': true,
+              'template-list-favorited': favs.has(key),
+            })}
+          >
+            <TiStar />
+          </div>
+          <b className="margin-right">{'Template: '}</b>
+          <Link to={`/editor/${templateAuthor}/${templateName}`}>{templateName}</Link>
+        </h4>
+        <h5>
+          <b>{'Author: '}</b>
+          {templateAuthor}
+        </h5>
+        <h5>
+          <b>{'Description: '}</b>
+          {templateDescription}
+        </h5>
+        <h5>{RenderTypeCounts(template)}</h5>
+        <h5>
+          {Object.entries(
+            template.widgets.reduce((acc, row) => {
+              acc[row.type as string] = (acc[row.type as string] || 0) + 1;
+              return acc;
+            }, {} as {[x: string]: number}),
+          )
+            .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
+            .join(', ')}
+        </h5>
+        <Tooltip
+          placement="bottom"
+          trigger={'click'}
+          overlay={
+            <div className="home-template-row-instances-container">
+              <div className="flex-down">
+                <h3>Templates Instances for {templateName}</h3>
+                <p>These are the saved examples of this template in use. </p>
+              </div>
+              <div className="flex flex-wrap">
+                {entries.map((entry, idx) => (
+                  <InstanceCard
+                    entry={entry}
+                    forPreview={false}
+                    userName={userName}
+                    key={`instance-${idx}`}
+                    removeInstance={removeInstance}
+                  />
+                ))}
+              </div>
+            </div>
+          }
+        >
+          <button className="instance-toggle">
+            Template Instances ({entries.length} instance{entries.length === 1 ? '' : 's'})
+          </button>
+        </Tooltip>
+      </div>
     </div>
   );
 }
@@ -225,7 +221,7 @@ export function HomeContainer(props: Props): JSX.Element {
       <Header />
       <div className="home-container-contents">
         <div className="home-container-contents-width-set full-width">
-          <h1>Ivy: an Integrated Visualization Editor </h1>
+          <h1>Ivy: A Visualization Editor</h1>
         </div>
         <div className="flex flex-wrap home-header">
           {instances
@@ -302,7 +298,7 @@ export function HomeContainer(props: Props): JSX.Element {
                 return (
                   <div className="flex-down" key={`${name}-row-${idx}`}>
                     {name !== `null` && <h1>{name}</h1>}
-                    <div style={{paddingLeft: '10px'}}>
+                    <div className="flex flex-wrap">
                       {temps.map((row: any) => {
                         const {
                           template: {templateName, templateAuthor},
