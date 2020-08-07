@@ -354,6 +354,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
     templateComplete: !missingFields.length,
     templateMap,
     templates: base.templates,
+    numTemplate: base.templates.length,
     views: base.views,
     viewCatalog: base.viewCatalog,
   };

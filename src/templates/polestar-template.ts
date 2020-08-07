@@ -346,9 +346,18 @@ const Polestar: Template = {
     makeTypeSelect('Detail', 'nominal'),
 
     // text
-    makeDataTarget('Text'),
-    makeTypeSelect('Text', 'nominal'),
-    makeAgg('Text'),
+    injectCondition(makeDataTarget('Text'), {
+      query: '!parameters.markType.includes("text")',
+      queryResult: 'hide',
+    }),
+    injectCondition(makeTypeSelect('Text', 'nominal'), {
+      query: '!parameters.markType.includes("text")',
+      queryResult: 'hide',
+    }),
+    injectCondition(makeAgg('Text'), {
+      query: '!parameters.markType.includes("text")',
+      queryResult: 'hide',
+    }),
 
     // row / column
     makeSection('Facet Divider', []),

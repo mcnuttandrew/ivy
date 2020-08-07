@@ -35,7 +35,7 @@ function optionRow(
     const oldVal = configVals[newIndex];
     newVals[newIndex] = configVals[currentIndex];
     newVals[currentIndex] = oldVal;
-    setWidgetValue({key: 'allowedTypes', value: newVals, idx});
+    setWidgetValue({key: 'allowedValues', value: newVals, idx});
   };
   return (value: DisplayRow, jdx: number): JSX.Element => {
     return (
@@ -59,7 +59,7 @@ function optionRow(
                 onChange={(event: {target: {value: any}}): any => {
                   const newVal = event.target.value;
                   const newRow = usingDisplayValueFormat ? {display: newVal, value: newVal} : `${newVal}`;
-                  setWidgetValue({key: 'allowedTypes', value: updateValue(configVals, newRow, jdx), idx});
+                  setWidgetValue({key: 'allowedValues', value: updateValue(configVals, newRow, jdx), idx});
                 }}
               />
             </IgnoreKeys>
@@ -73,7 +73,7 @@ function optionRow(
                   type="text"
                   onChange={(event): any => {
                     const newRow = {...value, display: event.target.value};
-                    setWidgetValue({key: 'allowedTypes', value: updateValue(configVals, newRow, jdx), idx});
+                    setWidgetValue({key: 'allowedValues', value: updateValue(configVals, newRow, jdx), idx});
                   }}
                 />
               </IgnoreKeys>
@@ -86,7 +86,7 @@ function optionRow(
           buttonClassName="list-widget-row-button"
           onClick={(): void => {
             const updated = [...configVals].filter((_, kdx) => kdx !== jdx);
-            setWidgetValue({key: 'allowedTypes', value: updated, idx});
+            setWidgetValue({key: 'allowedValues', value: updated, idx});
           }}
         />
       </div>
@@ -99,7 +99,10 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
   const config = widget.config;
   const vals = toDisplayVal(config.allowedValues);
   const usingDisplayValueFormat = !(typeof config.allowedValues[0] === 'string');
-  const updateList = (value: any): any => setWidgetValue({key: 'allowedTypes', value: value, idx});
+  const updateList = (value: any): any => {
+    setWidgetValue({key: 'allowedValues', value, idx});
+  };
+
   return (
     <div className="flex-down">
       <div className="flex">
@@ -139,7 +142,7 @@ function ListWidgetComponent(props: GeneralWidget<ListWidget>): JSX.Element {
   const {widget, widgetValue, setTemplateValue, editMode} = props;
   const config = widget.config;
   const firstVal = config.allowedValues[0];
-  const vals = toDisplayVal(widget.config.allowedValues);
+  const vals = toDisplayVal(config.allowedValues);
   return (
     <div className="list-widget">
       <div className="flex">
