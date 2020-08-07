@@ -87,9 +87,7 @@ interface RenderTemplateWithInstancesProps {
 }
 function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): JSX.Element {
   const {row, favoriteTemplatesConfig, userName, removeInstance} = props;
-  // const [showInstances, setShowInstance] = useState(false);
   const {template, entries} = row;
-  // const {templateName, templateAuthor} = template;
 
   const {templateName, templateAuthor, templateDescription} = template;
   const kabobbedAuthor = templateAuthor.replace(/\s+/g, '-');
