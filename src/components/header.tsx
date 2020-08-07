@@ -4,7 +4,7 @@ import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
 import {HOT_KEYS, HOT_KEY_DESCRIPTIONS} from '../constants/index';
-import {Link, Route} from 'react-router-dom';
+import {Link, Route, useLocation} from 'react-router-dom';
 
 interface HeaderProps {
   canRedo?: boolean;
@@ -16,7 +16,9 @@ interface HeaderProps {
 
 export default function Header(props: HeaderProps): JSX.Element {
   const {canRedo, canUndo, triggerRedo, triggerUndo, activateTour} = props;
-
+  const location = useLocation();
+  const {pathname} = location;
+  console.log(pathname);
   return (
     <div className="header flex background-1">
       <div className="flex center">
@@ -64,16 +66,6 @@ export default function Header(props: HeaderProps): JSX.Element {
         <Route path={['/editor/', '/editor/:x', '/editor/:x/:y', '/editor/:x/:z']}>
           <a onClick={(): any => activateTour()}>Tour</a>
         </Route>
-
-        <Link to="/" className="margin-left">
-          Gallery
-        </Link>
-        <Link to="/editor" className="margin-left">
-          Editor
-        </Link>
-        <Link to="/docs" className="margin-left">
-          Docs
-        </Link>
         <Route path={['/editor/', '/editor/:x', '/editor/:x/:y', '/editor/:x/:z']}>
           <Tooltip
             placement="bottom"
@@ -94,6 +86,34 @@ export default function Header(props: HeaderProps): JSX.Element {
             <div>Hotkeys</div>
           </Tooltip>
         </Route>
+
+        <Link
+          to="/"
+          className={classnames({
+            'margin-left': true,
+            'tab-selected': pathname === '/',
+          })}
+        >
+          Gallery
+        </Link>
+        <Link
+          to="/editor"
+          className={classnames({
+            'margin-left': true,
+            'tab-selected': pathname.includes('editor'),
+          })}
+        >
+          Editor
+        </Link>
+        <Link
+          to="/docs"
+          className={classnames({
+            'margin-left': true,
+            'tab-selected': pathname.includes('docs'),
+          })}
+        >
+          Docs
+        </Link>
       </div>
     </div>
   );

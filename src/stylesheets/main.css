@@ -294,6 +294,10 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   ;
 }
 
+.header .tab-selected {
+  text-decoration: underline;
+}
+
 .view-control button {
   font-size: 13px;
   height: 100%;
