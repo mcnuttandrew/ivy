@@ -327,7 +327,7 @@ function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element
 
 function equalityCheck(prevProps: any, nextProps: any): boolean {
   return Object.keys(prevProps).every(key => {
-    if (key === 'materializations' || key === 'widget') {
+    if (key === 'materializations') {
       return JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key]);
     }
     return prevProps[key] === nextProps[key];

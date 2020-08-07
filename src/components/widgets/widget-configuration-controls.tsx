@@ -105,7 +105,6 @@ export default function WidgetConfigurationControls(props: PlacementControlsProp
   if (!editMode) {
     return <div />;
   }
-  console.log(JSON.stringify(widget, null, 2));
   return (
     <div className="widget-handle flex">
       <Tooltip
