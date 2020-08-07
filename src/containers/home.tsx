@@ -259,12 +259,12 @@ export function HomeContainer(props: Props): JSX.Element {
             together through a single interfaces made possible by an abstraction called <b>templates</b>.
           </p>
           <p>
-            These <b>Templates</b> are essentially little functions that can be represented by graphically and
-            textually. They have arguments (the values of GUI widgets) and they have a function body (the way
-            that chart interacts with those arguments). They provide a series of light abstraction mechanisms
-            that enable a good degree of flexibility in the way that interfaces to charts are formed. You can
-            find out more about the specifics of this template language (called the Ivy Template Language or
-            ITL) in the <Link to="/docs">docs</Link>.
+            These <b>Templates</b> are essentially little functions that can be represented both graphically
+            and textually. They have arguments (the values of GUI widgets) and they have a function body (the
+            way that chart interacts with those arguments). They provide a series of light abstraction
+            mechanisms that enable a good degree of flexibility in the way that interfaces to charts are
+            formed. You can find out more about the specifics of this template language (called the Ivy
+            Template Language or ITL) in the <Link to="/docs">docs</Link>.
           </p>
           <p>
             We support templates in a variety of languages including{' '}

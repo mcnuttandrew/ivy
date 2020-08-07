@@ -20,7 +20,7 @@ const VegaLiteDataTypes = ['nominal', 'ordinal', 'quantitative', 'temporal'];
 export const toQuote = (x: string): string => `"${x}"`;
 const justCountAgg = toList(['none', 'count']);
 justCountAgg[0].value = undefined;
-const spatialAggs = [...justCountAgg, ...toList(['min', 'max', 'sum', 'mean', 'median', 'mode'])];
+const spatialAggs = [...justCountAgg, ...toList(['min', 'max', 'sum', 'mean', 'median', 'mode', 'distinct'])];
 
 export const used = (x: string): ConditionQuery => `Boolean(parameters.${x})`;
 export const unused = (x: string): ConditionQuery => `!parameters.${x}`;
