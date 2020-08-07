@@ -87,7 +87,6 @@ const builders = {
 
 interface GenericMaterializationMenuProps {
   allowedValues: {name: string; group?: string}[];
-  columns: ColumnHeader[];
   setMaterialization: GenericAction<SetMaterializationPayload>;
   setTemplateValue: GenericAction<SetTemplateValuePayload>;
   widgetValue: any;
@@ -96,7 +95,7 @@ interface GenericMaterializationMenuProps {
 }
 
 const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): null | JSX.Element => {
-  const {allowedValues, columns, materializations, setMaterialization, setTemplateValue, widget} = props;
+  const {allowedValues, setMaterialization, widget, setTemplateValue, materializations} = props;
   const groups = allowedValues.reduce(
     (acc, row) => {
       acc[row.group || ''] = (acc[row.group || ''] || []).concat(row);
@@ -128,13 +127,8 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
         .map(([key, group]) => {
           const rows = group.map(({name}, idx) => {
             const checked = (materializations || []).includes(name);
-            const column =
-              widget.type === 'DataTarget' && columns.find(column => name.includes(column.field));
             return (
               <div key={idx} className="flex space-between">
-                {column && (
-                  <div className={`template-card-type-pill--${column.type.toLowerCase()}`}>{column.type}</div>
-                )}
                 <span>{name}</span>
                 <Switch
                   {...switchCommon}
@@ -265,11 +259,12 @@ function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element
     },
   });
 
-  const [{isDragging}, drag] = useDrag({
+  const [{isDragging}, drag, preview] = useDrag({
     item: {type: 'WIDGET', widget, idx},
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
+    previewOptions: {anchorX: 1},
   });
 
   const opacity = isDragging ? 0.4 : 1;
@@ -281,7 +276,7 @@ function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element
   const options = materializationOptions(columns, widget);
   return (
     <div
-      ref={ref}
+      ref={preview}
       style={{opacity}}
       className={classnames({
         widget: true,
@@ -290,37 +285,38 @@ function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element
       })}
     >
       <div className="widget-body">{uiElement}</div>
-      <WidgetConfigurationControls {...props} controls={controls} />
-      {options.length > 0 && !disallowFanout && !editMode && (
-        <Tooltip
-          placement="top"
-          trigger="click"
-          overlay={
-            <div className="fan-out-tooltip">
-              <h3>Select Values to Fan Across</h3>
-              <h5>Fanning values allows you to consider multiple options in simultaneously</h5>
-              <GenericMaterializationMenu
-                allowedValues={options}
-                columns={columns}
-                setMaterialization={setMaterialization}
-                setTemplateValue={setTemplateValue}
-                widget={widget}
-                widgetValue={widgetValue}
-                materializations={materializations}
-              />
-            </div>
-          }
-        >
-          <div
-            className={classnames({
-              'materialize-button': true,
-              'materialize-button-active': materializations && materializations.length > 0,
-            })}
+      <div ref={ref}>
+        <WidgetConfigurationControls {...props} controls={controls} />
+        {options.length > 0 && !disallowFanout && !editMode && (
+          <Tooltip
+            placement="top"
+            trigger="click"
+            overlay={
+              <div className="fan-out-tooltip">
+                <h3>Select Values to Fan Across</h3>
+                <h5>Fanning values allows you to consider multiple options in simultaneously</h5>
+                <GenericMaterializationMenu
+                  allowedValues={options}
+                  setMaterialization={setMaterialization}
+                  setTemplateValue={setTemplateValue}
+                  widget={widget}
+                  widgetValue={widgetValue}
+                  materializations={materializations}
+                />
+              </div>
+            }
           >
-            <TiFlash />
-          </div>
-        </Tooltip>
-      )}
+            <div
+              className={classnames({
+                'materialize-button': true,
+                'materialize-button-active': materializations && materializations.length > 0,
+              })}
+            >
+              <TiFlash />
+            </div>
+          </Tooltip>
+        )}
+      </div>
     </div>
   );
 }

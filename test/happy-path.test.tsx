@@ -13,8 +13,6 @@ test('Happy path', done => {
     .first()
     .simulate('click', {button: 0});
 
-  // setTimeout(() => {
-  // console.log($.text());
   // the text of the encoding column should render as expected
   expect($.find('.encoding-column').text()).toMatchSnapshot();
   // the text of the data column should render as expected

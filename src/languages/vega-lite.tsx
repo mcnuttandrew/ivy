@@ -9,6 +9,7 @@ import {
   TemplateMap,
 } from '../types';
 import {buildSynthesizer, walkTreeAndLookForFields, difference} from './suggestion-utils';
+import stringify from 'json-stringify-pretty-compact';
 
 import React from 'react';
 import {Vega} from 'react-vega';
@@ -102,7 +103,6 @@ export function tryToGuessTheTypeForVegaLite(
 
 const vegaLiteEmpty: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  transform: [] as any[],
   mark: {type: 'point', tooltip: true},
   encoding: {},
 };
@@ -144,8 +144,32 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
           delete parsed.data.values;
         }
         parsed.data.name = 'myData';
-        return JSON.stringify(parsed, null, 2);
+        return stringify(parsed);
       },
+    });
+  }
+  if (parsedCode.transform) {
+    suggestions.push({
+      from: 'transform',
+      to: 'no transform',
+      comment: 'Remove Transform',
+      simpleReplace: false,
+      codeEffect: (code: string) => {
+        const parsed = JSON.parse(code);
+        delete parsed.transform;
+        return stringify(parsed);
+      },
+    });
+  }
+
+  const cleanedString = stringify(JSON.parse(code)).trim();
+  if (cleanedString !== code.trim()) {
+    suggestions.push({
+      from: 'unclean',
+      to: 'clean',
+      comment: 'Clean up code',
+      simpleReplace: false,
+      codeEffect: (): string => cleanedString,
     });
   }
   return suggestions;

@@ -100,7 +100,6 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
               codeMode={codeMode}
               currentCode={currentCode}
               editMode={props.editMode}
-              editorError={editorError}
               editorFontSize={editorFontSize}
               editorLineWrap={editorLineWrap}
               readInTemplate={props.readInTemplate}
@@ -123,6 +122,7 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
             />
             <div className="flex-down full-height full-width">
               {editorError && <div className="error-bar">JSON ERROR</div>}
+              {codeMode === JSON_OUTPUT && <div className="warning-bar">CODE IN THIS TAB IS READ ONLY</div>}
               {editMode && codeMode === TEMPLATE_BODY && (
                 <SuggestionBox
                   addWidget={props.addWidget}

@@ -24,7 +24,7 @@ export const writeHeight = (size: any): any => localStorage.setItem('splitPosHei
 export const getWidth = (): number => Number(localStorage.getItem('splitPosWidth'));
 export const writeWidth = (size: any): any => localStorage.setItem('splitPosWidth', size);
 
-export const getEditorFontSize = (): number => Number(localStorage.getItem('editorFontSize')) || 15;
+export const getEditorFontSize = (): number => Number(localStorage.getItem('editorFontSize')) || 10;
 export const writeEditorFontSize = (size: any): any => localStorage.setItem('editorFontSize', size);
 
 export const getEditorLineWrap = (): boolean => localStorage.getItem('editorLineWrap') === 'true';

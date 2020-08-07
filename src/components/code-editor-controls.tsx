@@ -157,7 +157,6 @@ interface CodeEditorControlsProps {
   codeMode: string;
   currentCode: string;
   editMode: boolean;
-  editorError: null | string;
   editorFontSize: number;
   editorLineWrap: boolean;
   readInTemplate: GenericAction<HandleCodePayload>;

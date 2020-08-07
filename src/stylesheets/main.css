@@ -295,7 +295,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 }
 
 .header .tab-selected {
-  text-decoration: underline;
+  font-weight: bold;
 }
 
 .view-control button {
@@ -1133,15 +1133,23 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 /* ERROR BAR IN CODE EDITOR */
 
-.error-bar {
+.error-bar, .warning-bar {
   align-items: center;
   background: red;
   color: white;
   display: flex;
   height: 20px;
   justify-content: center;
-  position: absolute;
   width: 100%;
+}
+
+.warning-bar {
+  background: lightseagreen;
+  z-index: 1;
+}
+
+.error-bar {
+  background: red;
 }
 
 .data-selection {
