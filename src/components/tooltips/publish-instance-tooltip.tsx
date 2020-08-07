@@ -28,6 +28,9 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
   }, [JSON.stringify(templateMap)]);
   // TODO ADD status/validation stuff (publishing/failed/succeeded/invalid)
   const instanceNameInput = useRef(null);
+  if (!vegaDataSetName.has(dataset)) {
+    return <div />;
+  }
   return (
     <Tooltip
       placement="bottom"
@@ -48,10 +51,6 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
               const templateInstance = instanceNameInput.current.value;
               if (!templateInstance.length) {
                 setError('Template instance must have a name');
-                return;
-              }
-              if (!vegaDataSetName.has(dataset)) {
-                setError('Instance must use a predefined dataset');
                 return;
               }
               // TODO: require templateMap must not be blank

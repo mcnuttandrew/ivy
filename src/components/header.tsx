@@ -18,7 +18,6 @@ export default function Header(props: HeaderProps): JSX.Element {
   const {canRedo, canUndo, triggerRedo, triggerUndo, activateTour} = props;
   const location = useLocation();
   const {pathname} = location;
-  console.log(pathname);
   return (
     <div className="header flex background-1">
       <div className="flex center">

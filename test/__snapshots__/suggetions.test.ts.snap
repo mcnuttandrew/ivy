@@ -3,21 +3,21 @@
 exports[`#synthesizeSuggestions (remove data first) - IsotypeBarChart 1`] = `
 Array [
   Object {
-    "comment": "col -> col (CREATE col)",
+    "comment": "Create a new datatarget with name col",
     "from": "\\"col\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[col]\\"",
   },
   Object {
-    "comment": "animal -> animal (CREATE animal)",
+    "comment": "Create a new datatarget with name animal",
     "from": "\\"animal\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[animal]\\"",
   },
   Object {
-    "comment": "country -> country (CREATE country)",
+    "comment": "Create a new datatarget with name country",
     "from": "\\"country\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
@@ -128,14 +128,14 @@ Array [
     "to": "\\"[col]\\"",
   },
   Object {
-    "comment": "animal -> animal (CREATE animal)",
+    "comment": "Create a new datatarget with name animal",
     "from": "\\"animal\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[animal]\\"",
   },
   Object {
-    "comment": "animal -> animal (CREATE/UPDATE animal)",
+    "comment": "Create a new datatarget with name animal and set it to animal",
     "from": "\\"animal\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
@@ -148,7 +148,7 @@ Array [
     "to": "\\"[col]\\"",
   },
   Object {
-    "comment": "country -> country (CREATE country)",
+    "comment": "Create a new datatarget with name country",
     "from": "\\"country\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
@@ -167,21 +167,21 @@ Array [
 exports[`#synthesizeSuggestions - Titantic Etc 1`] = `
 Array [
   Object {
-    "comment": "pclass -> pclass (CREATE pclass)",
+    "comment": "Create a new datatarget with name pclass",
     "from": "\\"pclass\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[pclass]\\"",
   },
   Object {
-    "comment": "age -> age (CREATE age)",
+    "comment": "Create a new datatarget with name age",
     "from": "\\"age\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[age]\\"",
   },
   Object {
-    "comment": "survived -> survived (CREATE survived)",
+    "comment": "Create a new datatarget with name survived",
     "from": "\\"survived\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
@@ -288,21 +288,21 @@ exports[`#synthesizeSuggestions - Titantic Etc 3`] = `Array []`;
 exports[`#synthesizeSuggestions happy path - IsotypeBarChart 1`] = `
 Array [
   Object {
-    "comment": "col -> col (CREATE col)",
+    "comment": "Create a new datatarget with name col",
     "from": "\\"col\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[col]\\"",
   },
   Object {
-    "comment": "animal -> animal (CREATE animal)",
+    "comment": "Create a new datatarget with name animal",
     "from": "\\"animal\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[animal]\\"",
   },
   Object {
-    "comment": "country -> country (CREATE country)",
+    "comment": "Create a new datatarget with name country",
     "from": "\\"country\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
@@ -321,21 +321,21 @@ Array [
 exports[`#synthesizeSuggestions happy path - IsotypeBarChart 2`] = `
 Array [
   Object {
-    "comment": "col -> col (CREATE col)",
+    "comment": "Create a new datatarget with name col",
     "from": "\\"col\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[col]\\"",
   },
   Object {
-    "comment": "animal -> animal (CREATE animal)",
+    "comment": "Create a new datatarget with name animal",
     "from": "\\"animal\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[animal]\\"",
   },
   Object {
-    "comment": "country -> country (CREATE country)",
+    "comment": "Create a new datatarget with name country",
     "from": "\\"country\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
@@ -353,7 +353,7 @@ Array [
     "to": "\\"[country]\\"",
   },
   Object {
-    "comment": "col -> col (CREATE col)",
+    "comment": "Create a new datatarget with name col",
     "from": "\\"col\\"",
     "sideEffect": [Function],
     "simpleReplace": false,
@@ -366,7 +366,7 @@ Array [
     "to": "\\"[country]\\"",
   },
   Object {
-    "comment": "animal -> animal (CREATE animal)",
+    "comment": "Create a new datatarget with name animal",
     "from": "\\"animal\\"",
     "sideEffect": [Function],
     "simpleReplace": false,

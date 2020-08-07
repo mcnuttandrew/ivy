@@ -100,7 +100,8 @@ function inferFieldTransformationSuggestions(
     acc.push({
       from: `"${from}"`,
       to: `"[${suggestedNewWidgetName}]"`,
-      comment: `${from} -> ${suggestedNewWidgetName} (CREATE ${suggestedNewWidgetName})`,
+      // comment: `${from} -> ${suggestedNewWidgetName} (CREATE ${suggestedNewWidgetName})`,
+      comment: `Create a new datatarget with name ${suggestedNewWidgetName}`,
       simpleReplace: false,
       sideEffect: () =>
         DataTargetFactory(containsFromNameAlready ? widgets.length + 1 : suggestedNewWidgetName),
@@ -109,7 +110,8 @@ function inferFieldTransformationSuggestions(
       acc.push({
         from: `"${from}"`,
         to: `"[${suggestedNewWidgetName}]"`,
-        comment: `${from} -> ${suggestedNewWidgetName} (CREATE/UPDATE ${suggestedNewWidgetName})`,
+        // comment: `${from} -> ${suggestedNewWidgetName} (CREATE/UPDATE ${suggestedNewWidgetName})`,
+        comment: `Create a new datatarget with name ${suggestedNewWidgetName} and set it to ${suggestedNewWidgetName}`,
         simpleReplace: false,
         sideEffect: setTemplateValues => {
           setTemplateValues({

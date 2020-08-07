@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 interface OnBlurInputProps {
   label: string;
   initialValue: string;
@@ -7,6 +7,9 @@ interface OnBlurInputProps {
 export default function OnBlurInput(props: OnBlurInputProps): JSX.Element {
   const {label, initialValue, update} = props;
   const [value, setValue] = useState(initialValue);
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
   return (
     <div className="flex">
       <input
