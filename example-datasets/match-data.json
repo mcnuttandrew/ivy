@@ -1,0 +1,74 @@
+[
+    {
+        "team": "Germany",
+        "matchday": 1,
+        "point": 0,
+        "diff": -1
+    },
+    {
+        "team": "Mexico",
+        "matchday": 1,
+        "point": 3,
+        "diff": 1
+    },
+    {
+        "team": "South Korea",
+        "matchday": 1,
+        "point": 0,
+        "diff": -1
+    },
+    {
+        "team": "Sweden",
+        "matchday": 1,
+        "point": 3,
+        "diff": 1
+    },
+    {
+        "team": "Germany",
+        "matchday": 2,
+        "point": 3,
+        "diff": 0
+    },
+    {
+        "team": "Mexico",
+        "matchday": 2,
+        "point": 6,
+        "diff": 2
+    },
+    {
+        "team": "South Korea",
+        "matchday": 2,
+        "point": 0,
+        "diff": -2
+    },
+    {
+        "team": "Sweden",
+        "matchday": 2,
+        "point": 3,
+        "diff": 0
+    },
+    {
+        "team": "Germany",
+        "matchday": 3,
+        "point": 3,
+        "diff": -2
+    },
+    {
+        "team": "Mexico",
+        "matchday": 3,
+        "point": 6,
+        "diff": -1
+    },
+    {
+        "team": "South Korea",
+        "matchday": 3,
+        "point": 3,
+        "diff": 0
+    },
+    {
+        "team": "Sweden",
+        "matchday": 3,
+        "point": 6,
+        "diff": 3
+    }
+]

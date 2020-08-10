@@ -1,0 +1,64 @@
+{
+  "horizon-data.json": {
+    "file": "horizon-data.json",
+    "length": 20,
+    "columns": [
+      "x",
+      "y"
+    ],
+    "MEASURE": 2
+  },
+  "match-data.json": {
+    "file": "match-data.json",
+    "length": 12,
+    "columns": [
+      "team",
+      "matchday",
+      "point",
+      "diff"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 3
+  },
+  "radial-example-data-2.json": {
+    "file": "radial-example-data-2.json",
+    "length": 6,
+    "columns": [
+      "value"
+    ],
+    "MEASURE": 1
+  },
+  "radial-example-data.json": {
+    "file": "radial-example-data.json",
+    "length": 6,
+    "columns": [
+      "category",
+      "value"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "titanic.json": {
+    "file": "titanic.json",
+    "length": 1309,
+    "columns": [
+      "pclass",
+      "survived",
+      "name",
+      "sex",
+      "age",
+      "sibsp",
+      "parch",
+      "ticket",
+      "fare",
+      "cabin",
+      "embarked",
+      "boat",
+      "body",
+      "home.dest",
+      "survived_text"
+    ],
+    "MEASURE": 7,
+    "DIMENSION": 8
+  }
+}

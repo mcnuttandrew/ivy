@@ -3,6 +3,7 @@ import {TiCog, TiDocumentAdd, TiBook} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {GenericAction} from '../actions';
 import Tooltip from 'rc-tooltip';
+
 import {classnames} from '../utils';
 import {ColumnHeader, Template, TemplateMap} from '../types';
 import RelatedViews from './related-views';

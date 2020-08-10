@@ -4,6 +4,8 @@ import {useDropzone} from 'react-dropzone';
 import {GenericAction, LoadDataPayload} from '../../actions/index';
 import {IgnoreKeys} from 'react-hotkeys';
 import VegaDatasetMeta from '../../constants/vega-datasets-counts.json';
+import smallDatasetCounts from '../../constants/small-example-datasets-counts.json';
+const combinedMeta = {...VegaDatasetMeta, ...smallDatasetCounts};
 import {DataType} from '../../types';
 import Modal from './modal';
 import {countSymbol} from '../template-card';
@@ -91,11 +93,11 @@ export default function DataModal(props: Props): JSX.Element {
         </div>
       </div>
       <div className="dataset-list">
-        {Object.keys(VegaDatasetMeta)
+        {Object.keys(combinedMeta)
           .filter(
             key =>
               key.toLowerCase().includes(searchTerm || '') ||
-              VegaDatasetMeta[key].columns.some((col: any) => col.toLowerCase().includes(searchTerm || '')),
+              combinedMeta[key].columns.some((col: any) => col.toLowerCase().includes(searchTerm || '')),
           )
           .sort((a, b) => {
             if (sortMode === 'ALPHA') {
@@ -113,12 +115,12 @@ export default function DataModal(props: Props): JSX.Element {
               }
               return 0;
             }
-            const aVal = Number(VegaDatasetMeta[a][sortMode]) || 0;
-            const bVal = Number(VegaDatasetMeta[b][sortMode]) || 0;
+            const aVal = Number(combinedMeta[a][sortMode]) || 0;
+            const bVal = Number(combinedMeta[b][sortMode]) || 0;
             return aVal - bVal;
           })
           .map(datasetName => {
-            const datasetMeta = VegaDatasetMeta[datasetName];
+            const datasetMeta = combinedMeta[datasetName];
             return (
               <div className="dataset-list-item flex" key={datasetName}>
                 <div className="full-height flex center">

@@ -64,6 +64,13 @@ export default function ShowData(props: Props): JSX.Element {
       })
       .catch(e => catchError(e));
   }, [JSON.stringify(spec), JSON.stringify(templateMap)]);
+
+  let rows = [];
+  try {
+    rows = (loadedData[selectedData] || []).slice(0, 10);
+  } catch (e) {
+    console.error(e);
+  }
   return (
     <div className="flex-down">
       <div className="show-data-table-controls">
@@ -77,7 +84,7 @@ export default function ShowData(props: Props): JSX.Element {
         <div>Showing a sample of the current data</div>
       </div>
       {error && <div>{error}</div>}
-      <div className="show-data-table">{showTable((loadedData[selectedData] || []).slice(0, 10))}</div>
+      <div className="show-data-table">{showTable(rows)}</div>
     </div>
   );
 }

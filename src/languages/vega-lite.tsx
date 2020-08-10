@@ -28,7 +28,8 @@ function getDataViews(props: RendererProps): Promise<any> {
   if (
     !get(finalSpec, ['data', 'values']) &&
     !get(finalSpec, ['data', 'url']) &&
-    !get(finalSpec, ['data', 'sequence'])
+    !get(finalSpec, ['data', 'sequence']) &&
+    !get(finalSpec, ['data', 'layer'])
   ) {
     finalSpec.data = {values: data};
   }
