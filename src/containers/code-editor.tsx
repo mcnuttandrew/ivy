@@ -98,7 +98,6 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
             <CodeEditorControls
               addWidget={props.addWidget}
               codeMode={codeMode}
-              currentCode={currentCode}
               editMode={props.editMode}
               editorFontSize={editorFontSize}
               editorLineWrap={editorLineWrap}
@@ -114,7 +113,6 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
                 writeEditorLineWrap(value);
                 setEditorLineWrap(value);
               }}
-              setSpecCode={props.setSpecCode}
               setProgrammaticView={props.setProgrammaticView}
               showProgrammaticMode={props.showProgrammaticMode}
               spec={props.spec}

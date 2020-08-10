@@ -54,24 +54,13 @@ const lineWraps = [
   {name: 'off', value: false},
 ];
 interface EditorControlsConfigProps {
-  codeMode: string;
-  currentCode: string;
   editorFontSize: number;
   editorLineWrap: boolean;
   setEditorFontSize: any;
   setEditorLineWrap: any;
-  setSpecCode: GenericAction<HandleCodePayload>;
 }
 function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
-  const {
-    setSpecCode,
-    codeMode,
-    editorFontSize,
-    setEditorFontSize,
-    currentCode,
-    editorLineWrap,
-    setEditorLineWrap,
-  } = props;
+  const {editorFontSize, setEditorFontSize, editorLineWrap, setEditorLineWrap} = props;
   const EDITOR_CONTROLS: any[] = [
     {name: 'Font Size', options: fontSizes, update: setEditorFontSize, current: editorFontSize},
     {name: 'Line wrap', options: lineWraps, update: setEditorLineWrap, current: editorLineWrap},
@@ -95,28 +84,6 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
                 </button>
               );
             })}
-          </div>
-        );
-      })}
-      <h3>Text Manipulation Shortcuts</h3>
-      {SHORTCUTS.map((shortcut: any) => {
-        const {action, name, description} = shortcut;
-        return (
-          <div
-            className="flex"
-            key={name}
-            onClick={(): void => {
-              if (codeMode !== TEMPLATE_BODY) {
-                return;
-              }
-              setSpecCode({
-                code: stringify(action(JSON.parse(currentCode))),
-                inError: false,
-              });
-            }}
-          >
-            <button type="button">{name}</button>
-            <div>{description}</div>
           </div>
         );
       })}
@@ -155,7 +122,6 @@ export function CodeCollapse(props: CodeCollapseProps): JSX.Element {
 interface CodeEditorControlsProps {
   addWidget?: GenericAction<GenWidget>;
   codeMode: string;
-  currentCode: string;
   editMode: boolean;
   editorFontSize: number;
   editorLineWrap: boolean;
@@ -165,7 +131,6 @@ interface CodeEditorControlsProps {
   setEditMode: GenericAction<boolean>;
   setEditorFontSize: any;
   setEditorLineWrap: any;
-  setSpecCode: GenericAction<HandleCodePayload>;
   setProgrammaticView: GenericAction<boolean>;
   showProgrammaticMode: boolean;
   spec: any;
@@ -174,7 +139,6 @@ interface CodeEditorControlsProps {
 export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.Element {
   const {
     codeMode,
-    currentCode,
     editMode,
     editorFontSize,
     editorLineWrap,
@@ -182,7 +146,6 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
     setEditMode,
     setEditorFontSize,
     setEditorLineWrap,
-    setSpecCode,
     setProgrammaticView,
     showProgrammaticMode,
   } = props;
@@ -245,13 +208,10 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
             trigger="click"
             overlay={
               <EditorControlsConfig
-                codeMode={codeMode}
-                currentCode={currentCode}
                 editorFontSize={editorFontSize}
                 editorLineWrap={editorLineWrap}
                 setEditorFontSize={setEditorFontSize}
                 setEditorLineWrap={setEditorLineWrap}
-                setSpecCode={setSpecCode}
               />
             }
           >
