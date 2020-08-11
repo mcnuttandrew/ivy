@@ -35,9 +35,20 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
     const generatedContent = new Function('parameters', `return ${query}`);
     result = Boolean(generatedContent(templateMap.paramValues));
   } catch (e) {
-    log('Query Evalution Error', e, query, templateMap.paramValues);
+    log('Query Evaluation Error', e, query, templateMap.paramValues);
   }
   return result;
+}
+
+function tryToComputeKey(query: string, templateMap: TemplateMap): string {
+  let result = query.slice(1).slice(0, query.length - 2);
+  try {
+    const generatedContent = new Function('parameters', `return ${result}`);
+    result = generatedContent(templateMap.paramValues);
+  } catch (e) {
+    log('Key Evaluation Error', e, query, templateMap.paramValues);
+  }
+  return `${result}`;
 }
 
 function shouldUpdateContainerWithValue(
@@ -65,7 +76,7 @@ function shouldUpdateContainerWithValue(
  */
 export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Json {
   return function walker(spec: Json): Json {
-    // if it's array interate across it
+    // if it's array iterate across it
     if (Array.isArray(spec)) {
       return spec.reduce((acc: JsonArray, child) => {
         if (child && typeof child === 'object' && (child as JsonMap).$cond) {
@@ -96,15 +107,19 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     }
     // otherwise looks through its children
     return Object.entries(spec).reduce((acc: JsonMap, [key, value]: [string, Json]) => {
-      // if it's a conditional, if so execute the conditional
+      let computedKey = key;
+      if (key.match(/\[(.*)\]/)) {
+        computedKey = tryToComputeKey(key, templateMap);
+      }
       if (value && typeof value === 'object' && (value as JsonMap).$cond) {
+        // if it's a conditional, if so execute the conditional
         const valuemap = (value as unknown) as IvyLangConditional;
         const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
         if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
-          acc[key] = walker(valuemap.$cond[queryResult]);
+          acc[computedKey] = walker(valuemap.$cond[queryResult]);
         }
       } else {
-        acc[key] = walker(value);
+        acc[computedKey] = walker(value);
       }
       return acc;
     }, {});

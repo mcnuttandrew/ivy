@@ -271,8 +271,12 @@ function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element
   if (editMode) {
     drag(drop(ref));
   }
+  const factory = builders[widgetType];
+  if (!factory) {
+    return <div>error</div>;
+  }
 
-  const {controls, uiElement, materializationOptions} = builders[widgetType](widget, props);
+  const {controls, uiElement, materializationOptions} = factory(widget, props);
   const options = materializationOptions(columns, widget);
   return (
     <div

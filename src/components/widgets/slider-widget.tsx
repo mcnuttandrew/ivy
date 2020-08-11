@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {SliderWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 import {EditParameterName, EditDisplayName, AddLabelToWidget, widgetName, Reset} from './widget-common';
@@ -56,6 +56,9 @@ function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element 
   const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
   const [localVal, setLocalVal] = useState(widgetValue);
   const setVal = (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`});
+  useEffect(() => {
+    setLocalVal(widgetValue);
+  }, [widgetValue]);
   return (
     <div className="slide-widget">
       <div className="widget-title">

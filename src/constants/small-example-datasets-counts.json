@@ -1,4 +1,24 @@
 {
+  "bar-chart-example.json": {
+    "file": "bar-chart-example.json",
+    "length": 9,
+    "columns": [
+      "a",
+      "b"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "emoji-bar.json": {
+    "file": "emoji-bar.json",
+    "length": 8,
+    "columns": [
+      "name",
+      "count"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
   "horizon-data.json": {
     "file": "horizon-data.json",
     "length": 20,
@@ -7,6 +27,17 @@
       "y"
     ],
     "MEASURE": 2
+  },
+  "image-scatterplot.json": {
+    "file": "image-scatterplot.json",
+    "length": 3,
+    "columns": [
+      "x",
+      "y",
+      "img"
+    ],
+    "MEASURE": 2,
+    "DIMENSION": 1
   },
   "match-data.json": {
     "file": "match-data.json",
@@ -19,6 +50,33 @@
     ],
     "DIMENSION": 1,
     "MEASURE": 3
+  },
+  "precomputed-penguin-summaries.json": {
+    "file": "precomputed-penguin-summaries.json",
+    "length": 3,
+    "columns": [
+      "Species",
+      "lower",
+      "q1",
+      "median",
+      "q3",
+      "upper",
+      "outliers"
+    ],
+    "DIMENSION": 2,
+    "MEASURE": 5
+  },
+  "questions.json": {
+    "file": "questions.json",
+    "length": 40,
+    "columns": [
+      "question",
+      "type",
+      "value",
+      "percentage"
+    ],
+    "DIMENSION": 2,
+    "MEASURE": 2
   },
   "radial-example-data-2.json": {
     "file": "radial-example-data-2.json",
@@ -34,6 +92,16 @@
     "columns": [
       "category",
       "value"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "simple-bar-labels.json": {
+    "file": "simple-bar-labels.json",
+    "length": 3,
+    "columns": [
+      "a",
+      "b"
     ],
     "DIMENSION": 1,
     "MEASURE": 1
@@ -60,5 +128,35 @@
     ],
     "MEASURE": 7,
     "DIMENSION": 8
+  },
+  "top-k.json": {
+    "file": "top-k.json",
+    "length": 22,
+    "columns": [
+      "student",
+      "score"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "total-time.json": {
+    "file": "total-time.json",
+    "length": 5,
+    "columns": [
+      "Activity",
+      "Time"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "waterfall-example.json": {
+    "file": "waterfall-example.json",
+    "length": 14,
+    "columns": [
+      "label",
+      "amount"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
   }
 }

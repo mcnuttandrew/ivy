@@ -1,0 +1,58 @@
+[
+    {
+        "label": "Begin",
+        "amount": 4000
+    },
+    {
+        "label": "Jan",
+        "amount": 1707
+    },
+    {
+        "label": "Feb",
+        "amount": -1425
+    },
+    {
+        "label": "Mar",
+        "amount": -1030
+    },
+    {
+        "label": "Apr",
+        "amount": 1812
+    },
+    {
+        "label": "May",
+        "amount": -1067
+    },
+    {
+        "label": "Jun",
+        "amount": -1481
+    },
+    {
+        "label": "Jul",
+        "amount": 1228
+    },
+    {
+        "label": "Aug",
+        "amount": 1176
+    },
+    {
+        "label": "Sep",
+        "amount": 1146
+    },
+    {
+        "label": "Oct",
+        "amount": 1205
+    },
+    {
+        "label": "Nov",
+        "amount": -1388
+    },
+    {
+        "label": "Dec",
+        "amount": 1492
+    },
+    {
+        "label": "End",
+        "amount": 0
+    }
+]
