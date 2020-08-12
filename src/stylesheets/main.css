@@ -1166,7 +1166,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   color: #444;
   display: flex;
   font-size: 10px;
-  height: 10px;
+  height: 15px;
   margin: 0;
   text-align-last: right;
   width: 100%;

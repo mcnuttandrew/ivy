@@ -9,6 +9,16 @@
     "DIMENSION": 1,
     "MEASURE": 1
   },
+  "discretizing-scales.json": {
+    "file": "discretizing-scales.json",
+    "length": 9,
+    "columns": [
+      "a",
+      "b"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
   "emoji-bar.json": {
     "file": "emoji-bar.json",
     "length": 8,
@@ -96,6 +106,17 @@
     "DIMENSION": 1,
     "MEASURE": 1
   },
+  "selectable-heatmap.json": {
+    "file": "selectable-heatmap.json",
+    "length": 9,
+    "columns": [
+      "actual",
+      "predicted",
+      "count"
+    ],
+    "DIMENSION": 2,
+    "MEASURE": 1
+  },
   "simple-bar-labels.json": {
     "file": "simple-bar-labels.json",
     "length": 3,
@@ -147,6 +168,18 @@
       "Time"
     ],
     "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "trellis-grid.json": {
+    "file": "trellis-grid.json",
+    "length": 27,
+    "columns": [
+      "a",
+      "b",
+      "c",
+      "p"
+    ],
+    "DIMENSION": 3,
     "MEASURE": 1
   },
   "waterfall-example.json": {
