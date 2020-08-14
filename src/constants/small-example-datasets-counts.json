@@ -9,6 +9,49 @@
     "DIMENSION": 1,
     "MEASURE": 1
   },
+  "bars-with-negative-vals.json": {
+    "file": "bars-with-negative-vals.json",
+    "length": 9,
+    "columns": [
+      "a",
+      "b"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "bullet-data.json": {
+    "file": "bullet-data.json",
+    "length": 5,
+    "columns": [
+      "title",
+      "subtitle",
+      "ranges",
+      "measures",
+      "markers"
+    ],
+    "DIMENSION": 5
+  },
+  "color-encoding-names.json": {
+    "file": "color-encoding-names.json",
+    "length": 3,
+    "columns": [
+      "color",
+      "b"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
+  },
+  "dashed-part.json": {
+    "file": "dashed-part.json",
+    "length": 7,
+    "columns": [
+      "a",
+      "b",
+      "predicted"
+    ],
+    "DIMENSION": 2,
+    "MEASURE": 1
+  },
   "discretizing-scales.json": {
     "file": "discretizing-scales.json",
     "length": 9,
@@ -29,6 +72,26 @@
     "DIMENSION": 1,
     "MEASURE": 1
   },
+  "falcon.json": {
+    "file": "falcon.json",
+    "length": 210,
+    "columns": [
+      "falcon",
+      "square"
+    ],
+    "MEASURE": 2
+  },
+  "gantt.json": {
+    "file": "gantt.json",
+    "length": 3,
+    "columns": [
+      "task",
+      "start",
+      "end"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 2
+  },
   "horizon-data.json": {
     "file": "horizon-data.json",
     "length": 20,
@@ -37,6 +100,16 @@
       "y"
     ],
     "MEASURE": 2
+  },
+  "hover-select-bar.json": {
+    "file": "hover-select-bar.json",
+    "length": 9,
+    "columns": [
+      "a",
+      "b"
+    ],
+    "DIMENSION": 1,
+    "MEASURE": 1
   },
   "image-scatterplot.json": {
     "file": "image-scatterplot.json",
@@ -60,6 +133,15 @@
     ],
     "DIMENSION": 1,
     "MEASURE": 3
+  },
+  "null-vals.json": {
+    "file": "null-vals.json",
+    "length": 7,
+    "columns": [
+      "x",
+      "y"
+    ],
+    "MEASURE": 2
   },
   "precomputed-penguin-summaries.json": {
     "file": "precomputed-penguin-summaries.json",
@@ -181,6 +263,19 @@
     ],
     "DIMENSION": 3,
     "MEASURE": 1
+  },
+  "voyager-2-study.json": {
+    "file": "voyager-2-study.json",
+    "length": 4,
+    "columns": [
+      "measure",
+      "mean",
+      "lo",
+      "hi",
+      "study"
+    ],
+    "DIMENSION": 2,
+    "MEASURE": 3
   },
   "waterfall-example.json": {
     "file": "waterfall-example.json",

@@ -163,7 +163,7 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
     });
   }
 
-  const cleanedString = stringify(JSON.parse(code)).trim();
+  const cleanedString = stringify(JSON.parse(code), {maxLength: 110}).trim();
   if (cleanedString !== code.trim()) {
     suggestions.push({
       from: 'unclean',

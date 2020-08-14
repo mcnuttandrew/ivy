@@ -1,5 +1,5 @@
 import {LanguageExtension} from '../types';
-
+import stringify from 'json-stringify-pretty-compact';
 import x from 'vega-projection-extended';
 // necessary footwork to force the projections to be imported
 // eslint-disable-next-line
@@ -93,8 +93,18 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
       codeEffect: (code: string) => {
         const parsed = JSON.parse(code);
         parsed.data[idx].values = 'myData';
-        return JSON.stringify(parsed, null, 2);
+        return stringify(parsed, {maxLength: 110});
       },
+    });
+  }
+  const cleanedString = stringify(JSON.parse(code), {maxLength: 110}).trim();
+  if (cleanedString !== code.trim()) {
+    suggestions.push({
+      from: 'unclean',
+      to: 'clean',
+      comment: 'Clean up code',
+      simpleReplace: false,
+      codeEffect: (): string => cleanedString,
     });
   }
   return suggestions;

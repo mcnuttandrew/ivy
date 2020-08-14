@@ -3,6 +3,7 @@ import {TiDeleteOutline} from 'react-icons/ti';
 import {IgnoreKeys} from 'react-hotkeys';
 import {Range} from 'rc-slider';
 import DatePicker from 'react-datepicker';
+import ErrorBoundary from './error-boundary';
 
 interface Props {
   column: any;
@@ -21,11 +22,17 @@ function DateFilter({filter, updateFilter}: Props): JSX.Element {
       <IgnoreKeys style={{height: '100%'}}>
         <div className="flex">
           <span>Start</span>
-          <DatePicker selected={range[0]} onChange={(date): any => updateFilter([date, range[1]])} />
+          <DatePicker
+            selected={new Date(range[0])}
+            onChange={(date): any => updateFilter([date, new Date(range[1])])}
+          />
         </div>
         <div className="flex">
           <span>End</span>
-          <DatePicker selected={range[1]} onChange={(date): any => updateFilter([range[0], date])} />
+          <DatePicker
+            selected={new Date(range[1])}
+            onChange={(date): any => updateFilter([new Date(range[0]), date])}
+          />
         </div>
       </IgnoreKeys>
     </div>
@@ -135,7 +142,6 @@ export default function Filter(props: Props): JSX.Element {
   if (!column) {
     return <div />;
   }
-
   return (
     <div className="flex-down filter-container">
       <div className="flex space-between filter-header">
@@ -144,11 +150,13 @@ export default function Filter(props: Props): JSX.Element {
           <TiDeleteOutline />
         </div>
       </div>
-      <div className="filter-contents">
-        {type === 'DIMENSION' && DimensionFilter(props)}
-        {type === 'MEASURE' && MeasureFilter(props)}
-        {type === 'TIME' && DateFilter(props)}
-      </div>
+      <ErrorBoundary>
+        <div className="filter-contents">
+          {type === 'DIMENSION' && DimensionFilter(props)}
+          {type === 'MEASURE' && MeasureFilter(props)}
+          {type === 'TIME' && DateFilter(props)}
+        </div>
+      </ErrorBoundary>
     </div>
   );
 }

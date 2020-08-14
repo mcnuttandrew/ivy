@@ -1,5 +1,4 @@
 import React from 'react';
-import stringify from 'json-stringify-pretty-compact';
 import {TiCog, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 import Tooltip from 'rc-tooltip';
@@ -8,41 +7,6 @@ import {GenericAction, HandleCodePayload} from '../actions';
 import {TemplateMap, GenWidget} from '../types';
 import {classnames, get} from '../utils';
 import {SimpleTooltip} from './tooltips';
-
-const SHORTCUTS = [
-  {
-    name: 'Add Height/Width',
-    action: (code: any): any => {
-      const usingNested = !!code.spec;
-      if (usingNested) {
-        code.spec.height = 500;
-        code.spec.width = 500;
-      } else {
-        code.height = 500;
-        code.width = 500;
-      }
-      return code;
-    },
-    description: 'Insert height and width values in to the current template',
-  },
-  {
-    name: 'Clean Up',
-    action: (code: any): any => code,
-    description: 'Clean up the formatting of the current code',
-  },
-  {
-    name: 'Swap x and y',
-    action: (code: any): any => {
-      if (get(code, ['encoding', 'x', 'field']) && get(code, ['encoding', 'y', 'field'])) {
-        const xTemp = code.encoding.x.field;
-        code.encoding.x.field = code.encoding.y.field;
-        code.encoding.y.field = xTemp;
-      }
-      return code;
-    },
-    description: 'Swap the x and y dimensions of encoding if they exist',
-  },
-];
 
 const fontSizes = [
   {name: 'small', value: 10},

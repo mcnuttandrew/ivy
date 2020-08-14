@@ -1,0 +1,30 @@
+[
+    {
+        "measure": "Open Exploration",
+        "mean": 1.813,
+        "lo": 1.255,
+        "hi": 2.37,
+        "study": "PoleStar vs Voyager"
+    },
+    {
+        "measure": "Focused Question Answering",
+        "mean": -1.688,
+        "lo": -2.325,
+        "hi": -1.05,
+        "study": "PoleStar vs Voyager"
+    },
+    {
+        "measure": "Open Exploration",
+        "mean": 2.1875,
+        "lo": 1.665,
+        "hi": 2.71,
+        "study": "PoleStar vs Voyager 2"
+    },
+    {
+        "measure": "Focused Question Answering",
+        "mean": -0.0625,
+        "lo": -0.474,
+        "hi": 0.349,
+        "study": "PoleStar vs Voyager 2"
+    }
+]

@@ -32,7 +32,15 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
   // TODO can probable keep a cache of these results?
   let result = false;
   try {
-    const generatedContent = new Function('parameters', `return ${query}`);
+    const generatedContent = new Function(
+      'parameters',
+      `
+      ${Object.keys(templateMap.paramValues)
+        .map(key => `const ${key} = parameters.${key}`)
+        .join('\n')}
+      return ${query};
+    `,
+    );
     result = Boolean(generatedContent(templateMap.paramValues));
   } catch (e) {
     log('Query Evaluation Error', e, query, templateMap.paramValues);
@@ -43,7 +51,16 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
 function tryToComputeKey(query: string, templateMap: TemplateMap): string {
   let result = query.slice(1).slice(0, query.length - 2);
   try {
-    const generatedContent = new Function('parameters', `return ${result}`);
+    const generatedContent = new Function(
+      'parameters',
+      `
+      ${Object.keys(templateMap.paramValues)
+        .map(key => key.replace(/-|\s/g, ''))
+        .map(key => `const ${key} = parameters.${key}`)
+        .join('\n')}
+      return ${result};
+    `,
+    );
     result = generatedContent(templateMap.paramValues);
   } catch (e) {
     log('Key Evaluation Error', e, query, templateMap.paramValues);
