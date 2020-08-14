@@ -15,7 +15,7 @@ Through this language we are able to treat chart specified in JSON-based domain 
     "y": {
         "field": "[xDim]", 
         "type": "nominal", 
-        "sort": {"$cond": {"query": "parameters.sort.includes('true')"}, "true": "-x"}
+        "sort": {"$if": "parameters.sort.includes('true')", "true": "-x"}
     },
     "x": {"aggregate": "count"}
   },
@@ -74,11 +74,9 @@ Here's a rough template for the conditionals in general
 
 ```json
 {
-    "$cond": {
-        "query": "QUERY",
-        "true": "VALUE_IF_TRUE",
-        "false": "VALUE_IF_FALSE"
-    }
+  "$if": "QUERY",
+  "true": "VALUE_IF_TRUE",
+  "false": "VALUE_IF_FALSE"
 }
 ```
 
