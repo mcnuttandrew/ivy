@@ -148,17 +148,14 @@ export default function CodeEditorControls(props: CodeEditorControlsProps): JSX.
                   flex: true,
                   'selected-tab': key === codeMode,
                 })}
+                onClick={(): any => {
+                  setCodeMode(key);
+                  if (!editMode && key !== JSON_OUTPUT) {
+                    setEditMode(true);
+                  }
+                }}
               >
-                <span
-                  onClick={(): any => {
-                    setCodeMode(key);
-                    if (!editMode) {
-                      setEditMode(true);
-                    }
-                  }}
-                >
-                  {key}
-                </span>
+                <span>{key}</span>
                 <SimpleTooltip message={description} />
               </div>
             );
