@@ -30,7 +30,6 @@ const PARALLEL_COORS: any = {
           return {
             $if: `parameters.Col${idx}`,
             true: `[Col${idx}]`,
-            // $cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`},
           };
         }),
       ],
@@ -50,17 +49,6 @@ const PARALLEL_COORS: any = {
           nice: true,
           domain: {data: 'table', field: `[Col${idx}]`},
         },
-        // $cond: {
-        //   query: `parameters.Col${idx}`,
-        //   true: {
-        //     name: `[Col${idx}]`,
-        //     type: 'linear',
-        //     range: 'height',
-        //     zero: `[Col${idx}Zero]`,
-        //     nice: true,
-        //     domain: {data: 'table', field: `[Col${idx}]`},
-        //   },
-        // },
       };
     }),
     {
@@ -71,15 +59,6 @@ const PARALLEL_COORS: any = {
         domain: {data: 'table', field: '[ColorBy]', sort: true},
         range: 'category',
       },
-      // $cond: {
-      //   query: 'parameters.ColorBy',
-      //   true: {
-      //     name: 'color',
-      //     type: 'ordinal',
-      //     domain: {data: 'table', field: '[ColorBy]', sort: true},
-      //     range: 'category',
-      //   },
-      // },
     },
   ],
 
@@ -94,16 +73,6 @@ const PARALLEL_COORS: any = {
           title: `[Col${idx}]`,
           offset: {scale: 'ord', value: `[Col${idx}]`, mult: -1},
         },
-        // $cond: {
-        //   query: `parameters.Col${idx}`,
-        //   true: {
-        //     orient: 'left',
-        //     zindex: 1,
-        //     scale: `[Col${idx}]`,
-        //     title: `[Col${idx}]`,
-        //     offset: {scale: 'ord', value: `[Col${idx}]`, mult: -1},
-        //   },
-        // },
       };
     }),
   ],
@@ -114,13 +83,6 @@ const PARALLEL_COORS: any = {
         stroke: 'color',
         title: '[ColorBy]',
       },
-      // $cond: {
-      //   query: 'parameters.ColorBy',
-      //   true: {
-      //     stroke: 'color',
-      //     title: '[ColorBy]',
-      //   },
-      // },
     },
   ],
   marks: [
@@ -142,11 +104,6 @@ const PARALLEL_COORS: any = {
                 $if: 'parameters.ColorBy',
                 true: {field: {parent: '[ColorBy]'}, scale: 'color'},
                 false: {value: '[Single Color]'},
-                // $cond: {
-                //   query: 'parameters.ColorBy',
-                //   true: {field: {parent: '[ColorBy]'}, scale: 'color'},
-                //   false: {value: '[Single Color]'},
-                // },
               },
             },
           },

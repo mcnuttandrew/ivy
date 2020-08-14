@@ -43,11 +43,6 @@ function aggregateConditional(key: string): JsonMap {
   const isNone = `${key}Agg.includes('none')`;
 
   return {
-    // $cond: {
-    // query: `${isCount} || (${filledIn} && !${isNone})`,
-    //   query: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
-    //   true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
-    // // },
     $if: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
     true: {$if: `${isCount}`, true: 'count', false: `[${key}Agg]`},
   };
@@ -62,18 +57,6 @@ function conditionalFieldName(key: string): JsonMap {
       false: `[${key}]`,
     },
   };
-  // return {
-  //   $cond: {
-  //     query: `${used(key)} && ${notCount(key)}`,
-  //     true: {
-  //       $cond: {
-  //         query: `(parameters.${key}.includes('${META_COL_ROW}')) || (parameters.${key}.includes('${META_COL_COL}'))`,
-  //         true: {repeat: `[${key}]`},
-  //         false: `[${key}]`,
-  //       },
-  //     },
-  //   },
-  // };
 }
 
 function zeroConditional(key: string): JsonMap {
@@ -84,13 +67,6 @@ function zeroConditional(key: string): JsonMap {
     $if: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
     true: `[${key}IncludeZero]`,
   };
-  // return {
-  //   $cond: {
-  //     query: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
-  //     // query: `${used(key)} && ${includeZero} && ${isQuant}`,
-  //     true: `[${key}IncludeZero]`,
-  //   },
-  // };
 }
 
 function timeUnitCond(key: string): any {
@@ -99,7 +75,6 @@ function timeUnitCond(key: string): any {
   return {
     $if: `${used(key)} && ${isTemporal} && ${isNotNull}`,
     true: `[${key}TimeUnit]`,
-    // $cond: {query: `${used(key)} && ${isTemporal} && ${isNotNull}`, true: `[${key}TimeUnit]`},
   };
 }
 
@@ -108,13 +83,6 @@ function typeCond(key: string): any {
     $if: `${used(key)} && ${key}Type.includes('quantitative')`,
     true: `[${key}ScaleType]`,
   };
-
-  // return {
-  //   $cond: {
-  //     query: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
-  //     true: `[${key}ScaleType]`,
-  //   },
-  // };
 }
 
 const renderObjectIf = (object: Json, query: string, fieldName: string): JsonMap => ({
@@ -129,11 +97,6 @@ const encoding = {
         $if: `${key}.includes('COUNT')`,
         true: 'quantitative',
         false: `[${key}Type]`,
-        // $cond: {
-        //   query: `parameters.${key}.includes('COUNT')`,
-        //   true: 'quantitative',
-        //   false: `[${key}Type]`,
-        // },
       },
       aggregate: aggregateConditional(key),
       timeUnit: timeUnitCond(key),
@@ -152,20 +115,11 @@ const encoding = {
         $if: `${key}.includes('COUNT')`,
         true: 'quantitative',
         false: `[${key}Type]`,
-        // $cond: {
-        //   query: `parameters.${key}.includes('COUNT')`,
-        //   true: 'quantitative',
-        //   false: `[${key}Type]`,
-        // },
       },
       aggregate: aggregateConditional(key),
       bin: {
         $if: `${key}Bin.includes('true') && ${key}Type.includes('quantitative')`,
         true: true,
-        // $cond: {
-        //   query: `parameters.${key}Bin.includes('true') && parameters.${key}Type.includes('quantitative')`,
-        //   true: true,
-        // },
       },
     } as any;
     if (key === 'Color') {
@@ -179,20 +133,6 @@ const encoding = {
           },
         },
       };
-      // output['scale'] = {
-      //   $cond: {
-      //     query: 'parameters.Color',
-      //     true: {
-      //       scheme: {
-      //         $cond: {
-      //           query: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
-      //           true: '[nominalColor]',
-      //           false: '[quantColor]',
-      //         },
-      //       },
-      //     },
-      //   },
-      // };
     }
     return {...acc, ...renderObjectIf(output, used(key), key.toLowerCase())};
   }, {}),
@@ -219,24 +159,12 @@ const PolestarBody: Json = {
       row: {$if: paramsInclude(META_COL_ROW), true: '[row]'},
       column: {$if: paramsInclude(META_COL_COL), true: '[column]'},
     },
-    // $cond: {
-    //   query: eitherMeta,
-    //   true: {
-    //     row: {$cond: {query: paramsInclude(META_COL_ROW), true: '[row]'}},
-    //     column: {$cond: {query: paramsInclude(META_COL_COL), true: '[column]'}},
-    //   },
-    // },
   },
   encoding: {$if: `!(${eitherMeta})`, true: encoding},
   mark: {$if: `!(${eitherMeta})`, true: mark},
   spec: {$if: eitherMeta, true: {encoding, mark}},
   height: {$if: 'showHeight.includes("true")', true: '[height]'},
   width: {$if: 'showWidth.includes("true")', true: '[width]'},
-  // encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding}},
-  // mark: {$cond: {query: `!(${eitherMeta})`, true: mark}},
-  // spec: {$cond: {query: eitherMeta, true: {encoding, mark}}},
-  // height: {$cond: {query: 'parameters.showHeight.includes("true")', true: '[height]'}},
-  // width: {$cond: {query: 'parameters.showWidth.includes("true")', true: '[width]'}},
 };
 
 const Polestar: Template = {
@@ -311,19 +239,6 @@ const Polestar: Template = {
     // Mark type
     makeSection('MarkDivider', []),
     simpleList({name: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('point')}),
-    // {
-    //   type: 'Shortcut',
-    //   name: 'main-shortcuts',
-    //   config: {
-    //     shortcuts: [
-    //       {
-    //         label: 'SWAP X & Y',
-    //         shortcutFunction:
-    //           "Object.keys(parameters).reduce((acc, d) => ({...acc, [d[0] === 'X' ? `Y${d.slice(1)}` : d[0] === 'Y' ? `X${d.slice(1)}` : d]: parameters[d]}), {})",
-    //       },
-    //     ],
-    //   },
-    // },
 
     // size & color dimensions
     ...['Color', 'Size'].reduce((acc, key: string) => {
