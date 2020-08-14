@@ -30,6 +30,13 @@ Array [
     "simpleReplace": false,
     "to": "\\"name\\": \\"myData\\"",
   },
+  Object {
+    "codeEffect": [Function],
+    "comment": "Clean up code",
+    "from": "unclean",
+    "simpleReplace": false,
+    "to": "clean",
+  },
 ]
 `;
 
@@ -161,6 +168,13 @@ Array [
     "simpleReplace": false,
     "to": "\\"name\\": \\"myData\\"",
   },
+  Object {
+    "codeEffect": [Function],
+    "comment": "Clean up code",
+    "from": "unclean",
+    "simpleReplace": false,
+    "to": "clean",
+  },
 ]
 `;
 
@@ -193,6 +207,13 @@ Array [
     "from": "data url",
     "simpleReplace": false,
     "to": "\\"name\\": \\"myData\\"",
+  },
+  Object {
+    "codeEffect": [Function],
+    "comment": "Clean up code",
+    "from": "unclean",
+    "simpleReplace": false,
+    "to": "clean",
   },
 ]
 `;
@@ -283,7 +304,17 @@ exports[`#synthesizeSuggestions - Titantic Etc 2`] = `
 }"
 `;
 
-exports[`#synthesizeSuggestions - Titantic Etc 3`] = `Array []`;
+exports[`#synthesizeSuggestions - Titantic Etc 3`] = `
+Array [
+  Object {
+    "codeEffect": [Function],
+    "comment": "Clean up code",
+    "from": "unclean",
+    "simpleReplace": false,
+    "to": "clean",
+  },
+]
+`;
 
 exports[`#synthesizeSuggestions happy path - IsotypeBarChart 1`] = `
 Array [
@@ -315,6 +346,13 @@ Array [
     "simpleReplace": false,
     "to": "\\"name\\": \\"myData\\"",
   },
+  Object {
+    "codeEffect": [Function],
+    "comment": "Clean up code",
+    "from": "unclean",
+    "simpleReplace": false,
+    "to": "clean",
+  },
 ]
 `;
 
@@ -340,6 +378,13 @@ Array [
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[country]\\"",
+  },
+  Object {
+    "codeEffect": [Function],
+    "comment": "Clean up code",
+    "from": "unclean",
+    "simpleReplace": false,
+    "to": "clean",
   },
 ]
 `;
@@ -371,6 +416,13 @@ Array [
     "sideEffect": [Function],
     "simpleReplace": false,
     "to": "\\"[animal]\\"",
+  },
+  Object {
+    "codeEffect": [Function],
+    "comment": "Clean up code",
+    "from": "unclean",
+    "simpleReplace": false,
+    "to": "clean",
   },
 ]
 `;

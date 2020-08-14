@@ -69,7 +69,9 @@ export default function ShowData(props: Props): JSX.Element {
   try {
     rows = (loadedData[selectedData] || []).slice(0, 10);
   } catch (e) {
+    /*eslint-disable*/
     console.error(e);
+    /*eslint-enable*/
   }
   return (
     <div className="flex-down">

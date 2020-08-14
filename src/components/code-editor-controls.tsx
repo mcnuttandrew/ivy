@@ -5,7 +5,7 @@ import Tooltip from 'rc-tooltip';
 import {JSON_OUTPUT, WIDGET_VALUES, WIDGET_CONFIGURATION, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction, HandleCodePayload} from '../actions';
 import {TemplateMap, GenWidget} from '../types';
-import {classnames, get} from '../utils';
+import {classnames} from '../utils';
 import {SimpleTooltip} from './tooltips';
 
 const fontSizes = [
