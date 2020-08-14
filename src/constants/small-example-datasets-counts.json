@@ -19,18 +19,6 @@
     "DIMENSION": 1,
     "MEASURE": 1
   },
-  "bullet-data.json": {
-    "file": "bullet-data.json",
-    "length": 5,
-    "columns": [
-      "title",
-      "subtitle",
-      "ranges",
-      "measures",
-      "markers"
-    ],
-    "DIMENSION": 5
-  },
   "color-encoding-names.json": {
     "file": "color-encoding-names.json",
     "length": 3,
@@ -81,6 +69,16 @@
     ],
     "MEASURE": 2
   },
+  "from-binned-data.json": {
+    "file": "from-binned-data.json",
+    "length": 8,
+    "columns": [
+      "bin_start",
+      "bin_end",
+      "count"
+    ],
+    "MEASURE": 3
+  },
   "gantt.json": {
     "file": "gantt.json",
     "length": 3,
@@ -122,6 +120,14 @@
     "MEASURE": 2,
     "DIMENSION": 1
   },
+  "log-histogram.json": {
+    "file": "log-histogram.json",
+    "length": 11,
+    "columns": [
+      "x"
+    ],
+    "MEASURE": 1
+  },
   "match-data.json": {
     "file": "match-data.json",
     "length": 12,
@@ -157,6 +163,18 @@
     ],
     "DIMENSION": 2,
     "MEASURE": 5
+  },
+  "pyramid-pie.json": {
+    "file": "pyramid-pie.json",
+    "length": 3,
+    "columns": [
+      "category",
+      "value",
+      "order",
+      "color"
+    ],
+    "DIMENSION": 2,
+    "MEASURE": 2
   },
   "questions.json": {
     "file": "questions.json",

@@ -20,6 +20,20 @@ interface ConditionalArgs {
   false?: Json;
 }
 export type IvyLangConditional = {$cond: ConditionalArgs};
+export interface NewIvyConditional {
+  $if: 'string';
+  true?: Json;
+  false?: Json;
+}
+
+function prepareFunction(query: string, templateMap: TemplateMap): string {
+  return `
+        ${Object.keys(templateMap.paramValues)
+          .map(key => key.replace(/(_|\W)/g, ''))
+          .map(key => `const ${key} = parameters.${key}`)
+          .join('\n')}
+      return ${query};`;
+}
 
 /**
  * Evaluate a ivy query, used for the widget conditions and conditional checks
@@ -32,15 +46,7 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
   // TODO can probable keep a cache of these results?
   let result = false;
   try {
-    const generatedContent = new Function(
-      'parameters',
-      `
-      ${Object.keys(templateMap.paramValues)
-        .map(key => `const ${key} = parameters.${key}`)
-        .join('\n')}
-      return ${query};
-    `,
-    );
+    const generatedContent = new Function('parameters', prepareFunction(query, templateMap));
     result = Boolean(generatedContent(templateMap.paramValues));
   } catch (e) {
     log('Query Evaluation Error', e, query, templateMap.paramValues);
@@ -51,16 +57,7 @@ function evaluateQuery(query: ConditionQuery, templateMap: TemplateMap): boolean
 function tryToComputeKey(query: string, templateMap: TemplateMap): string {
   let result = query.slice(1).slice(0, query.length - 2);
   try {
-    const generatedContent = new Function(
-      'parameters',
-      `
-      ${Object.keys(templateMap.paramValues)
-        .map(key => key.replace(/-|\s/g, ''))
-        .map(key => `const ${key} = parameters.${key}`)
-        .join('\n')}
-      return ${result};
-    `,
-    );
+    const generatedContent = new Function('parameters', prepareFunction(result, templateMap));
     result = generatedContent(templateMap.paramValues);
   } catch (e) {
     log('Key Evaluation Error', e, query, templateMap.paramValues);
@@ -96,11 +93,22 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     // if it's array iterate across it
     if (Array.isArray(spec)) {
       return spec.reduce((acc: JsonArray, child) => {
+        // OLD SYNTAX
         if (child && typeof child === 'object' && (child as JsonMap).$cond) {
           const valuemap = (child as unknown) as IvyLangConditional;
           const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
           if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
             return acc.concat(walker(valuemap.$cond[queryResult]));
+          } else {
+            return acc;
+          }
+        }
+        // NEW SYNTAX
+        if (child && typeof child === 'object' && (child as JsonMap).$if) {
+          const valuemap = (child as unknown) as NewIvyConditional;
+          const queryResult = evaluateQuery(valuemap.$if, templateMap) ? 'true' : 'false';
+          if (!shouldUpdateContainerWithValue(queryResult, (valuemap as unknown) as ConditionalArgs)) {
+            return acc.concat(walker(valuemap[queryResult]));
           } else {
             return acc;
           }
@@ -113,11 +121,22 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
       return spec;
     }
     // if the object being consider is itself a conditional evaluate it
+    // OLD SYNTAX
     if (typeof spec === 'object' && spec.$cond) {
       const valuemap = (spec as unknown) as IvyLangConditional;
       const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
       if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
         return walker(valuemap.$cond[queryResult]);
+      } else {
+        return null;
+      }
+    }
+    // NEW SYNTAX
+    if (typeof spec === 'object' && spec.$if) {
+      const valuemap = (spec as unknown) as NewIvyConditional;
+      const queryResult = evaluateQuery(valuemap.$if, templateMap) ? 'true' : 'false';
+      if (!shouldUpdateContainerWithValue(queryResult, (valuemap as unknown) as ConditionalArgs)) {
+        return walker(valuemap[queryResult]);
       } else {
         return null;
       }
@@ -129,11 +148,20 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
         computedKey = tryToComputeKey(key, templateMap);
       }
       if (value && typeof value === 'object' && (value as JsonMap).$cond) {
+        // OLD SYNTAX
         // if it's a conditional, if so execute the conditional
         const valuemap = (value as unknown) as IvyLangConditional;
         const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
         if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
           acc[computedKey] = walker(valuemap.$cond[queryResult]);
+        }
+      } else if (value && typeof value === 'object' && (value as JsonMap).$if) {
+        // NEW SYNTAX
+        // if it's a conditional, if so execute the conditional
+        const valuemap = (value as unknown) as NewIvyConditional;
+        const queryResult = evaluateQuery(valuemap.$if, templateMap) ? 'true' : 'false';
+        if (!shouldUpdateContainerWithValue(queryResult, (valuemap as unknown) as ConditionalArgs)) {
+          acc[computedKey] = walker(valuemap[queryResult]);
         }
       } else {
         acc[computedKey] = walker(value);
@@ -328,25 +356,45 @@ export function generateFullTemplateMap(widgets: GenWidget[]): TemplateMap {
 
 const buildConditionalValidation = (type: any, defKey: string): any => {
   return {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      $cond: {
+    anyOf: [
+      {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          $cond: {
+            description:
+              'In conditional arguments, requires a query ( which is a js predicate), a true branch, and a false branch',
+            type: 'object',
+            properties: {
+              query: {
+                type: 'string',
+                description:
+                  'Javascript predicate to be evaluated to determine result of predicate, must return a boolean. Some tips:\n\n 1. The current settings can be accessed by using the parameters object\n 2. The values held by values in the parameters object are strings.\n\n\n For example if you wanted to checked if boolean parameter setting was currently set to true, a reasonable way to do that would be:\n\n `parameters.switchVal === "true"` \n\n NOT `parameters.switchVal`\n\n The latter will always evaluated to true (because strings in JS are truthy).',
+              },
+              true: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
+              false: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
+            },
+            required: ['query'],
+          },
+        },
+      },
+      {
+        type: 'object',
+        additionalProperties: false,
         description:
           'In conditional arguments, requires a query ( which is a js predicate), a true branch, and a false branch',
-        type: 'object',
         properties: {
-          query: {
+          $if: {
             type: 'string',
             description:
-              'Javascript predicate to be evaluated to determine result of predicate, must return a boolean. Some tips:\n\n 1. The current settings can be accessed by using the parameters object\n 2. The values held by values in the parameters object are strings.\n\n\n For example if you wanted to checked if boolean parameter setting was currently set to true, a reasonable way to do that would be:\n\n `parameters.switchVal === "true"` \n\n NOT `parameters.switchVal`\n\n The latter will always evaluated to true (because strings in JS are truthy).',
+              'Javascript predicate to be evaluated to determine result of predicate, must return a boolean. Some tips:\n\n 1. The current settings can be accessed by using the parameters object\n 2. The values held by values in the parameters object are strings.\n\n\n For example if you wanted to checked if boolean parameter setting was currently set to true, a reasonable way to do that would be:\n\n `parameters.switchVal.includes("true")` \n\n NOT `parameters.switchVal`\n\n The latter will always evaluated to true (because strings in JS are truthy).',
           },
           true: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
           false: type ? {$ref: `#/${defKey}/${type}`} : {type: 'string'},
         },
-        required: ['query'],
+        required: ['$if'],
       },
-    },
+    ],
   };
 };
 const buildInterpolantType = (old: any): any => {

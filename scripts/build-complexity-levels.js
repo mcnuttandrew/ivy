@@ -18,7 +18,10 @@ getFile('./backups/backup-ive-be-vl.json')
       .map(({template}) => template)
       .reduce((acc, row) => {
         //   a really dumb complexity metric
-        acc[row.templateName] = row.widgets.length + (row.code.match(/\$cond/g) || []).length;
+        acc[row.templateName] =
+          row.widgets.length +
+          (row.code.match(/\$cond/g) || []).length +
+          (row.code.match(/\$if/g) || []).length;
         return acc;
       }, {});
     getFile('./backups/Ivy-Gallery-Rebuild.tsv')

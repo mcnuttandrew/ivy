@@ -1,0 +1,20 @@
+[
+    {
+        "category": "Sky",
+        "value": 75,
+        "order": 3,
+        "color": "#416D9D"
+    },
+    {
+        "category": "Shady side of a pyramid",
+        "value": 10,
+        "order": 1,
+        "color": "#674028"
+    },
+    {
+        "category": "Sunny side of a pyramid",
+        "value": 15,
+        "order": 2,
+        "color": "#DEAC58"
+    }
+]

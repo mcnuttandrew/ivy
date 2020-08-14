@@ -43,27 +43,37 @@ function aggregateConditional(key: string): JsonMap {
   const isNone = `parameters.${key}Agg.includes('none')`;
 
   return {
-    $cond: {
-      // query: `${isCount} || (${filledIn} && !${isNone})`,
-      query: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
-      true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
-    },
+    // $cond: {
+    // query: `${isCount} || (${filledIn} && !${isNone})`,
+    //   query: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
+    //   true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
+    // // },
+    $if: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
+    true: {$if: `${isCount}`, true: 'count', false: `[${key}Agg]`},
   };
 }
 
 function conditionalFieldName(key: string): JsonMap {
   return {
-    $cond: {
-      query: `${used(key)} && ${notCount(key)}`,
-      true: {
-        $cond: {
-          query: `(parameters.${key}.includes('${META_COL_ROW}')) || (parameters.${key}.includes('${META_COL_COL}'))`,
-          true: {repeat: `[${key}]`},
-          false: `[${key}]`,
-        },
-      },
+    $if: `${used(key)} && ${notCount(key)}`,
+    true: {
+      $if: `(parameters.${key}.includes('${META_COL_ROW}')) || (parameters.${key}.includes('${META_COL_COL}'))`,
+      true: {repeat: `[${key}]`},
+      false: `[${key}]`,
     },
   };
+  // return {
+  //   $cond: {
+  //     query: `${used(key)} && ${notCount(key)}`,
+  //     true: {
+  //       $cond: {
+  //         query: `(parameters.${key}.includes('${META_COL_ROW}')) || (parameters.${key}.includes('${META_COL_COL}'))`,
+  //         true: {repeat: `[${key}]`},
+  //         false: `[${key}]`,
+  //       },
+  //     },
+  //   },
+  // };
 }
 
 function zeroConditional(key: string): JsonMap {
@@ -71,44 +81,59 @@ function zeroConditional(key: string): JsonMap {
   const isQuant = `parameters.${key}Type.includes('quantitative')`;
   const isCount = `parameters.${key}.includes('COUNT')`;
   return {
-    $cond: {
-      query: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
-      // query: `${used(key)} && ${includeZero} && ${isQuant}`,
-      true: `[${key}IncludeZero]`,
-    },
+    $if: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
+    true: `[${key}IncludeZero]`,
   };
+  // return {
+  //   $cond: {
+  //     query: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
+  //     // query: `${used(key)} && ${includeZero} && ${isQuant}`,
+  //     true: `[${key}IncludeZero]`,
+  //   },
+  // };
 }
 
 function timeUnitCond(key: string): any {
   const isTemporal = `parameters.${key}Type.includes('temporal')`;
   const isNotNull = `!parameters.${key}TimeUnit.includes('null')`;
   return {
-    $cond: {query: `${used(key)} && ${isTemporal} && ${isNotNull}`, true: `[${key}TimeUnit]`},
+    $if: `${used(key)} && ${isTemporal} && ${isNotNull}`,
+    true: `[${key}TimeUnit]`,
+    // $cond: {query: `${used(key)} && ${isTemporal} && ${isNotNull}`, true: `[${key}TimeUnit]`},
   };
 }
 
 function typeCond(key: string): any {
   return {
-    $cond: {
-      query: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
-      true: `[${key}ScaleType]`,
-    },
+    $if: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
+    true: `[${key}ScaleType]`,
   };
+
+  // return {
+  //   $cond: {
+  //     query: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
+  //     true: `[${key}ScaleType]`,
+  //   },
+  // };
 }
 
 const renderObjectIf = (object: Json, query: string, fieldName: string): JsonMap => ({
-  [fieldName]: {$cond: {query, true: object}},
+  // [fieldName]: {$cond: {query, true: object}},
+  [fieldName]: {$if: query, true: object},
 });
 const encoding = {
   ...['X', 'Y'].reduce((acc: JsonMap, key) => {
     const output = {
       field: conditionalFieldName(key),
       type: {
-        $cond: {
-          query: `parameters.${key}.includes('COUNT')`,
-          true: 'quantitative',
-          false: `[${key}Type]`,
-        },
+        $if: `parameters.${key}.includes('COUNT')`,
+        true: 'quantitative',
+        false: `[${key}Type]`,
+        // $cond: {
+        //   query: `parameters.${key}.includes('COUNT')`,
+        //   true: 'quantitative',
+        //   false: `[${key}Type]`,
+        // },
       },
       aggregate: aggregateConditional(key),
       timeUnit: timeUnitCond(key),
@@ -123,35 +148,50 @@ const encoding = {
     const output = {
       field: conditionalFieldName(key),
       type: {
-        $cond: {
-          query: `parameters.${key}.includes('COUNT')`,
-          true: 'quantitative',
-          false: `[${key}Type]`,
-        },
+        $if: `parameters.${key}.includes('COUNT')`,
+        true: 'quantitative',
+        false: `[${key}Type]`,
+        // $cond: {
+        //   query: `parameters.${key}.includes('COUNT')`,
+        //   true: 'quantitative',
+        //   false: `[${key}Type]`,
+        // },
       },
       aggregate: aggregateConditional(key),
       bin: {
-        $cond: {
-          query: `parameters.${key}Bin.includes('true') && parameters.${key}Type.includes('quantitative')`,
-          true: true,
-        },
+        $if: `parameters.${key}Bin.includes('true') && parameters.${key}Type.includes('quantitative')`,
+        true: true,
+        // $cond: {
+        //   query: `parameters.${key}Bin.includes('true') && parameters.${key}Type.includes('quantitative')`,
+        //   true: true,
+        // },
       },
     } as any;
     if (key === 'Color') {
       output['scale'] = {
-        $cond: {
-          query: 'parameters.Color',
-          true: {
-            scheme: {
-              $cond: {
-                query: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
-                true: '[nominalColor]',
-                false: '[quantColor]',
-              },
-            },
+        $if: 'parameters.Color',
+        true: {
+          scheme: {
+            $if: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
+            true: '[nominalColor]',
+            false: '[quantColor]',
           },
         },
       };
+      // output['scale'] = {
+      //   $cond: {
+      //     query: 'parameters.Color',
+      //     true: {
+      //       scheme: {
+      //         $cond: {
+      //           query: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
+      //           true: '[nominalColor]',
+      //           false: '[quantColor]',
+      //         },
+      //       },
+      //     },
+      //   },
+      // };
     }
     return {...acc, ...renderObjectIf(output, used(key), key.toLowerCase())};
   }, {}),
@@ -173,19 +213,29 @@ const PolestarBody: Json = {
   $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
   transform: [] as JsonMap[],
   repeat: {
-    $cond: {
-      query: eitherMeta,
-      true: {
-        row: {$cond: {query: paramsInclude(META_COL_ROW), true: '[row]'}},
-        column: {$cond: {query: paramsInclude(META_COL_COL), true: '[column]'}},
-      },
+    $if: eitherMeta,
+    true: {
+      row: {$if: paramsInclude(META_COL_ROW), true: '[row]'},
+      column: {$if: paramsInclude(META_COL_COL), true: '[column]'},
     },
+    // $cond: {
+    //   query: eitherMeta,
+    //   true: {
+    //     row: {$cond: {query: paramsInclude(META_COL_ROW), true: '[row]'}},
+    //     column: {$cond: {query: paramsInclude(META_COL_COL), true: '[column]'}},
+    //   },
+    // },
   },
-  encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding}},
-  mark: {$cond: {query: `!(${eitherMeta})`, true: mark}},
-  spec: {$cond: {query: eitherMeta, true: {encoding, mark}}},
-  height: {$cond: {query: 'parameters.showHeight.includes("true")', true: '[height]'}},
-  width: {$cond: {query: 'parameters.showWidth.includes("true")', true: '[width]'}},
+  encoding: {$if: `!(${eitherMeta})`, true: encoding},
+  mark: {$if: `!(${eitherMeta})`, true: mark},
+  spec: {$if: eitherMeta, true: {encoding, mark}},
+  height: {$if: 'parameters.showHeight.includes("true")', true: '[height]'},
+  width: {$if: 'parameters.showWidth.includes("true")', true: '[width]'},
+  // encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding}},
+  // mark: {$cond: {query: `!(${eitherMeta})`, true: mark}},
+  // spec: {$cond: {query: eitherMeta, true: {encoding, mark}}},
+  // height: {$cond: {query: 'parameters.showHeight.includes("true")', true: '[height]'}},
+  // width: {$cond: {query: 'parameters.showWidth.includes("true")', true: '[width]'}},
 };
 
 const Polestar: Template = {
