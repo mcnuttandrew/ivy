@@ -28,7 +28,8 @@ function getDataViews(props: RendererProps): Promise<any> {
   if (
     !get(finalSpec, ['data', 'values']) &&
     !get(finalSpec, ['data', 'url']) &&
-    !get(finalSpec, ['data', 'sequence'])
+    !get(finalSpec, ['data', 'sequence']) &&
+    !get(finalSpec, ['data', 'layer'])
   ) {
     finalSpec.data = {values: data};
   }
@@ -148,21 +149,21 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
       },
     });
   }
-  if (parsedCode.transform) {
-    suggestions.push({
-      from: 'transform',
-      to: 'no transform',
-      comment: 'Remove Transform',
-      simpleReplace: false,
-      codeEffect: (code: string) => {
-        const parsed = JSON.parse(code);
-        delete parsed.transform;
-        return stringify(parsed);
-      },
-    });
-  }
+  // if (parsedCode.transform) {
+  //   suggestions.push({
+  //     from: 'transform',
+  //     to: 'no transform',
+  //     comment: 'Remove Transform',
+  //     simpleReplace: false,
+  //     codeEffect: (code: string) => {
+  //       const parsed = JSON.parse(code);
+  //       delete parsed.transform;
+  //       return stringify(parsed);
+  //     },
+  //   });
+  // }
 
-  const cleanedString = stringify(JSON.parse(code)).trim();
+  const cleanedString = stringify(JSON.parse(code), {maxLength: 110}).trim();
   if (cleanedString !== code.trim()) {
     suggestions.push({
       from: 'unclean',

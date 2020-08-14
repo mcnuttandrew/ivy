@@ -5,11 +5,14 @@ export function wrangle(data: DataRow[], transforms: DataTransform[]): any {
     const fieldVal = row[d.filter.field];
     switch (d.filter.type) {
       case 'DIMENSION':
-        return !!d.filter.range.find((key: string) => key === fieldVal);
+        return !!d.filter.range.find((key: string) => `${key}` === `${fieldVal}`);
       case 'MEASURE':
         return Number(fieldVal) >= d.filter.range[0] && Number(fieldVal) <= d.filter.range[1];
       case 'TIME':
-        return new Date(fieldVal) >= d.filter.range[0] && new Date(fieldVal) <= d.filter.range[1];
+        return (
+          new Date(fieldVal) >= new Date(d.filter.range[0]) &&
+          new Date(fieldVal) <= new Date(d.filter.range[1])
+        );
       default:
         return true;
     }

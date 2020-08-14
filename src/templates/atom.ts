@@ -47,7 +47,7 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
     } as Widget<SliderWidget>,
   ];
 
-  const cond = (query: string, tv: any): any => ({$cond: {query, true: tv}});
+  const cond = (query: string, tv: any): any => ({$if: query, true: tv});
   return {
     widgets,
     layout: cond(!NEVER_HIDE ? `parameters.Key${idx - 1}` : 'true', {

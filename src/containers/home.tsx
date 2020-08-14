@@ -225,7 +225,7 @@ export function HomeContainer(props: Props): JSX.Element {
         </div>
         <div className="flex flex-wrap home-header">
           {instances
-            .concat([...new Array(100 - instances.length)])
+            .concat([...new Array(Math.max(62 - instances.length, 0))])
             .sort(() => Math.random() * 2 - 1)
             .map((instance, idx) => {
               return (

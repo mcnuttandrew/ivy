@@ -28,7 +28,8 @@ const PARALLEL_COORS: any = {
       values: [
         ...[0, 1, 2, 3, 4, 5].map(idx => {
           return {
-            $cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`},
+            $if: `parameters.Col${idx}`,
+            true: `[Col${idx}]`,
           };
         }),
       ],
@@ -39,28 +40,24 @@ const PARALLEL_COORS: any = {
     {name: 'ord', type: 'point', range: 'width', round: true, domain: {data: 'fields', field: 'data'}},
     ...[0, 1, 2, 3, 4, 5].map(idx => {
       return {
-        $cond: {
-          query: `parameters.Col${idx}`,
-          true: {
-            name: `[Col${idx}]`,
-            type: 'linear',
-            range: 'height',
-            zero: `[Col${idx}Zero]`,
-            nice: true,
-            domain: {data: 'table', field: `[Col${idx}]`},
-          },
+        $if: `parameters.Col${idx}`,
+        true: {
+          name: `[Col${idx}]`,
+          type: 'linear',
+          range: 'height',
+          zero: `[Col${idx}Zero]`,
+          nice: true,
+          domain: {data: 'table', field: `[Col${idx}]`},
         },
       };
     }),
     {
-      $cond: {
-        query: 'parameters.ColorBy',
-        true: {
-          name: 'color',
-          type: 'ordinal',
-          domain: {data: 'table', field: '[ColorBy]', sort: true},
-          range: 'category',
-        },
+      $if: 'parameters.ColorBy',
+      true: {
+        name: 'color',
+        type: 'ordinal',
+        domain: {data: 'table', field: '[ColorBy]', sort: true},
+        range: 'category',
       },
     },
   ],
@@ -68,27 +65,23 @@ const PARALLEL_COORS: any = {
   axes: [
     ...[0, 1, 2, 3, 4, 5].map(idx => {
       return {
-        $cond: {
-          query: `parameters.Col${idx}`,
-          true: {
-            orient: 'left',
-            zindex: 1,
-            scale: `[Col${idx}]`,
-            title: `[Col${idx}]`,
-            offset: {scale: 'ord', value: `[Col${idx}]`, mult: -1},
-          },
+        $if: `parameters.Col${idx}`,
+        true: {
+          orient: 'left',
+          zindex: 1,
+          scale: `[Col${idx}]`,
+          title: `[Col${idx}]`,
+          offset: {scale: 'ord', value: `[Col${idx}]`, mult: -1},
         },
       };
     }),
   ],
   legends: [
     {
-      $cond: {
-        query: 'parameters.ColorBy',
-        true: {
-          stroke: 'color',
-          title: '[ColorBy]',
-        },
+      $if: 'parameters.ColorBy',
+      true: {
+        stroke: 'color',
+        title: '[ColorBy]',
       },
     },
   ],
@@ -108,11 +101,9 @@ const PARALLEL_COORS: any = {
               strokeWidth: {value: 1.01},
               strokeOpacity: {value: 0.3},
               stroke: {
-                $cond: {
-                  query: 'parameters.ColorBy',
-                  true: {field: {parent: '[ColorBy]'}, scale: 'color'},
-                  false: {value: '[Single Color]'},
-                },
+                $if: 'parameters.ColorBy',
+                true: {field: {parent: '[ColorBy]'}, scale: 'color'},
+                false: {value: '[Single Color]'},
               },
             },
           },

@@ -37,82 +37,71 @@ function aggregateConditional(key: string): JsonMap {
   // old version of the query left around
   // handling aggregate none case to reduce vega-lite errors proves to be pretty troublesome
   // const isNone = `parameters.${key}Agg === "\\"none\\""`;
-  const isCount = `parameters.${key}.includes('COUNT')`;
-  const filledIn = `parameters.${key}`;
-  const isQuantitative = `parameters.${key}Type.includes('quantitative')`;
-  const isNone = `parameters.${key}Agg.includes('none')`;
+  const isCount = `${key}.includes('COUNT')`;
+  const filledIn = `${key}`;
+  const isQuantitative = `${key}Type.includes('quantitative')`;
+  const isNone = `${key}Agg.includes('none')`;
 
   return {
-    $cond: {
-      // query: `${isCount} || (${filledIn} && !${isNone})`,
-      query: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
-      true: {$cond: {query: `${isCount}`, true: 'count', false: `[${key}Agg]`}},
-    },
+    $if: `!${isNone} && ${filledIn} && ${isQuantitative} || ${isCount}`,
+    true: {$if: `${isCount}`, true: 'count', false: `[${key}Agg]`},
   };
 }
 
 function conditionalFieldName(key: string): JsonMap {
   return {
-    $cond: {
-      query: `${used(key)} && ${notCount(key)}`,
-      true: {
-        $cond: {
-          query: `(parameters.${key}.includes('${META_COL_ROW}')) || (parameters.${key}.includes('${META_COL_COL}'))`,
-          true: {repeat: `[${key}]`},
-          false: `[${key}]`,
-        },
-      },
+    $if: `${used(key)} && ${notCount(key)}`,
+    true: {
+      $if: `(${key}.includes('${META_COL_ROW}')) || (${key}.includes('${META_COL_COL}'))`,
+      true: {repeat: `[${key}]`},
+      false: `[${key}]`,
     },
   };
 }
 
 function zeroConditional(key: string): JsonMap {
-  const notZero = `!parameters.${key}IncludeZero.includes('true')`;
-  const isQuant = `parameters.${key}Type.includes('quantitative')`;
-  const isCount = `parameters.${key}.includes('COUNT')`;
+  const notZero = `!${key}IncludeZero.includes('true')`;
+  const isQuant = `${key}Type.includes('quantitative')`;
+  const isCount = `${key}.includes('COUNT')`;
   return {
-    $cond: {
-      query: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
-      // query: `${used(key)} && ${includeZero} && ${isQuant}`,
-      true: `[${key}IncludeZero]`,
-    },
+    $if: `${used(key)} && ${notZero} && (${isQuant} || ${isCount})`,
+    true: `[${key}IncludeZero]`,
   };
 }
 
 function timeUnitCond(key: string): any {
-  const isTemporal = `parameters.${key}Type.includes('temporal')`;
-  const isNotNull = `!parameters.${key}TimeUnit.includes('null')`;
+  const isTemporal = `${key}Type.includes('temporal')`;
+  const isNotNull = `!${key}TimeUnit.includes('null')`;
   return {
-    $cond: {query: `${used(key)} && ${isTemporal} && ${isNotNull}`, true: `[${key}TimeUnit]`},
+    $if: `${used(key)} && ${isTemporal} && ${isNotNull}`,
+    true: `[${key}TimeUnit]`,
   };
 }
 
 function typeCond(key: string): any {
   return {
-    $cond: {
-      query: `${used(key)} && parameters.${key}Type.includes('quantitative')`,
-      true: `[${key}ScaleType]`,
-    },
+    $if: `${used(key)} && ${key}Type.includes('quantitative')`,
+    true: `[${key}ScaleType]`,
   };
 }
 
 const renderObjectIf = (object: Json, query: string, fieldName: string): JsonMap => ({
-  [fieldName]: {$cond: {query, true: object}},
+  // [fieldName]: {$cond: {query, true: object}},
+  [fieldName]: {$if: query, true: object},
 });
 const encoding = {
   ...['X', 'Y'].reduce((acc: JsonMap, key) => {
     const output = {
       field: conditionalFieldName(key),
       type: {
-        $cond: {
-          query: `parameters.${key}.includes('COUNT')`,
-          true: 'quantitative',
-          false: `[${key}Type]`,
-        },
+        $if: `${key}.includes('COUNT')`,
+        true: 'quantitative',
+        false: `[${key}Type]`,
       },
       aggregate: aggregateConditional(key),
       timeUnit: timeUnitCond(key),
-      scale: {$cond: {query: notCount(key), true: {zero: zeroConditional(key), type: typeCond(key)}}},
+      scale: {$if: notCount(key), true: {zero: zeroConditional(key), type: typeCond(key)}},
+      // scale: {$cond: {query: notCount(key), true: {zero: zeroConditional(key), type: typeCond(key)}}},
     };
     return {
       ...acc,
@@ -123,32 +112,24 @@ const encoding = {
     const output = {
       field: conditionalFieldName(key),
       type: {
-        $cond: {
-          query: `parameters.${key}.includes('COUNT')`,
-          true: 'quantitative',
-          false: `[${key}Type]`,
-        },
+        $if: `${key}.includes('COUNT')`,
+        true: 'quantitative',
+        false: `[${key}Type]`,
       },
       aggregate: aggregateConditional(key),
       bin: {
-        $cond: {
-          query: `parameters.${key}Bin.includes('true') && parameters.${key}Type.includes('quantitative')`,
-          true: true,
-        },
+        $if: `${key}Bin.includes('true') && ${key}Type.includes('quantitative')`,
+        true: true,
       },
     } as any;
     if (key === 'Color') {
       output['scale'] = {
-        $cond: {
-          query: 'parameters.Color',
-          true: {
-            scheme: {
-              $cond: {
-                query: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
-                true: '[nominalColor]',
-                false: '[quantColor]',
-              },
-            },
+        $if: 'Color',
+        true: {
+          scheme: {
+            $if: 'ColorType.includes("nominal") && !Color.includes("COUNT")',
+            true: '[nominalColor]',
+            false: '[quantColor]',
           },
         },
       };
@@ -173,19 +154,17 @@ const PolestarBody: Json = {
   $schema: 'https:vega.github.io/schema/vega-lite/v4.json',
   transform: [] as JsonMap[],
   repeat: {
-    $cond: {
-      query: eitherMeta,
-      true: {
-        row: {$cond: {query: paramsInclude(META_COL_ROW), true: '[row]'}},
-        column: {$cond: {query: paramsInclude(META_COL_COL), true: '[column]'}},
-      },
+    $if: eitherMeta,
+    true: {
+      row: {$if: paramsInclude(META_COL_ROW), true: '[row]'},
+      column: {$if: paramsInclude(META_COL_COL), true: '[column]'},
     },
   },
-  encoding: {$cond: {query: `!(${eitherMeta})`, true: encoding}},
-  mark: {$cond: {query: `!(${eitherMeta})`, true: mark}},
-  spec: {$cond: {query: eitherMeta, true: {encoding, mark}}},
-  height: {$cond: {query: 'parameters.showHeight.includes("true")', true: '[height]'}},
-  width: {$cond: {query: 'parameters.showWidth.includes("true")', true: '[width]'}},
+  encoding: {$if: `!(${eitherMeta})`, true: encoding},
+  mark: {$if: `!(${eitherMeta})`, true: mark},
+  spec: {$if: eitherMeta, true: {encoding, mark}},
+  height: {$if: 'showHeight.includes("true")', true: '[height]'},
+  width: {$if: 'showWidth.includes("true")', true: '[width]'},
 };
 
 const Polestar: Template = {
@@ -199,7 +178,7 @@ const Polestar: Template = {
     {name: META_COL_ROW, description: 'place this card onto fields to facet across by data column'},
     {name: META_COL_COL, description: 'place this card onto fields to facet across by data column'},
   ],
-  code: stringify(PolestarBody),
+  code: stringify(PolestarBody, {maxLength: 110}),
   widgets: [
     makeSection('Meta Columns Section', [USING_META_COLS_CONDITION]),
     makeText('Meta Columns', [USING_META_COLS_CONDITION]),
@@ -228,7 +207,7 @@ const Polestar: Template = {
             simpleCondition(key),
             {
               queryResult: 'show',
-              query: `parameters.${key} && parameters.${key}Type.includes('quantitative')`,
+              query: `${key} && ${key}Type.includes('quantitative')`,
             },
           ],
         }),
@@ -244,7 +223,7 @@ const Polestar: Template = {
             simpleCondition(key),
             {
               queryResult: 'show' as any,
-              query: `parameters.${key} && parameters.${key}Type.includes('temporal')`,
+              query: `${key} && ${key}Type.includes('temporal')`,
             },
           ],
         },
@@ -260,23 +239,10 @@ const Polestar: Template = {
     // Mark type
     makeSection('MarkDivider', []),
     simpleList({name: 'markType', list: toList(MARK_TYPES), defaultVal: toQuote('point')}),
-    // {
-    //   type: 'Shortcut',
-    //   name: 'main-shortcuts',
-    //   config: {
-    //     shortcuts: [
-    //       {
-    //         label: 'SWAP X & Y',
-    //         shortcutFunction:
-    //           "Object.keys(parameters).reduce((acc, d) => ({...acc, [d[0] === 'X' ? `Y${d.slice(1)}` : d[0] === 'Y' ? `X${d.slice(1)}` : d]: parameters[d]}), {})",
-    //       },
-    //     ],
-    //   },
-    // },
 
     // size & color dimensions
     ...['Color', 'Size'].reduce((acc, key: string) => {
-      const typeIsQuant = `parameters.${key}Type.includes('quantitative')`;
+      const typeIsQuant = `${key}Type.includes('quantitative')`;
       const widgets = [
         makeDataTarget(key),
         makeTypeSelect(key, key === 'Color' ? 'nominal' : 'ordinal'),
@@ -304,9 +270,9 @@ const Polestar: Template = {
             defaultValue: toQuote(VEGA_CATEGORICAL_COLOR_SCHEMES[10]),
           },
           conditions: [
-            {query: '!parameters.Color', queryResult: 'hide'},
+            {query: '!Color', queryResult: 'hide'},
             {
-              query: '!parameters.ColorType.includes("nominal") || parameters.Color.includes("COUNT")',
+              query: '!ColorType.includes("nominal") || Color.includes("COUNT")',
               queryResult: 'hide',
             },
           ],
@@ -320,9 +286,9 @@ const Polestar: Template = {
             defaultValue: toQuote(VEGA_CONT_COLOR_SCHEMES[0]),
           },
           conditions: [
-            {query: '!parameters.Color', queryResult: 'hide'},
+            {query: '!Color', queryResult: 'hide'},
             {
-              query: 'parameters.ColorType.includes("nominal") && !parameters.Color.includes("COUNT")',
+              query: 'ColorType.includes("nominal") && !Color.includes("COUNT")',
               queryResult: 'hide',
             },
           ],
@@ -334,11 +300,11 @@ const Polestar: Template = {
 
     // size & detail dimensions\
     injectCondition(makeDataTarget('Shape'), {
-      query: '!parameters.markType.includes("point")',
+      query: '!markType.includes("point")',
       queryResult: 'hide',
     }),
     injectCondition(makeTypeSelect('Shape', 'nominal'), {
-      query: '!parameters.markType.includes("point")',
+      query: '!markType.includes("point")',
       queryResult: 'hide',
     }),
 
@@ -347,15 +313,15 @@ const Polestar: Template = {
 
     // text
     injectCondition(makeDataTarget('Text'), {
-      query: '!parameters.markType.includes("text")',
+      query: '!markType.includes("text")',
       queryResult: 'hide',
     }),
     injectCondition(makeTypeSelect('Text', 'nominal'), {
-      query: '!parameters.markType.includes("text")',
+      query: '!markType.includes("text")',
       queryResult: 'hide',
     }),
     injectCondition(makeAgg('Text'), {
-      query: '!parameters.markType.includes("text")',
+      query: '!markType.includes("text")',
       queryResult: 'hide',
     }),
 
@@ -379,14 +345,14 @@ const Polestar: Template = {
       name: 'height',
       type: 'Slider',
       config: {minVal: 20, maxVal: 800, step: 10, defaultValue: 100},
-      conditions: [{query: '!parameters.showHeight.includes("true")', queryResult: 'hide'}],
+      conditions: [{query: '!showHeight.includes("true")', queryResult: 'hide'}],
     },
     simpleSwitch({name: `showWidth`, displayName: 'Specify Width', defaultsToActive: false}),
     {
       name: 'width',
       type: 'Slider',
       config: {minVal: 20, maxVal: 800, step: 10, defaultValue: 100},
-      conditions: [{query: '!parameters.showWidth.includes("true")', queryResult: 'hide'}],
+      conditions: [{query: '!showWidth.includes("true")', queryResult: 'hide'}],
     },
   ],
 };

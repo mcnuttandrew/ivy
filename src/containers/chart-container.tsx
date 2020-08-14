@@ -20,6 +20,7 @@ import {HoverTooltip} from '../components/tooltips';
 import {wrangle} from '../utils/wrangle';
 import {useWindowSize} from '../utils/hooks';
 import ShowDataWindow from '../components/show-data';
+import ErrorBoundary from '../components/error-boundary';
 import ViewControls from '../components/view-controls';
 import {classnames} from '../utils';
 import Tooltip from 'rc-tooltip';
@@ -325,13 +326,15 @@ function ChartArea(props: ChartContainerProps): JSX.Element {
         toggleShowData={(): any => setShowData(!showData)}
       />
       {showData && (
-        <ShowDataWindow
-          languages={languages}
-          data={preparedData}
-          spec={spec}
-          template={template}
-          templateMap={templateMap}
-        />
+        <ErrorBoundary>
+          <ShowDataWindow
+            languages={languages}
+            data={preparedData}
+            spec={spec}
+            template={template}
+            templateMap={templateMap}
+          />
+        </ErrorBoundary>
       )}
     </div>
   );

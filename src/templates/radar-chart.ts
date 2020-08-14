@@ -25,14 +25,14 @@ const RADAR: any = {
       transform: [
         {
           type: 'aggregate',
-          fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
+          fields: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
           groupby: ['[ColorBy]'],
-          ops: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}Agg]`}})),
-          as: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
+          ops: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}Agg]`})),
+          as: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
         },
         {
           type: 'fold',
-          fields: cols.map(idx => ({$cond: {query: `parameters.Col${idx}`, true: `[Col${idx}]`}})),
+          fields: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
         },
       ],
     },
@@ -62,17 +62,15 @@ const RADAR: any = {
       domainMin: 0,
     },
     ...cols.map(idx => ({
-      $cond: {
-        query: `parameters.Col${idx}`,
-        true: {
-          name: `[Col${idx}]`,
-          type: 'linear',
-          range: {signal: '[0, radius]'},
-          zero: true,
-          nice: false,
-          domain: {data: 'inputCopy', field: `[Col${idx}]`},
-          domainMin: 0,
-        },
+      $if: `parameters.Col${idx}`,
+      true: {
+        name: `[Col${idx}]`,
+        type: 'linear',
+        range: {signal: '[0, radius]'},
+        zero: true,
+        nice: false,
+        domain: {data: 'inputCopy', field: `[Col${idx}]`},
+        domainMin: 0,
       },
     })),
     {
@@ -108,56 +106,52 @@ const RADAR: any = {
               stroke: {scale: 'color', field: '[ColorBy]'},
               strokeWidth: {value: 1},
               strokeOpacity: {
-                value: {$cond: {query: 'parameters.showLines.includes("true")', true: 1, false: 0}},
+                value: {$if: 'parameters.showLines.includes("true")', true: 1, false: 0},
               },
               fill: {scale: 'color', field: '[ColorBy]'},
               fillOpacity: {
-                value: {$cond: {query: 'parameters.showLines.includes("true")', true: 0.1, false: 0}},
+                value: {$if: 'parameters.showLines.includes("true")', true: 0.1, false: 0},
               },
             },
           },
         },
         {
-          $cond: {
-            query: 'parameters.showDots.includes("true")',
-            true: {
-              type: 'symbol',
-              name: 'value-dot',
-              from: {data: 'category-line'},
-              encode: {
-                enter: {
-                  x: {signal: 'datum.x'},
-                  y: {signal: 'datum.y'},
-                  fill: {value: 'black'},
-                  size: {value: 30},
-                  tooltip: {field: 'datum'},
-                },
-                update: {
-                  stroke: {value: 'white'},
-                  strokeWidth: {value: 1},
-                  zindex: {value: 0},
-                },
-                hover: {stroke: {value: 'purple'}, strokeWidth: {value: 3}, zindex: {value: 1}},
+          $if: 'parameters.showDots.includes("true")',
+          true: {
+            type: 'symbol',
+            name: 'value-dot',
+            from: {data: 'category-line'},
+            encode: {
+              enter: {
+                x: {signal: 'datum.x'},
+                y: {signal: 'datum.y'},
+                fill: {value: 'black'},
+                size: {value: 30},
+                tooltip: {field: 'datum'},
               },
+              update: {
+                stroke: {value: 'white'},
+                strokeWidth: {value: 1},
+                zindex: {value: 0},
+              },
+              hover: {stroke: {value: 'purple'}, strokeWidth: {value: 3}, zindex: {value: 1}},
             },
           },
         },
         {
-          $cond: {
-            query: 'parameters.showText.includes("true")',
-            true: {
-              type: 'text',
-              name: 'value-text',
-              from: {data: 'category-line'},
-              encode: {
-                enter: {
-                  x: {signal: 'datum.x'},
-                  y: {signal: 'datum.y'},
-                  text: {signal: 'format(datum.datum.value, ".2f")'},
-                  align: {value: 'center'},
-                  baseline: {value: 'middle'},
-                  fill: {value: 'black'},
-                },
+          $if: 'parameters.showText.includes("true")',
+          true: {
+            type: 'text',
+            name: 'value-text',
+            from: {data: 'category-line'},
+            encode: {
+              enter: {
+                x: {signal: 'datum.x'},
+                y: {signal: 'datum.y'},
+                text: {signal: 'format(datum.datum.value, ".2f")'},
+                align: {value: 'center'},
+                baseline: {value: 'middle'},
+                fill: {value: 'black'},
               },
             },
           },

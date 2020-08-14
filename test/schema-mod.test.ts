@@ -48,7 +48,7 @@ const EXAMPLE_VL_SCHEMA_MODIFIED_CONDITIONAL: any = {
   ...COMMON,
   mark: 'bar',
   encoding: {
-    x: {field: {$cond: {query: 'parameters.x', true: '[X]'}}, type: 'quantitative'},
+    x: {field: {$if: 'parameters.x', true: '[X]'}, type: 'quantitative'},
     y: {field: 'b', type: 'quantitative'},
   },
 };

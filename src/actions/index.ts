@@ -12,7 +12,7 @@ import {
   WidgetType,
 } from '../types';
 import * as actionTypes from '../actions/action-types';
-
+import smallDatasetCounts from '../constants/small-example-datasets-counts.json';
 import {Action} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 
@@ -153,12 +153,15 @@ const getReader = (fileName: string): Reader => {
   return (): DataRow[] => [];
 };
 
-// when the application is deployed on the internet don't try to get data from a folder that doesn't exisit
-const vegaDatasetAdress =
-  window.location.origin === 'http://localhost:8080'
-    ? (fileName: string): string => `node_modules/vega-datasets/data/${fileName}`
-    : (fileName: string): string =>
-        `https://raw.githubusercontent.com/vega/vega-datasets/master/data/${fileName}`;
+function datasetAddress(fileName: string): string {
+  if (smallDatasetCounts[fileName]) {
+    return `./example-datasets/${fileName}`;
+  }
+  // when the application is deployed on the internet don't try to get data from a folder that doesn't exisit
+  return window.location.origin === 'http://localhost:8080'
+    ? `node_modules/vega-datasets/data/${fileName}`
+    : `https://raw.githubusercontent.com/vega/vega-datasets/master/data/${fileName}`;
+}
 
 export const loadDataFromPredefinedDatasets: GenericAction<{
   filename: string;
@@ -174,7 +177,7 @@ export const loadDataFromPredefinedDatasets: GenericAction<{
     return;
   }
   // regular path
-  fetch(vegaDatasetAdress(filename))
+  fetch(datasetAddress(filename))
     .then(d => d.text())
     .then(d => getReader(filename)(d))
     .then(d => {

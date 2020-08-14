@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import stringify from 'json-stringify-pretty-compact';
 
 import MonacoWrapper from '../components/monaco-wrapper';
+import ErrorBoundary from '../components/error-boundary';
 import GALLERY from '../templates/gallery';
 
 import * as actionCreators from '../actions/index';
@@ -98,7 +99,6 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
             <CodeEditorControls
               addWidget={props.addWidget}
               codeMode={codeMode}
-              currentCode={currentCode}
               editMode={props.editMode}
               editorFontSize={editorFontSize}
               editorLineWrap={editorLineWrap}
@@ -114,7 +114,6 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
                 writeEditorLineWrap(value);
                 setEditorLineWrap(value);
               }}
-              setSpecCode={props.setSpecCode}
               setProgrammaticView={props.setProgrammaticView}
               showProgrammaticMode={props.showProgrammaticMode}
               spec={props.spec}
@@ -124,16 +123,18 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
               {editorError && <div className="error-bar">JSON ERROR</div>}
               {codeMode === JSON_OUTPUT && <div className="warning-bar">CODE IN THIS TAB IS READ ONLY</div>}
               {editMode && codeMode === TEMPLATE_BODY && (
-                <SuggestionBox
-                  addWidget={props.addWidget}
-                  codeMode={props.codeMode}
-                  columns={props.columns}
-                  currentCode={currentCode}
-                  languages={props.languages}
-                  handleCodeUpdate={handleCodeUpdate}
-                  setAllTemplateValues={props.setAllTemplateValues}
-                  template={props.template}
-                />
+                <ErrorBoundary>
+                  <SuggestionBox
+                    addWidget={props.addWidget}
+                    codeMode={props.codeMode}
+                    columns={props.columns}
+                    currentCode={currentCode}
+                    languages={props.languages}
+                    handleCodeUpdate={handleCodeUpdate}
+                    setAllTemplateValues={props.setAllTemplateValues}
+                    template={props.template}
+                  />
+                </ErrorBoundary>
               )}
               <MonacoWrapper
                 codeMode={codeMode}

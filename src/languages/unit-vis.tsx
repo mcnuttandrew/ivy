@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {LanguageExtension, RendererProps, Template, Suggestion} from '../types';
 import {log} from '../utils';
 import {walkTreeAndLookForFields, buildSynthesizer} from './suggestion-utils';
+import stringify from 'json-stringify-pretty-compact';
 import UnitVis from 'unit-vis';
 
 const QUERY_KEY = 'atom-key-special-container';
@@ -71,8 +72,18 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
       codeEffect: (code: string) => {
         const parsed = JSON.parse(code);
         delete parsed.data;
-        return JSON.stringify(parsed, null, 2);
+        return stringify(parsed, {maxLength: 110});
       },
+    });
+  }
+  const cleanedString = stringify(JSON.parse(code), {maxLength: 110}).trim();
+  if (cleanedString !== code.trim()) {
+    suggestions.push({
+      from: 'unclean',
+      to: 'clean',
+      comment: 'Clean up code',
+      simpleReplace: false,
+      codeEffect: (): string => cleanedString,
     });
   }
   return suggestions;

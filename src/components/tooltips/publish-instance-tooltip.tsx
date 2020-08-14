@@ -3,8 +3,9 @@ import DomToImage from 'dom-to-image';
 import Tooltip from 'rc-tooltip';
 import {TiUpload} from 'react-icons/ti';
 import VegaDatasets from '../../constants/vega-datasets-counts.json';
+import SmallExampleDatasets from '../../constants/small-example-datasets-counts.json';
 import {POST_PARAMS} from '../../constants';
-const vegaDataSetName = new Set(Object.keys(VegaDatasets));
+const knownDatasetName = new Set(Object.keys(VegaDatasets).concat(Object.keys(SmallExampleDatasets)));
 
 import {TemplateMap} from '../../types';
 
@@ -28,7 +29,7 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
   }, [JSON.stringify(templateMap)]);
   // TODO ADD status/validation stuff (publishing/failed/succeeded/invalid)
   const instanceNameInput = useRef(null);
-  if (!vegaDataSetName.has(dataset)) {
+  if (dataset && !knownDatasetName.has(dataset)) {
     return <div />;
   }
   return (
@@ -64,7 +65,7 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
                     templateName,
                     templateMap,
                     templateInstance,
-                    dataset,
+                    dataset: dataset || 'null',
                     instanceCreator: userName,
                     thumbnail: templateImg,
                   }),

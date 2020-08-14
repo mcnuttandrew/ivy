@@ -32,11 +32,11 @@ const SCATTERPLOT: Template = {
   templateLanguage: 'vega-lite',
   code: stringify({
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-    mark: {type: 'point', color: {$cond: {$if: '!parameters.Color', $then: '[Single Color]', $else: null}}},
+    mark: {type: 'point', color: {$if: '!parameters.Color', $then: '[Single Color]', $else: null}},
     encoding: {
       x: {field: '[xDim]', type: 'quantitative'},
       y: {field: '[yDim]', type: 'quantitative'},
-      color: {$cond: {$if: 'parameters.Color', $then: {field: '[Color]', type: '[colorType]'}, $else: null}},
+      color: {$if: 'parameters.Color', $then: {field: '[Color]', type: '[colorType]'}, $else: null},
     },
   }),
 };

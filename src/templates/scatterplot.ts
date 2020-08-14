@@ -6,21 +6,17 @@ const SCATTERPLOT_EXAMPLE: any = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   layer: [
     {
-      $cond: {
-        query: 'parameters.showBand.includes("true")',
-        true: {
-          mark: {type: 'errorband', extent: 'stdev', opacity: 0.2},
-          encoding: {y: {field: '[yDim]', type: 'quantitative'}},
-        },
+      $if: 'parameters.showBand.includes("true")',
+      true: {
+        mark: {type: 'errorband', extent: 'stdev', opacity: 0.2},
+        encoding: {y: {field: '[yDim]', type: 'quantitative'}},
       },
     },
     {
-      $cond: {
-        query: 'parameters.showBand.includes("true")',
-        true: {
-          mark: 'rule',
-          encoding: {y: {field: '[yDim]', type: 'quantitative', aggregate: 'mean'}},
-        },
+      $if: 'parameters.showBand.includes("true")',
+      true: {
+        mark: 'rule',
+        encoding: {y: {field: '[yDim]', type: 'quantitative', aggregate: 'mean'}},
       },
     },
 
@@ -29,7 +25,7 @@ const SCATTERPLOT_EXAMPLE: any = {
         type: 'point',
         tooltip: true,
         size: '[Radius]',
-        color: {$cond: {true: '[Single Color]', false: null, query: '!parameters.Color'}},
+        color: {$if: '!parameters.Color', true: '[Single Color]', false: null},
       },
       encoding: {
         x: {field: '[xDim]', type: '[xType]', scale: {zero: '[Zeroes]'}},
@@ -39,18 +35,16 @@ const SCATTERPLOT_EXAMPLE: any = {
             test: 'datum["[xDim]"] === null || datum["[yDim]"] === null',
             value: '#aaa',
           },
-          field: {$cond: {query: 'parameters.Color', true: '[Color]'}},
-          type: {$cond: {query: 'parameters.Color', true: '[colorType]'}},
+          field: {$if: 'parameters.Color', true: '[Color]'},
+          type: {$if: 'parameters.Color', true: '[colorType]'},
         },
       },
     },
   ],
   config: {
-    $cond: {
-      query: 'parameters.showNulls.includes("true")',
-      true: {
-        mark: {invalid: null},
-      },
+    $if: 'parameters.showNulls.includes("true")',
+    true: {
+      mark: {invalid: null},
     },
   },
 };
