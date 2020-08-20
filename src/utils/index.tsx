@@ -154,8 +154,8 @@ export function getTemplateSaveState(base: AppState): SaveState {
 }
 
 export function serverPrefix(): string {
-  return 'https://ivy-be-vl.herokuapp.com';
-  // return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
+  // return 'https://ivy-be-vl.herokuapp.com';
+  return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
 }
 
 export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): Set<string> => {
