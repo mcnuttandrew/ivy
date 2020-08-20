@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {TiStar} from 'react-icons/ti';
 import {RenderTypeCounts} from '../components/template-card';
-import UnpublishInstanceTooltip from '../components/tooltips/unpublish-instance-tooltip';
+// import UnpublishInstanceTooltip from '../components/tooltips/unpublish-instance-tooltip';
 
 import Tooltip from 'rc-tooltip';
 import {getFavoriteTemplates, setFavoriteTemplates} from '../utils/local-storage';
@@ -65,7 +65,7 @@ function InstanceCard(props: InstanceCardProps): JSX.Element {
           </div>
           {!forPreview && name}
         </Link>
-        {!forPreview && userName === entry.instance_creator && removeInstance && (
+        {/* {!forPreview && userName === entry.instance_creator && removeInstance && (
           <UnpublishInstanceTooltip
             templateAuthor={templateAuthor}
             templateName={templateName}
@@ -73,7 +73,7 @@ function InstanceCard(props: InstanceCardProps): JSX.Element {
             userName={userName}
             removeInstance={removeInstance}
           />
-        )}
+        )} */}
       </div>
     </div>
   );

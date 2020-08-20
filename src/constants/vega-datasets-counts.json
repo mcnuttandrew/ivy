@@ -154,10 +154,26 @@
       "life_expect",
       "n_fertility",
       "n_life_expect",
-      "country"
+      "country",
+      "p_fertility",
+      "p_life_expect"
     ],
     "DIMENSION": 2,
-    "MEASURE": 5
+    "MEASURE": 5,
+    "p_fertility": {
+      "key": "p_fertility",
+      "label": "p_fertility",
+      "type": "STRING",
+      "category": "DIMENSION",
+      "format": ""
+    },
+    "p_life_expect": {
+      "key": "p_life_expect",
+      "label": "p_life_expect",
+      "type": "STRING",
+      "category": "DIMENSION",
+      "format": ""
+    }
   },
   "crimea.json": {
     "file": "crimea.json",
@@ -197,10 +213,26 @@
     "length": 252,
     "columns": [
       "id",
-      "name"
+      "name",
+      "parent",
+      "size"
     ],
     "MEASURE": 1,
-    "DIMENSION": 1
+    "DIMENSION": 1,
+    "parent": {
+      "key": "parent",
+      "label": "parent",
+      "type": "STRING",
+      "category": "DIMENSION",
+      "format": ""
+    },
+    "size": {
+      "key": "size",
+      "label": "size",
+      "type": "STRING",
+      "category": "DIMENSION",
+      "format": ""
+    }
   },
   "flights-10k.json": {
     "file": "flights-10k.json",
@@ -342,10 +374,18 @@
       "name",
       "start",
       "end",
-      "index"
+      "index",
+      "commonwealth"
     ],
     "DIMENSION": 1,
-    "MEASURE": 3
+    "MEASURE": 3,
+    "commonwealth": {
+      "key": "commonwealth",
+      "label": "commonwealth",
+      "type": "STRING",
+      "category": "DIMENSION",
+      "format": ""
+    }
   },
   "movies.json": {
     "file": "movies.json",
@@ -365,10 +405,18 @@
       "Director",
       "Rotten Tomatoes Rating",
       "IMDB Rating",
-      "IMDB Votes"
+      "IMDB Votes",
+      "Title"
     ],
     "MEASURE": 8,
-    "DIMENSION": 7
+    "DIMENSION": 7,
+    "Title": {
+      "key": "Title",
+      "label": "Title",
+      "type": "STRING",
+      "category": "DIMENSION",
+      "format": ""
+    }
   },
   "normal-2d.json": {
     "file": "normal-2d.json",
@@ -529,10 +577,18 @@
       "record",
       "normal",
       "actual",
-      "id"
+      "id",
+      "forecast"
     ],
     "DIMENSION": 4,
-    "MEASURE": 1
+    "MEASURE": 1,
+    "forecast": {
+      "key": "forecast",
+      "label": "forecast",
+      "type": "STRING",
+      "category": "DIMENSION",
+      "format": ""
+    }
   },
   "wheat.json": {
     "file": "wheat.json",
