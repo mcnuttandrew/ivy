@@ -149,19 +149,6 @@ function inferRemoveDataSuggestions(code: string, parsedCode: any): Suggestion[]
       },
     });
   }
-  // if (parsedCode.transform) {
-  //   suggestions.push({
-  //     from: 'transform',
-  //     to: 'no transform',
-  //     comment: 'Remove Transform',
-  //     simpleReplace: false,
-  //     codeEffect: (code: string) => {
-  //       const parsed = JSON.parse(code);
-  //       delete parsed.transform;
-  //       return stringify(parsed);
-  //     },
-  //   });
-  // }
 
   const cleanedString = stringify(JSON.parse(code), {maxLength: 110}).trim();
   if (cleanedString !== code.trim()) {

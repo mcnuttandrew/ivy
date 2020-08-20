@@ -50,6 +50,34 @@
     "DIMENSION": 1,
     "MEASURE": 1
   },
+  "dot-plot-1.json": {
+    "file": "dot-plot-1.json",
+    "length": 21,
+    "columns": [
+      "val"
+    ],
+    "MEASURE": 1
+  },
+  "dot-plot-2.json": {
+    "file": "dot-plot-2.json",
+    "length": 37,
+    "columns": [
+      "country",
+      "animal",
+      "col"
+    ],
+    "DIMENSION": 2,
+    "MEASURE": 1
+  },
+  "dot-plot-3.json": {
+    "file": "dot-plot-3.json",
+    "length": 37,
+    "columns": [
+      "country",
+      "animal"
+    ],
+    "DIMENSION": 2
+  },
   "emoji-bar.json": {
     "file": "emoji-bar.json",
     "length": 8,
@@ -59,15 +87,6 @@
     ],
     "DIMENSION": 1,
     "MEASURE": 1
-  },
-  "falcon.json": {
-    "file": "falcon.json",
-    "length": 210,
-    "columns": [
-      "falcon",
-      "square"
-    ],
-    "MEASURE": 2
   },
   "from-binned-data.json": {
     "file": "from-binned-data.json",

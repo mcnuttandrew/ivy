@@ -53,7 +53,7 @@ function SliderWidgetConfiguration(props: GeneralWidget<SliderWidget>): JSX.Elem
 
 function SliderWidgetComponent(props: GeneralWidget<SliderWidget>): JSX.Element {
   const {widget, widgetValue, setTemplateValue, editMode} = props;
-  const clamp = (v: any): number => Math.max(widget.config.minVal, Math.min(widget.config.maxVal, Number(v)));
+  const clamp = (v: any): number => Number(v);
   const [localVal, setLocalVal] = useState(widgetValue);
   const setVal = (text: any): any => setTemplateValue({field: widget.name, text: `${clamp(text)}`});
   useEffect(() => {

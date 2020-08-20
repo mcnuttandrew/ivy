@@ -11,6 +11,8 @@ import {
   Suggestion,
 } from '../types';
 import {MATERIALIZING, USE_LOCAL, BINDER} from '../constants/index';
+import {Analyzer} from 'type-analyzer';
+const {computeColMeta} = Analyzer;
 import GALLERY from '../templates/gallery';
 import {AppState, ColumnHeader} from '../types';
 
@@ -453,4 +455,24 @@ export function toSection(templates: any[], sectionStratagey: string, favorites:
       });
       return acc;
     }, {} as Group);
+}
+
+export function prepareMeta(data: any): any {
+  const initialMeta = computeColMeta(data);
+  const listAllColumns = (table: any): string[] =>
+    Object.keys(
+      table.reduce((acc: any, row: any) => {
+        const cols = Object.keys(row);
+        cols.forEach(col => {
+          acc[col] = true;
+        });
+        return acc;
+      }, {} as {[x: string]: boolean}),
+    );
+  const colsFromAnalyzer = new Set(initialMeta.map((x: any) => x.key));
+  const missingColumns = listAllColumns(data)
+    .filter(col => !colsFromAnalyzer.has(col))
+    // if it's missing set it to a default guess
+    .map(col => ({key: col, label: col, type: 'STRING', category: 'DIMENSION', format: ''}));
+  return initialMeta.concat(missingColumns);
 }

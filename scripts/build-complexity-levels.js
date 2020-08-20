@@ -29,7 +29,7 @@ getFile('./backups/backup-ive-be-vl.json')
       .then(instances => {
         const templateCounts = {};
         const solvedInstances = instances
-          .filter(row => row.Call)
+          .filter(row => row.Instance)
           .map((row, idx) => {
             const name = row['Short Template Name'];
             templateCounts[name] = (templateCounts[name] || 0) + 1;
@@ -40,7 +40,11 @@ getFile('./backups/backup-ive-be-vl.json')
             };
           })
           .map(row => {
-            return {...row, normedComplexity: row.complexity / templateCounts[row.templateName]};
+            return {
+              ...row,
+              normedComplexity: row.complexity / templateCounts[row.templateName],
+              templateName: templateCounts[row.templateName] > 1 ? row.templateName : 'Orphan',
+            };
           });
         writeFile('./backups/solution-complexities.json', JSON.stringify(solvedInstances));
       });

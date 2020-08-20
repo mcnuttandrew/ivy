@@ -1,6 +1,6 @@
 import {Dispatch} from 'redux';
 import {csvParse, tsvParse} from 'd3-dsv';
-import {generateDomain} from '../utils';
+import {generateDomain, prepareMeta} from '../utils';
 import {
   AppState,
   ColumnHeader,
@@ -16,8 +16,6 @@ import smallDatasetCounts from '../constants/small-example-datasets-counts.json'
 import {Action} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 
-import {Analyzer} from 'type-analyzer';
-const {computeColMeta} = Analyzer;
 import {summary} from 'datalib';
 export type CoerceTypePayload = {field: string; type: DataType};
 export type ModifyValueOnTemplatePayload = {key: string; value: any; editorError?: any};
@@ -122,7 +120,7 @@ export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[
   }, {} as {[x: string]: any});
   dispatch({
     type: actionTypes.RECIEVE_TYPE_INFERENCES,
-    payload: computeColMeta(data).map((col: any) => ({
+    payload: prepareMeta(data).map((col: any) => ({
       ...col,
       summary: {
         ...summaries[col.key],
