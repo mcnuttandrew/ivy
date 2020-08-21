@@ -182,6 +182,7 @@ export function HomeContainer(props: Props): JSX.Element {
   const [favs, setFavs] = useState(new Set([]));
   const [instances, setInstances] = useState([] as Instance[]);
   const [sortStratagey, setSortStratagey] = useState(location.hash.split('?')[1] || 'favorites');
+  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -277,6 +278,19 @@ export function HomeContainer(props: Props): JSX.Element {
             </a>
             , and a custom data table language. It&apos;s okay if you are not familiar with these languages,
             it&apos;s not strictly necessary to know them in order to make effective usage of our tool.
+          </p>
+          <p className="flex-down">
+            <span>You can view a video tutorial here if you like:</span>
+            {
+              <iframe
+                src="https://archive.org/embed/ivy-tutorial-1-v-2"
+                width="640"
+                height="480"
+                frameBorder="0"
+                title="ivy tutorial"
+                allowFullScreen
+              ></iframe>
+            }
           </p>
           <hr />
           <h3 className="home-container-label">

@@ -56,6 +56,7 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
       onError={onError}
       spec={finalSpec}
       mode="vega-lite"
+      renderer="svg"
       tooltip={new Handler({}).call}
     />
   );
