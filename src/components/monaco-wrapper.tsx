@@ -83,7 +83,7 @@ export default class CodeEditor extends React.Component<Props, State> {
           key={codeMode}
           language="json"
           theme="monokai"
-          height="500px"
+          height="100%"
           value={currentCode}
           options={{
             ...EDITOR_OPTIONS,
