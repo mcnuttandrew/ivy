@@ -50,13 +50,13 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
   ) {
     finalSpec.data = {values: data};
   }
+  // renderer="svg"
   return (
     <Vega
       actions={false}
       onError={onError}
       spec={finalSpec}
       mode="vega-lite"
-      renderer="svg"
       tooltip={new Handler({}).call}
     />
   );

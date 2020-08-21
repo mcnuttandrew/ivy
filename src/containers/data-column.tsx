@@ -120,7 +120,7 @@ function DataColumn(props: DataColumnProps): JSX.Element {
       <div className="flex-down">
         <div className="flex">
           <input
-            onChange={e => setSearchKey(e.target.value)}
+            onChange={(e): any => setSearchKey(e.target.value)}
             type="text"
             value={searchKey}
             placeholder="search for field"
