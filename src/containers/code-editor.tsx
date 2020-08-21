@@ -136,16 +136,18 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
                   />
                 </ErrorBoundary>
               )}
-              <MonacoWrapper
-                codeMode={codeMode}
-                currentCode={currentCode}
-                editMode={props.editMode}
-                editorFontSize={editorFontSize}
-                editorLineWrap={editorLineWrap}
-                handleCodeUpdate={handleCodeUpdate}
-                setCodeMode={props.setCodeMode}
-                setEditMode={props.setEditMode}
-              />
+              <ErrorBoundary>
+                <MonacoWrapper
+                  codeMode={codeMode}
+                  currentCode={currentCode}
+                  editMode={props.editMode}
+                  editorFontSize={editorFontSize}
+                  editorLineWrap={editorLineWrap}
+                  handleCodeUpdate={handleCodeUpdate}
+                  setCodeMode={props.setCodeMode}
+                  setEditMode={props.setEditMode}
+                />
+              </ErrorBoundary>
             </div>
           </div>
         )}
