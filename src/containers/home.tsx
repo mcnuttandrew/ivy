@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {TiStar} from 'react-icons/ti';
 import {RenderTypeCounts} from '../components/template-card';
-// import UnpublishInstanceTooltip from '../components/tooltips/unpublish-instance-tooltip';
 
 import Tooltip from 'rc-tooltip';
 import {getFavoriteTemplates, setFavoriteTemplates} from '../utils/local-storage';
@@ -46,11 +45,9 @@ interface Instance {
 interface InstanceCardProps {
   entry: Instance;
   forPreview: boolean;
-  userName: string;
-  removeInstance?: (templateAuthor: string, templateName: string, instanceName: string) => void;
 }
 function InstanceCard(props: InstanceCardProps): JSX.Element {
-  const {entry, forPreview, userName, removeInstance} = props;
+  const {entry, forPreview} = props;
   const templateAuthor = entry.template_creator;
   const templateName = entry.template_name;
   const name = entry.name;
@@ -65,15 +62,6 @@ function InstanceCard(props: InstanceCardProps): JSX.Element {
           </div>
           {!forPreview && name}
         </Link>
-        {/* {!forPreview && userName === entry.instance_creator && removeInstance && (
-          <UnpublishInstanceTooltip
-            templateAuthor={templateAuthor}
-            templateName={templateName}
-            instanceName={name}
-            userName={userName}
-            removeInstance={removeInstance}
-          />
-        )} */}
       </div>
     </div>
   );
@@ -82,11 +70,9 @@ function InstanceCard(props: InstanceCardProps): JSX.Element {
 interface RenderTemplateWithInstancesProps {
   row: {template: Template; entries: any[]};
   favoriteTemplatesConfig: {favs: Set<string>; setFavs: any};
-  userName: string;
-  removeInstance?: (templateAuthor: string, templateName: string, instanceName: string) => void;
 }
 function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): JSX.Element {
-  const {row, favoriteTemplatesConfig, userName, removeInstance} = props;
+  const {row, favoriteTemplatesConfig} = props;
   const {template, entries} = row;
 
   const {templateName, templateAuthor, templateDescription} = template;
@@ -155,13 +141,7 @@ function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): J
               </div>
               <div className="flex flex-wrap">
                 {entries.map((entry, idx) => (
-                  <InstanceCard
-                    entry={entry}
-                    forPreview={false}
-                    userName={userName}
-                    key={`instance-${idx}`}
-                    removeInstance={removeInstance}
-                  />
+                  <InstanceCard entry={entry} forPreview={false} key={`instance-${idx}`} />
                 ))}
               </div>
             </div>
@@ -178,7 +158,7 @@ function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): J
 
 const polestar = DEFAULT_TEMPLATES.find(x => x.templateName === 'Polestar');
 export function HomeContainer(props: Props): JSX.Element {
-  const {recieveTemplates, templates, userName} = props;
+  const {recieveTemplates, templates} = props;
   const [favs, setFavs] = useState(new Set([]));
   const [instances, setInstances] = useState([] as Instance[]);
   const [sortStratagey, setSortStratagey] = useState(location.hash.split('?')[1] || 'favorites');
@@ -202,18 +182,18 @@ export function HomeContainer(props: Props): JSX.Element {
       .then(x => x.json())
       .then(loadedInstances => setInstances(loadedInstances));
   }, []);
-  function removeInstance(templateAuthor: string, templateName: string, instanceName: string): void {
-    setInstances(
-      instances.filter(
-        instance =>
-          !(
-            instance.template_name === templateName &&
-            instance.template_creator === templateAuthor &&
-            instance.name === instanceName
-          ),
-      ),
-    );
-  }
+  // function removeInstance(templateAuthor: string, templateName: string, instanceName: string): void {
+  //   setInstances(
+  //     instances.filter(
+  //       instance =>
+  //         !(
+  //           instance.template_name === templateName &&
+  //           instance.template_creator === templateAuthor &&
+  //           instance.name === instanceName
+  //         ),
+  //     ),
+  //   );
+  // }
   const nestedTemplates = prepareNesting(templates, instances);
   const sections = sortStratagey !== 'river' && toSection(nestedTemplates, sortStratagey, favs);
   return (
@@ -241,7 +221,6 @@ export function HomeContainer(props: Props): JSX.Element {
                     } as Instance)
                   }
                   forPreview={true}
-                  userName={userName}
                 />
               );
             })}
@@ -278,6 +257,19 @@ export function HomeContainer(props: Props): JSX.Element {
             , and a custom data table language. It&apos;s okay if you are not familiar with these languages,
             it&apos;s not strictly necessary to know them in order to make effective usage of our tool.
           </p>
+          <p className="flex-down">
+            <span>You can view a video tutorial here if you like:</span>
+            {
+              <iframe
+                src="https://archive.org/embed/ivy-tutorial-1-v-2"
+                width="640"
+                height="480"
+                frameBorder="0"
+                title="ivy tutorial"
+                allowFullScreen
+              ></iframe>
+            }
+          </p>
           <hr />
           <h3 className="home-container-label">
             Select a template or template instance (or just go to <Link to="/editor/">the editor</Link>)
@@ -308,8 +300,6 @@ export function HomeContainer(props: Props): JSX.Element {
                             key={`${templateName}${BINDER}${templateAuthor}`}
                             row={row}
                             favoriteTemplatesConfig={{favs, setFavs}}
-                            userName={userName}
-                            removeInstance={removeInstance}
                           />
                         );
                       })}
@@ -324,12 +314,7 @@ export function HomeContainer(props: Props): JSX.Element {
               {instances
                 .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
                 .map((x, idx) => (
-                  <InstanceCard
-                    entry={x}
-                    forPreview={false}
-                    userName={userName}
-                    key={`river-instance-${idx}`}
-                  />
+                  <InstanceCard entry={x} forPreview={false} key={`river-instance-${idx}`} />
                 ))}
             </div>
           )}

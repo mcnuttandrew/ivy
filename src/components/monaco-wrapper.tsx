@@ -17,10 +17,15 @@ interface Props {
   setEditMode: GenericAction<boolean>;
 }
 
-export default class CodeEditor extends React.Component<Props> {
+interface State {
+  offsetStore: {[x: string]: number};
+}
+
+export default class CodeEditor extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.editorDidMount = this.editorDidMount.bind(this);
+    this.state = {offsetStore: {}};
   }
   editorDidMount(editor: any): void {
     editor.focus();
@@ -35,12 +40,26 @@ export default class CodeEditor extends React.Component<Props> {
     /* eslint-enable */
   }
 
-  componentDidUpdate(props: any): void {
+  getSnapshotBeforeUpdate(prevProps: Props): void {
+    const oldMode = prevProps.codeMode;
+    const newMode = this.props.codeMode;
+
     // on change code mode scroll to top
-    if (props.codeMode !== this.props.codeMode) {
+    /* eslint-disable */
+    // @ts-ignore
+    return oldMode !== newMode ? this.refs.monaco.editor.getScrollTop() : null;
+    /* eslint-enable */
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State, currentTop: number): void {
+    const oldMode = prevProps.codeMode;
+    const newMode = this.props.codeMode;
+    if (oldMode !== newMode) {
+      const {offsetStore} = this.state;
       /* eslint-disable */
+      this.setState({offsetStore: {...offsetStore, [oldMode]: currentTop}});
       // @ts-ignore
-      this.refs.monaco.editor.setScrollPosition({scrollTop: 0});
+      this.refs.monaco.editor.setScrollPosition({scrollTop: offsetStore[newMode]});
       /* eslint-enable */
     }
   }

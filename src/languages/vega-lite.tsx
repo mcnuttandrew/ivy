@@ -50,6 +50,7 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
   ) {
     finalSpec.data = {values: data};
   }
+  // renderer="svg"
   return (
     <Vega
       actions={false}

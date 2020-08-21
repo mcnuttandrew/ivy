@@ -8,7 +8,7 @@ import {GenericAction, CoerceTypePayload} from '../actions/index';
 import {AppState, CustomCard, ColumnHeader, DataTransform} from '../types';
 import {makeCustomType} from '../utils';
 import {SimpleTooltip} from '../components/tooltips';
-import {TiDatabase} from 'react-icons/ti';
+import {TiDatabase, TiCancel} from 'react-icons/ti';
 
 import * as actionCreators from '../actions/index';
 
@@ -88,14 +88,17 @@ function DataColumn(props: DataColumnProps): JSX.Element {
     currentlySelectedFile,
     setModalState,
   } = props;
+  const [searchKey, setSearchKey] = useState('');
   const hasCustomCards = customCards && customCards.length > 0;
-  const columnGroups = columns.reduce(
-    (acc, row) => {
-      acc[row.type] = (acc[row.type] || []).concat(row);
-      return acc;
-    },
-    {DIMENSION: [], MEASURE: [], TIME: []} as {[x: string]: ColumnHeader[]},
-  );
+  const columnGroups = columns
+    .filter(col => col.field.toLowerCase().includes(searchKey.toLowerCase()))
+    .reduce(
+      (acc, row) => {
+        acc[row.type] = (acc[row.type] || []).concat(row);
+        return acc;
+      },
+      {DIMENSION: [], MEASURE: [], TIME: []} as {[x: string]: ColumnHeader[]},
+    );
   return (
     <div className="flex-down column background-2" id="data-column-container">
       <div className="flex-down" style={{maxHeight: 'fit-content'}}>
@@ -115,6 +118,17 @@ function DataColumn(props: DataColumnProps): JSX.Element {
         </div>
       </div>
       <div className="flex-down">
+        <div className="flex">
+          <input
+            onChange={(e): any => setSearchKey(e.target.value)}
+            type="text"
+            value={searchKey}
+            placeholder="search for field"
+          />
+          <div onClick={(): any => setSearchKey('')} className="cursor-pointer">
+            <TiCancel />
+          </div>
+        </div>
         {Object.entries(columnGroups).map(makePillGroup({...props, checkOptions: false}))}
 
         {hasCustomCards && (
