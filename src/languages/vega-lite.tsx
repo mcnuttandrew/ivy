@@ -53,7 +53,7 @@ function VegaLiteRenderer(props: RendererProps): JSX.Element {
   return (
     <Vega
       actions={true}
-      renderer="svg"
+      renderer="canvas"
       onError={onError}
       spec={finalSpec}
       mode="vega-lite"
