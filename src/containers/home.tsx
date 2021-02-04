@@ -258,17 +258,15 @@ export function HomeContainer(props: Props): JSX.Element {
             it&apos;s not strictly necessary to know them in order to make effective usage of our tool.
           </p>
           <p className="flex-down">
-            <span>You can view a video tutorial here if you like:</span>
-            {
-              <iframe
-                src="https://archive.org/embed/ivy-tutorial-1-v-2"
-                width="640"
-                height="480"
-                frameBorder="0"
-                title="ivy tutorial"
-                allowFullScreen
-              ></iframe>
-            }
+            <span>
+              You can view a <a href="https://archive.org/embed/ivy-tutorial-1-v-2">video tutorial here</a>.
+            </span>
+          </p>
+          <p className="flex-down">
+            <span>
+              Find out more by checking out our{' '}
+              <a href="https://arxiv.org/pdf/2101.07902.pdf">CHI21 paper here</a>.
+            </span>
           </p>
           <hr />
           <h3 className="home-container-label">

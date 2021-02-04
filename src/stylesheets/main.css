@@ -1206,6 +1206,14 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   opacity: 0.2;
 }
 
+.github-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  font-size: 30px
+}
+
 .template-actions {
   align-items: center;
   font-weight: 900;

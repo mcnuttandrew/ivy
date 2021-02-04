@@ -1,5 +1,5 @@
 import React from 'react';
-import {TiArrowBack, TiArrowForward} from 'react-icons/ti';
+import {TiArrowBack, TiArrowForward, TiSocialGithub} from 'react-icons/ti';
 import Tooltip from 'rc-tooltip';
 import {GenericAction} from '../actions/index';
 import {classnames, NULL} from '../utils';
@@ -48,15 +48,6 @@ export default function Header(props: HeaderProps): JSX.Element {
               <TiArrowForward />
               <span>Redo</span>
             </div>
-            {/* <a
-            className="flex state-action-button"
-            href="HIDDEN FOR REVIEW"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <TiSocialGithub />
-            <span>Report a bug</span>
-          </a> */}
           </div>
         </Route>
       </div>
@@ -113,6 +104,14 @@ export default function Header(props: HeaderProps): JSX.Element {
         >
           Docs
         </Link>
+        <a
+          className="flex github-button"
+          href="https://github.com/mcnuttandrew/ivy"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <TiSocialGithub />
+        </a>
       </div>
     </div>
   );
