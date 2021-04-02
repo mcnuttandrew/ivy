@@ -138,6 +138,7 @@ export interface LanguageExtension {
   suggestion: (code: string, widgets: LangType.GenWidget[], columns: ColumnHeader[]) => Suggestion[];
   language: string;
   blankTemplate: LangType.Template;
+  // utility for using the data table debugger
   getDataViews: (props: RendererProps) => Promise<any>;
 }
 
