@@ -1,5 +1,6 @@
 import {LanguageExtension} from '../types';
 import stringify from 'json-stringify-pretty-compact';
+import {logError} from '../utils';
 import x from 'vega-projection-extended';
 // necessary footwork to force the projections to be imported
 // eslint-disable-next-line
@@ -45,9 +46,8 @@ function getDataViews(props: RendererProps): Promise<any> {
 function VegaRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
   const finalSpec = JSON.parse(JSON.stringify(spec));
-
   // this stratagey only supports one data set
-  (finalSpec.data || []).forEach((row: any, idx: number) => {
+  (Array.isArray(finalSpec.data) ? finalSpec.data : []).forEach((row: any, idx: number) => {
     if (row.values === 'myData') {
       finalSpec.data[idx].values = data;
     }
