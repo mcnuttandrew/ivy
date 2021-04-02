@@ -45,9 +45,8 @@ function getDataViews(props: RendererProps): Promise<any> {
 function VegaRenderer(props: RendererProps): JSX.Element {
   const {spec, data, onError} = props;
   const finalSpec = JSON.parse(JSON.stringify(spec));
-
   // this stratagey only supports one data set
-  (finalSpec.data || []).forEach((row: any, idx: number) => {
+  (Array.isArray(finalSpec.data) ? finalSpec.data : []).forEach((row: any, idx: number) => {
     if (row.values === 'myData') {
       finalSpec.data[idx].values = data;
     }

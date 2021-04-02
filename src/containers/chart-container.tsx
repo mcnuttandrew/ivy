@@ -179,7 +179,14 @@ const MemoizeRender = React.memo(
       return <div />;
     }
     onError(null);
-    return renderer({data, spec, onError});
+    let render: JSX.Element;
+    try {
+      render = renderer({data, spec, onError});
+      return render;
+    } catch (e) {
+      onError(e);
+      return <div />;
+    }
   },
   (prevProps, nextProps) => {
     return (
