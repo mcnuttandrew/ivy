@@ -1,6 +1,5 @@
 import {LanguageExtension} from '../types';
 import stringify from 'json-stringify-pretty-compact';
-import {logError} from '../utils';
 import x from 'vega-projection-extended';
 // necessary footwork to force the projections to be imported
 // eslint-disable-next-line
