@@ -1,6 +1,6 @@
 import {Dispatch} from 'redux';
 import {csvParse, tsvParse} from 'd3-dsv';
-import {generateDomain, prepareMeta} from '../utils';
+import {generateDomain, prepareMeta, logError} from '../utils';
 import {
   AppState,
   ColumnHeader,
@@ -114,10 +114,15 @@ export const setMaterialization = createAction<SetMaterializationPayload>(action
 export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[]> => (
   dispatch: Dispatch,
 ): void => {
-  const summaries = summary(data).reduce((acc: any, d: any) => {
-    acc[d.field] = {...d};
-    return acc;
-  }, {} as {[x: string]: any});
+  let summaries = {} as {[x: string]: any};
+  try {
+    summaries = summary(data).reduce((acc: any, d: any) => {
+      acc[d.field] = {...d};
+      return acc;
+    }, {} as {[x: string]: any});
+  } catch (e) {
+    logError(e);
+  }
   dispatch({
     type: actionTypes.RECIEVE_TYPE_INFERENCES,
     payload: prepareMeta(data).map((col: any) => ({
