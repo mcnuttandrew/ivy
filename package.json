@@ -75,7 +75,7 @@
     "dom-to-image": "^2.6.0",
     "github-markdown-css": "^4.0.0",
     "idb-keyval": "^3.2.0",
-    "immer": "^5.3.2",
+    "immer": "^9.0.6",
     "json-stringify-pretty-compact": "^2.0.0",
     "monaco-editor": "^0.18.1",
     "monaco-themes": "^0.3.3",
