@@ -1,7 +1,7 @@
-const {getFile, writeFile} = require('hoopoe');
+import {promises as fs} from 'fs';
 const {tsvParse} = require('d3-dsv');
 
-getFile('./backups/backup-ive-be-vl.json')
+fs.getFile('./backups/backup-ive-be-vl.json')
   .then(x => JSON.parse(x).templates.rows)
   .then(templates => {
     const templateMap = templates.reduce((acc, row) => {
@@ -24,7 +24,7 @@ getFile('./backups/backup-ive-be-vl.json')
           (row.code.match(/\$if/g) || []).length;
         return acc;
       }, {});
-    getFile('./backups/Ivy-Gallery-Rebuild.tsv')
+    fs.getFile('./backups/Ivy-Gallery-Rebuild.tsv')
       .then(x => tsvParse(x))
       .then(instances => {
         const templateCounts = {};
@@ -46,7 +46,7 @@ getFile('./backups/backup-ive-be-vl.json')
               templateName: templateCounts[row.templateName] > 1 ? row.templateName : 'Orphan',
             };
           });
-        writeFile('./backups/solution-complexities.json', JSON.stringify(solvedInstances));
+        fs.writeFile('./backups/solution-complexities.json', JSON.stringify(solvedInstances));
       });
     // console.log(templates.length);
   });

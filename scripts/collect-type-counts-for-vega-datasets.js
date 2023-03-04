@@ -1,4 +1,4 @@
-const {getFile, writeFile} = require('hoopoe');
+import {promises as fs} from 'fs';
 const {Analyzer} = require('type-analyzer');
 const {computeColMeta} = Analyzer;
 const {csvParse, tsvParse} = require('d3-dsv');
@@ -32,7 +32,8 @@ function listAllColumns(table) {
 
 Promise.all(
   Object.keys(vegaDataSet).map(key => {
-    return getFile(`./node_modules/vega-datasets/data/${key}`)
+    return fs
+      .getFile(`./node_modules/vega-datasets/data/${key}`)
       .then(d => getReader(key)(d))
       .then(file => [computeColMeta(file), file])
       .then(([colMeta, file]) => {
@@ -71,5 +72,5 @@ Promise.all(
       acc[row.file] = row;
       return acc;
     }, {});
-  writeFile('./src/constants/vega-datasets-counts.json', JSON.stringify(fullCounts, null, 2));
+  fs.writeFile('./src/constants/vega-datasets-counts.json', JSON.stringify(fullCounts, null, 2));
 });

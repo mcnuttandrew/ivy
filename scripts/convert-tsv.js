@@ -1,4 +1,4 @@
-const {getFile, writeFile} = require('hoopoe');
+import {promises as fs} from 'fs';
 const {tsvParse, csvParse} = require('d3-dsv');
 const allowCol = new Set([
   // 'Bureau ID',
@@ -55,7 +55,7 @@ const allowCol = new Set([
   'Missiles Reported Fired (Median)',
   // 'References',
 ]);
-getFile('./collected-data/Strikes-dirty.csv')
+fs.getFile('./collected-data/Strikes-dirty.csv')
   .then(csvParse)
   .then(d => {
     const mappedData = d.map(row => {
@@ -67,7 +67,7 @@ getFile('./collected-data/Strikes-dirty.csv')
         return acc;
       }, {});
     });
-    writeFile('./collected-data/drone-strikes.json', JSON.stringify(mappedData, null, 2));
+    fs.writeFile('./collected-data/drone-strikes.json', JSON.stringify(mappedData, null, 2));
   });
 
 // const dataRow = 'GEO,UNIT,SEX,AGE,ICD10\\TIME';

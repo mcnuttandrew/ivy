@@ -5916,11 +5916,6 @@ homedir-polyfill@^1.0.1:
   dependencies:
     parse-passwd "^1.0.0"
 
-hoopoe@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/hoopoe/-/hoopoe-1.0.1.tgz#7019cbd9a5edceb2d7448d3d627996b8235a6d30"
-  integrity sha512-3IdeezHIrW1Sqb23tyWSOEGMwGmMszSx7RkSpx9BiCH5lwyylF0Y2M8FDORLukUlXx4kiIQuTLkagVhinfX6OQ==
-
 hoopy@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/hoopy/-/hoopy-0.1.4.tgz#609207d661100033a9a9402ad3dea677381c1b1d"

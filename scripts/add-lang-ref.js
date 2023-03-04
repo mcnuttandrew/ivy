@@ -2,11 +2,12 @@
 const args = process.argv.slice(2);
 console.log(args);
 
-const {getFile, writeFile} = require('hoopoe');
+import {promises as fs} from 'fs';
 
-getFile(args[0])
+fs.getFile(args[0])
+  // getFile(args[0])
   .then(d => JSON.parse(d))
   .then(d => {
     d.$ref = '#/definitions/Template';
-    writeFile(args[0], JSON.stringify(d, null, 2));
+    fs.writeFile(args[0], JSON.stringify(d, null, 2));
   });

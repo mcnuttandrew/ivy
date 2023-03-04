@@ -1,6 +1,19 @@
-const {getFile, writeFile, executeCommandLineCmd} = require('hoopoe');
+import {promises as fs} from 'fs';
+const {exec} = require('child_process');
 const {Analyzer} = require('type-analyzer');
 const {computeColMeta} = Analyzer;
+
+function executeCommandLineCmd(cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({stdout, stderr});
+      }
+    });
+  });
+}
 
 const jsonReader = data => JSON.parse(data);
 const getReader = fileName => {
@@ -14,7 +27,8 @@ executeCommandLineCmd('ls example-datasets')
   .then(datasets => {
     Promise.all(
       datasets.map(key => {
-        return getFile(`./example-datasets/${key}`)
+        return fs
+          .getFile(`./example-datasets/${key}`)
           .then(d => getReader(key)(d))
           .then(file => [computeColMeta(file), file])
           .then(([colMeta, file]) =>
@@ -38,6 +52,6 @@ executeCommandLineCmd('ls example-datasets')
           acc[row.file] = row;
           return acc;
         }, {});
-      writeFile('./src/constants/small-example-datasets-counts.json', JSON.stringify(fullCounts, null, 2));
+      fs.writeFile('./src/constants/small-example-datasets-counts.json', JSON.stringify(fullCounts, null, 2));
     });
   });

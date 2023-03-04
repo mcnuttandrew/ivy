@@ -1,6 +1,7 @@
-const {getFile} = require('hoopoe');
-const {tsvParse} = require('d3-dsv');
-getFile('./backups/Ivy-Gallery-Rebuild.tsv')
+import {promises as fs} from 'fs';
+
+import {tsvParse} from 'd3-dsv';
+fs.getFile('./backups/Ivy-Gallery-Rebuild.tsv')
   .then(x => tsvParse(x))
   .then(instances => {
     const solvedInstances = instances.filter(row => row.Instance).map(x => x.Title);
