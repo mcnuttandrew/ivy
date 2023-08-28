@@ -4,11 +4,13 @@ import {connect} from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line no-undef
-const docsText = process.env.NODE_ENV === 'test' ? '' : require('../../docs/language-docs.md').default;
+// const docsText = process.env.NODE_ENV === 'test' ? '' : require('../../docs/language-docs.md').default;
 import * as actionCreators from '../actions/index';
 import {ActionUser} from '../actions';
 import Header from '../components/header';
 type Props = ActionUser;
+
+const docsText = '';
 
 export function DocsContainer(): JSX.Element {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+// import MonacoEditor from 'react-monaco-editor';
 import {IgnoreKeys} from 'react-hotkeys';
 import {debounce} from 'vega';
 
@@ -31,7 +31,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     editor.focus();
     /* eslint-disable */
     // @ts-ignore
-    import('monaco-themes/themes/Chrome DevTools.json').then(data => {
+    import('monaco-themes/themes/Chrome DevTools.json').then((data) => {
       // @ts-ignore
       monaco.editor.defineTheme('cobalt', data);
       // @ts-ignore
@@ -65,20 +65,20 @@ export default class CodeEditor extends React.Component<Props, State> {
   }
 
   render(): JSX.Element {
-    const {
-      codeMode,
-      currentCode,
-      editMode,
-      editorFontSize,
-      editorLineWrap,
-      handleCodeUpdate,
-      setCodeMode,
-      setEditMode,
-    } = this.props;
+    // const {
+    //   codeMode,
+    //   currentCode,
+    //   editMode,
+    //   editorFontSize,
+    //   editorLineWrap,
+    //   handleCodeUpdate,
+    //   setCodeMode,
+    //   setEditMode,
+    // } = this.props;
     return (
       /*eslint-disable react/no-string-refs*/
       <IgnoreKeys style={{height: '100%'}}>
-        <MonacoEditor
+        {/* <MonacoEditor
           ref="monaco"
           key={codeMode}
           language="json"
@@ -104,7 +104,7 @@ export default class CodeEditor extends React.Component<Props, State> {
             handleCodeUpdate(code);
           })}
           editorDidMount={this.editorDidMount}
-        />
+        /> */}
       </IgnoreKeys>
       /*eslint-en able react/no-string-refs*/
     );
