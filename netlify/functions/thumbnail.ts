@@ -33,12 +33,13 @@ export const handler: Handler = (event, context, callback) => {
           return;
         }
         const img = result.thumbnail;
-        const base64Image = img.split(';base64,').pop();
+        // const base64Image = img.split(';base64,').pop();
         callback!(null, {
           statusCode: 200,
-          headers: {'Content-Type': 'image/png'},
-          body: base64Image,
-          isBase64Encoded: true,
+          body: img,
+          // headers: {'Content-Type': 'image/png'},
+          // body: base64Image,
+          // isBase64Encoded: true,
         });
         connection.close();
       });

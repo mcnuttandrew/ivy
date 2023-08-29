@@ -1,6 +1,6 @@
 import {GenWidget} from '../types';
 import {get, set} from 'idb-keyval';
-import { logUser } from '../utils/api';
+import {logUser} from '../utils/api';
 
 // eslint-disable-next-line no-undef
 const isTest = process.env.NODE_ENV === 'test';
