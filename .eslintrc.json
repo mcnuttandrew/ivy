@@ -2,9 +2,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "plugin:@typescript-eslint/recommended"
   ],
   "plugins": ["react", "@typescript-eslint", "prettier", "react-hooks"],
   "env": {
@@ -16,12 +14,12 @@
   "rules": {
     "prettier/prettier": ["error", { "singleQuote": true }],
     "@typescript-eslint/no-explicit-any": 0 ,
-    "@typescript-eslint/camelcase": 0,
     "@typescript-eslint/ban-ts-ignore": 0,
     "no-case-declarations": 0,
     "react/prop-types": 0,
-    "no-console": 2,
-    "@typescript-eslint/no-empty-function": 0
+    "no-console": 0,
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/ban-ts-comment": 0
   },
   "settings": {
     "react": {

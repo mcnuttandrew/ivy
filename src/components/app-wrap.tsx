@@ -9,9 +9,17 @@ import Docs, {mapStateToProps as DocsMapStateToProps} from '../containers/docs';
 import ErrorBoundary from './error-boundary';
 import DEFAULT_LANGUAGES from '../languages';
 import {HashRouter as Router, Route, Switch} from 'react-router-dom';
+import {logUser} from '../utils/api';
+import {getUserName} from '../utils/local-storage';
 
 export default function AppWrap(): JSX.Element {
   // necessary footwork to appease typescript across the initial load
+  React.useEffect(() => {
+    const userNamer = getUserName();
+    if (userNamer) {
+      logUser(getUserName());
+    }
+  }, []);
   const store = setUpState();
   return (
     <ErrorBoundary>

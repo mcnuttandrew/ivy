@@ -11,8 +11,9 @@ export const BLANK_TEMPLATE: Template = {
   widgets: [],
 };
 
+// eslint-disable-next-line
 function ExampleRenderer(props: RendererProps): JSX.Element {
-  const {spec, data, onError} = props;
+  // const {spec, data, onError} = props;
   return <div />;
 }
 

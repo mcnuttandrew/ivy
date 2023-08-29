@@ -5,7 +5,7 @@ import {DataType} from '../types';
 import {constructDefaultTemplateMap} from '../ivy-lang';
 
 export const recieveData = (state: AppState, payload: {data: any; dumpTemplateMap: boolean}): AppState => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.views = ['view1'];
     if (payload.dumpTemplateMap) {
       draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
@@ -17,7 +17,7 @@ export const recieveData = (state: AppState, payload: {data: any; dumpTemplateMa
 };
 
 export const recieveDataForDataReducer = (
-  state: DataReducerState,
+  _: DataReducerState,
   payload: {data: DataRow[]; dumpTemplateMap: boolean},
 ): DataReducerState => {
   return {data: payload.data};
@@ -46,7 +46,7 @@ export const recieveTypeInferences = (state: AppState, payload: TypeInference[])
     {DIMENSION: [], MEASURE: [], TIME: []},
   );
   const orderedColumns = ['DIMENSION', 'TIME', 'MEASURE']
-    .map(key =>
+    .map((key) =>
       groupedColumns[key].sort((a: ColumnHeader, b: ColumnHeader) => {
         const textA = a.field.toUpperCase();
         const textB = b.field.toUpperCase();
@@ -55,38 +55,37 @@ export const recieveTypeInferences = (state: AppState, payload: TypeInference[])
     )
     .reduce((acc, row) => acc.concat(row), []);
 
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.columns = orderedColumns;
   });
 };
 
 // TODO this can be a blind set
 export const changeSelectedFile: ActionResponse<string> = (state, payload) => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.currentlySelectedFile = payload;
   });
 };
 
 export const coerceType: ActionResponse<CoerceTypePayload> = (state, payload) => {
   const {field, type} = payload;
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     const columnIdx = state.columns.findIndex((d: any) => d.field === field);
     const column = draftState.columns[columnIdx];
     draftState.columns[columnIdx].type = type;
     draftState.columns[columnIdx].domain = column.summary.coercionTypes[type];
-    draftState.templateMap.systemValues.dataTransforms = draftState.templateMap.systemValues.dataTransforms.filter(
-      transform => {
+    draftState.templateMap.systemValues.dataTransforms =
+      draftState.templateMap.systemValues.dataTransforms.filter((transform) => {
         if (transform.filter && transform.filter.field === field) {
           return false;
         }
         return true;
-      },
-    );
+      });
   });
 };
 
 export const recieveLanguages: ActionResponse<{[x: string]: LanguageExtension}> = (state, payload) => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.languages = payload;
   });
 };

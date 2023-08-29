@@ -129,7 +129,7 @@ export function ListWidgetConfiguration(props: GeneralWidget<ListWidget>): JSX.E
           </button>
         )}
         {usingDisplayValueFormat && (
-          <button type="button" onClick={(): any => updateList(vals.map(d => d.value))}>
+          <button type="button" onClick={(): any => updateList(vals.map((d) => d.value))}>
             Just Use Values
           </button>
         )}
@@ -174,7 +174,7 @@ const ListBuilder: WidgetBuilder = (widget, common) => {
     uiElement: <ListWidgetComponent {...common} widget={widg} />,
     materializationOptions: (): {name: string; group?: string}[] => {
       const vals = toDisplayVal((widget as Widget<ListWidget>).config.allowedValues);
-      return vals.map(d => ({name: `"${trim(d.display)}"`}));
+      return vals.map((d) => ({name: `"${trim(d.display)}"`}));
     },
   };
 };

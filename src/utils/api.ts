@@ -1,24 +1,52 @@
 import {Template} from '../types';
 import {DEFAULT_TEMPLATES} from '../templates';
 import {FETCH_PARMS} from '../constants/index';
-import {serverPrefix} from './index';
 
 function simpleGetJSON(url: string): Promise<any> {
-  return fetch(url, FETCH_PARMS as any).then(x => x.json());
+  return fetch(url, FETCH_PARMS as any)
+    .then((x) => x.json())
+    .catch((e) => console.error(e));
+}
+
+export function getTemplates(): Promise<Template[]> {
+  return fetch(`.netlify/functions/templates`, FETCH_PARMS as any)
+    .then((x) => x.json())
+    .then((fetchedData) =>
+      fetchedData.reduce((acc: any[], x: any) => {
+        try {
+          let result;
+          if (typeof x.template === 'string') {
+            result = JSON.parse(x.template);
+          } else if (typeof x.template === 'object') {
+            result = x.template;
+          } else {
+            throw new Error('bad template');
+          }
+          acc.push(result);
+        } catch (e) {
+          console.error('parse fail !', x);
+        }
+        return acc;
+      }, []),
+    );
+}
+
+export function logUser(userName: string) {
+  return fetch(`.netlify/functions/user-log/${userName}`, FETCH_PARMS as any);
 }
 
 export function getTemplate(templateAuthor: string, templateName: string): Promise<Template> {
   return new Promise((resolve, reject) => {
     const foundTemplate = DEFAULT_TEMPLATES.find(
-      template => template.templateAuthor === templateAuthor && template.templateName === templateName,
+      (template) => template.templateAuthor === templateAuthor && template.templateName === templateName,
     );
     if (foundTemplate) {
       resolve(foundTemplate);
       return;
     }
-    return simpleGetJSON(`${serverPrefix()}/${templateAuthor}/${templateName}`)
-      .then(template => resolve(template.template))
-      .catch(e => reject(e));
+    return simpleGetJSON(`.netlify/functions/template/${templateAuthor}/${templateName}`)
+      .then((template) => resolve(template))
+      .catch((e) => reject(e));
   });
 }
 
@@ -38,5 +66,18 @@ export function getTemplateInstance(
   templateName: string,
   templateInstance: string,
 ): Promise<TemplateInstance> {
-  return simpleGetJSON(`${serverPrefix()}/${templateAuthor}/${templateName}/${templateInstance}`);
+  return simpleGetJSON(
+    `.netlify/functions/template-instance/${templateAuthor}/${templateName}/${templateInstance}`,
+  )
+    .then((x) => {
+      x.template_instance =
+        x.template_instance && typeof x.template_instance === 'string'
+          ? JSON.parse(x.template_instance)
+          : x.template_instance;
+      return x;
+    })
+    .catch((e) => {
+      console.error(e);
+      return {} as TemplateInstance;
+    });
 }

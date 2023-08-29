@@ -75,7 +75,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
     templateMap,
   } = props;
   const keySet = Object.entries(templateMap.systemValues.viewsToMaterialize)
-    .filter(d => d[1].length)
+    .filter((d) => d[1].length)
     .reduce((acc, d: [string, string[]]) => acc.add(d[0]), new Set());
   function removeButton(name: string, key: string, value: string): JSX.Element {
     return (
@@ -83,7 +83,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
         className="cursor-pointer"
         key={key}
         onClick={(): void => {
-          const newVals = (templateMap.systemValues.viewsToMaterialize[key] || []).filter(d => d !== value);
+          const newVals = (templateMap.systemValues.viewsToMaterialize[key] || []).filter((d) => d !== value);
           setMaterialization({key, value: newVals});
         }}
       >
@@ -95,14 +95,14 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   }
   return (
     <React.Fragment>
-      {materializedViews.map(view => {
+      {materializedViews.map((view) => {
         const newTemplateMap: TemplateMap = {
           ...templateMap,
           paramValues: {...templateMap.paramValues, ...view.paramValues},
         };
         const spec = evaluateIvyProgram(template, newTemplateMap);
         const cardName = Object.entries(view.paramValues)
-          .map(row => row.join(': '))
+          .map((row) => row.join(': '))
           .join(' ');
         return (
           <div key={`view-${cardName}`} className="render-wrapper">
@@ -252,10 +252,10 @@ function ChartArea(props: ChartContainerProps): JSX.Element {
   const showChart = !templateGallery && renderer && templateComplete;
 
   const preCart = Object.entries(templateMap.systemValues.viewsToMaterialize).map(([key, values]) => {
-    return values.map(value => ({key, value}));
+    return values.map((value) => ({key, value}));
   });
   const materializedViews = preCart.length
-    ? [...cartesian(...preCart)].map(combo => {
+    ? [...cartesian(...preCart)].map((combo) => {
         return combo.reduce((acc: any, row: any) => ({...acc, [row.key]: row.value}), {});
       })
     : [];
@@ -371,7 +371,7 @@ export function mapStateToProps({base, data}: {base: AppState; data: DataReducer
 }
 
 function equalityChecker(prevProps: any, nextProps: any): boolean {
-  return Object.keys(prevProps).every(key => {
+  return Object.keys(prevProps).every((key) => {
     if (key === 'spec' || key === 'missingFields') {
       return JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key]);
     }

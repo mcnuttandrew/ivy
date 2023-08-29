@@ -1,6 +1,5 @@
 declare module 'type-analyzer';
 declare module 'datalib';
-declare module 'enzyme-adapter-react-16';
 
 declare module 'vega-projection-extended';
 declare module '*.md';

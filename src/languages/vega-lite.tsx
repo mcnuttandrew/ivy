@@ -9,7 +9,7 @@ import {
   TemplateMap,
 } from '../types';
 import {buildSynthesizer, walkTreeAndLookForFields, difference} from './suggestion-utils';
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 
 import React from 'react';
 import {Vega} from 'react-vega';
@@ -83,11 +83,11 @@ export function tryToGuessTheTypeForVegaLite(
   if (template.templateLanguage !== 'vega-lite') {
     return;
   }
-  const typeWidget = template.widgets.find(widget => widget.name === `${payload.field}Type`);
+  const typeWidget = template.widgets.find((widget) => widget.name === `${payload.field}Type`);
   if (!(typeWidget && payload.type === 'DataTarget')) {
     return;
   }
-  const column = columns.find(col => col.field === trim(payload.text as string));
+  const column = columns.find((col) => col.field === trim(payload.text as string));
   const dims = (typeWidget.config as ListWidget).allowedValues;
 
   if (column && column.type === 'DIMENSION' && dims.find(listFind('nominal'))) {

@@ -1,5 +1,5 @@
 // import DomToImage from 'dom-to-image';
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
   MultiDataTargetWidget,
@@ -10,7 +10,7 @@ import {
   CustomCard,
   Suggestion,
 } from '../types';
-import {MATERIALIZING, USE_LOCAL, BINDER} from '../constants/index';
+import {MATERIALIZING, BINDER} from '../constants/index';
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
 import GALLERY from '../templates/gallery';
@@ -25,7 +25,7 @@ export const NULL = (): void => {};
 
 export function classnames(classObject: {[val: string]: boolean}): string {
   return Object.keys(classObject)
-    .filter(name => classObject[name] && name)
+    .filter((name) => classObject[name] && name)
     .join(' ');
 }
 
@@ -41,9 +41,9 @@ export function getDomain(data: any[], field: string): number[] {
 
 export function getTimeDomain(data: any[], field: string): Date[] {
   return getDomain(
-    data.map(x => ({...x, [field]: new Date(x[field]).getTime()})),
+    data.map((x) => ({...x, [field]: new Date(x[field]).getTime()})),
     field,
-  ).map(epochDate => new Date(epochDate));
+  ).map((epochDate) => new Date(epochDate));
 }
 
 export function generateDomain(data: any[], field: string, type: string): any[] {
@@ -90,7 +90,7 @@ export function trim(dimName: string): string {
 }
 
 export const toList = (list: string[]): {display: string; value: string}[] =>
-  list.map(display => ({
+  list.map((display) => ({
     display,
     value: `"${display}"`,
   }));
@@ -146,18 +146,12 @@ export function deserializeTemplate(templateString: string): Template {
 type SaveState = 'NA' | 'NOT FOUND' | 'EQUAL' | 'DIFFERENT';
 export function getTemplateSaveState(base: AppState): SaveState {
   const template = base.currentTemplateInstance;
-  const associatedUpstreamTemplate = base.templates.find(t => t.templateName === template.templateName);
+  const associatedUpstreamTemplate = base.templates.find((t) => t.templateName === template.templateName);
   if (!associatedUpstreamTemplate) {
     return 'NOT FOUND';
   }
   return associatedUpstreamTemplate === template ? 'EQUAL' : 'DIFFERENT';
 }
-
-export function serverPrefix(): string {
-  // return 'https://ivy-be-vl.herokuapp.com';
-  return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
-}
-
 export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): Set<string> => {
   const dims = ['DIMENSION', 'MEASURE', 'TIME'];
   const dimCounter = dims.reduce((acc: any, key) => ({...acc, [key]: []}), {});
@@ -165,12 +159,12 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
   const toSet = (counter: {[x: string]: any[]}): Set<string> =>
     new Set(
       Object.entries(counter)
-        .filter(x => x[1].length)
-        .map(x => x[0]),
+        .filter((x) => x[1].length)
+        .map((x) => x[0]),
     );
 
   const result = template.widgets
-    .filter(d => ['MultiDataTarget', 'DataTarget'].includes(d.type))
+    .filter((d) => ['MultiDataTarget', 'DataTarget'].includes(d.type))
     .reduce((acc: any, widget: any) => {
       const type = widget.type;
       const name = widget.name;
@@ -181,7 +175,7 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
         (!val || val.length < widget.config.maxNumberOfTargets || !widget.config.maxNumberOfTargets)
       ) {
         (widget.config.allowedTypes as string[])
-          .filter(d => dimCounter[d])
+          .filter((d) => dimCounter[d])
           .forEach((allowedType: string): void => acc[allowedType].push(name));
       }
       // dont try figure it out if it's in use, needs to be before multidatatarget which has a truthy null, []
@@ -191,7 +185,7 @@ export const computeValidAddNexts = (template: Template, templateMap: TemplateMa
 
       if (type === 'DataTarget') {
         (widget.config.allowedTypes as string[])
-          .filter(d => dimCounter[d])
+          .filter((d) => dimCounter[d])
           .forEach((allowedType: string): void => acc[allowedType].push(name));
       }
       return acc;
@@ -205,11 +199,7 @@ export const makeColNameMap = (columns: ColumnHeader[]): {[d: string]: ColumnHea
     return acc;
   }, {});
 
-const toKey = (arr: string[]): string =>
-  arr
-    .slice()
-    .sort()
-    .join('-');
+const toKey = (arr: string[]): string => arr.slice().sort().join('-');
 
 export function buildCounts(template: Template, useTotal?: boolean): {[x: string]: number; SUM: number} {
   return template.widgets.reduce(
@@ -223,12 +213,8 @@ export function buildCounts(template: Template, useTotal?: boolean): {[x: string
         }
       }
       if (row.type === 'MultiDataTarget') {
-        const {
-          allowedTypes,
-          minNumberOfTargets,
-          maxNumberOfTargets,
-          required,
-        } = row.config as MultiDataTargetWidget;
+        const {allowedTypes, minNumberOfTargets, maxNumberOfTargets, required} =
+          row.config as MultiDataTargetWidget;
         acc.SUM += Number(maxNumberOfTargets) || 0;
         const comboKey = toKey(allowedTypes);
         if (useTotal || required) {
@@ -247,17 +233,19 @@ export function searchDimensionsCanMatch(
   columns: ColumnHeader[],
 ): {canBeUsed: boolean; isComplete: boolean} {
   const colMap = makeColNameMap(columns);
-  const desiredColumns = targetCols.map(key => colMap[trim(key)]);
+  const desiredColumns = targetCols.map((key) => colMap[trim(key)]);
   const config = template.widgets;
-  const targets = config.filter(d => d.type === 'DataTarget') as Widget<DataTargetWidget>[];
-  const multiTargets = config.filter(d => d.type === 'MultiDataTarget') as Widget<MultiDataTargetWidget>[];
-  const numRequired = targets.filter(d => d.config.required).length;
+  const targets = config.filter((d) => d.type === 'DataTarget') as Widget<DataTargetWidget>[];
+  const multiTargets = config.filter((d) => d.type === 'MultiDataTarget') as Widget<MultiDataTargetWidget>[];
+  const numRequired = targets.filter((d) => d.config.required).length;
   const usedTargets: Set<string> = new Set([]);
-  const result = desiredColumns.every(col => {
+  const result = desiredColumns.every((col) => {
     const availableSingleTargetField = targets
-      .filter(d => !usedTargets.has(d.name))
-      .find(d => col && d.config.allowedTypes.includes(col.type));
-    const availableMultiTargetField = multiTargets.find(d => col && d.config.allowedTypes.includes(col.type));
+      .filter((d) => !usedTargets.has(d.name))
+      .find((d) => col && d.config.allowedTypes.includes(col.type));
+    const availableMultiTargetField = multiTargets.find(
+      (d) => col && d.config.allowedTypes.includes(col.type),
+    );
 
     if (availableSingleTargetField) {
       usedTargets.add(availableSingleTargetField.name);
@@ -316,7 +304,7 @@ export function getOrMakeColumn(
   if (column) {
     return column;
   }
-  if ((customCards || []).find(x => x.name === columnName) || columnName === `${MATERIALIZING}`) {
+  if ((customCards || []).find((x) => x.name === columnName) || columnName === `${MATERIALIZING}`) {
     return makeCustomType({name: columnName, description: ''});
   }
   return null;
@@ -337,7 +325,7 @@ export function makeOptionsForDropdown(
     ...(customCards || []).map(({name}) => ({display: name, value: name, group: 'Template Fields'})),
   ].concat(
     columns
-      .map(column => ({
+      .map((column) => ({
         display: `${column.field} ${column.type}`,
         value: column.field,
         group: useGroupsAsTypes
@@ -356,8 +344,8 @@ export const toSet = (widgets: GenWidget[]): Set<string> =>
 export function removeFirstInstanceOf(a: string[], key: string): string[] {
   let hasFound = false;
   return a
-    .map(d => d)
-    .filter(x => {
+    .map((d) => d)
+    .filter((x) => {
       if (hasFound) {
         return true;
       }
@@ -385,10 +373,7 @@ export function takeSuggestion(code: string, suggestion: Suggestion): string {
 }
 
 export function toExportStr(str: string): string {
-  return str
-    .trim()
-    .toLowerCase()
-    .replace(/\s/g, '-');
+  return str.trim().toLowerCase().replace(/\s/g, '-');
 }
 
 /**
@@ -430,18 +415,18 @@ function groupBy(templates: any[], accessor: (x: any) => string): Group {
 }
 export function toSection(templates: any[], sectionStratagey: string, favorites: Set<string>): Group {
   const sectionFunctionMap: {[x: string]: (d: Template) => any} = {
-    alphabetical: d => d.templateName[0].toUpperCase(),
-    author: d => d.templateAuthor,
-    language: d => d.templateLanguage,
-    'vis key word': d => {
+    alphabetical: (d) => d.templateName[0].toUpperCase(),
+    author: (d) => d.templateAuthor,
+    language: (d) => d.templateLanguage,
+    'vis key word': (d) => {
       const match = visNameCombos.find(({key, synonyms}) =>
         [key, ...synonyms].some((str: string) => checkName(d, str)),
       );
       return (match && match.key) || 'other';
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    none: d => null,
-    favorites: d => {
+    none: () => null,
+    favorites: (d) => {
       const key = `${d.templateName}${BINDER}${d.templateAuthor}`;
       return favorites.has(key) ? 'Favorites' : 'Other';
     },
@@ -461,18 +446,21 @@ export function prepareMeta(data: any): any {
   const initialMeta = computeColMeta(data);
   const listAllColumns = (table: any): string[] =>
     Object.keys(
-      table.reduce((acc: any, row: any) => {
-        const cols = Object.keys(row);
-        cols.forEach(col => {
-          acc[col] = true;
-        });
-        return acc;
-      }, {} as {[x: string]: boolean}),
+      table.reduce(
+        (acc: any, row: any) => {
+          const cols = Object.keys(row);
+          cols.forEach((col) => {
+            acc[col] = true;
+          });
+          return acc;
+        },
+        {} as {[x: string]: boolean},
+      ),
     );
   const colsFromAnalyzer = new Set(initialMeta.map((x: any) => x.key));
   const missingColumns = listAllColumns(data)
-    .filter(col => !colsFromAnalyzer.has(col))
+    .filter((col) => !colsFromAnalyzer.has(col))
     // if it's missing set it to a default guess
-    .map(col => ({key: col, label: col, type: 'STRING', category: 'DIMENSION', format: ''}));
+    .map((col) => ({key: col, label: col, type: 'STRING', category: 'DIMENSION', format: ''}));
   return initialMeta.concat(missingColumns);
 }

@@ -41,14 +41,14 @@ interface RelatedViewsProps {
 export default function RelatedViews(props: RelatedViewsProps): JSX.Element {
   const {templates, templateMap, columns, template, setEncodingMode} = props;
   const viewsOfInterest = template.widgets
-    .filter(x => targetTypes.has(x.type))
+    .filter((x) => targetTypes.has(x.type))
     .reduce((acc, widget) => {
       if (templateMap.paramValues[widget.name]) {
         return acc.concat(templateMap.paramValues[widget.name]);
       }
       return acc;
     }, [] as string[]);
-  const relatedViews: Template[] = templates.filter(x => {
+  const relatedViews: Template[] = templates.filter((x) => {
     // dont suggest the gallery or the current template
     if (x.templateName === GALLERY.templateName || x.templateName === template.templateName) {
       return false;

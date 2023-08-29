@@ -11,7 +11,7 @@ interface Props {
 
 function serializeCell(cellValue: any): any {
   if (typeof cellValue === 'object') {
-    if (cellValue && Object.values(cellValue).every(x => typeof x !== 'object')) {
+    if (cellValue && Object.values(cellValue).every((x) => typeof x !== 'object')) {
       return JSON.stringify(cellValue);
     } else {
       return '(...)';
@@ -58,11 +58,11 @@ export default function ShowData(props: Props): JSX.Element {
         data,
         onError: () => {},
       })
-      .then(x => {
+      .then((x) => {
         setSelectedData(Object.keys(x)[0]);
         setLoadedData(x);
       })
-      .catch(e => catchError(e));
+      .catch((e) => catchError(e));
   }, [JSON.stringify(spec), JSON.stringify(templateMap)]);
 
   let rows = [];
@@ -77,7 +77,7 @@ export default function ShowData(props: Props): JSX.Element {
     <div className="flex-down">
       <div className="show-data-table-controls">
         <select onChange={(x): any => setSelectedData(x.target.value)}>
-          {Object.keys(loadedData).map(key => (
+          {Object.keys(loadedData).map((key) => (
             <option value={key} key={key}>
               {key}
             </option>

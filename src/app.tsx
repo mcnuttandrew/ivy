@@ -5,6 +5,8 @@ import setupMonaco from './utils/monaco';
 import {PREVENT_ACCIDENTAL_LEAVE} from './constants/index';
 import {randomSetUserNameIfUnset} from './utils/local-storage';
 
+(window as any).global = window;
+
 import './stylesheets/main.css';
 import './stylesheets/home.css';
 import './stylesheets/docs.css';

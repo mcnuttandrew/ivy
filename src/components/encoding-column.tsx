@@ -50,31 +50,34 @@ interface AddWidgetButtonProps {
   widgets: GenWidget[];
 }
 
-const renderOption = (
-  widgets: GenWidget[],
-  addWidget: GenericAction<GenWidget>,
-  removeWidgetFromTemplates?: (widget: GenWidget) => void,
-) => ([key, widgetFactory]: [string, WidgetFactoryFunc]): JSX.Element => {
-  const newWidget = widgetFactory(widgets.length);
-  return (
-    <div key={key} className="cursor-pointer flex add-widget-row space-between">
-      <div className="flex-down" onClick={(): any => addWidget(newWidget)}>
-        <div className="flex">
-          <TiChevronRight />
-          <span>New {key}</span>
+const renderOption =
+  (
+    widgets: GenWidget[],
+    addWidget: GenericAction<GenWidget>,
+    removeWidgetFromTemplates?: (widget: GenWidget) => void,
+  ) =>
+  // eslint-disable-next-line
+  ([key, widgetFactory]: [string, WidgetFactoryFunc]): JSX.Element => {
+    const newWidget = widgetFactory(widgets.length);
+    return (
+      <div key={key} className="cursor-pointer flex add-widget-row space-between">
+        <div className="flex-down" onClick={(): any => addWidget(newWidget)}>
+          <div className="flex">
+            <TiChevronRight />
+            <span>New {key}</span>
+          </div>
+          <div className="add-widget-row-description">{WidgetDescriptions[newWidget.type as string]}</div>
         </div>
-        <div className="add-widget-row-description">{WidgetDescriptions[newWidget.type as string]}</div>
+        {removeWidgetFromTemplates && (
+          <Reset
+            className="margin-left"
+            tooltipLabel="Delete this saved template from the local cache"
+            onClick={(): any => removeWidgetFromTemplates({...newWidget, name: key})}
+          />
+        )}
       </div>
-      {removeWidgetFromTemplates && (
-        <Reset
-          className="margin-left"
-          tooltipLabel="Delete this saved template from the local cache"
-          onClick={(): any => removeWidgetFromTemplates({...newWidget, name: key})}
-        />
-      )}
-    </div>
-  );
-};
+    );
+  };
 
 function AddWidgetButton(props: AddWidgetButtonProps): JSX.Element {
   const {addWidget, widgets} = props;
@@ -127,7 +130,7 @@ function buildSections(template: Template): GenWidget[][] {
     {currentSection: [], sections: []},
   );
 
-  return sections.sections.filter(d => d.length).concat([sections.currentSection]);
+  return sections.sections.filter((d) => d.length).concat([sections.currentSection]);
 }
 
 export default function EncodingColumn(props: EncodingColumnProps): JSX.Element {
@@ -195,7 +198,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
         </div>
       );
     });
-    if (!sectionContents.filter(d => d).length) {
+    if (!sectionContents.filter((d) => d).length) {
       return null;
     }
     return (
@@ -245,7 +248,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
             <div className="flex-down">
               <AddLabelToWidget label={'Template Language'}>
                 <Selector
-                  options={Object.keys(languages).map(key => ({
+                  options={Object.keys(languages).map((key) => ({
                     display: key,
                     value: key,
                   }))}

@@ -25,7 +25,7 @@ export default function DataModal(props: Props): JSX.Element {
   const [sortMode, setSortMode] = useState('FAVORITES');
   const [favs, setFavs] = useState(new Set([]));
   useEffect(() => {
-    getFavoriteDatasets().then(x => {
+    getFavoriteDatasets().then((x) => {
       const entries = x && x.length ? x : ['cars.json', 'penguins.json'];
       setFavs(new Set(entries as string[]));
     });
@@ -95,7 +95,7 @@ export default function DataModal(props: Props): JSX.Element {
       <div className="dataset-list">
         {Object.keys(combinedMeta)
           .filter(
-            key =>
+            (key) =>
               key.toLowerCase().includes(searchTerm || '') ||
               combinedMeta[key].columns.some((col: any) => col.toLowerCase().includes(searchTerm || '')),
           )
@@ -119,7 +119,7 @@ export default function DataModal(props: Props): JSX.Element {
             const bVal = Number(combinedMeta[b][sortMode]) || 0;
             return aVal - bVal;
           })
-          .map(datasetName => {
+          .map((datasetName) => {
             const datasetMeta = combinedMeta[datasetName];
             return (
               <div className="dataset-list-item flex" key={datasetName}>

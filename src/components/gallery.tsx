@@ -3,16 +3,9 @@ import {GenericAction, SetWidgetValuePayload} from '../actions/index';
 import {Template, TemplateMap, ColumnHeader} from '../types';
 import TemplateCard from './template-card';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {FETCH_PARMS} from '../constants';
-import {
-  searchDimensionsCanMatch,
-  buildCounts,
-  searchPredicate,
-  serverPrefix,
-  trim,
-  toSection,
-} from '../utils';
+import {searchDimensionsCanMatch, buildCounts, searchPredicate, trim, toSection} from '../utils';
 import {writeGallerySectionPref, getGallerySectionPref} from '../utils/local-storage';
+import {getTemplates} from '../utils/api';
 import GALLERY from '../templates/gallery';
 interface Props {
   columns: ColumnHeader[];
@@ -30,7 +23,7 @@ function filterTemplates(
   columns: ColumnHeader[],
   search: string,
 ): MarkedTemplate[] {
-  return templates.map(template => {
+  return templates.map((template) => {
     const {canBeUsed} = searchDimensionsCanMatch(template, spec.dataTargetSearch as string[], columns);
     if (!canBeUsed) {
       return {include: false, template};
@@ -59,7 +52,7 @@ export default function Gallery(props: Props): JSX.Element {
     const secStrat = templateMap.paramValues.sectionStratagey;
     if (secStrat && secStrat !== getGallerySectionPref()) {
       writeGallerySectionPref(`${secStrat}`);
-      const idx = GALLERY.widgets.findIndex(d => d.name === 'sectionStratagey');
+      const idx = GALLERY.widgets.findIndex((d) => d.name === 'sectionStratagey');
       setWidgetValue({key: 'defaultValue', value: secStrat, idx});
       saveCurrentTemplate();
     }
@@ -67,11 +60,9 @@ export default function Gallery(props: Props): JSX.Element {
   }, [templateMap.paramValues.sectionStratagey]);
 
   useEffect(() => {
-    fetch(`${serverPrefix()}/templates`, FETCH_PARMS as any)
-      .then(x => x.json())
-      .then(x => {
-        setTemplates(DEFAULT_TEMPLATES.concat(x.map((el: any) => el.template)));
-      });
+    getTemplates().then((x) => {
+      setTemplates(DEFAULT_TEMPLATES.concat(x));
+    });
   }, []);
 
   const produceTemplateCard = (markedTemplate: MarkedTemplate, idx: number): JSX.Element => {

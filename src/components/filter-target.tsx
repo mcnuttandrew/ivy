@@ -14,8 +14,8 @@ interface FilterTargetProps {
 export default function FilterTarget({onDrop, columns}: FilterTargetProps): JSX.Element {
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
-    drop: item => onDrop({...item}),
-    collect: monitor => ({
+    drop: (item) => onDrop({...item}),
+    collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
@@ -35,7 +35,7 @@ export default function FilterTarget({onDrop, columns}: FilterTargetProps): JSX.
           <div className="tooltip-internal flex-down">
             <h3>Add a filter</h3>
             <div>
-              {columns.map(column => (
+              {columns.map((column) => (
                 <button key={column.field} onClick={(): void => onDrop({text: column.field})}>
                   {column.field}
                 </button>

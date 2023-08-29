@@ -29,8 +29,8 @@ export interface NewIvyConditional {
 function prepareFunction(query: string, templateMap: TemplateMap): string {
   return `
         ${Object.keys(templateMap.paramValues)
-          .map(key => key.replace(/(_|\W)/g, ''))
-          .map(key => `const ${key} = parameters.${key}`)
+          .map((key) => key.replace(/(_|\W)/g, ''))
+          .map((key) => `const ${key} = parameters.${key}`)
           .join('\n')}
       return ${query};`;
 }
@@ -95,7 +95,7 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
       return spec.reduce((acc: JsonArray, child) => {
         // OLD SYNTAX
         if (child && typeof child === 'object' && (child as JsonMap).$cond) {
-          const valuemap = (child as unknown) as IvyLangConditional;
+          const valuemap = child as unknown as IvyLangConditional;
           const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
           if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
             return acc.concat(walker(valuemap.$cond[queryResult]));
@@ -105,9 +105,9 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
         }
         // NEW SYNTAX
         if (child && typeof child === 'object' && (child as JsonMap).$if) {
-          const valuemap = (child as unknown) as NewIvyConditional;
+          const valuemap = child as unknown as NewIvyConditional;
           const queryResult = evaluateQuery(valuemap.$if, templateMap) ? 'true' : 'false';
-          if (!shouldUpdateContainerWithValue(queryResult, (valuemap as unknown) as ConditionalArgs)) {
+          if (!shouldUpdateContainerWithValue(queryResult, valuemap as unknown as ConditionalArgs)) {
             return acc.concat(walker(valuemap[queryResult]));
           } else {
             return acc;
@@ -123,7 +123,7 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     // if the object being consider is itself a conditional evaluate it
     // OLD SYNTAX
     if (typeof spec === 'object' && spec.$cond) {
-      const valuemap = (spec as unknown) as IvyLangConditional;
+      const valuemap = spec as unknown as IvyLangConditional;
       const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
       if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
         return walker(valuemap.$cond[queryResult]);
@@ -133,9 +133,9 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
     }
     // NEW SYNTAX
     if (typeof spec === 'object' && spec.$if) {
-      const valuemap = (spec as unknown) as NewIvyConditional;
+      const valuemap = spec as unknown as NewIvyConditional;
       const queryResult = evaluateQuery(valuemap.$if, templateMap) ? 'true' : 'false';
-      if (!shouldUpdateContainerWithValue(queryResult, (valuemap as unknown) as ConditionalArgs)) {
+      if (!shouldUpdateContainerWithValue(queryResult, valuemap as unknown as ConditionalArgs)) {
         return walker(valuemap[queryResult]);
       } else {
         return null;
@@ -150,7 +150,7 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
       if (value && typeof value === 'object' && (value as JsonMap).$cond) {
         // OLD SYNTAX
         // if it's a conditional, if so execute the conditional
-        const valuemap = (value as unknown) as IvyLangConditional;
+        const valuemap = value as unknown as IvyLangConditional;
         const queryResult = evaluateQuery(valuemap.$cond.query, templateMap) ? 'true' : 'false';
         if (!shouldUpdateContainerWithValue(queryResult, valuemap.$cond)) {
           acc[computedKey] = walker(valuemap.$cond[queryResult]);
@@ -158,9 +158,9 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
       } else if (value && typeof value === 'object' && (value as JsonMap).$if) {
         // NEW SYNTAX
         // if it's a conditional, if so execute the conditional
-        const valuemap = (value as unknown) as NewIvyConditional;
+        const valuemap = value as unknown as NewIvyConditional;
         const queryResult = evaluateQuery(valuemap.$if, templateMap) ? 'true' : 'false';
-        if (!shouldUpdateContainerWithValue(queryResult, (valuemap as unknown) as ConditionalArgs)) {
+        if (!shouldUpdateContainerWithValue(queryResult, valuemap as unknown as ConditionalArgs)) {
           acc[computedKey] = walker(valuemap[queryResult]);
         }
       } else {
@@ -177,11 +177,11 @@ export function applyConditionals(templateMap: TemplateMap): (spec: Json) => Jso
  * @param templateMap - the specification/variable values defined by the gui
  */
 export function applyQueries(template: Template, templateMap: TemplateMap): Widget<any>[] {
-  return template.widgets.filter(widget => {
+  return template.widgets.filter((widget) => {
     if (!widget.conditions || !widget.conditions.length) {
       return true;
     }
-    return widget.conditions.every(condition => {
+    return widget.conditions.every((condition) => {
       const queryResult = evaluateQuery(condition.query, templateMap);
       return condition.queryResult === 'show' ? queryResult : !queryResult;
     });
@@ -223,18 +223,18 @@ export function getMissingFields(template: Template, templateMap: TemplateMap): 
 
   // data target
   const missingFileds = template.widgets
-    .filter(d => d.type === 'DataTarget' && (d as Widget<DataTargetWidget>).config.required)
-    .filter(d => !params[d.name])
-    .map(d => d.name);
+    .filter((d) => d.type === 'DataTarget' && (d as Widget<DataTargetWidget>).config.required)
+    .filter((d) => !params[d.name])
+    .map((d) => d.name);
 
   // multi data target
   const missingMultiFileds = template.widgets
-    .filter(d => d.type === 'MultiDataTarget' && (d as Widget<MultiDataTargetWidget>).config.required)
+    .filter((d) => d.type === 'MultiDataTarget' && (d as Widget<MultiDataTargetWidget>).config.required)
     .filter(
       (widget: Widget<MultiDataTargetWidget>) =>
         !params[widget.name] || params[widget.name].length < widget.config.minNumberOfTargets,
     )
-    .map(d => d.name);
+    .map((d) => d.name);
   return missingFileds.concat(missingMultiFileds);
 }
 
@@ -418,7 +418,7 @@ export function modifyJSONSchema(jsonSchema: any): any {
     }
     // if it's array interate across void
     if (Array.isArray(spec)) {
-      return spec.map(child => schemaWalk(child));
+      return spec.map((child) => schemaWalk(child));
     }
     // check if it's null or not an object return
     if (typeof spec !== 'object') {

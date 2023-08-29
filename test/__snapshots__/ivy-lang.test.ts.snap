@@ -1,30 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`#applyConditionals 1`] = `
-Object {
+{
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "config": Object {
-    "mark": Object {
+  "config": {
+    "mark": {
       "invalid": null,
     },
   },
-  "layer": Array [
-    Object {
-      "encoding": Object {
-        "y": Object {
+  "layer": [
+    {
+      "encoding": {
+        "y": {
           "field": "[yDim]",
           "type": "quantitative",
         },
       },
-      "mark": Object {
+      "mark": {
         "extent": "stdev",
         "opacity": 0.2,
         "type": "errorband",
       },
     },
-    Object {
-      "encoding": Object {
-        "y": Object {
+    {
+      "encoding": {
+        "y": {
           "aggregate": "mean",
           "field": "[yDim]",
           "type": "quantitative",
@@ -32,30 +32,30 @@ Object {
       },
       "mark": "rule",
     },
-    Object {
-      "encoding": Object {
-        "color": Object {
-          "condition": Object {
-            "test": "datum[\\"[xDim]\\"] === null || datum[\\"[yDim]\\"] === null",
+    {
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum["[xDim]"] === null || datum["[yDim]"] === null",
             "value": "#aaa",
           },
         },
-        "x": Object {
+        "x": {
           "field": "[xDim]",
-          "scale": Object {
+          "scale": {
             "zero": "[Zeroes]",
           },
           "type": "[xType]",
         },
-        "y": Object {
+        "y": {
           "field": "[yDim]",
-          "scale": Object {
+          "scale": {
             "zero": "[Zeroes]",
           },
           "type": "[yType]",
         },
       },
-      "mark": Object {
+      "mark": {
         "color": "[Single Color]",
         "size": "[Radius]",
         "tooltip": true,
@@ -67,30 +67,30 @@ Object {
 `;
 
 exports[`#applyConditionals 2`] = `
-Object {
+{
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "config": Object {
-    "mark": Object {
+  "config": {
+    "mark": {
       "invalid": null,
     },
   },
-  "layer": Array [
-    Object {
-      "encoding": Object {
-        "y": Object {
+  "layer": [
+    {
+      "encoding": {
+        "y": {
           "field": "[yDim]",
           "type": "quantitative",
         },
       },
-      "mark": Object {
+      "mark": {
         "extent": "stdev",
         "opacity": 0.2,
         "type": "errorband",
       },
     },
-    Object {
-      "encoding": Object {
-        "y": Object {
+    {
+      "encoding": {
+        "y": {
           "aggregate": "mean",
           "field": "[yDim]",
           "type": "quantitative",
@@ -98,32 +98,32 @@ Object {
       },
       "mark": "rule",
     },
-    Object {
-      "encoding": Object {
-        "color": Object {
-          "condition": Object {
-            "test": "datum[\\"[xDim]\\"] === null || datum[\\"[yDim]\\"] === null",
+    {
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum["[xDim]"] === null || datum["[yDim]"] === null",
             "value": "#aaa",
           },
           "field": "[Color]",
           "type": "[colorType]",
         },
-        "x": Object {
+        "x": {
           "field": "[xDim]",
-          "scale": Object {
+          "scale": {
             "zero": "[Zeroes]",
           },
           "type": "[xType]",
         },
-        "y": Object {
+        "y": {
           "field": "[yDim]",
-          "scale": Object {
+          "scale": {
             "zero": "[Zeroes]",
           },
           "type": "[yType]",
         },
       },
-      "mark": Object {
+      "mark": {
         "color": null,
         "size": "[Radius]",
         "tooltip": true,
@@ -135,64 +135,64 @@ Object {
 `;
 
 exports[`evaluateIvyProgram polestar template 1`] = `
-Object {
+{
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
-  "encoding": Object {},
-  "mark": Object {
+  "encoding": {},
+  "mark": {
     "opacity": 0.8,
     "tooltip": true,
     "type": "point",
   },
-  "transform": Array [],
+  "transform": [],
 }
 `;
 
 exports[`evaluateIvyProgram polestar template 2`] = `
-Object {
+{
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
-  "encoding": Object {
-    "x": Object {
+  "encoding": {
+    "x": {
       "field": "GooD Dimension",
-      "scale": Object {
+      "scale": {
         "type": "linear",
         "zero": false,
       },
       "type": "quantitative",
     },
   },
-  "mark": Object {
+  "mark": {
     "opacity": 0.8,
     "tooltip": true,
     "type": "point",
   },
-  "transform": Array [],
+  "transform": [],
 }
 `;
 
 exports[`evaluateIvyProgram polestar template 3`] = `
-Object {
+{
   "$schema": "https:vega.github.io/schema/vega-lite/v4.json",
-  "encoding": Object {
-    "x": Object {
+  "encoding": {
+    "x": {
       "field": "Origin",
-      "scale": Object {},
+      "scale": {},
       "type": "nominal",
     },
   },
-  "mark": Object {
+  "mark": {
     "opacity": 0.8,
     "tooltip": true,
     "type": "point",
   },
-  "transform": Array [],
+  "transform": [],
 }
 `;
 
 exports[`evaluateIvyProgram polestar template 4`] = `
-Object {
+{
   "$schema": "galleryLang",
   "SearchKey": "should result",
-  "dataTargetSearch": Array [],
+  "dataTargetSearch": [],
   "maxRequiredTargets": "[maxRequiredTargets]",
   "minRequiredTargets": "[minRequiredTargets]",
   "sectionStratagey": "[sectionStratagey]",

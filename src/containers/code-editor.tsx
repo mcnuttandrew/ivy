@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 
 import MonacoWrapper from '../components/monaco-wrapper';
 import ErrorBoundary from '../components/error-boundary';
@@ -54,7 +54,7 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
     Promise.resolve()
       .then(() => JSON.parse(code))
       .then(() => responseFunctionMap[codeMode]({code, inError: false}))
-      .catch(() => responseFunctionMap[codeMode]({code, inError: true}));
+      .catch(() => responseFunctionMap[codeMode] && responseFunctionMap[codeMode]({code, inError: true}));
   }
 
   function getCurrentCode(): string {

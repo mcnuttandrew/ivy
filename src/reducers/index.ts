@@ -5,7 +5,7 @@ import * as actionTypes from '../actions/action-types';
 
 import {AppState, ActionResponse, DataReducerState} from '../types';
 import LOADING from '../templates/loading';
-import {JSON_OUTPUT, SHOW_DATA_SELECTION_ON_LOAD} from '../constants/index';
+import {JSON_OUTPUT} from '../constants/index';
 import {log} from '../utils';
 
 import {pushToUndoStack, triggerRedo, triggerUndo, startAtomicChain, endAtomicChain} from './undo-actions';
@@ -66,7 +66,7 @@ export const DEFAULT_STATE: AppState = {
 
   // GUI
   currentTemplateInstance: LOADING,
-  openModal: SHOW_DATA_SELECTION_ON_LOAD ? 'data' : null,
+  openModal: 'data',
   encodingMode: LOADING.templateName,
 
   showProgrammaticMode: false,
@@ -98,8 +98,10 @@ export const DEFAULT_STATE: AppState = {
 };
 
 // second order effects
-const wrap = (func: ActionResponse<any>, wrapper: any): ActionResponse<any> => (state, payload): AppState =>
-  wrapper(state, func(state, payload));
+const wrap =
+  (func: ActionResponse<any>, wrapper: any): ActionResponse<any> =>
+  (state, payload): AppState =>
+    wrapper(state, func(state, payload));
 const addUndo = (func: ActionResponse<any>): ActionResponse<any> => wrap(func, pushToUndoStack);
 
 const actionFuncMap: {[val: string]: ActionResponse<any>} = {
@@ -162,7 +164,7 @@ const actionFuncMap: {[val: string]: ActionResponse<any>} = {
   [actionTypes.DELETE_VIEW]: addUndo(deleteView),
   [actionTypes.SWITCH_VIEW]: addUndo(switchView),
 };
-const NULL_ACTION: ActionResponse<void> = state => state;
+const NULL_ACTION: ActionResponse<void> = (state) => state;
 const reducers = {
   base: (state: AppState = DEFAULT_STATE, {type, payload}: {type: string; payload: any}): AppState => {
     // eslint-disable-next-line no-undef

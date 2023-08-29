@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {LanguageExtension, RendererProps, Template, Suggestion} from '../types';
 import {log} from '../utils';
 import {walkTreeAndLookForFields, buildSynthesizer} from './suggestion-utils';
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import UnitVis from 'unit-vis';
 
 const QUERY_KEY = 'atom-key-special-container';

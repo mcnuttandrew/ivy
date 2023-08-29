@@ -5,7 +5,6 @@ import {POST_PARAMS} from '../../constants';
 
 import {Template} from '../../types';
 import {GenericAction} from '../../actions';
-import {serverPrefix} from '../../utils';
 
 interface Props {
   template: Template;
@@ -36,7 +35,7 @@ export default function PublishTemplateTooltip(props: Props): JSX.Element {
           {error && <h5 style={{color: 'red'}}>{error}</h5>}
           <button
             onClick={(): void => {
-              fetch(`${serverPrefix()}/publish`, {...POST_PARAMS, body: output} as any).then(() => {
+              fetch(`.netlify/functions/publish`, {...POST_PARAMS, body: output} as any).then(() => {
                 setSaved(true);
                 saveCurrentTemplate();
               });

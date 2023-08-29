@@ -1,8 +1,17 @@
 // Cribbed from vega-editor
-import stringify from 'json-stringify-pretty-compact';
-import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as stringify from 'json-stringify-pretty-compact';
+import {parse as parseJSONC} from 'jsonc-parser';
+// import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {mergeDeep} from 'vega-lite/build/src/util';
 import {modifyJSONSchema} from '../ivy-lang';
+
+import vlSchema from 'vega-lite/build/vega-lite-schema.json';
+import vSchema from 'vega/build/vega-schema.json';
+import ivySchema from '../../assets/ivy.json';
+import unitVisSchema from 'unit-vis/unit-vis-schema.json';
+
+import {loader} from '@monaco-editor/react';
+import type * as Monaco from 'monaco-editor';
 
 /**
  * Adds markdownDescription props to a schema. See https://github.com/Microsoft/monaco-editor/issues/885
@@ -25,10 +34,10 @@ function addMarkdownProps(value: any): any {
 }
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-const vegaLiteSchema = modifyJSONSchema(require('vega-lite/build/vega-lite-schema.json'));
-const vegaSchema = modifyJSONSchema(require('vega/build/vega-schema.json'));
-const ivySchema = require('../../assets/ivy.json');
-const unitVisSchema = require('unit-vis/unit-vis-schema.json');
+const vegaLiteSchema = modifyJSONSchema(vlSchema);
+const vegaSchema = modifyJSONSchema(vSchema);
+// const ivySchema = ivySchema;
+// const unitVisSchema = require('unit-vis/unit-vis-schema.json');
 /* eslint-enable @typescript-eslint/no-var-requires */
 addMarkdownProps(vegaSchema);
 addMarkdownProps(vegaLiteSchema);
@@ -75,38 +84,37 @@ const schemas = [
   },
 ];
 
-export default function setupMonaco(): void {
-  Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-    allowComments: false,
-    enableSchemaRequest: true,
-    schemas,
-    validate: true,
-  });
+export default function setupMonaco() {
+  loader.init().then((monaco) => {
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      comments: 'warning',
+      trailingCommas: 'warning',
+      enableSchemaRequest: true,
+      schemas,
+      validate: true,
+    });
 
-  Monaco.languages.json.jsonDefaults.setModeConfiguration({
-    documentFormattingEdits: false,
-    documentRangeFormattingEdits: false,
-    completionItems: true,
-    hovers: true,
-    documentSymbols: true,
-    tokens: true,
-    colors: true,
-    foldingRanges: true,
-    diagnostics: true,
-  });
+    monaco.languages.json.jsonDefaults.setModeConfiguration({
+      documentFormattingEdits: false,
+      documentRangeFormattingEdits: false,
+      completionItems: true,
+      hovers: true,
+      documentSymbols: true,
+      tokens: true,
+      colors: true,
+      foldingRanges: true,
+      diagnostics: true,
+    });
 
-  Monaco.languages.registerDocumentFormattingEditProvider('json', {
-    provideDocumentFormattingEdits(
-      model: Monaco.editor.ITextModel,
-      // options: Monaco.languages.FormattingOptions,
-      // token: Monaco.CancellationToken,
-    ): Monaco.languages.TextEdit[] {
-      return [
-        {
-          range: model.getFullModelRange(),
-          text: stringify(JSON.parse(model.getValue())),
-        },
-      ];
-    },
+    monaco.languages.registerDocumentFormattingEditProvider('json', {
+      provideDocumentFormattingEdits(model: Monaco.editor.ITextModel): Monaco.languages.TextEdit[] {
+        return [
+          {
+            range: model.getFullModelRange(),
+            text: stringify(parseJSONC(model.getValue())),
+          },
+        ];
+      },
+    });
   });
 }

@@ -1,7 +1,3 @@
-import config from './config.json';
-
-export const USE_LOCAL = config.USE_LOCAL;
-
 type ON = 'on';
 export const EDITOR_OPTIONS = {
   selectOnLineNumbers: true,
@@ -24,7 +20,6 @@ export const TEMPLATE_BODY = 'Body';
 /* eslint-disable no-undef*/
 export const PREVENT_ACCIDENTAL_LEAVE = process.env.NODE_ENV === 'production';
 /* eslint-enable no-undef*/
-export const SHOW_DATA_SELECTION_ON_LOAD = config.SHOW_DATA_SELECTION_ON_LOAD;
 
 export const switchCommon = {
   offColor: '#800000',

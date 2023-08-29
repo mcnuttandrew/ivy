@@ -9,8 +9,6 @@ const knownDatasetName = new Set(Object.keys(VegaDatasets).concat(Object.keys(Sm
 
 import {TemplateMap} from '../../types';
 
-import {serverPrefix} from '../../utils';
-
 interface Props {
   templateAuthor: string;
   templateName: string;
@@ -57,8 +55,8 @@ export default function PublishInstanceTooltip(props: Props): JSX.Element {
               // TODO: require templateMap must not be blank
               // TODO: require that fan out is not currently in use
               const node = document.querySelector('.chart-container div');
-              DomToImage.toJpeg(node, {quality: 0.5}).then(templateImg => {
-                fetch(`${serverPrefix()}/publish-instance`, {
+              DomToImage.toJpeg(node, {quality: 0.5}).then((templateImg) => {
+                fetch(`.netlify/functions/publish-instance`, {
                   ...POST_PARAMS,
                   body: JSON.stringify({
                     templateAuthor,

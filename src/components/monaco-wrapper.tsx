@@ -1,5 +1,6 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import type * as Monaco from 'monaco-editor';
+import MonacoEditor from '@monaco-editor/react';
 import {IgnoreKeys} from 'react-hotkeys';
 import {debounce} from 'vega';
 
@@ -22,22 +23,22 @@ interface State {
 }
 
 export default class CodeEditor extends React.Component<Props, State> {
+  public editor: Monaco.editor.IStandaloneCodeEditor;
   constructor(props: any) {
     super(props);
     this.editorDidMount = this.editorDidMount.bind(this);
     this.state = {offsetStore: {}};
   }
-  editorDidMount(editor: any): void {
+  editorDidMount(editor: Monaco.editor.IStandaloneCodeEditor): void {
     editor.focus();
-    /* eslint-disable */
+    this.editor = editor;
     // @ts-ignore
-    import('monaco-themes/themes/Chrome DevTools.json').then(data => {
+    import('monaco-themes/themes/Chrome DevTools.json').then((data) => {
       // @ts-ignore
       monaco.editor.defineTheme('cobalt', data);
       // @ts-ignore
       monaco.editor.setTheme('cobalt');
     });
-    /* eslint-enable */
   }
 
   getSnapshotBeforeUpdate(prevProps: Props): void {
@@ -45,10 +46,8 @@ export default class CodeEditor extends React.Component<Props, State> {
     const newMode = this.props.codeMode;
 
     // on change code mode scroll to top
-    /* eslint-disable */
     // @ts-ignore
-    return oldMode !== newMode ? this.refs.monaco.editor.getScrollTop() : null;
-    /* eslint-enable */
+    return oldMode !== newMode ? this.editor.getScrollTop() : null;
   }
 
   componentDidUpdate(prevProps: Props, prevState: State, currentTop: number): void {
@@ -59,7 +58,7 @@ export default class CodeEditor extends React.Component<Props, State> {
       /* eslint-disable */
       this.setState({offsetStore: {...offsetStore, [oldMode]: currentTop}});
       // @ts-ignore
-      this.refs.monaco.editor.setScrollPosition({scrollTop: offsetStore[newMode]});
+      this.editor.setScrollPosition({scrollTop: offsetStore[newMode]});
       /* eslint-enable */
     }
   }
@@ -79,9 +78,9 @@ export default class CodeEditor extends React.Component<Props, State> {
       /*eslint-disable react/no-string-refs*/
       <IgnoreKeys style={{height: '100%'}}>
         <MonacoEditor
-          ref="monaco"
           key={codeMode}
           language="json"
+          defaultLanguage="json"
           theme="monokai"
           height="100%"
           value={currentCode}
@@ -103,7 +102,7 @@ export default class CodeEditor extends React.Component<Props, State> {
 
             handleCodeUpdate(code);
           })}
-          editorDidMount={this.editorDidMount}
+          onMount={this.editorDidMount}
         />
       </IgnoreKeys>
       /*eslint-en able react/no-string-refs*/

@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {toList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';
@@ -26,7 +26,7 @@ const PARALLEL_COORS: any = {
     {
       name: 'fields',
       values: [
-        ...[0, 1, 2, 3, 4, 5].map(idx => {
+        ...[0, 1, 2, 3, 4, 5].map((idx) => {
           return {
             $if: `parameters.Col${idx}`,
             true: `[Col${idx}]`,
@@ -38,7 +38,7 @@ const PARALLEL_COORS: any = {
 
   scales: [
     {name: 'ord', type: 'point', range: 'width', round: true, domain: {data: 'fields', field: 'data'}},
-    ...[0, 1, 2, 3, 4, 5].map(idx => {
+    ...[0, 1, 2, 3, 4, 5].map((idx) => {
       return {
         $if: `parameters.Col${idx}`,
         true: {
@@ -63,7 +63,7 @@ const PARALLEL_COORS: any = {
   ],
 
   axes: [
-    ...[0, 1, 2, 3, 4, 5].map(idx => {
+    ...[0, 1, 2, 3, 4, 5].map((idx) => {
       return {
         $if: `parameters.Col${idx}`,
         true: {
@@ -281,8 +281,8 @@ const ParallelCoordinates: Template = {
           query: `${cols
             .map((d, idx) =>
               cols
-                .filter((x, jdx) => idx !== jdx)
-                .map(x => `(parameters.Col${d} && (parameters.Col${x} === parameters.Col${d}))`)
+                .filter((_, jdx) => idx !== jdx)
+                .map((x) => `(parameters.Col${d} && (parameters.Col${x} === parameters.Col${d}))`)
                 .join(' || '),
             )
             .join(' || ')}`,

@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Widget, Template, GenWidget, SliderWidget, QueryResult} from '../types';
 import {simpleList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';
@@ -18,25 +18,25 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
           queryTarget: `Key${idx}`,
           query: `!parameters.Key${idx - 1}`,
         },
-      ].filter(d => d),
+      ].filter((d) => d),
     },
     simpleList({
       name: `Key${idx}Type`,
       defaultVal: '"groupby"',
       displayName: `Key${idx}Type`,
-      list: [...TYPES.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
+      list: [...TYPES.map((d) => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
       conditions: [
         !NEVER_HIDE && {queryResult: 'hide' as QueryResult, query: `!parameters.Key${idx - 1}`},
-      ].filter(d => d),
+      ].filter((d) => d),
     }),
     simpleList({
       name: `Key${idx}AspectRatio`,
       defaultVal: idx % 2 ? '"fillX"' : '"fillY"',
       displayName: `Key${idx}AspectRatio`,
-      list: [...ASPECT_RATIOS.map(d => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
+      list: [...ASPECT_RATIOS.map((d) => ({display: d, value: `"${d}"`})), {display: 'null', value: 'null'}],
       conditions: [
         !NEVER_HIDE && {queryResult: 'hide' as QueryResult, query: `!parameters.Key${idx - 1}`},
-      ].filter(d => d),
+      ].filter((d) => d),
     }),
     {
       name: `Key${idx}numBins`,
@@ -63,9 +63,8 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
 
 const configurations = [1, 2, 3, 4, 5, 6].map(generateLevel);
 
-/* eslint-disable @typescript-eslint/camelcase */
 const ATOM_TEMPLATE: any = {
-  layouts: configurations.map(d => d.layout),
+  layouts: configurations.map((d) => d.layout),
   mark: {
     color: {
       key: '[colorBy]',
@@ -76,7 +75,6 @@ const ATOM_TEMPLATE: any = {
   },
   $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
 };
-/* eslint-enable @typescript-eslint/camelcase */
 
 const ATOM: Template = {
   templateName: 'AtomExplore',
@@ -107,7 +105,7 @@ const ATOM: Template = {
     simpleList({
       name: `Shape`,
       defaultVal: '"circle"',
-      list: ['circle', 'rect'].map(d => ({display: d, value: `"${d}"`})),
+      list: ['circle', 'rect'].map((d) => ({display: d, value: `"${d}"`})),
     }),
     ...configurations.reduce((acc, d) => acc.concat(d.widgets), []),
   ],

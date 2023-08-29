@@ -4,7 +4,7 @@ import {getGallerySectionPref} from '../utils/local-storage';
 const SECTIONS = ['alphabetical', 'author', 'language', 'vis key word', 'none'];
 
 const toList = (arr: string[]): {display: string; value: string}[] =>
-  arr.map(display => ({display, value: `"${display}"`}));
+  arr.map((display) => ({display, value: `"${display}"`}));
 const FIRST_TEXT =
   'In order visualize your data, you need to pick a template to work in. To begin either select a template from the selection in main pane (to the right), or use this panel to search. Search can either happen through text:\n\n\n';
 const SECOND_TEXT =

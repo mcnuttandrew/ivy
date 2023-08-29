@@ -1,5 +1,5 @@
 import produce from 'immer';
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {TEMPLATE_BODY, MATERIALIZING, JSON_OUTPUT} from '../constants';
 import {
   ModifyValueOnTemplatePayload,
@@ -15,11 +15,11 @@ import {evaluateIvyProgram, constructDefaultTemplateMap} from '../ivy-lang';
 
 import {tryToGuessTheTypeForVegaLite} from '../languages/vega-lite';
 
-const dedupTemplates: ActionResponse<void> = state => {
-  return produce(state, draftState => {
+const dedupTemplates: ActionResponse<void> = (state) => {
+  return produce(state, (draftState) => {
     const toKey = (template: Template): string => `${template.templateAuthor} ---- ${template.templateName}`;
     const seen: {[x: string]: boolean} = {};
-    draftState.templates = state.templates.filter(template => {
+    draftState.templates = state.templates.filter((template) => {
       if (seen[toKey(template)]) {
         return false;
       }
@@ -30,21 +30,21 @@ const dedupTemplates: ActionResponse<void> = state => {
 };
 
 export const setMaterialization: ActionResponse<SetMaterializationPayload> = (state, payload) => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.templateMap.systemValues.viewsToMaterialize[payload.key] = payload.value;
   });
 };
 
 // for template map holes that are NOT data columns, fill em as best you can
 export function fillTemplateMapWithDefaults(state: AppState): AppState {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.templateMap = constructDefaultTemplateMap(state.currentTemplateInstance);
   });
 }
 
 export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => {
   return dedupTemplates(
-    produce(state, draftState => {
+    produce(state, (draftState) => {
       draftState.templates = draftState.templates.concat(payload);
     }),
   );
@@ -53,7 +53,7 @@ export const recieveTemplates: ActionResponse<Template[]> = (state, payload) => 
 export const setTemplate: ActionResponse<Template> = (state, payload) => {
   return dedupTemplates(
     fillTemplateMapWithDefaults(
-      produce(state, draftState => {
+      produce(state, (draftState) => {
         draftState.templates = draftState.templates.concat(payload);
         draftState.editMode = false;
         draftState.codeMode = JSON_OUTPUT;
@@ -68,11 +68,11 @@ export const setTemplate: ActionResponse<Template> = (state, payload) => {
 export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state, payload) => {
   const template = state.currentTemplateInstance;
   const getWidget = (name: string): Widget<any> | null =>
-    template.widgets.find(widget => widget.name === name);
+    template.widgets.find((widget) => widget.name === name);
   const {containingShelf} = payload;
   const fromWidget = getWidget(containingShelf);
   const toWidget = getWidget(payload.field);
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     if (containingShelf && fromWidget.type === 'DataTarget') {
       delete draftState.templateMap.paramValues[containingShelf];
     }
@@ -103,7 +103,8 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
 };
 
 export const setAllTemplateValues: ActionResponse<TemplateMap> = (state, payload) => {
-  return produce(state, draftState => {
+  console.log('setting current template values', payload);
+  return produce(state, (draftState) => {
     draftState.templateMap = {
       paramValues: {
         ...draftState.templateMap.paramValues,
@@ -123,7 +124,7 @@ function getAndRemoveTemplate(
   {templateAuthor, templateName}: {templateAuthor: string; templateName: string},
 ): AppState {
   return dedupTemplates(
-    produce(state, draftState => {
+    produce(state, (draftState) => {
       draftState.templates = state.templates.filter((template: Template) =>
         template.templateName === templateName && template.templateAuthor === templateAuthor ? false : true,
       );
@@ -133,7 +134,7 @@ function getAndRemoveTemplate(
 
 const insertTemplateIntoTemplates: ActionResponse<Template> = (state, template) => {
   return dedupTemplates(
-    produce(state, draftState => {
+    produce(state, (draftState) => {
       draftState.templates = getAndRemoveTemplate(state, {
         templateName: template.templateName,
         templateAuthor: template.templateAuthor,
@@ -142,12 +143,12 @@ const insertTemplateIntoTemplates: ActionResponse<Template> = (state, template) 
   );
 };
 
-export const saveCurrentTemplate: ActionResponse<void> = state =>
+export const saveCurrentTemplate: ActionResponse<void> = (state) =>
   insertTemplateIntoTemplates(state, state.currentTemplateInstance);
 
 export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload> = (state, payload) => {
   const {value, key} = payload;
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     // @ts-ignore
     draftState.currentTemplateInstance[key] = value;
     if (key === 'templateName') {
@@ -162,7 +163,7 @@ export const modifyValueOnTemplate: ActionResponse<ModifyValueOnTemplatePayload>
 // set the spec code
 export const setSpecCode: ActionResponse<HandleCodePayload> = (state, payload) => {
   const {code, inError} = payload;
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.currentTemplateInstance.code = code;
     draftState.editorError = inError;
   });
@@ -170,11 +171,11 @@ export const setSpecCode: ActionResponse<HandleCodePayload> = (state, payload) =
 
 export const readInTemplate: ActionResponse<HandleCodePayload> = (state, payload) => {
   if (payload.inError) {
-    return produce(state, draftState => {
+    return produce(state, (draftState) => {
       draftState.editorError = payload.inError;
     });
   }
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     const updatedTemplate = deserializeTemplate(payload.code);
     updatedTemplate.code = state.currentTemplateInstance.code;
     draftState.currentTemplateInstance = updatedTemplate;
@@ -184,11 +185,11 @@ export const readInTemplate: ActionResponse<HandleCodePayload> = (state, payload
 
 export const readInTemplateMap: ActionResponse<HandleCodePayload> = (state, payload) => {
   if (payload.inError) {
-    return produce(state, draftState => {
+    return produce(state, (draftState) => {
       draftState.editorError = payload.inError;
     });
   }
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.templateMap = JSON.parse(payload.code);
     draftState.editorError = payload.inError;
   });
@@ -209,7 +210,7 @@ export const setBlankTemplate: ActionResponse<{fork: string | null; language: st
     newTemplate.widgets = state.currentTemplateInstance.widgets;
   }
   return fillTemplateMapWithDefaults(
-    produce(state, draftState => {
+    produce(state, (draftState) => {
       draftState.currentTemplateInstance = newTemplate;
       draftState.encodingMode = newTemplate.templateName;
       if (fork) {
@@ -226,7 +227,7 @@ export const deleteTemplate: ActionResponse<{templateAuthor: string; templateNam
   payload,
 ) => {
   // TODO check if current template is the one deleted?
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.templates = getAndRemoveTemplate(state, payload).templates;
   });
 };
@@ -236,7 +237,7 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
   const {key, value, idx} = payload;
   // const template = state.currentTemplateInstance;
   const code = state.currentTemplateInstance.code;
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     if (key === 'name') {
       // update the old code with the new name
 
@@ -257,11 +258,10 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
       ];
       delete draftState.templateMap.systemValues.viewsToMaterialize[oldName];
       // update any filters
-      draftState.templateMap.systemValues.dataTransforms = draftState.templateMap.systemValues.dataTransforms.map(
-        transform => {
+      draftState.templateMap.systemValues.dataTransforms =
+        draftState.templateMap.systemValues.dataTransforms.map((transform) => {
           return transform.filter.field === value ? {filter: {...transform.filter, field: value}} : transform;
-        },
-      );
+        });
     } else if (topLevelKeys.has(key)) {
       // @ts-ignore
       draftState.currentTemplateInstance.widgets[idx][key] = value;
@@ -275,21 +275,21 @@ export const setWidgetValue: ActionResponse<SetWidgetValuePayload> = (state, pay
 // hey it's a lense
 type WidgetMod = (x: GenWidget[]) => GenWidget[];
 const modifyCurrentWidgets = (state: AppState, mod: WidgetMod): AppState =>
-  produce(state, draftState => {
+  produce(state, (draftState) => {
     draftState.currentTemplateInstance.widgets = mod(state.currentTemplateInstance.widgets);
     const draftedDefaults = constructDefaultTemplateMap(draftState.currentTemplateInstance);
-    draftState.currentTemplateInstance.widgets.forEach(widget => {
+    draftState.currentTemplateInstance.widgets.forEach((widget) => {
       if (!draftState.templateMap.paramValues[widget.name]) {
         draftState.templateMap.paramValues[widget.name] = draftedDefaults.paramValues[widget.name];
       }
     });
   });
 export const addWidget: ActionResponse<Widget<any>> = (state, payload) =>
-  modifyCurrentWidgets(state, d => d.concat(payload));
+  modifyCurrentWidgets(state, (d) => d.concat(payload));
 export const removeWidget: ActionResponse<number> = (state, payload) =>
-  modifyCurrentWidgets(state, d => d.filter((_: any, idx: number) => payload !== idx));
+  modifyCurrentWidgets(state, (d) => d.filter((_: any, idx: number) => payload !== idx));
 export const duplicateWidget: ActionResponse<number> = (state, payload) =>
-  modifyCurrentWidgets(state, d => {
+  modifyCurrentWidgets(state, (d) => {
     return d.reduce((acc, row, idx) => {
       if (idx !== payload) {
         return acc.concat(row);
@@ -303,7 +303,7 @@ export const moveWidget: ActionResponse<MoveWidgetPayload> = (state, payload) =>
   if (fromIdx === undefined || toIdx === undefined) {
     return state;
   }
-  return modifyCurrentWidgets(state, d => {
+  return modifyCurrentWidgets(state, (d) => {
     const withoutIdx = d.filter((_, idx) => idx !== fromIdx);
     withoutIdx.splice(toIdx, 0, d[fromIdx]);
     return withoutIdx;

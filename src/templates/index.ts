@@ -38,44 +38,46 @@ export const WidgetDescriptions: {[x: string]: string} = {
   Section: 'For organizing widgets into understandable sections.',
   Text: 'For explaining the purpose of widgets within the UI.',
 };
-export const DataTargetFactory: WidgetFactoryFunc = idx =>
+export const DataTargetFactory: WidgetFactoryFunc = (idx) =>
   ({
     name: makeName(idx, 'Var'),
     type: 'DataTarget',
     config: {allowedTypes: DATA_TYPES, required: true},
-  } as Widget<DataTargetWidget>);
-export const MultiDataTargetFactory: WidgetFactoryFunc = idx =>
+  }) as Widget<DataTargetWidget>;
+export const MultiDataTargetFactory: WidgetFactoryFunc = (idx) =>
   ({
     name: makeName(idx, 'MultiDim'),
     type: 'MultiDataTarget',
     config: {allowedTypes: DATA_TYPES, required: true, minNumberOfTargets: 0},
-  } as Widget<MultiDataTargetWidget>);
-export const ListFactory: WidgetFactoryFunc = idx =>
+  }) as Widget<MultiDataTargetWidget>;
+export const ListFactory: WidgetFactoryFunc = (idx) =>
   ({
     name: makeName(idx, 'ListItem'),
     type: 'List',
     config: {allowedValues: [] as {display: string; value: string}[], defaultValue: null},
-  } as Widget<ListWidget>);
-export const SwitchFactory: WidgetFactoryFunc = idx =>
+  }) as Widget<ListWidget>;
+export const SwitchFactory: WidgetFactoryFunc = (idx) =>
   ({
     name: makeName(idx, 'Switch'),
     type: 'Switch',
     config: {active: 'true', inactive: 'false', defaultsToActive: true},
-  } as Widget<SwitchWidget>);
-export const SliderFactory: WidgetFactoryFunc = idx =>
+  }) as Widget<SwitchWidget>;
+export const SliderFactory: WidgetFactoryFunc = (idx) =>
   ({
     name: `Slider${idx}`,
     type: 'Slider',
     config: {minVal: 0, maxVal: 10, step: 1, defaultValue: 5},
-  } as Widget<SliderWidget>);
-export const SectionFactory: WidgetFactoryFunc = idx =>
-  ({name: makeName(idx, 'Section'), type: 'Section', config: null} as Widget<SectionWidget>);
-export const FreeTextFactory: WidgetFactoryFunc = idx =>
-  ({name: makeName(idx, 'FreeText'), type: 'FreeText', config: {useParagraph: false}} as Widget<
-    FreeTextWidget
-  >);
-export const TextFactory: WidgetFactoryFunc = idx =>
-  ({name: makeName(idx, 'Text'), type: 'Text', config: {text: ''}} as Widget<TextWidget>);
+  }) as Widget<SliderWidget>;
+export const SectionFactory: WidgetFactoryFunc = (idx) =>
+  ({name: makeName(idx, 'Section'), type: 'Section', config: null}) as Widget<SectionWidget>;
+export const FreeTextFactory: WidgetFactoryFunc = (idx) =>
+  ({
+    name: makeName(idx, 'FreeText'),
+    type: 'FreeText',
+    config: {useParagraph: false},
+  }) as Widget<FreeTextWidget>;
+export const TextFactory: WidgetFactoryFunc = (idx) =>
+  ({name: makeName(idx, 'Text'), type: 'Text', config: {text: ''}}) as Widget<TextWidget>;
 
 export const widgetFactory: {[type: string]: WidgetFactoryFunc} = {
   DataTarget: DataTargetFactory,
@@ -107,24 +109,24 @@ export const widgetFactoryByGroups: {[type: string]: {[x: string]: WidgetFactory
 };
 
 export const preconfiguredWidgets: {[type: string]: WidgetFactoryFunc} = {
-  'Discrete Color Options': idx =>
+  'Discrete Color Options': (idx) =>
     ({
       name: `ColorList${idx}`,
       type: 'List',
       config: {allowedValues: toList(VEGA_CATEGORICAL_COLOR_SCHEMES)},
-    } as Widget<ListWidget>),
-  'Data Types Options': idx =>
+    }) as Widget<ListWidget>,
+  'Data Types Options': (idx) =>
     ({
       name: `DataTypeOptions${idx}`,
       type: 'List',
       config: {allowedValues: toList(['quantitative', 'temporal', 'ordinal', 'nominal'])},
-    } as Widget<ListWidget>),
-  'Single Color Options (Tableau 10)': idx =>
+    }) as Widget<ListWidget>,
+  'Single Color Options (Tableau 10)': (idx) =>
     ({
       name: `DataTypeOptions${idx}`,
       type: 'List',
       config: {allowedValues: toList(tableau10)},
-    } as Widget<ListWidget>),
+    }) as Widget<ListWidget>,
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [

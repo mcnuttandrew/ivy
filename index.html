@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -14,26 +14,10 @@
     <meta name="apple-mobile-web-app-title" content="FeX">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" href="single-page-icon.png" />
-
-    <link rel="stylesheet" href="style.css">
-    <style>
-    .loading-msg {
-      align-items: center;
-      bottom: 0;
-      display: flex;
-      font-family: "Helvetica Neue", sans-serif;
-      justify-content: center;
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-  </style>
   </head>
-  <body ontouchstart="">
-    <div id="root-container"> </div>
-    <div class="loading-msg"><h1>LOADING</h1></div>
-    <script src="app.js"></script>
-    <script async defer data-website-id="2f7056e6-d47a-456f-8ed6-e655e24df271" src="https://tan-lytics.herokuapp.com/umami.js"></script>
+  <body>
+    <div id="root-container"></div>
+    <script type="module" src="/src/app.tsx"></script>
   </body>
 </html>
+

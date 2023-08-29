@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Template, GenWidget, Condition, Widget, ListWidget} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';
@@ -20,7 +20,7 @@ import {
 } from './polestar-template-utils';
 
 const PRIMITVES = ['AREA', 'BAR', 'CIRCLE', 'LINE', 'POINT', 'RECT', 'SQUARE', 'TEXT', 'TICK', 'TRAIL'];
-const MARK_TYPES = PRIMITVES.map(x => x.toLowerCase());
+const MARK_TYPES = PRIMITVES.map((x) => x.toLowerCase());
 
 const META_COL_ROW = 'row';
 const META_COL_COL = 'column';

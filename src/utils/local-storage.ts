@@ -1,5 +1,6 @@
 import {GenWidget} from '../types';
 import {get, set} from 'idb-keyval';
+import {logUser} from '../utils/api';
 
 // eslint-disable-next-line no-undef
 const isTest = process.env.NODE_ENV === 'test';
@@ -136,6 +137,8 @@ export const randomSetUserNameIfUnset = (): void => {
   if (!getUserName()) {
     const name1 = names[Math.floor(Math.random() * names.length)];
     const name2 = names[Math.floor(Math.random() * names.length)];
-    writeUserName(`${name1}-${name2}-${Math.floor(Math.random() * 100)}`);
+    const fullName = `${name1}-${name2}-${Math.floor(Math.random() * 100)}`;
+    logUser(fullName);
+    writeUserName(fullName);
   }
 };

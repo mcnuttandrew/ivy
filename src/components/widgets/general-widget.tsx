@@ -123,7 +123,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
   return (
     <div>
       {Object.entries(groups)
-        .filter(row => row[1].length)
+        .filter((row) => row[1].length)
         .map(([key, group]) => {
           const rows = group.map(({name}, idx) => {
             const checked = (materializations || []).includes(name);
@@ -135,7 +135,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
                   checked={checked}
                   onChange={(): any => {
                     const newVals = checked
-                      ? materializations.filter(d => d !== name)
+                      ? materializations.filter((d) => d !== name)
                       : materializations.concat(name);
                     setMaterialization({
                       key: widget.name,
@@ -326,7 +326,7 @@ function GeneralWidgetComponent(props: GeneralWidgetComponentProps): JSX.Element
 }
 
 function equalityCheck(prevProps: any, nextProps: any): boolean {
-  return Object.keys(prevProps).every(key => {
+  return Object.keys(prevProps).every((key) => {
     if (key === 'materializations') {
       return JSON.stringify(prevProps[key]) === JSON.stringify(nextProps[key]);
     }

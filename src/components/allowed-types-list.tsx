@@ -9,7 +9,7 @@ export default function AllowedTypesList(props: AllowedTypesListProps): JSX.Elem
   const {allowedTypes} = props;
   return (
     <div className="flex data-type-container">
-      {allowedTypes.map(type => {
+      {allowedTypes.map((type) => {
         return (
           <Tooltip
             key={type}
