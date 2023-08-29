@@ -4,7 +4,8 @@ import {errorResponse, getOne} from '../utils';
 
 function getParametersFromPath(path) {
   const [_, __, ...parameters] = path.split('/').map((x) => x.replace(/%20/g, ' '));
-  return {author: parameters[2], name: parameters[3]};
+  const [_0, _1, author, ...rest] = parameters; 
+  return {author, name: rest.join('/')};
 }
 
 function pathToQuery(path: string) {

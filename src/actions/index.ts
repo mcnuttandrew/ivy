@@ -186,6 +186,10 @@ export const loadDataFromPredefinedDatasets: GenericAction<{
       generateTypeInferences(data)(dispatch, arg2, arg3);
       return;
     }
+    if (!filename) {
+      dispatch({type: actionTypes.RECIEVE_DATA, payload: {data: [], dumpTemplateMap}});
+      return;
+    }
     // regular path
     fetch(datasetAddress(filename))
       .then((d) => d.text())

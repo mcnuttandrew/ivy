@@ -5,21 +5,16 @@ const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017';
 const DB_NAME = 'ivy-be';
 
 export function getParametersFromPath(path) {
+  console.log(path)
   const [_, __, ...parameters] = path.split('/').map((x) => x.replace(/%20/g, ' '));
-  return {
-    author: parameters[2],
-    name: parameters[3],
-    instance: parameters[4],
-  };
+  const [_0, _1, author, name, ...rest] = parameters;
+  return {author, name, instance: rest.join('/')};
 }
 
-export function errorResponse(callback, err) {
+export function errorResponse(callback, err, statusCode = 500) {
   console.error(err);
 
-  callback(null, {
-    statusCode: 500,
-    body: JSON.stringify({error: err}),
-  });
+  callback(null, {statusCode, body: JSON.stringify({error: err})});
 }
 
 export const getMany: (colName: string) => Handler = (colName: string) => (event, context, callback) => {

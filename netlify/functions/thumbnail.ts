@@ -6,6 +6,8 @@ const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017';
 const DB_NAME = 'ivy-be';
 
 export const handler: Handler = (event, context, callback) => {
+  // errorResponse(callback, 'Not implemented');
+  // return;
   let params;
   try {
     params = getParametersFromPath(event.path);
@@ -23,7 +25,8 @@ export const handler: Handler = (event, context, callback) => {
       const db = connection.db(DB_NAME);
       const collection = db.collection('template-instances');
 
-      collection.findOne(query).then((result) => {
+      collection.find(query).sort({id: -1}).limit(1).toArray().then((results) => {
+        const result = results[0];
         if (!result || !result.thumbnail) {
           errorResponse(callback, 'No thumbnail found');
           connection.close();

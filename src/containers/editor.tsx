@@ -46,12 +46,35 @@ interface RootProps extends ActionUser {
   userName: string;
 }
 
+// ensure that template instances with slashes are parsed right
+function maybeAdjustTemplateInstanceFromParams(
+  templateAuthor: string,
+  templateName: string,
+  templateInstance: string,
+): string {
+  const fullHref = window.location.href;
+  const suburl = `${templateAuthor}/${templateName}/${templateInstance}`.trim();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [left, right] = fullHref.split(suburl);
+  if (right && right.length) {
+    return `${templateInstance.trim()}${right}`;
+  } else {
+    return templateInstance;
+  }
+}
+
 function EditorContainer(props: RootProps): JSX.Element {
   const {languages, recieveTemplates} = props;
   const store = setUpState();
   const [repaintIdx, setRepaintIdx] = useState(0);
   const triggerRepaint = (): any => setRepaintIdx(repaintIdx + 1);
   const {templateAuthor, templateName, templateInstance, specialRoute} = useParams();
+  const checkedTemplateInstance = maybeAdjustTemplateInstanceFromParams(
+    templateAuthor,
+    templateName,
+    templateInstance,
+  );
+
   useEffect(() => {
     props.setUserName(getUserName());
     props.recieveLanguages(props.languages);
@@ -66,7 +89,7 @@ function EditorContainer(props: RootProps): JSX.Element {
     ) {
       return;
     }
-    if (!templateInstance && !templateAuthor && !templateName) {
+    if (!checkedTemplateInstance && !templateAuthor && !templateName) {
       if (!props.currentlySelectedFile) {
         props.setModalState('data');
       }
@@ -74,7 +97,7 @@ function EditorContainer(props: RootProps): JSX.Element {
       props.fillTemplateMapWithDefaults();
       return;
     }
-    if (!templateInstance) {
+    if (!checkedTemplateInstance) {
       getTemplate(templateAuthor, templateName).then((template) => {
         if (!props.currentlySelectedFile) {
           props.setModalState('data');
@@ -86,15 +109,16 @@ function EditorContainer(props: RootProps): JSX.Element {
     if (templateInstance) {
       Promise.all([
         getTemplate(templateAuthor, templateName),
-        getTemplateInstance(templateAuthor, templateName, templateInstance),
+        getTemplateInstance(templateAuthor, templateName, checkedTemplateInstance),
       ]).then(([template, templateInstance]) => {
         const dataset = templateInstance.dataset;
         props.changeSelectedFile({filename: dataset, dumpTemplateMap: false});
         props.setTemplate(template);
         props.setAllTemplateValues(templateInstance.template_instance as any as TemplateMap);
+        props.setModalState(null);
       });
     }
-  }, [templateAuthor, templateName, templateInstance]);
+  }, [templateAuthor, templateName, checkedTemplateInstance]);
 
   const width = getWidth() || 610;
   return (
