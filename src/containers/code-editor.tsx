@@ -2,12 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import stringify from 'json-stringify-pretty-compact';
 
-import ProngWrapper from '../components/prong-wrapper';
 import MonacoWrapper from '../components/monaco-wrapper';
 import ErrorBoundary from '../components/error-boundary';
 import GALLERY from '../templates/gallery';
-
-import {getHeight} from '../utils/local-storage';
 
 import * as actionCreators from '../actions/index';
 

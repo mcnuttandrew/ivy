@@ -5,10 +5,11 @@ import {RenderTypeCounts} from '../components/template-card';
 
 import Tooltip from 'rc-tooltip';
 import {getFavoriteTemplates, setFavoriteTemplates} from '../utils/local-storage';
+import {getTemplates} from '../utils/api';
 import * as actionCreators from '../actions/index';
 import {FETCH_PARMS, BINDER} from '../constants';
 import {AppState, DataReducerState, Template} from '../types';
-import {serverPrefix, toSection, SECTIONS, classnames} from '../utils';
+import {toSection, SECTIONS, classnames} from '../utils';
 import {ActionUser} from '../actions';
 import {DEFAULT_TEMPLATES} from '../templates';
 import Header from '../components/header';
@@ -32,7 +33,7 @@ function prepareNesting(templates: any[], instances: any[]): any {
     acc[key] = (acc[key] || []).concat(row);
     return acc;
   }, {});
-  return templates.map(template => ({template, entries: groups[toKey(template)] || []}));
+  return templates.map((template) => ({template, entries: groups[toKey(template)] || []}));
 }
 
 interface Instance {
@@ -95,7 +96,7 @@ function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): J
               favs.has(key) ? newSet.delete(key) : newSet.add(key);
               setFavs(newSet);
               setFavoriteTemplates(
-                Array.from(newSet).map(x => {
+                Array.from(newSet).map((x) => {
                   const [templateName, templateAuthor] = x.split(BINDER);
                   return {templateName, templateAuthor};
                 }),
@@ -156,7 +157,7 @@ function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): J
   );
 }
 
-const polestar = DEFAULT_TEMPLATES.find(x => x.templateName === 'Polestar');
+const polestar = DEFAULT_TEMPLATES.find((x) => x.templateName === 'Polestar');
 export function HomeContainer(props: Props): JSX.Element {
   const {recieveTemplates, templates} = props;
   const [favs, setFavs] = useState(new Set([]));
@@ -168,19 +169,18 @@ export function HomeContainer(props: Props): JSX.Element {
     if (process.env.NODE_ENV === 'test') {
       return;
     }
-    getFavoriteTemplates().then(x => {
+    getFavoriteTemplates().then((x) => {
       const newFavs =
         x && x.length
-          ? x.map(el => `${el.templateName}${BINDER}${el.templateAuthor}`)
+          ? x.map((el) => `${el.templateName}${BINDER}${el.templateAuthor}`)
           : [`${polestar.templateName}${BINDER}${polestar.templateAuthor}`];
       return setFavs(new Set(newFavs));
     });
-    fetch(`${serverPrefix()}/templates`, FETCH_PARMS as any)
-      .then(x => x.json())
-      .then(loadedTemplates => recieveTemplates(loadedTemplates.map((x: any) => x.template)));
-    fetch(`${serverPrefix()}/template-instances`, FETCH_PARMS as any)
-      .then(x => x.json())
-      .then(loadedInstances => setInstances(loadedInstances));
+    getTemplates().then((x) => recieveTemplates(x));
+    // .then((loadedTemplates) => recieveTemplates(loadedTemplates.map((x: any) => x.template)));
+    fetch(`.netlify/functions/template-instances`, FETCH_PARMS as any)
+      .then((x) => x.json())
+      .then((loadedInstances) => setInstances(loadedInstances));
   }, []);
   // function removeInstance(templateAuthor: string, templateName: string, instanceName: string): void {
   //   setInstances(
@@ -274,7 +274,7 @@ export function HomeContainer(props: Props): JSX.Element {
           </h3>
           <div className="flex">
             <b>Sort by</b>
-            {['favorites', 'river', ...SECTIONS].map(strat => (
+            {['favorites', 'river', ...SECTIONS].map((strat) => (
               <Link to={`/?${strat}`} key={strat}>
                 <button type="button" onClick={(): any => setSortStratagey(strat)} key={strat}>
                   {strat}

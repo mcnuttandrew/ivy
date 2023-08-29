@@ -30,3 +30,6 @@ assets/schema-mod.json
 *.brf
 secrets.md
 coverage/*
+
+# Local Netlify folder
+.netlify

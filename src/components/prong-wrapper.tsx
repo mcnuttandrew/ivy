@@ -29,7 +29,6 @@ function CodeEditor(props: Props) {
         schema={{}}
         code={currentCode}
         onChange={debounce(700, (code: string): void => {
-          console.log('changed??');
           if (!editMode) {
             setEditMode(true);
           }

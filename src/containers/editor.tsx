@@ -19,11 +19,9 @@ import HotKeyProvider, {mapStateToProps as HotKeyProviderMapStateToProps} from '
 import DataColumn, {mapStateToProps as DataColumnMapStateToProps} from './data-column';
 import TourProvider, {mapStateToProps as TourProviderMapStateToProps} from './tour-provider';
 
-import {FETCH_PARMS} from '../constants';
-
 import {DataRow, ActionUser} from '../actions/index';
-import {classnames, serverPrefix} from '../utils';
-import {getTemplate, getTemplateInstance} from '../utils/api';
+import {classnames} from '../utils';
+import {getTemplate, getTemplateInstance, getTemplates} from '../utils/api';
 import {getWidth, writeWidth} from '../utils/local-storage';
 import {AppState, DataReducerState, LanguageExtension, Template, TemplateMap} from '../types';
 
@@ -57,9 +55,7 @@ function EditorContainer(props: RootProps): JSX.Element {
   useEffect(() => {
     props.setUserName(getUserName());
     props.recieveLanguages(props.languages);
-    fetch(`${serverPrefix()}/templates`, FETCH_PARMS as any)
-      .then(x => x.json())
-      .then(loadedTemplates => recieveTemplates(loadedTemplates.map((x: any) => x.template)));
+    getTemplates().then((loadedTemplates) => recieveTemplates(loadedTemplates));
   }, []);
 
   // TODO MAINTAIN STATE ACROSS REFERENCE, ALSO TRY TO CONVERT SELECTION?
@@ -79,7 +75,7 @@ function EditorContainer(props: RootProps): JSX.Element {
       return;
     }
     if (!templateInstance) {
-      getTemplate(templateAuthor, templateName).then(template => {
+      getTemplate(templateAuthor, templateName).then((template) => {
         if (!props.currentlySelectedFile) {
           props.setModalState('data');
         }
@@ -95,7 +91,7 @@ function EditorContainer(props: RootProps): JSX.Element {
         const dataset = templateInstance.dataset;
         props.changeSelectedFile({filename: dataset, dumpTemplateMap: false});
         props.setTemplate(template);
-        props.setAllTemplateValues((templateInstance.template_instance as any) as TemplateMap);
+        props.setAllTemplateValues(templateInstance.template_instance as any as TemplateMap);
       });
     }
   }, [templateAuthor, templateName, templateInstance]);

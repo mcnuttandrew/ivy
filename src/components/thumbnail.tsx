@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {serverPrefix} from '../utils';
 import GALLERY from '../templates/gallery';
 
 interface ThumbnailProps {
@@ -13,11 +12,16 @@ function thumbnailLocation(
   templateAuthor: string | null,
   templateInstance: string | null,
 ): string {
-  if (!templateName || templateName === 'BLANK TEMPLATE') {
+  if (
+    !templateName ||
+    templateName === 'BLANK TEMPLATE' ||
+    templateName === 'fillter' ||
+    templateAuthor === 'filler'
+  ) {
     return 'logo.png';
   }
   if (templateInstance) {
-    return `${serverPrefix()}/thumbnail/${templateAuthor}/${templateName}/${templateInstance}`;
+    return `.netlify/functions/thumbnail/${templateAuthor}/${templateName}/${templateInstance}`;
   }
   if (templateName === 'Polestar') {
     return 'assets/polestar-logo.png';
@@ -28,7 +32,7 @@ function thumbnailLocation(
   if (templateName === GALLERY.templateName) {
     return 'assets/chart-gallery-logo.png';
   }
-  return `${serverPrefix()}/thumbnail/${templateAuthor}/${templateName}`;
+  return `.netlify/functions/thumbnail/${templateAuthor}/${templateName}`;
 }
 
 function Thumbnail(props: ThumbnailProps): JSX.Element {
