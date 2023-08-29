@@ -66,20 +66,18 @@ export function getTemplateInstance(
   templateName: string,
   templateInstance: string,
 ): Promise<TemplateInstance> {
-  return (
-    simpleGetJSON(
-      `.netlify/functions/template-instance/${templateAuthor}/${templateName}/${templateInstance}`,
-    )
-      .then((x) => {
-        x.template_instance =
-          x.template_instance && typeof x.template_instance === 'string'
-            ? JSON.parse(x.template_instance)
-            : x.template_instance;
-        return x;
-      })
-      .catch((e) => {
-        console.error(e);
-        return {} as TemplateInstance;
-      })
-  );
+  return simpleGetJSON(
+    `.netlify/functions/template-instance/${templateAuthor}/${templateName}/${templateInstance}`,
+  )
+    .then((x) => {
+      x.template_instance =
+        x.template_instance && typeof x.template_instance === 'string'
+          ? JSON.parse(x.template_instance)
+          : x.template_instance;
+      return x;
+    })
+    .catch((e) => {
+      console.error(e);
+      return {} as TemplateInstance;
+    });
 }
