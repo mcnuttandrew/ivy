@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 
 import MonacoWrapper from '../components/monaco-wrapper';
 import ErrorBoundary from '../components/error-boundary';

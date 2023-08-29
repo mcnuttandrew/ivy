@@ -187,7 +187,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
             setAllTemplateValues={setAllTemplateValues}
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
-            disallowFanout={template.disallowFanOut}
+            disallowFanout={!!template.disallowFanOut}
             customCards={template.customCards}
             setMaterialization={setMaterialization}
             widgetValue={templateMap.paramValues[widget.name]}

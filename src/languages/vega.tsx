@@ -1,5 +1,5 @@
 import {LanguageExtension} from '../types';
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import * as x from 'vega-projection-extended';
 // necessary footwork to force the projections to be imported
 // @ts-ignore

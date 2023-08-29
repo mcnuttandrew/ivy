@@ -1,5 +1,5 @@
 import produce from 'immer';
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {TEMPLATE_BODY, MATERIALIZING, JSON_OUTPUT} from '../constants';
 import {
   ModifyValueOnTemplatePayload,

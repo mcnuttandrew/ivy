@@ -1,4 +1,4 @@
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {Template, GenWidget, Condition, Widget, ListWidget} from '../types';
 import {Json, JsonMap} from '../types';
 import {AUTHORS} from '../constants/index';

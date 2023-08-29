@@ -9,7 +9,7 @@ import {
   TemplateMap,
 } from '../types';
 import {buildSynthesizer, walkTreeAndLookForFields, difference} from './suggestion-utils';
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 
 import React from 'react';
 import {Vega} from 'react-vega';
