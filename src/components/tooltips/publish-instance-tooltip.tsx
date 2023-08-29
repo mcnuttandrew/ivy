@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect} from 'react';
-import DomToImage from 'dom-to-image';
+import DomToImage from 'dom-to-image-more';
 // // @ts-ignore
 // window.require = (name) => new URL(name, import.meta.url).href
 // const DomToImage = require('dom-to-image');
