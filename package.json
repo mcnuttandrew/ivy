@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.12",
     "@jest/globals": "^29.6.1",
