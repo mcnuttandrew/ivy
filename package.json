@@ -93,11 +93,8 @@
     "build": "NODE_ENV=production tsc && vite build",
     "lint": "yarn lint:ts",
     "lint:ts": "eslint --ext .ts --ext .tsx src",
-    "lint:fix": "eslint './src/**/*.{ts,tsx}'",
     "test": "NODE_ENV=test && jest",
     "coverage": "yarn test  --collect-coverage",
-    "prettify": "prettier --write 'src/**/*.{ts,tsx}'",
-    "analyze": "NODE_ENV=analysis webpack --profile > stats.json",
     "schema-mod": "ts-node scripts/generate-schema-mod.ts"
   },
   "jest": {
