@@ -3,12 +3,12 @@ import {SectionWidget, Widget} from '../../types';
 import {GeneralWidget, WidgetBuilder} from './general-widget';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function SectionWidgetConfiguration(props: GeneralWidget<SectionWidget>): JSX.Element {
+function SectionWidgetConfiguration(_: GeneralWidget<SectionWidget>): JSX.Element {
   return <div />;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function SectionWidgetComponent(props: GeneralWidget<SectionWidget>): JSX.Element {
+function SectionWidgetComponent(_: GeneralWidget<SectionWidget>): JSX.Element {
   return <div className="section-widget" />;
 }
 

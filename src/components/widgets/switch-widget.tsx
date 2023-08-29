@@ -19,6 +19,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
       </div>
       <div className="flex">
         <AddLabelToWidget label={'Default'}>
+            {/* @ts-ignore */}
           <Switch
             {...switchCommon}
             checked={!!config.defaultsToActive}
@@ -28,6 +29,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
           />
         </AddLabelToWidget>
         <AddLabelToWidget label={'Active Value'}>
+          {/* @ts-ignore */}
           <IgnoreKeys style={{height: '100%'}}>
             <input
               aria-label={`Inactive value`}
@@ -38,6 +40,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
           </IgnoreKeys>
         </AddLabelToWidget>
         <AddLabelToWidget label={'Inactive Value'}>
+          {/* @ts-ignore */}
           <IgnoreKeys style={{height: '100%'}}>
             <input
               aria-label={`Inactive value`}
@@ -62,6 +65,7 @@ function SwitchWidgetComponent(props: GeneralWidget<SwitchWidget>): JSX.Element 
       <div className="flex-down">
         <div className="flex space-between">
           <div className="widget-title">{widgetName(widget, editMode)}</div>
+          {/* @ts-ignore */}
           <Switch
             {...switchCommon}
             checked={isActive}

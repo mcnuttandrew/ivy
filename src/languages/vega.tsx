@@ -2,7 +2,7 @@ import {LanguageExtension} from '../types';
 import * as stringify from 'json-stringify-pretty-compact';
 import * as x from 'vega-projection-extended';
 // necessary footwork to force the projections to be imported
-// eslint-disable-next-line
+// @ts-ignore
 const yx = x;
 
 import React from 'react';

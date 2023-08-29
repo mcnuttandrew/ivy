@@ -38,7 +38,7 @@ function fullMatch(): JSX.Element {
 export function countSymbol(symbol: string): JSX.Element {
   return (
     <div className="count-symbol">
-      {symbol.split('-').map((key, idx, arr) => {
+      {symbol.split('-').map((key, _, arr) => {
         const circType = arr.length === 1 ? 'full' : arr.length === 2 ? 'half' : 'third';
         return (
           <div

@@ -48,6 +48,7 @@ function viewOption(props: ViewOptionProps): JSX.Element {
         overlay={
           <div>
             <div>View Controls</div>
+                  {/* @ts-ignore */}
             <IgnoreKeys style={{height: '100%'}}>
               <input
                 aria-label={`Set view name`}

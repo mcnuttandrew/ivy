@@ -130,6 +130,7 @@ const GenericMaterializationMenu = (props: GenericMaterializationMenuProps): nul
             return (
               <div key={idx} className="flex space-between">
                 <span>{name}</span>
+                      {/* @ts-ignore */}
                 <Switch
                   {...switchCommon}
                   checked={checked}

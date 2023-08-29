@@ -14,6 +14,7 @@ export function EditParameterName(props: EditParameterNameProps): JSX.Element {
   const {widget, setWidgetValue, idx} = props;
   return (
     <AddLabelToWidget label={'Parameter Name'}>
+      {/* @ts-ignore */}
       <IgnoreKeys style={{height: '100%'}}>
         <input
           aria-label={`Parameter name`}
@@ -35,6 +36,7 @@ export function EditDisplayName(props: EditDisplayNameProps): JSX.Element {
   const {widget, setWidgetValue, idx} = props;
   return (
     <AddLabelToWidget label={'Display Name'}>
+      {/* @ts-ignore */}
       <IgnoreKeys style={{height: '100%'}}>
         <input
           aria-label={`Display name`}

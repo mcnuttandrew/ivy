@@ -51,6 +51,7 @@ function optionRow(
         </div>
         <div className="flex">
           <AddLabelToWidget label="Option Value">
+                  {/* @ts-ignore */}
             <IgnoreKeys style={{height: '100%'}}>
               <input
                 aria-label={`allow value set`}
@@ -66,6 +67,7 @@ function optionRow(
           </AddLabelToWidget>
           {usingDisplayValueFormat && (
             <AddLabelToWidget label="Option Display Name">
+                    {/* @ts-ignore */}
               <IgnoreKeys style={{height: '100%'}}>
                 <input
                   aria-label={`allow value set`}

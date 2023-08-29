@@ -31,6 +31,7 @@ function HotKeyProvider(props: RootProps): JSX.Element {
     func();
   };
   return (
+    // @ts-ignore
     <GlobalHotKeys
       keyMap={{...HOT_KEYS, USER_PANEL: 'u+p'}}
       handlers={{
