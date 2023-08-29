@@ -1,6 +1,8 @@
 import React, {useRef, useState, useEffect} from 'react';
-// import DomToImage from 'dom-to-image';
-const DomToImage = require('dom-to-image');
+import DomToImage from 'dom-to-image';
+// // @ts-ignore
+// window.require = (name) => new URL(name, import.meta.url).href
+// const DomToImage = require('dom-to-image');
 import Tooltip from 'rc-tooltip';
 import {TiUpload} from 'react-icons/ti';
 import VegaDatasets from '../../constants/vega-datasets-counts.json';

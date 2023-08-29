@@ -31,10 +31,10 @@ export const writeEditorFontSize = (size: any): any => localStorage.setItem('edi
 export const getEditorLineWrap = (): boolean => localStorage.getItem('editorLineWrap') === 'true';
 export const writeEditorLineWrap = (wrap: any): any => localStorage.setItem('editorLineWrap', wrap);
 
-export const getUserName = (): string => localStorage.getItem('UserName');
+export const getUserName = (): string => localStorage.getItem('UserName')!;
 export const writeUserName = (name: any): any => localStorage.setItem('UserName', name);
 
-export const getGallerySectionPref = (): string => localStorage.getItem('GallerySectionPref');
+export const getGallerySectionPref = (): string => localStorage.getItem('GallerySectionPref')!;
 export const writeGallerySectionPref = (name: any): any => localStorage.setItem('GallerySectionPref', name);
 
 const names = [

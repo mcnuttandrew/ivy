@@ -7,7 +7,7 @@ import {modifyJSONSchema} from '../ivy-lang';
 
 import vlSchema from 'vega-lite/build/vega-lite-schema.json';
 import vSchema from 'vega/build/vega-schema.json';
-import ivySchema from '../../assets/ivy.json';
+import ivySchema from '../../public/assets/ivy.json';
 import unitVisSchema from 'unit-vis/unit-vis-schema.json';
 
 import {loader} from '@monaco-editor/react';
