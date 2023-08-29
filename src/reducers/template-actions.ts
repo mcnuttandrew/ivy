@@ -103,6 +103,7 @@ export const setTemplateValue: ActionResponse<SetTemplateValuePayload> = (state,
 };
 
 export const setAllTemplateValues: ActionResponse<TemplateMap> = (state, payload) => {
+  console.log('setting current template values', payload);
   return produce(state, (draftState) => {
     draftState.templateMap = {
       paramValues: {
