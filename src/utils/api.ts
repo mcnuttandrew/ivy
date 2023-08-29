@@ -14,7 +14,14 @@ export function getTemplates(): Promise<Template[]> {
     .then((fetchedData) =>
       fetchedData.reduce((acc: any[], x: any) => {
         try {
-          const result = JSON.parse(x.template);
+          let result;
+          if (typeof x.template === 'string') {
+            result = JSON.parse(x.template);
+          } else if (typeof x.template === 'object') {
+            result = x.template;
+          } else {
+            throw new Error('bad template');
+          }
           acc.push(result);
         } catch (e) {
           console.log('parse fail !', x);

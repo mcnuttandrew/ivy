@@ -6,7 +6,6 @@ import {Link} from 'react-router-dom';
 
 import {Template} from '../../types';
 import {GenericAction} from '../../actions/index';
-import {serverPrefix} from '../../utils';
 
 interface Props {
   template: Template;
@@ -41,7 +40,7 @@ export default function UnpublishInstanceTooltip(props: Props): JSX.Element {
           <Link
             to="/editor/unpublished"
             onClick={(): void => {
-              fetch(`${serverPrefix()}/remove`, {
+              fetch(`.netlify/functions/remove`, {
                 ...POST_PARAMS,
                 body: JSON.stringify({
                   templateName: template.templateName,

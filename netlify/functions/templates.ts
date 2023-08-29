@@ -1,3 +1,3 @@
-import {simpleHandler} from '../utils';
+import {getMany} from '../utils';
 
-export const handler = simpleHandler('templates');
+export const handler = getMany('templates');

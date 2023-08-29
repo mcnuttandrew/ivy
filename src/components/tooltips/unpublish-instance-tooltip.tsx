@@ -3,8 +3,6 @@ import Tooltip from 'rc-tooltip';
 import {TiTrash} from 'react-icons/ti';
 import {POST_PARAMS} from '../../constants';
 
-import {serverPrefix} from '../../utils';
-
 interface Props {
   templateAuthor: string;
   templateName: string;
@@ -35,7 +33,7 @@ export default function UnpublishInstanceTooltip(props: Props): JSX.Element {
           <button
             type="button"
             onClick={(): void => {
-              fetch(`${serverPrefix()}/remove`, {
+              fetch(`.netlify/functions/remove-instance`, {
                 ...POST_PARAMS,
                 body: JSON.stringify({templateAuthor, templateName, instanceName, userName}),
               } as any).then(() => {

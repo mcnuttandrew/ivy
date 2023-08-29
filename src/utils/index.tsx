@@ -10,7 +10,7 @@ import {
   CustomCard,
   Suggestion,
 } from '../types';
-import {MATERIALIZING, USE_LOCAL, BINDER} from '../constants/index';
+import {MATERIALIZING, BINDER} from '../constants/index';
 import {Analyzer} from 'type-analyzer';
 const {computeColMeta} = Analyzer;
 import GALLERY from '../templates/gallery';
@@ -152,14 +152,6 @@ export function getTemplateSaveState(base: AppState): SaveState {
   }
   return associatedUpstreamTemplate === template ? 'EQUAL' : 'DIFFERENT';
 }
-
-export function serverPrefix(): string {
-  return '';
-  // return location.origin;
-  // return 'https://ivy-be-vl.herokuapp.com';
-  // return USE_LOCAL ? 'http://localhost:5000' : 'https://hydra-template-server.herokuapp.com';
-}
-
 export const computeValidAddNexts = (template: Template, templateMap: TemplateMap): Set<string> => {
   const dims = ['DIMENSION', 'MEASURE', 'TIME'];
   const dimCounter = dims.reduce((acc: any, key) => ({...acc, [key]: []}), {});
