@@ -1,7 +1,7 @@
 import {DataTransform, DataRow} from '../types';
 
 export function wrangle(data: DataRow[], transforms: DataTransform[]): any {
-  const predicates = transforms.map(d => (row: DataRow): boolean => {
+  const predicates = transforms.map((d) => (row: DataRow): boolean => {
     const fieldVal = row[d.filter.field];
     switch (d.filter.type) {
       case 'DIMENSION':
@@ -17,5 +17,5 @@ export function wrangle(data: DataRow[], transforms: DataTransform[]): any {
         return true;
     }
   });
-  return data.filter(row => predicates.every(pred => pred(row)));
+  return data.filter((row) => predicates.every((pred) => pred(row)));
 }

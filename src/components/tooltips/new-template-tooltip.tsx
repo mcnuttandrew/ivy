@@ -30,7 +30,7 @@ export default function NewTemplateTooltip(props: Props): JSX.Element {
           overlay={
             <div className="flex-down">
               <h5>Create Blank Template</h5>
-              {Object.keys(languages).map(language => {
+              {Object.keys(languages).map((language) => {
                 return (
                   <button
                     type="button"

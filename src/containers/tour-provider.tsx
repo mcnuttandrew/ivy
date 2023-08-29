@@ -43,7 +43,7 @@ const tourContent = {
   welcome: `Welcome to the Ivy tour! We'll get acquainted with the various parts of the app by stepping through each of them in turn.`,
 };
 
-type Condition = (lifecycle: string, action: string) => void;
+// type Condition = (lifecycle: string, action: string) => void;
 function TourProvider(props: TourProps): JSX.Element {
   const {setShowTour, showTour, setProgrammaticView, setCodeMode, setEditMode} = props;
   if (!showTour) {

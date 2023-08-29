@@ -29,7 +29,7 @@ export default function MultiShelf(props: Props): JSX.Element {
         field: fieldKey,
         multiTarget: true,
       }),
-    collect: monitor => ({
+    collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
@@ -40,8 +40,8 @@ export default function MultiShelf(props: Props): JSX.Element {
   const options = makeOptionsForDropdown({customCards, widget, columns, useGroupsAsTypes});
 
   const columnHeaders = shelfValues
-    .map(shelfValue => getOrMakeColumn(shelfValue, columns, customCards))
-    .filter(d => d);
+    .map((shelfValue) => getOrMakeColumn(shelfValue, columns, customCards))
+    .filter((d) => d);
   const maxValsHit = (widget.config.maxNumberOfTargets || Infinity) <= columnHeaders.length;
   const dropCommon = {field: fieldKey, multiTarget: true};
 
@@ -69,7 +69,7 @@ export default function MultiShelf(props: Props): JSX.Element {
                 column={columnHeader}
                 setParam={(x: any): void => {
                   onDrop({
-                    text: shelfValues.filter(d => d !== x.column.field),
+                    text: shelfValues.filter((d) => d !== x.column.field),
                     ...dropCommon,
                   });
                 }}
@@ -100,7 +100,7 @@ export default function MultiShelf(props: Props): JSX.Element {
             {!maxValsHit && (
               <Selector
                 useGroups={true}
-                options={options.filter(d => !shelfValues.includes(d.value))}
+                options={options.filter((d) => !shelfValues.includes(d.value))}
                 selectedValue={' '}
                 onChange={(x: any): void => {
                   onDrop({text: shelfValues.concat([`${x}`]), ...dropCommon});

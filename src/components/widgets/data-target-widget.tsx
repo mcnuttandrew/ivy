@@ -22,7 +22,7 @@ function DataTargetWidgetConfiguration(props: GeneralWidget<DataTargetWidget>): 
         <div className="flex-down">
           <span className="tool-description">Data Types:</span>
           <div className="flex">
-            {DATA_TYPES.map(type => {
+            {DATA_TYPES.map((type) => {
               const checked = allowedTypesSet.has(type);
               const toggleType = (): void => {
                 if (checked) {
@@ -91,7 +91,7 @@ const DataTargetBuilder: WidgetBuilder = (widget, common) => {
     uiElement: <DataTargetWidgetComponent {...common} widget={widg} />,
     materializationOptions: (columns, widget): {name: string; group?: string}[] => {
       const widg = widget as Widget<DataTargetWidget>;
-      return columns.map(d => ({
+      return columns.map((d) => ({
         name: `"${d.field}"`,
         group: widg.config.allowedTypes.includes(d.type) ? 'Recomended' : 'Not Recomended',
       }));

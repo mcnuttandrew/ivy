@@ -123,10 +123,13 @@ function RenderTemplateWithInstances(props: RenderTemplateWithInstancesProps): J
         <h5>{RenderTypeCounts(template)}</h5>
         <h5>
           {Object.entries(
-            template.widgets.reduce((acc, row) => {
-              acc[row.type as string] = (acc[row.type as string] || 0) + 1;
-              return acc;
-            }, {} as {[x: string]: number}),
+            template.widgets.reduce(
+              (acc, row) => {
+                acc[row.type as string] = (acc[row.type as string] || 0) + 1;
+                return acc;
+              },
+              {} as {[x: string]: number},
+            ),
           )
             .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
             .join(', ')}

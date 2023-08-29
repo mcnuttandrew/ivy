@@ -59,7 +59,9 @@ export interface GenericAction<T> {
 }
 
 function createAction<T>(type: any): GenericAction<T> {
-  return payload => (dispatch): any => dispatch({type, payload});
+  return (payload) =>
+    (dispatch): any =>
+      dispatch({type, payload});
 }
 
 export const addToNextOpenSlot = createAction<ColumnHeader>(actionTypes.ADD_TO_NEXT_OPEN_SLOT);
@@ -111,38 +113,41 @@ export interface SetMaterializationPayload {
 }
 export const setMaterialization = createAction<SetMaterializationPayload>(actionTypes.SET_MATERIALIZATION);
 
-export const generateTypeInferences = (data: DataRow[]): AppThunk<TypeInference[]> => (
-  dispatch: Dispatch,
-): void => {
-  let summaries = {} as {[x: string]: any};
-  try {
-    summaries = summary(data).reduce((acc: any, d: any) => {
-      acc[d.field] = {...d};
-      return acc;
-    }, {} as {[x: string]: any});
-  } catch (e) {
-    logError(e);
-  }
-  dispatch({
-    type: actionTypes.RECIEVE_TYPE_INFERENCES,
-    payload: prepareMeta(data).map((col: any) => ({
-      ...col,
-      summary: {
-        ...summaries[col.key],
-        coercionTypes: ['MEASURE', 'DIMENSION', 'TIME'].reduce((acc, key) => {
-          acc[key] = generateDomain(data, col.key, key);
+export const generateTypeInferences =
+  (data: DataRow[]): AppThunk<TypeInference[]> =>
+  (dispatch: Dispatch): void => {
+    let summaries = {} as {[x: string]: any};
+    try {
+      summaries = summary(data).reduce(
+        (acc: any, d: any) => {
+          acc[d.field] = {...d};
           return acc;
-        }, {} as any),
-      },
-      domain: generateDomain(data, col.key, col.category),
-    })),
-  });
-};
+        },
+        {} as {[x: string]: any},
+      );
+    } catch (e) {
+      logError(e);
+    }
+    dispatch({
+      type: actionTypes.RECIEVE_TYPE_INFERENCES,
+      payload: prepareMeta(data).map((col: any) => ({
+        ...col,
+        summary: {
+          ...summaries[col.key],
+          coercionTypes: ['MEASURE', 'DIMENSION', 'TIME'].reduce((acc, key) => {
+            acc[key] = generateDomain(data, col.key, key);
+            return acc;
+          }, {} as any),
+        },
+        domain: generateDomain(data, col.key, col.category),
+      })),
+    });
+  };
 
 type Reader = (x: string) => DataRow[];
-const csvReader: Reader = data => csvParse(data);
-const jsonReader: Reader = data => JSON.parse(data);
-const tsvReader: Reader = data => tsvParse(data);
+const csvReader: Reader = (data) => csvParse(data);
+const jsonReader: Reader = (data) => JSON.parse(data);
+const tsvReader: Reader = (data) => tsvParse(data);
 const getReader = (fileName: string): Reader => {
   if (fileName.includes('.csv')) {
     return csvReader;
@@ -169,53 +174,55 @@ function datasetAddress(fileName: string): string {
 export const loadDataFromPredefinedDatasets: GenericAction<{
   filename: string;
   dumpTemplateMap: boolean;
-}> = ({filename, dumpTemplateMap}) => (dispatch, arg2, arg3): void => {
-  // infra for tests
-  // eslint-disable-next-line no-undef
-  if (process.env.NODE_ENV === 'test') {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const data = require(`vega-datasets/data/${filename}`);
-    dispatch({type: actionTypes.RECIEVE_DATA, payload: {data, dumpTemplateMap}});
-    generateTypeInferences(data)(dispatch, arg2, arg3);
-    return;
-  }
-  // regular path
-  fetch(datasetAddress(filename))
-    .then(d => d.text())
-    .then(d => getReader(filename)(d))
-    .then(d => {
-      dispatch({type: actionTypes.RECIEVE_DATA, payload: {data: d, dumpTemplateMap}});
-      generateTypeInferences(d)(dispatch, arg2, arg3);
+}> =
+  ({filename, dumpTemplateMap}) =>
+  (dispatch, arg2, arg3): void => {
+    // infra for tests
+    // eslint-disable-next-line no-undef
+    if (process.env.NODE_ENV === 'test') {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const data = require(`vega-datasets/data/${filename}`);
+      dispatch({type: actionTypes.RECIEVE_DATA, payload: {data, dumpTemplateMap}});
+      generateTypeInferences(data)(dispatch, arg2, arg3);
+      return;
+    }
+    // regular path
+    fetch(datasetAddress(filename))
+      .then((d) => d.text())
+      .then((d) => getReader(filename)(d))
+      .then((d) => {
+        dispatch({type: actionTypes.RECIEVE_DATA, payload: {data: d, dumpTemplateMap}});
+        generateTypeInferences(d)(dispatch, arg2, arg3);
+      });
+  };
+
+export const loadCustomDataset: GenericAction<LoadDataPayload> =
+  (file) =>
+  (dispatch, arg2, arg3): void => {
+    const {fileName, data} = file;
+    dispatch({
+      type: actionTypes.CHANGE_SELECTED_FILE,
+      payload: fileName,
     });
-};
+    getReader(fileName)(data);
 
-export const loadCustomDataset: GenericAction<LoadDataPayload> = file => (dispatch, arg2, arg3): void => {
-  const {fileName, data} = file;
-  dispatch({
-    type: actionTypes.CHANGE_SELECTED_FILE,
-    payload: fileName,
-  });
-  getReader(fileName)(data);
+    const liveData = getReader(fileName)(data);
+    dispatch({
+      type: actionTypes.RECIEVE_DATA,
+      payload: {data: liveData, dumpTemplateMap: true},
+    });
+    generateTypeInferences(liveData)(dispatch, arg2, arg3);
+  };
 
-  const liveData = getReader(fileName)(data);
-  dispatch({
-    type: actionTypes.RECIEVE_DATA,
-    payload: {data: liveData, dumpTemplateMap: true},
-  });
-  generateTypeInferences(liveData)(dispatch, arg2, arg3);
-};
-
-export const changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}> = payload => (
-  dispatch,
-  arg2,
-  arg3,
-): void => {
-  dispatch({
-    type: actionTypes.CHANGE_SELECTED_FILE,
-    payload: payload.filename,
-  });
-  loadDataFromPredefinedDatasets(payload)(dispatch, arg2, arg3);
-};
+export const changeSelectedFile: GenericAction<{filename: string; dumpTemplateMap: boolean}> =
+  (payload) =>
+  (dispatch, arg2, arg3): void => {
+    dispatch({
+      type: actionTypes.CHANGE_SELECTED_FILE,
+      payload: payload.filename,
+    });
+    loadDataFromPredefinedDatasets(payload)(dispatch, arg2, arg3);
+  };
 
 export interface ActionUser {
   addToNextOpenSlot: GenericAction<ColumnHeader>;

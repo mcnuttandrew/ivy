@@ -12,6 +12,7 @@ export const BLANK_TEMPLATE: Template = {
 };
 
 function ExampleRenderer(props: RendererProps): JSX.Element {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {spec, data, onError} = props;
   return <div />;
 }

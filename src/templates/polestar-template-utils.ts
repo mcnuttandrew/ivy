@@ -11,7 +11,7 @@ import {
   ConditionQuery,
 } from '../types';
 export const toList = (list: string[]): {display: string; value: string}[] =>
-  list.map(display => ({
+  list.map((display) => ({
     display,
     value: `"${display}"`,
   }));
@@ -49,7 +49,7 @@ export const makeMultiTarget = ({dim, conditions}: MakeMultiTargetType): Widget<
     type: 'MultiDataTarget',
     config: {allowedTypes: ALLDATA_TYPES, required: true, minNumberOfTargets: 0},
     conditions,
-  } as Widget<MultiDataTargetWidget>);
+  }) as Widget<MultiDataTargetWidget>;
 
 export const makeText = (textLabel: string, conditions: Condition[]): Widget<TextWidget> => ({
   name: textLabel,

@@ -104,7 +104,7 @@ function baseBallCard(props: BaseBallCardProps): JSX.Element {
     {key: 'distinct', show: 'Unique'},
     column.type !== 'DIMENSION' && {key: 'min', show: 'Min'},
     column.type !== 'DIMENSION' && {key: 'max', show: 'Max'},
-  ].filter(d => d);
+  ].filter((d) => d);
   const summaryPresent = Object.keys(column.summary).length;
   const isCustom = column.type === 'CUSTOM';
   return (
@@ -180,7 +180,7 @@ export default function Pill(props: PillProps): JSX.Element {
 
   const [{opacity}, dragRef] = useDrag({
     item: {type: 'CARD', text: column.field, containingShelf},
-    collect: monitor => ({
+    collect: (monitor) => ({
       opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });

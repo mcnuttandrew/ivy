@@ -37,7 +37,7 @@ interface MakePillProps {
 }
 
 type makePillType = (props: MakePillProps) => (column: ColumnHeader | CustomCard, idx: number) => JSX.Element;
-const MakePill: makePillType = props => {
+const MakePill: makePillType = (props) => {
   const {addToNextOpenSlot, coerceType, createFilter, fillableFields, showGUIView} = props;
 
   return (column, idx): JSX.Element => {
@@ -61,20 +61,22 @@ const MakePill: makePillType = props => {
   };
 };
 
-const makePillGroup = (props: MakePillProps) => ([key, columns]: [string, ColumnHeader[]]): JSX.Element => {
-  const [open, setOpen] = useState(true);
-  return (
-    <div className="flex-down" key={key}>
-      <div className="flex space-between capitolize">
-        <h5>{`${key.toLowerCase()} (${columns.length})`}</h5>
-        <button type="button" onClick={(): any => setOpen(!open)}>
-          {open ? 'hide' : 'show'}
-        </button>
+const makePillGroup =
+  (props: MakePillProps) =>
+  ([key, columns]: [string, ColumnHeader[]]): JSX.Element => {
+    const [open, setOpen] = useState(true);
+    return (
+      <div className="flex-down" key={key}>
+        <div className="flex space-between capitolize">
+          <h5>{`${key.toLowerCase()} (${columns.length})`}</h5>
+          <button type="button" onClick={(): any => setOpen(!open)}>
+            {open ? 'hide' : 'show'}
+          </button>
+        </div>
+        {(open ? columns : []).map(MakePill(props))}
       </div>
-      {(open ? columns : []).map(MakePill(props))}
-    </div>
-  );
-};
+    );
+  };
 
 function DataColumn(props: DataColumnProps): JSX.Element {
   const {
@@ -91,7 +93,7 @@ function DataColumn(props: DataColumnProps): JSX.Element {
   const [searchKey, setSearchKey] = useState('');
   const hasCustomCards = customCards && customCards.length > 0;
   const columnGroups = columns
-    .filter(col => col.field.toLowerCase().includes(searchKey.toLowerCase()))
+    .filter((col) => col.field.toLowerCase().includes(searchKey.toLowerCase()))
     .reduce(
       (acc, row) => {
         acc[row.type] = (acc[row.type] || []).concat(row);
@@ -166,7 +168,7 @@ function DataColumn(props: DataColumnProps): JSX.Element {
         {showGUIView && (
           <div>
             <FilterTarget
-              onDrop={(item: any): any => createFilter(columns.find(d => d.field === item.text))}
+              onDrop={(item: any): any => createFilter(columns.find((d) => d.field === item.text))}
               columns={columns}
             />
           </div>
@@ -196,7 +198,7 @@ function eqSet(as: Set<any>, bs: Set<any>): boolean {
   return true;
 }
 function equalityChecker(prevProps: any, nextProps: any): boolean {
-  return Object.keys(prevProps).every(key => {
+  return Object.keys(prevProps).every((key) => {
     if (key === 'fillableFields') {
       return eqSet(prevProps[key], nextProps[key]);
     }

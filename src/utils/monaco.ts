@@ -107,11 +107,7 @@ export default function setupMonaco() {
     });
 
     monaco.languages.registerDocumentFormattingEditProvider('json', {
-      provideDocumentFormattingEdits(
-        model: Monaco.editor.ITextModel,
-        options: Monaco.languages.FormattingOptions,
-        token: Monaco.CancellationToken,
-      ): Monaco.languages.TextEdit[] {
+      provideDocumentFormattingEdits(model: Monaco.editor.ITextModel): Monaco.languages.TextEdit[] {
         return [
           {
             range: model.getFullModelRange(),

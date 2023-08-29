@@ -5,8 +5,10 @@ import TABLE from '../templates/table';
 import {TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 
 const PAGE_SIZE = 30;
-const abstractCompare = (sortKey: string, reverseSort: boolean) => (a: any, b: any): number =>
-  (reverseSort ? -1 : 1) * `${a[sortKey]}`.localeCompare(`${b[sortKey]}`);
+const abstractCompare =
+  (sortKey: string, reverseSort: boolean) =>
+  (a: any, b: any): number =>
+    (reverseSort ? -1 : 1) * `${a[sortKey]}`.localeCompare(`${b[sortKey]}`);
 function DataTableRenderer(props: RendererProps): JSX.Element {
   const {spec, data = []} = props;
   const {columns} = spec as JsonMap;
@@ -17,7 +19,7 @@ function DataTableRenderer(props: RendererProps): JSX.Element {
   const nextPageExists = page < numPages;
   const prevPageExists = page > 0;
   // TODO sorting, pagination
-  const reducedData = data.map(row =>
+  const reducedData = data.map((row) =>
     ((columns as any) || []).reduce((acc: any, column: any) => ({...acc, [column]: row[column]}), {} as any),
   );
   return (

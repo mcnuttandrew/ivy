@@ -24,7 +24,7 @@ export function getTemplates(): Promise<Template[]> {
           }
           acc.push(result);
         } catch (e) {
-          console.log('parse fail !', x);
+          console.error('parse fail !', x);
         }
         return acc;
       }, []),

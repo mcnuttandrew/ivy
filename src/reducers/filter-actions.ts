@@ -3,7 +3,7 @@ import {ActionResponse, ColumnHeader} from '../types';
 import produce from 'immer';
 
 export const createFilter: ActionResponse<ColumnHeader> = (state, payload) => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     let range = [];
     switch (payload.type) {
       default:
@@ -12,7 +12,7 @@ export const createFilter: ActionResponse<ColumnHeader> = (state, payload) => {
         break;
       case 'TIME':
       case 'MEASURE':
-        range = state.columns.find(d => d.field === payload.field).domain;
+        range = state.columns.find((d) => d.field === payload.field).domain;
         break;
     }
     draftState.templateMap.systemValues.dataTransforms.push({
@@ -27,15 +27,14 @@ export const createFilter: ActionResponse<ColumnHeader> = (state, payload) => {
 
 export const updateFilter: ActionResponse<UpdateFilterPayload> = (state, payload) => {
   const {newFilterValue, idx} = payload;
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.templateMap.systemValues.dataTransforms[idx].filter.range = newFilterValue;
   });
 };
 
 export const deleteFilter: ActionResponse<number> = (state, deleteIndex) => {
-  return produce(state, draftState => {
-    draftState.templateMap.systemValues.dataTransforms = draftState.templateMap.systemValues.dataTransforms.filter(
-      (_: any, idx: number) => idx !== deleteIndex,
-    );
+  return produce(state, (draftState) => {
+    draftState.templateMap.systemValues.dataTransforms =
+      draftState.templateMap.systemValues.dataTransforms.filter((_: any, idx: number) => idx !== deleteIndex);
   });
 };

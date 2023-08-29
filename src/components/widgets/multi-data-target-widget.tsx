@@ -21,7 +21,7 @@ function MultiDataTargetWidgetConfiguration(props: GeneralWidget<MultiDataTarget
         <div className="flex-down">
           <span className="tool-description">Data Types</span>
           <div className="flex">
-            {DATA_TYPES.map(type => {
+            {DATA_TYPES.map((type) => {
               const checked = allowedTypesSet.has(type);
               const toggleValue = (): void => {
                 if (checked) {

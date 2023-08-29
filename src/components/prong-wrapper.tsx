@@ -4,7 +4,7 @@ import {Editor, StandardBundle} from 'prong-editor';
 import 'prong-editor/style.css';
 import {debounce} from 'vega';
 
-import {EDITOR_OPTIONS, JSON_OUTPUT, TEMPLATE_BODY} from '../constants/index';
+import {JSON_OUTPUT, TEMPLATE_BODY} from '../constants/index';
 import {GenericAction} from '../actions';
 
 interface Props {

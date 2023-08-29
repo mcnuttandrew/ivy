@@ -32,7 +32,7 @@ function EditorControlsConfig(props: EditorControlsConfigProps): JSX.Element {
   return (
     <div className="flex-down code-editor-controls">
       <h3>Controls</h3>
-      {EDITOR_CONTROLS.map(control => {
+      {EDITOR_CONTROLS.map((control) => {
         return (
           <div className="flex" key={control.name}>
             <span>{control.name}</span>

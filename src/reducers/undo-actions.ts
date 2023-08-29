@@ -18,7 +18,7 @@ const createStackItem = (state: AppState): UndoRedoStackItem => {
 
 // TODO if this gets any larger we will need to develop an itemized notion of undo
 const applyStackItemToState = (state: AppState, stackItem: any): AppState => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.currentView = stackItem.currentView;
     draftState.templateMap = stackItem.templateMap;
     draftState.views = stackItem.views;
@@ -36,36 +36,36 @@ export function pushToUndoStack(oldState: AppState, newState: AppState): AppStat
   if (newState.atomicLock) {
     return newState;
   }
-  return produce(newState, draftState => {
+  return produce(newState, (draftState) => {
     draftState.undoStack.push(createStackItem(oldState));
     draftState.redoStack = [];
   });
 }
 // TODO these are probably constructable as a single more elegant function
-export const triggerRedo: ActionResponse<void> = state => {
+export const triggerRedo: ActionResponse<void> = (state) => {
   const redoStack = state.redoStack;
-  return produce(applyStackItemToState(state, redoStack[redoStack.length - 1]), draftState => {
+  return produce(applyStackItemToState(state, redoStack[redoStack.length - 1]), (draftState) => {
     draftState.redoStack.pop();
     draftState.undoStack.push(createStackItem(state));
   });
 };
 
-export const triggerUndo: ActionResponse<void> = state => {
+export const triggerUndo: ActionResponse<void> = (state) => {
   const undoStack = state.undoStack;
-  return produce(applyStackItemToState(state, undoStack[undoStack.length - 1]), draftState => {
+  return produce(applyStackItemToState(state, undoStack[undoStack.length - 1]), (draftState) => {
     draftState.undoStack.pop();
     draftState.redoStack.push(createStackItem(state));
   });
 };
 
-export const startAtomicChain: ActionResponse<void> = state => {
-  return produce(state, draftState => {
+export const startAtomicChain: ActionResponse<void> = (state) => {
+  return produce(state, (draftState) => {
     draftState.atomicLock = true;
   });
 };
 
-export const endAtomicChain: ActionResponse<void> = state => {
-  return produce(state, draftState => {
+export const endAtomicChain: ActionResponse<void> = (state) => {
+  return produce(state, (draftState) => {
     draftState.atomicLock = false;
   });
 };

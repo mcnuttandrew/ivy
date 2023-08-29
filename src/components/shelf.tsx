@@ -47,7 +47,7 @@ export default function Shelf(props: Shelf): JSX.Element {
   const [{isOver, canDrop}, drop] = useDrop({
     accept: 'CARD',
     drop: (item: any) => onDrop({...item, text: `"${item.text}"`, field: fieldKey}),
-    collect: monitor => ({isOver: monitor.isOver(), canDrop: monitor.canDrop()}),
+    collect: (monitor) => ({isOver: monitor.isOver(), canDrop: monitor.canDrop()}),
   });
 
   const columnHeader = getOrMakeColumn(shelfValue, columns, customCards);

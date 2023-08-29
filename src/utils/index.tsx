@@ -446,13 +446,16 @@ export function prepareMeta(data: any): any {
   const initialMeta = computeColMeta(data);
   const listAllColumns = (table: any): string[] =>
     Object.keys(
-      table.reduce((acc: any, row: any) => {
-        const cols = Object.keys(row);
-        cols.forEach((col) => {
-          acc[col] = true;
-        });
-        return acc;
-      }, {} as {[x: string]: boolean}),
+      table.reduce(
+        (acc: any, row: any) => {
+          const cols = Object.keys(row);
+          cols.forEach((col) => {
+            acc[col] = true;
+          });
+          return acc;
+        },
+        {} as {[x: string]: boolean},
+      ),
     );
   const colsFromAnalyzer = new Set(initialMeta.map((x: any) => x.key));
   const missingColumns = listAllColumns(data)

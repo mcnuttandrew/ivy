@@ -7,9 +7,9 @@ import ReactMarkdown from 'react-markdown';
 // eslint-disable-next-line no-undef
 // const docsText = process.env.NODE_ENV === 'test' ? '' : require('../../docs/language-docs.md').default;
 import * as actionCreators from '../actions/index';
-import {ActionUser} from '../actions';
+// import {ActionUser} from '../actions';
 import Header from '../components/header';
-type Props = ActionUser;
+// type Props = ActionUser;
 
 export function DocsContainer(): JSX.Element {
   const [docsText, setDocsText] = React.useState('');

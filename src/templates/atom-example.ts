@@ -1,7 +1,6 @@
 import * as stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
-/* eslint-disable @typescript-eslint/camelcase */
 const UNIT_VIS_EXAMPLE: any = {
   $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
   mark: {color: {key: '[category]', type: 'categorical'}},
@@ -11,7 +10,6 @@ const UNIT_VIS_EXAMPLE: any = {
     {subgroup: {type: 'flatten'}, aspect_ratio: 'maxfill'},
   ],
 };
-/* eslint-enable @typescript-eslint/camelcase */
 
 const UNITVIS: Template = {
   templateName: 'UnitVis Test',

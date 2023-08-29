@@ -63,7 +63,6 @@ function generateLevel(idx: number): {widgets: GenWidget[]; layout: any} {
 
 const configurations = [1, 2, 3, 4, 5, 6].map(generateLevel);
 
-/* eslint-disable @typescript-eslint/camelcase */
 const ATOM_TEMPLATE: any = {
   layouts: configurations.map((d) => d.layout),
   mark: {
@@ -76,7 +75,6 @@ const ATOM_TEMPLATE: any = {
   },
   $schema: 'https://unit-vis.netlify.com/assets/unit-vis-schema.json',
 };
-/* eslint-enable @typescript-eslint/camelcase */
 
 const ATOM: Template = {
   templateName: 'AtomExplore',

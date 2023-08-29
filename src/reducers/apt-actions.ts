@@ -15,7 +15,7 @@ export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payloa
   const templateMap: TemplateMap = state.templateMap;
   const column = getOrMakeColumn(payload.field, state.columns, template.customCards || []);
   const allowedWidgets = toSet(applyQueries(template, templateMap));
-  const widgets = template.widgets.filter(widget => allowedWidgets.has(widget.name));
+  const widgets = template.widgets.filter((widget) => allowedWidgets.has(widget.name));
   const openDropTargets = widgets
     // select just the open drop targets
     .filter((widget: GenWidget) => widget.type === 'DataTarget' && !templateMap.paramValues[widget.name])
@@ -42,10 +42,13 @@ export const addToNextOpenSlot: ActionResponse<{field: string}> = (state, payloa
   });
 
   // created sorted list, this enable user defined list to define auto add algorithm
-  const widgetIndex = template.widgets.reduce((acc, widget, idx) => {
-    acc[widget.name] = idx;
-    return acc;
-  }, {} as {[x: string]: number});
+  const widgetIndex = template.widgets.reduce(
+    (acc, widget, idx) => {
+      acc[widget.name] = idx;
+      return acc;
+    },
+    {} as {[x: string]: number},
+  );
   const targets = []
     .concat(openDropTargets)
     .concat(openMultiDropTargets)

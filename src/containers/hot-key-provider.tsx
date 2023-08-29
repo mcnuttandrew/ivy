@@ -24,15 +24,8 @@ interface RootProps extends ActionUser {
 }
 
 function HotKeyProvider(props: RootProps): JSX.Element {
-  const {
-    canRedo,
-    canUndo,
-    fillTemplateMapWithDefaults,
-    openModal,
-    setModalState,
-    triggerRedo,
-    triggerUndo,
-  } = props;
+  const {canRedo, canUndo, fillTemplateMapWithDefaults, openModal, setModalState, triggerRedo, triggerUndo} =
+    props;
   const withSay = (func: any, name: string) => (): any => {
     log('hotkey', name);
     func();

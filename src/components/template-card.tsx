@@ -66,7 +66,7 @@ const combos = [
 
 function combosToMessages(typeCounts: TypeCounts): JSX.Element[] {
   return combos
-    .filter(d => typeCounts[d] > 0)
+    .filter((d) => typeCounts[d] > 0)
     .map((key: string) => {
       return (
         <HoverTooltip
@@ -83,10 +83,7 @@ function combosToMessages(typeCounts: TypeCounts): JSX.Element[] {
 }
 function computeLinesOfCode(template: Template): number {
   const bodyLines = template.code.trim().split('\n').length;
-  const templateWithoutBodyLines =
-    serializeTemplate(template)
-      .trim()
-      .split('\n').length - 1;
+  const templateWithoutBodyLines = serializeTemplate(template).trim().split('\n').length - 1;
   return bodyLines + templateWithoutBodyLines;
 }
 export function RenderTypeCounts(template: Template): JSX.Element {
@@ -106,7 +103,7 @@ export function RenderTypeCounts(template: Template): JSX.Element {
           )}
           {!maxMessages.length && (
             <div className="margin-left">
-              {template.widgets.find(d => new Set(['DataTarget', 'MultiDataTarget']).has(d.type))
+              {template.widgets.find((d) => new Set(['DataTarget', 'MultiDataTarget']).has(d.type))
                 ? '∞'
                 : 'None'}
             </div>

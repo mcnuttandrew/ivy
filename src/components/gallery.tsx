@@ -3,7 +3,6 @@ import {GenericAction, SetWidgetValuePayload} from '../actions/index';
 import {Template, TemplateMap, ColumnHeader} from '../types';
 import TemplateCard from './template-card';
 import {DEFAULT_TEMPLATES} from '../templates';
-import {FETCH_PARMS} from '../constants';
 import {searchDimensionsCanMatch, buildCounts, searchPredicate, trim, toSection} from '../utils';
 import {writeGallerySectionPref, getGallerySectionPref} from '../utils/local-storage';
 import {getTemplates} from '../utils/api';

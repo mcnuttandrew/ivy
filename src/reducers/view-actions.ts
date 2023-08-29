@@ -15,7 +15,7 @@ function updateCatalogView(state: AppState, view: string): AppState {
     templateMap: state.templateMap,
     currentTemplateInstance: state.currentTemplateInstance,
   };
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     draftState.viewCatalog[view] = catalogEntry;
   });
 }
@@ -25,7 +25,7 @@ export const switchView: ActionResponse<string> = (state, payload) => {
   if (!catalogEntry) {
     return state;
   }
-  return produce(updateCatalogView(state, state.currentView), draftState => {
+  return produce(updateCatalogView(state, state.currentView), (draftState) => {
     draftState.currentView = payload;
     draftState.encodingMode = catalogEntry.encodingMode;
     draftState.currentTemplateInstance = catalogEntry.currentTemplateInstance;
@@ -33,9 +33,9 @@ export const switchView: ActionResponse<string> = (state, payload) => {
   });
 };
 
-export const createNewView: ActionResponse<void> = state => {
+export const createNewView: ActionResponse<void> = (state) => {
   const newViewName = `view${state.views.length + 1}`;
-  const newState = produce(state, draftState => {
+  const newState = produce(state, (draftState) => {
     draftState.views = state.views.concat(newViewName);
     draftState.viewCatalog[newViewName] = BLANK_CATALOG_ENTRY;
   });
@@ -43,14 +43,14 @@ export const createNewView: ActionResponse<void> = state => {
 };
 export const deleteView: ActionResponse<string> = (state, payload) => {
   // todo maybe need to update view catalog here?
-  return produce(state, draftState => {
-    draftState.views = state.views.filter(view => view !== payload);
+  return produce(state, (draftState) => {
+    draftState.views = state.views.filter((view) => view !== payload);
     delete draftState.viewCatalog[payload];
   });
 };
 
 export const changeViewName: ActionResponse<{idx: number; value: string}> = (state, {idx, value}) => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     const oldViewName = draftState.views[idx];
     draftState.viewCatalog[value] = draftState.viewCatalog[oldViewName];
     delete draftState.viewCatalog[draftState.views[idx]];
@@ -61,10 +61,10 @@ export const changeViewName: ActionResponse<{idx: number; value: string}> = (sta
   });
 };
 
-export const cloneView: ActionResponse<void> = state => {
+export const cloneView: ActionResponse<void> = (state) => {
   const newViewName = `view${state.views.length + 1}`;
   const updatedState = updateCatalogView(state, state.currentView);
-  const newState = produce(state, draftState => {
+  const newState = produce(state, (draftState) => {
     draftState.views = updatedState.views.concat(newViewName);
     draftState.viewCatalog[newViewName] = updatedState.viewCatalog[state.currentView];
   });

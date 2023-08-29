@@ -79,23 +79,23 @@ function inferFieldTransformationSuggestions(
   // if fields are use as a value they are likely being used like [FIELDNAME]": "[key]
   // ignore column names that are in there
   const likelyFields = possibleFields.filter(
-    key =>
+    (key) =>
       (code.includes(`": "${key}`) || code.includes(`":"${key}`)) &&
       !widgetNames.has(key) &&
       !widgetNames.has(targetTrim(key)),
   );
-  const dropTargets = widgets.filter(widget => widget.type === 'DataTarget').map(widget => widget.name);
+  const dropTargets = widgets.filter((widget) => widget.type === 'DataTarget').map((widget) => widget.name);
 
   const suggestions = likelyFields.reduce((acc: Suggestion[], from) => {
     if (widgetNames.has(`[${from}]`)) {
       return acc;
     }
-    const fieldPresentInData = columns.find(col => col.field === from);
+    const fieldPresentInData = columns.find((col) => col.field === from);
     // suggest setting the found field to all of the existing widgets
     dropTargets.forEach((to: string) => acc.push(buildSuggest(from, to)));
 
     // suggest creating a new widget
-    const containsFromNameAlready = !widgets.every(widget => widget.name !== from);
+    const containsFromNameAlready = !widgets.every((widget) => widget.name !== from);
     const suggestedNewWidgetName = !containsFromNameAlready ? from : `Var${widgets.length + 1}`;
     acc.push({
       from: `"${from}"`,
@@ -111,7 +111,7 @@ function inferFieldTransformationSuggestions(
         to: `"[${suggestedNewWidgetName}]"`,
         comment: `Create a new datatarget with name ${suggestedNewWidgetName} and set it to ${suggestedNewWidgetName}`,
         simpleReplace: false,
-        sideEffect: setTemplateValues => {
+        sideEffect: (setTemplateValues) => {
           setTemplateValues({
             paramValues: {[suggestedNewWidgetName]: `"${from}"`},
             systemValues: {viewsToMaterialize: {}, dataTransforms: []},
