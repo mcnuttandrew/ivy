@@ -2,7 +2,8 @@ import {LanguageExtension} from '../types';
 import stringify from '../utils/stringify';
 import * as x from 'vega-projection-extended';
 // necessary footwork to force the projections to be imported
-// @ts-ignore eslint-ignore-nextline
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const yx = x;
 
 import React from 'react';
