@@ -31,6 +31,10 @@ export function getTemplates(): Promise<Template[]> {
     );
 }
 
+export function logUser(userName: string) {
+  return fetch(`.netlify/functions/user-log/${userName}`, FETCH_PARMS as any);
+}
+
 export function getTemplate(templateAuthor: string, templateName: string): Promise<Template> {
   return new Promise((resolve, reject) => {
     const foundTemplate = DEFAULT_TEMPLATES.find(
