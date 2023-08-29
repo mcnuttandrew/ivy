@@ -36,7 +36,7 @@ function FreeTextWidgetComponent(props: GeneralWidget<FreeTextWidget>): JSX.Elem
   return (
     <div className="flex free-text-widget">
       <div className="widget-title">{widgetName(widget, editMode)}</div>
-            {/* @ts-ignore */}
+      {/* @ts-ignore */}
       <IgnoreKeys style={{height: '100%'}}>
         {!widget.config.useParagraph && <input aria-label={`${widget.name} text box`} {...inputProps} />}
         {widget.config.useParagraph && <textarea aria-label={`${widget.name} text box`} {...inputProps} />}

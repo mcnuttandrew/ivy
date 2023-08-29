@@ -19,7 +19,7 @@ function SwitchWidgetConfiguration(props: GeneralWidget<SwitchWidget>): JSX.Elem
       </div>
       <div className="flex">
         <AddLabelToWidget label={'Default'}>
-            {/* @ts-ignore */}
+          {/* @ts-ignore */}
           <Switch
             {...switchCommon}
             checked={!!config.defaultsToActive}

@@ -19,7 +19,7 @@ function DateFilter({filter, updateFilter}: Props): JSX.Element {
   } = filter;
   return (
     <div className="flex-down">
-                {/* @ts-ignore */}
+      {/* @ts-ignore */}
       <IgnoreKeys style={{height: '100%'}}>
         <div className="flex">
           <span>Start</span>
@@ -45,7 +45,7 @@ function MeasureFilter({filter, column, updateFilter}: Props): JSX.Element {
   const {domain} = column;
   return (
     <div className="flex-down">
-        {/* @ts-ignore */}
+      {/* @ts-ignore */}
       <IgnoreKeys style={{height: '100%'}}>
         <div className="grid">
           <span className="grid-col-1">min</span>

@@ -264,7 +264,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
               </AddLabelToWidget>
               <AddLabelToWidget label={'Disallow Fan Out'}>
                 <span className="flex">
-                    {/* @ts-ignore */}
+                  {/* @ts-ignore */}
                   <Switch
                     {...switchCommon}
                     checked={!!template.disallowFanOut}

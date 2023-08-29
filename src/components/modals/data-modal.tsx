@@ -53,7 +53,7 @@ export default function DataModal(props: Props): JSX.Element {
       <div className="flex space-between">
         <h3>Predefined Datasets</h3>
         <div>
-                    {/* @ts-ignore */}
+          {/* @ts-ignore */}
           <IgnoreKeys style={{height: '100%'}}>
             <input
               type="text"
