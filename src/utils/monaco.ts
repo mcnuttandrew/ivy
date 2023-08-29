@@ -1,5 +1,5 @@
 // Cribbed from vega-editor
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {parse as parseJSONC} from 'jsonc-parser';
 // import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {mergeDeep} from 'vega-lite/build/src/util';

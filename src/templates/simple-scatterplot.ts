@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
 
@@ -11,7 +11,7 @@ const SCATTERPLOT: Template = {
       name: 'colorType',
       type: 'List',
       config: {
-        allowedValues: ['"quantitative"', '"ordinal"'].map(x => ({display: x, value: x})),
+        allowedValues: ['"quantitative"', '"ordinal"'].map((x) => ({display: x, value: x})),
         defaultValue: '"ordinal"',
       },
       conditions: [{query: '!parameters.Color', queryResult: 'hide'}],
@@ -20,7 +20,7 @@ const SCATTERPLOT: Template = {
       name: 'Single Color',
       type: 'List',
       config: {
-        allowedValues: ['"steelblue"', '"blue"', '"red"'].map(x => ({display: x, value: x})),
+        allowedValues: ['"steelblue"', '"blue"', '"red"'].map((x) => ({display: x, value: x})),
         defaultValue: '"steelblue"',
       },
       conditions: [{query: 'parameters.Color', queryResult: 'hide'}],

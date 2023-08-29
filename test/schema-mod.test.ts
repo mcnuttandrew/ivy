@@ -1,11 +1,9 @@
 import {modifyJSONSchema} from '../src/ivy-lang';
 
-import Ajv from 'ajv';
-import polestarTemplate from '../src/templates/polestar-template';
+import * as Ajv from 'ajv';
 /* eslint-disable @typescript-eslint/no-var-requires */
 const draft6Schema = require('ajv/lib/refs/json-schema-draft-06.json');
 const vegaLiteSchema = require('vega-lite/build/vega-lite-schema.json');
-const unitVisSchema = require('unit-vis/unit-vis-schema.json');
 /* eslint-enable @typescript-eslint/no-var-requires */
 // const valid = ajv.validate(vegaLiteSchema, polestarTemplate.code);
 const ajv = new Ajv({
@@ -59,7 +57,7 @@ const EXAMPLE_VL_SCHEMA_MODIFIED_INTERPOLANT: any = {
   encoding: {x: {field: 'a', type: '[xType]'}, y: {field: 'b', type: '[yType]'}},
 };
 
-test('#modifyJSONSchema', async function() {
+test('#modifyJSONSchema', async function () {
   const vlSchema = modifyJSONSchema(vegaLiteSchema);
   //   console.log(JSON.stringify(vlSchema, null, 2));
   // catches unused invalid top level key

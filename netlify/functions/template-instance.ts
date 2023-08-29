@@ -2,7 +2,6 @@ import {getOne, getParametersFromPath} from '../utils';
 
 function pathToQuery(path: string) {
   const params = getParametersFromPath(path);
-  console.log(params);
   const query = {
     template_name: params.name,
     template_creator: params.author,

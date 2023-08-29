@@ -1,5 +1,5 @@
 // WIP THIS ONE IS HARD
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
 const cols = [0, 1, 2, 3, 4, 5];
@@ -25,14 +25,14 @@ const RADAR: any = {
       transform: [
         {
           type: 'aggregate',
-          fields: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
+          fields: cols.map((idx) => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
           groupby: ['[ColorBy]'],
-          ops: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}Agg]`})),
-          as: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
+          ops: cols.map((idx) => ({$if: `parameters.Col${idx}`, true: `[Col${idx}Agg]`})),
+          as: cols.map((idx) => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
         },
         {
           type: 'fold',
-          fields: cols.map(idx => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
+          fields: cols.map((idx) => ({$if: `parameters.Col${idx}`, true: `[Col${idx}]`})),
         },
       ],
     },
@@ -61,7 +61,7 @@ const RADAR: any = {
       domain: {data: 'table', field: 'value'},
       domainMin: 0,
     },
-    ...cols.map(idx => ({
+    ...cols.map((idx) => ({
       $if: `parameters.Col${idx}`,
       true: {
         name: `[Col${idx}]`,

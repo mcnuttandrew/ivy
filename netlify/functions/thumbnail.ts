@@ -6,8 +6,6 @@ const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017';
 const DB_NAME = 'ivy-be';
 
 export const handler: Handler = (event, context, callback) => {
-  errorResponse(callback, 'TEMPL BLOCK');
-  return;
   let params;
   try {
     params = getParametersFromPath(event.path);

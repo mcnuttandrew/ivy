@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
 /* eslint-disable @typescript-eslint/camelcase */

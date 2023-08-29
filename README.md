@@ -19,4 +19,3 @@ npm run start
 ```
 
 Currently netlify runs the deployed version (and remounts automatically on push). It is hosted at https://ivy-vis.netlify.com/
-See the [ivy server](https://github.com/mcnuttandrew/ivy-server) for instructions on how to set up the server part. 

@@ -1,10 +1,27 @@
-import {configure} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+class LocalStorageMock {
+  store: Record<string, string>;
+  constructor() {
+    this.store = {};
+  }
 
-require('jest-fetch-mock').enableMocks();
+  clear() {
+    this.store = {};
+  }
 
-configure({adapter: new Adapter()});
+  getItem(key) {
+    return this.store[key] || null;
+  }
+
+  setItem(key, value) {
+    this.store[key] = String(value);
+  }
+
+  removeItem(key) {
+    delete this.store[key];
+  }
+}
+
 // @ts-ignore
-HTMLCanvasElement.prototype.getContext = (): void => {
-  // return whatever getContext has to return
-};
+global.localStorage = new LocalStorageMock();
+// @ts-ignore
+global.window = {};

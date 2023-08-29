@@ -1,38 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`#fillTemplateMapWithDefaults 1`] = `
-Object {
+{
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "config": Object {
-    "mark": Object {
+  "config": {
+    "mark": {
       "invalid": null,
     },
   },
-  "layer": Array [
-    Object {
-      "encoding": Object {
-        "color": Object {
-          "condition": Object {
-            "test": "datum[\\"null\\"] === null || datum[\\"null\\"] === null",
+  "layer": [
+    {
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum["null"] === null || datum["null"] === null",
             "value": "#aaa",
           },
         },
-        "x": Object {
+        "x": {
           "field": null,
-          "scale": Object {
+          "scale": {
             "zero": true,
           },
           "type": "quantitative",
         },
-        "y": Object {
+        "y": {
           "field": null,
-          "scale": Object {
+          "scale": {
             "zero": true,
           },
           "type": "quantitative",
         },
       },
-      "mark": Object {
+      "mark": {
         "color": "steelblue",
         "size": 15,
         "tooltip": true,
@@ -44,58 +44,58 @@ Object {
 `;
 
 exports[`#fillTemplateMapWithDefaults 2`] = `
-Object {
-  "paramValues": Object {
+{
+  "paramValues": {
     "Color": null,
     "Radius": 15,
-    "Single Color": "\\"steelblue\\"",
+    "Single Color": ""steelblue"",
     "Zeroes": "true",
-    "colorType": "\\"ordinal\\"",
+    "colorType": ""ordinal"",
     "showBand": "false",
     "showNulls": "true",
     "xDim": null,
-    "xType": "\\"quantitative\\"",
+    "xType": ""quantitative"",
     "yDim": null,
-    "yType": "\\"quantitative\\"",
+    "yType": ""quantitative"",
   },
-  "systemValues": Object {
-    "dataTransforms": Array [],
-    "viewsToMaterialize": Object {},
+  "systemValues": {
+    "dataTransforms": [],
+    "viewsToMaterialize": {},
   },
 }
 `;
 
 exports[`#fillTemplateMapWithDefaults 3`] = `
-Object {
+{
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "autosize": "fit",
-  "data": Array [
-    Object {
+  "data": [
+    {
       "name": "table",
-      "transform": Array [
-        Object {
-          "as": Array [
+      "transform": [
+        {
+          "as": [
             "pieAg",
           ],
-          "fields": Array [
+          "fields": [
             null,
           ],
-          "groupby": Array [
+          "groupby": [
             null,
           ],
-          "ops": Array [
+          "ops": [
             "mean",
           ],
           "type": "aggregate",
         },
-        Object {
+        {
           "endAngle": 6.29,
           "field": "pieAg",
           "sort": true,
           "startAngle": 0,
           "type": "pie",
         },
-        Object {
+        {
           "as": "tooltip",
           "expr": "datum['null'] + ': ' + datum.pieAg",
           "type": "formula",
@@ -105,120 +105,120 @@ Object {
     },
   ],
   "height": 200,
-  "marks": Array [
-    Object {
-      "encode": Object {
-        "enter": Object {
-          "cornerRadius": Object {
+  "marks": [
+    {
+      "encode": {
+        "enter": {
+          "cornerRadius": {
             "value": 0,
           },
-          "endAngle": Object {
+          "endAngle": {
             "field": "endAngle",
           },
-          "fill": Object {
+          "fill": {
             "field": null,
             "scale": "color",
           },
-          "innerRadius": Object {
+          "innerRadius": {
             "value": 60,
           },
-          "outerRadius": Object {
+          "outerRadius": {
             "signal": "width / 2",
           },
-          "startAngle": Object {
+          "startAngle": {
             "field": "startAngle",
           },
-          "tooltip": Object {
+          "tooltip": {
             "field": "tooltip",
           },
-          "x": Object {
+          "x": {
             "signal": "width / 2",
           },
-          "y": Object {
+          "y": {
             "signal": "height / 2",
           },
         },
       },
-      "from": Object {
+      "from": {
         "data": "table",
       },
       "type": "arc",
     },
-    Object {
-      "encode": Object {
-        "enter": Object {
-          "align": Object {
+    {
+      "encode": {
+        "enter": {
+          "align": {
             "value": "center",
           },
-          "baseline": Object {
+          "baseline": {
             "value": "middle",
           },
-          "fill": Object {
+          "fill": {
             "value": "#000",
           },
-          "radius": Object {
+          "radius": {
             "scale": "placement",
             "value": 1.3,
           },
-          "text": Object {
+          "text": {
             "field": null,
           },
-          "theta": Object {
+          "theta": {
             "signal": "(datum.startAngle + datum.endAngle)/2",
           },
-          "x": Object {
-            "field": Object {
+          "x": {
+            "field": {
               "group": "width",
             },
             "mult": 0.5,
           },
-          "y": Object {
-            "field": Object {
+          "y": {
+            "field": {
               "group": "height",
             },
             "mult": 0.5,
           },
         },
       },
-      "from": Object {
+      "from": {
         "data": "table",
       },
       "type": "text",
     },
   ],
   "padding": 50,
-  "scales": Array [
-    Object {
-      "domain": Object {
+  "scales": [
+    {
+      "domain": {
         "data": "table",
         "field": null,
       },
       "name": "color",
-      "range": Object {
+      "range": {
         "scheme": "category20",
       },
       "type": "ordinal",
     },
-    Object {
-      "domain": Array [
+    {
+      "domain": [
         0,
         1,
       ],
       "name": "r",
-      "range": Array [
+      "range": [
         20,
         100,
       ],
       "type": "sqrt",
       "zero": false,
     },
-    Object {
-      "domain": Array [
+    {
+      "domain": [
         0,
         1,
       ],
       "name": "placement",
-      "range": Array [
+      "range": [
         20,
         100,
       ],
@@ -231,167 +231,167 @@ Object {
 `;
 
 exports[`#fillTemplateMapWithDefaults 4`] = `
-Object {
-  "paramValues": Object {
+{
+  "paramValues": {
     "DonutChart": "60",
     "Sort": "true",
-    "aggregate": "\\"mean\\"",
+    "aggregate": ""mean"",
     "category": null,
-    "colorScheme": "\\"category20\\"",
-    "radialAggregate": "\\"mean\\"",
+    "colorScheme": ""category20"",
+    "radialAggregate": ""mean"",
     "radialValue": null,
     "value": null,
   },
-  "systemValues": Object {
-    "dataTransforms": Array [],
-    "viewsToMaterialize": Object {},
+  "systemValues": {
+    "dataTransforms": [],
+    "viewsToMaterialize": {},
   },
 }
 `;
 
 exports[`#fillTemplateMapWithDefaults 5`] = `
-Object {
+{
   "$schema": "data-table",
-  "columns": Array [],
+  "columns": [],
 }
 `;
 
 exports[`#fillTemplateMapWithDefaults 6`] = `
-Object {
-  "paramValues": Object {
-    "columns": Array [],
+{
+  "paramValues": {
+    "columns": [],
   },
-  "systemValues": Object {
-    "dataTransforms": Array [],
-    "viewsToMaterialize": Object {},
+  "systemValues": {
+    "dataTransforms": [],
+    "viewsToMaterialize": {},
   },
 }
 `;
 
 exports[`#setTemplateValues 1`] = `
 "{
-  \\"$schema\\": \\"https://vega.github.io/schema/vega/v5.json\\",
-  \\"width\\": 200,
-  \\"height\\": 200,
-  \\"padding\\": 50,
-  \\"autosize\\": \\"fit\\",
-  \\"data\\": [
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 200,
+  "height": 200,
+  "padding": 50,
+  "autosize": "fit",
+  "data": [
     {
-      \\"name\\": \\"table\\",
-      \\"values\\": \\"myData\\",
-      \\"transform\\": [
+      "name": "table",
+      "values": "myData",
+      "transform": [
         {
-          \\"type\\": \\"aggregate\\",
-          \\"groupby\\": [\\"CATEGORY_TEST\\"],
-          \\"fields\\": [
-            \\"VALUE_TEST\\",
+          "type": "aggregate",
+          "groupby": ["CATEGORY_TEST"],
+          "fields": [
+            "VALUE_TEST",
             {
-              \\"$cond\\": {
-                \\"query\\": \\"parameters.radialValue\\",
-                \\"true\\": \\"[radialValue]\\"
+              "$cond": {
+                "query": "parameters.radialValue",
+                "true": "[radialValue]"
               }
             }
           ],
-          \\"ops\\": [
-            \\"[aggregate]\\",
+          "ops": [
+            "[aggregate]",
             {
-              \\"$cond\\": {
-                \\"query\\": \\"parameters.radialValue\\",
-                \\"true\\": \\"[radialAggregate]\\"
+              "$cond": {
+                "query": "parameters.radialValue",
+                "true": "[radialAggregate]"
               }
             }
           ],
-          \\"as\\": [
-            \\"pieAg\\",
-            {\\"$cond\\": {\\"query\\": \\"parameters.radialValue\\", \\"true\\": \\"radAgg\\"}}
+          "as": [
+            "pieAg",
+            {"$cond": {"query": "parameters.radialValue", "true": "radAgg"}}
           ]
         },
         {
-          \\"type\\": \\"pie\\",
-          \\"field\\": \\"pieAg\\",
-          \\"startAngle\\": 0,
-          \\"endAngle\\": 6.29,
-          \\"sort\\": \\"[Sort]\\"
+          "type": "pie",
+          "field": "pieAg",
+          "startAngle": 0,
+          "endAngle": 6.29,
+          "sort": "[Sort]"
         },
         {
-          \\"type\\": \\"formula\\",
-          \\"expr\\": {
-            \\"$cond\\": {
-              \\"query\\": \\"parameters.radialValue\\",
-              \\"true\\": \\"{'CATEGORY_TEST': datum['CATEGORY_TEST'], 'VALUE_TEST': datum.pieAg, '[radialValue]': datum.radAgg}\\",
-              \\"false\\": \\"datum['CATEGORY_TEST'] + ': ' + datum.pieAg\\"
+          "type": "formula",
+          "expr": {
+            "$cond": {
+              "query": "parameters.radialValue",
+              "true": "{'CATEGORY_TEST': datum['CATEGORY_TEST'], 'VALUE_TEST': datum.pieAg, '[radialValue]': datum.radAgg}",
+              "false": "datum['CATEGORY_TEST'] + ': ' + datum.pieAg"
             }
           },
-          \\"as\\": \\"tooltip\\"
+          "as": "tooltip"
         }
       ]
     }
   ],
-  \\"scales\\": [
+  "scales": [
     {
-      \\"name\\": \\"color\\",
-      \\"type\\": \\"ordinal\\",
-      \\"domain\\": {\\"data\\": \\"table\\", \\"field\\": \\"CATEGORY_TEST\\"},
-      \\"range\\": {\\"scheme\\": \\"[colorScheme]\\"}
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "table", "field": "CATEGORY_TEST"},
+      "range": {"scheme": "[colorScheme]"}
     },
     {
-      \\"name\\": \\"r\\",
-      \\"type\\": \\"sqrt\\",
-      \\"domain\\": {
-        \\"$cond\\": {
-          \\"query\\": \\"parameters.radialValue\\",
-          \\"true\\": {\\"data\\": \\"table\\", \\"field\\": \\"radAgg\\"},
-          \\"false\\": [0, 1]
+      "name": "r",
+      "type": "sqrt",
+      "domain": {
+        "$cond": {
+          "query": "parameters.radialValue",
+          "true": {"data": "table", "field": "radAgg"},
+          "false": [0, 1]
         }
       },
-      \\"zero\\": false,
-      \\"range\\": [20, 100]
+      "zero": false,
+      "range": [20, 100]
     },
     {
-      \\"name\\": \\"placement\\",
-      \\"type\\": \\"sqrt\\",
-      \\"domain\\": [0, 1],
-      \\"zero\\": false,
-      \\"range\\": [20, 100]
+      "name": "placement",
+      "type": "sqrt",
+      "domain": [0, 1],
+      "zero": false,
+      "range": [20, 100]
     }
   ],
-  \\"marks\\": [
+  "marks": [
     {
-      \\"type\\": \\"arc\\",
-      \\"from\\": {\\"data\\": \\"table\\"},
-      \\"encode\\": {
-        \\"enter\\": {
-          \\"fill\\": {\\"scale\\": \\"color\\", \\"field\\": \\"CATEGORY_TEST\\"},
-          \\"x\\": {\\"signal\\": \\"width / 2\\"},
-          \\"y\\": {\\"signal\\": \\"height / 2\\"},
-          \\"startAngle\\": {\\"field\\": \\"startAngle\\"},
-          \\"endAngle\\": {\\"field\\": \\"endAngle\\"},
-          \\"innerRadius\\": {\\"value\\": \\"[DonutChart]\\"},
-          \\"outerRadius\\": {
-            \\"$cond\\": {
-              \\"query\\": \\"parameters.radialValue\\",
-              \\"true\\": {\\"scale\\": \\"r\\", \\"field\\": \\"radAgg\\"},
-              \\"false\\": {\\"signal\\": \\"width / 2\\"}
+      "type": "arc",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "color", "field": "CATEGORY_TEST"},
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"},
+          "startAngle": {"field": "startAngle"},
+          "endAngle": {"field": "endAngle"},
+          "innerRadius": {"value": "[DonutChart]"},
+          "outerRadius": {
+            "$cond": {
+              "query": "parameters.radialValue",
+              "true": {"scale": "r", "field": "radAgg"},
+              "false": {"signal": "width / 2"}
             }
           },
-          \\"cornerRadius\\": {\\"value\\": 0},
-          \\"tooltip\\": {\\"field\\": \\"tooltip\\"}
+          "cornerRadius": {"value": 0},
+          "tooltip": {"field": "tooltip"}
         }
       }
     },
     {
-      \\"type\\": \\"text\\",
-      \\"from\\": {\\"data\\": \\"table\\"},
-      \\"encode\\": {
-        \\"enter\\": {
-          \\"x\\": {\\"field\\": {\\"group\\": \\"width\\"}, \\"mult\\": 0.5},
-          \\"y\\": {\\"field\\": {\\"group\\": \\"height\\"}, \\"mult\\": 0.5},
-          \\"radius\\": {\\"scale\\": \\"placement\\", \\"value\\": 1.3},
-          \\"theta\\": {\\"signal\\": \\"(datum.startAngle + datum.endAngle)/2\\"},
-          \\"fill\\": {\\"value\\": \\"#000\\"},
-          \\"align\\": {\\"value\\": \\"center\\"},
-          \\"baseline\\": {\\"value\\": \\"middle\\"},
-          \\"text\\": {\\"field\\": \\"CATEGORY_TEST\\"}
+      "type": "text",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"field": {"group": "width"}, "mult": 0.5},
+          "y": {"field": {"group": "height"}, "mult": 0.5},
+          "radius": {"scale": "placement", "value": 1.3},
+          "theta": {"signal": "(datum.startAngle + datum.endAngle)/2"},
+          "fill": {"value": "#000"},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "text": {"field": "CATEGORY_TEST"}
         }
       }
     }
@@ -401,192 +401,192 @@ exports[`#setTemplateValues 1`] = `
 
 exports[`#setTemplateValues 2`] = `
 "{
-  \\"$schema\\": \\"https://vega.github.io/schema/vega-lite/v4.json\\",
-  \\"layer\\": [
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "layer": [
     {
-      \\"$if\\": \\"parameters.showBand.includes(\\\\\\"true\\\\\\")\\",
-      \\"true\\": {
-        \\"mark\\": {\\"type\\": \\"errorband\\", \\"extent\\": \\"stdev\\", \\"opacity\\": 0.2},
-        \\"encoding\\": {\\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"quantitative\\"}}
+      "$if": "parameters.showBand.includes(\\"true\\")",
+      "true": {
+        "mark": {"type": "errorband", "extent": "stdev", "opacity": 0.2},
+        "encoding": {"y": {"field": "yDim_TEST", "type": "quantitative"}}
       }
     },
     {
-      \\"$if\\": \\"parameters.showBand.includes(\\\\\\"true\\\\\\")\\",
-      \\"true\\": {
-        \\"mark\\": \\"rule\\",
-        \\"encoding\\": {
-          \\"y\\": {\\"field\\": \\"yDim_TEST\\", \\"type\\": \\"quantitative\\", \\"aggregate\\": \\"mean\\"}
+      "$if": "parameters.showBand.includes(\\"true\\")",
+      "true": {
+        "mark": "rule",
+        "encoding": {
+          "y": {"field": "yDim_TEST", "type": "quantitative", "aggregate": "mean"}
         }
       }
     },
     {
-      \\"mark\\": {
-        \\"type\\": \\"point\\",
-        \\"tooltip\\": true,
-        \\"size\\": \\"[Radius]\\",
-        \\"color\\": {
-          \\"$if\\": \\"!parameters.Color\\",
-          \\"true\\": \\"[Single Color]\\",
-          \\"false\\": null
+      "mark": {
+        "type": "point",
+        "tooltip": true,
+        "size": "[Radius]",
+        "color": {
+          "$if": "!parameters.Color",
+          "true": "[Single Color]",
+          "false": null
         }
       },
-      \\"encoding\\": {
-        \\"x\\": {
-          \\"field\\": \\"xDim_TEST\\",
-          \\"type\\": \\"[xType]\\",
-          \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}
+      "encoding": {
+        "x": {
+          "field": "xDim_TEST",
+          "type": "[xType]",
+          "scale": {"zero": "[Zeroes]"}
         },
-        \\"y\\": {
-          \\"field\\": \\"yDim_TEST\\",
-          \\"type\\": \\"[yType]\\",
-          \\"scale\\": {\\"zero\\": \\"[Zeroes]\\"}
+        "y": {
+          "field": "yDim_TEST",
+          "type": "[yType]",
+          "scale": {"zero": "[Zeroes]"}
         },
-        \\"color\\": {
-          \\"condition\\": {
-            \\"test\\": \\"datum[\\\\\\"xDim_TEST\\\\\\"] === null || datum[\\\\\\"yDim_TEST\\\\\\"] === null\\",
-            \\"value\\": \\"#aaa\\"
+        "color": {
+          "condition": {
+            "test": "datum[\\"xDim_TEST\\"] === null || datum[\\"yDim_TEST\\"] === null",
+            "value": "#aaa"
           },
-          \\"field\\": {\\"$if\\": \\"parameters.Color\\", \\"true\\": \\"[Color]\\"},
-          \\"type\\": {\\"$if\\": \\"parameters.Color\\", \\"true\\": \\"[colorType]\\"}
+          "field": {"$if": "parameters.Color", "true": "[Color]"},
+          "type": {"$if": "parameters.Color", "true": "[colorType]"}
         }
       }
     }
   ],
-  \\"config\\": {
-    \\"$if\\": \\"parameters.showNulls.includes(\\\\\\"true\\\\\\")\\",
-    \\"true\\": {\\"mark\\": {\\"invalid\\": null}}
+  "config": {
+    "$if": "parameters.showNulls.includes(\\"true\\")",
+    "true": {"mark": {"invalid": null}}
   }
 }"
 `;
 
 exports[`#setTemplateValues 3`] = `
 "{
-  \\"$schema\\": \\"data-table\\",
-  \\"columns\\": [\\"\\\\\\"xDim_TEST\\\\\\"\\",\\"\\\\\\"yDim_TEST\\\\\\"\\"]
+  "$schema": "data-table",
+  "columns": ["\\"xDim_TEST\\"","\\"yDim_TEST\\""]
 }"
 `;
 
 exports[`#setTemplateValues 4`] = `
 "
 {
-\\"$schema\\": \\"https://vega.github.io/schema/vega-lite/v4.json\\",
-\\"config\\": {\\"view\\": {\\"stroke\\": \\"\\"}},
-\\"width\\": 400,
-\\"height\\": 400,
-\\"data\\": {\\"name\\": \\"myData\\"},
-\\"transform\\": [
+"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+"config": {"view": {"stroke": ""}},
+"width": 400,
+"height": 400,
+"data": {"name": "myData"},
+"transform": [
 {
-\\"window\\": [{\\"op\\": \\"row_number\\", \\"as\\": \\"id\\"}],
-\\"sort\\": [{\\"field\\": Example}]
+"window": [{"op": "row_number", "as": "id"}],
+"sort": [{"field": Example}]
 },
-{\\"calculate\\": \\"ceil (datum.id / 5)\\", \\"as\\": \\"col\\"},
-{\\"calculate\\": \\"datum.id - datum.col * 5\\", \\"as\\": \\"row\\"}
+{"calculate": "ceil (datum.id / 5)", "as": "col"},
+{"calculate": "datum.id - datum.col * 5", "as": "row"}
 ],
-\\"mark\\": {\\"type\\": \\"point\\", \\"filled\\": true},
-\\"encoding\\": {
-\\"x\\": {\\"field\\": \\"col\\", \\"type\\": \\"ordinal\\", \\"axis\\": null},
-\\"y\\": {\\"field\\": \\"row\\", \\"type\\": \\"ordinal\\", \\"axis\\": null},
-\\"shape\\": {
-\\"value\\": \\"M1.7 -1.7h-0.8c0.3 -0.2 0.6 -0.5 0.6 -0.9c0 -0.6 -0.4 -1 -1 -1c-0.6 0 -1 0.4 -1 1c0 0.4 0.2 0.7 0.6 0.9h-0.8c-0.4 0 -0.7 0.3 -0.7 0.6v1.9c0 0.3 0.3 0.6 0.6 0.6h0.2c0 0 0 0.1 0 0.1v1.9c0 0.3 0.2 0.6 0.3 0.6h1.3c0.2 0 0.3 -0.3 0.3 -0.6v-1.8c0 0 0 -0.1 0 -0.1h0.2c0.3 0 0.6 -0.3 0.6 -0.6v-2c0.2 -0.3 -0.1 -0.6 -0.4 -0.6z\\"
+"mark": {"type": "point", "filled": true},
+"encoding": {
+"x": {"field": "col", "type": "ordinal", "axis": null},
+"y": {"field": "row", "type": "ordinal", "axis": null},
+"shape": {
+"value": "M1.7 -1.7h-0.8c0.3 -0.2 0.6 -0.5 0.6 -0.9c0 -0.6 -0.4 -1 -1 -1c-0.6 0 -1 0.4 -1 1c0 0.4 0.2 0.7 0.6 0.9h-0.8c-0.4 0 -0.7 0.3 -0.7 0.6v1.9c0 0.3 0.3 0.6 0.6 0.6h0.2c0 0 0 0.1 0 0.1v1.9c0 0.3 0.2 0.6 0.3 0.6h1.3c0.2 0 0.3 -0.3 0.3 -0.6v-1.8c0 0 0 -0.1 0 -0.1h0.2c0.3 0 0.6 -0.3 0.6 -0.6v-2c0.2 -0.3 -0.1 -0.6 -0.4 -0.6z"
 },
-\\"color\\": {\\"field\\": Example, \\"type\\": \\"nominal\\", \\"scale\\": {\\"scheme\\": \\"set1\\"}},
-\\"opacity\\": {
-\\"condition\\": {\\"selection\\": \\"highlight\\", \\"value\\": 1},
-\\"value\\": 0.2
+"color": {"field": Example, "type": "nominal", "scale": {"scheme": "set1"}},
+"opacity": {
+"condition": {"selection": "highlight", "value": 1},
+"value": 0.2
 },
-\\"size\\": {\\"value\\": 60}
+"size": {"value": 60}
 },
-\\"selection\\": {\\"highlight\\": {\\"type\\": \\"interval\\"}}
+"selection": {"highlight": {"type": "interval"}}
 }"
 `;
 
 exports[`serialize/deserialize template 1`] = `
 "{
-  \\"$schema\\": \\"https://ivy-vis.netlify.com/assets/ivy.0.0.1.json\\",
-  \\"templateName\\": \\"pie chart\\",
-  \\"templateDescription\\": \\"A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.\\",
-  \\"templateAuthor\\": \\"Ivy Authors\\",
-  \\"templateLanguage\\": \\"vega\\",
-  \\"widgets\\": [
-    {\\"name\\": \\"category\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"DIMENSION\\"], \\"required\\": true}},
+  "$schema": "https://ivy-vis.netlify.com/assets/ivy.0.0.1.json",
+  "templateName": "pie chart",
+  "templateDescription": "A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.",
+  "templateAuthor": "Ivy Authors",
+  "templateLanguage": "vega",
+  "widgets": [
+    {"name": "category", "type": "DataTarget", "config": {"allowedTypes": ["DIMENSION"], "required": true}},
     {
-      \\"name\\": \\"Sort\\",
-      \\"type\\": \\"Switch\\",
-      \\"config\\": {\\"active\\": \\"true\\", \\"inactive\\": \\"false\\", \\"defaultsToActive\\": true}
+      "name": "Sort",
+      "type": "Switch",
+      "config": {"active": "true", "inactive": "false", "defaultsToActive": true}
     },
-    {\\"name\\": \\"value\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"MEASURE\\"], \\"required\\": true}},
+    {"name": "value", "type": "DataTarget", "config": {"allowedTypes": ["MEASURE"], "required": true}},
     {
-      \\"name\\": \\"aggregate\\",
-      \\"type\\": \\"List\\",
-      \\"config\\": {
-        \\"allowedValues\\": [
-          {\\"display\\": \\"count\\", \\"value\\": \\"\\\\\\"count\\\\\\"\\"},
-          {\\"display\\": \\"missing\\", \\"value\\": \\"\\\\\\"missing\\\\\\"\\"},
-          {\\"display\\": \\"distinct\\", \\"value\\": \\"\\\\\\"distinct\\\\\\"\\"},
-          {\\"display\\": \\"sum\\", \\"value\\": \\"\\\\\\"sum\\\\\\"\\"},
-          {\\"display\\": \\"mean\\", \\"value\\": \\"\\\\\\"mean\\\\\\"\\"},
-          {\\"display\\": \\"median\\", \\"value\\": \\"\\\\\\"median\\\\\\"\\"},
-          {\\"display\\": \\"min\\", \\"value\\": \\"\\\\\\"min\\\\\\"\\"},
-          {\\"display\\": \\"max\\", \\"value\\": \\"\\\\\\"max\\\\\\"\\"}
+      "name": "aggregate",
+      "type": "List",
+      "config": {
+        "allowedValues": [
+          {"display": "count", "value": "\\"count\\""},
+          {"display": "missing", "value": "\\"missing\\""},
+          {"display": "distinct", "value": "\\"distinct\\""},
+          {"display": "sum", "value": "\\"sum\\""},
+          {"display": "mean", "value": "\\"mean\\""},
+          {"display": "median", "value": "\\"median\\""},
+          {"display": "min", "value": "\\"min\\""},
+          {"display": "max", "value": "\\"max\\""}
         ],
-        \\"defaultValue\\": \\"\\\\\\"mean\\\\\\"\\"
+        "defaultValue": "\\"mean\\""
       }
     },
-    {\\"name\\": \\"radialValue\\", \\"type\\": \\"DataTarget\\", \\"config\\": {\\"allowedTypes\\": [\\"MEASURE\\"], \\"required\\": false}},
+    {"name": "radialValue", "type": "DataTarget", "config": {"allowedTypes": ["MEASURE"], "required": false}},
     {
-      \\"name\\": \\"radialAggregate\\",
-      \\"displayName\\": \\"aggregate\\",
-      \\"type\\": \\"List\\",
-      \\"config\\": {
-        \\"allowedValues\\": [
-          {\\"display\\": \\"count\\", \\"value\\": \\"\\\\\\"count\\\\\\"\\"},
-          {\\"display\\": \\"missing\\", \\"value\\": \\"\\\\\\"missing\\\\\\"\\"},
-          {\\"display\\": \\"distinct\\", \\"value\\": \\"\\\\\\"distinct\\\\\\"\\"},
-          {\\"display\\": \\"sum\\", \\"value\\": \\"\\\\\\"sum\\\\\\"\\"},
-          {\\"display\\": \\"mean\\", \\"value\\": \\"\\\\\\"mean\\\\\\"\\"},
-          {\\"display\\": \\"median\\", \\"value\\": \\"\\\\\\"median\\\\\\"\\"},
-          {\\"display\\": \\"min\\", \\"value\\": \\"\\\\\\"min\\\\\\"\\"},
-          {\\"display\\": \\"max\\", \\"value\\": \\"\\\\\\"max\\\\\\"\\"}
+      "name": "radialAggregate",
+      "displayName": "aggregate",
+      "type": "List",
+      "config": {
+        "allowedValues": [
+          {"display": "count", "value": "\\"count\\""},
+          {"display": "missing", "value": "\\"missing\\""},
+          {"display": "distinct", "value": "\\"distinct\\""},
+          {"display": "sum", "value": "\\"sum\\""},
+          {"display": "mean", "value": "\\"mean\\""},
+          {"display": "median", "value": "\\"median\\""},
+          {"display": "min", "value": "\\"min\\""},
+          {"display": "max", "value": "\\"max\\""}
         ],
-        \\"defaultValue\\": \\"\\\\\\"mean\\\\\\"\\"
+        "defaultValue": "\\"mean\\""
       }
     },
-    {\\"name\\": \\"OtherSettingsSection\\", \\"type\\": \\"Section\\", \\"config\\": null},
+    {"name": "OtherSettingsSection", "type": "Section", "config": null},
     {
-      \\"name\\": \\"colorScheme\\",
-      \\"type\\": \\"List\\",
-      \\"config\\": {
-        \\"allowedValues\\": [
-          {\\"display\\": \\"accent\\", \\"value\\": \\"\\\\\\"accent\\\\\\"\\"},
-          {\\"display\\": \\"category10\\", \\"value\\": \\"\\\\\\"category10\\\\\\"\\"},
-          {\\"display\\": \\"category20\\", \\"value\\": \\"\\\\\\"category20\\\\\\"\\"},
-          {\\"display\\": \\"category20b\\", \\"value\\": \\"\\\\\\"category20b\\\\\\"\\"},
-          {\\"display\\": \\"category20c\\", \\"value\\": \\"\\\\\\"category20c\\\\\\"\\"},
-          {\\"display\\": \\"dark2\\", \\"value\\": \\"\\\\\\"dark2\\\\\\"\\"},
-          {\\"display\\": \\"paired\\", \\"value\\": \\"\\\\\\"paired\\\\\\"\\"},
-          {\\"display\\": \\"pastel1\\", \\"value\\": \\"\\\\\\"pastel1\\\\\\"\\"},
-          {\\"display\\": \\"pastel2\\", \\"value\\": \\"\\\\\\"pastel2\\\\\\"\\"},
-          {\\"display\\": \\"set1\\", \\"value\\": \\"\\\\\\"set1\\\\\\"\\"},
-          {\\"display\\": \\"set2\\", \\"value\\": \\"\\\\\\"set2\\\\\\"\\"},
-          {\\"display\\": \\"set3\\", \\"value\\": \\"\\\\\\"set3\\\\\\"\\"},
-          {\\"display\\": \\"tableau10\\", \\"value\\": \\"\\\\\\"tableau10\\\\\\"\\"},
-          {\\"display\\": \\"tableau20\\", \\"value\\": \\"\\\\\\"tableau20\\\\\\"\\"}
+      "name": "colorScheme",
+      "type": "List",
+      "config": {
+        "allowedValues": [
+          {"display": "accent", "value": "\\"accent\\""},
+          {"display": "category10", "value": "\\"category10\\""},
+          {"display": "category20", "value": "\\"category20\\""},
+          {"display": "category20b", "value": "\\"category20b\\""},
+          {"display": "category20c", "value": "\\"category20c\\""},
+          {"display": "dark2", "value": "\\"dark2\\""},
+          {"display": "paired", "value": "\\"paired\\""},
+          {"display": "pastel1", "value": "\\"pastel1\\""},
+          {"display": "pastel2", "value": "\\"pastel2\\""},
+          {"display": "set1", "value": "\\"set1\\""},
+          {"display": "set2", "value": "\\"set2\\""},
+          {"display": "set3", "value": "\\"set3\\""},
+          {"display": "tableau10", "value": "\\"tableau10\\""},
+          {"display": "tableau20", "value": "\\"tableau20\\""}
         ],
-        \\"defaultValue\\": \\"\\\\\\"category20\\\\\\"\\"
+        "defaultValue": "\\"category20\\""
       }
     },
     {
-      \\"name\\": \\"DonutChart\\",
-      \\"type\\": \\"Switch\\",
-      \\"config\\": {\\"active\\": \\"60\\", \\"inactive\\": \\"0\\", \\"defaultsToActive\\": true}
+      "name": "DonutChart",
+      "type": "Switch",
+      "config": {"active": "60", "inactive": "0", "defaultsToActive": true}
     }
   ],
-  \\"code\\": \\"SEE BODY\\"
+  "code": "SEE BODY"
 }"
 `;
 
 exports[`serialize/deserialize template 2`] = `
-Object {
+{
   "code": "SEE CODE EDITOR",
   "customCards": undefined,
   "disallowFanOut": undefined,
@@ -594,10 +594,10 @@ Object {
   "templateDescription": "A popular way to show part-to-whole relationships, can express as donut chart or a pie chart.",
   "templateLanguage": "vega",
   "templateName": "pie chart",
-  "widgets": Array [
-    Object {
-      "config": Object {
-        "allowedTypes": Array [
+  "widgets": [
+    {
+      "config": {
+        "allowedTypes": [
           "DIMENSION",
         ],
         "required": true,
@@ -605,8 +605,8 @@ Object {
       "name": "category",
       "type": "DataTarget",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "active": "true",
         "defaultsToActive": true,
         "inactive": "false",
@@ -614,9 +614,9 @@ Object {
       "name": "Sort",
       "type": "Switch",
     },
-    Object {
-      "config": Object {
-        "allowedTypes": Array [
+    {
+      "config": {
+        "allowedTypes": [
           "MEASURE",
         ],
         "required": true,
@@ -624,50 +624,50 @@ Object {
       "name": "value",
       "type": "DataTarget",
     },
-    Object {
-      "config": Object {
-        "allowedValues": Array [
-          Object {
+    {
+      "config": {
+        "allowedValues": [
+          {
             "display": "count",
-            "value": "\\"count\\"",
+            "value": ""count"",
           },
-          Object {
+          {
             "display": "missing",
-            "value": "\\"missing\\"",
+            "value": ""missing"",
           },
-          Object {
+          {
             "display": "distinct",
-            "value": "\\"distinct\\"",
+            "value": ""distinct"",
           },
-          Object {
+          {
             "display": "sum",
-            "value": "\\"sum\\"",
+            "value": ""sum"",
           },
-          Object {
+          {
             "display": "mean",
-            "value": "\\"mean\\"",
+            "value": ""mean"",
           },
-          Object {
+          {
             "display": "median",
-            "value": "\\"median\\"",
+            "value": ""median"",
           },
-          Object {
+          {
             "display": "min",
-            "value": "\\"min\\"",
+            "value": ""min"",
           },
-          Object {
+          {
             "display": "max",
-            "value": "\\"max\\"",
+            "value": ""max"",
           },
         ],
-        "defaultValue": "\\"mean\\"",
+        "defaultValue": ""mean"",
       },
       "name": "aggregate",
       "type": "List",
     },
-    Object {
-      "config": Object {
-        "allowedTypes": Array [
+    {
+      "config": {
+        "allowedTypes": [
           "MEASURE",
         ],
         "required": false,
@@ -675,120 +675,120 @@ Object {
       "name": "radialValue",
       "type": "DataTarget",
     },
-    Object {
-      "config": Object {
-        "allowedValues": Array [
-          Object {
+    {
+      "config": {
+        "allowedValues": [
+          {
             "display": "count",
-            "value": "\\"count\\"",
+            "value": ""count"",
           },
-          Object {
+          {
             "display": "missing",
-            "value": "\\"missing\\"",
+            "value": ""missing"",
           },
-          Object {
+          {
             "display": "distinct",
-            "value": "\\"distinct\\"",
+            "value": ""distinct"",
           },
-          Object {
+          {
             "display": "sum",
-            "value": "\\"sum\\"",
+            "value": ""sum"",
           },
-          Object {
+          {
             "display": "mean",
-            "value": "\\"mean\\"",
+            "value": ""mean"",
           },
-          Object {
+          {
             "display": "median",
-            "value": "\\"median\\"",
+            "value": ""median"",
           },
-          Object {
+          {
             "display": "min",
-            "value": "\\"min\\"",
+            "value": ""min"",
           },
-          Object {
+          {
             "display": "max",
-            "value": "\\"max\\"",
+            "value": ""max"",
           },
         ],
-        "defaultValue": "\\"mean\\"",
+        "defaultValue": ""mean"",
       },
       "displayName": "aggregate",
       "name": "radialAggregate",
       "type": "List",
     },
-    Object {
+    {
       "config": null,
       "name": "OtherSettingsSection",
       "type": "Section",
     },
-    Object {
-      "config": Object {
-        "allowedValues": Array [
-          Object {
+    {
+      "config": {
+        "allowedValues": [
+          {
             "display": "accent",
-            "value": "\\"accent\\"",
+            "value": ""accent"",
           },
-          Object {
+          {
             "display": "category10",
-            "value": "\\"category10\\"",
+            "value": ""category10"",
           },
-          Object {
+          {
             "display": "category20",
-            "value": "\\"category20\\"",
+            "value": ""category20"",
           },
-          Object {
+          {
             "display": "category20b",
-            "value": "\\"category20b\\"",
+            "value": ""category20b"",
           },
-          Object {
+          {
             "display": "category20c",
-            "value": "\\"category20c\\"",
+            "value": ""category20c"",
           },
-          Object {
+          {
             "display": "dark2",
-            "value": "\\"dark2\\"",
+            "value": ""dark2"",
           },
-          Object {
+          {
             "display": "paired",
-            "value": "\\"paired\\"",
+            "value": ""paired"",
           },
-          Object {
+          {
             "display": "pastel1",
-            "value": "\\"pastel1\\"",
+            "value": ""pastel1"",
           },
-          Object {
+          {
             "display": "pastel2",
-            "value": "\\"pastel2\\"",
+            "value": ""pastel2"",
           },
-          Object {
+          {
             "display": "set1",
-            "value": "\\"set1\\"",
+            "value": ""set1"",
           },
-          Object {
+          {
             "display": "set2",
-            "value": "\\"set2\\"",
+            "value": ""set2"",
           },
-          Object {
+          {
             "display": "set3",
-            "value": "\\"set3\\"",
+            "value": ""set3"",
           },
-          Object {
+          {
             "display": "tableau10",
-            "value": "\\"tableau10\\"",
+            "value": ""tableau10"",
           },
-          Object {
+          {
             "display": "tableau20",
-            "value": "\\"tableau20\\"",
+            "value": ""tableau20"",
           },
         ],
-        "defaultValue": "\\"category20\\"",
+        "defaultValue": ""category20"",
       },
       "name": "colorScheme",
       "type": "List",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "active": "60",
         "defaultsToActive": true,
         "inactive": "0",

@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES, AGGREGATES} from './vega-common';
 import {toList} from './polestar-template-utils';
@@ -37,8 +37,7 @@ const PIECHART_EXAMPLE: any = {
           expr: {
             $cond: {
               ...radQuery,
-              true:
-                "{'[category]': datum['[category]'], '[value]': datum.pieAg, '[radialValue]': datum.radAgg}",
+              true: "{'[category]': datum['[category]'], '[value]': datum.pieAg, '[radialValue]': datum.radAgg}",
               false: "datum['[category]'] + ': ' + datum.pieAg",
             },
           },

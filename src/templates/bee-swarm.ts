@@ -1,4 +1,4 @@
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {Template} from '../types';
 import {VEGA_CATEGORICAL_COLOR_SCHEMES} from './vega-common';
 import {toList} from './polestar-template-utils';

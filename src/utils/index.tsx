@@ -1,5 +1,5 @@
 // import DomToImage from 'dom-to-image';
-import stringify from 'json-stringify-pretty-compact';
+import * as stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,
   MultiDataTargetWidget,
@@ -425,7 +425,7 @@ export function toSection(templates: any[], sectionStratagey: string, favorites:
       return (match && match.key) || 'other';
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    none: (d) => null,
+    none: () => null,
     favorites: (d) => {
       const key = `${d.templateName}${BINDER}${d.templateAuthor}`;
       return favorites.has(key) ? 'Favorites' : 'Other';
