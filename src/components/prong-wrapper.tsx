@@ -23,6 +23,7 @@ function CodeEditor(props: Props) {
   const {editMode, setEditMode, handleCodeUpdate, setCodeMode, codeMode, currentCode, height} = props;
 
   return (
+    // @ts-ignore
     <IgnoreKeys style={{height: '100%'}}>
       <Editor
         height={`${height}px`}

@@ -7,6 +7,7 @@ import {getHeight, writeHeight} from '../utils/local-storage';
 export default function SplitPaneWrapper(props: any): JSX.Element {
   if (props.showProgrammaticMode && props.showGUIView) {
     return (
+      // @ts-ignore
       <SplitPane
         split="horizontal"
         minSize={60}

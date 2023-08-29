@@ -21,9 +21,9 @@ interface Props {
 
 export default function DataModal(props: Props): JSX.Element {
   const {changeSelectedFile, loadCustomDataset, setModalState} = props;
-  const [searchTerm, setSearchTerm] = useState(null);
+  const [searchTerm, setSearchTerm] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState('FAVORITES');
-  const [favs, setFavs] = useState(new Set([]));
+  const [favs, setFavs] = useState<Set<string>>(new Set([]));
   useEffect(() => {
     getFavoriteDatasets().then((x) => {
       const entries = x && x.length ? x : ['cars.json', 'penguins.json'];
@@ -35,7 +35,7 @@ export default function DataModal(props: Props): JSX.Element {
     const file = acceptedFiles[0];
     const reader = new FileReader();
     reader.onload = (event): void => {
-      loadCustomDataset({fileName: file.name, data: event.target.result as any});
+      loadCustomDataset({fileName: file.name, data: event!.target?.result as any});
       setModalState(null);
     };
 
@@ -53,6 +53,7 @@ export default function DataModal(props: Props): JSX.Element {
       <div className="flex space-between">
         <h3>Predefined Datasets</h3>
         <div>
+          {/* @ts-ignore */}
           <IgnoreKeys style={{height: '100%'}}>
             <input
               type="text"

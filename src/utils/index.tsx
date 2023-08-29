@@ -1,5 +1,4 @@
-// import DomToImage from 'dom-to-image';
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {
   DataTargetWidget,
   MultiDataTargetWidget,

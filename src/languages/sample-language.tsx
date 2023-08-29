@@ -12,7 +12,7 @@ export const BLANK_TEMPLATE: Template = {
 };
 
 // eslint-disable-next-line
-function ExampleRenderer(props: RendererProps): JSX.Element {
+function ExampleRenderer(_: RendererProps): JSX.Element {
   // const {spec, data, onError} = props;
   return <div />;
 }

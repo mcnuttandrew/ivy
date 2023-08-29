@@ -1,5 +1,5 @@
 // WIP THIS ONE IS HARD
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
 const cols = [0, 1, 2, 3, 4, 5];

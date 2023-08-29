@@ -1,8 +1,9 @@
 import {LanguageExtension} from '../types';
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import * as x from 'vega-projection-extended';
 // necessary footwork to force the projections to be imported
-// eslint-disable-next-line
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const yx = x;
 
 import React from 'react';
@@ -19,7 +20,7 @@ function getDataViews(props: RendererProps): Promise<any> {
   return new Promise((resolve, reject) => {
     const finalSpec = JSON.parse(JSON.stringify(spec));
 
-    // this stratagey only supports one data set
+    // this strategy only supports one data set
     (finalSpec.data || []).forEach((row: any, idx: number) => {
       if (row.values === 'myData') {
         finalSpec.data[idx].values = data;

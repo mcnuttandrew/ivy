@@ -1,4 +1,4 @@
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {Widget, Template, GenWidget, SliderWidget, QueryResult} from '../types';
 import {simpleList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';

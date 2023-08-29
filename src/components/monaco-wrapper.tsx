@@ -50,7 +50,7 @@ export default class CodeEditor extends React.Component<Props, State> {
     return oldMode !== newMode ? this.editor.getScrollTop() : null;
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State, currentTop: number): void {
+  componentDidUpdate(prevProps: Props, _: State, currentTop: number): void {
     const oldMode = prevProps.codeMode;
     const newMode = this.props.codeMode;
     if (oldMode !== newMode) {
@@ -75,7 +75,7 @@ export default class CodeEditor extends React.Component<Props, State> {
       setEditMode,
     } = this.props;
     return (
-      /*eslint-disable react/no-string-refs*/
+      // @ts-ignore
       <IgnoreKeys style={{height: '100%'}}>
         <MonacoEditor
           key={codeMode}

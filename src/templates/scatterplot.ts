@@ -1,4 +1,4 @@
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {Template} from '../types';
 import {toList} from './polestar-template-utils';
 import {AUTHORS} from '../constants/index';

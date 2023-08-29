@@ -60,6 +60,7 @@ function ConditionBuilder(props: ConditionBuilderProps): JSX.Element {
               />
             </AddLabelToWidget>
             <AddLabelToWidget label="Query">
+              {/* @ts-ignore */}
               <IgnoreKeys style={{height: '100%'}}>
                 <OnBlurInput
                   initialValue={condition.query}

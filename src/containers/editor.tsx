@@ -55,7 +55,7 @@ function maybeAdjustTemplateInstanceFromParams(
   const fullHref = window.location.href;
   const suburl = `${templateAuthor}/${templateName}/${templateInstance}`.trim();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [left, right] = fullHref.split(suburl);
+  const [_, right] = fullHref.split(suburl);
   if (right && right.length) {
     return `${templateInstance.trim()}${right}`;
   } else {
@@ -158,6 +158,7 @@ function EditorContainer(props: RootProps): JSX.Element {
       />
       <div className="flex main-content-container relative">
         <DndProvider backend={HTML5Backend}>
+          {/* @ts-ignore */}
           <SplitPane
             split="vertical"
             minSize={610}

@@ -187,7 +187,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
             setAllTemplateValues={setAllTemplateValues}
             setTemplateValue={setTemplateValue}
             setWidgetValue={setWidgetValue}
-            disallowFanout={template.disallowFanOut}
+            disallowFanout={!!template.disallowFanOut}
             customCards={template.customCards}
             setMaterialization={setMaterialization}
             widgetValue={templateMap.paramValues[widget.name]}
@@ -219,6 +219,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
       {editMode && template && (
         <div className="flex">
           <div className="flex full-width space-between">
+            {/* @ts-ignore */}
             <IgnoreKeys style={{height: '100%'}}>
               <AddLabelToWidget label={'Name'}>
                 <OnBlurInput
@@ -235,7 +236,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
               <AddLabelToWidget label={'Description'}>
                 <OnBlurInput
                   label="Template Description"
-                  initialValue={template.templateDescription}
+                  initialValue={template.templateDescription || ''}
                   update={(value): any =>
                     modifyValueOnTemplate({
                       value,
@@ -263,6 +264,7 @@ export default function EncodingColumn(props: EncodingColumnProps): JSX.Element 
               </AddLabelToWidget>
               <AddLabelToWidget label={'Disallow Fan Out'}>
                 <span className="flex">
+                  {/* @ts-ignore */}
                   <Switch
                     {...switchCommon}
                     checked={!!template.disallowFanOut}

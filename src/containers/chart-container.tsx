@@ -77,7 +77,7 @@ function materializeWrapper(props: MaterializeWrapperProps): JSX.Element {
   const keySet = Object.entries(templateMap.systemValues.viewsToMaterialize)
     .filter((d) => d[1].length)
     .reduce((acc, d: [string, string[]]) => acc.add(d[0]), new Set());
-  function removeButton(name: string, key: string, value: string): JSX.Element {
+  function removeButton(_: string, key: string, value: string): JSX.Element {
     return (
       <div
         className="cursor-pointer"

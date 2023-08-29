@@ -1,4 +1,4 @@
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {Template} from '../types';
 import {AUTHORS} from '../constants/index';
 const UNIT_VIS_EXAMPLE: any = {

@@ -1,5 +1,5 @@
 // Cribbed from vega-editor
-import * as stringify from 'json-stringify-pretty-compact';
+import stringify from '../utils/stringify';
 import {parse as parseJSONC} from 'jsonc-parser';
 // import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {mergeDeep} from 'vega-lite/build/src/util';
@@ -7,7 +7,7 @@ import {modifyJSONSchema} from '../ivy-lang';
 
 import vlSchema from 'vega-lite/build/vega-lite-schema.json';
 import vSchema from 'vega/build/vega-schema.json';
-import ivySchema from '../../assets/ivy.json';
+import ivySchema from '../../public/assets/ivy.json';
 import unitVisSchema from 'unit-vis/unit-vis-schema.json';
 
 import {loader} from '@monaco-editor/react';
