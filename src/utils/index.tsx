@@ -1,4 +1,3 @@
-// import DomToImage from 'dom-to-image';
 import * as stringify from 'json-stringify-pretty-compact';
 import {
   DataTargetWidget,

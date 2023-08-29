@@ -17,7 +17,7 @@ import CodeEditor, {mapStateToProps as CodeEditorMapStateToProps} from './code-e
 import EncodingColumn, {mapStateToProps as EncodingColumnMapStateToProps} from './encoding-column';
 import HotKeyProvider, {mapStateToProps as HotKeyProviderMapStateToProps} from './hot-key-provider';
 import DataColumn, {mapStateToProps as DataColumnMapStateToProps} from './data-column';
-import TourProvider, {mapStateToProps as TourProviderMapStateToProps} from './tour-provider';
+// import TourProvider, {mapStateToProps as TourProviderMapStateToProps} from './tour-provider';
 
 import {DataRow, ActionUser} from '../actions/index';
 import {classnames} from '../utils';
@@ -128,7 +128,7 @@ function EditorContainer(props: RootProps): JSX.Element {
         {...HotKeyProviderMapStateToProps(store.getState())}
         languages={languages}
       />
-      <TourProvider {...actionCreators} {...TourProviderMapStateToProps(store.getState())} />
+      {/* <TourProvider {...actionCreators} {...TourProviderMapStateToProps(store.getState())} /> */}
       {props.openModal === 'data' && (
         <DataModal
           changeSelectedFile={props.changeSelectedFile}
