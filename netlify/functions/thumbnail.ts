@@ -40,7 +40,5 @@ export const handler: Handler = (event, context, callback) => {
         connection.close();
       });
     })
-    .catch((err) => {
-      return errorResponse(callback, err);
-    });
+    .catch((err) => errorResponse(callback, err));
 };
