@@ -90,7 +90,7 @@
   "scripts": {
     "dev": "vite",
     "start": "netlify dev",
-    "build": "NODE_ENV=production vite build",
+    "build": "NODE_ENV=production tsc && vite build",
     "lint": "yarn lint:ts",
     "lint:ts": "eslint --ext .ts --ext .tsx src",
     "lint:fix": "eslint './src/**/*.{ts,tsx}'",

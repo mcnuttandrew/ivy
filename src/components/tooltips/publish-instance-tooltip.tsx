@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function PublishInstanceTooltip(props: Props): JSX.Element {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   const [saved, setSaved] = useState(false);
   const {templateAuthor, templateName, templateMap, dataset, userName} = props;
   useEffect(() => {
