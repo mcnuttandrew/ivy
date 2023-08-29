@@ -5,6 +5,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react/jsx-runtime'],
   },
+  assetsInclude: ['**/*.md'],
   plugins: [react()],
   define: {
     // By default, Vite doesn't include shims for NodeJS/

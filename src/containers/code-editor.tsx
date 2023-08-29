@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import stringify from 'json-stringify-pretty-compact';
 
-// import MonacoWrapper from '../components/monaco-wrapper';
+import ProngWrapper from '../components/prong-wrapper';
+import MonacoWrapper from '../components/monaco-wrapper';
 import ErrorBoundary from '../components/error-boundary';
 import GALLERY from '../templates/gallery';
+
+import {getHeight} from '../utils/local-storage';
 
 import * as actionCreators from '../actions/index';
 
@@ -54,7 +57,7 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
     Promise.resolve()
       .then(() => JSON.parse(code))
       .then(() => responseFunctionMap[codeMode]({code, inError: false}))
-      .catch(() => responseFunctionMap[codeMode]({code, inError: true}));
+      .catch(() => responseFunctionMap[codeMode] && responseFunctionMap[codeMode]({code, inError: true}));
   }
 
   function getCurrentCode(): string {
@@ -136,8 +139,8 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
                   />
                 </ErrorBoundary>
               )}
-              {/* <ErrorBoundary> */}
-              {/* <MonacoWrapper
+              <ErrorBoundary>
+                <MonacoWrapper
                   codeMode={codeMode}
                   currentCode={currentCode}
                   editMode={props.editMode}
@@ -146,8 +149,8 @@ function CodeEditorContainer(props: CodeEditorProps): JSX.Element {
                   handleCodeUpdate={handleCodeUpdate}
                   setCodeMode={props.setCodeMode}
                   setEditMode={props.setEditMode}
-                /> */}
-              {/* </ErrorBoundary> */}
+                />
+              </ErrorBoundary>
             </div>
           </div>
         )}
