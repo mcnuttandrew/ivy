@@ -13,7 +13,11 @@ window.process = {cwd: () => ''};
 export function DocsContainer(): JSX.Element {
   const [docsText, setDocsText] = React.useState('');
   useEffect(() => {
-    fetch('./docs/language-docs.md')
+    const url =
+      location.hostname === 'localhost'
+        ? './docs/language-docs.md'
+        : 'https://raw.githubusercontent.com/mcnuttandrew/ivy/master/docs/language-docs.md';
+    fetch(url)
       .then((x) => x.text())
       .then((x) => setDocsText(x))
       .catch((e) => console.error(e));
