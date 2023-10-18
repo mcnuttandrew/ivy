@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 
 import * as actionCreators from '../actions/index';
+import remarkGfm from 'remark-gfm';
 import Header from '../components/header';
 
 // mock necessary for react markdown for some reason
@@ -26,7 +27,7 @@ export function DocsContainer(): JSX.Element {
     <div className="home-container">
       <Header />
       <div className="markdown-body home-container-contents-width-set">
-        {<ReactMarkdown>{docsText}</ReactMarkdown>}
+        {<ReactMarkdown remarkPlugins={[remarkGfm]}>{docsText}</ReactMarkdown>}
       </div>
     </div>
   );

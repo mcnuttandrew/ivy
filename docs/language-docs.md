@@ -42,18 +42,17 @@ The settings are pretty simple; they just say there's something called xDim and 
 
 
 
-
 ### GUI Elements
 
 The current user interface for Ivy features a number of different types of variables (and corresponding GUI widgets). These include:
 
 | Data Type  | Gui Component  |   
-|---|---|---|
-|  Field name From Dataset |  DataTarget |
-| Array of field names From Dataset |  MultiDataTarget |
-| Enum |  List |
-| Boolean |  Switch |
-| Number |  Slider |
+|---|---|   
+|  Field name From Dataset |  DataTarget |   
+| Array of field names From Dataset |  MultiDataTarget |   
+| Enum |  List |   
+| Boolean |  Switch |   
+| Number |  Slider |   
 | Text |  FreeText |
 
 From these basic components you can define a wide array of specific GUI behaviours. There are also a number of predefined widgets that can be helpful to use, such as DiscreteColorOptions which is a List that includes all of the basic discrete color schemes present in vega and vega-lite.
